@@ -10,10 +10,10 @@ import { isoelectronicSeries } from '@/lib/chem/periodicity'
 export const ELECTRON_COUNTS = [2, 10, 18] as const
 export type ElectronCount = (typeof ELECTRON_COUNTS)[number]
 
-/** Charges shown for each electron count: a neutral-or-cation window for 2, and ±2 for 10 and 18. */
+/** Charges shown for each electron count: the species with a Pauling radius in ionic-radii.ts. */
 const CHARGE_WINDOW: Record<ElectronCount, { min: number; max: number }> = {
-  2: { min: 0, max: 2 },
-  10: { min: -2, max: 2 },
+  2: { min: -1, max: 2 },
+  10: { min: -3, max: 3 },
   18: { min: -2, max: 2 },
 }
 
@@ -37,7 +37,7 @@ export interface IsoSpecies {
 /** The species of one electron count, in Z order (anions, then the noble gas, then cations). */
 export function speciesFor(electrons: ElectronCount): IsoSpecies[] {
   const { min, max } = CHARGE_WINDOW[electrons]
-  const raw = isoelectronicSeries(electrons, 2)
+  const raw = isoelectronicSeries(electrons, 3)
     .filter((s) => s.charge >= min && s.charge <= max)
     .map((s) => ({
       Z: s.Z,

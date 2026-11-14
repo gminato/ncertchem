@@ -12,8 +12,8 @@ describe('NCERT-printed radii', () => {
   })
 
   it('reads the ionic radii printed in the text', () => {
-    expect(speciesRadius(9, 'F', -1)).toMatchObject({ pm: 136, source: 'ncert-text' })
-    expect(speciesRadius(11, 'Na', 1)).toMatchObject({ pm: 95, source: 'ncert-text' })
+    expect(speciesRadius(9, 'F', -1)).toMatchObject({ pm: 136, source: 'pauling-crystal' })
+    expect(speciesRadius(11, 'Na', 1)).toMatchObject({ pm: 95, source: 'pauling-crystal' })
   })
 
   it('treats noble gases as having no ionic or atomic radius', () => {
@@ -21,7 +21,24 @@ describe('NCERT-printed radii', () => {
   })
 
   it('reports untabulated species without inventing a value', () => {
-    expect(speciesRadius(17, 'Cl', -1)).toMatchObject({ pm: null, source: 'untabulated' })
+    expect(speciesRadius(35, 'Br', -1)).toMatchObject({ pm: null, source: 'untabulated' })
+  })
+
+  it('uses one Pauling crystal scale for every ion in the three series', () => {
+    const expected: [number, string, number, number][] = [
+      [7, 'N', -3, 171], [8, 'O', -2, 140], [9, 'F', -1, 136], [11, 'Na', 1, 95], [12, 'Mg', 2, 65], [13, 'Al', 3, 50],
+      [16, 'S', -2, 184], [17, 'Cl', -1, 181], [19, 'K', 1, 133], [20, 'Ca', 2, 99],
+      [1, 'H', -1, 208], [3, 'Li', 1, 60], [4, 'Be', 2, 31],
+    ]
+    for (const [Z, symbol, charge, pm] of expected) {
+      expect(speciesRadius(Z, symbol, charge)).toMatchObject({ pm, source: 'pauling-crystal' })
+      expect(speciesRadius(Z, symbol, charge).citation).toContain('Pauling (1960)')
+    }
+  })
+
+  it('does not use the Section 3.7.2 anomalous-properties values (Li⁺ 76, Mg²⁺ 72)', () => {
+    expect(speciesRadius(3, 'Li', 1).pm).not.toBe(76)
+    expect(speciesRadius(12, 'Mg', 2).pm).not.toBe(72)
   })
 })
 

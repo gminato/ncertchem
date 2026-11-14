@@ -80,6 +80,12 @@ for (const scheme of ['light', 'dark'] as const) {
       await expect(sim).toHaveAttribute('data-electrons', '18')
       await page.screenshot({ path: path.join(SCREEN_DIR, `u3-3-7-isoelectronic-18-${scheme}.png`) })
 
+      // And 2 electrons: H⁻ to Be²⁺, with the Pauling radii for each species.
+      await page.getByRole('radiogroup', { name: 'Electron count' }).getByRole('radio', { name: '2' }).click()
+      await expect(sim).toHaveAttribute('data-electrons', '2')
+      await page.waitForTimeout(TWEEN_WAIT_MS)
+      await page.screenshot({ path: path.join(SCREEN_DIR, `u3-3-7-isoelectronic-2-${scheme}.png`) })
+
       expect(errors, errors.join('\n')).toEqual([])
     })
   })
