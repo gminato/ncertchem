@@ -1,0 +1,72 @@
+---
+class: 11
+unit: 1
+section: "1.8"
+order: 8
+title: "Mole Concept and Molar Masses"
+slug: "1-8-mole-concept-and-molar-masses"
+summary: "A mole is a counting unit of about 6.022 × 10²³ particles, and one mole in grams equals the atomic or molecular mass in u."
+ncert: "Class 11, Part I — Unit 1, Section 1.8"
+---
+
+<Hook>
+Put 18.02 g of water on one pan of a kitchen scale and 58.5 g of common salt on the other. The salt is heavier, so surely it holds more particles? Yet the two samples contain exactly the same number of particles. How can a counting unit make sense of that?
+</Hook>
+
+<Scrolly animation="mole-scale">
+<Step>
+Atoms and molecules are far too small to count one at a time, so we count them in bundles. You already do this. A **dozen** is 12 things, a gross is 144 and a score is 20. Each bundle is simply a convenient number for the job in hand. The **mole** is the bundle chemists use for particles, and it is a very large one.
+</Step>
+<Step>
+Scale the idea up. A **ream** of paper is conventionally 500 sheets, far more than a dozen, yet still a bundle a shopkeeper can count and carry. The picture draws a ream as a stack. What matters is not the paper but the count, and a bundle always holds the same number of items, whatever those items are.
+</Step>
+<Step>
+Now place the mole on the same scale. Each tick on this axis is a factor of 10,000, so a dozen and a ream sit close to the left-hand end. One **mole** contains $6.02214076 \times 10^{23}$ elementary entities. That is the exact defined value of the Avogadro constant, and the calculations on this site use the rounded value $6.022 \times 10^{23}\ \text{mol}^{-1}$.
+</Step>
+<Step>
+Now compare one mole of three substances. The vessels hold one mole of water, one mole of sodium chloride and one mole of carbon. Their masses differ: **18.02 g** of water, **58.5 g** of NaCl and **12.011 g** of carbon. Each of these masses is a **molar mass**, expressed in g mol⁻¹, and each has the same numerical value as the atomic, molecular or formula mass in u.
+</Step>
+<Step>
+Now count the particles. Each vessel holds $6.022 \times 10^{23}$ entities: molecules of water, formula units of sodium chloride and atoms of carbon. The masses differ, but the particle counts are equal. A mole is a fixed count, and molar mass is the bridge that turns grams into particles.
+</Step>
+</Scrolly>
+
+A mole names a count, not a kind of substance. One mole of hydrogen atoms, one mole of water molecules and one mole of sodium chloride formula units each contain $6.022 \times 10^{23}$ entities. The unit tells you how many, and the substance tells you what the entities are.
+
+The mass of one mole is the molar mass $M$, and it has the same numerical value as the atomic, molecular or formula mass in u. For water, the atomic masses give $2 \times 1.008 + 16.00 = 18.016$, which we quote as $18.02\ \text{g mol}^{-1}$. For sodium chloride the molar mass is $58.5\ \text{g mol}^{-1}$.
+
+Three quantities describe a sample: its mass $m$ in grams, its amount $n$ in moles and its number of particles $N$. Use the bridge to move between them. Edit any node and the other two follow.
+
+<Simulation name="mole-bridge" title="The mole bridge: mass, amount and particles" />
+
+The bridge runs on two relations, one per arrow pair:
+
+$$
+n = \frac{m}{M}, \qquad N = n\,N_\text{A}
+$$
+
+Divide a mass by the molar mass to get moles. Multiply moles by the Avogadro constant to get particles. Reverse either step to go the other way. Every line in the simulation shows its working, with molar masses rounded to two decimal places as in the text above.
+
+<Check n={1} numeric answer={3.011} unit="× 10²³" tolerance={0.001} explanation="Each mole holds 6.022 × 10²³ molecules, so 0.5 × 6.022 × 10²³ = 3.011 × 10²³ molecules.">
+How many molecules are there in $0.5\ \text{mol}$ of carbon dioxide? Give your answer in units of $10^{23}$.
+</Check>
+
+<Check
+  n={2}
+  options={["12.011 g of water", "24.022 g of carbon", "58.5 g of sodium chloride"]}
+  answer={2}
+  explanation="12.011 g of carbon is one mole of atoms, and so is 58.5 g of sodium chloride. 12.011 g of water is only 12.011 ÷ 18.02 ≈ 0.67 mol, and 24.022 g of carbon is two moles."
+>
+Which sample holds the same number of particles as 12.011 g of carbon?
+</Check>
+
+<Check n={3} numeric answer={146.25} unit="g" tolerance={0.05} explanation="The mass is m = nM = 2.5 × 58.5 = 146.25 g.">
+What is the mass of $2.5\ \text{mol}$ of sodium chloride? Give your answer in grams.
+</Check>
+
+<KeyIdeas>
+- One mole contains $6.022 \times 10^{23}$ elementary entities. The count is the same for every substance.
+- The molar mass $M$ is in g mol⁻¹ and equals the atomic, molecular or formula mass in u: $M(\text{H}_2\text{O}) \approx 18.02\ \text{g mol}^{-1}$.
+- Mass, amount and particles are linked by $n = m/M$ and $N = n\,N_\text{A}$.
+- One mole of water, sodium chloride or carbon holds the same number of entities, although their masses differ.
+</KeyIdeas>

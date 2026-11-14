@@ -1,3 +1,4 @@
+import { MoleBridge } from './sims/mole-bridge'
 import type { ComponentType } from 'react'
 import { StatesOfMatter } from './sims/StatesOfMatter'
 
@@ -13,4 +14,5 @@ export interface SimulationProps {
  */
 export const simulations: Record<string, ComponentType<SimulationProps>> = {
   'states-of-matter': StatesOfMatter,
+  'mole-bridge': MoleBridge,
 }

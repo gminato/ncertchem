@@ -1,0 +1,288 @@
+.sim {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+  font-family: var(--font-sans);
+  color: var(--fg);
+}
+
+/* The three nodes and the arrow pairs between them, in one row when there is room. */
+.bridge {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: stretch;
+  justify-content: center;
+  gap: var(--space-3);
+}
+
+.node {
+  flex: 0 1 200px;
+  min-width: 170px;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  padding: var(--space-3) var(--space-4);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  transition: border-color 0.4s var(--ease-out), box-shadow 0.4s var(--ease-out);
+}
+
+.nodeActive {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-soft);
+}
+
+.nodeHead {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-2);
+}
+
+.nodeTitle {
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--fg-muted);
+}
+
+.nodeFormula {
+  font-family: var(--font-serif);
+  font-size: 1rem;
+  color: var(--fg);
+}
+
+/* An arrow pair: a right arrow over a left arrow, each with its operation. */
+.pair {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: var(--space-2);
+  min-width: 118px;
+  padding: 0 var(--space-1);
+}
+
+.arrow {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+}
+
+.arrowLabel {
+  font-family: var(--font-serif);
+  font-size: 0.95rem;
+  color: var(--fg-muted);
+  white-space: nowrap;
+}
+
+.track {
+  position: relative;
+  width: 100%;
+  height: 14px;
+}
+
+.arrowSvg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+.arrowLine {
+  stroke: var(--fg-subtle);
+  stroke-width: 1.6;
+  stroke-linecap: round;
+  vector-effect: non-scaling-stroke;
+}
+
+.arrowHead {
+  fill: var(--fg-subtle);
+}
+
+/* The flow dot: it runs along its arrow when a value changes. */
+.dot {
+  position: absolute;
+  top: 50%;
+  width: 9px;
+  height: 9px;
+  margin-top: -4.5px;
+  margin-left: -4.5px;
+  border-radius: 50%;
+  background: var(--accent);
+  box-shadow: 0 0 10px var(--accent);
+  opacity: 0;
+  pointer-events: none;
+  animation-duration: 0.9s;
+  animation-timing-function: ease-in-out;
+  animation-fill-mode: both;
+}
+
+.dotRight {
+  animation-name: flowRight;
+}
+
+.dotLeft {
+  animation-name: flowLeft;
+}
+
+@keyframes flowRight {
+  0% {
+    left: 0%;
+    opacity: 0;
+  }
+  15%,
+  85% {
+    opacity: 1;
+  }
+  100% {
+    left: 100%;
+    opacity: 0;
+  }
+}
+
+@keyframes flowLeft {
+  0% {
+    left: 100%;
+    opacity: 0;
+  }
+  15%,
+  85% {
+    opacity: 1;
+  }
+  100% {
+    left: 0%;
+    opacity: 0;
+  }
+}
+
+.calc {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-1);
+  font-family: var(--font-serif);
+  text-align: center;
+}
+
+.calcLine {
+  margin: 0;
+  font-size: 1.05rem;
+  color: var(--fg);
+  font-variant-numeric: tabular-nums;
+}
+
+/* The magnified view. */
+.zoomFigure {
+  margin: 0;
+  width: 100%;
+  max-width: 720px;
+  align-self: center;
+}
+
+.zoomSvg {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.window {
+  fill: var(--liquid);
+  stroke: var(--orbit-active);
+  stroke-width: 1.6;
+  stroke-dasharray: 4 3;
+}
+
+.zoomLine {
+  stroke: var(--fg-subtle);
+  stroke-width: 1.2;
+  stroke-dasharray: 3 4;
+}
+
+/* The inset eases in each time the substance changes. */
+.zoomIn {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: zoomIn 0.6s var(--ease-out) both;
+}
+
+@keyframes zoomIn {
+  from {
+    opacity: 0.2;
+    transform: scale(0.92);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Controls row. */
+.controlGroup {
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-3) var(--space-5);
+}
+
+.formulaField {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-size: 0.9rem;
+  color: var(--fg-muted);
+}
+
+.formulaLabel {
+  white-space: nowrap;
+}
+
+.formulaInput {
+  width: 9.5em;
+  min-height: 40px;
+  padding: 0 var(--space-3);
+  font-family: var(--font-mono);
+  font-size: 1rem;
+  color: var(--fg);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+}
+
+.formulaInput:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.formulaInput[aria-invalid="true"] {
+  border-color: var(--caution);
+}
+
+.hint,
+.error {
+  margin: 0;
+  flex-basis: 100%;
+  font-size: 0.85rem;
+}
+
+.hint {
+  color: var(--fg-subtle);
+}
+
+.error {
+  color: var(--caution);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .zoomIn,
+  .dot {
+    animation: none;
+  }
+  .dot {
+    display: none;
+  }
+}
