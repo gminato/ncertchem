@@ -90,10 +90,18 @@ test.describe('Unit navigation', () => {
   })
 
   test('a Unit with no Sections yet shows a calm empty state', async ({ page }) => {
-    await page.goto('/class-11/unit-1')
+    await page.goto('/class-11/unit-3')
     await expect(page.getByRole('heading', { level: 1 })).toHaveText(
-      'Some Basic Concepts of Chemistry'
+      'Classification of Elements and Periodicity in Properties'
     )
     await expect(page.getByText('The Sections of this Unit are being written.')).toBeVisible()
+  })
+
+  test('Unit 1 lists all ten Sections in order', async ({ page }) => {
+    await page.goto('/class-11/unit-1')
+    const links = page.locator('a[href^="/class-11/unit-1/"]')
+    await expect(links).toHaveCount(10)
+    await expect(links.first()).toHaveAttribute('href', /1-1-importance-of-chemistry$/)
+    await expect(links.last()).toHaveAttribute('href', /1-10-stoichiometry$/)
   })
 })

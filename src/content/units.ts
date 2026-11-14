@@ -11,6 +11,7 @@ export interface UnitInfo {
 export const UNITS: readonly UnitInfo[] = [
   { class: 11, unit: 1, title: 'Some Basic Concepts of Chemistry' },
   { class: 11, unit: 2, title: 'Structure of Atom' },
+  { class: 11, unit: 3, title: 'Classification of Elements and Periodicity in Properties' },
 ]
 
 /** Finds a Unit by class and unit number. */
