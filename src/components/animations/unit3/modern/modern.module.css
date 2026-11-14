@@ -123,3 +123,8 @@
 .zigzag {
   filter: drop-shadow(0 0 4px var(--caution-soft));
 }
+
+.leader {
+  stroke: var(--fg-subtle);
+  stroke-width: 1;
+}

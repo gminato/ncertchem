@@ -16,6 +16,14 @@ export interface IupacSegment {
   abbreviation: string
 }
 
+export interface IupacElision {
+  /** Position of the dropped letter in `raw`. */
+  index: number
+  letter: string
+  /** Which rule drops it. */
+  rule: 'i-of-ium' | 'n-of-enn'
+}
+
 export interface IupacBreakdown {
   Z: number
   segments: IupacSegment[]
@@ -24,11 +32,11 @@ export interface IupacBreakdown {
   /** The roots with "ium" added, before any elision. */
   raw: string
   /**
-   * The elision applied to the raw name, if any. A root that ends in "i" (bi, tri) keeps
-   * its "i", so the "i" of "ium" is dropped: "bi" + "ium" gives "bium". `index` is the
-   * position in `raw` of the dropped letter.
+   * Letters dropped from `raw`, in order of position. Two rules apply. A root that ends in
+   * "i" (bi, tri) keeps its "i", so the "i" of "ium" is dropped: "bi" + "ium" gives "bium".
+   * Before "nil", one "n" of "enn" is dropped: "enn" + "nil" gives "ennil".
    */
-  elision: { index: number; letter: string } | null
+  elisions: IupacElision[]
   /** The final name, from iupacName(Z). */
   name: string
   /** The systematic symbol, from iupacSymbol(Z). */
@@ -36,7 +44,7 @@ export interface IupacBreakdown {
 }
 
 /**
- * Breaks element Z into its digits, roots and ending, and reports the elision applied.
+ * Breaks element Z into its digits, roots and ending, and lists the elisions applied.
  *
  * @throws {RangeError} If Z is not an integer from 100 to 999
  */
@@ -53,17 +61,31 @@ export function iupacBreakdown(Z: number): IupacBreakdown {
     })
   const joined = segments.map((s) => s.root).join('')
   const raw = `${joined}ium`
+  const elisions: IupacElision[] = []
+  let offset = 0
+  segments.forEach((seg, i) => {
+    const next = segments[i + 1]
+    if (seg.root === 'enn' && next && next.root === 'nil') {
+      // The last letter of "enn" is the dropped n.
+      elisions.push({ index: offset + 2, letter: 'n', rule: 'n-of-enn' })
+    }
+    offset += seg.root.length
+  })
   const lastRoot = segments[segments.length - 1].root
-  const elision = lastRoot.endsWith('i') ? { index: joined.length, letter: 'i' } : null
-  return { Z, segments, joined, raw, elision, name, symbol }
+  if (lastRoot.endsWith('i')) {
+    elisions.push({ index: joined.length, letter: 'i', rule: 'i-of-ium' })
+  }
+  return { Z, segments, joined, raw, elisions, name, symbol }
 }
 
 /**
- * The name the breakdown reconstructs from the raw name and the elision. It should match
- * `name` for every Z except those where a root "enn" meets "nil" (see the report on
- * periodicity.ts), which this function does not claim to handle.
+ * The name the breakdown reconstructs by dropping each elided letter from `raw`. For every
+ * Z from 100 to 999 this equals `name`, which the tests check.
  */
 export function reconstructName(b: IupacBreakdown): string {
-  if (!b.elision) return b.raw
-  return b.raw.slice(0, b.elision.index) + b.raw.slice(b.elision.index + 1)
+  let out = b.raw
+  for (const e of [...b.elisions].reverse()) {
+    out = out.slice(0, e.index) + out.slice(e.index + 1)
+  }
+  return out
 }

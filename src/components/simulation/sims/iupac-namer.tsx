@@ -10,7 +10,7 @@ import styles from './iupac-namer.module.css'
 
 const MIN_Z = 100
 const MAX_Z = 999
-const PRESETS = [101, 109, 120, 137, 999]
+const PRESETS = [101, 109, 120, 137, 190, 999]
 
 /**
  * IupacNamer: type an atomic number from 100 to 999 and watch the systematic name assemble. Each
@@ -53,12 +53,10 @@ export function IupacNamer(_props: SimulationProps) {
   )
 }
 
-/** The assembly: digits, roots, the joined string with its elision, then the name and symbol. */
+/** The assembly: digits, roots, the joined string with its elisions, then the name and symbol. */
 function Assembly({ b }: { b: IupacBreakdown }) {
-  const { elision, raw } = b
-  const before = elision ? raw.slice(0, elision.index) : raw
-  const struck = elision ? raw.slice(elision.index, elision.index + 1) : ''
-  const after = elision ? raw.slice(elision.index + 1) : ''
+  const struckAt = new Map(b.elisions.map((e) => [e.index, e]))
+  const chars = Array.from(b.raw)
   return (
     <div className={styles.stage}>
       <div className={styles.row} aria-label="Digits and roots">
@@ -76,23 +74,37 @@ function Assembly({ b }: { b: IupacBreakdown }) {
 
       <div className={styles.block}>
         <span className={styles.label}>Roots joined, then “ium” added</span>
-        <p className={styles.raw}>
-          <span>{before}</span>
-          {elision && (
-            <span className={styles.struck} data-testid="elided">
-              {struck}
-            </span>
+        <p className={styles.raw} data-testid="raw">
+          {chars.map((ch, i) =>
+            struckAt.has(i) ? (
+              <span key={i} className={styles.struck} data-testid="elided">
+                {ch}
+              </span>
+            ) : (
+              <span key={i}>{ch}</span>
+            )
           )}
-          <span>{after}</span>
         </p>
-        {elision ? (
-          <p className={styles.note}>
-            The root <span className="sym">{b.segments[b.segments.length - 1].abbreviation}</span> ends in{' '}
-            <span className={styles.letter}>i</span>, so the <span className={styles.letter}>i</span> of “ium”
-            is elided.
-          </p>
+        {b.elisions.length > 0 ? (
+          <ul className={styles.notes}>
+            {b.elisions.map((e) => (
+              <li key={e.index} className={styles.note}>
+                {e.rule === 'i-of-ium' ? (
+                  <>
+                    The root <span className="sym">{b.segments[b.segments.length - 1].abbreviation}</span> ends in{' '}
+                    <span className={styles.letter}>i</span>, so the <span className={styles.letter}>i</span> of “ium”
+                    is elided.
+                  </>
+                ) : (
+                  <>
+                    “enn” comes before “nil”, so one <span className={styles.letter}>n</span> of “enn” is elided.
+                  </>
+                )}
+              </li>
+            ))}
+          </ul>
         ) : (
-          <p className={styles.note}>No elision: the last root does not end in i.</p>
+          <p className={styles.note}>No elision: the roots meet without a clash.</p>
         )}
       </div>
 

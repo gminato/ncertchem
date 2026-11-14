@@ -2,6 +2,7 @@
 
 import { moseleyLine, MOSELEY_SLOPE_SCALED } from '@/lib/chem/moseley'
 import { MOSELEY_Z_RANGE, moseleyTarget } from './modern-steps'
+import { orbitLabelPosition } from '@/components/vocab/placement'
 import styles from './modern.module.css'
 
 export interface MoseleyPlotProps {
@@ -32,10 +33,17 @@ const POINTS = moseleyLine(MOSELEY_Z_RANGE.min, MOSELEY_Z_RANGE.max).map((p) => 
   y: yFor(p.y),
 }))
 
+// Point labels sit below and to the right of the line, where nothing is drawn. The
+// orbit helper puts each label on a ray from its point, so the leader line is radial.
+const LABEL_POINTS = POINTS.map((p) => orbitLabelPosition(p.x, p.y, 0, 62, 34))
+
 // The line runs from Z = 1 (where √ν = 0) to Z = 32, at the right edge of the plot.
 const LINE_START = { x: xFor(1), y: yFor(0) }
 const LINE_END = { x: xFor(32), y: yFor(31 * MOSELEY_SLOPE_SCALED) }
 const LINE_D = `M ${LINE_START.x} ${LINE_START.y} L ${LINE_END.x} ${LINE_END.y}`
+
+// The Z = 1 callout sits in the empty upper-left of the plot, with a vertical leader to the intercept.
+const CALLOUT: { x: number; y: number; textAnchor: 'start' } = { x: PLOT.left + 12, y: PLOT.top + 70, textAnchor: 'start' }
 
 /**
  * MoseleyPlot: the square root of the K-alpha frequency against atomic number. The
@@ -111,9 +119,12 @@ export function MoseleyPlot({ step, reducedMotion }: MoseleyPlotProps) {
           >
             <circle cx={p.x} cy={p.y} r={6} className={styles.pointDot} />
             {i % 4 === 0 && (
-              <text x={p.x + 9} y={p.y - 9} className={styles.pointLabel}>
-                Z {p.Z}
-              </text>
+              <>
+                <line x1={p.x} y1={p.y} x2={LABEL_POINTS[i].x} y2={LABEL_POINTS[i].y} className={styles.leader} />
+                <text x={LABEL_POINTS[i].x} y={LABEL_POINTS[i].y + 5} textAnchor={LABEL_POINTS[i].textAnchor} className={styles.pointLabel}>
+                  Z {p.Z}
+                </text>
+              </>
             )}
           </g>
         )
@@ -121,7 +132,8 @@ export function MoseleyPlot({ step, reducedMotion }: MoseleyPlotProps) {
 
       <g style={{ opacity: target.intercept ? 1 : 0, transition: transition ?? 'opacity 0.4s ease' }}>
         <circle cx={LINE_START.x} cy={LINE_START.y} r={5} className={styles.interceptDot} />
-        <text x={LINE_START.x + 10} y={LINE_START.y - 12} className={styles.callout}>
+        <line x1={LINE_START.x} y1={LINE_START.y} x2={CALLOUT.x - 4} y2={CALLOUT.y - 5} className={styles.leader} />
+        <text x={CALLOUT.x} y={CALLOUT.y} textAnchor={CALLOUT.textAnchor} className={styles.callout}>
           Z = 1: √ν = 0
         </text>
       </g>
