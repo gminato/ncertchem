@@ -24,12 +24,12 @@ export interface DaltonPostulatesProps {
 // Geometry (SVG viewBox 640 x 400)
 // ---------------------------------------------------------------------------
 
-const VIEW_WIDTH = 640
+const VIEW_WIDTH = 600
 const VIEW_HEIGHT = 400
 const LABEL_FONT = 16
 
 /** Step 1: a 4 x 4 grid of one kind of atom, for postulate 1. */
-const GRID = { cols: 4, rows: 4, spacing: 36, left: 70, top: 110 }
+const GRID = { cols: 4, rows: 4, spacing: 44, left: 80, top: 100 }
 
 /** Step 2: rows of one element each, for postulate 2. */
 const ELEMENT_ROWS: { element: string; name: string }[] = [
@@ -37,17 +37,17 @@ const ELEMENT_ROWS: { element: string; name: string }[] = [
   { element: 'O', name: 'oxygen' },
   { element: 'C', name: 'carbon' },
 ]
-const ELEMENT_ROW = { left: 170, spacing: 52, top: 100, count: 4 }
+const ELEMENT_ROW = { left: 190, spacing: 60, top: 150, count: 4 }
 
 /** Step 4: the reaction morph, placed with the reactants on the left and products on the right. */
 const REACTANT_SITES: MoleculeSite[] = [
-  { formula: 'H2', cx: 110, cy: 130, scale: 1.5 },
-  { formula: 'H2', cx: 110, cy: 250, scale: 1.5 },
-  { formula: 'O2', cx: 250, cy: 190, scale: 1.5 },
+  { formula: 'H2', cx: 110, cy: 140, scale: 1.6 },
+  { formula: 'H2', cx: 110, cy: 260, scale: 1.6 },
+  { formula: 'O2', cx: 240, cy: 200, scale: 1.6 },
 ]
 const PRODUCT_SITES: MoleculeSite[] = [
-  { formula: 'H2O', cx: 440, cy: 130, scale: 1.5 },
-  { formula: 'H2O', cx: 440, cy: 250, scale: 1.5 },
+  { formula: 'H2O', cx: 300, cy: 140, scale: 1.6 },
+  { formula: 'H2O', cx: 300, cy: 260, scale: 1.6 },
 ]
 const REACTANTS = placeMolecules(REACTANT_SITES)
 const PRODUCTS = placeMolecules(PRODUCT_SITES)
@@ -113,8 +113,8 @@ export function DaltonPostulates({ step, reducedMotion }: DaltonPostulatesProps)
             <Label x={GRID.left + 1.5 * GRID.spacing} y={GRID.top + 4 * GRID.spacing + 10} fontSize={LABEL_FONT} fill="var(--fg-muted)">
               many separate atoms
             </Label>
-            <Atom element="C" x={470} y={200} r={70} defsPrefix="dl" />
-            <Label x={470} y={300} fontSize={LABEL_FONT} fill="var(--fg-muted)">
+            <Atom element="C" x={440} y={190} r={80} defsPrefix="dl" />
+            <Label x={440} y={300} fontSize={LABEL_FONT} fill="var(--fg-muted)">
               one atom: the smallest unit
             </Label>
           </g>
@@ -144,7 +144,7 @@ export function DaltonPostulates({ step, reducedMotion }: DaltonPostulatesProps)
                 </g>
               )
             })}
-            <Label x={320} y={300} fontSize={LABEL_FONT} fill="var(--fg-muted)">
+            <Label x={300} y={340} fontSize={LABEL_FONT} fill="var(--fg-muted)">
               same element, same atoms; different elements, different colour and size
             </Label>
           </g>
@@ -152,12 +152,12 @@ export function DaltonPostulates({ step, reducedMotion }: DaltonPostulatesProps)
 
         {active === 2 && (
           <g className={styles.reveal}>
-            <Molecule formula="H2O" x={170} y={170} scale={2.2} defsPrefix="dl" style="ball-and-stick" />
-            <Label x={170} y={300} fontSize={18} fill="var(--fg)">
+            <Molecule formula="H2O" x={160} y={180} scale={2.4} defsPrefix="dl" style="ball-and-stick" />
+            <Label x={160} y={330} fontSize={18} fill="var(--fg)">
               H<Label.Sub>2</Label.Sub>O: H : O = 2 : 1
             </Label>
-            <Molecule formula="CO2" x={470} y={170} scale={2.2} defsPrefix="dl" style="ball-and-stick" />
-            <Label x={470} y={300} fontSize={18} fill="var(--fg)">
+            <Molecule formula="CO2" x={440} y={180} scale={2.4} defsPrefix="dl" style="ball-and-stick" />
+            <Label x={440} y={330} fontSize={18} fill="var(--fg)">
               CO<Label.Sub>2</Label.Sub>: C : O = 1 : 2
             </Label>
           </g>
@@ -166,10 +166,10 @@ export function DaltonPostulates({ step, reducedMotion }: DaltonPostulatesProps)
         {active === 3 && (
           <g className={styles.reveal}>
             <SceneView atoms={atoms} bonds={bonds} bondWidth={3} defsPrefix="dl" />
-            <Label x={320} y={60} fontSize={18} fill="var(--fg)">
+            <Label x={300} y={52} fontSize={18} fill="var(--fg)">
               {DALTON_REACTION_TEXT}
             </Label>
-            <Label x={320} y={340} fontSize={LABEL_FONT} fill="var(--fg-muted)">
+            <Label x={300} y={365} fontSize={LABEL_FONT} fill="var(--fg-muted)">
               H atoms: 4 → 4   ·   O atoms: 2 → 2
             </Label>
           </g>

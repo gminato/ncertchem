@@ -10,7 +10,7 @@ import {
   type MoleculeSite,
 } from './atom-scene'
 import { SceneView } from './SceneView'
-import { useStepState } from './useStepState'
+import { useStepState, clampStepIndex } from './useStepState'
 import {
   GAS_LAWS_STEP_COUNT,
   snapshotForStep,
@@ -18,7 +18,6 @@ import {
   volumeRatioText,
   type GasLawsSnapshot,
 } from './gas-laws-steps'
-import { clampStepIndex } from './useStepState'
 import styles from './scene.module.css'
 
 export interface GasLawsProps {
@@ -27,31 +26,34 @@ export interface GasLawsProps {
 }
 
 // ---------------------------------------------------------------------------
-// Geometry (SVG viewBox 640 x 460)
+// Geometry (SVG viewBox 600 x 500). Content spans y = 44 to 460 so the card is filled.
 // ---------------------------------------------------------------------------
 
-const VIEW_WIDTH = 640
-const VIEW_HEIGHT = 460
+const VIEW_WIDTH = 600
+const VIEW_HEIGHT = 500
+const LABEL = 16
 
-/** Cylinders stand on a common base at y = 400. One unit volume is 110 units tall. */
-const BASE_Y = 400
-const UNIT = 110
-const CYLINDER_WIDTH = 110
+/** Cylinders stand on a common base at y = 420. One unit volume is 150 units tall. */
+const BASE_Y = 420
+const UNIT = 150
+const CYLINDER_WIDTH = 120
 const CYLINDERS = {
-  h2: { cx: 115, units: 2 },
-  o2: { cx: 320, units: 1 },
-  h2o: { cx: 525, units: 2 },
+  h2: { cx: 110, units: 2 },
+  o2: { cx: 300, units: 1 },
+  h2o: { cx: 490, units: 2 },
 } as const
 
-/** Close-up boxes: one unit volume each, in a row. */
-const BOX = { y: 175, height: 170, width: 96 }
-const BOX_X = { a: 16, b: 120, c: 256, d: 400, e: 512 } as const
-const BOX_CENTRE = { x: 320, y: 260 }
+/** Close-up boxes: one unit volume each, in one row across the full width. */
+const BOX = { y: 110, height: 300, width: 92 }
+const BOX_X = { a: 23, b: 133, c: 259, d: 385, e: 495 } as const
+const PLUS_X = 248
+const ARROW_X = 375
+const BOX_CENTRE_Y = 260
 
-/** Molecule sites inside each box, two per box (equal numbers per unit volume). */
-const ROWS = [BOX.y + 57, BOX.y + 113]
-/** Molecules in a box are drawn large enough that their atoms read clearly, even when split. */
-const BOX_MOLECULE_SCALE = 1.25
+/** Two molecules per box, one third and two thirds of the way down. */
+const ROWS = [BOX.y + BOX.height / 3, BOX.y + (2 * BOX.height) / 3]
+/** Molecules are drawn larger than in the cylinders, so that their atoms read clearly when split. */
+const BOX_MOLECULE_SCALE = 1.4
 const molecule = (formula: string, cx: number, cy: number): MoleculeSite => ({
   formula,
   cx,
@@ -59,18 +61,18 @@ const molecule = (formula: string, cx: number, cy: number): MoleculeSite => ({
   scale: BOX_MOLECULE_SCALE,
 })
 const REACTANT_SITES: MoleculeSite[] = [
-  molecule('H2', BOX_X.a + 48, ROWS[0]),
-  molecule('H2', BOX_X.a + 48, ROWS[1]),
-  molecule('H2', BOX_X.b + 48, ROWS[0]),
-  molecule('H2', BOX_X.b + 48, ROWS[1]),
-  molecule('O2', BOX_X.c + 48, ROWS[0]),
-  molecule('O2', BOX_X.c + 48, ROWS[1]),
+  molecule('H2', BOX_X.a + BOX.width / 2, ROWS[0]),
+  molecule('H2', BOX_X.a + BOX.width / 2, ROWS[1]),
+  molecule('H2', BOX_X.b + BOX.width / 2, ROWS[0]),
+  molecule('H2', BOX_X.b + BOX.width / 2, ROWS[1]),
+  molecule('O2', BOX_X.c + BOX.width / 2, ROWS[0]),
+  molecule('O2', BOX_X.c + BOX.width / 2, ROWS[1]),
 ]
 const PRODUCT_SITES: MoleculeSite[] = [
-  molecule('H2O', BOX_X.d + 48, ROWS[0]),
-  molecule('H2O', BOX_X.d + 48, ROWS[1]),
-  molecule('H2O', BOX_X.e + 48, ROWS[0]),
-  molecule('H2O', BOX_X.e + 48, ROWS[1]),
+  molecule('H2O', BOX_X.d + BOX.width / 2, ROWS[0]),
+  molecule('H2O', BOX_X.d + BOX.width / 2, ROWS[1]),
+  molecule('H2O', BOX_X.e + BOX.width / 2, ROWS[0]),
+  molecule('H2O', BOX_X.e + BOX.width / 2, ROWS[1]),
 ]
 
 const PRODUCTS = placeMolecules(PRODUCT_SITES)
@@ -81,6 +83,15 @@ const INVERSE = invertPairing(TARGET_OF)
 const PRODUCT_BONDS_ON_MORPH = PRODUCTS.bonds.map((bond) => ({ a: INVERSE[bond.a], b: INVERSE[bond.b] }))
 
 const KEYS = ['ratio', 'zoom', 'split', 'join'] as const
+
+/** Caption for the close-up, chosen by Step so that the intermediate state is named. */
+const CLOSE_UP_CAPTION = [
+  '',
+  '',
+  'one unit volume of each gas: two molecules in every box',
+  'molecules split into atoms',
+  'atoms regroup into H₂O',
+]
 
 /**
  * The tween runs the changing properties one after another. Going forward it goes
@@ -171,7 +182,7 @@ export function GasLaws({ step, reducedMotion }: GasLawsProps) {
                   style={{ stroke: 'var(--glass-wall)' }}
                 />
               )}
-              <Label x={cyl.cx} y={BASE_Y + 28} fontSize={17} fill="var(--fg)">
+              <Label x={cyl.cx} y={BASE_Y + 34} fontSize={18} fill="var(--fg)">
                 {cyl.formula === 'H2O' ? (
                   <>
                     H<Label.Sub>2</Label.Sub>O(g)
@@ -186,25 +197,25 @@ export function GasLaws({ step, reducedMotion }: GasLawsProps) {
             </g>
           ))}
 
-          <Label x={217} y={cylinderCentreY(1)} fontSize={28} fill="var(--fg-muted)">
+          <Label x={205} y={cylinderCentreY(1)} fontSize={30} fill="var(--fg-muted)">
             +
           </Label>
-          <Label x={422} y={cylinderCentreY(1)} fontSize={28} fill="var(--fg-muted)">
+          <Label x={395} y={cylinderCentreY(1)} fontSize={30} fill="var(--fg-muted)">
             →
           </Label>
         </g>
 
         <g opacity={view.ratio * cylinderLayer}>
-          <Label x={320} y={62} fontSize={20} fill="var(--orbit-active)">
+          <Label x={300} y={44} fontSize={22} fill="var(--orbit-active)">
             volume ratio {volumeRatioText()}
           </Label>
-          <Label x={CYLINDERS.h2.cx} y={cylinderTop(2) - 16} fontSize={15} fill="var(--fg-muted)">
+          <Label x={CYLINDERS.h2.cx} y={cylinderTop(2) - 16} fontSize={LABEL} fill="var(--fg-muted)">
             2 volumes
           </Label>
-          <Label x={CYLINDERS.o2.cx} y={cylinderTop(1) - 16} fontSize={15} fill="var(--fg-muted)">
+          <Label x={CYLINDERS.o2.cx} y={cylinderTop(1) - 16} fontSize={LABEL} fill="var(--fg-muted)">
             1 volume
           </Label>
-          <Label x={CYLINDERS.h2o.cx} y={cylinderTop(2) - 16} fontSize={15} fill="var(--fg-muted)">
+          <Label x={CYLINDERS.h2o.cx} y={cylinderTop(2) - 16} fontSize={LABEL} fill="var(--fg-muted)">
             2 volumes
           </Label>
         </g>
@@ -212,7 +223,7 @@ export function GasLaws({ step, reducedMotion }: GasLawsProps) {
         {/* Layer 2: the close-up, one unit volume per box, with the molecules inside */}
         <g
           opacity={view.zoom}
-          transform={`translate(${BOX_CENTRE.x} ${BOX_CENTRE.y}) scale(${zoomScale}) translate(${-BOX_CENTRE.x} ${-BOX_CENTRE.y})`}
+          transform={`translate(300 ${BOX_CENTRE_Y}) scale(${zoomScale}) translate(-300 ${-BOX_CENTRE_Y})`}
         >
           {(
             [
@@ -229,11 +240,11 @@ export function GasLaws({ step, reducedMotion }: GasLawsProps) {
                 y={BOX.y}
                 width={BOX.width}
                 height={BOX.height}
-                rx={8}
+                rx={10}
                 style={{ fill: 'var(--surface-raised)', stroke: 'var(--glass-wall)' }}
                 strokeWidth={1.2}
               />
-              <Label x={box.x + BOX.width / 2} y={BOX.y + BOX.height + 18} fontSize={16} fill="var(--fg)">
+              <Label x={box.x + BOX.width / 2} y={BOX.y + BOX.height + 28} fontSize={18} fill="var(--fg)">
                 {box.label === 'H2O' ? (
                   <>
                     H<Label.Sub>2</Label.Sub>O
@@ -248,17 +259,17 @@ export function GasLaws({ step, reducedMotion }: GasLawsProps) {
             </g>
           ))}
 
-          <Label x={236} y={BOX.y + BOX.height / 2} fontSize={26} fill="var(--fg-muted)">
+          <Label x={PLUS_X} y={BOX.y + BOX.height / 2} fontSize={30} fill="var(--fg-muted)">
             +
           </Label>
-          <Label x={376} y={BOX.y + BOX.height / 2} fontSize={26} fill="var(--fg-muted)">
+          <Label x={ARROW_X} y={BOX.y + BOX.height / 2} fontSize={30} fill="var(--fg-muted)">
             →
           </Label>
 
-          <SceneView atoms={atoms} bonds={bonds} bondWidth={3} defsPrefix="gl" />
+          <SceneView atoms={atoms} bonds={bonds} bondWidth={3.4} defsPrefix="gl" />
 
-          <Label x={320} y={BOX.y + BOX.height + 50} fontSize={15} fill="var(--fg-muted)">
-            one unit volume of each gas: two molecules in every box
+          <Label x={300} y={74} fontSize={17} fill="var(--fg-muted)">
+            {CLOSE_UP_CAPTION[active]}
           </Label>
         </g>
       </svg>
