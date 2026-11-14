@@ -127,7 +127,15 @@ export function BuildUpAtoms({ step, reducedMotion }: BuildUpAtomsProps) {
         <VocabDefs idPrefix="build" />
 
         <Label x={VIEW_WIDTH / 2} y={34} fontSize={20} fill="var(--fg)">
-          {header ? `${header.name} (${header.symbol}), Z = ${placed}` : 'An atom with no electrons yet'}
+          {header ? (
+            <>
+              {`${header.name} (${header.symbol}), `}
+              <tspan className="sym">Z</tspan>
+              {` = ${placed}`}
+            </>
+          ) : (
+            'An atom with no electrons yet'
+          )}
         </Label>
 
         {ROWS.map((label, index) => {
