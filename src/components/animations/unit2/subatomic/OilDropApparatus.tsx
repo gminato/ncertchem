@@ -171,14 +171,14 @@ export function OilDropApparatus({ step, reducedMotion }: OilDropApparatusProps)
           <path d={`M${DROP_X + 26},${weightTipY - 8} L${DROP_X + 30},${weightTipY} L${DROP_X + 34},${weightTipY - 8}`} fill="none" />
         </g>
         <Label x={DROP_X + 42} y={dropPixelY + 14 + FORCE_UNIT / 2} fontSize={16} textAnchor="start" fill="var(--fg)">
-          <tspan fontStyle="italic">mg</tspan>
+          <tspan className="sym">mg</tspan>
         </Label>
         <g opacity={Math.min(1, s.force)} style={{ stroke: 'var(--accent)' }} strokeWidth={2}>
           <line x1={DROP_X + 30} x2={DROP_X + 30} y1={dropPixelY - 14} y2={elecTipY + 8} />
           <path d={`M${DROP_X + 26},${elecTipY + 8} L${DROP_X + 30},${elecTipY} L${DROP_X + 34},${elecTipY + 8}`} fill="none" />
         </g>
         <Label x={DROP_X + 42} y={dropPixelY - 14 - electricLength / 2} fontSize={16} textAnchor="start" fill="var(--accent)" opacity={Math.min(1, s.force)}>
-          <tspan fontStyle="italic">qE</tspan>
+          <tspan className="sym">qE</tspan>
         </Label>
 
         {/* Histogram of measured charges, in units of e */}
@@ -208,7 +208,7 @@ export function OilDropApparatus({ step, reducedMotion }: OilDropApparatusProps)
           </Label>
         ))}
         <Label x={(HIST.left + HIST.right) / 2} y={HIST.base + 44} fontSize={16} textAnchor="middle" fill="var(--fg)">
-          measured <tspan fontStyle="italic">q</tspan>/<tspan fontStyle="italic">e</tspan>
+          measured <tspan className="sym">q</tspan>/<tspan className="sym">e</tspan>
         </Label>
         <Label x={(HIST.left + HIST.right) / 2} y={HIST.top - 12} fontSize={16} textAnchor="middle" fill="var(--fg-muted)" opacity={s.histo}>
           charge on each drop
@@ -220,12 +220,12 @@ export function OilDropApparatus({ step, reducedMotion }: OilDropApparatusProps)
         </Label>
         {activeStep === 3 && (
           <Label x={VIEW_W / 2} y={508} fontSize={16} textAnchor="middle" fill="var(--accent)">
-            <tspan fontStyle="italic">V</tspan> = <tspan fontStyle="italic">mgd</tspan>/(<tspan fontStyle="italic">ne</tspan>) ≈ {Math.round(BALANCE_VOLTS)} V, 1.0 cm gap
+            <tspan className="sym">V</tspan> = <tspan className="sym">mgd</tspan>/(<tspan className="sym">ne</tspan>) ≈ {Math.round(BALANCE_VOLTS)} V, 1.0 cm gap
           </Label>
         )}
         {activeStep === 4 && (
           <Label x={VIEW_W / 2} y={508} fontSize={16} textAnchor="middle" fill="var(--accent)">
-            <tspan fontStyle="italic">e</tspan> = {sci(ELEMENTARY_CHARGE_C, 4)} C, the unit of charge
+            <tspan className="sym">e</tspan> = {sci(ELEMENTARY_CHARGE_C, 4)} C, the unit of charge
           </Label>
         )}
       </svg>

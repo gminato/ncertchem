@@ -28,7 +28,7 @@ const C = { x: 320, y: 270 }
 /** Radius of the ZnS screen ring, in SVG units. */
 const RING_R = 150
 /** Foil view: SVG units per impact-parameter unit b₀. Not to scale. */
-const FOIL_UNIT = 1.5
+const FOIL_UNIT = 1.0
 const SOURCE_X = 92
 const FOIL = { x: C.x - 5, width: 10, top: 170, bottom: 370 }
 
@@ -41,7 +41,7 @@ const ZOOM_UNIT = 8
  * back. The sample is chosen so that each class is visible.
  */
 const SAMPLE = {
-  straight: [23.5, 26, 29, 32, 35, 38, 41, 44, -24, -27, -30, -33, -36, -40, -43],
+  straight: [60, 66, 72, 78, 84, 90, 96, -62, -68, -74, -80, -86, -92, -98],
   deflected: [3.2, -4.5, 6.5, -9.5],
   bounced: [0.6],
 }
@@ -174,7 +174,7 @@ export function RutherfordScattering({ step, reducedMotion }: RutherfordScatteri
 
           {/* Source */}
           <rect x={SOURCE_X - 34} y={C.y - 26} width={34} height={52} rx={6} style={{ fill: 'var(--surface-raised)', stroke: 'var(--border)' }} />
-          <Label x={SOURCE_X - 17} y={180} fontSize={16} textAnchor="middle">
+          <Label x={SOURCE_X - 17} y={150} fontSize={16} textAnchor="middle">
             α source
           </Label>
 
