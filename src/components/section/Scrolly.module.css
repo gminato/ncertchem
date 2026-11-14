@@ -128,7 +128,7 @@
 .scrolly[data-layout="wide"] .visual {
   position: sticky;
   top: 0;
-  height: 62vh;
+  height: 60vh;
   padding: var(--space-3) 0;
   background: var(--bg);
   z-index: 2;
@@ -144,6 +144,25 @@
   aspect-ratio: auto;
 }
 
+.scrolly[data-layout="wide"] .visualPanel {
+  overflow: hidden;
+}
+
+/* FitToBox: content keeps its natural layout and is scaled down to fit. */
+.fitBox {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  overflow: hidden;
+}
+
+.fitContent {
+  width: 100%;
+  transform-origin: top center;
+}
+
 .scrolly[data-layout="wide"] .steps {
   position: relative;
   z-index: 1;
@@ -151,9 +170,11 @@
 }
 
 .scrolly[data-layout="wide"] .step {
-  min-height: 55vh;
+  /* A Step is active exactly while it sits in the band below the visual. */
+  min-height: 38vh;
+  justify-content: flex-start;
   align-items: center;
-  text-align: left;
+  padding: var(--space-4) 0 var(--space-5);
   background: var(--bg);
 }
 

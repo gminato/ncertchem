@@ -14,7 +14,7 @@ async function activateStep(page: Page, scrolly: number, step: number) {
   const block = page.locator('[data-animation]').nth(scrolly)
   const steps = block.locator('[data-scrolly-step]')
   await steps.nth(step).scrollIntoViewIfNeeded()
-  await steps.nth(step).evaluate((el) => el.scrollIntoView({ block: 'center' }))
+  await steps.nth(step).evaluate((el) => el.scrollIntoView({ block: el.closest('[data-layout="wide"]') ? 'end' : 'center' }))
   await expect(steps.nth(step)).toHaveAttribute('data-active', 'true')
   await page.waitForTimeout(700)
 }

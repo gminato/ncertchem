@@ -10,7 +10,7 @@ async function gotoStep(page: Page, index: number) {
   const step = page.locator('[data-scrolly-step]').nth(index)
   // Put the Step near the top of the viewport so it passes the activation line.
   await step.evaluate((el) => {
-    el.scrollIntoView({ block: 'center' })
+    el.scrollIntoView({ block: el.closest('[data-layout="wide"]') ? 'end' : 'center' })
   })
   await expect(step).toHaveAttribute('data-active', 'true')
   // Let the view tween finish before the screenshot.

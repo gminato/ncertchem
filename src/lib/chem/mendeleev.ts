@@ -25,7 +25,7 @@ export const KNOWN_IN_1869_SYMBOLS: readonly string[] = [
   'Na', 'Mg', 'Al', 'Si', 'P', 'S', 'Cl',
   'K', 'Ca', 'Ti', 'V', 'Cr', 'Mn', 'Fe', 'Co', 'Ni', 'Cu', 'Zn', 'As', 'Se', 'Br',
   'Rb', 'Sr', 'Y', 'Zr', 'Nb', 'Mo', 'Ru', 'Rh', 'Pd', 'Ag', 'Cd', 'In', 'Sn', 'Sb', 'Te', 'I',
-  'Cs', 'Ba', 'La', 'Ce', 'Ta', 'W', 'Os', 'Ir', 'Pt', 'Au', 'Hg', 'Tl', 'Pb', 'Bi', 'Th', 'U',
+  'Cs', 'Ba', 'La', 'Ce', 'Tb', 'Er', 'Ta', 'W', 'Os', 'Ir', 'Pt', 'Au', 'Hg', 'Tl', 'Pb', 'Bi', 'Th', 'U',
 ]
 
 /** Atomic numbers of the 1869-known set. Throws if a symbol is missing from the data. */

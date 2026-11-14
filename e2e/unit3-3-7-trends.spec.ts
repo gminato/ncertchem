@@ -21,7 +21,7 @@ async function gotoStep(page: Page, animation: string, index: number) {
     .locator(`[data-animation="${animation}"] [data-scrolly-step]`)
     .nth(index)
     .evaluate((el) => {
-      el.scrollIntoView({ block: 'center' })
+      el.scrollIntoView({ block: el.closest('[data-layout="wide"]') ? 'end' : 'center' })
     })
 }
 

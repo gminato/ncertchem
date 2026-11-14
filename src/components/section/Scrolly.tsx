@@ -7,6 +7,7 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { useGSAP } from '@gsap/react'
 import { animations, type AnimationName } from '@/components/animations/registry'
 import { usePrefersReducedMotion } from './usePrefersReducedMotion'
+import { FitToBox } from './FitToBox'
 import styles from './Scrolly.module.css'
 
 gsap.registerPlugin(ScrollTrigger, useGSAP)
@@ -29,8 +30,11 @@ export interface ScrollyProps {
   layout?: 'side' | 'wide'
 }
 
-/** Viewport fraction where a Step counts as reached in the 'wide' layout (below a ~60vh visual). */
-const WIDE_LINE = 0.78
+/**
+ * Viewport fraction where a Step counts as reached in the 'wide' layout: as soon
+ * as it rises into view below the ~60vh visual, so it is active while readable.
+ */
+const WIDE_LINE = 0.97
 
 /**
  * A Scrolly Animation: Steps of Prose on one side, a pinned Animation on the other.
@@ -84,9 +88,9 @@ export function Scrolly({ animation, children, layout = 'side' }: ScrollyProps) 
 
       if (wide) {
         // The visual covers the top ~60% of the view at every width, so a Step
-        // becomes active once it has risen just below it.
+        // becomes active as soon as it rises into the band beneath it.
         mm.add('all', () => {
-          const triggers = configure('top 78%', 'bottom 78%')
+          const triggers = configure('top 97%', 'bottom 97%')
           return () => triggers.forEach((t) => t.kill())
         })
       } else {
@@ -127,7 +131,13 @@ export function Scrolly({ animation, children, layout = 'side' }: ScrollyProps) 
     >
       <div className={styles.visual}>
         <div className={styles.visualPanel} data-testid="scrolly-visual">
-          <Visual step={step} reducedMotion={reducedMotion} />
+          {wide ? (
+            <FitToBox>
+              <Visual step={step} reducedMotion={reducedMotion} />
+            </FitToBox>
+          ) : (
+            <Visual step={step} reducedMotion={reducedMotion} />
+          )}
         </div>
       </div>
       <div className={styles.steps}>{children}</div>
