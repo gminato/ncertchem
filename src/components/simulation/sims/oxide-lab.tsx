@@ -46,7 +46,7 @@ interface OxideSetup {
   layout: 'single' | 'triple'
   /** Beaker data for the layout. Triple setups are [HCl, water, NaOH]. */
   beakers: Beaker[]
-  /** One sentence for the readout: what happens and why the colour is what it is. */
+  /** One complete sentence for the readout: the oxide's character and what happens in the liquid. */
   summary: string
 }
 
@@ -56,14 +56,14 @@ const SETUPS: Record<OxideFormula, OxideSetup> = {
     label: 'Na₂O',
     layout: 'single',
     beakers: [{ label: 'water', colour: 'violet', dissolves: true }],
-    summary: 'Na₂O dissolves in water to form sodium hydroxide, a strong base.',
+    summary: 'Na₂O is a basic oxide: it dissolves in water to form sodium hydroxide, a strong base.',
   },
   MgO: {
     formula: 'MgO',
     label: 'MgO',
     layout: 'single',
     beakers: [{ label: 'water', colour: 'blue', dissolves: false }],
-    summary: 'MgO is basic but sparingly soluble, so only part of it goes into solution as Mg(OH)₂.',
+    summary: 'MgO is a basic oxide, but sparingly soluble: only part of it dissolves, forming Mg(OH)₂.',
   },
   Al2O3: {
     formula: 'Al2O3',
@@ -74,7 +74,7 @@ const SETUPS: Record<OxideFormula, OxideSetup> = {
       { label: 'water', colour: 'green', dissolves: false },
       { label: 'NaOH', colour: 'violet', dissolves: true },
     ],
-    summary: 'Al₂O₃ is insoluble in water, but it dissolves in both acid and base. That makes it amphoteric.',
+    summary: 'Al₂O₃ is amphoteric: insoluble in water, it dissolves in both acid and base.',
   },
   SiO2: {
     formula: 'SiO2',
@@ -85,29 +85,28 @@ const SETUPS: Record<OxideFormula, OxideSetup> = {
       { label: 'water', colour: 'green', dissolves: false },
       { label: 'hot NaOH', colour: 'violet', dissolves: true },
     ],
-    summary:
-      'SiO₂ is insoluble in water and does not react with acid. It is a weakly acidic oxide: it reacts with hot, concentrated base.',
+    summary: 'SiO₂ is a weakly acidic oxide: insoluble in water and unreactive with acid, it dissolves in hot, concentrated base.',
   },
   P4O10: {
     formula: 'P4O10',
     label: 'P₄O₁₀',
     layout: 'single',
     beakers: [{ label: 'water', colour: 'orange', dissolves: true }],
-    summary: 'P₄O₁₀ reacts with water to form phosphoric acid, an acid.',
+    summary: 'P₄O₁₀ is an acidic oxide: it reacts with water to form phosphoric acid.',
   },
   SO3: {
     formula: 'SO3',
     label: 'SO₃',
     layout: 'single',
     beakers: [{ label: 'water', colour: 'red', dissolves: true }],
-    summary: 'SO₃ dissolves in water to form sulphuric acid, a strong acid.',
+    summary: 'SO₃ is an acidic oxide: it dissolves in water to form sulphuric acid, a strong acid.',
   },
   Cl2O7: {
     formula: 'Cl2O7',
     label: 'Cl₂O₇',
     layout: 'single',
     beakers: [{ label: 'water', colour: 'red', dissolves: true }],
-    summary: 'Cl₂O₇ dissolves in water to form perchloric acid, a strong acid.',
+    summary: 'Cl₂O₇ is an acidic oxide: it dissolves in water to form perchloric acid, a strong acid.',
   },
 }
 
@@ -240,7 +239,7 @@ export function OxideLab({ reducedMotion }: SimulationProps) {
 
       <div className={styles.readout} aria-live="polite">
         <p className={styles.summary}>
-          <strong>{setup.label}</strong> is a {oxideNature(formula)} oxide. {setup.summary}
+          {setup.summary}
         </p>
         <ul className={styles.swatches} aria-label="Illustrative pH colours">
           {setup.beakers.map((b) => (

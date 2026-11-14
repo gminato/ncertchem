@@ -14,7 +14,7 @@ async function gotoStep(page: Page, index: number) {
   })
   await expect(step).toHaveAttribute('data-active', 'true')
   // Let the view tween finish before the screenshot.
-  await page.waitForTimeout(1000)
+  await page.waitForTimeout(1500)
 }
 
 for (const scheme of ['light', 'dark'] as const) {
@@ -51,7 +51,15 @@ for (const scheme of ['light', 'dark'] as const) {
 
       await sim.getByRole('button', { name: /Al₂O₃/ }).click()
       await expect(sim.getByRole('button', { name: /Al₂O₃/ })).toHaveAttribute('aria-pressed', 'true')
-      await page.waitForTimeout(1500)
+      // Let the acid and base solids finish dissolving (about 3.3 s after the change).
+      await page.waitForTimeout(3800)
+      const opacities = await sim.locator('[data-solid]').evaluateAll((nodes) =>
+        nodes.map((n) => Number(getComputedStyle(n).opacity))
+      )
+      // Order: dilute HCl, water, NaOH. Water keeps the solid intact.
+      expect(opacities[0]).toBeLessThan(0.05)
+      expect(opacities[1]).toBeGreaterThan(0.95)
+      expect(opacities[2]).toBeLessThan(0.05)
       await sim.screenshot({ path: path.join(SCREEN_DIR, `u3-3-7-oxide-lab-alumina-${scheme}.png`) })
 
       await sim.getByRole('button', { name: /Cl₂O₇/ }).click()

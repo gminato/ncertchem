@@ -45,12 +45,15 @@
   }
 }
 
+/* The solid shrinks and fades as it dissolves, sinking slightly into the liquid. */
 @keyframes dissolve {
   from {
     opacity: 1;
+    transform: translateY(0) scale(1);
   }
   to {
     opacity: 0;
+    transform: translateY(8px) scale(0.45);
   }
 }
 
@@ -59,9 +62,11 @@
 }
 
 .dropDissolve {
+  transform-box: fill-box;
+  transform-origin: center;
   animation:
     drop 0.8s cubic-bezier(0.3, 0.7, 0.4, 1) both,
-    dissolve 1.4s ease 1s both;
+    dissolve 2.4s ease-in 0.9s both;
 }
 
 .gone {
