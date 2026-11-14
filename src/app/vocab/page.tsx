@@ -23,6 +23,7 @@ import {
 } from '@/components/vocab'
 import { Stage3DLazy, OrbitalLobes3D } from '@/components/stage3d'
 import { energyLevel } from '@/lib/chem/bohr'
+import { PeriodicDemo } from '@/components/periodic'
 
 /** Balmer lines in the visible range, with their relative brightness. */
 const HYDROGEN_LINES = [
@@ -1066,6 +1067,24 @@ export default function VocabPage() {
             </div>
           </article>
         </div>
+      </section>
+
+      {/* Periodic table and trends */}
+      <section className={styles.section} id="periodic" aria-labelledby="periodic-heading">
+        <h2 id="periodic-heading" className={styles.sectionTitle}>
+          Periodic table and trends
+        </h2>
+        <p className={styles.sectionSubtitle}>
+          The table arranges elements by atomic number, and the same shape explains their
+          properties. Blocks shade the s, p, d and f orbitals. Heatmaps and trend lines show how a
+          property changes across a period, and the dips are where the orbital picture explains
+          the data.
+        </p>
+        <article className={`${styles.card} ${styles.wide}`}>
+          <div className={styles.cardBody}>
+            <PeriodicDemo />
+          </div>
+        </article>
       </section>
     </div>
   )

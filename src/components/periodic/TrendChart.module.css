@@ -1,0 +1,86 @@
+.chart {
+  display: block;
+  width: 100%;
+  height: auto;
+  overflow: visible;
+  font-family: var(--font-sans);
+}
+
+.grid {
+  stroke: var(--border);
+  stroke-width: 1;
+}
+
+.axis {
+  stroke: var(--fg-subtle);
+  stroke-width: 1;
+}
+
+.tick {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  fill: var(--fg-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.axisLabel {
+  font-family: var(--font-sans);
+  font-size: 13px;
+  fill: var(--fg-muted);
+}
+
+.symbol {
+  font-family: var(--font-sans);
+  font-size: 13px;
+  font-weight: 600;
+  fill: var(--fg);
+}
+
+.line {
+  fill: none;
+  stroke: var(--electron);
+  stroke-width: 2.25;
+  stroke-linejoin: round;
+  stroke-linecap: round;
+}
+
+.point {
+  fill: var(--surface);
+  stroke: var(--electron);
+  stroke-width: 2;
+}
+
+.pointHighlight {
+  fill: var(--surface);
+  stroke: var(--proton);
+  stroke-width: 2.5;
+}
+
+.bar {
+  fill: var(--electron);
+  opacity: 0.85;
+}
+
+.barHighlight {
+  fill: var(--proton);
+  opacity: 0.9;
+}
+
+.leader {
+  stroke: var(--fg-subtle);
+  stroke-width: 1;
+}
+
+.callout {
+  font-family: var(--font-sans);
+  font-size: 12px;
+  font-weight: 500;
+  fill: var(--fg);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .line {
+    stroke-dasharray: none !important;
+    stroke-dashoffset: 0 !important;
+  }
+}

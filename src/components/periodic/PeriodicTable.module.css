@@ -1,0 +1,126 @@
+/* Periodic table (SVG). Every colour is a token, so light and dark both work. */
+
+.table {
+  display: block;
+  width: 100%;
+  height: auto;
+  max-width: 1040px;
+  margin: 0 auto;
+  overflow: visible;
+  font-family: var(--font-sans);
+}
+
+.axis {
+  font-family: var(--font-sans);
+  font-size: 11px;
+  font-weight: 500;
+  fill: var(--fg-subtle);
+  font-variant-numeric: tabular-nums;
+}
+
+.fBlockLabel {
+  font-family: var(--font-sans);
+  font-size: 10px;
+  font-style: italic;
+  fill: var(--fg-muted);
+}
+
+.placeholder {
+  fill: none;
+  stroke: var(--fg-subtle);
+  stroke-width: 1;
+  stroke-dasharray: 3 3;
+}
+
+.placeholderText {
+  font-family: var(--font-sans);
+  font-size: 10px;
+  fill: var(--fg-subtle);
+}
+
+.cell {
+  cursor: pointer;
+  outline: none;
+  transition: opacity 0.25s var(--ease-out);
+}
+
+.cellRect {
+  fill: var(--surface);
+  stroke: var(--border);
+  stroke-width: 1;
+  transition: stroke 0.2s var(--ease-out), stroke-width 0.2s var(--ease-out);
+}
+
+.cell:hover .cellRect {
+  stroke: var(--fg-muted);
+}
+
+.highlight .cellRect {
+  stroke: var(--accent);
+  stroke-width: 1.5;
+}
+
+.selected .cellRect {
+  stroke: var(--accent);
+  stroke-width: 2;
+}
+
+.dim {
+  opacity: 0.35;
+}
+
+/* Focus ring: shown for keyboard focus only. */
+.ring {
+  fill: none;
+  stroke: var(--accent);
+  stroke-width: 2.5;
+  opacity: 0;
+  transition: opacity 0.15s var(--ease-out);
+}
+
+.cell:focus-visible .ring {
+  opacity: 1;
+}
+
+.z {
+  font-size: 10.5px;
+  font-weight: 500;
+  fill: var(--fg-subtle);
+  font-variant-numeric: tabular-nums;
+}
+
+.mass {
+  font-size: 9px;
+  fill: var(--fg-subtle);
+  font-variant-numeric: tabular-nums;
+}
+
+.symbol {
+  font-weight: 600;
+  fill: var(--fg);
+  letter-spacing: 0;
+}
+
+.value {
+  font-size: 9.5px;
+  font-weight: 600;
+  fill: var(--fg);
+  font-variant-numeric: tabular-nums;
+}
+
+.name {
+  font-size: 8.5px;
+  fill: var(--fg-muted);
+}
+
+.compact .z {
+  font-size: 10px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cell,
+  .cellRect,
+  .ring {
+    transition: none;
+  }
+}

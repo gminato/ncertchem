@@ -1,0 +1,82 @@
+.legend {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  font-family: var(--font-sans);
+  max-width: 420px;
+}
+
+.heading {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-3);
+  font-size: 0.85rem;
+}
+
+.label {
+  font-weight: 600;
+  color: var(--fg);
+}
+
+.unit {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--fg-muted);
+}
+
+.barWrap {
+  position: relative;
+  padding-top: 2px;
+}
+
+.bar {
+  height: 12px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border);
+}
+
+.tick {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 1px;
+  background: var(--fg-muted);
+}
+
+.scale {
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  color: var(--fg-muted);
+  font-variant-numeric: tabular-nums;
+  min-height: 1.2em;
+}
+
+.mid {
+  position: absolute;
+  transform: translateX(-50%);
+}
+
+.missing {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-size: 0.75rem;
+  color: var(--fg-muted);
+}
+
+/* Matches the hatched "no data" fill used by PeriodicTable. */
+.swatch {
+  width: 14px;
+  height: 14px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border);
+  background: repeating-linear-gradient(
+    45deg,
+    var(--surface-raised) 0 3px,
+    var(--fg-subtle) 3px 4px
+  );
+}

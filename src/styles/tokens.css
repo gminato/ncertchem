@@ -214,3 +214,37 @@
     --spectrum-track-opacity: 0.3;
   }
 }
+
+/* Periodic table: block and category tints (cells sit on --surface). */
+:root,
+[data-theme="light"] {
+  --block-s: rgba(37, 99, 235, 0.1);
+  --block-p: rgba(201, 139, 0, 0.13);
+  --block-d: rgba(30, 122, 76, 0.1);
+  --block-f: rgba(139, 79, 214, 0.1);
+  --cat-metal: rgba(31, 32, 35, 0.06);
+  --cat-nonmetal: rgba(224, 101, 63, 0.13);
+  --cat-metalloid: rgba(23, 147, 138, 0.14);
+}
+
+[data-theme="dark"] {
+  --block-s: rgba(108, 182, 255, 0.16);
+  --block-p: rgba(227, 179, 65, 0.16);
+  --block-d: rgba(86, 211, 100, 0.14);
+  --block-f: rgba(196, 155, 255, 0.16);
+  --cat-metal: rgba(240, 246, 252, 0.08);
+  --cat-nonmetal: rgba(255, 155, 126, 0.16);
+  --cat-metalloid: rgba(79, 214, 200, 0.16);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --block-s: rgba(108, 182, 255, 0.16);
+    --block-p: rgba(227, 179, 65, 0.16);
+    --block-d: rgba(86, 211, 100, 0.14);
+    --block-f: rgba(196, 155, 255, 0.16);
+    --cat-metal: rgba(240, 246, 252, 0.08);
+    --cat-nonmetal: rgba(255, 155, 126, 0.16);
+    --cat-metalloid: rgba(79, 214, 200, 0.16);
+  }
+}
