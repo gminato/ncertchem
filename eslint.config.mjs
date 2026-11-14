@@ -11,6 +11,7 @@ const config = [
       'dist/**',
       'playwright-report/**',
       'test-results/**',
+      '.claude/**',
     ],
   },
 ]
