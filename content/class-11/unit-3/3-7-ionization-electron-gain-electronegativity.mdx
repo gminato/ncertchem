@@ -1,0 +1,110 @@
+---
+class: 11
+unit: 3
+section: "3.7"
+order: 5
+title: "Periodic Trends: Ionization Enthalpy, Electron Gain Enthalpy and Electronegativity"
+summary: "How tightly an atom holds its electrons, how readily it takes one more, and how hard it pulls on a shared pair, and where each property breaks the rule."
+slug: "3-7-ionization-electron-gain-electronegativity"
+ncert: "Class 11, Part I — Unit 3, Section 3.7.1(c)–(e)"
+---
+
+<Hook>
+The chlorine that a water tank uses to kill germs and the sodium in the salt on your thali sit in the same row of the periodic table. One grabs an extra electron eagerly, and the other lets an electron go easily. What decides which way an atom leans?
+</Hook>
+
+## Ionization enthalpy (3.7.1(c))
+
+Ionization enthalpy measures how tightly an atom holds on to its electrons. It is the energy needed to remove an electron from an isolated gaseous atom in its ground state. For the first electron the change is written as
+
+$$\ce{X(g) -> X^+(g) + e^-}$$
+
+and the value, $\Delta_i H$, is given in kJ mol⁻¹. Pulling an electron away from a neutral atom always costs energy, so $\Delta_i H$ is always positive.
+
+Removing a second electron from the ion $\ce{X+}$ costs more, because the ion is positive and holds what is left more firmly. The third is higher again. When a book says "ionization enthalpy" without a qualifier, it means the first.
+
+Plot the first ionization enthalpies against atomic number and two patterns stand out. The peaks are at the noble gases, which have closed shells, and the troughs are at the alkali metals. In between, the value generally rises across a period and falls down a group. Two forces explain this. The nucleus pulls on each electron, and the inner electrons screen some of that pull. The electron that is removed feels an effective nuclear charge, $Z_{\text{eff}}$, that is smaller than the true nuclear charge.
+
+Slater's rules, a textbook estimate that NCERT does not use, put $Z_{\text{eff}}$ for the outer electron of sodium at about 2.2 and for chlorine at about 6.1. Across a period, electrons enter the same shell and screen each other only a little, so $Z_{\text{eff}}$ climbs. Down a group, each new shell adds screening that outweighs the extra charge.
+
+Two dips break the rise in period 2. Both have their origin in the 2p subshell, and the Scrolly below shows them one at a time.
+
+<Scrolly animation="ionization-trends">
+<Step>
+Both period lines draw in from left to right. The upper line runs from lithium to neon, and the lower from sodium to argon. Each rises in general, and each has two dips. The callouts name them: boron and oxygen in period 2, aluminium and sulphur in period 3. The values are PubChem's for every element except sodium, magnesium and silicon, which use the values NCERT prints in Problem 3.6.
+</Step>
+<Step>
+Zoom in on the first dip. Beryllium is $1s^2\,2s^2$, and its outermost electron is a 2s electron. Boron is $1s^2\,2s^2\,2p^1$. The electron that boron loses, the one highlighted, is in 2p. A 2p electron penetrates inwards less than a 2s electron does, so the inner core screens it more. It is held more loosely, and boron has the lower value.
+</Step>
+<Step>
+Now the second dip, between nitrogen and oxygen. Nitrogen has three 2p electrons in three separate orbitals, as Hund's rule requires. Oxygen has four, so one orbital holds a pair, and the two electrons in it repel each other. The paired electron, highlighted, comes off most easily. Oxygen's value is therefore lower than nitrogen's, even though oxygen has the higher nuclear charge.
+</Step>
+<Step>
+Move down group 1 and the screening effect works in one direction. Each step down adds a shell, so the outer electron sits further from the nucleus and has more inner electrons between them. The line falls from lithium to caesium. Hydrogen is left out. It sits in group 1 by its configuration, but it is not an alkali metal, and its value is far higher.
+</Step>
+</Scrolly>
+
+<Check n="ie-n-vs-o" options={["Oxygen, because it has the higher nuclear charge", "Nitrogen, because the paired 2p electrons in oxygen repel each other and one of them is easier to remove", "They are equal, because both are in period 2", "Oxygen, because a p electron is always easier to remove than an s electron"]} answer={1} explanation={<p>Oxygen's fourth 2p electron shares an orbital with another electron, so the repulsion between them lowers the energy needed to remove it. Nitrogen's three 2p electrons are all unpaired, so its first ionization enthalpy is higher. The nuclear charge does not settle the question here.</p>}>
+Which atom has the higher first ionization enthalpy, nitrogen or oxygen, and why?
+</Check>
+
+<Check n="ie-kj" numeric answer={1681} tolerance={1} unit="kJ mol⁻¹" explanation={<p>1 eV per atom is 96.485 kJ mol⁻¹, so 17.423 × 96.485 = 1681.06, which rounds to 1681. PubChem gives the same value, 1681.1 kJ mol⁻¹. The table shows PubChem values in kJ mol⁻¹ so that every period compares on one scale.</p>}>
+PubChem gives the first ionization energy of fluorine as 17.423 eV. Convert it to kJ mol⁻¹, to the nearest whole number, using 1 eV per atom = 96.485 kJ mol⁻¹.
+</Check>
+
+## Electron gain enthalpy (3.7.1(d))
+
+Ionization enthalpy describes losing an electron. Electron gain enthalpy describes taking one. It is the enthalpy change when an electron is added to a neutral gaseous atom to form a negative ion:
+
+$$\ce{X(g) + e^- -> X^-(g)}$$
+
+The symbol is $\Delta_{eg} H$, and the unit is kJ mol⁻¹. NCERT's sign convention is that a negative value means energy is released. Many books define the electron affinity with the opposite sign, so check which convention your book uses before you compare numbers. This Section uses NCERT's.
+
+NCERT's Table 3.7 gives values for the main group elements. Group 1 runs from hydrogen to caesium, and the others are:
+
+- Group 16: O −141, S −200, Se −195, Te −190, Po −174 kJ mol⁻¹.
+- Group 17: F −328, Cl −349, Br −325, I −295, At −270 kJ mol⁻¹.
+- Group 18: He +48, Ne +116, Ar +96, Kr +96, Xe +77, Rn +68 kJ mol⁻¹.
+
+The trend across a period is that the gain becomes more negative, since the atom is smaller and the added electron is pulled in more strongly. Down a group it becomes less negative, because the added electron lands further from the nucleus. The noble gases have positive values, because the added electron must start a new, higher shell, and that is an unstable arrangement.
+
+Two exceptions come from repulsion inside the small second shell. Fluorine's value, −328, is less negative than chlorine's, −349, and oxygen's, −141, is less negative than sulphur's, −200. An electron added to fluorine or oxygen enters the crowded n = 2 shell and meets strong repulsion. An electron added to chlorine or sulphur enters the larger n = 3 shell, where the repulsion is much weaker.
+
+Oxygen's second electron gain enthalpy is positive. The oxide ion $\ce{O-}$ is already negatively charged, so it repels the electron being added, and energy must be supplied to force it in.
+
+<Scrolly animation="energetics-table">
+<Step>
+The whole table now takes the colour of electron gain enthalpy. Each cell lights up as the sweep passes its group, from group 1 on the left to group 18 on the right. Teal cells release energy when they gain an electron, and orange cells absorb it. The values are NCERT's wherever NCERT prints them.
+</Step>
+<Step>
+Four halogens stand out: fluorine, chlorine, bromine and iodine. Their values are −328, −349, −325 and −295 kJ mol⁻¹. Chlorine is the most negative. Fluorine is the smallest halogen, but its extra electron must enter the crowded second shell, and the repulsion there is strong.
+</Step>
+<Step>
+Now the colour is Pauling electronegativity, the ability of an atom in a compound to draw the shared electrons towards itself. Fluorine is the highest at 4.0, which is the value the Pauling scale assigns it. In general the values climb across each period and fall down each group. Caesium, at 0.7, is the lowest value NCERT prints.
+</Step>
+<Step>
+The last view shades each element by category. Metals fill the left and the bottom of the table, where electronegativity is low. Non-metals sit at the upper right, where it is high. Metalloids lie between them, and NCERT's examples are silicon, germanium and arsenic. Electronegativity is therefore inversely related to metallic character.
+</Step>
+</Scrolly>
+
+<Check n="gain-most-negative" options={["Fluorine, because it is the smallest halogen", "Chlorine, because its extra electron enters the larger 3p shell and meets less repulsion", "Bromine, because it is the second-heaviest halogen", "Iodine, because it has the most electrons"]} answer={1} explanation={<p>Chlorine has the most negative value of the four, at −349 kJ mol⁻¹ (NCERT Table 3.7). Fluorine is smaller, but its extra electron enters the second shell, where repulsion is strong, so its value, −328 kJ mol⁻¹, is less negative.</p>}>
+Of fluorine, chlorine, bromine and iodine, which has the most negative electron gain enthalpy?
+</Check>
+
+## Electronegativity (3.7.1(e))
+
+Electronegativity is a qualitative idea. It describes how strongly an atom in a compound pulls on shared electrons, and it cannot be measured directly. Several numerical scales exist. The Pauling scale is the most widely used. In 1922 Linus Pauling arbitrarily assigned fluorine the value 4.0, and the other values are set relative to it.
+
+NCERT's Table 3.8 gives the Pauling values for period 2, from lithium to fluorine, as 1.0, 1.5, 2.0, 2.5, 3.0, 3.5 and 4.0. For period 3, from sodium to chlorine, they are 0.9, 1.2, 1.5, 1.8, 2.1, 2.5 and 3.0. Down group 1 they fall from 1.0 for lithium to 0.7 for caesium, and down group 17 from 4.0 for fluorine to 2.2 for astatine.
+
+The trend follows the atomic radius. Across a period the radius shrinks, and the outer electrons feel a stronger pull, so the electronegativity rises. Down a group the radius grows and the pull weakens, so electronegativity falls. Non-metals are electronegative and tend to gain electrons, and metals are electropositive and tend to lose them. The increase in electronegativity across a period is therefore a move towards non-metallic character, and the decrease down a group is a move towards metallic character.
+
+<Simulation name="trends-explorer" title="Trends Explorer: the whole table at once" />
+
+<KeyIdeas>
+- The first ionization enthalpy, $\Delta_i H$, is the energy to remove one electron from an isolated gaseous atom, in kJ mol⁻¹. It rises across a period and falls down a group.
+- The dips at boron (after beryllium) and oxygen (after nitrogen) come from the 2p subshell: a 2p electron is screened by the 2s pair, and the paired electrons in oxygen's 2p repel each other.
+- Electron gain enthalpy, $\Delta_{eg} H$, is negative when energy is released. It becomes more negative across a period and less negative down a group. Fluorine and oxygen are the exceptions, because their added electron enters the small second shell.
+- Noble gases have positive electron gain enthalpies, because the added electron must enter a new, higher shell.
+- Pauling electronegativity, with fluorine at 4.0, rises across a period and falls down a group. High values go with non-metallic character.
+</KeyIdeas>

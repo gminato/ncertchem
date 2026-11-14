@@ -1,0 +1,76 @@
+/* Stacked layers inside a pinned Scrolly panel. Each layer fades on its own. */
+.stage {
+  position: absolute;
+  inset: 12px;
+}
+
+.layer {
+  position: absolute;
+  inset: 0;
+  transition: none;
+}
+
+.chartTop,
+.chartBottom {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 50%;
+}
+
+.chartTop {
+  top: 0;
+}
+
+.chartBottom {
+  top: 50%;
+}
+
+.layer > svg,
+.chartTop > svg,
+.chartBottom > svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.svg {
+  display: block;
+}
+
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* The periodic table in the EnergeticsTable Scrolly, with its legend and readout. */
+.tableStage {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  width: 100%;
+}
+
+.tableSvg {
+  width: 100%;
+  height: auto;
+}
+
+.legend {
+  width: 100%;
+}
+
+.caption {
+  margin: 0;
+  font-family: var(--font-sans);
+  font-size: 15px;
+  line-height: 1.45;
+  color: var(--fg-muted);
+}
