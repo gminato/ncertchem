@@ -1,4 +1,5 @@
 import type { ComponentType } from 'react'
+import { LimitingReagent } from './sims/LimitingReagent'
 
 export interface SimulationProps {
   /** True when the Learner has asked the OS for reduced motion. Skip tweens and loops when set. */
@@ -11,3 +12,4 @@ export interface SimulationProps {
  * go in the Simulation's controls row through `<SimulationControls>`.
  */
 export const simulations: Record<string, ComponentType<SimulationProps>> = {}
+simulations['limiting-reagent'] = LimitingReagent
