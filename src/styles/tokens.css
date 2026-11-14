@@ -29,6 +29,33 @@
   --sphere-highlight: rgba(255, 255, 255, 0.55);
   --sphere-shadow: rgba(20, 15, 10, 0.45);
 
+  /* Element colours for Atoms (harmonised CPK). Atoms and Molecules read these. */
+  --el-H: #F2F0EC;
+  --el-C: #3D4046;
+  --el-O: #D8473F;
+  --el-N: #3F55B8;
+  --el-Cl: #3E9C5E;
+  --el-Na: #8258C8;
+  --el-S: #E0B02E;
+  --el-Fe: #B65A34;
+  --el-Cu: #C07A3E;
+  --el-other: #A29D94;
+  --atom-rim: rgba(31, 32, 35, 0.28);
+  --bond: #6B6862;
+
+  /* Vessels: glass walls, sheen and liquid */
+  --glass-wall: rgba(31, 32, 35, 0.3);
+  --glass-fill: rgba(255, 255, 255, 0.45);
+  --glass-sheen: rgba(255, 255, 255, 0.95);
+  --liquid: rgba(47, 111, 235, 0.2);
+  --liquid-edge: rgba(47, 111, 235, 0.55);
+
+  /* Check feedback: calm success and gentle caution */
+  --success: #1E7A4C;
+  --success-soft: rgba(30, 122, 76, 0.1);
+  --caution: #8A5A00;
+  --caution-soft: rgba(201, 139, 0, 0.12);
+
   /* Spacing Scale */
   --space-1: 4px;
   --space-2: 8px;
@@ -78,6 +105,30 @@
 
   --sphere-highlight: rgba(255, 255, 255, 0.65);
   --sphere-shadow: rgba(0, 0, 0, 0.65);
+
+  --el-H: #E6EAF0;
+  --el-C: #5A606B;
+  --el-O: #FF6B5E;
+  --el-N: #8D9CFF;
+  --el-Cl: #5BD682;
+  --el-Na: #B596FF;
+  --el-S: #FFD35C;
+  --el-Fe: #E08A5C;
+  --el-Cu: #E9A56B;
+  --el-other: #A8B0BA;
+  --atom-rim: rgba(255, 255, 255, 0.3);
+  --bond: #8B949E;
+
+  --glass-wall: rgba(240, 246, 252, 0.32);
+  --glass-fill: rgba(255, 255, 255, 0.05);
+  --glass-sheen: rgba(255, 255, 255, 0.24);
+  --liquid: rgba(108, 182, 255, 0.4);
+  --liquid-edge: rgba(150, 205, 255, 0.9);
+
+  --success: #56D364;
+  --success-soft: rgba(86, 211, 100, 0.14);
+  --caution: #E3B341;
+  --caution-soft: rgba(227, 179, 65, 0.14);
 }
 
 @media (prefers-color-scheme: dark) {
@@ -105,6 +156,30 @@
 
     --sphere-highlight: rgba(255, 255, 255, 0.65);
     --sphere-shadow: rgba(0, 0, 0, 0.65);
+
+    --el-H: #E6EAF0;
+    --el-C: #5A606B;
+    --el-O: #FF6B5E;
+    --el-N: #8D9CFF;
+    --el-Cl: #5BD682;
+    --el-Na: #B596FF;
+    --el-S: #FFD35C;
+    --el-Fe: #E08A5C;
+    --el-Cu: #E9A56B;
+    --el-other: #A8B0BA;
+    --atom-rim: rgba(255, 255, 255, 0.3);
+    --bond: #8B949E;
+
+    --glass-wall: rgba(240, 246, 252, 0.32);
+    --glass-fill: rgba(255, 255, 255, 0.05);
+    --glass-sheen: rgba(255, 255, 255, 0.24);
+    --liquid: rgba(108, 182, 255, 0.4);
+    --liquid-edge: rgba(150, 205, 255, 0.9);
+
+    --success: #56D364;
+    --success-soft: rgba(86, 211, 100, 0.14);
+    --caution: #E3B341;
+    --caution-soft: rgba(227, 179, 65, 0.14);
   }
 }
 

@@ -51,6 +51,85 @@
   color: var(--fg);
 }
 
+.crumb {
+  color: var(--accent);
+  text-decoration: none;
+}
+
+.crumb:hover {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.crumbSep {
+  margin: 0 var(--space-2);
+  color: var(--fg-subtle);
+}
+
+/* Previous / next Section links, between the prose and the NCERT reference. */
+.pager {
+  max-width: 68ch;
+  margin: var(--space-8) auto 0;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-4);
+}
+
+.pagerLink {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  padding: var(--space-4) var(--space-5);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  text-decoration: none;
+  color: var(--fg);
+  transition: border-color 0.2s var(--ease-out), background-color 0.2s var(--ease-out);
+}
+
+.pagerLink:hover {
+  border-color: var(--accent);
+  background: var(--surface-raised);
+}
+
+.pagerLink:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.pagerNext {
+  text-align: right;
+  align-items: flex-end;
+}
+
+.pagerKicker {
+  font-family: var(--font-sans);
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
+.pagerTitle {
+  font-family: var(--font-serif);
+  font-size: 1.05rem;
+  line-height: 1.35;
+  color: var(--fg);
+}
+
+@media (max-width: 640px) {
+  .pager {
+    grid-template-columns: 1fr;
+  }
+
+  .pagerNext {
+    text-align: left;
+    align-items: flex-start;
+  }
+}
+
 .body {
   font-family: var(--font-serif);
   font-size: 19.5px;

@@ -145,6 +145,17 @@
   margin-top: var(--space-2);
 }
 
+/* Cards that span the whole grid row (or two columns on wide screens). */
+.wide {
+  grid-column: 1 / -1;
+}
+
+@media (min-width: 1000px) {
+  .wideHalf {
+    grid-column: span 2;
+  }
+}
+
 @media (max-width: 640px) {
   .header {
     flex-direction: column;
