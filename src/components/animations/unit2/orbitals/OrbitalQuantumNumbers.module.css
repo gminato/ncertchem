@@ -1,0 +1,73 @@
+/* Scrolly visual for 2.6. Colours come only from tokens, so both themes follow the site. */
+
+.svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  max-height: 100%;
+}
+
+/* Each layer fades in as its Step arrives. Reduced motion is set by the data attribute. */
+.layer {
+  transition: opacity 0.5s var(--ease-out);
+}
+
+[data-reduced-motion='true'] .layer {
+  transition: none;
+}
+
+.slotEmpty {
+  fill: var(--surface);
+  stroke: var(--fg-subtle);
+  stroke-width: 1.2;
+  stroke-dasharray: 4 4;
+}
+
+.slotFilled {
+  fill: var(--accent-soft);
+  stroke: var(--accent);
+  stroke-width: 1.6;
+  transition: fill 0.4s var(--ease-out), stroke 0.4s var(--ease-out);
+}
+
+.shell {
+  fill: none;
+  stroke: var(--border);
+  stroke-width: 1.5;
+}
+
+.shellPicked {
+  fill: var(--accent-soft);
+  stroke: var(--accent);
+  stroke-width: 2.2;
+  transition: fill 0.4s var(--ease-out), stroke 0.4s var(--ease-out);
+}
+
+.row {
+  fill: var(--surface-raised);
+  stroke: var(--border);
+  stroke-width: 1;
+}
+
+.rowPicked {
+  fill: var(--accent-soft);
+  stroke: var(--accent);
+  stroke-width: 1.8;
+  transition: fill 0.4s var(--ease-out), stroke 0.4s var(--ease-out);
+}
+
+.axis {
+  stroke: var(--fg-subtle);
+  stroke-width: 1;
+}
+
+.guide {
+  stroke: var(--accent);
+  stroke-width: 1;
+  stroke-dasharray: 3 4;
+}
+
+.nodeMarker {
+  fill: var(--surface);
+  stroke-width: 2;
+}

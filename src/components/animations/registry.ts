@@ -14,6 +14,7 @@ import { GasLaws } from './unit1/GasLaws'
 import { DaltonPostulates } from './unit1/DaltonPostulates'
 import { IsotopeSeesaw } from './unit1/IsotopeSeesaw'
 import { MolecularMass } from './unit1/MolecularMass'
+import { OrbitalQuantumNumbers } from './unit2/orbitals/OrbitalQuantumNumbers'
 
 /**
  * Animations available to a Scrolly Animation, keyed by the `animation` prop.
@@ -36,6 +37,7 @@ export const animations = {
   'dalton-postulates': DaltonPostulates,
   'isotope-seesaw': IsotopeSeesaw,
   'molecular-mass': MolecularMass,
+  'orbital-quantum-numbers': OrbitalQuantumNumbers,
 } as const
 
 export type AnimationName = keyof typeof animations

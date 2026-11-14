@@ -1,0 +1,229 @@
+/* Orbital explorer. Colours come only from tokens, so both themes follow the site. */
+
+.root {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1.6fr) minmax(220px, 1fr);
+  gap: 0;
+  align-items: stretch;
+}
+
+.stage {
+  position: relative;
+  min-width: 0;
+  background: var(--surface);
+  border-right: 1px solid var(--border);
+}
+
+.readout {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  padding: var(--space-4) var(--space-5);
+  background: var(--surface);
+  min-width: 0;
+}
+
+.eyebrowRow {
+  margin: 0;
+  font-family: var(--font-sans);
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
+.name {
+  margin: 0;
+  font-family: var(--font-serif);
+  font-size: 2.1rem;
+  line-height: 1.1;
+  color: var(--fg);
+}
+
+.nameMain {
+  font-variant-numeric: lining-nums;
+}
+
+.address {
+  margin: 0;
+  font-family: var(--font-sans);
+  font-size: 0.9rem;
+  line-height: 1.5;
+  color: var(--fg-muted);
+}
+
+.nodeList {
+  margin: 0;
+  display: grid;
+  gap: var(--space-2);
+}
+
+.nodeList > div {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-3);
+  padding-bottom: var(--space-2);
+  border-bottom: 1px solid var(--border);
+}
+
+.nodeList dt {
+  font-family: var(--font-sans);
+  font-size: 0.9rem;
+  color: var(--fg-muted);
+}
+
+.nodeList dd {
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: 1.05rem;
+  font-variant-numeric: tabular-nums;
+  color: var(--fg);
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-2);
+}
+
+.formula {
+  font-family: var(--font-sans);
+  font-size: 0.8rem;
+  color: var(--fg-subtle);
+}
+
+.note {
+  margin: 0;
+  font-family: var(--font-sans);
+  font-size: 0.9rem;
+  line-height: 1.5;
+  color: var(--fg-muted);
+}
+
+.number {
+  font-family: var(--font-mono);
+  color: var(--fg);
+  font-variant-numeric: tabular-nums;
+}
+
+.legend {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  font-family: var(--font-sans);
+  font-size: 0.85rem;
+  color: var(--fg-muted);
+  margin-top: auto;
+}
+
+.swatchPos,
+.swatchNeg {
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  margin-left: var(--space-3);
+}
+
+.swatchPos {
+  background: var(--orbital-pos);
+}
+
+.swatchNeg {
+  background: var(--orbital-neg);
+}
+
+/* Controls, rendered into the Simulation's controls row. */
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  min-width: 0;
+}
+
+.fieldLabel {
+  font-family: var(--font-sans);
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--fg-muted);
+}
+
+.choices {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.choice {
+  font-family: var(--font-sans);
+  font-size: 0.9rem;
+  min-width: 2.4rem;
+  padding: 6px 10px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border);
+  background: var(--surface-raised);
+  color: var(--fg);
+  cursor: pointer;
+  transition: background 0.2s var(--ease-out), border-color 0.2s var(--ease-out);
+}
+
+.choice:hover:not(:disabled) {
+  border-color: var(--accent);
+}
+
+.choice[aria-pressed='true'] {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: var(--accent-fg);
+}
+
+.choice:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
+.choice:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.fallbackSvg {
+  width: auto;
+  height: 80%;
+  max-width: 100%;
+}
+
+/* Visually hidden, but read by screen readers. */
+.sr {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+@media (max-width: 760px) {
+  .layout {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .stage {
+    border-right: none;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .readout {
+    padding: var(--space-4);
+  }
+
+  .name {
+    font-size: 1.7rem;
+  }
+}
