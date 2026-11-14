@@ -30,6 +30,9 @@ import { OrbitalQuantumNumbers } from './unit2/orbitals/OrbitalQuantumNumbers'
 import { DeBroglieScale } from './unit2/bohr/DeBroglieScale'
 import { DeBroglieOrbit } from './unit2/bohr/DeBroglieOrbit'
 import { HeisenbergMicroscope } from './unit2/bohr/HeisenbergMicroscope'
+import { MoseleyPlot } from './unit3/modern/MoseleyPlot'
+import { PeriodicLongForm } from './unit3/modern/PeriodicLongForm'
+import { PeriodicBlocks, PeriodicCategories } from './unit3/modern/PeriodicBlocks'
 
 /**
  * Animations available to a Scrolly Animation, keyed by the `animation` prop.
@@ -68,6 +71,10 @@ export const animations = {
   'de-broglie-scale': DeBroglieScale,
   'de-broglie-orbit': DeBroglieOrbit,
   'heisenberg-microscope': HeisenbergMicroscope,
+  'moseley-plot': MoseleyPlot,
+  'periodic-long-form': PeriodicLongForm,
+  'periodic-blocks': PeriodicBlocks,
+  'periodic-categories': PeriodicCategories,
 } as const
 
 export type AnimationName = keyof typeof animations

@@ -1,0 +1,111 @@
+/* Table explorer: the table on the left, the element's reasoning on the right. Tokens only. */
+
+.explorer {
+  width: 100%;
+  font-family: var(--font-sans);
+  color: var(--fg);
+}
+
+.layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(260px, 340px);
+  gap: 24px;
+  align-items: start;
+}
+
+.tableCol {
+  min-width: 0;
+}
+
+.detail {
+  display: grid;
+  gap: 16px;
+  min-width: 0;
+}
+
+.reasons {
+  margin: 0;
+  display: grid;
+  gap: 6px;
+  font-size: 15px;
+  line-height: 1.5;
+}
+
+.reasons dt {
+  font-weight: 600;
+  color: var(--fg);
+  margin-top: 6px;
+}
+
+.reasons dd {
+  margin: 0;
+  color: var(--fg-muted);
+}
+
+.summary {
+  margin: 12px 0 0;
+  font-size: 15px;
+  color: var(--fg);
+}
+
+.legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 18px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-size: 14px;
+  color: var(--fg-muted);
+}
+
+.legend li {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.swatch {
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  border-radius: 3px;
+  border: 1px solid var(--border);
+}
+
+.legendText {
+  margin: 0;
+  font-size: 14px;
+  color: var(--fg-muted);
+  line-height: 1.5;
+}
+
+.orbitals {
+  margin: 0;
+}
+
+.orbitals svg {
+  display: block;
+  width: 100%;
+  max-width: 340px;
+  height: auto;
+}
+
+.orbitals figcaption {
+  margin-top: 6px;
+  font-size: 13px;
+  color: var(--fg-subtle);
+}
+
+.note {
+  margin: 0;
+  font-size: 14px;
+  color: var(--fg-muted);
+  line-height: 1.5;
+}
+
+@media (max-width: 760px) {
+  .layout {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}

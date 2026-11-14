@@ -1,0 +1,125 @@
+/* Unit 3, Section 3.3 to 3.6 Animations. Every colour is a token, so both themes work. */
+
+.svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  font-family: var(--font-sans);
+}
+
+/* SVG text is sized in viewBox units. The Scrolly panel is about 570 px wide for 640 units,
+   so 15 units is about 13 px on screen. */
+.tick {
+  font-size: 15px;
+  fill: var(--fg-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.axisLabel {
+  font-size: 16px;
+  fill: var(--fg);
+}
+
+.axis {
+  stroke: var(--fg-subtle);
+  stroke-width: 1.4;
+}
+
+.grid {
+  stroke: var(--border);
+  stroke-width: 1;
+}
+
+.gridFaint {
+  stroke: var(--border);
+  stroke-width: 1;
+  stroke-dasharray: 2 5;
+  opacity: 0.7;
+}
+
+.fitLine {
+  fill: none;
+  stroke: var(--accent);
+  stroke-width: 3;
+  stroke-linecap: round;
+}
+
+.point {
+  transition: opacity 0.35s ease;
+}
+
+.pointDot {
+  fill: var(--accent-soft);
+  stroke: var(--accent);
+  stroke-width: 2;
+}
+
+.pointLabel {
+  font-size: 14px;
+  fill: var(--fg-muted);
+}
+
+.interceptDot {
+  fill: var(--caution);
+}
+
+.callout {
+  font-size: 15px;
+  fill: var(--caution);
+  font-weight: 600;
+}
+
+.note {
+  font-size: 14px;
+  fill: var(--fg-muted);
+}
+
+/* The periodic table frame: the table, its HTML number labels, and a caption under it. */
+.frame {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  width: 100%;
+  height: 100%;
+  padding: 8px 4px;
+  font-family: var(--font-sans);
+  color: var(--fg);
+}
+
+.tableBox {
+  position: relative;
+  width: 100%;
+}
+
+.groupLabel,
+.periodLabel {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--fg-subtle);
+  pointer-events: none;
+  line-height: 1;
+}
+
+.caption {
+  margin: 0;
+  font-size: 15px;
+  line-height: 1.5;
+  color: var(--fg);
+  min-height: 4.5em;
+}
+
+.zigzag {
+  fill: none;
+  stroke: var(--caution);
+  stroke-width: 5;
+  stroke-linejoin: round;
+  stroke-linecap: round;
+  pointer-events: none;
+}
+
+.zigzag path,
+.zigzag {
+  filter: drop-shadow(0 0 4px var(--caution-soft));
+}

@@ -1,0 +1,165 @@
+/* IUPAC name builder. Tokens only, so light and dark both hold. */
+
+.namer {
+  display: grid;
+  gap: 20px;
+  font-family: var(--font-sans);
+  color: var(--fg);
+}
+
+.presets {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.stage {
+  display: grid;
+  gap: 22px;
+  padding: 8px 4px;
+}
+
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.segment {
+  display: grid;
+  justify-items: center;
+  gap: 6px;
+  padding: 12px 14px;
+  min-width: 96px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--surface-raised);
+  animation: rise 0.45s ease both;
+}
+
+.digit {
+  font-size: 30px;
+  font-weight: 600;
+  line-height: 1;
+  color: var(--accent);
+}
+
+.arrow {
+  font-size: 14px;
+  color: var(--fg-subtle);
+}
+
+.root {
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.abbr {
+  font-size: 15px;
+  color: var(--fg-muted);
+}
+
+.block {
+  display: grid;
+  gap: 6px;
+}
+
+.label {
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: var(--fg-subtle);
+}
+
+.raw {
+  margin: 0;
+  font-size: 26px;
+  font-family: var(--font-mono, ui-monospace, monospace);
+  letter-spacing: 0.02em;
+  word-break: break-all;
+}
+
+/* The elided letter: it is struck through, then fades to muted. */
+.struck {
+  position: relative;
+  color: var(--caution);
+}
+
+.struck::after {
+  content: '';
+  position: absolute;
+  left: -1px;
+  right: -1px;
+  top: 52%;
+  height: 2px;
+  background: var(--caution);
+  transform-origin: left center;
+  animation: strike 0.7s ease-out 0.25s both;
+}
+
+.note {
+  margin: 0;
+  font-size: 15px;
+  color: var(--fg-muted);
+  line-height: 1.5;
+}
+
+.letter {
+  font-family: var(--font-mono, ui-monospace, monospace);
+}
+
+.result {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 28px;
+}
+
+.name {
+  margin: 4px 0 0;
+  font-size: 30px;
+  font-weight: 600;
+  color: var(--fg);
+}
+
+.symbol {
+  margin: 4px 0 0;
+  font-size: 30px;
+  font-weight: 600;
+  color: var(--accent);
+}
+
+.summary {
+  margin: 0;
+  font-size: 15px;
+  color: var(--fg-muted);
+}
+
+@keyframes strike {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .segment,
+  .struck::after {
+    animation: none;
+  }
+  .struck::after {
+    transform: scaleX(1);
+  }
+}
