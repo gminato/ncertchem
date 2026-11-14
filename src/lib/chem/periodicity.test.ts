@@ -173,3 +173,11 @@ describe('oxideNature (NCERT section 3.7.3)', () => {
     expect(() => oxideNature('Xe2O')).toThrow(RangeError)
   })
 })
+
+describe('iupacName elision of enn before nil', () => {
+  it('drops one n: 190 is unennilium and 900 is ennilnilium', () => {
+    expect(iupacName(190)).toBe('unennilium')
+    expect(iupacName(900)).toBe('ennilnilium')
+    expect(iupacName(199)).toBe('unennennium')
+  })
+})

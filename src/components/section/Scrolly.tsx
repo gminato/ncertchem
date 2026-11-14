@@ -20,7 +20,17 @@ const NARROW_LINE = 0.6
 export interface ScrollyProps {
   animation: AnimationName
   children?: ReactNode
+  /**
+   * 'side' (default): the visual is pinned beside the Steps on desktop.
+   * 'wide': the visual is pinned full-width across the top and the Steps scroll
+   * beneath it at every width. Use it for wide visuals such as the full
+   * periodic table, which would be illegible in the side column.
+   */
+  layout?: 'side' | 'wide'
 }
+
+/** Viewport fraction where a Step counts as reached in the 'wide' layout (below a ~60vh visual). */
+const WIDE_LINE = 0.78
 
 /**
  * A Scrolly Animation: Steps of Prose on one side, a pinned Animation on the other.
@@ -28,7 +38,8 @@ export interface ScrollyProps {
  * receives as its `step` prop. Desktop pins the visual beside the text; narrow
  * screens pin it to the top and let the text scroll underneath.
  */
-export function Scrolly({ animation, children }: ScrollyProps) {
+export function Scrolly({ animation, children, layout = 'side' }: ScrollyProps) {
+  const wide = layout === 'wide'
   const rootRef = useRef<HTMLDivElement>(null)
   const [step, setStep] = useState(0)
   const reducedMotion = usePrefersReducedMotion()
@@ -48,7 +59,7 @@ export function Scrolly({ animation, children }: ScrollyProps) {
       // active Step is the last one whose top has reached the trigger line.
       const narrowQuery = window.matchMedia(NARROW_QUERY)
       const syncActive = () => {
-        const line = window.innerHeight * (narrowQuery.matches ? NARROW_LINE : DESKTOP_LINE)
+        const line = window.innerHeight * (wide ? WIDE_LINE : narrowQuery.matches ? NARROW_LINE : DESKTOP_LINE)
         let active = 0
         steps.forEach((el, index) => {
           if (el.getBoundingClientRect().top <= line) active = index
@@ -71,16 +82,25 @@ export function Scrolly({ animation, children }: ScrollyProps) {
           })
         )
 
-      mm.add(DESKTOP_QUERY, () => {
-        const triggers = configure('top center', 'bottom center')
-        return () => triggers.forEach((t) => t.kill())
-      })
-      mm.add(NARROW_QUERY, () => {
-        // Narrow screens: the visual covers the top of the viewport, so a Step
-        // becomes active once it has risen into the lower part of the view.
-        const triggers = configure('top 60%', 'bottom 60%')
-        return () => triggers.forEach((t) => t.kill())
-      })
+      if (wide) {
+        // The visual covers the top ~60% of the view at every width, so a Step
+        // becomes active once it has risen just below it.
+        mm.add('all', () => {
+          const triggers = configure('top 78%', 'bottom 78%')
+          return () => triggers.forEach((t) => t.kill())
+        })
+      } else {
+        mm.add(DESKTOP_QUERY, () => {
+          const triggers = configure('top center', 'bottom center')
+          return () => triggers.forEach((t) => t.kill())
+        })
+        mm.add(NARROW_QUERY, () => {
+          // Narrow screens: the visual covers the top of the viewport, so a Step
+          // becomes active once it has risen into the lower part of the view.
+          const triggers = configure('top 60%', 'bottom 60%')
+          return () => triggers.forEach((t) => t.kill())
+        })
+      }
 
       // Web fonts change the layout after the first measurement; re-measure once
       // they are ready so the Step trigger positions are current.
@@ -94,7 +114,7 @@ export function Scrolly({ animation, children }: ScrollyProps) {
         mm.revert()
       }
     },
-    { scope: rootRef, dependencies: [stepCount] }
+    { scope: rootRef, dependencies: [stepCount, wide] }
   )
 
   return (
@@ -102,6 +122,7 @@ export function Scrolly({ animation, children }: ScrollyProps) {
       ref={rootRef}
       className={styles.scrolly}
       data-animation={animation}
+      data-layout={layout}
       data-reduced-motion={reducedMotion ? 'true' : 'false'}
     >
       <div className={styles.visual}>

@@ -37,8 +37,9 @@ function systematic(Z: number): { name: string; symbol: string } {
   let name = ''
   roots.forEach((r, i) => {
     const next = roots[i + 1]
+    // IUPAC elision: "enn" before "nil" drops one n (enn + nil → ennil).
     if (r.root === 'enn' && next && next.root === 'nil') {
-      name += 'enn'
+      name += 'en'
       return
     }
     name += r.root

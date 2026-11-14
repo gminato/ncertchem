@@ -115,6 +115,60 @@
   }
 }
 
+
+/*
+ * Wide layout: the visual is pinned full-width across the top at every width
+ * (for wide visuals like the full periodic table); the Steps scroll beneath it.
+ */
+.scrolly[data-layout="wide"] {
+  display: block;
+  column-gap: 0;
+}
+
+.scrolly[data-layout="wide"] .visual {
+  position: sticky;
+  top: 0;
+  height: 62vh;
+  padding: var(--space-3) 0;
+  background: var(--bg);
+  z-index: 2;
+  display: flex;
+  justify-content: center;
+}
+
+.scrolly[data-layout="wide"] .visualPanel {
+  width: 100%;
+  max-width: 1040px;
+  height: 100%;
+  max-height: none;
+  aspect-ratio: auto;
+}
+
+.scrolly[data-layout="wide"] .steps {
+  position: relative;
+  z-index: 1;
+  background: var(--bg);
+}
+
+.scrolly[data-layout="wide"] .step {
+  min-height: 55vh;
+  align-items: center;
+  text-align: left;
+  background: var(--bg);
+}
+
+.scrolly[data-layout="wide"] .stepText {
+  max-width: 40rem;
+}
+
+@media (max-width: 959.98px) {
+  .scrolly[data-layout="wide"] .visual {
+    height: 45vh;
+    padding: var(--space-3) var(--space-4);
+    margin: 0 calc(-1 * var(--space-4));
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .step {
     transition: none;
