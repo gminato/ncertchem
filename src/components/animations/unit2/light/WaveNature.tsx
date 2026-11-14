@@ -56,7 +56,7 @@ function FieldLegend({ y }: { y: number }) {
     <g>
       <line x1={70} x2={110} y1={y} y2={y} strokeWidth={2.4} strokeLinecap="round" style={{ stroke: 'var(--accent)' }} />
       <Label x={122} y={y} textAnchor="start" fontSize={16}>
-        <tspan fontStyle="italic">E</tspan> electric field, in phase with <tspan fontStyle="italic">B</tspan>
+        <tspan className="sym">E</tspan> electric field, in phase with <tspan className="sym">B</tspan>
       </Label>
       <line
         x1={70}
@@ -68,7 +68,7 @@ function FieldLegend({ y }: { y: number }) {
         style={{ stroke: 'var(--field-b)' }}
       />
       <Label x={122} y={y + 36} textAnchor="start" fontSize={16}>
-        <tspan fontStyle="italic">B</tspan> magnetic field, at right angles to <tspan fontStyle="italic">E</tspan>
+        <tspan className="sym">B</tspan> magnetic field, at right angles to <tspan className="sym">E</tspan>
       </Label>
     </g>
   )
@@ -110,18 +110,18 @@ export function WaveNature({ step, reducedMotion }: WaveNatureProps) {
         {active === 1 && (
           <g className={enter}>
             <Label x={70} y={116} textAnchor="start" fontSize={16}>
-              <tspan fontStyle="italic">λ</tspan> = 650 nm, <tspan fontStyle="italic">ν</tspan> ={' '}
+              <tspan className="sym">λ</tspan> = 650 nm, <tspan className="sym">ν</tspan> ={' '}
               {formatScientific(wavelengthFacts(650).frequencyHz, 3)} Hz
             </Label>
             <EMWave x={70} y={190} length={500} wavelength={150} amplitude={56} />
             <Label x={70} y={306} textAnchor="start" fontSize={16}>
-              <tspan fontStyle="italic">λ</tspan> = 400 nm, <tspan fontStyle="italic">ν</tspan> ={' '}
+              <tspan className="sym">λ</tspan> = 400 nm, <tspan className="sym">ν</tspan> ={' '}
               {formatScientific(wavelengthFacts(400).frequencyHz, 3)} Hz
             </Label>
             <EMWave x={70} y={380} length={500} wavelength={75} amplitude={56} />
             <Label x={70} y={468} textAnchor="start" fontSize={16}>
-              <tspan fontStyle="italic">c</tspan> = <tspan fontStyle="italic">ν</tspan>{' '}
-              <tspan fontStyle="italic">λ</tspan> = {formatScientific(SPEED_OF_LIGHT, 3)} m s⁻¹ for both
+              <tspan className="sym">c</tspan> = <tspan className="sym">ν</tspan>{' '}
+              <tspan className="sym">λ</tspan> = {formatScientific(SPEED_OF_LIGHT, 3)} m s⁻¹ for both
             </Label>
             <Label x={70} y={500} textAnchor="start" fontSize={15}>
               Not to scale: the drawn wavelengths are in a 2 : 1 ratio.
@@ -199,7 +199,7 @@ export function WaveNature({ step, reducedMotion }: WaveNatureProps) {
               )
             })}
             <Label x={320} y={440} fontSize={16}>
-              Wavelength <tspan fontStyle="italic">λ</tspan>, on a log scale. Visible light is boxed.
+              Wavelength <tspan className="sym">λ</tspan>, on a log scale. Visible light is boxed.
             </Label>
             <Label x={320} y={470} fontSize={16}>
               Every region is the same kind of wave, travelling at the same speed.
@@ -236,7 +236,7 @@ export function WaveNature({ step, reducedMotion }: WaveNatureProps) {
               className={styles.guide}
             />
             <Label x={320} y={372} fontSize={18}>
-              At 500 nm, the wavenumber <tspan fontStyle="italic">1/λ</tspan> ={' '}
+              At 500 nm, the wavenumber 1/<tspan className="sym">λ</tspan> ={' '}
               {formatScientific(wavelengthFacts(500).wavenumberPerCm, 3)} cm⁻¹
             </Label>
             <Label x={320} y={416} fontSize={16}>

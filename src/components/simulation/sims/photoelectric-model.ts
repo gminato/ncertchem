@@ -85,7 +85,7 @@ export function visualElectronSpeed(keEv: number): number {
 }
 
 /** Photons arriving per second at full intensity (on screen). */
-export const PHOTONS_PER_SECOND_AT_FULL = 12
+export const PHOTONS_PER_SECOND_AT_FULL = 4
 
 /**
  * Photons arriving per second at the plate, for the animation. Proportional to

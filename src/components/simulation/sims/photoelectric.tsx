@@ -32,7 +32,7 @@ const STAGE_H = 290
 const TUBE = { left: 150, top: 88, width: 410, height: 156 }
 const LAMP = { x: 34, y: 124, width: 70, height: 96 }
 const BEAM_Y = STAGE_GEOMETRY.beamY
-const PHOTON_TAIL = 92
+const PHOTON_TAIL = 34
 
 /** KE-versus-ν plot: frequency from 0 to 3 × 10¹⁵ Hz, KE from 0 to 12 eV. */
 const PLOT = { w: 360, h: 240, left: 56, right: 340, top: 18, bottom: 190 }
@@ -100,7 +100,7 @@ function KePlot({ readout }: { readout: BeamReadout }) {
         </g>
       ))}
       <Label x={(PLOT.left + PLOT.right) / 2} y={PLOT.bottom + 36} fontSize={14}>
-        <tspan fontStyle="italic">ν</tspan> / 10¹⁵ Hz
+        <tspan className="sym">ν</tspan> / 10¹⁵ Hz
       </Label>
       <Label
         x={14}
@@ -113,7 +113,7 @@ function KePlot({ readout }: { readout: BeamReadout }) {
 
       <line x1={x0} x2={x0} y1={PLOT.top} y2={PLOT.bottom} className={styles.guide} />
       <Label x={x0 + 6} y={PLOT.top + 10} textAnchor="start" fontSize={13} fill="var(--fg-muted)">
-        <tspan fontStyle="italic">ν</tspan>₀
+        <tspan className="sym">ν</tspan>₀
       </Label>
 
       <path
@@ -132,7 +132,7 @@ function KePlot({ readout }: { readout: BeamReadout }) {
         {readout.emitted ? `${ke.toFixed(2)} eV` : 'no emission'}
       </Label>
       <Label x={PLOT.right - 6} y={PLOT.bottom - 22} textAnchor="end" fontSize={13} fill="var(--fg-muted)">
-        slope <tspan fontStyle="italic">h</tspan>/<tspan fontStyle="italic">e</tspan>
+        slope <tspan className="sym">h</tspan>/<tspan className="sym">e</tspan>
       </Label>
     </svg>
   )
@@ -284,25 +284,25 @@ export function Photoelectric({ reducedMotion }: SimulationProps) {
       <div className={styles.lower}>
         <dl className={styles.readout} data-testid="photo-readout">
           <dt>
-            <span style={{ fontStyle: 'italic' }}>ν</span> (frequency)
+            <span className="sym">ν</span> (frequency)
           </dt>
           <dd>{formatScientific(readout.frequencyHz, 3)} Hz</dd>
           <dt>
-            photon energy <span style={{ fontStyle: 'italic' }}>hν</span>
+            photon energy <span className="sym">hν</span>
           </dt>
           <dd>{readout.photonEv.toFixed(2)} eV</dd>
           <dt>
-            work function <span style={{ fontStyle: 'italic' }}>W</span>₀ ({readout.metal})
+            work function <span className="sym">W</span>₀ ({readout.metal})
           </dt>
           <dd>{readout.workFunctionEv.toFixed(2)} eV</dd>
           <dt>KE of electron (max)</dt>
           <dd>{readout.emitted ? `${readout.keEv.toFixed(2)} eV` : '0 eV (none ejected)'}</dd>
           <dt>
-            <span style={{ fontStyle: 'italic' }}>v</span>max (speed)
+            <span className="sym">v</span>max (speed)
           </dt>
           <dd>{readout.emitted ? `${formatScientific(readout.maxSpeedMs, 2)} m s⁻¹` : '—'}</dd>
           <dt>
-            threshold <span style={{ fontStyle: 'italic' }}>ν</span>₀
+            threshold <span className="sym">ν</span>₀
           </dt>
           <dd>
             {formatScientific(readout.thresholdHz, 3)} Hz, {readout.thresholdNm.toFixed(0)} nm
