@@ -1,0 +1,81 @@
+---
+class: 11
+unit: 2
+section: "2.6"
+order: 6
+title: "Quantum Mechanical Model of Atom: Orbitals and Quantum Numbers"
+summary: "An orbital is a wave function with three integer labels, and the labels fix its shape, its size and its energy."
+slug: "2-6-quantum-mechanical-model-orbitals"
+ncert: "Class 11, Part I — Unit 2, Sections 2.6.1–2.6.3"
+---
+
+<Hook>
+A neon sign glows red-orange and a sodium street lamp glows yellow, and every element has its own pattern of lines. Bohr's orbits explained the lines of hydrogen, but the same picture fails for atoms with more than one electron. So what replaces a fixed circular path for each electron?
+</Hook>
+
+Classical mechanics describes falling stones and orbiting planets well, but it cannot describe electrons in atoms. Electrons behave partly like waves, and their position cannot be known together with their velocity. Quantum mechanics takes both facts into account. In 1926 Erwin Schrödinger proposed an equation for the energy of a system of particles, and solving it gives the allowed energies and a **wave function**, written $\psi$, for each allowed state.
+
+The wave function itself has no direct physical meaning. Its square, $\psi^2$, does. Max Born's interpretation is that $\psi^2$ at a point is the **probability density** there: the probability of finding the electron in a small volume is $\psi^2$ times that volume. So quantum mechanics does not give a path for the electron. It gives the region where the electron is most likely to be found.
+
+Four features of this model matter for everything that follows. The energy of an electron in an atom takes only certain values. Each allowed wave function describes an **atomic orbital**, and each orbital holds one definite energy. The probability of finding the electron is given by $\psi^2$, not by a path. And the Schrödinger equation can be solved exactly only for hydrogen and other one-electron species. For larger atoms, approximate methods are used, and they show that orbitals in other atoms look much like hydrogen's, but are somewhat contracted by the larger nuclear charge.
+
+<Scrolly animation="orbital-quantum-numbers">
+<Step>
+An orbital is labelled by three integers. Read them as an address. The first, the **principal quantum number** $n$, can be $1, 2, 3, \dots$ and picks the **shell**. Here $n = 3$, which is shell M. Its value sets the size of the orbital and, for hydrogen, its energy. Shell $n$ holds $n^2$ orbitals.
+</Step>
+<Step>
+The second label, the **azimuthal quantum number** $\ell$, picks the **subshell** within the shell. It takes whole values from $0$ up to $n - 1$, so shell 3 has three subshells: $3s$ ($\ell = 0$), $3p$ ($\ell = 1$) and $3d$ ($\ell = 2$). Choosing $\ell = 1$ selects $3p$. The value of $\ell$ also gives the three-dimensional shape of the orbitals.
+</Step>
+<Step>
+The third label, the **magnetic quantum number** $m_\ell$, picks one orbital from the subshell. For a given $\ell$ it runs from $-\ell$ to $+\ell$, giving $2\ell + 1$ values. A $p$ subshell has three orbitals, for $m_\ell = -1, 0, +1$, and their lobes lie along the $x$, $y$ and $z$ axes. All orbitals of one subshell share an energy in hydrogen.
+</Step>
+<Step>
+The last label, the **spin quantum number** $m_s$, is $+\tfrac{1}{2}$ or $-\tfrac{1}{2}$. The two values are the two spin states, drawn as up and down arrows. An orbital holds at most two electrons, and only when their spins are opposite. Four numbers, $n$, $\ell$, $m_\ell$ and $m_s$, give the full address of one electron.
+</Step>
+<Step>
+The orbital also has a radial story. Plot $r^2R^2$ against the distance $r$ from the nucleus, and you get the probability of finding the electron in a thin shell at that distance. The $1s$ curve peaks at $r = 52.9\ \text{pm}$, the Bohr radius. Each extra shell adds **radial nodes**, distances where the probability falls to zero. The $2s$ orbital has one, near $106\ \text{pm}$, and $3p$ has one, near $317\ \text{pm}$.
+</Step>
+<Step>
+In hydrogen, every orbital of one shell has the same energy, so $2s$ and $2p$ are **degenerate**. In a many-electron atom, inner electrons partly shield the outer ones from the nucleus, so the energy depends on $\ell$ as well as $n$. A simple guide, the $(n + \ell)$ rule, gives the filling order: $4s$ fills before $3d$, even though $3d$ has the smaller $n$.
+</Step>
+</Scrolly>
+
+### Orbitals and quantum numbers (Section 2.6.1)
+
+An atom has many orbitals. They can be told apart by their size, shape and orientation, and these three properties are encoded in the quantum numbers $n$, $\ell$ and $m_\ell$. Together with $m_s$, they describe each electron completely.
+
+The number of orbitals is set by the numbers already introduced. A subshell with azimuthal number $\ell$ has $2\ell + 1$ orbitals, so an $s$ subshell has one, a $p$ subshell has three, a $d$ subshell has five and an $f$ subshell has seven. The subshells of shell $n$ have $\ell = 0$ up to $\ell = n - 1$, which adds up to $n^2$ orbitals. Since each orbital holds two electrons, shell $n$ can hold $2n^2$ electrons. For $n = 3$, that is $18$.
+
+<Check n={1} question="How many orbitals does a 4f subshell contain?" options={["3", "5", "7", "14"]} answer={2} explanation="The f subshell has ℓ = 3, so it has 2ℓ + 1 = 7 orbitals, one for each m_ℓ from −3 to +3. The 14 is the number of electrons it can hold, two per orbital." />
+
+### The shapes of atomic orbitals (Section 2.6.2)
+
+The orbital wave function is a mathematical function of position, but the plots of ψ and ψ² against distance differ from one orbital to another. For an $s$ orbital, the probability density falls steadily away from the nucleus in $1s$. In $2s$ it first falls to zero, rises to a small maximum, and then falls away again. The point where the density is zero is a **nodal surface**, or node. The number of radial nodes in an $ns$ orbital is $n - 1$.
+
+A **boundary surface** draws the surface on which $\psi^2$ is constant, chosen so that it encloses about 90% of the probability. The boundary of an $s$ orbital is a sphere centred on the nucleus. A boundary surface cannot enclose 100%, because $\psi^2$ never becomes exactly zero at a finite distance.
+
+The three $p$ orbitals each have two lobes, one on either side of a plane through the nucleus. The density is zero on that plane, which is an **angular node**. The $p_z$ orbital has its nodal plane in the $xy$-plane. The five $d$ orbitals are $d_{xy}$, $d_{yz}$, $d_{xz}$, $d_{x^2-y^2}$ and $d_{z^2}$. The first four have similar four-lobed shapes. $d_{z^2}$ is different, with two lobes along the $z$-axis and a ring around the middle. Shells with $n = 3$ and above have all of them.
+
+The number of radial nodes is $n - \ell - 1$, and the number of angular nodes is $\ell$. Their sum is $n - 1$.
+
+<Simulation name="orbital-explorer" title="Orbital explorer: boundary surfaces, nodes and probability clouds" />
+
+<Check n={2} question="How many radial nodes does a 3s orbital have?" numeric answer={2} tolerance={0} explanation="Radial nodes are n − ℓ − 1 = 3 − 0 − 1 = 2. The two nodes sit at about 1.9 a₀ and 7.1 a₀, so the probability is zero at both distances, with non-zero regions in between and beyond." />
+
+### Energies of orbitals (Section 2.6.3)
+
+In a hydrogen atom the energy depends only on the principal quantum number $n$. The energy levels rise as $1s < 2s = 2p < 3s = 3p = 3d < 4s = 4p = 4d = 4f$, so orbitals with the same $n$ are degenerate. The $1s$ orbital is the ground state, and any electron in $2s$, $2p$ or higher is excited.
+
+In a multi-electron atom the energy depends on $n$ and $\ell$. Within a shell, the energy increases from $s$ to $p$ to $d$ to $f$. The reason is shielding: the electrons in inner shells repel the outer electrons and reduce the attraction the nucleus exerts on them. The effective nuclear charge, $Z_\text{eff}\,e$, is the net positive charge that an outer electron experiences. An $s$ electron spends more time close to the nucleus than a $p$ electron does, so it is held more tightly and has a lower energy. For the same reason, the $(n + \ell)$ rule orders the subshells: the lower the value of $n + \ell$, the lower the energy, and for equal $n + \ell$ the smaller $n$ comes first. The rule explains why $4s$ fills before $3d$.
+
+<Check n={3} question="In a hydrogen atom, which pair of orbitals has the same energy?" options={["2s and 2p", "2s and 3s", "3p and 4s"]} answer={0} explanation="In hydrogen the energy depends only on n, so all orbitals of one shell are degenerate. 2s and 2p both have n = 2. In a many-electron atom, 2s and 2p would no longer be equal." />
+
+<Check n={4} question="What is the maximum number of electrons in shell n = 3?" numeric answer={18} tolerance={0} explanation="Shell n holds 2n² electrons: 2 × 3² = 18. This comes from 9 orbitals with two electrons each." />
+
+<KeyIdeas>
+- An atomic orbital is a one-electron wave function $\psi$. Its square $\psi^2$ is the probability density, and a boundary surface encloses about 90% of the probability.
+- Three quantum numbers, $n$, $\ell$ and $m_\ell$, fix an orbital's size, shape and orientation. The spin quantum number $m_s = \pm\tfrac{1}{2}$ fixes the electron's spin, and each orbital holds two electrons with opposite spins.
+- Shell $n$ has $n^2$ orbitals and holds $2n^2$ electrons. A subshell with azimuthal number $\ell$ has $2\ell + 1$ orbitals.
+- The number of radial nodes is $n - \ell - 1$, the number of angular nodes is $\ell$, and the total number of nodes is $n - 1$.
+- In hydrogen the energy depends only on $n$, so subshells of one shell are degenerate. In many-electron atoms it depends on $n$ and $\ell$, and the $(n + \ell)$ rule gives the filling order.
+</KeyIdeas>

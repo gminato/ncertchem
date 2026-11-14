@@ -4,6 +4,7 @@ import { SigFigRuler } from './sims/sigfig-ruler'
 import { StatesOfMatter } from './sims/StatesOfMatter'
 import { LimitingReagent } from './sims/LimitingReagent'
 import { Photoelectric } from './sims/photoelectric'
+import { OrbitalExplorer } from './sims/orbital-explorer'
 
 export interface SimulationProps {
   /** True when the Learner has asked the OS for reduced motion. Skip tweens and loops when set. */
@@ -21,4 +22,5 @@ export const simulations: Record<string, ComponentType<SimulationProps>> = {
   'mole-bridge': MoleBridge,
   'limiting-reagent': LimitingReagent,
   photoelectric: Photoelectric,
+  'orbital-explorer': OrbitalExplorer,
 }

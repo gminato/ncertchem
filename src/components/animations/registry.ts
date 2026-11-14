@@ -26,6 +26,7 @@ import { ParticleTable } from './unit2/subatomic/ParticleTable'
 import { RutherfordScattering } from './unit2/atomic/RutherfordScattering'
 import { IsotopeNuclei } from './unit2/atomic/IsotopeNuclei'
 import { OrbitCollapse } from './unit2/atomic/OrbitCollapse'
+import { OrbitalQuantumNumbers } from './unit2/orbitals/OrbitalQuantumNumbers'
 
 /**
  * Animations available to a Scrolly Animation, keyed by the `animation` prop.
@@ -60,6 +61,7 @@ export const animations = {
   'atomic-rutherford': RutherfordScattering,
   'atomic-isotopes': IsotopeNuclei,
   'atomic-collapse': OrbitCollapse,
+  'orbital-quantum-numbers': OrbitalQuantumNumbers,
 } as const
 
 export type AnimationName = keyof typeof animations
