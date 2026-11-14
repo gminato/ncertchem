@@ -1,0 +1,113 @@
+---
+class: 11
+unit: 2
+section: "2.6"
+order: 7
+title: "Filling Orbitals and Electronic Configuration"
+summary: "Electrons fill the lowest orbitals first, at most two to an orbital, and spread out before they pair. Chromium is the famous exception."
+slug: "2-6-filling-orbitals-electronic-configuration"
+ncert: "Class 11, Part I — Unit 2, Sections 2.6.4–2.6.6"
+---
+
+<Hook>
+Chromium is one of the metals in stainless steel, the alloy that resists rust. Fill its electrons in the simplest order and you would expect $4s^2\,3d^4$. Nature puts one electron in $4s$ and five in $3d$ instead. Which rules does an atom follow, and when does it bend them?
+</Hook>
+
+## Filling the orbitals (2.6.4)
+
+Three ideas decide where each electron of an atom goes: the Aufbau principle, the Pauli exclusion principle and Hund's rule. The first two set the order and the capacity. The third decides how electrons share a subshell.
+
+<Scrolly animation="aufbau-diagonal">
+<Step>
+Electrons do not all share one level. They sit in subshells such as $1s$, $2s$ and $2p$, and each subshell has its own energy. The **Aufbau principle** says that in the ground state the electrons fill the lowest-energy orbitals first. The word comes from German and means "building up". The diagram below sets out every subshell on a grid of $n$ and $l$.
+</Step>
+<Step>
+The order comes from a simple rule. Add $n$ and $l$ for each subshell. A smaller sum means a lower energy. When two sums are equal, the subshell with the smaller $n$ fills first. The arrows join subshells with the same $n + l$, and each arrow runs from its first subshell to its last.
+</Step>
+<Step>
+Watch the counter. Ten electrons fill $1s$, $2s$ and $2p$, which is neon's configuration. At twenty, the $4s$ subshell has its two electrons before $3d$ gets any: $4s$ has $n + l = 4$ and $3d$ has $n + l = 5$. This is why potassium and calcium use $4s$.
+</Step>
+<Step>
+At $Z = 24$ the plain order predicts $4s^2\,3d^4$. The real ground state is $3d^5\,4s^1$, the exception that Section 2.6.6 explains. The energies of $3d$ and $4s$ are close, so a small shift is enough to reach a half-filled $d$ subshell.
+</Step>
+<Step>
+At $Z = 36$, krypton has every subshell up to $4p$ filled: $1s^2\,2s^2\,2p^6\,3s^2\,3p^6\,3d^{10}\,4s^2\,4p^6$. The rest of the grid, from $4d$ upward, is still empty. The arrows give the order, and the counter gives the total. A full outermost shell is why noble gases such as argon are so unreactive, a point Section 2.6.5 returns to.
+</Step>
+</Scrolly>
+
+The **Pauli exclusion principle** sets the capacity. No two electrons in an atom can share all four quantum numbers. In practice an orbital holds at most two electrons, and when it holds two, their spins are opposite. An $s$ subshell takes two electrons, a $p$ subshell six and a $d$ subshell ten. A shell with principal quantum number $n$ holds $2n^2$ electrons in all.
+
+<Check n="4f" numeric answer={14} unit="electrons" explanation={<p>An f subshell has l = 3, so 2l + 1 = 7 orbitals. Each orbital holds two electrons with opposite spins, giving 7 × 2 = 14.</p>}>
+How many electrons can the $4f$ subshell hold?
+</Check>
+
+**Hund's rule of maximum multiplicity** governs the orbitals of one subshell, which all have the same energy. Electrons go into the empty orbitals one at a time, with parallel spins, and pairing only begins once every orbital holds one electron. Pairing therefore starts with the fourth electron in $p$, the sixth in $d$ and the eighth in $f$.
+
+<Scrolly animation="build-up-atoms">
+<Step>
+Each box is an orbital, and an arrow is an electron. Up is spin $+\tfrac{1}{2}$ and down is spin $-\tfrac{1}{2}$. The atoms start empty. Over the next steps we build nitrogen, oxygen and chromium, one electron at a time, using only the rules from this section.
+</Step>
+<Step>
+The first two electrons enter $1s$, and they must have opposite spins, so $1s$ is a full pair. The same happens in $2s$. Four electrons have now filled $1s$ and $2s$, two pairs in all. A third electron cannot join either pair, because the Pauli principle forbids it.
+</Step>
+<Step>
+Nitrogen, $Z = 7$, has three electrons left for $2p$. They go into the three $p$ orbitals, one each, with parallel spins. This is Hund's rule at work: the electrons stay in separate orbitals rather than sharing one. The configuration is $1s^2\,2s^2\,2p^3$, and all three of the $2p$ electrons are unpaired.
+</Step>
+<Step>
+Oxygen, $Z = 8$, has one more electron. Every $2p$ orbital is now singly occupied, so the fourth electron has to pair up with one of them, with the opposite spin. The configuration is $1s^2\,2s^2\,2p^4$, and two of its electrons are unpaired.
+</Step>
+<Step>
+Chromium, $Z = 24$, fills $1s$ to $3p$ as before. The next electron goes into $4s$, and five more go into $3d$, one per orbital, all spin up. The result, $3d^5\,4s^1$, has six unpaired electrons, and its half-filled $d$ subshell is the reason for the exception.
+</Step>
+</Scrolly>
+
+The Scrolly above built three atoms with these rules. Try it yourself. The Check below asks you to fill the orbital diagram of nitrogen. Notice which moves the builder refuses, and which it accepts but marks as wrong.
+
+<ConfigBuilder element="N" />
+
+## The electronic configuration of atoms (2.6.5)
+
+An electronic configuration lists how many electrons each subshell holds. Two notations are common. The first writes the subshell and its count as a superscript, as in $1s^2\,2s^2\,2p^3$. The second draws one box per orbital and an arrow per electron, which also shows every spin. The first notation is quicker, and the second is clearer about Hund's rule.
+
+For a long configuration, the full inner shells are shortened to the noble gas that has the same electrons. Sodium is $[\text{Ne}]\,3s^1$, and potassium is $[\text{Ar}]\,4s^1$. The electrons in a full core are **core electrons**. The electrons in the outermost shell are the **valence electrons**, and they decide most of the chemistry. In sodium, the valence electron is the lone $3s^1$ electron. Oxygen, with $1s^2\,2s^2\,2p^4$, is the next example to try.
+
+<ConfigBuilder element="O" />
+
+Potassium and calcium put their extra electrons in $4s$, because that orbital is lower in energy than $3d$. From scandium onward, $3d$ fills before $4p$, and the ten $3d$ electrons of zinc complete the first row of the transition metals. The full list of configurations for $Z = 1$ to $36$ is in NCERT's Table 2.6. Iron, $Z = 26$, is a harder case: it has $3d^6\,4s^2$ and four unpaired electrons. Build it below.
+
+<ConfigBuilder element="Fe" />
+
+## Stability of completely filled and half-filled subshells (2.6.6)
+
+Most atoms follow the rules above exactly. A few do not, because the ground state is the state of lowest total energy, and some configurations are more stable than the rules alone predict. In chromium and copper, the $4s$ and $3d$ subshells are close in energy. An electron moves from $4s$ to $3d$ when the move leaves $3d$ either half-filled or completely filled. Chromium becomes $3d^5\,4s^1$ and copper becomes $3d^{10}\,4s^1$.
+
+Two causes make these subshells stable. First, a half-filled or full subshell is symmetrical, and its electrons shield one another less, so the nucleus pulls on them more strongly. Second, electrons with the same spin in degenerate orbitals can **exchange** their positions. The energy released by these exchanges is the exchange energy, and it is the basis of Hund's rule.
+
+<Scrolly animation="exchange-pairs">
+<Step>
+Five 3d electrons, one in each orbital and all with spin up, make a half-filled $d^5$ subshell. The five 3d orbitals have equal energy, which is what makes them degenerate. Any two of these electrons with the same spin can exchange their positions, and the exchange releases energy, which is called exchange energy. Each pair you see drawn here is one such possible exchange.
+</Step>
+<Step>
+Count the exchanges as pairs of electrons with the same spin. Five electrons give $5 \times 4 / 2 = 10$ pairs, so $d^5$ has ten possible exchanges, the arcs drawn here. NCERT's Figure 2.18 shows the same $d^5$ case. Each arc joins one pair, and the counter rises by one for each arc, so you can watch the total build up to ten.
+</Step>
+<Step>
+Now take one electron away to get $d^4$: four parallel electrons, with the fifth orbital left empty. The same count gives $4 \times 3 / 2 = 6$ pairs. $d^4$ has fewer exchanges than $d^5$, so by this argument it gains less exchange energy and is less stable.
+</Step>
+<Step>
+Put the two side by side. $d^5$ gives ten exchanges and $d^4$ gives six. That extra exchange energy, together with the smaller shielding, is why chromium moves one electron from $4s$ to reach $3d^5$, and copper moves one to reach $3d^{10}$. NCERT also counts $p^3$, $p^6$, $f^7$ and $f^{14}$ among the stable configurations.
+</Step>
+</Scrolly>
+
+Now the stability has a number you can check. A chromium atom in its ground state has $3d^5\,4s^1$. Count its unpaired electrons.
+
+<Check n="cr-unpaired" numeric answer={6} unit="unpaired electrons" explanation={<p>The half-filled 3d subshell has five unpaired electrons, all with parallel spins, and the single 4s electron adds one more. The total is 5 + 1 = 6.</p>}>
+How many unpaired electrons does a chromium atom have in its ground state?
+</Check>
+
+<KeyIdeas>
+- The Aufbau principle fills orbitals in order of increasing energy. The $(n + l)$ rule gives the order: $1s, 2s, 2p, 3s, 3p, 4s, 3d, 4p$ and so on.
+- The Pauli exclusion principle allows at most two electrons per orbital, and they must have opposite spins. A shell $n$ holds $2n^2$ electrons.
+- Hund's rule: in a subshell, each orbital takes one electron with parallel spin before any pairing begins.
+- The rules give the configurations of most atoms, but chromium ($3d^5\,4s^1$) and copper ($3d^{10}\,4s^1$) are exceptions.
+- Half-filled and completely filled subshells are extra stable, because they are symmetrical, shield less and gain more exchange energy.
+</KeyIdeas>

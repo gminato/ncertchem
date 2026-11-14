@@ -1,0 +1,29 @@
+.wrapper {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+/* Rows of the build-up diagram fade in as their subshell starts. */
+.row {
+  transition: opacity 0.35s var(--ease-out);
+}
+
+/* Visually hidden, but announced by screen readers. */
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}

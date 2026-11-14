@@ -7,6 +7,7 @@ import { sections } from '#site/content'
 import { ThemeToggle } from '@/components/ui/ThemeToggle'
 import { Hook, KeyIdeas, Scrolly, Step } from '@/components/section'
 import { Check } from '@/components/check'
+import { ConfigBuilder } from '@/components/check/ConfigBuilder'
 import { Simulation } from '@/components/simulation'
 import { findUnit } from '@/content/units'
 import { parseSegment, prevNext, sectionsForUnit } from '@/lib/unit-nav'
@@ -119,6 +120,7 @@ export default async function SectionPage({
             KeyIdeas,
             Check,
             Simulation,
+            ConfigBuilder,
           } as MdxComponents)}
         </div>
 

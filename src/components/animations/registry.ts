@@ -14,6 +14,9 @@ import { GasLaws } from './unit1/GasLaws'
 import { DaltonPostulates } from './unit1/DaltonPostulates'
 import { IsotopeSeesaw } from './unit1/IsotopeSeesaw'
 import { MolecularMass } from './unit1/MolecularMass'
+import { AufbauDiagonal } from './unit2/filling/AufbauDiagonal'
+import { BuildUpAtoms } from './unit2/filling/BuildUpAtoms'
+import { ExchangeEnergy } from './unit2/filling/ExchangeEnergy'
 
 /**
  * Animations available to a Scrolly Animation, keyed by the `animation` prop.
@@ -36,6 +39,9 @@ export const animations = {
   'dalton-postulates': DaltonPostulates,
   'isotope-seesaw': IsotopeSeesaw,
   'molecular-mass': MolecularMass,
+  'aufbau-diagonal': AufbauDiagonal,
+  'build-up-atoms': BuildUpAtoms,
+  'exchange-pairs': ExchangeEnergy,
 } as const
 
 export type AnimationName = keyof typeof animations
