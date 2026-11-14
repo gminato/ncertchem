@@ -7,6 +7,11 @@ import { EverydayChemistry } from './unit1/EverydayChemistry'
 import { MatterClassification } from './unit1/MatterClassification'
 import { EmpiricalPipeline } from './unit1/EmpiricalPipeline'
 import { MoleScale } from './unit1/MoleScale'
+import { MassBalance } from './unit1/MassBalance'
+import { GasLaws } from './unit1/GasLaws'
+import { DaltonPostulates } from './unit1/DaltonPostulates'
+import { IsotopeSeesaw } from './unit1/IsotopeSeesaw'
+import { MolecularMass } from './unit1/MolecularMass'
 
 /**
  * Animations available to a Scrolly Animation, keyed by the `animation` prop.
@@ -22,6 +27,11 @@ export const animations = {
   'matter-classification': MatterClassification,
   'mole-scale': MoleScale,
   'empirical-pipeline': EmpiricalPipeline,
+  'mass-balance': MassBalance,
+  'gay-lussac-avogadro': GasLaws,
+  'dalton-postulates': DaltonPostulates,
+  'isotope-seesaw': IsotopeSeesaw,
+  'molecular-mass': MolecularMass,
 } as const
 
 export type AnimationName = keyof typeof animations
