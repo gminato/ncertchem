@@ -90,11 +90,19 @@ test.describe('Unit navigation', () => {
   })
 
   test('a Unit with no Sections yet shows a calm empty state', async ({ page }) => {
-    await page.goto('/class-11/unit-3')
+    await page.goto('/class-11/unit-4')
     await expect(page.getByRole('heading', { level: 1 })).toHaveText(
-      'Classification of Elements and Periodicity in Properties'
+      'Chemical Bonding and Molecular Structure'
     )
     await expect(page.getByText('The Sections of this Unit are being written.')).toBeVisible()
+  })
+
+  test('Unit 3 lists its six Sections in order', async ({ page }) => {
+    await page.goto('/class-11/unit-3')
+    const links = page.locator('a[href^="/class-11/unit-3/"]')
+    await expect(links).toHaveCount(6)
+    await expect(links.first()).toHaveAttribute('href', /3-1-classifying-elements-and-genesis$/)
+    await expect(links.last()).toHaveAttribute('href', /3-7-chemical-properties-and-reactivity$/)
   })
 
   test('Unit 1 lists all ten Sections in order', async ({ page }) => {
