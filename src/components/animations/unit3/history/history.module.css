@@ -1,0 +1,168 @@
+/* Shared styles for the Unit 3 history Scrollies. Colours come from the tokens only. */
+
+.svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  overflow: visible;
+  font-family: var(--font-sans);
+}
+
+.partial {
+  display: block;
+  width: 100%;
+  height: auto;
+  font-family: var(--font-sans);
+}
+
+.cellKnown {
+  fill: var(--surface);
+  stroke: var(--border);
+  stroke-width: 1;
+  transition: fill 0.5s var(--ease-out), stroke 0.5s var(--ease-out);
+}
+
+.cellGap {
+  fill: none;
+  stroke: var(--fg-subtle);
+  stroke-width: 1.25;
+  stroke-dasharray: 4 3;
+}
+
+.cellFocus {
+  fill: var(--accent-soft);
+  stroke: var(--accent);
+  stroke-width: 2;
+}
+
+.cellSwap {
+  fill: var(--caution-soft);
+  stroke: var(--caution);
+  stroke-width: 2;
+}
+
+.symbolText {
+  font-family: var(--font-sans);
+  font-size: 14px;
+  font-weight: 600;
+  fill: var(--fg);
+}
+
+.gapMark {
+  font-family: var(--font-sans);
+  font-size: 16px;
+  fill: var(--fg-subtle);
+}
+
+.caption {
+  font-family: var(--font-sans);
+  font-size: 13px;
+  fill: var(--fg-muted);
+}
+
+.note {
+  font-family: var(--font-sans);
+  font-size: 14px;
+  fill: var(--fg-muted);
+}
+
+.noteStrong {
+  font-family: var(--font-sans);
+  font-size: 14px;
+  font-weight: 600;
+  fill: var(--fg);
+}
+
+.axis {
+  stroke: var(--fg-subtle);
+  stroke-width: 1.25;
+}
+
+.tick {
+  font-family: var(--font-sans);
+  font-size: 13px;
+  fill: var(--fg-muted);
+}
+
+.dot {
+  fill: var(--surface);
+  stroke: var(--electron);
+  stroke-width: 2.25;
+  transition: transform 0.7s var(--ease-out), opacity 0.5s var(--ease-out);
+}
+
+.dotMean {
+  fill: var(--accent-soft);
+  stroke: var(--accent);
+  stroke-width: 2;
+  transition: transform 0.7s var(--ease-out), opacity 0.5s var(--ease-out);
+}
+
+.meanMarker {
+  fill: var(--accent);
+}
+
+.dim {
+  opacity: 0.28;
+  transition: opacity 0.5s var(--ease-out);
+}
+
+.lit {
+  opacity: 1;
+  transition: opacity 0.5s var(--ease-out);
+}
+
+.arc {
+  fill: none;
+  stroke: var(--accent);
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-dasharray: 180;
+  transition: stroke-dashoffset 0.8s var(--ease-out), opacity 0.4s var(--ease-out);
+}
+
+.curve {
+  fill: none;
+  stroke: var(--electron);
+  stroke-width: 2.5;
+  stroke-linejoin: round;
+  stroke-linecap: round;
+  transition: d 0.6s var(--ease-out);
+}
+
+.point {
+  fill: var(--surface);
+  stroke: var(--electron);
+  stroke-width: 2;
+  transition: opacity 0.4s var(--ease-out);
+}
+
+.pointAlkali {
+  fill: var(--proton);
+  stroke: var(--surface);
+  stroke-width: 1.5;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cellKnown,
+  .dot,
+  .dotMean,
+  .dim,
+  .lit,
+  .arc,
+  .curve,
+  .point {
+    transition: none;
+  }
+}
+
+:global([data-reduced-motion='true']) .cellKnown,
+:global([data-reduced-motion='true']) .dot,
+:global([data-reduced-motion='true']) .dotMean,
+:global([data-reduced-motion='true']) .dim,
+:global([data-reduced-motion='true']) .lit,
+:global([data-reduced-motion='true']) .arc,
+:global([data-reduced-motion='true']) .curve,
+:global([data-reduced-motion='true']) .point {
+  transition: none;
+}
