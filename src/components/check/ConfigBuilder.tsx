@@ -168,7 +168,13 @@ export function ConfigBuilder({ element, n }: ConfigBuilderProps) {
   const firstViolation = outcome && outcome.kind !== 'correct' ? outcome.violations[0] : null
   const moreViolations = outcome && outcome.kind !== 'correct' ? outcome.violations.length - 1 : 0
 
-  const question = `Build the ground-state orbital diagram of ${info.name} (${info.symbol}, Z = ${Z}). Add electrons to the boxes, then press Check.`
+  const question = (
+    <>
+      {`Build the ground-state orbital diagram of ${info.name} (${info.symbol}, `}
+      <span className="sym">Z</span>
+      {` = ${Z}). Add electrons to the boxes, then press Check.`}
+    </>
+  )
   const explanation = [
     `${info.name} (${info.symbol}) has the ground-state configuration ${ground}.`,
     `It has ${unpairedCount(state)} unpaired electron${unpairedCount(state) === 1 ? '' : 's'}.`,

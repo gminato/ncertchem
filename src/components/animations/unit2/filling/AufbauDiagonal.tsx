@@ -182,7 +182,7 @@ export function AufbauDiagonal({ step, reducedMotion }: AufbauDiagonalProps) {
             fontSize={15}
             fill="var(--fg-subtle)"
           >
-            <tspan fontStyle="italic">n</tspan> = {n}
+            <tspan className="sym">n</tspan> = {n}
           </Label>
         ))}
 
@@ -261,7 +261,7 @@ export function AufbauDiagonal({ step, reducedMotion }: AufbauDiagonalProps) {
 
         {/* Electron counter: a big Z, the element name, and 36 electron places */}
         <Label x={COUNTER_X} y={96} fontSize={14} fill="var(--fg-muted)">
-          atomic number Z
+          atomic number <tspan className="sym">Z</tspan>
         </Label>
         <Label x={COUNTER_X} y={140} fontSize={44} fill="var(--fg)">
           {Z}
