@@ -13,6 +13,7 @@ import {
   PHASE,
   REACTOR,
   REACTION_OPTIONS,
+  REACTOR_MOLECULE_SCALE,
   RESERVOIR,
   SITE,
   buildReactorPlan,
@@ -125,10 +126,10 @@ export function LimitingReagent({ reducedMotion }: SimulationProps) {
         setStatus('done')
       },
     })
-    if (!active) tween.current.pause()
   }
 
   const frames = frameAt(plan, shownT)
+
   const finished = shownStatus === 'done'
   const clipId = `limit-clip-${uid}`
   const limitingFormula = outcome.limiting
@@ -198,22 +199,14 @@ export function LimitingReagent({ reducedMotion }: SimulationProps) {
 
         <g clipPath={`url(#${clipId})`}>
           {frames.map((f) => {
-            const scale = 0.8
+            const scale = REACTOR_MOLECULE_SCALE
             return (
-              <g key={f.id} opacity={f.opacity} data-molecule={f.formula}>
-                {f.glow && (
-                  <circle
-                    cx={f.x}
-                    cy={f.y}
-                    r={30}
-                    strokeWidth={1.5}
-                    style={{
-                      fill: 'var(--caution-soft)',
-                      stroke: 'var(--caution)',
-                      filter: 'drop-shadow(0 0 calc(4px * var(--glow-strength)) var(--caution))',
-                    }}
-                  />
-                )}
+              <g
+                key={f.id}
+                opacity={f.opacity}
+                data-molecule={f.formula}
+                style={f.glow ? { filter: 'drop-shadow(0 0 5px var(--caution))' } : undefined}
+              >
                 <Molecule
                   formula={f.formula}
                   style="ball-and-stick"
@@ -227,9 +220,15 @@ export function LimitingReagent({ reducedMotion }: SimulationProps) {
           })}
         </g>
 
-        {/* Reservoir band labels; the limiting reagent gets a caution tag */}
+        {/* Reservoir band headers: the leftover count (after the run) and the limiting tag */}
         {option.reaction.reactants.map((r, k) => {
           const isLimiting = r.formula === limitingFormula
+          const left = finished ? outcome.remaining[r.formula] ?? 0 : null
+          const parts = [
+            formulaLabel(r.formula),
+            left !== null ? `${left} left` : null,
+            isLimiting ? 'limiting reagent' : null,
+          ].filter(Boolean)
           return (
             <Label
               key={`band-${r.formula}`}
@@ -241,8 +240,7 @@ export function LimitingReagent({ reducedMotion }: SimulationProps) {
               fill={isLimiting ? 'var(--caution)' : 'var(--fg-muted)'}
               data-testid={isLimiting ? 'limiting-label' : undefined}
             >
-              {formulaLabel(r.formula)}
-              {isLimiting ? ' · limiting reagent' : ''}
+              {parts.join(' · ')}
             </Label>
           )
         })}

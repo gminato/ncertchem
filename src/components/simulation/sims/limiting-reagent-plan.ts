@@ -59,17 +59,13 @@ export const MAX_MOLECULES = 12
 export const REACTOR = { width: 600, height: 340 } as const
 
 /** Reservoir (left): one horizontal band per reactant, holding unreacted molecules. */
-export const RESERVOIR = { left: 16, right: 298, bandTop: [18, 176] as const, bandHeight: 146 }
+export const RESERVOIR = { left: 16, right: 298, bandTop: [14, 170] as const, bandHeight: 156 }
+/** Molecule scale in the reactor (the SVG draws ball-and-stick molecules at this scale). */
+export const REACTOR_MOLECULE_SCALE = 0.7
 /** Reaction site (right): a 2 by 3 grid of cells, one cell per whole reaction event. */
 export const SITE = { left: 316, cellWidth: 134, cellHeight: 102, top: 18, cols: 2, rows: 3 }
 export const MAX_EVENTS = SITE.cols * SITE.rows
 
-/** Spacing between molecules in a cell group. */
-const GROUP_SPACING = 34
-const GROUP_SPACING_DENSE = 30
-
-/** Spacing rule for placing molecules in a band: the best of this many candidates is kept. */
-const CANDIDATES = 40
 
 /** Phase boundaries of the reaction, as fractions of the whole run (0 to 1). */
 export const PHASE = {
@@ -129,46 +125,92 @@ interface Point {
   y: number
 }
 
+/** Molecules a reservoir band can hold, and the number of lattice slots in it. */
+export const BAND_SLOTS = 12
+
 /**
- * Places `count` molecules in a rectangle with best-candidate sampling: each new
- * point is the candidate farthest from those already placed. Point k depends only
- * on the seed and on points 0 to k-1, so adding a molecule never moves the others.
+ * Twelve lattice slots in a rectangle: three staggered rows of four. Neighbours in a
+ * row are 58 units apart and those in the next row 48 apart, so at the reactor's
+ * scale no two molecules touch. Packing 12 molecules at random cannot keep that gap.
+ */
+export function latticeSlots(rect: { left: number; right: number; top: number; bottom: number }): Point[] {
+  const cx = (rect.left + rect.right) / 2
+  const cy = (rect.top + rect.bottom) / 2
+  const dx = 58
+  const dy = 38
+  const slots: Point[] = []
+  for (let row = 0; row < 3; row++) {
+    const shift = row % 2 === 0 ? 0 : dx / 2
+    for (let col = 0; col < 4; col++) {
+      slots.push({
+        x: cx + (col - 1.5) * dx + shift - dx / 4,
+        y: cy + (row - 1) * dy,
+      })
+    }
+  }
+  return slots
+}
+
+/**
+ * Places `count` molecules in a band: a seeded shuffle of the lattice slots decides
+ * which slots are filled. Molecule k always takes the same slot, so adding a molecule
+ * never moves the others, and the layout is the same on every render.
+ *
+ * @throws {RangeError} If count is negative or more than BAND_SLOTS
  */
 export function placeInBand(
   seed: number,
   count: number,
   rect: { left: number; right: number; top: number; bottom: number }
 ): Point[] {
-  const rand = seededRandom(seed)
-  const points: Point[] = []
-  for (let i = 0; i < count; i++) {
-    let best: Point | null = null
-    let bestDist = -1
-    for (let c = 0; c < CANDIDATES; c++) {
-      const candidate = {
-        x: rect.left + rand() * (rect.right - rect.left),
-        y: rect.top + rand() * (rect.bottom - rect.top),
-      }
-      let nearest = Infinity
-      for (const p of points) {
-        nearest = Math.min(nearest, Math.hypot(candidate.x - p.x, candidate.y - p.y))
-      }
-      if (nearest > bestDist) {
-        bestDist = nearest
-        best = candidate
-      }
-    }
-    if (best) points.push({ x: round1(best.x), y: round1(best.y) })
+  if (!Number.isInteger(count) || count < 0 || count > BAND_SLOTS) {
+    throw new RangeError(`A band holds 0 to ${BAND_SLOTS} molecules (received ${count})`)
   }
-  return points
+  const slots = latticeSlots(rect)
+  const order = slots.map((_, i) => i)
+  const rand = seededRandom(seed)
+  for (let i = order.length - 1; i > 0; i--) {
+    const j = Math.floor(rand() * (i + 1))
+    ;[order[i], order[j]] = [order[j], order[i]]
+  }
+  return order.slice(0, count).map((i) => ({ x: round1(slots[i].x), y: round1(slots[i].y) }))
 }
 
 const round1 = (v: number) => Math.round(v * 10) / 10
 
-/** Offsets for `n` molecules standing side by side, centred on zero. */
+/**
+ * Fixed slot pattern for `n` molecules in one cell, centred on zero. Centres are
+ * at least 64 units apart across a row or 38 down a column, so the molecules
+ * (about 50 by 20 units at the reactor's scale) keep a visible gap between them.
+ * Every molecule is drawn in its layout orientation; no slot rotates it.
+ */
 export function groupOffsets(n: number): Point[] {
-  const spacing = n > 3 ? GROUP_SPACING_DENSE : GROUP_SPACING
-  return Array.from({ length: n }, (_, j) => ({ x: (j - (n - 1) / 2) * spacing, y: 0 }))
+  const dx = 32
+  const dy = 19
+  switch (n) {
+    case 1:
+      return [{ x: 0, y: 0 }]
+    case 2:
+      return [
+        { x: -dx, y: 0 },
+        { x: dx, y: 0 },
+      ]
+    case 3:
+      return [
+        { x: -dx, y: -dy },
+        { x: dx, y: -dy },
+        { x: 0, y: dy },
+      ]
+    case 4:
+      return [
+        { x: -dx, y: -dy },
+        { x: dx, y: -dy },
+        { x: -dx, y: dy },
+        { x: dx, y: dy },
+      ]
+    default:
+      throw new RangeError(`A cell holds 1 to 4 molecules per side (received ${n})`)
+  }
 }
 
 /** Centre of reaction cell `index` (0 to MAX_EVENTS - 1). */
@@ -215,11 +257,11 @@ export function buildReactorPlan(
   // Reservoir: every reactant molecule gets a resting place in its band.
   const restPoints: Record<string, Point[]> = {}
   reactants.forEach((r, k) => {
-    const top = RESERVOIR.bandTop[k] + 36
-    const bottom = RESERVOIR.bandTop[k] + RESERVOIR.bandHeight - 14
+    const top = RESERVOIR.bandTop[k] + 26
+    const bottom = RESERVOIR.bandTop[k] + RESERVOIR.bandHeight - 8
     restPoints[r.formula] = placeInBand(101 + k * 7919, counts[r.formula] ?? 0, {
-      left: RESERVOIR.left + 22,
-      right: RESERVOIR.right - 14,
+      left: RESERVOIR.left + 16,
+      right: RESERVOIR.right - 16,
       top,
       bottom,
     })

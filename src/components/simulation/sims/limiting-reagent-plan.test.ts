@@ -1,7 +1,11 @@
 import { describe, expect, it } from 'vitest'
+import { MOLECULE_LAYOUTS } from '@/components/vocab/molecules'
+import { atomRadius } from '@/components/vocab/atom'
 import {
   MAX_EVENTS,
+  MAX_MOLECULES,
   REACTION_OPTIONS,
+  REACTOR_MOLECULE_SCALE,
   RESERVOIR,
   SITE,
   buildReactorPlan,
@@ -122,20 +126,64 @@ describe('frameAt', () => {
 
 describe('layout helpers', () => {
   it('places points inside the rectangle and deterministically', () => {
-    const rect = { left: 0, right: 100, top: 0, bottom: 50 }
+    const rect = { left: 0, right: 250, top: 0, bottom: 120 }
     const pts = placeInBand(7, 10, rect)
     expect(pts).toEqual(placeInBand(7, 10, rect))
     for (const p of pts) {
       expect(p.x).toBeGreaterThanOrEqual(0)
-      expect(p.x).toBeLessThanOrEqual(100)
+      expect(p.x).toBeLessThanOrEqual(250)
       expect(p.y).toBeGreaterThanOrEqual(0)
-      expect(p.y).toBeLessThanOrEqual(50)
+      expect(p.y).toBeLessThanOrEqual(120)
     }
   })
 
   it('centres group offsets on zero', () => {
     const offs = groupOffsets(3)
     expect(offs.reduce((s, o) => s + o.x, 0)).toBeCloseTo(0, 9)
+  })
+
+  it('keeps every pair of molecules in a cell clearly apart', () => {
+    // Footprint of a molecule is about 50 by 20 units; a gap needs centres 64 apart in a row or 38 apart in a column.
+    for (const n of [1, 2, 3, 4]) {
+      const pts = groupOffsets(n)
+      for (let i = 0; i < n; i++) {
+        for (let j = i + 1; j < n; j++) {
+          const dx = Math.abs(pts[i].x - pts[j].x)
+          const dy = Math.abs(pts[i].y - pts[j].y)
+          const separated = dx >= 64 || dy >= 38
+          expect(separated, `n=${n} slots ${i},${j}`).toBe(true)
+        }
+      }
+      for (const p of pts) {
+        expect(Math.abs(p.x)).toBeLessThanOrEqual(40)
+        expect(Math.abs(p.y)).toBeLessThanOrEqual(30)
+      }
+    }
+  })
+
+  it('keeps reservoir molecules apart at the 12-molecule maximum', () => {
+    // Footprint radius of a molecule as drawn: its farthest atom from the centre, plus that atom's radius.
+    const radiusOf = (formula: string) => {
+      const layout = MOLECULE_LAYOUTS[formula]
+      const r = Math.max(
+        ...layout.atoms.map((a) => Math.hypot(a.x, a.y) + atomRadius(a.element) * 0.5)
+      )
+      return r * REACTOR_MOLECULE_SCALE
+    }
+    for (const option of REACTION_OPTIONS) {
+      const max = Object.fromEntries(option.reaction.reactants.map((r) => [r.formula, MAX_MOLECULES]))
+      const plan = buildReactorPlan(option, max)
+      for (const formula of option.reaction.reactants.map((r) => r.formula)) {
+        const pts = plan.molecules.filter((m) => m.role === 'reactant' && m.species === formula).map((m) => m.start)
+        for (let i = 0; i < pts.length; i++) {
+          for (let j = i + 1; j < pts.length; j++) {
+            const d = Math.hypot(pts[i].x - pts[j].x, pts[i].y - pts[j].y)
+            const need = 2 * radiusOf(formula) + 4
+            expect(d, `${option.id} ${formula} ${i},${j}`).toBeGreaterThanOrEqual(need)
+          }
+        }
+      }
+    }
   })
 
   it('clamps slider values to whole numbers from 0 to 12', () => {

@@ -112,6 +112,39 @@ for (const scheme of ['light', 'dark'] as const) {
 
       expect(errors).toEqual([])
     })
+
+    test('limiting-reagent Simulation at maximum counts for every reaction', async ({ page }) => {
+      fs.mkdirSync(SCREEN_DIR, { recursive: true })
+      await page.goto(SECTION_URL)
+      await waitForScrolly(page)
+      const sim = page.locator('[data-simulation="limiting-reagent"]')
+      await sim.scrollIntoViewIfNeeded()
+
+      const reactions = [
+        { id: 'h2-o2', label: '2H₂ + O₂ → 2H₂O', sliders: ['H₂ molecules', 'O₂ molecules'] },
+        { id: 'n2-h2', label: 'N₂ + 3H₂ → 2NH₃', sliders: ['N₂ molecules', 'H₂ molecules'] },
+        { id: 'ch4-o2', label: 'CH₄ + 2O₂ → CO₂ + 2H₂O', sliders: ['CH₄ molecules', 'O₂ molecules'] },
+      ]
+      for (const r of reactions) {
+        await sim.getByRole('radio', { name: r.label }).click()
+        for (const name of r.sliders) {
+          // End on a focused range input sets it to its maximum (12).
+          await sim.getByRole('slider', { name }).focus()
+          await page.keyboard.press('End')
+          await expect(sim.getByRole('slider', { name })).toHaveValue('12')
+        }
+        await sim.getByRole('button', { name: 'React' }).click()
+        await expect(sim.getByTestId('limiting-reagent-reactor')).toHaveAttribute('data-status', 'done', {
+          timeout: 8000,
+        })
+        await page.waitForTimeout(300)
+        await sim.getByTestId('limiting-reagent-reactor').screenshot({
+          path: screenPath(`u1-1-10-stoichiometry-sim-max-${r.id}-${scheme}`),
+        })
+        // Reset the Simulation for the next reaction.
+        await sim.getByRole('button', { name: 'Reset' }).click()
+      }
+    })
   })
 }
 
