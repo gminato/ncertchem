@@ -7,13 +7,15 @@ import { StageAxes } from './StageAxes'
 /**
  * Placeholder 3D specimen: a p-type lobe pair. The two translucent ellipsoids
  * take the orbital phase colours (--orbital-pos and --orbital-neg), and a faint
- * disc marks the nodal plane between them. The real orbital meshes come later.
+ * disc marks the nodal plane between them. The group is turned so that the
+ * orbital's z is up, as in the chemistry convention and in the orbital explorer,
+ * and the axis letters are x, y and z with z up. The real orbital meshes come later.
  */
 export function OrbitalLobes3D() {
   const colors = useStageColors()
 
   return (
-    <group>
+    <group rotation={[-Math.PI / 2, 0, 0]}>
       <mesh position={[0, 0, 0.9]} scale={[0.6, 0.6, 0.96]}>
         <sphereGeometry args={[1, 48, 32]} />
         <meshPhysicalMaterial

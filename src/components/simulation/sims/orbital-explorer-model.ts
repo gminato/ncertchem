@@ -12,16 +12,13 @@ import {
   enclosedRadius,
   orbitalValueFn,
   radialExtent,
+  radialNodeRadii,
   sampleOrbitalGrid,
   sampleProbabilityCloud,
   type OrbitalGrid,
 } from '@/lib/chem/orbital-density'
-import {
-  clipTriangles,
-  compactMesh,
-  surfaceNets,
-  type TriangleMesh,
-} from './orbital-explorer-mesh'
+import { analyticNodes, type NodalSurfaces } from './orbital-nodes'
+import { compactMesh, surfaceNets, type TriangleMesh } from './orbital-explorer-mesh'
 
 /** A real orbital: principal quantum number n, azimuthal l, and real magnetic index m. */
 export interface OrbitalChoice {
@@ -34,6 +31,9 @@ export interface OrbitalChoice {
 export const BOUNDARY_FRACTION = 0.9
 /** Boundary surface radius after scaling, in scene units. Keeps the lobes at 60–70% of the stage. */
 export const FIT_RADIUS = 1.5
+
+/** Nodal sheets extend this far past the boundary (as a multiple of FIT_RADIUS), so their edges sit outside the lobes. */
+const NODE_SHEET_REACH = 1.05
 /** Points in the probability cloud. */
 export const CLOUD_POINTS = 12000
 /** Grid points per side for the 3D sampling. */
@@ -113,8 +113,11 @@ export interface OrbitalGeometry {
   positive: TriangleMesh
   /** Lobe where ψ < 0 (the phase colour --orbital-neg). */
   negative: TriangleMesh
-  /** Nodal surface, ψ = 0: nodal planes, cones and radial spheres, trimmed to the lobes. */
-  nodes: TriangleMesh
+  /**
+   * Analytic nodes, ψ = 0: the nodal planes and cones (trimmed discs), the radial spheres at the
+   * node radii, and rim segments that outline the sheets. Exact, so they are smooth.
+   */
+  nodes: NodalSurfaces
   /** Probability cloud, three numbers per point in scene units, with the sign of ψ at each point. */
   cloud: { positions: Float32Array; signs: Int8Array }
   /** Cross-sections for the 2D fallback. Each is size × size, with the density relative to the boundary threshold. */
@@ -196,9 +199,13 @@ export function buildOrbitalGeometry(choice: OrbitalChoice): OrbitalGeometry {
   const positive = surfaceNets({ size: grid.size, origin: volumeOrigin, step: grid.step, values: positiveField }, 0)
   const negative = surfaceNets({ size: grid.size, origin: volumeOrigin, step: grid.step, values: negativeField }, 0)
 
-  // Nodal surface: ψ = 0, trimmed to the boundary radius so nodal planes become discs.
-  const nodesRaw = surfaceNets({ size: grid.size, origin: volumeOrigin, step: grid.step, values: grid.psi }, 0)
-  const nodes = clipTriangles(nodesRaw, (x, y, z) => Math.hypot(x, y, z) <= boundaryRadius * 1.02)
+  // Nodes: exact planes, cones and spheres (see orbital-nodes.ts), in scene units.
+  const nodes = analyticNodes(
+    l,
+    m,
+    FIT_RADIUS * NODE_SHEET_REACH,
+    radialNodeRadii(n, l, radialExtent(n, l) * 1.5).map((r) => r * scale)
+  )
 
   const cloud = sampleProbabilityCloud(grid, CLOUD_POINTS, CLOUD_SEED)
   const cloudPositions = new Float32Array(cloud.positions.length)
@@ -215,7 +222,7 @@ export function buildOrbitalGeometry(choice: OrbitalChoice): OrbitalGeometry {
     extentPm,
     positive: scaleMesh(positive, scale),
     negative: scaleMesh(negative, scale),
-    nodes: scaleMesh(nodes, scale),
+    nodes,
     cloud: { positions: cloudPositions, signs: cloud.signs },
     slices: { size: SLICE_SIZE, half: sliceHalf * scale, xy, xz },
   }

@@ -20,14 +20,21 @@ export interface Stage3DProps {
   fallback: ReactNode
   /** The 3D content: meshes, lights and helpers. Read colours with useStageColors(). */
   children?: ReactNode
-  /** Starting camera position. The orbit target is always the origin. */
+  /**
+   * Starting camera position. The orbit target is always the origin. The default is slightly
+   * elevated, so that a ring reads as a ring, and far enough out that axis letters at the
+   * default StageAxes length stay inside the frame.
+   */
   cameraPosition?: [number, number, number]
-  /** Turn the gentle auto-rotation on. It also stops for reduced motion and after the first drag. */
+  /** Turn the gentle auto-rotation on (opt-in). It also stops for reduced motion and after the first drag. */
   autoRotate?: boolean
   /** Short hint shown in the corner until the visitor first interacts. */
   hint?: ReactNode
   className?: string
 }
+
+/** Default camera: elevated, with all axis letters inside the frame. */
+export const DEFAULT_CAMERA: [number, number, number] = [4.4, 2.4, 5.2]
 
 let webGLCache: boolean | undefined
 
@@ -146,8 +153,8 @@ export function Stage3D({
   label,
   fallback,
   children,
-  cameraPosition = [3.4, 2.4, 6.9],
-  autoRotate = true,
+  cameraPosition = DEFAULT_CAMERA,
+  autoRotate = false,
   hint = 'Drag to rotate, scroll to zoom',
   className,
 }: Stage3DProps) {

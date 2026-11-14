@@ -122,11 +122,34 @@ describe('buildOrbitalGeometry', () => {
     expect(negY.length).toBeGreaterThan(5)
   })
 
-  it('has a nodal surface for 2p_z that lies on the xy-plane', () => {
+  it('has an analytic nodal plane for 2p_z that lies exactly on the xy-plane', () => {
     const g = geom(2, 1, 0)
-    const nodes = usedVertices(g.nodes)
+    const nodes = usedVertices(g.nodes.sheets)
     expect(nodes.length).toBeGreaterThan(20)
-    for (const [, , z] of nodes) expect(Math.abs(z)).toBeLessThan(0.05)
+    for (const [, , z] of nodes) expect(Math.abs(z)).toBeLessThan(1e-6)
+    expect(g.nodes.spheres.indices.length).toBe(0)
+  })
+
+  it('has analytic dz² cones at cos θ = ±1/√3 (θ = 54.74° and 125.26°)', () => {
+    const g = geom(3, 2, 0)
+    const cosines = usedVertices(g.nodes.sheets)
+      .map(([x, y, z]) => ({ r: Math.hypot(x, y, z), z }))
+      .filter(({ r }) => r > 0.2)
+      .map(({ r, z }) => z / r)
+    const target = 1 / Math.sqrt(3)
+    expect(cosines.length).toBeGreaterThan(100)
+    for (const c of cosines) expect(Math.min(Math.abs(c - target), Math.abs(c + target))).toBeLessThan(1e-4)
+    expect(cosines.some((c) => c > 0)).toBe(true)
+    expect(cosines.some((c) => c < 0)).toBe(true)
+  })
+
+  it('has three radial spheres for 4s and the node count from the lib (n − ℓ − 1)', () => {
+    const g = geom(4, 0, 0)
+    // Node radii are scaled into scene units, so the sphere radii are positive and sorted by the lib.
+    const radii = new Set(
+      usedVertices(g.nodes.spheres).map(([x, y, z]) => Math.round(Math.hypot(x, y, z) * 1000) / 1000)
+    )
+    expect(radii.size).toBe(3)
   })
 
   it('has a spherical nodal surface for 2s at r = 2 a₀ (no points of the 2s cloud there)', () => {
@@ -134,7 +157,7 @@ describe('buildOrbitalGeometry', () => {
     // Scale factor: scene units per a₀ = 1.5 / boundary radius, and the radius is extentPm / 52.9.
     const boundaryA0 = g.extentPm / 52.9
     const nodeRadius = (2 * 1.5) / boundaryA0
-    const nodes = usedVertices(g.nodes)
+    const nodes = usedVertices(g.nodes.spheres)
     expect(nodes.length).toBeGreaterThan(50)
     for (const [x, y, z] of nodes) {
       expect(Math.abs(Math.hypot(x, y, z) - nodeRadius)).toBeLessThan(0.05 * nodeRadius)

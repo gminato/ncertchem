@@ -1,7 +1,7 @@
 'use client'
 
-import { useMemo } from 'react'
-import { EnergyLadder, Label, OrbitalBox, VocabDefs } from '@/components/vocab'
+import { useMemo, type ReactNode } from 'react'
+import { EnergyLadder, Label, LabelSub, OrbitalBox, VocabDefs } from '@/components/vocab'
 import {
   RADIAL_CURVES,
   a0ToPm,
@@ -27,6 +27,9 @@ export interface OrbitalQuantumNumbersProps {
 const VIEW_WIDTH = 640
 const VIEW_HEIGHT = 540
 const LABEL_SIZE = 15
+
+/** A quantum number with a true minus sign (U+2212) and an explicit plus sign, as in mℓ = −1. */
+const signedText = (value: number) => (value > 0 ? `+${value}` : value < 0 ? `−${-value}` : '0')
 
 /** Four address slots across the top. */
 const SLOTS = [
@@ -72,11 +75,11 @@ function pathFor(points: { pm: number; density: number }[]): string {
 function AddressLayer({ state }: { state: OrbitalStepState }) {
   const { address } = state
   const picked = [address.n, address.l, address.ml, address.ms]
-  const values = [
-    address.n === null ? '?' : `n = ${address.n}`,
-    address.l === null ? '?' : `ℓ = ${address.l} (${'spdf'[address.l]})`,
-    address.ml === null ? '?' : `mℓ = ${address.ml > 0 ? `+${address.ml}` : address.ml === 0 ? '0' : `−${-address.ml}`}`,
-    address.ms === null ? '?' : `ms = ${address.ms > 0 ? '+½' : '−½'}`,
+  const values: ReactNode[] = [
+    address.n === null ? '?' : <><tspan className="sym">n</tspan> = {address.n}</>,
+    address.l === null ? '?' : <><tspan className="sym">ℓ</tspan> = {address.l} ({'spdf'[address.l]})</>,
+    address.ml === null ? '?' : <><tspan className="sym">m</tspan><LabelSub><tspan className="sym">ℓ</tspan></LabelSub> = {signedText(address.ml)}</>,
+    address.ms === null ? '?' : <><tspan className="sym">m</tspan><LabelSub><tspan className="sym">s</tspan></LabelSub> = {address.ms > 0 ? '+½' : '−½'}</>,
   ]
   const shellName = address.n === null ? null : ['K', 'L', 'M'][address.n - 1]
   const subName = address.l === null ? null : `${address.n ?? 3}${'spdf'[address.l]}`
@@ -183,7 +186,7 @@ function AddressLayer({ state }: { state: OrbitalStepState }) {
                 {name}
               </Label>
               <Label x={ROWS.x + i * 98 + 43} y={390} fontSize={15} fill="var(--fg-subtle)">
-                {`mℓ = ${m > 0 ? `+${m}` : m < 0 ? `−${-m}` : '0'}`}
+                <tspan className="sym">m</tspan><LabelSub><tspan className="sym">ℓ</tspan></LabelSub> = {signedText(m)}
               </Label>
             </g>
           )
@@ -206,7 +209,7 @@ function AddressLayer({ state }: { state: OrbitalStepState }) {
             label={`${subName}${orbitalName ? orbitalName.slice(1) : ''}`}
           />
           <Label x={ROWS.x + 110} y={478} fontSize={LABEL_SIZE} textAnchor="start" fill="var(--fg-muted)">
-            spin up, ms = +½
+            spin up, <tspan className="sym">m</tspan><LabelSub><tspan className="sym">s</tspan></LabelSub> = +½
           </Label>
         </g>
       )}
@@ -252,7 +255,7 @@ function RadialLayer() {
         </g>
       ))}
       <Label x={(PLOT.x0 + PLOT.x1) / 2} y={PLOT.y1 + 44} fontSize={LABEL_SIZE} fill="var(--fg-muted)">
-        distance from the nucleus, r (pm)
+        distance from the nucleus, <tspan className="sym">r</tspan> (pm)
       </Label>
       {[0, 0.2, 0.4, 0.6].map((d) => (
         <g key={d}>
@@ -263,7 +266,7 @@ function RadialLayer() {
         </g>
       ))}
       <Label x={PLOT.x0 - 2} y={PLOT.y0 - 14} fontSize={LABEL_SIZE} textAnchor="start" fill="var(--fg-muted)">
-        r²R² (a₀⁻¹)
+        <tspan className="sym">r</tspan>²<tspan className="sym">R</tspan>² (a₀⁻¹)
       </Label>
 
       {/* 1s peak at the Bohr radius. */}
