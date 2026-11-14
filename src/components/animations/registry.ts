@@ -27,6 +27,9 @@ import { RutherfordScattering } from './unit2/atomic/RutherfordScattering'
 import { IsotopeNuclei } from './unit2/atomic/IsotopeNuclei'
 import { OrbitCollapse } from './unit2/atomic/OrbitCollapse'
 import { OrbitalQuantumNumbers } from './unit2/orbitals/OrbitalQuantumNumbers'
+import { DeBroglieScale } from './unit2/bohr/DeBroglieScale'
+import { DeBroglieOrbit } from './unit2/bohr/DeBroglieOrbit'
+import { HeisenbergMicroscope } from './unit2/bohr/HeisenbergMicroscope'
 
 /**
  * Animations available to a Scrolly Animation, keyed by the `animation` prop.
@@ -62,6 +65,9 @@ export const animations = {
   'atomic-isotopes': IsotopeNuclei,
   'atomic-collapse': OrbitCollapse,
   'orbital-quantum-numbers': OrbitalQuantumNumbers,
+  'de-broglie-scale': DeBroglieScale,
+  'de-broglie-orbit': DeBroglieOrbit,
+  'heisenberg-microscope': HeisenbergMicroscope,
 } as const
 
 export type AnimationName = keyof typeof animations
