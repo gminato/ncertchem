@@ -42,6 +42,7 @@ for (const scheme of ['light', 'dark'] as const) {
       await expect(page.getByRole('heading', { level: 1 })).toHaveText('Importance of Chemistry')
       await expect(page.locator('[data-scrolly-step]')).toHaveCount(4)
       await waitForScrolly(page)
+      await expect(page.locator('.katex-error')).toHaveCount(0)
 
       for (let i = 0; i < 4; i++) {
         await gotoStep(page, i)
@@ -68,6 +69,7 @@ for (const scheme of ['light', 'dark'] as const) {
       await expect(page.getByRole('heading', { level: 1 })).toHaveText('Nature of Matter')
       await expect(page.locator('[data-scrolly-step]')).toHaveCount(6)
       await waitForScrolly(page)
+      await expect(page.locator('.katex-error')).toHaveCount(0)
 
       for (let i = 0; i < 6; i++) {
         await gotoStep(page, i)
