@@ -1,0 +1,117 @@
+---
+class: 11
+unit: 1
+section: "1.4"
+order: 4
+title: "Uncertainty in Measurement"
+summary: "Scientific notation keeps huge numbers manageable, and significant figures record how sure you are of a result."
+slug: "1-4-uncertainty-in-measurement"
+ncert: "Class 11, Part I — Unit 1, Section 1.4"
+---
+
+<Hook>
+A chemist weighs one sample and writes 2.0 g on the label. Another chemist writes 2.00 g for a similar sample. Both are honest. What does the extra zero tell you about the balance and the person reading it?
+</Hook>
+
+Chemistry deals with numbers at two extremes. A mole of hydrogen atoms holds $6.022 \times 10^{23}$ atoms, and a single hydrogen atom weighs about $1.66 \times 10^{-24}$ g. Writing those as plain decimals is error-prone, and calculating with them is worse. You need a notation for the size of a number, and a notation for how sure you are of it.
+
+## Scientific notation
+
+Any number can be written as $N \times 10^{n}$, where $n$ is a whole-number exponent and $N$ is a number from 1 up to, but not including, 10. Moving the decimal point changes the exponent. The number 58 300 becomes $5.83 \times 10^{4}$, because the point moved four places to the left. The number 0.0000375 becomes $3.75 \times 10^{-5}$, because the point moved five places to the right.
+
+Multiplication and division follow the rules of exponents. Multiply the $N$ parts, and add the exponents for a product (or subtract them for a quotient):
+
+$$
+(3.0 \times 10^{5}) \times (2.0 \times 10^{-2}) = 6.0 \times 10^{3}
+$$
+
+Addition and subtraction need the exponents to match first. Only then can the $N$ parts be added or subtracted:
+
+$$
+(4.25 \times 10^{3}) + (7.5 \times 10^{2}) = (4.25 + 0.75) \times 10^{3} = 5.00 \times 10^{3}
+$$
+
+## Significant figures
+
+No measurement is exact. A kitchen scale might show 12 g for an object that an analytical balance weighs at 12.37 g. The digit you can read with confidence is only part of the story. The rest is an estimate. **Significant figures** are the digits you know with certainty, plus one more digit that is estimated or uncertain. If you record 42.6 mL, the 4 and the 2 are certain and the 6 is uncertain, and the uncertainty is taken as ±1 in the last digit.
+
+These rules tell you how many significant figures a number has:
+
+1. Every non-zero digit is significant. The number 472 cm has three, and 0.75 mL has two.
+2. Zeros before the first non-zero digit are not significant, because they only locate the decimal point. The number 0.0340 has three, because the zeros before the 3 do not count.
+3. Zeros between two non-zero digits are significant. The number 4.075 has four.
+4. Zeros at the end of a number count only if the number has a decimal point. The number 100 has one significant figure, 100. has three, and 1.00 × 10² has three.
+
+<Check n={1} options={["2", "3", "4", "5"]} answer={1} explanation="The leading zeros only locate the decimal point. The 5, 2 and the final 0 after the decimal point are significant, which makes three.">
+How many significant figures are in 0.00520?
+</Check>
+
+## Precision and accuracy
+
+Two words are often confused. **Precision** is how close repeated measurements are to each other. **Accuracy** is how close a measurement, or the mean of several, is to the true value. A result can be one, both, or neither. The Scrolly below shows four sets of four readings of a 5.00 g piece of metal, each drawn as darts on a target whose bullseye is the true value.
+
+<Scrolly animation="precision-accuracy">
+<Step>
+**Precise and accurate.** The four readings, 4.99, 5.01, 5.00 and 5.00 g, sit close together and close to the true value. Their range is 0.02 g, and their mean is 5.00 g. Both tests pass, which is the goal of a careful measurement.
+</Step>
+<Step>
+**Precise, not accurate.** These readings agree closely, with a range of 0.02 g. Their mean, 5.43 g, is well away from 5.00 g. Agreement is not correctness. An instrument that has drifted from its calibration can give consistent, wrong readings.
+</Step>
+<Step>
+**Accurate, not precise.** The mean of 4.82, 5.20, 4.96 and 5.02 g is 5.00 g, exactly the true value. The readings still scatter across 0.38 g. Averaging can hide poor precision, so any single reading from this set could be far off.
+</Step>
+<Step>
+**Neither.** The readings 5.70, 4.55, 5.30 and 4.85 g spread across 1.15 g, and their mean is 5.10 g, about 2% high. A result like this is not reliable until the method is improved.
+</Step>
+</Scrolly>
+
+## Rules for calculations
+
+Significant figures do not stop at the reading. The result of a calculation can be no more certain than the data it came from, so it must be reported with the right number of digits.
+
+**For addition and subtraction**, the result keeps the fewest decimal places of any input. Add 4.52, 13.1 and 0.381, and the answer is 18.001. Because 13.1 has only one decimal place, the answer is reported as 18.0.
+
+**For multiplication and division**, the result keeps the fewest significant figures of any input. Multiply 3.45 cm by 2.0 cm and you get 6.90 cm². The input 2.0 has two significant figures, so the answer is 6.9 cm².
+
+**For rounding**, use three rules. If the first digit you remove is more than 5, increase the digit before it by one: 2.386 rounds to 2.39. If the first digit removed is less than 5, leave the digit before it unchanged: 3.862 rounds to 3.86. If the first digit removed is exactly 5, round to the even digit. The digit before a 5 goes up only if it is odd. So 7.35 becomes 7.4, and 7.45 also becomes 7.4.
+
+The simulation below asks you to make the measurement itself, which is where significant figures begin.
+
+<Simulation name="sigfig-ruler" title="Read the scale: certain digits and one estimate" />
+
+<Check n={2} numeric answer={6.4} tolerance={0.05} explanation="4.56 × 1.4 = 6.384. The factor 1.4 has two significant figures, so the answer is rounded to 6.4.">
+Multiply 4.56 by 1.4 and report the result to the correct number of significant figures.
+</Check>
+
+## Dimensional analysis
+
+Calculations often need a change of units. The method for doing this is called **dimensional analysis**, or the factor-label method. It relies on a **unit factor**: a fraction whose numerator and denominator describe the same amount in different units. Since the two are equal, the fraction equals 1, and multiplying by 1 does not change a quantity.
+
+For example, one hour is 60 minutes, so $\dfrac{60\ \text{min}}{1\ \text{h}} = 1$. Multiply by this fraction, and the hours cancel. Units cancel exactly as numbers do, so you can check your working by watching them. The Scrolly below converts 2.5 hours to seconds in two steps.
+
+<Scrolly animation="unit-factors">
+<Step>
+Begin with the given value, **2.5 h**. Keep its unit attached to the number. You are going to multiply it by unit factors until only seconds are left.
+</Step>
+<Step>
+Multiply by $\dfrac{60\ \text{min}}{1\ \text{h}}$, which equals 1. The hours in the top and bottom cancel, leaving $2.5 \times 60 = \mathbf{150\ min}$.
+</Step>
+<Step>
+Multiply by $\dfrac{60\ \text{s}}{1\ \text{min}}$, which also equals 1. The minutes cancel, leaving $150 \times 60 = \mathbf{9000\ s}$. A unit factor only changes the unit, not the duration.
+</Step>
+<Step>
+So **2.5 h = 9000 s**. You can check any conversion this way: if the units that should cancel do not, the fraction is upside down. Set up the factors so the unit you want to lose sits in the denominator.
+</Step>
+</Scrolly>
+
+<Check n={3} numeric answer={5400} tolerance={0} unit="s" explanation="1.5 h × 60 min/h × 60 s/min = 5400 s. The hours and minutes cancel in turn.">
+How many seconds are there in 1.5 hours?
+</Check>
+
+<KeyIdeas>
+- Scientific notation writes a number as $N \times 10^{n}$ with $1 \le N < 10$. Use it for very large or very small values.
+- Significant figures are the certain digits plus one estimated digit. The number 0.0340 has three; 100 has one; 100. has three.
+- Precision is agreement between repeated readings. Accuracy is agreement with the true value. Both are needed for a good result.
+- In addition and subtraction, keep the fewest decimal places. In multiplication and division, keep the fewest significant figures. Round a 5 to the even digit.
+- A unit factor equals 1. Multiply by factors whose units cancel, and check the cancellation before you calculate.
+</KeyIdeas>

@@ -1,5 +1,6 @@
 import { MoleBridge } from './sims/mole-bridge'
 import type { ComponentType } from 'react'
+import { SigFigRuler } from './sims/sigfig-ruler'
 import { StatesOfMatter } from './sims/StatesOfMatter'
 
 export interface SimulationProps {
@@ -13,6 +14,7 @@ export interface SimulationProps {
  * go in the Simulation's controls row through `<SimulationControls>`.
  */
 export const simulations: Record<string, ComponentType<SimulationProps>> = {
+  'sigfig-ruler': SigFigRuler,
   'states-of-matter': StatesOfMatter,
   'mole-bridge': MoleBridge,
 }
