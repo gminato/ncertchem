@@ -159,7 +159,7 @@ export function CathodeRayTube({ step, reducedMotion }: CathodeRayTubeProps) {
             ))
           )}
           <Label x={FIELD_X + FIELD_W / 2} y={80} fontSize={16} textAnchor="middle" fill="var(--field-b)">
-            <tspan fontStyle="italic">B</tspan> into page
+            <tspan className="sym">B</tspan> into page
           </Label>
         </g>
 
@@ -180,7 +180,7 @@ export function CathodeRayTube({ step, reducedMotion }: CathodeRayTubeProps) {
             </g>
           ))}
           <Label x={FIELD_X + FIELD_W / 2} y={PLATE_TOP - 16} fontSize={16} textAnchor="middle" fill="var(--accent)" opacity={fields.fieldE}>
-            <tspan fontStyle="italic">E</tspan>
+            <tspan className="sym">E</tspan>
           </Label>
         </g>
 
@@ -205,16 +205,16 @@ export function CathodeRayTube({ step, reducedMotion }: CathodeRayTubeProps) {
         </Label>
         {activeStep >= 2 && (
           <Label x={VIEW_W / 2} y={456} fontSize={17} textAnchor="middle" fill="var(--fg-muted)">
-            <tspan fontStyle="italic">r</tspan> = <tspan fontStyle="italic">mv</tspan>/(<tspan fontStyle="italic">eB</tspan>) = {RADIUS_CM} cm
+            <tspan className="sym">r</tspan> = <tspan className="sym">mv</tspan>/(<tspan className="sym">eB</tspan>) = {RADIUS_CM} cm
           </Label>
         )}
         {activeStep === 3 && (
           <g>
             <Label x={VIEW_W / 2} y={486} fontSize={17} textAnchor="middle" fill="var(--fg-muted)">
-              <tspan fontStyle="italic">v</tspan> = <tspan fontStyle="italic">E</tspan>/<tspan fontStyle="italic">B</tspan> = {SPEED_LABEL} m s⁻¹
+              <tspan className="sym">v</tspan> = <tspan className="sym">E</tspan>/<tspan className="sym">B</tspan> = {SPEED_LABEL} m s⁻¹
             </Label>
             <Label x={VIEW_W / 2} y={514} fontSize={17} textAnchor="middle" style={{ fontWeight: 600 }} fill="var(--accent)">
-              <tspan fontStyle="italic">e</tspan>/<tspan fontStyle="italic">m</tspan> = {CHARGE_TO_MASS_LABEL} C kg⁻¹
+              <tspan className="sym">e</tspan>/<tspan className="sym">m</tspan> = {CHARGE_TO_MASS_LABEL} C kg⁻¹
             </Label>
           </g>
         )}

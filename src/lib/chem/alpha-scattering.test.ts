@@ -68,3 +68,28 @@ describe('scatterClass', () => {
     expect(scatterClass(120 * DEG)).toBe('bounced')
   })
 })
+
+describe('screen hits for undeflected particles', () => {
+  // Radius 150 in units of b₀: the screen is far from the nucleus, so the outgoing
+  // direction determines where each particle lands.
+  const hitY = (b: number) => {
+    const t = integrateAlpha(b)
+    const path = pathToCircle(t, 150)
+    return path[path.length - 1].y
+  }
+
+  it('lands the final segment along the computed scattering angle', () => {
+    const t = integrateAlpha(60)
+    const path = pathToCircle(t, 150)
+    const a = path[path.length - 2]
+    const z = path[path.length - 1]
+    const dir = Math.atan2(z.y - a.y, z.x - a.x)
+    expect(Math.abs(dir - t.angle)).toBeLessThan(1e-6)
+  })
+
+  it('keeps undeflected particles nearly parallel: hits move with b, not focused', () => {
+    // Spacing of impact parameters is 36; the screen hits should differ by about the same.
+    const spread = hitY(96) - hitY(60)
+    expect(Math.abs(spread - 36)).toBeLessThan(2)
+  })
+})

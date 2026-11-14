@@ -93,7 +93,7 @@ export function ParticleTable({ step }: ParticleTableProps) {
                 data-active={isActive ? 'true' : 'false'}
               >
                 <td>
-                  <span style={{ fontStyle: 'italic' }}>{row.symbol}</span> · {row.name}
+                  <span className="sym">{row.symbol}</span> · {row.name}
                 </td>
                 <td className={styles.num}>{chargeLabel(row.charge)}</td>
                 <td className={styles.num}>{sci(row.mass, 5)}</td>
