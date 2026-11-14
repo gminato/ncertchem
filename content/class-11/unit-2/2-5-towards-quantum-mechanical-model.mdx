@@ -1,0 +1,116 @@
+---
+class: 11
+unit: 2
+section: "2.5"
+order: 5
+title: "Towards Quantum Mechanical Model of the Atom"
+summary: "Electrons behave as waves, so their paths cannot be sharp: Heisenberg's uncertainty principle limits what we can know, and that is why Bohr's fixed orbits had to give way."
+slug: "2-5-towards-quantum-mechanical-model"
+ncert: "Class 11, Part I — Unit 2, Section 2.5"
+---
+
+<Hook>
+Bowl a cricket ball and it arrives at the stumps along a path you could trace with a ruler. Does an electron in an atom travel along a path like that too? The answer changed how chemists picture every atom.
+</Hook>
+
+Bohr's model worked for hydrogen, but it could not be the last word. Its fixed circular orbits do not survive the wave nature of the electron, and they cannot be squared with the limits on measurement. Two developments made a more general model possible: the **dual behaviour of matter**, and **Heisenberg's uncertainty principle**.
+
+## 2.5.1 Dual behaviour of matter
+
+In 1924 the French physicist Louis de Broglie proposed that matter, like radiation, should show both particle and wave behaviour. Light has a wavelength and also carries momentum, so an electron, with its momentum, should have a wavelength too. For a particle of mass $m$ moving at speed $v$, de Broglie's relation is
+
+$$
+\lambda = \frac{h}{mv} = \frac{h}{p}
+$$
+
+where $p = mv$ is the momentum. The prediction was tested, and electron beams were found to diffract, a behaviour of waves. The scrolling animation below compares the wavelengths of an everyday object and of an electron.
+
+<Scrolly animation="de-broglie-scale">
+<Step>
+In 1924 de Broglie made a bold proposal. Light has a wavelength and also carries momentum, so matter, which also carries momentum, should have a wavelength too. For a particle of mass $m$ moving at speed $v$, the wavelength is $\lambda = h/mv$. The electron, which we pictured as a tiny ball, should have waves.
+</Step>
+<Step>
+Start with an everyday object. A cricket ball of $0.16\ \text{kg}$ moving at $40\ \text{m s}^{-1}$ has $\lambda = h/mv \approx 1.0 \times 10^{-34}\ \text{m}$. Such a wavelength is far too short to detect, which is why a bowled ball never shows wave properties.
+</Step>
+<Step>
+Now an electron moving at $1.0 \times 10^{6}\ \text{m s}^{-1}$, the same order of speed as electrons in atoms. Its wavelength is $\lambda \approx 7.3 \times 10^{-10}\ \text{m}$, about 14 times the Bohr radius of $52.9\ \text{pm}$. A wavelength of that size, comparable with atomic dimensions, can be measured.
+</Step>
+<Step>
+Put the two side by side. The electron's wavelength is about $7 \times 10^{24}$ times the ball's. Only for the electron are the wave effects large enough to see, and the electron microscope, which resolves detail far finer than an ordinary light microscope, is built on this wave nature.
+</Step>
+</Scrolly>
+
+### A wave wrapped around an orbit
+
+Bohr's rule, $m v r = n h / 2\pi$, looks like an arbitrary condition. De Broglie's picture makes it natural. Suppose the electron's wave is wrapped around its orbit. A wave can only close on itself if the circumference holds a whole number of wavelengths, so $2\pi r = n\lambda$. Substitute $\lambda = h/mv$ and you get $m v r = nh/2\pi$ exactly. The next animation wraps the wave around the first four Bohr orbits, and then around an orbit where the wave does not fit.
+
+<Scrolly animation="de-broglie-orbit">
+<Step>
+Take the first Bohr orbit, with radius $r_1 = 52.9\ \text{pm}$. Its circumference is $2\pi r_1 \approx 332\ \text{pm}$. Wrap the electron's wave around it. The wave closes on itself, because exactly one wavelength of $332\ \text{pm}$ fits the circle. The wave is drawn with a radial wiggle, for clarity.
+</Step>
+<Step>
+Move out to $n = 2$. The radius is four times larger, $211.6\ \text{pm}$, and the circumference is about $1330\ \text{pm}$. Two wavelengths of about $665\ \text{pm}$ now fit, and the wave closes again.
+</Step>
+<Step>
+At $n = 3$ the radius is $476.1\ \text{pm}$ and the circumference is about $2991\ \text{pm}$. Three wavelengths of about $997\ \text{pm}$ fit neatly, and the wave still closes on itself.
+</Step>
+<Step>
+At $n = 4$ the radius is $846.4\ \text{pm}$, four wavelengths of about $1330\ \text{pm}$ fit, and the wave closes. In every case the condition is $2\pi r_n = n\lambda$. This is the quantisation of the angular momentum, seen as a standing pattern.
+</Step>
+<Step>
+Now try $3.5$ wavelengths around the $n = 3$ orbit. The wave cannot close. Its two ends meet half a cycle out of step, and they cancel each other at the seam. Such a wave interferes destructively with itself, so the picture says only orbits holding a whole number of wavelengths are allowed.
+</Step>
+</Scrolly>
+
+## 2.5.2 Heisenberg's uncertainty principle
+
+In 1927 Werner Heisenberg stated a consequence of the wave nature of matter and radiation. It is impossible to determine at the same time the exact position and the exact momentum of an electron. If $\Delta x$ is the uncertainty in position and $\Delta p_x = m\,\Delta v_x$ the uncertainty in momentum along the same axis, then
+
+$$
+\Delta x \cdot \Delta p_x \ge \frac{h}{4\pi}
+$$
+
+If the position is known very precisely, the velocity is badly uncertain, and if the velocity is known very precisely, the position is badly uncertain. The trade-off is a property of nature, not of our instruments. The thought experiment below is the classic way to see it: to locate an electron, you must illuminate it.
+
+<Scrolly animation="heisenberg-microscope">
+<Step>
+To find an electron you must look at it, and in physics that means bouncing light off it. A photon carries momentum $p = h/\lambda$, and the object it strikes receives that momentum. Short wavelengths locate the electron more finely, and they also strike harder.
+</Step>
+<Step>
+Red light at $700\ \text{nm}$ carries a momentum of about $9.5 \times 10^{-28}\ \text{kg m s}^{-1}$. That is only about 0.1 % of the momentum of an electron moving at $10^{6}\ \text{m s}^{-1}$, so the electron barely moves. But the wave is so long that it can tell us the electron is somewhere within about $700\ \text{nm}$, and no better.
+</Step>
+<Step>
+Now use $0.1\ \text{nm}$ light. The position is now known to about $0.1\ \text{nm}$, but the photon carries about $6.6 \times 10^{-24}\ \text{kg m s}^{-1}$, roughly seven times the electron's own momentum. The electron is knocked away, and its velocity after the collision is uncertain.
+</Step>
+<Step>
+This is the trade-off. Shrinking $\Delta x$ forces $\Delta p_x$ to grow, and their product never falls below $h/4\pi = 5.27 \times 10^{-35}\ \text{J s}$. An electron's position and momentum cannot both be known exactly at the same moment.
+</Step>
+</Scrolly>
+
+### Why the uncertainty matters for some objects and not others
+
+The product $\Delta x\,\Delta v$ sets a *minimum* for the uncertainty in velocity, $\Delta v \ge h / (4\pi m\,\Delta x)$. Its size depends entirely on the mass. Take a dust grain of $1\ \text{mg}$, that is $10^{-6}\ \text{kg}$, whose position is known to within $1\ \mu\text{m}$. The minimum uncertainty in its velocity is $5.3 \times 10^{-23}\ \text{m s}^{-1}$. No experiment could ever detect that, so for ordinary objects the principle is irrelevant.
+
+Now take an electron whose position is known to within $50\ \text{pm}$, about the size of an atom. The minimum uncertainty in its velocity is $1.16 \times 10^{6}\ \text{m s}^{-1}$. That is more than half the $2.19 \times 10^{6}\ \text{m s}^{-1}$ speed of the electron in the first Bohr orbit. For a microscopic particle the uncertainty is not a small correction. It decides what can be said about its motion.
+
+<Check n={1} numeric answer={364} tolerance={1} unit="pm" explanation="λ = h/(mv) = 6.626 × 10⁻³⁴ J s / (9.1094 × 10⁻³¹ kg × 2.0 × 10⁶ m s⁻¹) = 3.64 × 10⁻¹⁰ m, which is 364 pm.">
+What is the de Broglie wavelength, in picometres, of an electron moving at $2.0 \times 10^{6}\ \text{m s}^{-1}$?
+</Check>
+
+## Why the Bohr model had to be replaced
+
+The Bohr model treats the electron as a charged particle moving in a well-defined circular orbit, and it ignores the wave nature of the electron altogether. An orbit is a clearly defined path, and such a path can be fixed only if both the position and the velocity of the electron are known exactly at the same time. The uncertainty principle forbids that. So Bohr's model ignores the dual behaviour of matter and contradicts Heisenberg's principle.
+
+The replacement is the **quantum mechanical model**. It uses Schrödinger's equation, which incorporates de Broglie's wave idea and is consistent with the uncertainty principle. Solving it for the electron in an atom gives wave functions, and for a macroscopic object the results reduce to classical mechanics. For atoms, the electron's position is no longer a fixed orbit but a probability, which is the subject of the sections that follow.
+
+<Check n={2} options={["The uncertainty principle applies only to electrons and never to other particles", "For a 1 mg dust grain located to 1 μm, the minimum uncertainty in velocity is negligible", "Heisenberg's principle allows the exact position and velocity of an electron to be known together", "Bohr's orbits are exact paths, so the uncertainty principle never applies to them"]} answer={1} explanation="The uncertainty in velocity for a 1 mg grain located to 1 μm is about 5 × 10⁻²³ m s⁻¹, which no measurement could detect. The principle applies to all particles, but its effect is only significant for microscopic objects such as electrons.">
+Which statement about Heisenberg's uncertainty principle is correct?
+</Check>
+
+<KeyIdeas>
+- Matter has a wavelength $\lambda = h/mv$: negligible for everyday objects, and large enough to measure for electrons.
+- A Bohr orbit holds a whole number of wavelengths, $2\pi r_n = n\lambda$, which is the same statement as $m v r = nh/2\pi$.
+- $\Delta x \cdot \Delta p_x \ge h/4\pi$: position and momentum cannot both be known exactly, so an electron has no sharp path.
+- The uncertainty in velocity is negligible for a 1 mg grain but more than half the speed of the electron in the first Bohr orbit for an electron located to 50 pm.
+- Bohr's model ignored the electron's wave nature and contradicted the uncertainty principle, so it was replaced by the quantum mechanical model.
+</KeyIdeas>

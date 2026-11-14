@@ -4,7 +4,7 @@ unit: 2
 section: "2.4"
 order: 4
 title: "Bohr's Model for Hydrogen Atom"
-summary: "Electrons occupy fixed orbits, and each jump between them emits a photon of one exact colour."
+summary: "Electrons occupy fixed orbits, each jump between them emits or absorbs a photon of one exact colour, and that is why hydrogen shows a line spectrum."
 slug: "2-4-bohr-model"
 ncert: "Class 11, Part I — Unit 2, Section 2.4"
 ---
@@ -32,9 +32,100 @@ That photon has a wavelength of $656\ \text{nm}$: red light. Every hydrogen atom
 </Step>
 </Scrolly>
 
+## Bohr's postulates
+
+Bohr built his model on four assumptions, and each one was a break from classical physics. A classical electron circling a nucleus should radiate continuously and spiral inwards. Bohr said it does not, and he replaced that picture with a small set of rules.
+
+1. **Stationary states.** The electron moves in circular orbits around the nucleus without radiating. These orbits are the **stationary states**, and they are numbered by the **principal quantum number** $n = 1, 2, 3, \dots$
+2. **Quantised angular momentum.** Only those orbits are allowed in which the angular momentum is a whole-number multiple of $h/2\pi$:
+
+$$
+m_\text{e}\, v\, r = n\,\frac{h}{2\pi}
+$$
+
+Here $m_\text{e}$ is the mass of the electron, $v$ its speed and $r$ the radius of its orbit.
+
+3. **Energy is exchanged in packets.** An electron changes orbit only by absorbing or emitting radiation. The energy gap between two orbits, $E_\text{f} - E_\text{i}$, is carried by a photon of frequency $\nu$, and this is Bohr's frequency rule:
+
+$$
+\Delta E = h\nu
+$$
+
+4. **A stable ladder of energies.** Each allowed orbit has a definite energy, and the electron in the lowest one, $n = 1$, is in the most stable state.
+
+## Radii and energies of the orbits
+
+Combining the quantisation rule with the balance of electrical and centrifugal forces gives two results for hydrogen. The radius of the $n$-th orbit grows as $n^2$:
+
+$$
+r_n = n^2\,a_0, \qquad a_0 = 52.9\ \text{pm}
+$$
+
+The first orbit, $n = 1$, has radius $a_0 = 52.9\ \text{pm}$, the **Bohr radius**, and the second has four times that radius, $211.6\ \text{pm}$. The energy of the same orbit is
+
+$$
+E_n = -R_\text{H}\,\frac{1}{n^2}, \qquad R_\text{H} = 2.18 \times 10^{-18}\ \text{J}
+$$
+
+The energies are negative because they are measured from a free electron at rest, which has zero energy. The more negative the energy, the more tightly the electron is bound. The ground state is $E_1 = -2.18 \times 10^{-18}\ \text{J}$, which is $-13.6\ \text{eV}$. The state $n = 2$ has one quarter of that magnitude: $E_2 = -5.45 \times 10^{-19}\ \text{J}$, or $-3.40\ \text{eV}$.
+
+Two consequences follow. Energy rises towards zero as $n$ increases, so the gaps between neighbouring orbits shrink. And the orbits spread outwards, so an excited electron sits farther from the nucleus.
+
+### Hydrogen-like ions
+
+Any species with one electron, such as $\ce{He+}$ or $\ce{Li^2+}$, behaves in the same way with a nucleus of charge $Z$. Only two expressions change:
+
+$$
+E_n = -R_\text{H}\,\frac{Z^2}{n^2}, \qquad r_n = \frac{52.9\ n^2}{Z}\ \text{pm}
+$$
+
+For $\ce{He+}$, with $Z = 2$, the first orbit has radius $r_1 = 52.9 / 2 = 26.45\ \text{pm}$, half the hydrogen value, and its energy is four times as negative: $E_1 = -8.72 \times 10^{-18}\ \text{J}$. A larger nuclear charge pulls the electron closer and holds it more tightly.
+
+## 2.4.1 Explanation of the line spectrum
+
+The line spectrum of hydrogen, which you met in Section 2.3, is a direct consequence of the rules above. An electron can only make a jump between two allowed orbits, so only certain energy gaps are possible, and each gap gives one photon of one wavelength. Absorption happens when the electron jumps up, from a lower $n_\text{i}$ to a higher $n_\text{f}$; emission happens when it falls back down.
+
+Substituting the energies into $\Delta E = E_\text{f} - E_\text{i}$ gives
+
+$$
+\Delta E = R_\text{H}\left(\frac{1}{n_\text{i}^2} - \frac{1}{n_\text{f}^2}\right)
+$$
+
+where the sign of $\Delta E$ tells you the direction. Dividing by $hc$ turns this into the wavenumber, $\bar{\nu} = 1/\lambda$: $\bar{\nu} = 1.09677 \times 10^{7}\ \text{m}^{-1}\left(\dfrac{1}{n_\text{i}^2} - \dfrac{1}{n_\text{f}^2}\right)$. This is the Rydberg formula. Rydberg had found it empirically, from the measured wavelengths alone. Bohr's model explains why it works.
+
+Each series of lines is a family of transitions that share the same final level, $n_\text{f}$. Transitions ending on $n_\text{f} = 1$ form the **Lyman** series in the ultraviolet, those ending on $n_\text{f} = 2$ form the **Balmer** series, which includes the visible lines, and those ending on $n_\text{f} = 3$ form the **Paschen** series in the infrared. The brightness of a line depends on how many photons of that wavelength are emitted or absorbed.
+
+<Check n={2} numeric answer={1094} tolerance={2} unit="nm" explanation="Use 1/λ = R̄ (1/n_f² − 1/n_i²) with R̄ = 1.09677 × 10⁷ m⁻¹, so 1/λ = 1.09677 × 10⁷ × (1/9 − 1/36) = 9.14 × 10⁵ m⁻¹ and λ = 1.094 × 10⁻⁶ m. Equivalently, ΔE = 2.18 × 10⁻¹⁸ J × (1/9 − 1/36) = 1.817 × 10⁻¹⁹ J, and λ = hc / ΔE gives the same 1094 nm. This photon is infrared, in the Paschen series.">
+A hydrogen atom drops from $n = 6$ to $n = 3$. What is the wavelength of the photon it emits, in nanometres? Use $R_\text{H} = 2.18 \times 10^{-18}\ \text{J}$, $h = 6.626 \times 10^{-34}\ \text{J s}$ and $c = 3.0 \times 10^{8}\ \text{m s}^{-1}$.
+</Check>
+
+<Check n={1} options={["−2.18 × 10⁻¹⁸ J", "−8.72 × 10⁻¹⁸ J", "−5.45 × 10⁻¹⁹ J", "−1.09 × 10⁻¹⁷ J"]} answer={0} explanation="E_n = −R_H Z²/n². For He⁺, Z = 2 and n = 2, so Z²/n² = 4/4 = 1, and E_2 = −2.18 × 10⁻¹⁸ J. This is the same energy as the hydrogen ground state.">
+What is the energy of the $n = 2$ level of $\ce{He+}$?
+</Check>
+
+The spectrum below lets you build these series yourself. Choose an upper and a lower level, and the electron jumps, a photon flies to the strip and its line lights up. Switch on absorption mode to reverse the arrow and see the dark lines of absorption.
+
+<Simulation name="hydrogen-spectrum" title="Hydrogen spectrum: build the series from the Bohr atom" />
+
+## 2.4.2 Limitations of Bohr's model
+
+Bohr's model was a real advance over Rutherford's nuclear model. It accounted for the stability of the atom and for the line spectrum of hydrogen and of hydrogen-like ions such as $\ce{He+}$, $\ce{Li^2+}$ and $\ce{Be^3+}$. It was, however, too simple, and it fails in four ways.
+
+1. **Fine structure.** Sophisticated spectroscopes show that some hydrogen lines are doublets, two lines very close together. The model predicts a single line in each case.
+2. **Other atoms.** The model cannot describe any atom with more than one electron, such as helium, which has two. Once the electrons repel each other, the simple orbit picture breaks down.
+3. **Electric and magnetic fields.** Placing the atom in a magnetic field splits its lines (the Zeeman effect), and an electric field also splits them (the Stark effect). Bohr's theory cannot explain either.
+4. **Chemical bonds.** The model says nothing about how atoms combine to form molecules through chemical bonds.
+
+<Check n={3} options={["The Balmer lines of hydrogen", "The splitting of lines in a magnetic field, the Zeeman effect", "The radius of the first orbit of hydrogen", "The lines of the He⁺ ion"]} answer={1} explanation="The Zeeman effect, and the Stark effect in an electric field, lie beyond Bohr's model. The model does explain the Balmer lines of hydrogen, the radius of the first orbit and the lines of hydrogen-like ions such as He⁺.">
+Which of these can the Bohr model NOT explain?
+</Check>
+
+These shortcomings point to a more general theory, one that includes the wave nature of the electron and the limits on what can be measured. That is the subject of the next Section.
+
 <KeyIdeas>
-- In Bohr's model the electron occupies only certain orbits, each with a fixed energy $E_n = -R_\text{H}\,\dfrac{1}{n^2}$, where $R_\text{H} = 2.18 \times 10^{-18}\ \text{J}$.
+- In Bohr's model the electron occupies only certain orbits, each with a fixed energy $E_n = -R_\text{H}\,\dfrac{Z^2}{n^2}$, where $R_\text{H} = 2.18 \times 10^{-18}\ \text{J}$.
 - Absorbing energy moves the electron to a higher orbit; falling back releases a photon.
 - The photon's energy equals the gap between the orbits: $\Delta E = h\nu$.
 - Fixed gaps mean fixed wavelengths, and fixed wavelengths mean a **line spectrum**.
+- The orbit radius is $r_n = 52.9\,n^2/Z$ pm, so $\ce{He+}$ has its first orbit at $26.45$ pm, and the model fails for atoms with more than one electron.
 </KeyIdeas>

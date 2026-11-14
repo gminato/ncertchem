@@ -3,6 +3,7 @@ import type { ComponentType } from 'react'
 import { SigFigRuler } from './sims/sigfig-ruler'
 import { StatesOfMatter } from './sims/StatesOfMatter'
 import { LimitingReagent } from './sims/LimitingReagent'
+import { HydrogenSpectrum } from './sims/hydrogen-spectrum'
 
 export interface SimulationProps {
   /** True when the Learner has asked the OS for reduced motion. Skip tweens and loops when set. */
@@ -19,4 +20,5 @@ export const simulations: Record<string, ComponentType<SimulationProps>> = {
   'states-of-matter': StatesOfMatter,
   'mole-bridge': MoleBridge,
   'limiting-reagent': LimitingReagent,
+  'hydrogen-spectrum': HydrogenSpectrum,
 }
