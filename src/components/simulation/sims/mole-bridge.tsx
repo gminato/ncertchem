@@ -26,7 +26,10 @@ import {
   particlesToMolesLine,
   resolveSubstance,
   sampleFromMoles,
+  scientificParts,
+  superscript,
 } from '@/lib/chem/mole-bridge'
+import { roundToSigFigs } from '@/lib/chem/sigfigs'
 import styles from './mole-bridge.module.css'
 
 /** Which node the Learner last edited. It sets the direction of the flow. */
@@ -41,8 +44,6 @@ interface Pulse {
 const DEFAULT_FORMULA = 'H2O'
 /** The worked example: 36.04 g of water is 2.000 mol. */
 const DEFAULT_GRAMS = 36.04
-/** Particle counts are typed in units of 10²³, so the field stays short. */
-const PARTICLE_UNIT = 1e23
 const FLOW_DELAY_SECOND = 0.35
 
 const PRESETS: readonly SegmentedOption<string>[] = [
@@ -139,8 +140,18 @@ export function MoleBridge({ reducedMotion }: SimulationProps) {
 
   const editMass = (grams: number) => recordEdit('mass', grams, molesFromGrams(formula, grams))
   const editAmount = (value: number) => recordEdit('amount', value, value)
-  const editParticles = (scaled: number) =>
-    recordEdit('particles', scaled, molesFromParticles(scaled * PARTICLE_UNIT))
+  /**
+   * The particle field is in normalised scientific notation, so the typed
+   * mantissa is scaled by the exponent that the field currently shows.
+   */
+  const editParticles = (mantissa: number) => {
+    const exponent = scientificParts(sample.particles).exponent
+    const particles = Number(`${mantissa}e${exponent}`)
+    recordEdit('particles', mantissa, molesFromParticles(particles))
+  }
+  const particleParts = scientificParts(sample.particles)
+  const amountText =
+    sample.moles >= 1e-3 && sample.moles < 1e6 ? roundToSigFigs(sample.moles, 4) : undefined
 
   /**
    * Switches the substance but keeps the same mass, so the amount changes:
@@ -216,6 +227,7 @@ export function MoleBridge({ reducedMotion }: SimulationProps) {
           <NumberField
             label="Amount"
             value={source === 'amount' ? typed : sample.moles}
+            displayValue={amountText}
             onChange={editAmount}
             min={0}
             unit="mol"
@@ -234,10 +246,11 @@ export function MoleBridge({ reducedMotion }: SimulationProps) {
         <Node title="Particles" formula={shownFormula} highlighted={source === 'particles'}>
           <NumberField
             label="Particles"
-            value={source === 'particles' ? typed : sample.particles / PARTICLE_UNIT}
+            value={source === 'particles' ? typed : Number(particleParts.mantissa)}
+            displayValue={particleParts.mantissa}
             onChange={editParticles}
             min={0}
-            unit="× 10²³"
+            unit={`× 10${superscript(particleParts.exponent)}`}
             precision={4}
             id="mole-bridge-particles"
           />

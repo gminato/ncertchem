@@ -56,6 +56,17 @@ export function superscript(n: number): string {
 }
 
 /**
+ * Normalised scientific notation (1 ≤ mantissa < 10) to `sig` significant
+ * figures, as the mantissa text and the exponent. Rounding that reaches 10 is
+ * carried into the exponent, so 9.9999e23 gives "1.000" and 24.
+ */
+export function scientificParts(x: number, sig = BRIDGE_SIG_FIGS): { mantissa: string; exponent: number } {
+  if (x === 0) return { mantissa: (0).toFixed(sig - 1), exponent: 0 }
+  const [mantissa, exponent] = x.toExponential(sig - 1).split('e')
+  return { mantissa, exponent: Number(exponent) }
+}
+
+/**
  * A large or tiny number in scientific notation with the ×10ⁿ superscript
  * form used on the site, e.g. formatScientific(6.02214076e23, 4) is "6.022 × 10²³".
  */
