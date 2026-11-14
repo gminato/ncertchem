@@ -1,0 +1,74 @@
+.sim {
+  display: grid;
+  gap: 10px;
+  width: 100%;
+}
+
+.rowWrap {
+  position: relative;
+}
+
+.columns {
+  display: grid;
+  height: 18px;
+  align-items: center;
+  text-align: center;
+}
+
+.colOn,
+.colOff {
+  font-size: 13px;
+  line-height: 1;
+}
+
+.colOn {
+  color: var(--electron);
+}
+
+.colOff {
+  color: transparent;
+}
+
+.focus {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.cloud {
+  fill: var(--electron);
+  opacity: 0.14;
+  stroke: var(--electron);
+  stroke-width: 1.5;
+  stroke-dasharray: 4 4;
+}
+
+.nucleus {
+  fill: var(--surface, transparent);
+  stroke: var(--fg-muted);
+  stroke-width: 1;
+}
+
+.proton {
+  fill: var(--proton);
+}
+
+.readout {
+  margin: 0;
+  font-size: 15px;
+  color: var(--fg);
+}
+
+.note {
+  margin: 0;
+  padding: 12px 0;
+  font-size: 15px;
+  color: var(--fg-muted);
+  text-align: center;
+}
+
+.source {
+  margin: 0;
+  font-size: 13px;
+  color: var(--fg-subtle);
+}
