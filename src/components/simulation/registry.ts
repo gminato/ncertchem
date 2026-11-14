@@ -1,4 +1,5 @@
 import type { ComponentType } from 'react'
+import { SigFigRuler } from './sims/sigfig-ruler'
 
 export interface SimulationProps {
   /** True when the Learner has asked the OS for reduced motion. Skip tweens and loops when set. */
@@ -10,4 +11,6 @@ export interface SimulationProps {
  * work adds entries here. Each entry renders its own stage, and its controls
  * go in the Simulation's controls row through `<SimulationControls>`.
  */
-export const simulations: Record<string, ComponentType<SimulationProps>> = {}
+export const simulations: Record<string, ComponentType<SimulationProps>> = {
+  'sigfig-ruler': SigFigRuler,
+}
