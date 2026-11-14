@@ -189,7 +189,7 @@ export function LineSpectra({ step, reducedMotion }: LineSpectraProps) {
                     className={styles.rung}
                   />
                   <Label x={LADDER.labelX} y={levelY(n)} textAnchor="start" fontSize={16} fill="var(--fg)">
-                    <tspan fontStyle="italic">n</tspan> = {n} ({'−'}
+                    <tspan className="sym">n</tspan> = {n} ({'−'}
                     {Math.abs(ev).toFixed(2)} eV)
                   </Label>
                 </g>

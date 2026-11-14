@@ -43,6 +43,10 @@ const LabelComponent = forwardRef<SVGTextElement, LabelProps>(function Label(
   },
   ref
 ) {
+  // Drop undefined props so that, for example, fill={undefined} keeps the default fill.
+  const forwarded = Object.fromEntries(
+    Object.entries(rest).filter(([, value]) => value !== undefined)
+  ) as typeof rest
   return (
     <text
       ref={ref}
@@ -67,7 +71,7 @@ const LabelComponent = forwardRef<SVGTextElement, LabelProps>(function Label(
         ...style,
       }}
       className={className}
-      {...rest}
+      {...forwarded}
     >
       {children}
       {sub && (

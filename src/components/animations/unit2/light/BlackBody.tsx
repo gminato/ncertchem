@@ -98,11 +98,11 @@ function Frame() {
         )
       })}
       <Label x={(PLOT.left + PLOT.right) / 2} y={PLOT.bottom + 56} fontSize={16}>
-        Wavelength <tspan fontStyle="italic">λ</tspan> / nm
+        Wavelength <tspan className="sym">λ</tspan> / nm
       </Label>
       <Label x={PLOT.left} y={PLOT.top - 22} textAnchor="start" fontSize={15}>
-        Spectral radiance <tspan fontStyle="italic">B</tspan>
-        <tspan dy="0.3em" fontSize="0.75em" fontStyle="italic">λ</tspan>
+        Spectral radiance <tspan className="sym">B</tspan>
+        <tspan dy="0.3em" fontSize="0.75em" className="sym">λ</tspan>
         <tspan dy="-0.3em"> (W sr⁻¹ m⁻³)</tspan>
       </Label>
     </g>
@@ -253,16 +253,16 @@ export function BlackBody({ step, reducedMotion }: BlackBodyProps) {
             {[
               <>E = 0</>,
               <>
-                <tspan fontStyle="italic">E</tspan> = <tspan fontStyle="italic">h</tspan>
-                <tspan fontStyle="italic">ν</tspan>
+                <tspan className="sym">E</tspan> = <tspan className="sym">h</tspan>
+                <tspan className="sym">ν</tspan>
               </>,
               <>
-                <tspan fontStyle="italic">E</tspan> = 2<tspan fontStyle="italic">h</tspan>
-                <tspan fontStyle="italic">ν</tspan>
+                <tspan className="sym">E</tspan> = 2<tspan className="sym">h</tspan>
+                <tspan className="sym">ν</tspan>
               </>,
               <>
-                <tspan fontStyle="italic">E</tspan> = 3<tspan fontStyle="italic">h</tspan>
-                <tspan fontStyle="italic">ν</tspan>
+                <tspan className="sym">E</tspan> = 3<tspan className="sym">h</tspan>
+                <tspan className="sym">ν</tspan>
               </>,
               <>…</>,
             ].map((text, i) => (
@@ -274,7 +274,7 @@ export function BlackBody({ step, reducedMotion }: BlackBodyProps) {
               Planck: steps of hν only
             </Label>
             <Label x={70} y={470} textAnchor="start" fontSize={16}>
-              <tspan fontStyle="italic">h</tspan> = 6.626 × 10⁻³⁴ J s is Planck’s constant.
+              <tspan className="sym">h</tspan> = 6.626 × 10⁻³⁴ J s is Planck’s constant.
             </Label>
           </g>
         )}
