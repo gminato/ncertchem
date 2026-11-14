@@ -32,3 +32,17 @@ export const PLANCK = 6.626e-34
  * Unit: meters per second (m/s)
  */
 export const SPEED_OF_LIGHT = 3.0e8
+
+/**
+ * Avogadro constant as used in NCERT Class 11 Unit 1 calculations (6.022 × 10²³ mol⁻¹).
+ * The exact defined value is 6.02214076e23 mol⁻¹ (AVOGADRO_EXACT); NCERT's rounded
+ * value is used here so that worked examples reproduce the textbook numbers.
+ * Unit: mol⁻¹
+ */
+export const AVOGADRO = 6.022e23
+
+/**
+ * One atomic mass unit in grams (1 u = 1.66056 × 10⁻²⁴ g).
+ * Unit: g
+ */
+export const AMU_GRAMS = 1.66056e-24
