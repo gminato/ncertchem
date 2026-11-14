@@ -112,14 +112,17 @@
 :root,
 [data-theme="light"] {
   --spectrum-track: #1B1D21;
+  --spectrum-track-opacity: 0.22;
 }
 
 [data-theme="dark"] {
   --spectrum-track: #05070A;
+  --spectrum-track-opacity: 0.3;
 }
 
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
     --spectrum-track: #05070A;
+    --spectrum-track-opacity: 0.3;
   }
 }

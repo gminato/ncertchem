@@ -15,7 +15,7 @@ export const LEVEL_MAX = 3
 export const EMISSION_ANGLE = Math.PI / 3
 
 /** Fraction of the photon's path covered during Step 2; Step 3 completes it. */
-export const PHOTON_PROGRESS_STEP2 = 0.85
+export const PHOTON_PROGRESS_STEP2 = 0.95
 
 /** Ambient orbital speed on Step 0 (radians per second). */
 export const AMBIENT_SPIN_RATE = 0.35

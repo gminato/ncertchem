@@ -41,32 +41,36 @@ export interface BohrEmissionProps {
 // Geometry (SVG viewBox 800 x 600)
 // ---------------------------------------------------------------------------
 
-const VIEW_WIDTH = 800
-const VIEW_HEIGHT = 600
+// Viewbox is sized for a ~590px-wide card: every label is set at 16 units,
+// which renders at about 14px on a 1280px viewport.
+const VIEW_WIDTH = 640
+const VIEW_HEIGHT = 540
 
-/** Atom on the left ~60%, centred on (ATOM.cx, ATOM.cy). */
-const ATOM = { cx: 205, cy: 250, rMax: 165 }
+/** Atom on the left, centred on (ATOM.cx, ATOM.cy); the n = 3 orbit is ~45% of the width. */
+const ATOM = { cx: 170, cy: 230, rMax: 130 }
 /** Scales physical orbit radii so that the n = 3 orbit has radius ATOM.rMax. */
 const ATOM_SCALE = ATOM.rMax / orbitRadius(LEVEL_MAX)
 const orbitR = (n: number) => orbitRadius(n) * ATOM_SCALE
 /**
  * Orbit labels sit above each orbit, centred, in the gap just outside it. The
- * offset clears the electron's own radius (electron size 13) and the label's
- * half-height, so a label never meets the stroke or the moving electron.
+ * offset clears the electron's own radius and the label's half-height, so a
+ * label never meets the stroke or the moving electron.
  */
 const ORBIT_LABEL_ANGLE = -90
 const ORBIT_LABEL_OFFSET = 18
+const ORBIT_LABEL_FONT = 16
 
-/** Energy ladder on the right ~40%. */
+/** Energy ladder on the right, close to the atom and taller than before. */
 const LADDER = {
-  rungLeft: 530,
-  rungRight: 600,
-  top: 110,
-  bottom: 380,
-  labelX: 612,
-  arrowX: 512,
+  rungLeft: 350,
+  rungRight: 420,
+  top: 60,
+  bottom: 330,
+  labelX: 430,
+  arrowX: 332,
   minLabelGap: 22,
 }
+const LADDER_FONT = 16
 const LADDER_EV_MIN = orbitEnergyEv(LEVEL_MIN)
 const LADDER_EV_MAX = orbitEnergyEv(LEVEL_MAX)
 const ladderBounds = {
@@ -82,13 +86,24 @@ const ladderRungLabels = ladderLabels(
   LADDER.minLabelGap
 )
 
-/** Visible spectrum (nm) drawn as a strip across the bottom. */
+/** Visible spectrum (nm) drawn as a continuous track across the bottom. */
 const VISIBLE_NM_MIN = 380
 const VISIBLE_NM_MAX = 750
-const STRIP = { left: 60, right: 740, y: 520, height: 10 }
+const STRIP = { left: 40, right: 600, y: 420, height: 14 }
 const TICK_NM = [400, 500, 600, 700]
+const TICK_FONT = 16
 const xForNm = (nm: number) =>
   STRIP.left + ((nm - VISIBLE_NM_MIN) / (VISIBLE_NM_MAX - VISIBLE_NM_MIN)) * (STRIP.right - STRIP.left)
+
+/** Gradient stops sampled from the spectral colour model every 10 nm. */
+const SPECTRUM_STOPS: { offset: string; color: string }[] = []
+for (let nm = VISIBLE_NM_MIN; nm <= VISIBLE_NM_MAX; nm += 10) {
+  SPECTRUM_STOPS.push({
+    offset: `${(((nm - VISIBLE_NM_MIN) / (VISIBLE_NM_MAX - VISIBLE_NM_MIN)) * 100).toFixed(2)}%`,
+    color: wavelengthToCss(nm),
+  })
+}
+SPECTRUM_STOPS.push({ offset: '100%', color: wavelengthToCss(VISIBLE_NM_MAX) })
 
 const LINE_NM = emissionWavelengthNm()
 const LINE_X = xForNm(LINE_NM)
@@ -291,7 +306,7 @@ export function BohrEmission({ step, reducedMotion }: BohrEmissionProps) {
   const showPhoton = view.photonAlpha > 0.001 && packetLength >= MIN_PACKET_LENGTH
 
   const activeLevel = Math.round(view.level)
-  const pulseRadius = view.pulse * (ATOM.rMax + 40)
+  const pulseRadius = view.pulse * (ATOM.rMax + 30)
   const pulseAlpha = Math.sin(Math.PI * Math.min(1, Math.max(0, view.pulse))) * 0.8
 
   const ladderArrowUp = { y1: LADDER.bottom, y2: LADDER.top }
@@ -308,6 +323,13 @@ export function BohrEmission({ step, reducedMotion }: BohrEmissionProps) {
         data-step={activeStep}
       >
         <VocabDefs idPrefix="bohr" />
+        <defs>
+          <linearGradient id="bohr-spectrum" x1="0%" y1="0%" x2="100%" y2="0%">
+            {SPECTRUM_STOPS.map((stop) => (
+              <stop key={stop.offset} offset={stop.offset} stopColor={stop.color} />
+            ))}
+          </linearGradient>
+        </defs>
 
         {/* Energy pulse: a soft ring expanding from the nucleus */}
         {pulseAlpha > 0.001 && (
@@ -339,7 +361,7 @@ export function BohrEmission({ step, reducedMotion }: BohrEmissionProps) {
                 x={pos.x}
                 y={pos.y}
                 textAnchor={pos.textAnchor}
-                fontSize={20}
+                fontSize={ORBIT_LABEL_FONT}
                 halo
                 fill={isActive ? 'var(--orbit-active)' : 'var(--fg-muted)'}
               >
@@ -354,11 +376,11 @@ export function BohrEmission({ step, reducedMotion }: BohrEmissionProps) {
           neutrons={0}
           x={ATOM.cx}
           y={ATOM.cy}
-          nucleonRadius={9}
+          nucleonRadius={6}
           defsPrefix="bohr"
         />
 
-        <Electron x={electronX} y={electronY} size={13} defsPrefix="bohr" />
+        <Electron x={electronX} y={electronY} size={11} defsPrefix="bohr" />
 
         {/* Emitted photon, travelling from the atom toward the strip */}
         {showPhoton && (
@@ -402,7 +424,7 @@ export function BohrEmission({ step, reducedMotion }: BohrEmissionProps) {
                 x={LADDER.labelX}
                 y={place.labelY}
                 textAnchor="start"
-                fontSize={18}
+                fontSize={LADDER_FONT}
                 halo
                 fill={isActive ? 'var(--orbit-active)' : 'var(--fg-muted)'}
               >
@@ -413,7 +435,7 @@ export function BohrEmission({ step, reducedMotion }: BohrEmissionProps) {
           )
         })}
 
-        <Electron x={ladderMidX} y={dotY} size={11} defsPrefix="bohr" />
+        <Electron x={ladderMidX} y={dotY} size={10} defsPrefix="bohr" />
 
         {/* Excitation arrow (Step 1) */}
         <g opacity={view.upArrow}>
@@ -427,7 +449,7 @@ export function BohrEmission({ step, reducedMotion }: BohrEmissionProps) {
             x={LADDER.arrowX - 10}
             y={(ladderArrowDown.y1 + ladderArrowDown.y2) / 2}
             textAnchor="end"
-            fontSize={18}
+            fontSize={LADDER_FONT}
           >
             ΔE = {DELTA_E_LABEL} eV
           </Label>
@@ -439,8 +461,19 @@ export function BohrEmission({ step, reducedMotion }: BohrEmissionProps) {
           y={STRIP.y}
           width={STRIP.right - STRIP.left}
           height={STRIP.height}
-          rx={2}
-          style={{ fill: 'var(--spectrum-track)' }}
+          rx={STRIP.height / 2}
+          fill="url(#bohr-spectrum)"
+          style={{ opacity: 'var(--spectrum-track-opacity)' }}
+        />
+        <rect
+          x={STRIP.left}
+          y={STRIP.y}
+          width={STRIP.right - STRIP.left}
+          height={STRIP.height}
+          rx={STRIP.height / 2}
+          fill="none"
+          strokeWidth={0.8}
+          style={{ stroke: 'var(--border)' }}
         />
         {TICK_NM.map((nm) => (
           <g key={`tick-${nm}`}>
@@ -452,7 +485,7 @@ export function BohrEmission({ step, reducedMotion }: BohrEmissionProps) {
               strokeWidth={1.2}
               style={{ stroke: 'var(--fg-subtle)' }}
             />
-            <Label x={xForNm(nm)} y={STRIP.y + STRIP.height + 24} fontSize={17} fill="var(--fg-subtle)">
+            <Label x={xForNm(nm)} y={STRIP.y + STRIP.height + 26} fontSize={TICK_FONT} fill="var(--fg-subtle)">
               {nm} nm
             </Label>
           </g>
@@ -464,8 +497,8 @@ export function BohrEmission({ step, reducedMotion }: BohrEmissionProps) {
             <line
               x1={LINE_X}
               x2={LINE_X}
-              y1={STRIP.y - 30}
-              y2={STRIP.y + STRIP.height}
+              y1={STRIP.y - 8}
+              y2={STRIP.y + STRIP.height + 8}
               strokeWidth={3}
               strokeLinecap="round"
               data-testid="spectral-line"
@@ -476,15 +509,15 @@ export function BohrEmission({ step, reducedMotion }: BohrEmissionProps) {
               }}
             />
             <g opacity={view.line}>
-              <Label x={LINE_X} y={STRIP.y - 42} textAnchor="middle" fontSize={20}>
+              <Label x={LINE_X} y={STRIP.y - 40} textAnchor="middle" fontSize={18}>
                 H<Label.Sub>α</Label.Sub>
                 <tspan dy="-0.32em"> {LINE_NM} nm</tspan>
               </Label>
               <Label
                 x={(STRIP.left + STRIP.right) / 2}
-                y={STRIP.y + STRIP.height + 58}
+                y={STRIP.y + STRIP.height + 62}
                 textAnchor="middle"
-                fontSize={18}
+                fontSize={16}
               >
                 {emissionSeriesName()} series
               </Label>

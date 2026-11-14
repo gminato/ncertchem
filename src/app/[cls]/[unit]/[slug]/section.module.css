@@ -73,3 +73,16 @@
     padding: 0 var(--space-3) var(--space-8);
   }
 }
+
+/* Math: inline KaTeX never breaks mid-expression; display math centres and scrolls. */
+.body :global(.katex) {
+  white-space: nowrap;
+}
+
+.body :global(.katex-display) {
+  margin: var(--space-5) 0;
+  padding: var(--space-1) 0;
+  text-align: center;
+  overflow-x: auto;
+  overflow-y: hidden;
+}

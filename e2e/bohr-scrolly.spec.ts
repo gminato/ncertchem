@@ -40,7 +40,8 @@ for (const scheme of ['light', 'dark'] as const) {
 
       for (let i = 0; i < 4; i++) {
         await gotoStep(page, i)
-        await page.waitForTimeout(1500)
+        // Step 2's photon travels for ~1.8s after the drop; wait until it has arrived.
+        await page.waitForTimeout(i === 2 ? 2200 : 1500)
         await page.screenshot({ path: path.join(SCREEN_DIR, `step-${i}-${scheme}.png`) })
       }
 
