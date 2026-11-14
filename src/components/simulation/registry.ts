@@ -11,6 +11,7 @@ import { TableExplorer } from './sims/table-explorer'
 import { IupacNamer } from './sims/iupac-namer'
 import { TrendsExplorer } from './sims/trends-explorer'
 import { MendeleevPredict } from './sims/mendeleev-predict'
+import { OxideLab } from './sims/oxide-lab'
 
 export interface SimulationProps {
   /** True when the Learner has asked the OS for reduced motion. Skip tweens and loops when set. */
@@ -35,4 +36,5 @@ export const simulations: Record<string, ComponentType<SimulationProps>> = {
   'iupac-namer': IupacNamer,
   'trends-explorer': TrendsExplorer,
   'mendeleev-predict': MendeleevPredict,
+  'oxide-lab': OxideLab,
 }

@@ -43,6 +43,7 @@ import { DobereinerTriads } from './unit3/history/DobereinerTriads'
 import { NewlandsOctaves } from './unit3/history/NewlandsOctaves'
 import { MeyerVolume } from './unit3/history/MeyerVolume'
 import { MendeleevGaps } from './unit3/history/MendeleevGaps'
+import { ChemicalProperties } from './unit3/chemical/ChemicalProperties'
 
 /**
  * Animations available to a Scrolly Animation, keyed by the `animation` prop.
@@ -96,6 +97,7 @@ export const animations = {
   'history-octaves': NewlandsOctaves,
   'history-meyer': MeyerVolume,
   'history-mendeleev-gaps': MendeleevGaps,
+  'chemical-properties': ChemicalProperties,
 } as const
 
 export type AnimationName = keyof typeof animations
