@@ -6,6 +6,7 @@ import { LimitingReagent } from './sims/LimitingReagent'
 import { Photoelectric } from './sims/photoelectric'
 import { OrbitalExplorer } from './sims/orbital-explorer'
 import { HydrogenSpectrum } from './sims/hydrogen-spectrum'
+import { OxideLab } from './sims/oxide-lab'
 
 export interface SimulationProps {
   /** True when the Learner has asked the OS for reduced motion. Skip tweens and loops when set. */
@@ -25,4 +26,5 @@ export const simulations: Record<string, ComponentType<SimulationProps>> = {
   photoelectric: Photoelectric,
   'orbital-explorer': OrbitalExplorer,
   'hydrogen-spectrum': HydrogenSpectrum,
+  'oxide-lab': OxideLab,
 }
