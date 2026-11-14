@@ -59,14 +59,6 @@
   color: var(--fg);
 }
 
-.note {
-  margin: 0;
-  padding: 12px 0;
-  font-size: 15px;
-  color: var(--fg-muted);
-  text-align: center;
-}
-
 .source {
   margin: 0;
   font-size: 13px;

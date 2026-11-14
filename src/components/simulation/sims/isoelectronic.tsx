@@ -123,7 +123,7 @@ export function Isoelectronic({ reducedMotion }: SimulationProps) {
             }))}
             title={`Isoelectronic species with ${electrons} electrons, sized by radius`}
             width={ROW_WIDTH}
-            maxRadiusPx={ROW_MAX_PX}
+            maxRadiusPx={Math.min(ROW_MAX_PX, ROW_WIDTH / drawable.length / 2.2)}
             labelPlacement="beneath"
           />
           <div className={styles.columns} aria-hidden="true" style={{ gridTemplateColumns: `repeat(${drawable.length}, 1fr)` }}>
@@ -134,11 +134,7 @@ export function Isoelectronic({ reducedMotion }: SimulationProps) {
             ))}
           </div>
         </div>
-      ) : (
-        <p className={styles.note}>
-          No radius is tabulated here for the {electrons}-electron series yet. The protons, electrons and Z over electrons still apply.
-        </p>
-      )}
+      ) : null}
 
       <svg
         viewBox={`0 0 ${FOCUS_WIDTH} ${FOCUS_HEIGHT}`}
@@ -166,7 +162,7 @@ export function Isoelectronic({ reducedMotion }: SimulationProps) {
         {readoutLine(current, ratio)}
       </p>
       <p className={styles.source}>
-        Radii: NCERT Table 3.6 and 3.7.1(b) text, the NCERT radii table, and Shannon (1976, CN 6) for O²⁻.
+        Ionic radii: Pauling (1960), the same values NCERT prints for F⁻ and Na⁺. Atomic radii: NCERT Table 3.6. Noble gases are drawn between their neighbours and are not measured radii.
       </p>
 
       <SimulationControls>

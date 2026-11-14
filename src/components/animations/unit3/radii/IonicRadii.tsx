@@ -74,7 +74,7 @@ export function IonicRadii({ step, reducedMotion }: RadiiStepProps) {
         />
       </RadiusColumns>
       <p style={{ margin: '6px 0 0', fontSize: 13, color: 'var(--fg-subtle)', textAlign: 'center' }}>
-        O²⁻: Shannon CN 6. F⁻, Na⁺: NCERT text. Mg²⁺: NCERT radii table.
+        Ionic radii: Pauling (1960). Atomic radii: NCERT Table 3.6.
       </p>
     </div>
   )
