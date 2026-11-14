@@ -97,7 +97,7 @@ export function DeBroglieScale({ step, reducedMotion }: DeBroglieScaleProps) {
             Cricket ball, 0.16 kg at 40 m s<Sup>−1</Sup>
           </Label>
           <Label x={BALL_X - 10} y={RULER.y - 42} textAnchor="start" fontSize={14} fill="var(--fg-muted)">
-            λ ≈{' '}
+            <tspan className="sym">λ</tspan> ≈{' '}
             <Scientific mantissa={ballSci.mantissa} exp={ballSci.exp} unit="m" />
           </Label>
         </g>
@@ -109,7 +109,7 @@ export function DeBroglieScale({ step, reducedMotion }: DeBroglieScaleProps) {
             Electron at 10<Sup>6</Sup> m s<Sup>−1</Sup>
           </Label>
           <Label x={ELECTRON_X + 10} y={RULER.y + 78} textAnchor="end" fontSize={14} fill="var(--fg-muted)">
-            λ ≈{' '}
+            <tspan className="sym">λ</tspan> ≈{' '}
             <Scientific mantissa={electronSci.mantissa} exp={electronSci.exp} unit="m" />
           </Label>
         </g>

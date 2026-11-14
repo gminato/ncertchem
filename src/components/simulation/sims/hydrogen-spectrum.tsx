@@ -237,6 +237,11 @@ export function HydrogenSpectrum({ reducedMotion }: SimulationProps) {
 
   const dotX = (LADDER.rungLeft + LADDER.rungRight) / 2
   const dotY = yForEv(levelEvContinuous(electronLevel))
+  const deltaX = LADDER.rungLeft - 24
+  const deltaA = rungY(pair.upper)
+  const deltaB = rungY(pair.lower)
+  const deltaTop = Math.min(deltaA, deltaB)
+  const deltaBottom = Math.max(deltaA, deltaB)
 
   // Photon geometry. The source is the atom on the lower orbit, at the angle the jump began.
   const flyingJump = inFlight ? jump : null
@@ -317,7 +322,7 @@ export function HydrogenSpectrum({ reducedMotion }: SimulationProps) {
                   halo
                   fill={isSel ? 'var(--orbit-active)' : 'var(--fg-muted)'}
                 >
-                  <tspan fontStyle="italic">n</tspan> = {n}
+                  <tspan className="sym">n</tspan> = {n}
                 </Label>
               )}
             </g>
@@ -395,7 +400,7 @@ export function HydrogenSpectrum({ reducedMotion }: SimulationProps) {
                 halo
                 fill={isSel ? 'var(--orbit-active)' : 'var(--fg-muted)'}
               >
-                <tspan fontStyle="italic">n</tspan> = {n} ({trueMinus(ev)} eV)
+                <tspan className="sym">n</tspan> = {n} ({trueMinus(ev)} eV)
                 {isUpper ? ' upper' : isLower ? ' lower' : ''}
               </Label>
               {/* The label is the main target: labels are spaced apart, so their boxes never overlap. */}
@@ -414,18 +419,14 @@ export function HydrogenSpectrum({ reducedMotion }: SimulationProps) {
 
         <Electron x={dotX} y={dotY} size={10} defsPrefix="hs" />
 
-        {/* ΔE arrow between the selected rungs: down for emission, up for absorption */}
-        <g opacity={0.95}>
-          <line
-            x1={LADDER.rungLeft - 24}
-            x2={LADDER.rungLeft - 24}
-            y1={rungY(mode === 'emission' ? pair.upper : pair.lower)}
-            y2={rungY(mode === 'emission' ? pair.lower : pair.upper)}
-            strokeWidth={2}
-            style={{ stroke: 'var(--orbit-active)' }}
-          />
-          <Label x={LADDER.rungLeft - 36} y={(rungY(pair.upper) + rungY(pair.lower)) / 2} textAnchor="end" fontSize={14} fill="var(--orbit-active)">
-            {`ΔE = ${readout.deltaEnergyEv.toFixed(2)} eV`}
+        {/* ΔE double-headed bracket spanning the upper and lower selected rungs */}
+        <g opacity={0.95} style={{ stroke: 'var(--orbit-active)', fill: 'none' }}>
+          <line x1={deltaX} x2={deltaX} y1={deltaTop} y2={deltaBottom} strokeWidth={2} />
+          <polyline points={`${deltaX - 4},${deltaTop + 6} ${deltaX},${deltaTop} ${deltaX + 4},${deltaTop + 6}`} strokeWidth={2} />
+          <polyline points={`${deltaX - 4},${deltaBottom - 6} ${deltaX},${deltaBottom} ${deltaX + 4},${deltaBottom - 6}`} strokeWidth={2} />
+          <Label x={deltaX - 8} y={(deltaTop + deltaBottom) / 2 + 5} textAnchor="end" fontSize={14} fill="var(--orbit-active)">
+            <tspan className="sym">ΔE</tspan>
+            {` = ${readout.deltaEnergyEv.toFixed(2)} eV`}
           </Label>
         </g>
 
@@ -452,17 +453,23 @@ export function HydrogenSpectrum({ reducedMotion }: SimulationProps) {
           </dd>
         </div>
         <div className={styles.item}>
-          <dt>Wavelength λ</dt>
+          <dt>
+            Wavelength <span className="sym" style={{ textTransform: 'none' }}>λ</span>
+          </dt>
           <dd>{readout.wavelengthNm.toFixed(1)} nm</dd>
         </div>
         <div className={styles.item}>
-          <dt>Frequency ν</dt>
+          <dt>
+            Frequency <span className="sym" style={{ textTransform: 'none' }}>ν</span>
+          </dt>
           <dd>
             <ScientificNumber value={readout.frequencyHz} digits={2} unit="Hz" />
           </dd>
         </div>
         <div className={styles.item}>
-          <dt>Energy change ΔE</dt>
+          <dt>
+            Energy change <span className="sym" style={{ textTransform: 'none' }}>ΔE</span>
+          </dt>
           <dd>
             {readout.deltaEnergyEv.toFixed(2)} eV
             <span className={styles.sub}>
@@ -475,7 +482,7 @@ export function HydrogenSpectrum({ reducedMotion }: SimulationProps) {
           <dt>Series</dt>
           <dd>
             {readout.series} · {readout.region}
-            {!readout.onAxis && <span className={styles.sub}> (beyond 2000 nm, off scale)</span>}
+            {!readout.onAxis && <span className={styles.sub}> (beyond the strip)</span>}
           </dd>
         </div>
       </dl>

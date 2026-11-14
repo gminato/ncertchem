@@ -141,7 +141,7 @@ export function HeisenbergMicroscope({ step, reducedMotion }: HeisenbergMicrosco
         )}
         {s === 1 && (
           <Label x={VIEW_WIDTH / 2} y={266} fontSize={14} fill="var(--fg-muted)">
-            {'Recoil p = h/λ ≈ '}
+            {'Recoil '}<tspan className="sym">p = h/λ</tspan>{' ≈ '}
             <Scientific mantissa={longSci.mantissa} exp={longSci.exp} />
             {' kg m s'}
             <Sup>−1</Sup>
@@ -149,7 +149,7 @@ export function HeisenbergMicroscope({ step, reducedMotion }: HeisenbergMicrosco
         )}
         {s === 2 && (
           <Label x={VIEW_WIDTH / 2} y={266} fontSize={14} fill="var(--fg-muted)">
-            {'Recoil p = h/λ ≈ '}
+            {'Recoil '}<tspan className="sym">p = h/λ</tspan>{' ≈ '}
             <Scientific mantissa={shortSci.mantissa} exp={shortSci.exp} />
             {' kg m s'}
             <Sup>−1</Sup>

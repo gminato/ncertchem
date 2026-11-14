@@ -131,7 +131,12 @@ export function DeBroglieOrbit({ step, reducedMotion }: DeBroglieOrbitProps) {
           {CAPTIONS[s]}
         </Label>
         <Label x={CENTRE.x} y={432} fontSize={14} fill="var(--fg-muted)">
-          {`r = ${orbitRadiusPm(nShown).toFixed(1)} pm;  2πr ÷ λ = ${s === 4 ? '3.5' : nShown}`}
+          <tspan className="sym">r</tspan>
+          {` = ${orbitRadiusPm(nShown).toFixed(1)} pm;  2`}
+          <tspan className="sym">πr</tspan>
+          {' ÷ '}
+          <tspan className="sym">λ</tspan>
+          {` = ${s === 4 ? '3.5' : nShown}`}
         </Label>
       </svg>
       <p className={styles.srOnly} aria-live="polite">
