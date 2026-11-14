@@ -1,4 +1,5 @@
 import type { ComponentType } from 'react'
+import { StatesOfMatter } from './sims/StatesOfMatter'
 import { LimitingReagent } from './sims/LimitingReagent'
 
 export interface SimulationProps {
@@ -11,5 +12,7 @@ export interface SimulationProps {
  * work adds entries here. Each entry renders its own stage, and its controls
  * go in the Simulation's controls row through `<SimulationControls>`.
  */
-export const simulations: Record<string, ComponentType<SimulationProps>> = {}
+export const simulations: Record<string, ComponentType<SimulationProps>> = {
+  'states-of-matter': StatesOfMatter,
+}
 simulations['limiting-reagent'] = LimitingReagent
