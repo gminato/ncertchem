@@ -1,0 +1,97 @@
+---
+class: 11
+unit: 3
+section: "3.5"
+order: 3
+title: "Electronic Configurations and the Blocks of the Periodic Table"
+summary: "The outer configuration decides the group and the period. The s, p, d and f blocks follow from which subshell the last electron enters, and metals, non-metals and metalloids follow from the blocks."
+slug: "3-5-electronic-configuration-and-blocks"
+ncert: "Class 11, Part I — Unit 3, Sections 3.5–3.6"
+---
+
+<Hook>
+Sodium and potassium each have one electron in their outermost shell, and both react fiercely with water. Chlorine has seven, and it is a highly reactive halogen. What does the count of outer electrons tell you about where an element sits, and how it behaves?
+</Hook>
+
+## Electronic configurations in periods (3.5a)
+
+An element's place in the table reflects the quantum numbers of the last orbital its electrons fill. The period number gives the principal quantum number $n$ of the outermost shell. Each new period starts when a new shell begins to fill, so period $n$ adds electrons to the $ns$ and $np$ subshells of shell $n$, together with any inner $d$ or $f$ subshells that the energy order places before them.
+
+The length of a period is twice the number of orbitals it fills. Period 1 fills only 1s, one orbital, and so holds two elements. Period 2 fills 2s and 2p, four orbitals, and holds eight. Period 4 fills 4s, then 3d, then 4p: one, five and three orbitals, nine in all, so it holds eighteen. Period 6 fills 6s, then 4f, then 5d and 6p: one, seven, five and three orbitals, sixteen in all, so it holds thirty-two. The energy order, not the shell number, decides which subshells join a period.
+
+<Check n="period6-orbitals" numeric answer={16} unit="orbitals" explanation={<p>Period 6 fills 6s (1 orbital), 4f (7), 5d (5) and 6p (3). The total is 1 + 7 + 5 + 3 = 16 orbitals, which holds 16 × 2 = 32 electrons.</p>}>
+How many orbitals does period 6 fill, counting its 4f subshell?
+</Check>
+
+## Groupwise configurations (3.5b)
+
+Elements in one group share the same valence shell configuration, so they have similar chemical properties. The group 1 elements, the alkali metals, all have an $ns^1$ outer configuration. Lithium is $[\text{He}]\,2s^1$, sodium is $[\text{Ne}]\,3s^1$ and potassium is $[\text{Ar}]\,4s^1$. Only $n$ changes from one row to the next. The same is true for group 17, the halogens, whose outer configuration is $ns^2np^5$.
+
+Because the outer configuration decides the chemistry, the properties depend on the atomic number through this periodic repetition, and not on the atomic mass. That is the point of the periodic law from Section 3.3, now seen through the electrons.
+
+## The s, p, d and f blocks (3.6)
+
+Each block is named for the subshell that its last electron enters. The map of the blocks is the most useful way to see the table's structure. Use the scrolly below to light up each block in turn, along with the outer configuration that defines it.
+
+<Scrolly animation="periodic-blocks">
+<Step>
+Each row is a period. The period number is the highest principal quantum number $n$ of the elements in that row, so every element in period 3 has its outermost electrons in the $n = 3$ shell. Moving along a row adds electrons to that same shell, which is why the length of a row is set by the subshells available in it.
+</Step>
+<Step>
+Each column is a group. The elements of a group share an outer configuration, so group 1 is $ns^1$ in every period and group 17 is $ns^2np^5$. Read down a column and only $n$ changes, which is why the chemistry of a group is similar from one row to the next.
+</Step>
+<Step>
+The s-block is groups 1 and 2. The last electron enters an s subshell, so the outer configuration is $ns^1$ or $ns^2$. These are reactive metals with low ionization enthalpies, and they form ions readily. Helium is also an s-block element, but it sits in group 18 because its shell is full.
+</Step>
+<Step>
+The p-block runs from group 13 to group 18. The outer configuration runs from $ns^2np^1$ to $ns^2np^6$, and the last electron enters a p subshell. Group 18 has the full $ns^2np^6$ shell, which makes the noble gases very unreactive. The halogens and chalcogens just before them gain electrons readily.
+</Step>
+<Step>
+The d-block is groups 3 to 12, the transition elements, where electrons enter the $(n-1)d$ subshell. The general outer configuration is $(n-1)d^{1\text{–}10}\,ns^{0\text{–}2}$. Palladium is the exception, with $4d^{10}\,5s^0$. Zinc, cadmium and mercury have a full d subshell and do not show most transition-metal properties.
+</Step>
+<Step>
+The f-block is the two detached rows. The lanthanoids, cerium to lutetium, and the actinoids, thorium to lawrencium, fill an f subshell. Their general configuration is $(n-2)f^{1\text{–}14}\,(n-1)d^{0\text{–}1}\,ns^2$. They are all metals, and the actinoids are radioactive.
+</Step>
+</Scrolly>
+
+The four blocks have characteristic properties, and the properties follow from the subshell being filled. The s-block elements are reactive metals, and they are never found pure in nature. Their compounds are mostly ionic, except for those of lithium and beryllium.
+
+The p-block contains a full range of behaviour. Their non-metallic character grows from left to right across a period, and their metallic character grows down a group. The noble gases at the end of each period have their valence shell full, so they barely react.
+
+The d-block elements are the transition metals. They mostly form coloured ions, show several oxidation states, are often paramagnetic, and are frequently used as catalysts. They bridge the very reactive s-block metals and the less active metals of groups 13 and 14.
+
+The f-block elements are the inner transition elements. The lanthanoids are a close family with similar properties, and the early actinoids have many oxidation states, which makes their chemistry more complicated.
+
+<Check n="fe-block" options={["s-block", "p-block", "d-block", "f-block"]} answer={2} explanation={<p>Iron has the configuration [Ar] 3d⁶ 4s². The last electron of the building-up order enters 3d, a d subshell, and iron sits in group 8 of the d-block.</p>}>
+Which block does iron ($Z = 26$) belong to?
+</Check>
+
+<Simulation name="table-explorer" title="Table explorer" />
+
+## Metals, non-metals and metalloids (3.6.5)
+
+The blocks also give a broad classification by properties. Metals occupy the left and centre of the table, and they make up most of the known elements. Non-metals sit at the top right. Between them runs a thick zig-zag line, and the elements along it show properties of both sides. The scrolly below steps through the three groups and draws the line.
+
+<Scrolly animation="periodic-categories">
+<Step>
+Metals lie to the left of the zig-zag and in the centre of the table. They are usually solids with high melting points. They conduct heat and electricity well, and they can be hammered into sheets (malleable) or drawn into wires (ductile). Mercury, which is a liquid at room temperature, is the usual exception.
+</Step>
+<Step>
+Non-metals sit at the top right. They are usually solids or gases with low melting points, and they are poor conductors of heat and electricity. Most non-metallic solids are brittle, so they are neither malleable nor ductile. Moving from left to right across a period, elements become less metallic.
+</Step>
+<Step>
+The change from metal to non-metal is not sudden. The thick zig-zag line marks the boundary, and the elements along it show properties of both. Silicon, germanium, arsenic, antimony and tellurium are the examples NCERT names; NCERT calls them semi-metals or metalloids. The data used here also class boron and polonium as metalloids.
+</Step>
+</Scrolly>
+
+<Check n="group15-config" options={["ns²np³", "ns²np⁵", "ns¹", "(n − 1)d⁵ ns²"]} answer={0} explanation={<p>Group 15 has five outer electrons, and the outer configuration is ns² np³. The count is 2 + 3 = 5 electrons, with 10 + 5 = 15 giving the group number.</p>}>
+Which outer configuration is shared by the elements of group 15, such as nitrogen and phosphorus?
+</Check>
+
+<KeyIdeas>
+- The period number is the principal quantum number of the outermost shell, and the length of each period is twice the number of orbitals it fills.
+- Elements in one group share an outer configuration. Group 1 is $ns^1$, and group 17 is $ns^2np^5$.
+- The s-block (groups 1 and 2), p-block (13 to 18), d-block (3 to 12) and f-block (the lanthanoids and actinoids) are named for the subshell of the last electron.
+- The d-block has the general configuration $(n-1)d^{1\text{–}10}\,ns^{0\text{–}2}$, with palladium as the exception. The f-block has $(n-2)f^{1\text{–}14}\,(n-1)d^{0\text{–}1}\,ns^2$.
+- Metals lie left of a zig-zag line, non-metals lie top right, and metalloids such as silicon and germanium sit along the line.
+</KeyIdeas>

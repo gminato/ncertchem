@@ -34,6 +34,9 @@ import { DefinitionRadii } from './unit3/radii/DefinitionRadii'
 import { PeriodTwoRadii, GroupOneRadii } from './unit3/radii/PeriodRadii'
 import { PeriodicRadiiMap } from './unit3/radii/PeriodicRadiiMap'
 import { IonicRadii } from './unit3/radii/IonicRadii'
+import { MoseleyPlot } from './unit3/modern/MoseleyPlot'
+import { PeriodicLongForm } from './unit3/modern/PeriodicLongForm'
+import { PeriodicBlocks, PeriodicCategories } from './unit3/modern/PeriodicBlocks'
 
 /**
  * Animations available to a Scrolly Animation, keyed by the `animation` prop.
@@ -77,6 +80,10 @@ export const animations = {
   'radii-group-one': GroupOneRadii,
   'radii-periodic-table': PeriodicRadiiMap,
   'radii-ionic': IonicRadii,
+  'moseley-plot': MoseleyPlot,
+  'periodic-long-form': PeriodicLongForm,
+  'periodic-blocks': PeriodicBlocks,
+  'periodic-categories': PeriodicCategories,
 } as const
 
 export type AnimationName = keyof typeof animations
