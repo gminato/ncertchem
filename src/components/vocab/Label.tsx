@@ -6,6 +6,7 @@ export interface LabelProps extends React.SVGAttributes<SVGTextElement> {
   sub?: React.ReactNode
   sup?: React.ReactNode
   fontSize?: number | string
+  halo?: boolean
   children?: React.ReactNode
 }
 
@@ -32,6 +33,7 @@ const LabelComponent = forwardRef<SVGTextElement, LabelProps>(function Label(
     sub,
     sup,
     fontSize = 12,
+    halo = false,
     textAnchor = 'middle',
     dominantBaseline = 'central',
     children,
@@ -52,10 +54,16 @@ const LabelComponent = forwardRef<SVGTextElement, LabelProps>(function Label(
       textAnchor={textAnchor}
       dominantBaseline={dominantBaseline}
       style={{
-        fontVariant: 'all-small-caps',
-        fontVariantCaps: 'all-small-caps',
-        letterSpacing: '0.06em',
+        letterSpacing: '0.01em',
         userSelect: 'none',
+        ...(halo
+          ? {
+              paintOrder: 'stroke',
+              stroke: 'var(--surface)',
+              strokeWidth: '4px',
+              strokeLinejoin: 'round',
+            }
+          : {}),
         ...style,
       }}
       className={className}

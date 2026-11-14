@@ -232,7 +232,7 @@ describe('Photon', () => {
 })
 
 describe('Label', () => {
-  it('renders SVG <text> with small-caps styling in --font-sans and --fg-muted', () => {
+  it('renders SVG <text> without case transforms in --font-sans and --fg-muted', () => {
     const html = renderToStaticMarkup(
       <svg>
         <Label x={50} y={60}>Proton</Label>
@@ -244,8 +244,24 @@ describe('Label', () => {
     expect(html).toContain('y="60"')
     expect(html).toContain('fill="var(--fg-muted)"')
     expect(html).toContain('font-family="var(--font-sans)"')
-    expect(html).toContain('all-small-caps')
+    expect(html).not.toContain('small-caps')
+    expect(html).not.toContain('uppercase')
+    expect(html).toContain('letter-spacing:0.01em')
     expect(html).toContain('Proton')
+  })
+
+  it('renders background halo when halo prop is true', () => {
+    const html = renderToStaticMarkup(
+      <svg>
+        <Label x={50} y={60} halo>
+          n=1
+        </Label>
+      </svg>
+    )
+
+    expect(html).toContain('paint-order:stroke')
+    expect(html).toContain('stroke:var(--surface)')
+    expect(html).toContain('stroke-width:4px')
   })
 
   it('renders subscript and superscript helpers', () => {

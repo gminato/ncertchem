@@ -8,7 +8,10 @@ import {
   EnergyLevel,
   Photon,
   Label,
+  ladderY,
+  joulesToEv,
 } from '@/components/vocab'
+import { energyLevel } from '@/lib/chem/bohr'
 import styles from './vocab.module.css'
 
 export const metadata: Metadata = {
@@ -18,6 +21,18 @@ export const metadata: Metadata = {
 }
 
 export default function VocabPage() {
+  // Proportional hydrogen energy levels (converted from Joules to eV)
+  const e1 = joulesToEv(energyLevel(1))
+  const e2 = joulesToEv(energyLevel(2))
+  const e3 = joulesToEv(energyLevel(3))
+  const e4 = joulesToEv(energyLevel(4))
+
+  const ladderBounds = { top: -46, bottom: 46, eMin: e1, eMax: e4 }
+  const yLadder1 = ladderY(e1, ladderBounds)
+  const yLadder2 = ladderY(e2, ladderBounds)
+  const yLadder3 = ladderY(e3, ladderBounds)
+  const yLadder4 = ladderY(e4, ladderBounds)
+
   return (
     <div className={styles.container}>
       {/* Page Header */}
@@ -55,7 +70,7 @@ export default function VocabPage() {
                 <VocabDefs />
                 <Electron x={0} y={-8} size={14} />
                 <Label x={0} y={32} fontSize={13}>
-                  e<Label.Sup>−</Label.Sup>
+                  e⁻
                 </Label>
               </svg>
             </div>
@@ -65,13 +80,12 @@ export default function VocabPage() {
                 <span className={styles.cardBadge}>--electron</span>
               </div>
               <p className={styles.cardDescription}>
-                Solid particle with a soft radial halo. The halo luminosity expands dynamically
-                in dark mode via <code>--glow-strength</code>.
+                An electron drawn as a cool blue particle with a soft glow halo.
               </p>
             </div>
           </article>
 
-          {/* Card: Nucleus H (1p) */}
+          {/* Card: Nucleus H (1p, 0n) */}
           <article className={styles.card}>
             <div className={styles.cardCanvas}>
               <svg
@@ -83,7 +97,7 @@ export default function VocabPage() {
                 <VocabDefs />
                 <Nucleus protons={1} neutrons={0} x={0} y={-8} nucleonRadius={10} />
                 <Label x={0} y={34} fontSize={13}>
-                  <Label.Sup>1</Label.Sup>H (1p)
+                  ¹H (1p, 0n)
                 </Label>
               </svg>
             </div>
@@ -93,13 +107,12 @@ export default function VocabPage() {
                 <span className={styles.cardBadge}>1p, 0n</span>
               </div>
               <p className={styles.cardDescription}>
-                Single proton rendered in warm coral-red (<code>--proton</code>) with subtle 3D
-                specular highlight shading.
+                A single proton drawn in warm coral-red with a subtle highlight.
               </p>
             </div>
           </article>
 
-          {/* Card: Nucleus He (2p 2n) */}
+          {/* Card: Nucleus He (2p, 2n) */}
           <article className={styles.card}>
             <div className={styles.cardCanvas}>
               <svg
@@ -111,7 +124,7 @@ export default function VocabPage() {
                 <VocabDefs />
                 <Nucleus protons={2} neutrons={2} x={0} y={-8} nucleonRadius={9} />
                 <Label x={0} y={34} fontSize={13}>
-                  <Label.Sup>4</Label.Sup>He (2p, 2n)
+                  ⁴He (2p, 2n)
                 </Label>
               </svg>
             </div>
@@ -121,13 +134,12 @@ export default function VocabPage() {
                 <span className={styles.cardBadge}>2p, 2n</span>
               </div>
               <p className={styles.cardDescription}>
-                Deterministic 4-nucleon alpha cluster interleaving protons and warm-grey neutrons (
-                <code>--neutron</code>).
+                An alpha particle cluster of two protons and two warm-grey neutrons.
               </p>
             </div>
           </article>
 
-          {/* Card: Nucleus Li (3p 4n) */}
+          {/* Card: Nucleus Li (3p, 4n) */}
           <article className={styles.card}>
             <div className={styles.cardCanvas}>
               <svg
@@ -139,7 +151,7 @@ export default function VocabPage() {
                 <VocabDefs />
                 <Nucleus protons={3} neutrons={4} x={0} y={-8} nucleonRadius={8} />
                 <Label x={0} y={34} fontSize={13}>
-                  <Label.Sup>7</Label.Sup>Li (3p, 4n)
+                  ⁷Li (3p, 4n)
                 </Label>
               </svg>
             </div>
@@ -149,8 +161,7 @@ export default function VocabPage() {
                 <span className={styles.cardBadge}>3p, 4n</span>
               </div>
               <p className={styles.cardDescription}>
-                Dense deterministic sphere packing sorted back-to-front by depth for authentic
-                depth without hydration discrepancies.
+                A seven-nucleon cluster packed in depth with three protons and four neutrons.
               </p>
             </div>
           </article>
@@ -167,7 +178,7 @@ export default function VocabPage() {
                 <VocabDefs />
                 <Nucleus protons={26} neutrons={30} x={0} y={-8} />
                 <Label x={0} y={34} fontSize={13}>
-                  <Label.Sup>56</Label.Sup>Fe (count &gt; 20)
+                  ⁵⁶Fe (count &gt; 20)
                 </Label>
               </svg>
             </div>
@@ -177,8 +188,7 @@ export default function VocabPage() {
                 <span className={styles.cardBadge}>&gt; 20 nucleons</span>
               </div>
               <p className={styles.cardDescription}>
-                Counts &gt; 20 automatically condense into a single shaded sphere with a warm
-                ambient nuclear glow halo.
+                A heavy nucleus with more than twenty nucleons drawn as a single shaded sphere with a nuclear glow.
               </p>
             </div>
           </article>
@@ -195,7 +205,7 @@ export default function VocabPage() {
         </p>
 
         <div className={styles.grid}>
-          {/* Card: 656 nm Red */}
+          {/* Card: 656 nm Red (Hα) */}
           <article className={styles.card}>
             <div className={styles.cardCanvas}>
               <svg
@@ -207,23 +217,22 @@ export default function VocabPage() {
                 <VocabDefs />
                 <Photon wavelengthNm={656} x={-60} y={-8} length={120} />
                 <Label x={0} y={28} fontSize={12}>
-                  H<Label.Sub>α</Label.Sub> · 656 nm (Red)
+                  H<Label.Sub>α</Label.Sub><tspan dy="-0.32em"> · 656 nm (Red)</tspan>
                 </Label>
               </svg>
             </div>
             <div className={styles.cardBody}>
               <div className={styles.cardHeading}>
-                <span>Balmer H-Alpha</span>
+                <span>Balmer Hα</span>
                 <span className={styles.cardBadge}>656 nm</span>
               </div>
               <p className={styles.cardDescription}>
-                Longest visible hydrogen emission line with broad, gentle wiggles and deep crimson
-                glow.
+                The 656 nm red Balmer alpha photon drawn as a gentle wave packet.
               </p>
             </div>
           </article>
 
-          {/* Card: 486 nm Cyan */}
+          {/* Card: 486 nm Cyan (Hβ) */}
           <article className={styles.card}>
             <div className={styles.cardCanvas}>
               <svg
@@ -235,22 +244,22 @@ export default function VocabPage() {
                 <VocabDefs />
                 <Photon wavelengthNm={486} x={-60} y={-8} length={120} />
                 <Label x={0} y={28} fontSize={12}>
-                  H<Label.Sub>β</Label.Sub> · 486 nm (Cyan)
+                  H<Label.Sub>β</Label.Sub><tspan dy="-0.32em"> · 486 nm (Cyan)</tspan>
                 </Label>
               </svg>
             </div>
             <div className={styles.cardBody}>
               <div className={styles.cardHeading}>
-                <span>Balmer H-Beta</span>
+                <span>Balmer Hβ</span>
                 <span className={styles.cardBadge}>486 nm</span>
               </div>
               <p className={styles.cardDescription}>
-                Vibrant cyan-blue line exhibiting medium-density oscillations.
+                The 486 nm cyan Balmer beta photon drawn with medium-frequency oscillations.
               </p>
             </div>
           </article>
 
-          {/* Card: 434 nm Blue */}
+          {/* Card: 434 nm Blue (Hγ) */}
           <article className={styles.card}>
             <div className={styles.cardCanvas}>
               <svg
@@ -262,22 +271,22 @@ export default function VocabPage() {
                 <VocabDefs />
                 <Photon wavelengthNm={434} x={-60} y={-8} length={120} />
                 <Label x={0} y={28} fontSize={12}>
-                  H<Label.Sub>γ</Label.Sub> · 434 nm (Blue)
+                  H<Label.Sub>γ</Label.Sub><tspan dy="-0.32em"> · 434 nm (Blue)</tspan>
                 </Label>
               </svg>
             </div>
             <div className={styles.cardBody}>
               <div className={styles.cardHeading}>
-                <span>Balmer H-Gamma</span>
+                <span>Balmer Hγ</span>
                 <span className={styles.cardBadge}>434 nm</span>
               </div>
               <p className={styles.cardDescription}>
-                Blue-violet emission with tighter oscillation frequencies.
+                The 434 nm blue Balmer gamma photon drawn with compact oscillations.
               </p>
             </div>
           </article>
 
-          {/* Card: 410 nm Violet */}
+          {/* Card: 410 nm Violet (Hδ) */}
           <article className={styles.card}>
             <div className={styles.cardCanvas}>
               <svg
@@ -289,22 +298,22 @@ export default function VocabPage() {
                 <VocabDefs />
                 <Photon wavelengthNm={410} x={-60} y={-8} length={120} />
                 <Label x={0} y={28} fontSize={12}>
-                  H<Label.Sub>δ</Label.Sub> · 410 nm (Violet)
+                  H<Label.Sub>δ</Label.Sub><tspan dy="-0.32em"> · 410 nm (Violet)</tspan>
                 </Label>
               </svg>
             </div>
             <div className={styles.cardBody}>
               <div className={styles.cardHeading}>
-                <span>Balmer H-Delta</span>
+                <span>Balmer Hδ</span>
                 <span className={styles.cardBadge}>410 nm</span>
               </div>
               <p className={styles.cardDescription}>
-                Deep violet boundary wavelength rendered with tight spatial wiggles.
+                The 410 nm violet Balmer delta photon drawn with rapid oscillations.
               </p>
             </div>
           </article>
 
-          {/* Card: 121 nm UV (Dashed) */}
+          {/* Card: 121 nm UV (Lyman-α) */}
           <article className={styles.card}>
             <div className={styles.cardCanvas}>
               <svg
@@ -326,13 +335,12 @@ export default function VocabPage() {
                 <span className={styles.cardBadge}>Dashed · UV</span>
               </div>
               <p className={styles.cardDescription}>
-                Non-visible quantum below 380 nm rendered dashed using standardized neutral violet
-                fallback (#7B61FF) and compact wiggles.
+                A 121 nm ultraviolet photon drawn as a dashed wave packet in violet.
               </p>
             </div>
           </article>
 
-          {/* Card: 1875 nm IR (Dashed) */}
+          {/* Card: 1875 nm IR (Paschen-α) */}
           <article className={styles.card}>
             <div className={styles.cardCanvas}>
               <svg
@@ -354,8 +362,7 @@ export default function VocabPage() {
                 <span className={styles.cardBadge}>Dashed · IR</span>
               </div>
               <p className={styles.cardDescription}>
-                Non-visible quantum above 750 nm rendered dashed with standardized neutral rust
-                fallback (#8B2E2E) and broad wiggles.
+                An 1875 nm infrared photon drawn as a dashed wave packet in rust.
               </p>
             </div>
           </article>
@@ -383,11 +390,12 @@ export default function VocabPage() {
                 <VocabDefs />
                 <EnergyLevel variant="orbit" r={30} active={false} />
                 <EnergyLevel variant="orbit" r={54} active={true} />
-                <Label x={0} y={-30} fontSize={11}>
-                  n=1
+                {/* Labels positioned along orbit at -35° outside stroke with legibility halo */}
+                <Label x={33} y={-23} fontSize={11} halo>
+                  <tspan fontStyle="italic">n</tspan> = 1
                 </Label>
-                <Label x={0} y={-54} fontSize={11} fill="var(--orbit-active)">
-                  n=2 (active)
+                <Label x={52} y={-37} fontSize={11} fill="var(--orbit-active)" halo>
+                  <tspan fontStyle="italic">n</tspan> = 2 (active)
                 </Label>
               </svg>
             </div>
@@ -397,35 +405,46 @@ export default function VocabPage() {
                 <span className={styles.cardBadge}>variant=&quot;orbit&quot;</span>
               </div>
               <p className={styles.cardDescription}>
-                Circular orbits with subtle resting strokes (<code>--orbit</code>). Active levels
-                gain prominence and luminescence with <code>--orbit-active</code>.
+                Concentric circular paths showing electron orbits, highlighted when active.
               </p>
             </div>
           </article>
 
-          {/* Card: Energy Ladder */}
+          {/* Card: Energy Ladder (Physically Proportional for Hydrogen n=1..4) */}
           <article className={styles.card}>
             <div className={styles.cardCanvas}>
               <svg
                 viewBox="-90 -70 180 140"
                 className={styles.svgElement}
                 role="img"
-                aria-label="Energy levels ladder variant showing inactive and active horizontal rungs"
+                aria-label="Energy levels ladder variant showing proportionally spaced hydrogen levels n=1 to 4"
               >
                 <VocabDefs />
-                <EnergyLevel variant="ladder" width={130} y={35} active={false} />
-                <Label x={-52} y={23} fontSize={11} textAnchor="start">
-                  n=1 (−13.6 eV)
+                <EnergyLevel variant="ladder" width={130} y={yLadder1} active={false} />
+                <Label x={-52} y={35} fontSize={10.5} textAnchor="start" halo>
+                  <tspan fontStyle="italic">n</tspan> = 1 (−13.6 eV)
                 </Label>
 
-                <EnergyLevel variant="ladder" width={130} y={-5} active={true} />
-                <Label x={-52} y={-17} fontSize={11} textAnchor="start" fill="var(--orbit-active)">
-                  n=2 (−3.4 eV) [active]
+                <EnergyLevel variant="ladder" width={130} y={yLadder2} active={true} />
+                <Label
+                  x={-52}
+                  y={-16}
+                  fontSize={10.5}
+                  textAnchor="start"
+                  fill="var(--orbit-active)"
+                  halo
+                >
+                  <tspan fontStyle="italic">n</tspan> = 2 (−3.4 eV) [active]
                 </Label>
 
-                <EnergyLevel variant="ladder" width={130} y={-35} active={false} />
-                <Label x={-52} y={-47} fontSize={11} textAnchor="start">
-                  n=3 (−1.51 eV)
+                <EnergyLevel variant="ladder" width={130} y={yLadder3} active={false} />
+                <Label x={-52} y={-34.5} fontSize={10.5} textAnchor="start" halo>
+                  <tspan fontStyle="italic">n</tspan> = 3 (−1.51 eV)
+                </Label>
+
+                <EnergyLevel variant="ladder" width={130} y={yLadder4} active={false} />
+                <Label x={-52} y={-56} fontSize={10.5} textAnchor="start" halo>
+                  <tspan fontStyle="italic">n</tspan> = 4 (−0.85 eV)
                 </Label>
               </svg>
             </div>
@@ -435,21 +454,19 @@ export default function VocabPage() {
                 <span className={styles.cardBadge}>variant=&quot;ladder&quot;</span>
               </div>
               <p className={styles.cardDescription}>
-                Horizontal rungs for energy diagrams and spectroscopic transitions, supporting
-                active highlighting.
+                Horizontal rungs spaced proportionally to energy levels, highlighted when active.
               </p>
             </div>
           </article>
         </div>
       </section>
 
-      {/* Composite Architecture Section */}
+      {/* Putting it together Section */}
       <section className={styles.section}>
-        <h2 className={styles.sectionTitle}>Composite Composition</h2>
+        <h2 className={styles.sectionTitle}>Putting it together</h2>
         <p className={styles.sectionSubtitle}>
-          Full architectural demonstration: combining Nucleus, concentric Bohr EnergyLevels, an
-          orbiting Electron, an emitted Photon packet, and small-caps Labels into one composite
-          SVG.
+          Combining a nucleus, concentric Bohr orbits, an electron, and an emitted photon into a
+          single diagram.
         </p>
 
         <div className={styles.grid}>
@@ -468,15 +485,15 @@ export default function VocabPage() {
                 <EnergyLevel variant="orbit" r={78} active={true} />
                 <EnergyLevel variant="orbit" r={116} active={false} />
 
-                {/* Level Labels */}
-                <Label x={0} y={-44} fontSize={11}>
-                  n=1
+                {/* Level Labels positioned along orbit at -35° outside stroke with legibility halo */}
+                <Label x={43} y={-30} fontSize={11} halo>
+                  <tspan fontStyle="italic">n</tspan> = 1
                 </Label>
-                <Label x={0} y={-82} fontSize={11} fill="var(--orbit-active)">
-                  n=2 (active state)
+                <Label x={75} y={-53} fontSize={11} fill="var(--orbit-active)" halo>
+                  <tspan fontStyle="italic">n</tspan> = 2 (active)
                 </Label>
-                <Label x={0} y={-120} fontSize={11}>
-                  n=3
+                <Label x={106} y={-75} fontSize={11} halo>
+                  <tspan fontStyle="italic">n</tspan> = 3
                 </Label>
 
                 {/* Central Hydrogen Nucleus */}
@@ -496,21 +513,18 @@ export default function VocabPage() {
                 />
 
                 {/* Emitted Photon Annotation */}
-                <Label x={148} y={-82} fontSize={11} fill="var(--fg-muted)">
+                <Label x={148} y={-82} fontSize={11} fill="var(--fg-muted)" halo>
                   hν · 486 nm
                 </Label>
               </svg>
             </div>
             <div className={styles.cardBody}>
               <div className={styles.cardHeading}>
-                <span>Mini Composite Bohr Atom</span>
+                <span>Composite Bohr Atom</span>
                 <span className={styles.cardBadge}>Integrated Model</span>
               </div>
               <p className={styles.cardDescription}>
-                Complete composition demonstrating seamless co-existence of all Visual
-                Vocabulary elements within an SVG coordinate space. The electron is positioned on
-                the active <code>n=2</code> level emitting a Balmer H-beta photon (486 nm) into free
-                space.
+                A hydrogen atom with an electron in the active n = 2 orbit emitting a 486 nm photon.
               </p>
             </div>
           </article>
