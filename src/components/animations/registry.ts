@@ -39,6 +39,10 @@ import { PeriodicLongForm } from './unit3/modern/PeriodicLongForm'
 import { PeriodicBlocks, PeriodicCategories } from './unit3/modern/PeriodicBlocks'
 import { IonizationTrends } from './unit3/energetics/IonizationTrends'
 import { EnergeticsTable } from './unit3/energetics/EnergeticsTable'
+import { DobereinerTriads } from './unit3/history/DobereinerTriads'
+import { NewlandsOctaves } from './unit3/history/NewlandsOctaves'
+import { MeyerVolume } from './unit3/history/MeyerVolume'
+import { MendeleevGaps } from './unit3/history/MendeleevGaps'
 
 /**
  * Animations available to a Scrolly Animation, keyed by the `animation` prop.
@@ -88,6 +92,10 @@ export const animations = {
   'periodic-categories': PeriodicCategories,
   'ionization-trends': IonizationTrends,
   'energetics-table': EnergeticsTable,
+  'history-triads': DobereinerTriads,
+  'history-octaves': NewlandsOctaves,
+  'history-meyer': MeyerVolume,
+  'history-mendeleev-gaps': MendeleevGaps,
 } as const
 
 export type AnimationName = keyof typeof animations
