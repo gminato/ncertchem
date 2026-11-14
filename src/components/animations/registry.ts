@@ -37,6 +37,8 @@ import { IonicRadii } from './unit3/radii/IonicRadii'
 import { MoseleyPlot } from './unit3/modern/MoseleyPlot'
 import { PeriodicLongForm } from './unit3/modern/PeriodicLongForm'
 import { PeriodicBlocks, PeriodicCategories } from './unit3/modern/PeriodicBlocks'
+import { IonizationTrends } from './unit3/energetics/IonizationTrends'
+import { EnergeticsTable } from './unit3/energetics/EnergeticsTable'
 
 /**
  * Animations available to a Scrolly Animation, keyed by the `animation` prop.
@@ -84,6 +86,8 @@ export const animations = {
   'periodic-long-form': PeriodicLongForm,
   'periodic-blocks': PeriodicBlocks,
   'periodic-categories': PeriodicCategories,
+  'ionization-trends': IonizationTrends,
+  'energetics-table': EnergeticsTable,
 } as const
 
 export type AnimationName = keyof typeof animations

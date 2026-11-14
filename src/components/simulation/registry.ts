@@ -9,6 +9,7 @@ import { HydrogenSpectrum } from './sims/hydrogen-spectrum'
 import { Isoelectronic } from './sims/isoelectronic'
 import { TableExplorer } from './sims/table-explorer'
 import { IupacNamer } from './sims/iupac-namer'
+import { TrendsExplorer } from './sims/trends-explorer'
 
 export interface SimulationProps {
   /** True when the Learner has asked the OS for reduced motion. Skip tweens and loops when set. */
@@ -31,4 +32,5 @@ export const simulations: Record<string, ComponentType<SimulationProps>> = {
   isoelectronic: Isoelectronic,
   'table-explorer': TableExplorer,
   'iupac-namer': IupacNamer,
+  'trends-explorer': TrendsExplorer,
 }
