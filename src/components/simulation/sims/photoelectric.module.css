@@ -1,0 +1,136 @@
+/* Photoelectric Simulation. Colours come from tokens only. */
+
+.wrap {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.stage {
+  width: 100%;
+}
+
+.svg {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.banner {
+  margin: 0;
+  padding: var(--space-3) var(--space-4);
+  border-radius: var(--radius-md);
+  font-family: var(--font-sans);
+  font-size: 0.98rem;
+  line-height: 1.45;
+  color: var(--fg);
+  background: var(--surface);
+  border: 1px solid var(--border);
+}
+
+.bannerBelow {
+  border-color: var(--fg-muted);
+  font-weight: 600;
+}
+
+.bannerAbove {
+  background: var(--accent-soft);
+  border-color: var(--accent);
+}
+
+.lower {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: var(--space-4);
+  align-items: start;
+}
+
+@media (max-width: 720px) {
+  .lower {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+.readout {
+  margin: 0;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: var(--space-2) var(--space-4);
+  font-family: var(--font-sans);
+  font-size: 0.95rem;
+}
+
+.readout dt {
+  color: var(--fg-muted);
+}
+
+.readout dd {
+  margin: 0;
+  color: var(--fg);
+  font-family: var(--font-mono);
+  font-size: 0.9rem;
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+  white-space: nowrap;
+}
+
+.plot {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.axis {
+  stroke: var(--fg-subtle);
+  stroke-width: 1.2;
+  fill: none;
+}
+
+.line {
+  fill: none;
+  stroke: var(--accent);
+  stroke-width: 2.6;
+  stroke-linecap: round;
+}
+
+.guide {
+  stroke: var(--fg-subtle);
+  stroke-width: 1;
+  stroke-dasharray: 4 4;
+  fill: none;
+}
+
+.lamp {
+  fill: var(--surface);
+  stroke: var(--fg-subtle);
+  stroke-width: 1.5;
+}
+
+.tube {
+  fill: var(--surface);
+  stroke: var(--border);
+  stroke-width: 2;
+  opacity: 0.9;
+}
+
+.plate {
+  fill: var(--fg-subtle);
+  opacity: 0.85;
+}
+
+.plateFlash {
+  fill: var(--accent);
+}

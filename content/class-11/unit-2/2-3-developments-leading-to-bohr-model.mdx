@@ -1,0 +1,193 @@
+---
+class: 11
+unit: 2
+section: "2.3"
+order: 3
+title: "Developments Leading to the Bohr's Model of Atom"
+slug: "2-3-developments-leading-to-bohr-model"
+summary: "Light is both a wave and a stream of quanta, and atoms emit only at sharp wavelengths, which is the evidence Bohr needed."
+ncert: "Class 11, Part I — Unit 2, Section 2.3"
+---
+
+<Hook>
+Stoke a coal fire and its embers glow a dull red. Fan them and they turn orange, then nearly white. Heat makes things shine, and the colour follows the temperature. Why should that be?
+</Hook>
+
+Bohr did not invent his model from nothing. He built it on two developments. The first is that light has a dual character: it behaves as a wave in some experiments and as a stream of particles in others. The second is that atoms give out light only at sharp, separate wavelengths. This Section follows the first thread and then the evidence from atomic spectra.
+
+## 2.3.1 Wave nature of electromagnetic radiation
+
+Light was once thought to be a stream of tiny particles, and by the nineteenth century experiments had shown that it is a wave. Maxwell then showed that a light wave is made of oscillating electric and magnetic fields, and that an accelerating charge sends such fields outward.
+
+<Scrolly animation="wave-nature">
+<Step>
+Light is an **electromagnetic wave**. An accelerating charge sends out two fields that oscillate: an electric field $E$ and a magnetic field $B$. They swing in step, at right angles to each other and to the direction the wave travels. The wave needs no medium, so it crosses empty space.
+</Step>
+<Step>
+A wave has two main properties. Its **frequency**, $\nu$, counts the waves that pass a point each second, and is measured in hertz (Hz), after Heinrich Hertz. Its **wavelength**, $\lambda$, is the distance from one crest to the next. The speed of the wave is their product:
+
+$$
+c = \nu\lambda
+$$
+
+In vacuum $c = 3.0 \times 10^{8}\ \text{m s}^{-1}$ for every kind of electromagnetic radiation, so a shorter wavelength means a higher frequency.
+</Step>
+<Step>
+Radio waves, microwaves, infrared, visible light, ultraviolet, X-rays and gamma rays are all electromagnetic waves. They differ only in wavelength. This band is drawn on a logarithmic scale, because it spans fifteen powers of ten, from a picometre to a kilometre. Visible light is a small slice in the middle, the only part your eyes can detect.
+</Step>
+<Step>
+Zoom in on that slice and it is a band of colours, from violet at about $400\ \text{nm}$ to red at $750\ \text{nm}$. The frequencies run from about $7.5 \times 10^{14}\ \text{Hz}$ to $4.0 \times 10^{14}\ \text{Hz}$. Spectroscopists often quote the **wavenumber**, $\bar{\nu} = 1/\lambda$, in cm⁻¹. At $500\ \text{nm}$ it is $2.00 \times 10^{4}\ \text{cm}^{-1}$.
+</Step>
+</Scrolly>
+
+<Check n={1} numeric answer={6} tolerance={0.01} unit="× 10¹⁴ Hz" explanation="ν = c / λ = (3.0 × 10⁸ m s⁻¹) / (5.00 × 10⁻⁷ m) = 6.00 × 10¹⁴ Hz. The wavelength is 500 nm, which lies in the visible band.">
+Light of wavelength $500\ \text{nm}$ has a frequency of how many $\times 10^{14}$ hertz?
+</Check>
+
+## 2.3.2 Particle nature of electromagnetic radiation
+
+Wave theory explains interference and diffraction well, but two observations in particular resisted it. One is the light given off by hot bodies. The other is the ejection of electrons from metal surfaces. Both were resolved by treating radiation as packets of energy.
+
+### Black-body radiation
+
+A **black body** is an ideal absorber: it takes in all the radiation that falls on it. A good approximation is a cavity with a tiny hole. Light that enters the hole is reflected by the walls and absorbed until it is gone, so the hole looks black. In equilibrium the body also emits radiation, and the spectrum it emits depends only on its temperature.
+
+<Scrolly animation="black-body">
+<Step>
+A **black body** absorbs all the radiation that falls on it. A cavity with a tiny hole is a good model. Light entering the hole bounces around the walls and is absorbed there, so the hole looks perfectly black. In equilibrium such a body also emits radiation, and that spectrum depends only on its temperature.
+</Step>
+<Step>
+Heat the cavity to $3000\ \text{K}$ and it emits at every wavelength, but the intensity peaks near $967\ \text{nm}$. That is infrared, which the eye cannot see, and most of the energy lies there. The plot shows intensity against wavelength on a logarithmic axis.
+</Step>
+<Step>
+Raise the temperature and the intensity rises at every wavelength, while the peak moves to shorter wavelengths: $967\ \text{nm}$ at $3000\ \text{K}$, $725\ \text{nm}$ at $4000\ \text{K}$, $580\ \text{nm}$ at $5000\ \text{K}$ and $483\ \text{nm}$ at $6000\ \text{K}$. As the peak climbs into the visible, a poker heated in a fire shifts from dull red towards white.
+</Step>
+<Step>
+Max Planck matched these curves in 1900 by assuming that the oscillators in the walls take up and give out energy in discrete quanta, $E = h\nu$, with nothing in between. Energy comes in steps of $h\nu$: $0,\ h\nu,\ 2h\nu,\ 3h\nu$ and so on. Planck's constant is $h = 6.626 \times 10^{-34}\ \text{J s}$.
+</Step>
+</Scrolly>
+
+Planck's law gives the full curve at each temperature $T$. Here $B_\lambda$ is the spectral radiance, in W sr⁻¹ m⁻³:
+
+$$
+B_\lambda(\lambda, T) = \frac{2hc^{2}}{\lambda^{5}}\cdot\frac{1}{\exp\!\left(\dfrac{hc}{\lambda k_\text{B} T}\right) - 1}
+$$
+
+The constant $k_\text{B} = 1.380649 \times 10^{-23}\ \text{J K}^{-1}$ is the Boltzmann constant, which appears nowhere else in this Section.
+
+<Check n={2} options={["Towards longer wavelength", "Towards shorter wavelength", "It stays at the same wavelength", "It disappears"]} answer={1} explanation="The peak wavelength is inversely proportional to temperature. It is 967 nm at 3000 K and 483 nm at 6000 K. The intensity at every wavelength also grows with temperature.">
+As a black body gets hotter, in which direction does its intensity peak move?
+</Check>
+
+### The photoelectric effect
+
+In 1887 Heinrich Hertz found that light falling on certain metals, such as potassium, rubidium and caesium, ejects electrons. This is the **photoelectric effect**. Three of its features could not be explained by a wave:
+
+- The electrons leave as soon as the light arrives, with no measurable delay.
+- Brighter light gives more electrons, but not faster ones. Their kinetic energy depends on the frequency of the light, not on its brightness.
+- Each metal has a **threshold frequency** $\nu_0$. Below it, no electrons leave, however bright the light is. Above it, electrons leave with kinetic energy that grows with frequency.
+
+In 1905 Einstein explained the effect by treating light as a stream of photons, each carrying energy $h\nu$. A photon gives all its energy to one electron. Part of it frees the electron from the metal, and the **work function** $W_0 = h\nu_0$ is that part. The rest is the electron's kinetic energy:
+
+$$
+\tfrac{1}{2}\, m_\text{e} v^{2} = h\nu - W_0
+$$
+
+Table 2.2 of NCERT gives the work functions of six metals, from 2.25 eV for potassium to 4.8 eV for copper. For potassium, $\nu_0 = W_0 / h \approx 5.44 \times 10^{14}\ \text{Hz}$. The simulation below uses the same six values, so you can find each metal's threshold for yourself.
+
+<Simulation name="photoelectric" title="The photoelectric effect: one metal, one wavelength" />
+
+Set a wavelength longer than the threshold for the metal, then turn the intensity to full. Nothing is ejected. Shorten the wavelength past the threshold and electrons appear, even at low intensity. Intensity controls how many electrons leave, and the wavelength controls how fast they leave.
+
+<Check n={3} options={["600 nm, at full intensity", "400 nm, at the lowest intensity", "Neither, at any intensity"]} answer={1} explanation="At 600 nm a photon carries 2.07 eV, less than W₀ = 2.25 eV for potassium, so nothing is ejected at any intensity. At 400 nm a photon carries 3.10 eV, which is more than W₀, so electrons leave even at low intensity. The kinetic energy is 0.85 eV.">
+Potassium has $W_0 = 2.25\ \text{eV}$. Which light ejects electrons: $600\ \text{nm}$ light at full intensity, or $400\ \text{nm}$ light at the lowest intensity?
+</Check>
+
+Light, then, has both faces. Interference and diffraction need the wave picture, while the black body and the photoelectric effect need the photon. Experiment decides which picture a given observation needs, and both describe the same light.
+
+## 2.3.3 Evidence for quantised energy: atomic spectra
+
+A continuous rainbow is not the only way light can be spread out. A prism splits white light into all the colours from red to violet, with no gaps. A glowing gas does something different. It emits light at a few sharp wavelengths only. The pattern of bright lines is its **emission spectrum**. Light passed through a gas that absorbs loses those same wavelengths, leaving dark lines in a continuous band. That is the **absorption spectrum**, and it is the negative of the emission spectrum. Every element has its own pattern, which is why spectroscopy identified elements, and helium was discovered in the Sun's spectrum by this method.
+
+<Scrolly animation="line-spectra">
+<Step>
+Pass white light through a prism and it spreads into a continuous band of colours, from red at one end to violet at the other. Ordinary light mixes all the visible wavelengths together. Because every wavelength in the visible range is present, the band has no gaps at all.
+</Step>
+<Step>
+Now excite hydrogen gas in a discharge tube. Its molecules split into atoms, and those atoms emit light at only a few wavelengths. The first four lines of the **Balmer series** appear here: $656.5\ \text{nm}$, $486.3\ \text{nm}$, $434.2\ \text{nm}$ and $410.3\ \text{nm}$. Further Balmer lines lie closer together, near $365\ \text{nm}$.
+</Step>
+<Step>
+Pass white light through a gas that absorbs at those wavelengths and the same positions turn dark. The gas removes exactly the wavelengths it can absorb, which makes the absorption spectrum the negative of the emission spectrum.
+</Step>
+<Step>
+Each named series ends on the same lower level: **Lyman** on $n_1 = 1$, **Balmer** on $n_1 = 2$, **Paschen** on $n_1 = 3$, **Brackett** on $n_1 = 4$ and **Pfund** on $n_1 = 5$. The arrows mark the first line of each series. Only the Balmer lines fall in the visible region.
+</Step>
+</Scrolly>
+
+Hydrogen has the simplest line spectrum of all. Balmer found in 1885 that its visible lines fit a simple formula, and the Swedish spectroscopist Johannes Rydberg noticed that every series of hydrogen lines fits one expression. With $n_2 > n_1$ both integers, the wavenumber of a line is
+
+$$
+\bar{\nu} = \frac{1}{\lambda} = \bar{R}\left(\frac{1}{n_1^{2}} - \frac{1}{n_2^{2}}\right), \qquad \bar{R} = 109\,677\ \text{cm}^{-1}
+$$
+
+The first line of each series, computed from this formula with the constant above, is:
+
+<table style={{ borderCollapse: 'collapse', width: '100%', fontFamily: 'var(--font-sans)', fontSize: '0.95rem', margin: '1.2rem 0' }}>
+<thead>
+<tr>
+<th style={{ textAlign: 'left', padding: '0.45rem 0.6rem', borderBottom: '2px solid var(--border)' }}>Series</th>
+<th style={{ textAlign: 'right', padding: '0.45rem 0.6rem', borderBottom: '2px solid var(--border)' }}><i>n</i>₁</th>
+<th style={{ textAlign: 'right', padding: '0.45rem 0.6rem', borderBottom: '2px solid var(--border)' }}>Lines start at <i>n</i>₂</th>
+<th style={{ textAlign: 'left', padding: '0.45rem 0.6rem', borderBottom: '2px solid var(--border)' }}>Region</th>
+<th style={{ textAlign: 'right', padding: '0.45rem 0.6rem', borderBottom: '2px solid var(--border)' }}>First line, nm</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style={{ padding: '0.45rem 0.6rem', borderBottom: '1px solid var(--border)' }}>Lyman</td>
+<td style={{ textAlign: 'right', padding: '0.45rem 0.6rem', borderBottom: '1px solid var(--border)' }}>1</td>
+<td style={{ textAlign: 'right', padding: '0.45rem 0.6rem', borderBottom: '1px solid var(--border)' }}>2</td>
+<td style={{ padding: '0.45rem 0.6rem', borderBottom: '1px solid var(--border)' }}>Ultraviolet</td>
+<td style={{ textAlign: 'right', padding: '0.45rem 0.6rem', borderBottom: '1px solid var(--border)' }}>121.6</td>
+</tr>
+<tr>
+<td style={{ padding: '0.45rem 0.6rem', borderBottom: '1px solid var(--border)' }}>Balmer</td>
+<td style={{ textAlign: 'right', padding: '0.45rem 0.6rem', borderBottom: '1px solid var(--border)' }}>2</td>
+<td style={{ textAlign: 'right', padding: '0.45rem 0.6rem', borderBottom: '1px solid var(--border)' }}>3</td>
+<td style={{ padding: '0.45rem 0.6rem', borderBottom: '1px solid var(--border)' }}>Visible</td>
+<td style={{ textAlign: 'right', padding: '0.45rem 0.6rem', borderBottom: '1px solid var(--border)' }}>656.5</td>
+</tr>
+<tr>
+<td style={{ padding: '0.45rem 0.6rem', borderBottom: '1px solid var(--border)' }}>Paschen</td>
+<td style={{ textAlign: 'right', padding: '0.45rem 0.6rem', borderBottom: '1px solid var(--border)' }}>3</td>
+<td style={{ textAlign: 'right', padding: '0.45rem 0.6rem', borderBottom: '1px solid var(--border)' }}>4</td>
+<td style={{ padding: '0.45rem 0.6rem', borderBottom: '1px solid var(--border)' }}>Infrared</td>
+<td style={{ textAlign: 'right', padding: '0.45rem 0.6rem', borderBottom: '1px solid var(--border)' }}>1875.6</td>
+</tr>
+<tr>
+<td style={{ padding: '0.45rem 0.6rem', borderBottom: '1px solid var(--border)' }}>Brackett</td>
+<td style={{ textAlign: 'right', padding: '0.45rem 0.6rem', borderBottom: '1px solid var(--border)' }}>4</td>
+<td style={{ textAlign: 'right', padding: '0.45rem 0.6rem', borderBottom: '1px solid var(--border)' }}>5</td>
+<td style={{ padding: '0.45rem 0.6rem', borderBottom: '1px solid var(--border)' }}>Infrared</td>
+<td style={{ textAlign: 'right', padding: '0.45rem 0.6rem', borderBottom: '1px solid var(--border)' }}>4052.3</td>
+</tr>
+<tr>
+<td style={{ padding: '0.45rem 0.6rem' }}>Pfund</td>
+<td style={{ textAlign: 'right', padding: '0.45rem 0.6rem' }}>5</td>
+<td style={{ textAlign: 'right', padding: '0.45rem 0.6rem' }}>6</td>
+<td style={{ padding: '0.45rem 0.6rem' }}>Infrared</td>
+<td style={{ textAlign: 'right', padding: '0.45rem 0.6rem' }}>7459.9</td>
+</tr>
+</tbody>
+</table>
+
+<Check n={4} numeric answer={656} tolerance={0.5} unit="nm" explanation="For n₁ = 2 and n₂ = 3: 1/λ = 109 677 × (1/4 − 1/9) = 1.523 × 10⁴ cm⁻¹, so λ = 656.5 nm. To the nearest nanometre that is 656 nm, the red H-alpha line.">
+Use the Rydberg formula to find the wavelength, in nanometres, of the line from $n_2 = 3$ to $n_1 = 2$.
+</Check>
+
+<KeyIdeas>
+- Light is an electromagnetic wave: $c = \nu\lambda$, and every region of the spectrum travels at the same speed $c$.
+- A black body's spectrum depends only on its temperature. As it heats, the peak shifts to shorter wavelengths, and Planck explained this with energy in quanta, $E = h\nu$.
+- In the photoelectric effect, emission needs $h\nu > W_0$. Below the threshold no electron leaves, at any intensity. Above it, $\tfrac12 m_\text{e} v^{2} = h\nu - W_0$, and intensity sets how many electrons leave.
+- Hydrogen emits and absorbs only at discrete wavelengths, and the Rydberg formula describes every series. Section 2.4 turns this evidence into Bohr's model.
+</KeyIdeas>
