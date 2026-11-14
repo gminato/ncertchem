@@ -10,6 +10,13 @@ import type { OrbitalGeometry } from './orbital-explorer-model'
 /** Half-length of each drawn axis in scene units. Sized so the x, y and z letters stay in the stage. */
 export const AXIS_LENGTH = 1.75
 
+/**
+ * Turns the chemistry frame (z vertical) into the scene frame, where +y is up. A rotation of
+ * −90° about x sends the orbital's z to scene +y, so dz² lobes point up and down, and the
+ * orbital's x and y lie in the horizontal plane.
+ */
+const CHEMISTRY_TO_SCENE: [number, number, number] = [-Math.PI / 2, 0, 0]
+
 export type OrbitalView = 'surface' | 'cloud'
 
 export interface OrbitalSceneProps {
@@ -50,7 +57,7 @@ export function splitCloud(cloud: { positions: Float32Array; signs: Int8Array })
   return { positive, negative }
 }
 
-/** A BufferGeometry for a triangle mesh. It is disposed when the mesh changes or the view unmounts. */
+/** A BufferGeometry for an indexed triangle mesh. It is disposed when the mesh changes or the view unmounts. */
 function useMeshGeometry(mesh: TriangleMesh): BufferGeometry {
   const geometry = useMemo(() => {
     const g = new BufferGeometry()
@@ -63,8 +70,8 @@ function useMeshGeometry(mesh: TriangleMesh): BufferGeometry {
   return geometry
 }
 
-/** A BufferGeometry holding only positions, for point clouds. */
-function usePointGeometry(positions: Float32Array): BufferGeometry {
+/** A BufferGeometry holding only positions: point clouds and line segments. */
+function usePositionGeometry(positions: Float32Array): BufferGeometry {
   const geometry = useMemo(() => {
     const g = new BufferGeometry()
     g.setAttribute('position', new BufferAttribute(positions, 3))
@@ -96,20 +103,39 @@ function LobeMesh({ mesh, color }: { mesh: TriangleMesh; color: string }) {
   )
 }
 
-/** The nodal surface, ψ = 0, drawn as a faint translucent sheet. */
-function NodalSurface({ mesh, color }: { mesh: TriangleMesh; color: string }) {
-  const geometry = useMeshGeometry(mesh)
-  if (mesh.indices.length === 0) return null
+/**
+ * The analytic nodes: nodal planes, cones and radial spheres as faint neutral fills, each
+ * sheet outlined by a rim. Fills and rims are neutral, so they read in either theme without
+ * competing with the phase colours.
+ */
+function NodalSurface({ nodes, fill, rim }: { nodes: OrbitalGeometry['nodes']; fill: string; rim: string }) {
+  const sheetGeometry = useMeshGeometry(nodes.sheets)
+  const sphereGeometry = useMeshGeometry(nodes.spheres)
+  const rimGeometry = usePositionGeometry(nodes.rims)
   return (
-    <mesh geometry={geometry}>
-      <meshBasicMaterial color={color} transparent opacity={0.14} depthWrite={false} side={DoubleSide} />
-    </mesh>
+    <group>
+      {nodes.sheets.indices.length > 0 && (
+        <mesh geometry={sheetGeometry}>
+          <meshBasicMaterial color={fill} transparent opacity={0.1} depthWrite={false} side={DoubleSide} />
+        </mesh>
+      )}
+      {nodes.spheres.indices.length > 0 && (
+        <mesh geometry={sphereGeometry}>
+          <meshBasicMaterial color={fill} transparent opacity={0.12} depthWrite={false} side={DoubleSide} />
+        </mesh>
+      )}
+      {nodes.rims.length > 0 && (
+        <lineSegments geometry={rimGeometry}>
+          <lineBasicMaterial color={rim} transparent opacity={0.5} depthWrite={false} />
+        </lineSegments>
+      )}
+    </group>
   )
 }
 
 /** Probability cloud points for one phase sign. Dark themes add the points, so they glow. */
 function CloudPoints({ positions, color, dark }: { positions: Float32Array; color: string; dark: boolean }) {
-  const geometry = usePointGeometry(positions)
+  const geometry = usePositionGeometry(positions)
   return (
     <points geometry={geometry}>
       <pointsMaterial
@@ -127,8 +153,9 @@ function CloudPoints({ positions, color, dark }: { positions: Float32Array; colo
 
 /**
  * The 3D content of the orbital explorer, for use inside Stage3D: the boundary lobes or the
- * probability cloud, the optional nodal surface, and the x, y and z axes. Colours come from
- * the stage tokens, so the phases are --orbital-pos and --orbital-neg in both themes.
+ * probability cloud, the optional analytic nodes, and the x, y and z axes. The orbital and its
+ * axes share one rotated group, so the axis letters are the orbital's own x, y and z, with z up.
+ * Colours come from the stage tokens, so the phases are --orbital-pos and --orbital-neg in both themes.
  */
 export function OrbitalScene({ geometry, view, showNodes }: OrbitalSceneProps) {
   const colors = useStageColors()
@@ -136,7 +163,7 @@ export function OrbitalScene({ geometry, view, showNodes }: OrbitalSceneProps) {
   const cloud = useMemo(() => splitCloud(geometry.cloud), [geometry.cloud])
 
   return (
-    <group>
+    <group rotation={CHEMISTRY_TO_SCENE}>
       {view === 'surface' ? (
         <>
           <LobeMesh mesh={geometry.positive} color={colors.orbitalPos} />
@@ -148,7 +175,7 @@ export function OrbitalScene({ geometry, view, showNodes }: OrbitalSceneProps) {
           <CloudPoints positions={cloud.negative} color={colors.orbitalNeg} dark={dark} />
         </>
       )}
-      {showNodes && <NodalSurface mesh={geometry.nodes} color={colors.fg} />}
+      {showNodes && <NodalSurface nodes={geometry.nodes} fill={colors.fg} rim={colors.fgMuted} />}
       <StageAxes length={AXIS_LENGTH} />
     </group>
   )

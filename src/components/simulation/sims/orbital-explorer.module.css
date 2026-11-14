@@ -20,6 +20,17 @@
   border-right: 1px solid var(--border);
 }
 
+/* Shown over the previous picture while a new orbital builds. It does not block the stage. */
+.building {
+  position: absolute;
+  top: 10px;
+  left: 12px;
+  margin: 0;
+  font-size: 0.85rem;
+  color: var(--fg-subtle);
+  pointer-events: none;
+}
+
 .readout {
   display: flex;
   flex-direction: column;

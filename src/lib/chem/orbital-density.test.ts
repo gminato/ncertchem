@@ -5,8 +5,11 @@ import {
   enclosedRadius,
   gridCoordinate,
   mulberry32,
+  angularRootsCosTheta,
+  nodalPlaneAngles,
   orbitalValueFn,
   radialExtent,
+  radialNodeRadii,
   sampleOrbitalGrid,
   sampleProbabilityCloud,
 } from './orbital-density'
@@ -140,5 +143,47 @@ describe('sampleProbabilityCloud', () => {
     const neg = cloud.signs.length - pos
     expect(pos).toBeGreaterThan(0)
     expect(neg).toBeGreaterThan(0)
+  })
+})
+
+describe('analytic nodes', () => {
+  it('gives the cos θ roots of the angular part: none for s, cos θ = 0 for p_z, ±1/√3 for d_z²', () => {
+    expect(angularRootsCosTheta(0, 0)).toEqual([])
+    const pz = angularRootsCosTheta(1, 0)
+    expect(pz).toHaveLength(1)
+    expect(Math.abs(pz[0])).toBeLessThan(1e-9)
+    const dz2 = angularRootsCosTheta(2, 0).sort((a, b) => a - b)
+    expect(dz2).toHaveLength(2)
+    expect(dz2[0]).toBeCloseTo(-1 / Math.sqrt(3), 8)
+    expect(dz2[1]).toBeCloseTo(1 / Math.sqrt(3), 8)
+  })
+
+  it('has l nodal cones in total for each subshell (no real m is missing one)', () => {
+    for (let l = 0; l <= 3; l++) {
+      for (let m = -l; m <= l; m++) {
+        const total = angularRootsCosTheta(l, m).length + nodalPlaneAngles(m).length
+        // Angular nodes are the cones plus the planes. The count must match ℓ for every real orbital.
+        expect(total).toBe(l)
+      }
+    }
+  })
+
+  it('puts nodal planes at the right azimuths: cos φ for m > 0, sin φ for m < 0', () => {
+    // d_x²−y² (m = +2) has planes at φ = π/4 and 3π/4, i.e. the planes x = ±y.
+    const plusTwo = nodalPlaneAngles(2).map((p) => Math.round((p / Math.PI) * 4) / 4)
+    expect(plusTwo).toEqual([0.25, 0.75])
+    // d_xy (m = −2) has planes at φ = 0 and π/2, the xz- and yz-planes.
+    expect(nodalPlaneAngles(-2)).toEqual([0, Math.PI / 2])
+    expect(nodalPlaneAngles(0)).toEqual([])
+  })
+
+  it('finds n − ℓ − 1 radial nodes, at the closed-form radii for 3s', () => {
+    expect(radialNodeRadii(1, 0)).toHaveLength(0)
+    expect(radialNodeRadii(2, 0)).toHaveLength(1)
+    expect(radialNodeRadii(3, 1)).toHaveLength(1)
+    const threes = radialNodeRadii(3, 0)
+    expect(threes).toHaveLength(2)
+    expect(threes[0]).toBeCloseTo((9 - 3 * Math.sqrt(3)) / 2, 3)
+    expect(threes[1]).toBeCloseTo((9 + 3 * Math.sqrt(3)) / 2, 3)
   })
 })

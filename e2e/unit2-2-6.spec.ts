@@ -96,7 +96,7 @@ for (const scheme of ['light', 'dark'] as const) {
       // n = 4 with f, mℓ = −2 gives 4fxyz, and the cloud view with the nodes shown.
       await sim.getByRole('group', { name: 'Shell n' }).getByRole('button', { name: '4', exact: true }).click()
       await subshells.getByRole('button', { name: 'f', exact: true }).click()
-      await sim.getByRole('group', { name: 'Orbital m_ℓ' }).getByRole('button', { name: 'fxyz' }).click()
+      await sim.getByRole('group', { name: 'Orbital mℓ' }).getByRole('button', { name: 'fxyz' }).click()
       await expect(sim.getByText('4fxyz', { exact: true }).first()).toBeVisible()
       await expect(sim.locator('.sr, [aria-live="polite"]').first()).toContainText('4fxyz orbital in shell N')
       await sim.getByRole('radio', { name: 'Probability cloud' }).click()
@@ -137,7 +137,7 @@ test.describe('Orbital explorer without WebGL', () => {
     await expect(sim.locator('[data-testid="stage3d"]')).toHaveAttribute('data-support', 'none')
     await expect(sim.getByTestId('stage3d-fallback')).toBeVisible()
     await sim.getByRole('group', { name: 'Shell n' }).getByRole('button', { name: '2', exact: true }).click()
-    await expect(sim.getByRole('group', { name: 'Orbital m_ℓ' })).toBeVisible()
+    await expect(sim.getByRole('group', { name: 'Orbital mℓ' })).toBeVisible()
     await sim.screenshot({ path: path.join(SCREEN_DIR, 'u2-2-6-explorer-fallback-light.png') })
     expect(errors).toEqual([])
   })

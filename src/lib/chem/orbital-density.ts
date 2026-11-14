@@ -93,6 +93,81 @@ function angularFunction(l: number, m: number): (cosT: number, sinT: number, phi
   return (cosT, sinT, phi) => norm * sinT ** absM * evaluatePolynomial(poly, cosT) * Math.sin(absM * phi)
 }
 
+/**
+ * The radii (a₀) where the radial part R_nl has a node, found by scanning and bisection up to
+ * maxA0. There are n − ℓ − 1 of them (checked by the tests).
+ */
+export function radialNodeRadii(n: number, l: number, maxA0 = 40): number[] {
+  const step = 0.005
+  const nodes: number[] = []
+  let previous = radialR(n, l, step)
+  for (let r = 2 * step; r <= maxA0; r += step) {
+    const current = radialR(n, l, r)
+    if (previous * current < 0) {
+      let lo = r - step
+      let hi = r
+      for (let iter = 0; iter < 60; iter++) {
+        const mid = (lo + hi) / 2
+        if (radialR(n, l, lo) * radialR(n, l, mid) <= 0) hi = mid
+        else lo = mid
+      }
+      nodes.push((lo + hi) / 2)
+    }
+    previous = current
+  }
+  return nodes
+}
+
+/**
+ * The values of cos θ (between −1 and 1) where the θ part of the real harmonic (l, m) is
+ * zero. Each root is a nodal cone about the z-axis: cos θ = 0 is the xy-plane, and dz² has
+ * roots ±1/√3, which is θ = 54.74° and 125.26°. The roots are found by scanning for sign
+ * changes and bisecting, so they come from the same polynomial that {@link orbitalValueFn} uses.
+ */
+export function angularRootsCosTheta(l: number, m: number): number[] {
+  const absM = Math.abs(m)
+  let poly = legendreCoefficients(l)
+  for (let k = 0; k < absM; k++) poly = derivative(poly)
+  const f = (x: number) => evaluatePolynomial(poly, x)
+  const roots: number[] = []
+  const steps = 4000
+  let prevX = -1 + 1e-9
+  let prevV = f(prevX)
+  for (let s = 1; s <= steps; s++) {
+    const x = -1 + (2 * s) / steps
+    const v = f(Math.min(x, 1 - 1e-9))
+    if (prevV === 0) roots.push(prevX)
+    else if (prevV * v < 0) {
+      let lo = prevX
+      let hi = Math.min(x, 1 - 1e-9)
+      for (let iter = 0; iter < 80; iter++) {
+        const mid = (lo + hi) / 2
+        if (f(lo) * f(mid) <= 0) hi = mid
+        else lo = mid
+      }
+      roots.push((lo + hi) / 2)
+    }
+    prevX = x
+    prevV = v
+  }
+  return roots
+}
+
+/**
+ * The azimuthal angles (radians, in [0, π)) of the nodal half-planes through the z-axis.
+ * For m > 0 the factor cos(mφ) vanishes at φ = (k + ½)π/m; for m < 0 the factor sin(|m|φ)
+ * vanishes at φ = kπ/|m|. Each angle is one full plane (φ and φ + π are the same plane).
+ */
+export function nodalPlaneAngles(m: number): number[] {
+  const absM = Math.abs(m)
+  if (absM === 0) return []
+  const angles: number[] = []
+  for (let k = 0; k < absM; k++) {
+    angles.push(m > 0 ? ((k + 0.5) * Math.PI) / absM : (k * Math.PI) / absM)
+  }
+  return angles
+}
+
 /** A function ψ(x, y, z) for one real orbital, in atomic units. */
 export type OrbitalValueFn = (x: number, y: number, z: number) => number
 

@@ -79,7 +79,7 @@ function AxisLetter({ text, color, position }: { text: string; color: string; po
  * Subtle x, y and z axes through the origin, with a small arrow head and a letter
  * at each tip. Put it inside a Stage3D.
  */
-export function StageAxes({ length = 2.2, labels = true }: StageAxesProps) {
+export function StageAxes({ length = 1.75, labels = true }: StageAxesProps) {
   const colors = useStageColors()
   const tip = 0.06
 
