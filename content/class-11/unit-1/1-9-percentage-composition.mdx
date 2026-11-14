@@ -1,0 +1,76 @@
+---
+class: 11
+unit: 1
+section: "1.9"
+order: 9
+title: "Percentage Composition"
+slug: "1-9-percentage-composition"
+summary: "Mass per cent tells you what a compound is made of, and with the molar mass it yields the empirical and then the molecular formula."
+ncert: "Class 11, Part I — Unit 1, Section 1.9 (with 1.9.1)"
+---
+
+<Hook>
+A lab receives a white, crystalline powder with no label. The analysis reports 40.00 % carbon, 6.71 % hydrogen and 53.29 % oxygen by mass. Can those three percentages alone reveal the formula, and then the compound itself?
+</Hook>
+
+Before you can name a compound, you need to know what it is made of. For a new substance, the first measurement is usually the **mass per cent** of each element, the share of the compound's mass that each element supplies. The same measurement also checks purity: a sample whose percentages differ from those of the pure compound is not pure.
+
+The mass per cent of an element is its mass in one mole of the compound, divided by the molar mass of the compound, times 100:
+
+$$
+\text{mass \%} = \frac{\text{mass of the element in one mole of compound}}{\text{molar mass of the compound}} \times 100
+$$
+
+Carbon dioxide, $\text{CO}_2$, has a molar mass of $44.01\ \text{g mol}^{-1}$ made of one carbon ($12.011\ \text{g}$) and two oxygens ($2 \times 16.00\ \text{g}$). Its carbon is therefore $27.29\ \%$ and its oxygen $72.71\ \%$ by mass.
+
+Now the harder question. Suppose you know the percentages of an unknown compound. How do you turn them into a formula? The method below works through a sample of glucose, $\text{C}_6\text{H}_{12}\text{O}_6$. Pretend the lab has measured only the percentages.
+
+<Scrolly animation="empirical-pipeline">
+<Step>
+Begin with mass per cent. The sample is glucose, and the lab reports carbon at **40.00 %**, hydrogen at **6.71 %** and oxygen at **53.29 %** of its mass. The bar shows the same split: its segments add to 100 %, and each colour is one element's share of the sample.
+</Step>
+<Step>
+Imagine a **100 g** sample. Each percentage then becomes a mass in grams: 40.00 g of carbon, 6.71 g of hydrogen and 53.29 g of oxygen. Grams still measure mass, not the number of atoms, so the next step converts each mass into moles.
+</Step>
+<Step>
+Divide each mass by the atomic mass of its element. Carbon gives $40.00 \div 12.011 = 3.330$ mol, hydrogen gives $6.71 \div 1.008 = 6.657$ mol and oxygen gives $53.29 \div 16.00 = 3.331$ mol. Atoms combine in whole-number ratios, so compare these moles with one another. The smallest is carbon's 3.330 mol.
+</Step>
+<Step>
+Divide every mole value by that smallest value. Carbon becomes $1.00$, hydrogen $2.00$ and oxygen $1.00$. The ratio C : H : O is **1 : 2 : 1**, a whole-number ratio. If a ratio had come out as $1.5$ or $1.33$, you would first multiply every value by 2 or 3 to clear the fraction.
+</Step>
+<Step>
+The simplest whole-number ratio gives the **empirical formula**, $\text{CH}_2\text{O}$, with a formula mass of $30.03\ \text{g mol}^{-1}$. Glucose has a molar mass of $180.16\ \text{g mol}^{-1}$, so $n = 180.16 \div 30.03 \approx 6$. Multiply the empirical formula by 6 to get the **molecular formula**, $\text{C}_6\text{H}_{12}\text{O}_6$.
+</Step>
+</Scrolly>
+
+### 1.9.1 Empirical and molecular formulas
+
+An **empirical formula** gives the simplest whole-number ratio of the atoms in a compound. A **molecular formula** gives the exact number of each kind of atom in one molecule. Both come from the same percentages. The molar mass is the extra piece of information that links them.
+
+The steps above form one routine. Convert the mass per cent into grams in a 100 g sample. Convert the grams into moles by dividing by each atomic mass. Divide by the smallest number of moles, and make the ratios whole numbers. That gives the empirical formula. Finally, divide the molar mass by the empirical formula mass to get $n$, and multiply the empirical formula by $n$.
+
+The empirical formula alone is not enough to name a compound. The same CH₂O pattern describes formaldehyde ($\text{CH}_2\text{O}$, with $n = 1$), acetic acid ($\text{C}_2\text{H}_4\text{O}_2$, with $n = 2$) and glucose ($n = 6$). Only the molar mass tells them apart.
+
+<Check n={1} numeric answer={72.71} unit="%" tolerance={0.01} explanation="Oxygen is 2 × 16.00 = 32.00 g of the 44.01 g in one mole of CO₂, so 32.00 ÷ 44.01 × 100 = 72.71 %.">
+What is the mass per cent of oxygen in carbon dioxide, to two decimal places?
+</Check>
+
+<Check
+  n={2}
+  options={["To convert moles back into grams", "To find the molar mass of the compound", "To get the smallest whole-number ratio of atoms"]}
+  answer={2}
+  explanation="Dividing by the smallest value makes that element's ratio 1, and the other ratios follow. Once they are whole numbers, they give the atoms in the empirical formula."
+>
+In the pipeline, why do we divide every mole value by the smallest one?
+</Check>
+
+<Check n={3} numeric answer={6} tolerance={0.05}  explanation="n = 180.16 ÷ 30.03 ≈ 6, so the molecular formula is six times CH₂O, which is C₆H₁₂O₆.">
+A compound has the empirical formula CH₂O and a molar mass of 180.16 g mol⁻¹. What is the value of n?
+</Check>
+
+<KeyIdeas>
+- Mass per cent of an element = (mass of that element in one mole of compound ÷ molar mass of the compound) × 100.
+- Dividing each element's mass by its atomic mass gives moles. Dividing by the smallest value and clearing fractions gives whole numbers, which are the empirical formula.
+- The molecular formula is n times the empirical formula, where n = molar mass ÷ empirical formula mass.
+- A sample whose mass percentages differ from the expected values is not the pure compound.
+</KeyIdeas>
