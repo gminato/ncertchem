@@ -1,0 +1,109 @@
+:root,
+[data-theme="light"] {
+  /* Surfaces - Warm editorial paper light aesthetic */
+  --bg: #FAF7F2;
+  --surface: #FFFFFF;
+  --surface-raised: #F4EFEA;
+  --border: rgba(44, 38, 30, 0.12);
+
+  /* Text */
+  --fg: #1F2023;
+  --fg-muted: #5C5B56;
+  --fg-subtle: #8C8A82;
+
+  /* Accent */
+  --accent: #2563EB;
+  --accent-soft: rgba(37, 99, 235, 0.08);
+  --accent-fg: #FFFFFF;
+
+  /* Entity colors (The Visual Vocabulary) */
+  --electron: #2F6FEB;
+  --proton: #E05252;
+  --neutron: #8C857B;
+  --nucleus-glow: rgba(224, 82, 82, 0.2);
+  --orbit: rgba(31, 32, 35, 0.18);
+  --orbit-active: #2F6FEB;
+  --glow-strength: 0;
+
+  /* Shading helper tokens for 3D spheres without hardcoded hexes in components */
+  --sphere-highlight: rgba(255, 255, 255, 0.55);
+  --sphere-shadow: rgba(20, 15, 10, 0.45);
+
+  /* Spacing Scale */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 24px;
+  --space-6: 32px;
+  --space-7: 48px;
+  --space-8: 64px;
+
+  /* Radii */
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 16px;
+
+  /* Easing */
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+
+  /* Typography fallbacks (Next.js font variables on <html> override these) */
+  --font-serif: "Newsreader", "Source Serif 4", Georgia, serif;
+  --font-sans: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-mono: "JetBrains Mono", Menlo, Monaco, Consolas, monospace;
+}
+
+/* Dark theme overrides */
+[data-theme="dark"] {
+  --bg: #0D1117;
+  --surface: #161B22;
+  --surface-raised: #21262D;
+  --border: rgba(240, 246, 252, 0.12);
+
+  --fg: #F0F6FC;
+  --fg-muted: #8B949E;
+  --fg-subtle: #6E7681;
+
+  --accent: #58A6FF;
+  --accent-soft: rgba(88, 166, 255, 0.15);
+  --accent-fg: #0D1117;
+
+  --electron: #6CB6FF;
+  --proton: #FF7B72;
+  --neutron: #9E9A95;
+  --nucleus-glow: rgba(255, 123, 114, 0.4);
+  --orbit: rgba(240, 246, 252, 0.22);
+  --orbit-active: #6CB6FF;
+  --glow-strength: 1;
+
+  --sphere-highlight: rgba(255, 255, 255, 0.65);
+  --sphere-shadow: rgba(0, 0, 0, 0.65);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0D1117;
+    --surface: #161B22;
+    --surface-raised: #21262D;
+    --border: rgba(240, 246, 252, 0.12);
+
+    --fg: #F0F6FC;
+    --fg-muted: #8B949E;
+    --fg-subtle: #6E7681;
+
+    --accent: #58A6FF;
+    --accent-soft: rgba(88, 166, 255, 0.15);
+    --accent-fg: #0D1117;
+
+    --electron: #6CB6FF;
+    --proton: #FF7B72;
+    --neutron: #9E9A95;
+    --nucleus-glow: rgba(255, 123, 114, 0.4);
+    --orbit: rgba(240, 246, 252, 0.22);
+    --orbit-active: #6CB6FF;
+    --glow-strength: 1;
+
+    --sphere-highlight: rgba(255, 255, 255, 0.65);
+    --sphere-shadow: rgba(0, 0, 0, 0.65);
+  }
+}
