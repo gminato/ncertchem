@@ -64,3 +64,15 @@ samp,
 .prose p {
   margin-bottom: var(--space-4);
 }
+
+/*
+ * Physics and chemistry symbols in UI and SVG labels (ν, λ, h, v, E, n…).
+ * Inter's italic ν is indistinguishable from v, so symbols use KaTeX's math
+ * font (already loaded by katex.css) to match the typeset maths in the Prose.
+ */
+.sym {
+  font-family: KaTeX_Math, var(--font-serif), serif;
+  font-style: italic;
+  font-weight: normal;
+  letter-spacing: 0;
+}
