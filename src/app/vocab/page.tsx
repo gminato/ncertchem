@@ -16,8 +16,21 @@ import {
   Molecule,
   ParticleBox,
   Vessel,
+  SpectrumStrip,
+  OrbitalBox,
+  EMWave,
+  EnergyLadder,
 } from '@/components/vocab'
+import { Stage3DLazy, OrbitalLobes3D } from '@/components/stage3d'
 import { energyLevel } from '@/lib/chem/bohr'
+
+/** Balmer lines in the visible range, with their relative brightness. */
+const HYDROGEN_LINES = [
+  { nm: 656, intensity: 1 },
+  { nm: 486, intensity: 0.85 },
+  { nm: 434, intensity: 0.7 },
+  { nm: 410, intensity: 0.6 },
+]
 import styles from './vocab.module.css'
 
 export const metadata: Metadata = {
@@ -49,6 +62,12 @@ export default function VocabPage() {
   // Orbit labels sit just outside each circle at the top, in the gap above it.
   const orbit1Label = orbitLabelPosition(0, 0, 30, -90, 8)
   const orbit2Label = orbitLabelPosition(0, 0, 54, -90, 8)
+
+  // Hydrogen levels for the energy ladder card, in eV (negative: bound states).
+  const hydrogenLevels = [1, 2, 3, 4].map((n) => ({
+    n,
+    ev: joulesToEv(energyLevel(n)),
+  }))
 
   return (
     <div className={styles.container}>
@@ -828,6 +847,221 @@ export default function VocabPage() {
               <p className={styles.cardDescription}>
                 Sodium chloride is drawn as an ion pair with no bond line. Hydrogen chloride is a
                 covalent molecule.
+              </p>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      {/* Light, spectra and electrons */}
+      <section className={styles.section} id="light-spectra" aria-labelledby="light-spectra-heading">
+        <h2 id="light-spectra-heading" className={styles.sectionTitle}>
+          Light, spectra and electrons
+        </h2>
+        <p className={styles.sectionSubtitle}>
+          How light carries energy, how atoms emit and absorb it, and how electrons fill their
+          orbitals. Spectra use the same wavelength colours as the photons above.
+        </p>
+
+        <div className={styles.grid}>
+          {/* Card: Spectra (three strips in one canvas) */}
+          <article className={`${styles.card} ${styles.wide}`}>
+            <div className={`${styles.cardCanvas} ${styles.cardCanvasTall}`}>
+              <svg
+                viewBox="0 0 640 262"
+                className={styles.svgElement}
+                role="img"
+                aria-label="Three visible-spectrum strips from 380 to 750 nanometres: an emission spectrum with bright lines, an absorption spectrum with dark lines, and a continuous spectrum"
+              >
+                <VocabDefs idPrefix="spectra" />
+                {(
+                  [
+                    { label: 'Emission', y: 52, mode: 'emission' },
+                    { label: 'Absorption', y: 130, mode: 'absorption' },
+                    { label: 'Continuous', y: 208, mode: 'continuous' },
+                  ] as const
+                ).map((row) => (
+                  <g key={row.mode}>
+                    <Label x={8} y={row.y + 7} textAnchor="start" fontSize={15} fill="var(--fg)">
+                      {row.label}
+                    </Label>
+                    <SpectrumStrip
+                      x={150}
+                      y={row.y}
+                      width={450}
+                      height={14}
+                      mode={row.mode}
+                      lines={HYDROGEN_LINES}
+                      idPrefix={`spectra-${row.mode}`}
+                    />
+                  </g>
+                ))}
+              </svg>
+            </div>
+            <div className={styles.cardBody}>
+              <div className={styles.cardHeading}>
+                <span>Spectra</span>
+                <span className={styles.cardBadge}>SpectrumStrip</span>
+              </div>
+              <p className={styles.cardDescription}>
+                Emission shows bright lines on a dim track. Absorption shows dark lines cut into a
+                bright rainbow. A continuous spectrum has no lines at all.
+              </p>
+            </div>
+          </article>
+
+          {/* Card: Box-and-arrow configurations */}
+          <article className={styles.card}>
+            <div className={styles.cardCanvas}>
+              <svg
+                viewBox="-12 -10 176 180"
+                className={styles.svgElement}
+                role="img"
+                aria-label="Three subshells in box-and-arrow notation: 1s with a pair, 2p with three parallel spins (correct), and 2p with a paired electron before the other boxes are filled (violation, outlined)"
+              >
+                <VocabDefs />
+                <OrbitalBox x={0} y={4} label="1s" orbitals={[{ up: true, down: true }]} />
+                <OrbitalBox
+                  x={0}
+                  y={62}
+                  label="2p"
+                  orbitals={[
+                    { up: true, down: false },
+                    { up: true, down: false },
+                    { up: true, down: false },
+                  ]}
+                />
+                <OrbitalBox
+                  x={0}
+                  y={120}
+                  label="2p"
+                  state="violation"
+                  orbitals={[
+                    { up: true, down: true },
+                    { up: true, down: false },
+                    { up: false, down: false },
+                  ]}
+                />
+              </svg>
+            </div>
+            <div className={styles.cardBody}>
+              <div className={styles.cardHeading}>
+                <span>Box and arrow</span>
+                <span className={styles.cardBadge}>OrbitalBox</span>
+              </div>
+              <p className={styles.cardDescription}>
+                Each box is one orbital and each arrow one electron: up for spin +½, down for
+                −½. Hund&rsquo;s rule fills every box once before pairing. The outlined row breaks
+                it.
+              </p>
+            </div>
+          </article>
+
+          {/* Card: Electromagnetic wave */}
+          <article className={styles.card}>
+            <div className={styles.cardCanvas}>
+              <svg
+                viewBox="0 0 320 170"
+                className={styles.svgElement}
+                role="img"
+                aria-label="An electromagnetic wave: an electric field in blue swings up and down, a magnetic field in violet swings in depth, both in phase, along an axis that points to the right"
+              >
+                <VocabDefs />
+                <Label x={10} y={16} textAnchor="start" fontSize={12} fill="var(--accent)">
+                  E · electric
+                </Label>
+                <Label x={10} y={32} textAnchor="start" fontSize={12} fill="var(--field-b)">
+                  B · magnetic
+                </Label>
+                <EMWave x={16} y={96} length={284} wavelength={118} amplitude={34} />
+              </svg>
+            </div>
+            <div className={styles.cardBody}>
+              <div className={styles.cardHeading}>
+                <span>Electromagnetic wave</span>
+                <span className={styles.cardBadge}>E ⊥ B</span>
+              </div>
+              <p className={styles.cardDescription}>
+                The electric and magnetic fields swing in step, at right angles to each other and to
+                the direction the wave travels.
+              </p>
+            </div>
+          </article>
+
+          {/* Card: Energy ladder for hydrogen */}
+          <article className={styles.card}>
+            <div className={styles.cardCanvas}>
+              <svg
+                viewBox="-8 -22 220 160"
+                className={styles.svgElement}
+                role="img"
+                aria-label="Hydrogen energy ladder with levels n = 1 to 4 spaced in proportion to energy; n = 2 is active"
+              >
+                <VocabDefs />
+                <EnergyLadder
+                  levels={hydrogenLevels.map((level) => ({
+                    label: (
+                      <>
+                        <tspan fontStyle="italic">n</tspan> = {level.n} ({'−'}
+                        {formatEvMagnitude(level.ev)} eV)
+                      </>
+                    ),
+                    energy: level.ev,
+                  }))}
+                  top={0}
+                  bottom={128}
+                  rungLeft={0}
+                  rungRight={56}
+                  labelX={66}
+                  minLabelGap={14}
+                  fontSize={12}
+                  activeIndex={1}
+                />
+              </svg>
+            </div>
+            <div className={styles.cardBody}>
+              <div className={styles.cardHeading}>
+                <span>Energy ladder</span>
+                <span className={styles.cardBadge}>EnergyLadder</span>
+              </div>
+              <p className={styles.cardDescription}>
+                Hydrogen&rsquo;s levels crowd together as n grows. Labels that would overlap are
+                nudged apart and joined to their rung by a leader line.
+              </p>
+            </div>
+          </article>
+
+          {/* Card: 3D orbital specimen (full width) */}
+          <article className={`${styles.card} ${styles.wide}`}>
+            <Stage3DLazy
+              label="Orbitals (3D): a translucent p-type lobe pair, coral and teal, with x, y and z axes. Drag to rotate."
+              fallback={
+                <svg viewBox="-96 -130 192 260" role="img" aria-label="Flat drawing of a p-type lobe pair: a coral lobe above a teal lobe">
+                  <line
+                    x1={-110}
+                    x2={110}
+                    y1={0}
+                    y2={0}
+                    strokeWidth={1}
+                    strokeDasharray="4 4"
+                    style={{ stroke: 'var(--fg-subtle)' }}
+                  />
+                  <ellipse cx={0} cy={-58} rx={42} ry={62} style={{ fill: 'var(--orbital-pos)', opacity: 0.8 }} />
+                  <ellipse cx={0} cy={58} rx={42} ry={62} style={{ fill: 'var(--orbital-neg)', opacity: 0.8 }} />
+                </svg>
+              }
+            >
+              <OrbitalLobes3D />
+            </Stage3DLazy>
+            <div className={styles.cardBody}>
+              <div className={styles.cardHeading}>
+                <span>Orbitals (3D)</span>
+                <span className={styles.cardBadge}>Stage3D</span>
+              </div>
+              <p className={styles.cardDescription}>
+                A placeholder p-type lobe pair in translucent coral and teal, with x, y and z axes.
+                Drag to rotate and scroll to zoom. It stops turning once you interact, and it stays
+                still when reduced motion is on.
               </p>
             </div>
           </article>

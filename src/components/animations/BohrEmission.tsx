@@ -8,12 +8,13 @@ import {
   Label,
   Nucleus,
   Photon,
+  SpectrumStrip,
   VocabDefs,
   ladderLabels,
   ladderY,
   orbitLabelPosition,
+  spectrumX,
 } from '@/components/vocab'
-import { wavelengthToCss } from '@/lib/chem/wavelength-color'
 import {
   AMBIENT_SPIN_RATE,
   EMISSION_ANGLE,
@@ -86,28 +87,14 @@ const ladderRungLabels = ladderLabels(
   LADDER.minLabelGap
 )
 
-/** Visible spectrum (nm) drawn as a continuous track across the bottom. */
-const VISIBLE_NM_MIN = 380
-const VISIBLE_NM_MAX = 750
+/** Visible spectrum strip across the bottom, drawn by the shared SpectrumStrip. */
 const STRIP = { left: 40, right: 600, y: 420, height: 14 }
-const TICK_NM = [400, 500, 600, 700]
+const STRIP_WIDTH = STRIP.right - STRIP.left
+const xForNm = (nm: number) => STRIP.left + spectrumX(nm, STRIP_WIDTH)
 const TICK_FONT = 16
-const xForNm = (nm: number) =>
-  STRIP.left + ((nm - VISIBLE_NM_MIN) / (VISIBLE_NM_MAX - VISIBLE_NM_MIN)) * (STRIP.right - STRIP.left)
-
-/** Gradient stops sampled from the spectral colour model every 10 nm. */
-const SPECTRUM_STOPS: { offset: string; color: string }[] = []
-for (let nm = VISIBLE_NM_MIN; nm <= VISIBLE_NM_MAX; nm += 10) {
-  SPECTRUM_STOPS.push({
-    offset: `${(((nm - VISIBLE_NM_MIN) / (VISIBLE_NM_MAX - VISIBLE_NM_MIN)) * 100).toFixed(2)}%`,
-    color: wavelengthToCss(nm),
-  })
-}
-SPECTRUM_STOPS.push({ offset: '100%', color: wavelengthToCss(VISIBLE_NM_MAX) })
 
 const LINE_NM = emissionWavelengthNm()
 const LINE_X = xForNm(LINE_NM)
-const LINE_CSS = wavelengthToCss(LINE_NM)
 const DELTA_E_LABEL = emissionDeltaEvLabel()
 
 /** Photon path: from the emission point on the n = 2 orbit to the strip. */
@@ -323,13 +310,6 @@ export function BohrEmission({ step, reducedMotion }: BohrEmissionProps) {
         data-step={activeStep}
       >
         <VocabDefs idPrefix="bohr" />
-        <defs>
-          <linearGradient id="bohr-spectrum" x1="0%" y1="0%" x2="100%" y2="0%">
-            {SPECTRUM_STOPS.map((stop) => (
-              <stop key={stop.offset} offset={stop.offset} stopColor={stop.color} />
-            ))}
-          </linearGradient>
-        </defs>
 
         {/* Energy pulse: a soft ring expanding from the nucleus */}
         {pulseAlpha > 0.001 && (
@@ -455,59 +435,21 @@ export function BohrEmission({ step, reducedMotion }: BohrEmissionProps) {
           </Label>
         </g>
 
-        {/* Visible-spectrum strip, 380 to 750 nm, starts empty */}
-        <rect
+        {/* Visible-spectrum strip, 380 to 750 nm. The line fades in during Step 3. */}
+        <SpectrumStrip
           x={STRIP.left}
           y={STRIP.y}
-          width={STRIP.right - STRIP.left}
+          width={STRIP_WIDTH}
           height={STRIP.height}
-          rx={STRIP.height / 2}
-          fill="url(#bohr-spectrum)"
-          style={{ opacity: 'var(--spectrum-track-opacity)' }}
+          mode="emission"
+          lines={view.line > 0.001 ? [{ nm: LINE_NM, intensity: view.line }] : []}
+          tickFontSize={TICK_FONT}
+          idPrefix="bohr"
         />
-        <rect
-          x={STRIP.left}
-          y={STRIP.y}
-          width={STRIP.right - STRIP.left}
-          height={STRIP.height}
-          rx={STRIP.height / 2}
-          fill="none"
-          strokeWidth={0.8}
-          style={{ stroke: 'var(--border)' }}
-        />
-        {TICK_NM.map((nm) => (
-          <g key={`tick-${nm}`}>
-            <line
-              x1={xForNm(nm)}
-              x2={xForNm(nm)}
-              y1={STRIP.y + STRIP.height}
-              y2={STRIP.y + STRIP.height + 6}
-              strokeWidth={1.2}
-              style={{ stroke: 'var(--fg-subtle)' }}
-            />
-            <Label x={xForNm(nm)} y={STRIP.y + STRIP.height + 26} fontSize={TICK_FONT} fill="var(--fg-subtle)">
-              {nm} nm
-            </Label>
-          </g>
-        ))}
 
-        {/* The spectral line itself, its label, and the series name */}
+        {/* The spectral line's label and the series name */}
         {view.line > 0.001 && (
           <g>
-            <line
-              x1={LINE_X}
-              x2={LINE_X}
-              y1={STRIP.y - 8}
-              y2={STRIP.y + STRIP.height + 8}
-              strokeWidth={3}
-              strokeLinecap="round"
-              data-testid="spectral-line"
-              style={{
-                stroke: LINE_CSS,
-                opacity: view.line,
-                filter: `drop-shadow(0 0 calc(4px * var(--glow-strength)) ${LINE_CSS})`,
-              }}
-            />
             <g opacity={view.line}>
               <Label x={LINE_X} y={STRIP.y - 40} textAnchor="middle" fontSize={18}>
                 H<Label.Sub>α</Label.Sub>
