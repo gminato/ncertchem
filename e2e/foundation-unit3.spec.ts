@@ -28,11 +28,15 @@ for (const scheme of ['light', 'dark'] as const) {
         await expect(section.getByRole('heading', { level: 2 })).toHaveText(
           'Periodic table and trends'
         )
-        await expect(section.getByRole('group', { name: /Periodic table of the fixture/ })).toBeVisible()
+        await expect(section.getByRole('group', { name: /shaded by block/ })).toBeVisible()
         await page.evaluate(() => document.fonts.ready)
         await section.screenshot({
           path: path.join(SCREEN_DIR, `vocab-unit3-${scheme}-${viewport.width}.png`),
         })
+        // A close crop of the full table, so cell typography can be checked at real size.
+        await section
+          .getByRole('group', { name: /shaded by block/ })
+          .screenshot({ path: path.join(SCREEN_DIR, `vocab-unit3-table-${scheme}-${viewport.width}.png`) })
 
         expect(errors).toEqual([])
       })
@@ -70,6 +74,6 @@ test.describe('Unit 3 periodic table keyboard navigation', () => {
     await page.keyboard.press('Enter')
     const sodium = table.locator('[data-z="11"]')
     await expect(sodium).toHaveAttribute('aria-current', 'true')
-    await expect(page.locator('#periodic [role="status"]')).toContainText('Sodium, Z 11')
+    await expect(page.locator('#periodic [role="status"]')).toContainText('Sodium (Na), Z 11')
   })
 })

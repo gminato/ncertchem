@@ -11,6 +11,8 @@ import {
   PITCH,
   cellRect as layoutCellRect,
   colLeft,
+  displayName,
+  nameFits,
   nextFocusZ,
   tableViewBox,
 } from './layout'
@@ -18,16 +20,16 @@ import type { CellRect } from './layout'
 import { MISSING_FILL, contrastText } from './colour-scale'
 import styles from './PeriodicTable.module.css'
 
+export { MISSING_FILL }
+
 export interface CellStyle {
   /** A CSS colour for the cell fill. Pass MISSING_FILL to draw the hatched "no data" cell. */
   fill?: string
-  /** A value line drawn under the symbol, for heatmaps. */
+  /** A value line drawn in the bottom of the cell, for heatmaps. */
   value?: string
   /** Lowers the cell's opacity, for filtered views. */
   dim?: boolean
 }
-
-export { MISSING_FILL }
 
 export interface PeriodicTableProps {
   elements: readonly ElementRecord[]
@@ -36,6 +38,10 @@ export interface PeriodicTableProps {
   highlight?: readonly number[]
   selected?: number
   onSelect?: (el: ElementRecord) => void
+  /**
+   * full: symbol, Z and name (where it fits). compact: symbol and Z only,
+   * for heatmaps. Mass is not drawn in either: it lives in the caption and tile.
+   */
   variant: 'full' | 'compact'
   showGroupNumbers?: boolean
   showPeriodNumbers?: boolean
@@ -63,7 +69,7 @@ const CATEGORY_FILL: Record<ElementRecord['category'], string> = {
 
 const NAV_KEYS = new Set(['ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown', 'Home', 'End'])
 
-/** Re-exported geometry helper for overlays, aligned to the cell grid. */
+/** Geometry of a grid position, for overlays. Returns null for off-grid positions. */
 export function cellRect(Z: number, position: PositionFn): CellRect | null {
   return layoutCellRect(Z, position)
 }
@@ -71,7 +77,7 @@ export function cellRect(Z: number, position: PositionFn): CellRect | null {
 /** "Sodium, Z 11, group 1, period 3", or "Cerium, Z 58, f-block, period 6". */
 export function cellAriaLabel(el: ElementRecord, value?: string): string {
   const where = el.group !== null ? `group ${el.group}` : 'f-block'
-  const base = `${el.name}, Z ${el.Z}, ${where}, period ${el.period}`
+  const base = `${displayName(el)}, Z ${el.Z}, ${where}, period ${el.period}`
   return value ? `${base}, ${value}` : base
 }
 
@@ -104,17 +110,11 @@ export function PeriodicTable({
   const viewBox = useMemo(() => tableViewBox(), [])
   const byZ = useMemo(() => new Map(elements.map((el) => [el.Z, el])), [elements])
   const highlighted = useMemo(() => new Set(highlight ?? []), [highlight])
-  const placed = useMemo(
-    () => elements.filter((el) => position(el.Z).row >= 1),
-    [elements, position]
-  )
+  const placed = useMemo(() => elements.filter((el) => position(el.Z).row >= 1), [elements, position])
 
   // Roving tabindex: one cell is in the tab order. Prefer the last focused cell,
   // then the selected one, then the first cell.
-  const firstZ = placed.reduce<number | null>(
-    (min, el) => (min === null || el.Z < min ? el.Z : min),
-    null
-  )
+  const firstZ = placed.reduce<number | null>((min, el) => (min === null || el.Z < min ? el.Z : min), null)
   const tabStop = focusZ ?? selected ?? firstZ
 
   const moveFocus = (Z: number) => {
@@ -146,6 +146,8 @@ export function PeriodicTable({
   const compact = variant === 'compact'
   const groups = Array.from({ length: COLS }, (_, i) => i + 1)
   const periods = [1, 2, 3, 4, 5, 6, 7]
+  // The f-block row labels sit in columns 1 and 2, right-aligned against column 3.
+  const fLabelX = GUTTER_LEFT + colLeft(3) - 8
 
   return (
     <svg
@@ -158,13 +160,7 @@ export function PeriodicTable({
       data-variant={variant}
     >
       <defs>
-        <pattern
-          id={hatchId}
-          width={6}
-          height={6}
-          patternUnits="userSpaceOnUse"
-          patternTransform="rotate(45)"
-        >
+        <pattern id={hatchId} width={6} height={6} patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
           <rect width={6} height={6} style={{ fill: 'var(--surface-raised)' }} />
           <line x1={0} y1={0} x2={0} y2={6} strokeWidth={1.4} style={{ stroke: 'var(--fg-subtle)' }} />
         </pattern>
@@ -184,50 +180,23 @@ export function PeriodicTable({
         ))}
 
       {showPeriodNumbers &&
-        periods.map((p) => {
-          const y = rectFor(p, 1).cy
-          return (
-            <text key={`p${p}`} x={GUTTER_LEFT - 10} y={y + 4} textAnchor="end" className={styles.axis}>
-              {p}
-            </text>
-          )
-        })}
+        periods.map((p) => (
+          <text
+            key={`p${p}`}
+            x={GUTTER_LEFT - 10}
+            y={rectFor(p, 1).cy + 4}
+            textAnchor="end"
+            className={styles.axis}
+          >
+            {p}
+          </text>
+        ))}
 
-      {/* Placeholders that point to the detached lanthanide and actinide rows. */}
-      {[6, 7].map((row) => {
-        const rect = rectFor(row, 3)
-        const label = row === 6 ? '57–71' : '89–103'
-        return (
-          <g key={`ph${row}`} aria-hidden="true">
-            <rect
-              x={rect.x}
-              y={rect.y}
-              width={CELL}
-              height={CELL}
-              rx={CELL_RADIUS}
-              className={styles.placeholder}
-            />
-            <text x={rect.cx} y={rect.cy + 4} textAnchor="middle" className={styles.placeholderText}>
-              {label}
-            </text>
-          </g>
-        )
-      })}
-      <text
-        x={GUTTER_LEFT + colLeft(2) + PITCH - 6}
-        y={rectFor(9, 1).cy + 4}
-        textAnchor="end"
-        className={styles.fBlockLabel}
-      >
-        Lanthanides
+      <text x={fLabelX} y={rectFor(9, 3).cy + 4} textAnchor="end" className={styles.fBlockLabel}>
+        Lanthanoids
       </text>
-      <text
-        x={GUTTER_LEFT + colLeft(2) + PITCH - 6}
-        y={rectFor(10, 1).cy + 4}
-        textAnchor="end"
-        className={styles.fBlockLabel}
-      >
-        Actinides
+      <text x={fLabelX} y={rectFor(10, 3).cy + 4} textAnchor="end" className={styles.fBlockLabel}>
+        Actinoids
       </text>
 
       {placed.map((el) => {
@@ -237,20 +206,16 @@ export function PeriodicTable({
         const isMissing = style.fill === MISSING_FILL
         const fillStyle = isMissing
           ? `url(#${hatchId})`
-          : style.fill ??
-            (blockShading ? BLOCK_FILL[el.block] : categoryShading ? CATEGORY_FILL[el.category] : undefined)
+          : (style.fill ??
+            (blockShading ? BLOCK_FILL[el.block] : categoryShading ? CATEGORY_FILL[el.category] : undefined))
         // Missing cells use a muted ink on the hatch. Filled cells use black or
         // white, whichever contrasts more. Plain cells keep the theme ink.
-        const textFill = isMissing
-          ? 'var(--fg-muted)'
-          : style.fill
-            ? contrastText(style.fill)
-            : undefined
+        const textFill = isMissing ? 'var(--fg-muted)' : style.fill ? contrastText(style.fill) : undefined
         const isSelected = selected === el.Z
         const isHighlight = highlighted.has(el.Z)
         const isTabStop = tabStop === el.Z
-        const group = el.group === null ? '' : String(el.group)
         const hasValue = style.value !== undefined
+        const showName = !compact && !hasValue && nameFits(displayName(el))
         const label = cellAriaLabel(el, style.value)
         const classes = [
           styles.cell,
@@ -261,9 +226,12 @@ export function PeriodicTable({
           .filter(Boolean)
           .join(' ')
 
-        // Symbol and value positions. The value line sits under the symbol.
-        const symbolY = hasValue ? rect.cy - 2 : compact ? rect.cy + 8 : rect.cy + 3
+        // Layout inside the cell. Z sits in the top-left corner and never shares
+        // a line with the symbol. The symbol is centred. The name or the value
+        // sits along the bottom edge.
         const symbolSize = compact ? 24 : hasValue ? 19 : 22
+        // Vertical centre of the symbol, clear of the Z corner above and the name below.
+        const symbolY = compact ? rect.cy + 8 : hasValue ? rect.cy + 3 : showName ? rect.cy + 6 : rect.cy + 8
 
         return (
           <g
@@ -276,7 +244,7 @@ export function PeriodicTable({
             data-z={el.Z}
             data-symbol={el.symbol}
             data-block={el.block}
-            data-group={group}
+            data-group={el.group === null ? '' : String(el.group)}
             data-period={el.period}
             data-category={el.category}
             data-row={pos.row}
@@ -307,39 +275,25 @@ export function PeriodicTable({
             />
             <text
               x={rect.x + 6}
-              y={rect.y + 12}
+              y={rect.y + 13}
               className={styles.z}
-              style={textFill ? { fill: textFill, opacity: 0.8 } : undefined}
+              style={textFill ? { fill: textFill, opacity: 0.85 } : undefined}
             >
               {el.Z}
             </text>
-            {!compact && !hasValue && (
-              <text
-                x={rect.x + rect.width - 5}
-                y={rect.y + 12}
-                textAnchor="end"
-                className={styles.mass}
-                style={textFill ? { fill: textFill, opacity: 0.8 } : undefined}
-              >
-                {el.atomicMass.toFixed(el.atomicMass < 100 ? 2 : 0)}
-              </text>
-            )}
             <text
               x={rect.cx}
               y={symbolY}
               textAnchor="middle"
               className={styles.symbol}
-              style={{
-                fontSize: symbolSize,
-                ...(textFill ? { fill: textFill } : {}),
-              }}
+              style={{ fontSize: symbolSize, ...(textFill ? { fill: textFill } : {}) }}
             >
               {el.symbol}
             </text>
             {hasValue && (
               <text
                 x={rect.cx}
-                y={rect.cy + 13}
+                y={rect.y + rect.height - 7}
                 textAnchor="middle"
                 className={styles.value}
                 style={textFill ? { fill: textFill } : undefined}
@@ -347,15 +301,15 @@ export function PeriodicTable({
                 {style.value}
               </text>
             )}
-            {!compact && !hasValue && (
+            {showName && (
               <text
                 x={rect.cx}
-                y={rect.y + rect.height - 7}
+                y={rect.y + rect.height - 6}
                 textAnchor="middle"
                 className={styles.name}
                 style={textFill ? { fill: textFill } : undefined}
               >
-                {el.name}
+                {displayName(el)}
               </text>
             )}
           </g>
@@ -370,6 +324,13 @@ export function PeriodicTable({
 /** Rect for a grid position. Positions off the grid fall back to the origin. */
 function rectFor(row: number, col: number): CellRect {
   return (
-    layoutCellRect(0, () => ({ row, col })) ?? { x: 0, y: 0, width: CELL, height: CELL, cx: CELL / 2, cy: CELL / 2 }
+    layoutCellRect(0, () => ({ row, col })) ?? {
+      x: 0,
+      y: 0,
+      width: CELL,
+      height: CELL,
+      cx: CELL / 2,
+      cy: CELL / 2,
+    }
   )
 }

@@ -13,8 +13,11 @@ export interface TrendChartProps {
   points: readonly TrendPoint[]
   /** Axis title for the x-axis, for example "Atomic number, Z". */
   xLabel?: string
-  /** Axis title for the y-axis, with its unit, for example "First ionisation energy (eV)". */
-  yLabel: string
+  /**
+   * Axis title for the y-axis, with its unit. A node, so symbols can carry
+   * the `.sym` class, for example "ΔᵢH / kJ mol⁻¹".
+   */
+  yLabel: React.ReactNode
   /** Fixed y bounds. Defaults to nice bounds around the data. */
   yDomain?: readonly [number, number]
   /** Approximate number of y gridlines. */
@@ -91,7 +94,12 @@ export function TrendChart({
       return { x: xScale(point.x), y: yScale(point.y), text: h.text }
     })
     .filter((c): c is { x: number; y: number; text: string } => c !== null)
-  const callouts = placeCallouts(calloutInputs)
+  const callouts = placeCallouts(calloutInputs, segments, {
+    left: MARGIN.left,
+    right: MARGIN.left + plotW,
+    top: MARGIN.top,
+    bottom: MARGIN.top + plotH,
+  })
   const highlightedIndexes = new Set(highlight.map((h) => h.index))
 
   return (
@@ -200,7 +208,21 @@ export function TrendChart({
 
       {callouts.map((c) => (
         <g key={`c${c.text}`}>
-          <line x1={c.x} x2={c.labelX} y1={c.y - 6} y2={c.labelY + 4} className={styles.leader} />
+          <line
+            x1={c.x}
+            x2={c.x}
+            y1={c.side === 'above' ? c.y - 6 : c.y + 6}
+            y2={c.leaderEndY}
+            className={styles.leader}
+          />
+          <rect
+            x={c.box.x0}
+            y={c.box.y0}
+            width={c.box.x1 - c.box.x0}
+            height={c.box.y1 - c.box.y0}
+            rx={4}
+            className={styles.calloutBox}
+          />
           <text x={c.labelX} y={c.labelY} textAnchor="middle" className={styles.callout}>
             {c.text}
           </text>

@@ -1,6 +1,7 @@
 /**
  * Pure maths for TrendChart: nice axis ticks, linear scales, line segments
- * that break at missing values, and callout placement that avoids collisions.
+ * that break at missing values, and callout placement that keeps labels in
+ * clear space, never on the series or on each other.
  */
 
 export interface TrendPoint {
@@ -28,9 +29,7 @@ export function niceTicks(min: number, max: number, count = 5): NiceTicks {
   }
   const raw = (hi - lo) / Math.max(1, count)
   const magnitude = Math.pow(10, Math.floor(Math.log10(raw)))
-  const step = [1, 2, 2.5, 5, 10]
-    .map((m) => m * magnitude)
-    .find((s) => s >= raw) as number
+  const step = [1, 2, 2.5, 5, 10].map((m) => m * magnitude).find((s) => s >= raw) as number
   const first = Math.floor(lo / step) * step
   const last = Math.ceil(hi / step) * step
   const ticks: number[] = []
@@ -87,32 +86,119 @@ export interface CalloutInput {
   text: string
 }
 
-export interface PlacedCallout extends CalloutInput {
-  /** Pixel position of the label's baseline centre. */
-  labelX: number
-  labelY: number
+export interface PlaneBounds {
+  left: number
+  right: number
+  top: number
+  bottom: number
 }
 
-const CALLOUT_OFFSET = 26
-const CALLOUT_LINE_HEIGHT = 15
-const CALLOUT_MIN_GAP_X = 90
+export interface LabelBox {
+  x0: number
+  x1: number
+  y0: number
+  y1: number
+}
+
+export interface PlacedCallout extends CalloutInput {
+  /** Centre x of the label. Labels are centred on their point. */
+  labelX: number
+  /** Baseline y of the label text. */
+  labelY: number
+  /** Where the leader line meets the label box. */
+  leaderEndY: number
+  side: 'above' | 'below'
+  box: LabelBox
+}
+
+const CALLOUT_FONT_PX = 12
+const CALLOUT_CHAR_PX = CALLOUT_FONT_PX * 0.56
+const CALLOUT_PAD_X = 8
+const CALLOUT_BOX_H = 18
+const CALLOUT_CLEAR = 4
+/** Candidate label offsets from the point (baseline y relative to the point). */
+const CANDIDATES: readonly { side: 'above' | 'below'; dy: number }[] = [
+  { side: 'above', dy: -30 },
+  { side: 'below', dy: 36 },
+  { side: 'above', dy: -56 },
+  { side: 'below', dy: 62 },
+]
+
+/** Sample points along every segment, so a label box can be tested against the line. */
+function sampleSeries(series: readonly (readonly PixelPoint[])[]): PixelPoint[] {
+  const samples: PixelPoint[] = []
+  for (const seg of series) {
+    for (let i = 0; i < seg.length; i++) {
+      samples.push(seg[i])
+      if (i + 1 < seg.length) {
+        const a = seg[i]
+        const b = seg[i + 1]
+        for (let s = 1; s < 12; s++) {
+          const t = s / 12
+          samples.push({ x: a.x + (b.x - a.x) * t, y: a.y + (b.y - a.y) * t })
+        }
+      }
+    }
+  }
+  return samples
+}
+
+function boxesOverlap(a: LabelBox, b: LabelBox): boolean {
+  return a.x0 < b.x1 && b.x0 < a.x1 && a.y0 < b.y1 && b.y0 < a.y1
+}
+
+function insideExpanded(p: PixelPoint, box: LabelBox, pad: number): boolean {
+  return p.x >= box.x0 - pad && p.x <= box.x1 + pad && p.y >= box.y0 - pad && p.y <= box.y1 + pad
+}
 
 /**
- * Places callout labels above their points. A label that would collide with
- * a neighbour (close in x and in y) is lifted above it, so labels never overlap.
- * Labels are placed left to right.
+ * Places callouts above or below their points, in clear space. A candidate is
+ * accepted when its box lies inside the plot, touches no part of the series,
+ * and overlaps no label already placed. Candidates are tried nearest first.
+ * If none is clear, the nearest candidate is used.
  */
-export function placeCallouts(inputs: readonly CalloutInput[]): PlacedCallout[] {
+export function placeCallouts(
+  inputs: readonly CalloutInput[],
+  series: readonly (readonly PixelPoint[])[],
+  bounds: PlaneBounds
+): PlacedCallout[] {
+  const samples = sampleSeries(series)
   const sorted = [...inputs].sort((a, b) => a.x - b.x)
   const placed: PlacedCallout[] = []
+  const taken: LabelBox[] = []
+
   for (const item of sorted) {
-    let labelY = item.y - CALLOUT_OFFSET
-    for (const other of placed) {
-      const nearX = Math.abs(other.labelX - item.x) < CALLOUT_MIN_GAP_X
-      const nearY = Math.abs(other.labelY - labelY) < CALLOUT_LINE_HEIGHT
-      if (nearX && nearY) labelY = other.labelY - CALLOUT_LINE_HEIGHT
+    const halfW = item.text.length * CALLOUT_CHAR_PX / 2 + CALLOUT_PAD_X
+    let chosen: PlacedCallout | null = null
+    for (const cand of CANDIDATES) {
+      const labelY = item.y + cand.dy
+      const box: LabelBox = {
+        x0: item.x - halfW,
+        x1: item.x + halfW,
+        y0: labelY - CALLOUT_FONT_PX,
+        y1: labelY + 5,
+      }
+      const inside =
+        box.x0 >= bounds.left && box.x1 <= bounds.right && box.y0 >= bounds.top && box.y1 <= bounds.bottom
+      if (!inside) continue
+      if (samples.some((p) => insideExpanded(p, box, CALLOUT_CLEAR))) continue
+      if (taken.some((other) => boxesOverlap(other, expand(box, CALLOUT_CLEAR)))) continue
+      const leaderEndY = cand.side === 'above' ? box.y1 : box.y0
+      chosen = { ...item, labelX: item.x, labelY, leaderEndY, side: cand.side, box }
+      break
     }
-    placed.push({ ...item, labelX: item.x, labelY })
+    if (!chosen) {
+      const cand = CANDIDATES[0]
+      const labelY = item.y + cand.dy
+      const box: LabelBox = { x0: item.x - halfW, x1: item.x + halfW, y0: labelY - CALLOUT_FONT_PX, y1: labelY + 5 }
+      chosen = { ...item, labelX: item.x, labelY, leaderEndY: box.y1, side: cand.side, box }
+    }
+    taken.push(chosen.box)
+    placed.push(chosen)
   }
   return placed
+}
+
+function expand(box: LabelBox, pad: number): LabelBox {
+  return { x0: box.x0 - pad, x1: box.x1 + pad, y0: box.y0 - pad, y1: box.y1 + pad }
 }

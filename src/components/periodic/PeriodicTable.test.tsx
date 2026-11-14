@@ -5,6 +5,7 @@ import { PeriodicTable, cellAriaLabel, MISSING_FILL } from './PeriodicTable'
 import { ScaleLegend } from './ScaleLegend'
 import { ElementTile } from './ElementTile'
 import { FIXTURE_ELEMENTS, fixturePosition } from './fixture'
+import { PERIODIC_TABLE, tablePosition, elementBySymbol } from '../../lib/chem/periodic-data'
 
 function render(node: React.ReactElement): string {
   return renderToStaticMarkup(node)
@@ -15,9 +16,14 @@ describe('PeriodicTable markup', () => {
     <PeriodicTable elements={FIXTURE_ELEMENTS} position={fixturePosition} variant="full" blockShading />
   )
 
-  it('renders one button-role cell per fixture element', () => {
+  it('renders one button-role cell per element', () => {
     const cells = html.match(/role="button"/g) ?? []
     expect(cells).toHaveLength(FIXTURE_ELEMENTS.length)
+  })
+
+  it('renders all 118 cells for the full real table', () => {
+    const full = render(<PeriodicTable elements={PERIODIC_TABLE} position={tablePosition} variant="full" />)
+    expect(full.match(/role="button"/g) ?? []).toHaveLength(118)
   })
 
   it('gives each cell a descriptive aria-label', () => {
@@ -37,6 +43,19 @@ describe('PeriodicTable markup', () => {
     expect(html).toMatch(/data-z="58"[^>]*data-group=""/)
   })
 
+  it('labels the detached f-block rows as Lanthanoids and Actinoids', () => {
+    const full = render(<PeriodicTable elements={PERIODIC_TABLE} position={tablePosition} variant="full" />)
+    expect(full).toContain('>Lanthanoids<')
+    expect(full).toContain('>Actinoids<')
+    expect(full).not.toContain('57–71')
+  })
+
+  it('places lanthanum and actinium in group 3 of rows 6 and 7', () => {
+    const full = render(<PeriodicTable elements={PERIODIC_TABLE} position={tablePosition} variant="full" />)
+    expect(full).toMatch(/data-z="57"[^>]*data-row="6"[^>]*data-col="3"/)
+    expect(full).toMatch(/data-z="89"[^>]*data-row="7"[^>]*data-col="3"/)
+  })
+
   it('puts exactly one cell in the tab order', () => {
     const tabStops = html.match(/tabindex="0"/g) ?? []
     expect(tabStops).toHaveLength(1)
@@ -48,31 +67,30 @@ describe('PeriodicTable markup', () => {
 
   it('places the selected cell in the tab order and marks it current', () => {
     const selected = render(
-      <PeriodicTable
-        elements={FIXTURE_ELEMENTS}
-        position={fixturePosition}
-        variant="full"
-        selected={11}
-      />
+      <PeriodicTable elements={FIXTURE_ELEMENTS} position={fixturePosition} variant="full" selected={11} />
     )
     expect(selected).toMatch(/tabindex="0"[^>]*data-z="11"|data-z="11"[^>]*tabindex="0"/)
     expect(selected).toMatch(/aria-current="true"[^>]*data-z="11"|data-z="11"[^>]*aria-current="true"/)
   })
 
-  it('draws the lanthanide and actinide placeholders in group 3', () => {
-    expect(html).toContain('57–71')
-    expect(html).toContain('89–103')
+  it('never draws atomic mass in the table, and draws names only where they fit', () => {
+    const full = render(<PeriodicTable elements={FIXTURE_ELEMENTS} position={fixturePosition} variant="full" />)
+    expect(full).not.toContain('22.99')
+    expect(full).toContain('>Sodium<')
+    // Praseodymium is too long for a cell at 10 px, so it is left off the cell.
+    const pr = render(
+      <PeriodicTable
+        elements={[elementBySymbol('Pr')!]}
+        position={tablePosition}
+        variant="full"
+      />
+    )
+    expect(pr).not.toContain('>Praseodymium<')
+    expect(pr).toContain('aria-label="Praseodymium, Z 59, f-block, period 6"')
   })
 
-  it('shows the atomic mass only in the full variant', () => {
-    const full = render(
-      <PeriodicTable elements={FIXTURE_ELEMENTS} position={fixturePosition} variant="full" />
-    )
-    const compact = render(
-      <PeriodicTable elements={FIXTURE_ELEMENTS} position={fixturePosition} variant="compact" />
-    )
-    expect(full).toContain('22.99')
-    expect(compact).not.toContain('22.99')
+  it('hides names in the compact variant', () => {
+    const compact = render(<PeriodicTable elements={FIXTURE_ELEMENTS} position={fixturePosition} variant="compact" />)
     expect(compact).not.toContain('>Sodium<')
   })
 
@@ -109,12 +127,12 @@ describe('PeriodicTable markup', () => {
 
 describe('cellAriaLabel', () => {
   it('builds the spec pattern for a main-group element', () => {
-    const na = FIXTURE_ELEMENTS.find((el) => el.symbol === 'Na')
+    const na = elementBySymbol('Na')
     expect(na && cellAriaLabel(na)).toBe('Sodium, Z 11, group 1, period 3')
   })
 
   it('appends a value when one is shown', () => {
-    const na = FIXTURE_ELEMENTS.find((el) => el.symbol === 'Na')
+    const na = elementBySymbol('Na')
     expect(na && cellAriaLabel(na, '0.93')).toBe('Sodium, Z 11, group 1, period 3, 0.93')
   })
 })
@@ -150,26 +168,17 @@ describe('ScaleLegend markup', () => {
 })
 
 describe('ElementTile markup', () => {
-  it('shows the element values and its configuration', () => {
-    const na = FIXTURE_ELEMENTS.find((el) => el.symbol === 'Na') ?? null
-    const html = render(<ElementTile element={na} configuration="[Ne] 3s1" />)
+  it('shows NCERT terms and kJ mol⁻¹ values, and the configuration', () => {
+    const na = elementBySymbol('Na') ?? null
+    const html = render(<ElementTile element={na} configuration="[Ne] 3s¹" />)
     expect(html).toContain('Sodium')
-    expect(html).toContain('5.14 eV')
-    expect(html).toContain('[Ne] 3s1')
+    expect(html).toContain('Ionization enthalpy')
+    expect(html).toContain('kJ mol⁻¹')
+    expect(html).toContain('[Ne] 3s¹')
   })
 
   it('shows question marks and a caption for a predicted element', () => {
-    const eka = {
-      ...(FIXTURE_ELEMENTS[0]),
-      Z: 31,
-      symbol: 'Ea',
-      name: 'Eka-aluminium',
-      atomicMass: 68,
-      electronegativity: null,
-      firstIonizationEnergyEv: null,
-      electronAffinity: null,
-      atomicRadius: null,
-    }
+    const eka = { ...(elementBySymbol('H') as NonNullable<ReturnType<typeof elementBySymbol>>), Z: 31, symbol: 'Ea', name: 'Eka-aluminium', ncertName: undefined, atomicMass: 68, electronegativity: null, firstIonizationEnergyKjPerMol: null, electronAffinityEv: null, atomicRadiusPm: null }
     const html = render(<ElementTile element={eka} predicted />)
     expect(html).toContain('Predicted by Mendeleev')
     expect(html).not.toContain('Not available')
@@ -177,7 +186,7 @@ describe('ElementTile markup', () => {
   })
 
   it('reports Not available for a missing value', () => {
-    const he = FIXTURE_ELEMENTS.find((el) => el.symbol === 'He') ?? null
+    const he = elementBySymbol('He') ?? null
     const html = render(<ElementTile element={he} />)
     expect(html).toContain('Not available')
   })

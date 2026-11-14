@@ -4,11 +4,14 @@ import {
   PITCH,
   cellRevealOrder,
   cellRect,
+  displayName,
+  nameFits,
   nextFocusZ,
   rowTop,
   tableViewBox,
 } from './layout'
 import { FIXTURE_ELEMENTS, fixturePosition } from './fixture'
+import { PERIODIC_TABLE } from '../../lib/chem/periodic-data'
 
 describe('rowTop', () => {
   it('stacks rows 1 to 7 at one pitch each', () => {
@@ -52,7 +55,21 @@ describe('cellRect', () => {
   })
 
   it('returns null for positions off the grid', () => {
-    expect(cellRect(999, fixturePosition)).toBeNull()
+    expect(cellRect(1, () => ({ row: 0, col: 0 }))).toBeNull()
+  })
+})
+
+describe('displayName and nameFits', () => {
+  it('prefers the NCERT spelling and falls back to the data name', () => {
+    const al = PERIODIC_TABLE.find((e) => e.symbol === 'Al')
+    expect(al && displayName(al)).toBe(al?.ncertName ?? al?.name)
+    const h = PERIODIC_TABLE.find((e) => e.symbol === 'H')
+    expect(h && displayName(h)).toBe('Hydrogen')
+  })
+
+  it('fits short names and drops long ones rather than shrinking them', () => {
+    expect(nameFits('Sodium')).toBe(true)
+    expect(nameFits('Praseodymium')).toBe(false)
   })
 })
 

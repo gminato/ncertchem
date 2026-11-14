@@ -5,52 +5,70 @@ import { PeriodicTable } from './PeriodicTable'
 import type { CellStyle } from './PeriodicTable'
 import { ScaleLegend } from './ScaleLegend'
 import { TrendChart } from './TrendChart'
+import type { TrendHighlight } from './TrendChart'
 import { AtomSizeRow } from './AtomSizeRow'
 import { ElementTile } from './ElementTile'
-import {
-  MISSING_FILL,
-  SEQUENTIAL_VIRIDIS,
-  divergingRamp,
-  divergingScale,
-  sequentialScale,
-} from './colour-scale'
-import { FIXTURE_ELEMENTS, fixturePosition } from './fixture'
+import { MISSING_FILL, SEQUENTIAL_VIRIDIS, divergingRamp, divergingScale, sequentialScale } from './colour-scale'
+import { displayName } from './layout'
 import type { ElementRecord } from './types'
+import {
+  PERIODIC_TABLE,
+  elementByZ,
+  ionizationAnomalies,
+  outerConfiguration,
+  tablePosition,
+} from '../../lib/chem/periodic-data'
+import type { IonizationAnomalyReason } from '../../lib/chem/periodic-data'
 
-const ELECTRONEGATIVITY_DOMAIN: [number, number] = [0.8, 4]
-const AFFINITY_DOMAIN: [number, number] = [-0.5, 3.6]
+const EV_TO_KJ_PER_MOL = 96.485
 
-const electronegativityFill = sequentialScale(ELECTRONEGATIVITY_DOMAIN, SEQUENTIAL_VIRIDIS)
-const affinityFill = divergingScale(AFFINITY_DOMAIN, 0)
+const EN_DOMAIN: [number, number] = [0.7, 4]
+/** Electron gain enthalpy in kJ mol⁻¹. Negative means energy is released. */
+const GAIN_DOMAIN: [number, number] = [-360, 60]
 
-/** Cell styling for the electronegativity heatmap. Missing values hatch. */
+const electronegativityFill = sequentialScale(EN_DOMAIN, SEQUENTIAL_VIRIDIS)
+const gainFill = divergingScale(GAIN_DOMAIN, 0)
+
 function electronegativityCell(el: ElementRecord): CellStyle {
   const fill = electronegativityFill(el.electronegativity)
   if (fill === null) return { fill: MISSING_FILL, value: '—' }
-  return { fill, value: el.electronegativity?.toFixed(2) }
+  return { fill, value: (el.electronegativity as number).toFixed(2) }
 }
 
-/** Cell styling for the electron affinity heatmap. Signed around zero. */
-function affinityCell(el: ElementRecord): CellStyle {
-  const fill = affinityFill(el.electronAffinity)
+function gainKjPerMol(el: ElementRecord): number | null {
+  return el.electronAffinityEv === null ? null : -el.electronAffinityEv * EV_TO_KJ_PER_MOL
+}
+
+function gainCell(el: ElementRecord): CellStyle {
+  const kj = gainKjPerMol(el)
+  const fill = gainFill(kj)
   if (fill === null) return { fill: MISSING_FILL, value: '—' }
-  return { fill, value: el.electronAffinity?.toFixed(2) }
+  return { fill, value: Math.round(kj as number).toString() }
 }
 
-const PERIOD_TWO = FIXTURE_ELEMENTS.filter((el) => el.period === 2).sort((a, b) => a.Z - b.Z)
+// Period 2, main-group elements, in atomic-number order (Li to Ne).
+const PERIOD_TWO = PERIODIC_TABLE.filter((e) => e.period === 2 && (e.block === 's' || e.block === 'p')).sort(
+  (a, b) => a.Z - b.Z
+)
 const PERIOD_TWO_POINTS = PERIOD_TWO.map((el) => ({
   x: el.Z,
-  y: el.firstIonizationEnergyEv,
+  y: el.firstIonizationEnergyKjPerMol,
   label: el.symbol,
 }))
 
-/** Boron and oxygen are the two dips in period 2. */
-const B_INDEX = PERIOD_TWO.findIndex((el) => el.symbol === 'B')
-const O_INDEX = PERIOD_TWO.findIndex((el) => el.symbol === 'O')
+const REASON_TEXT: Record<IonizationAnomalyReason, string> = {
+  'p-electron-shielded': 'the 2p electron is shielded',
+  'paired-electron-repulsion': 'paired electrons repel',
+}
 
-const SODIUM = FIXTURE_ELEMENTS.find((el) => el.symbol === 'Na') ?? null
+/** Dips in the data, with NCERT's reasons, mapped onto the period-2 points. */
+const PERIOD_TWO_HIGHLIGHTS: TrendHighlight[] = ionizationAnomalies(2).flatMap((a) => {
+  const index = PERIOD_TWO.findIndex((el) => el.Z === a.to)
+  if (index < 0) return []
+  return [{ index, text: `${elementByZ(a.to).symbol} dips: ${REASON_TEXT[a.reason]}` }]
+})
 
-/** Eka-aluminium: Mendeleev's 1871 prediction, later found as gallium. */
+/** Mendeleev's 1871 prediction (eka-aluminium). Its values are unknown, shown as "?". */
 const EKA_ALUMINIUM: ElementRecord = {
   Z: 31,
   symbol: 'Ea',
@@ -59,55 +77,59 @@ const EKA_ALUMINIUM: ElementRecord = {
   group: 13,
   period: 4,
   block: 'p',
+  fBlockRow: null,
   category: 'metal',
+  pubchemGroupBlock: '',
   electronegativity: null,
+  atomicRadiusPm: null,
   firstIonizationEnergyEv: null,
-  electronAffinity: null,
-  atomicRadius: null,
+  firstIonizationEnergyKjPerMol: null,
+  electronAffinityEv: null,
+  standardState: '',
 }
 
+const SODIUM = elementByZ(11)
+
 export function PeriodicDemo() {
-  const [selected, setSelected] = useState<number | undefined>(11)
-  const [lastPicked, setLastPicked] = useState<string | null>(null)
+  const [selected, setSelected] = useState<number>(11)
+  const picked = PERIODIC_TABLE.find((e) => e.Z === selected) ?? SODIUM
 
   return (
     <div>
-      {/* 1. Full table: block shading, group and period numbers, keyboard navigable */}
+      {/* 1. Full 118-element table, shaded by block */}
       <PeriodicTable
-        elements={FIXTURE_ELEMENTS}
-        position={fixturePosition}
+        elements={PERIODIC_TABLE}
+        position={tablePosition}
         variant="full"
         blockShading
         showGroupNumbers
         showPeriodNumbers
         selected={selected}
-        onSelect={(el) => {
-          setSelected(el.Z)
-          setLastPicked(`${el.name}, Z ${el.Z}`)
-        }}
-        title="Periodic table of the fixture elements, shaded by block"
+        onSelect={(el) => setSelected(el.Z)}
+        title="Periodic table of the elements, shaded by block"
       />
-      <p role="status" aria-live="polite" style={{ fontSize: '0.85rem', color: 'var(--fg-muted)', margin: '8px 0 0' }}>
-        {lastPicked ? `Selected ${lastPicked}` : 'Use the arrow keys to move, Enter to select.'}
+      <p role="status" aria-live="polite" style={{ fontSize: '0.9rem', color: 'var(--fg)', margin: '12px 0 0' }}>
+        {`${displayName(picked)} (${picked.symbol}), Z ${picked.Z}, atomic mass ${picked.atomicMass.toFixed(picked.atomicMass < 100 ? 2 : 1)} u. `}
+        <span style={{ color: 'var(--fg-subtle)' }}>Use the arrow keys to move and Enter to select.</span>
       </p>
 
       <Divider />
 
-      {/* 2. Compact heatmap with its legend */}
-      <div style={{ display: 'grid', gap: 24 }}>
+      {/* 2. Heatmaps with legends */}
+      <div style={{ display: 'grid', gap: 32 }}>
         <div>
           <PeriodicTable
-            elements={FIXTURE_ELEMENTS}
-            position={fixturePosition}
+            elements={PERIODIC_TABLE}
+            position={tablePosition}
             variant="compact"
             cell={electronegativityCell}
             showGroupNumbers
-            title="Heatmap of electronegativity for the fixture elements"
+            title="Heatmap of Pauling electronegativity for all elements"
           />
           <div style={{ marginTop: 16 }}>
             <ScaleLegend
               stops={SEQUENTIAL_VIRIDIS}
-              domain={ELECTRONEGATIVITY_DOMAIN}
+              domain={EN_DOMAIN}
               unit="Pauling"
               label="Electronegativity"
               kind="sequential"
@@ -117,19 +139,19 @@ export function PeriodicDemo() {
 
         <div>
           <PeriodicTable
-            elements={FIXTURE_ELEMENTS}
-            position={fixturePosition}
+            elements={PERIODIC_TABLE}
+            position={tablePosition}
             variant="compact"
-            cell={affinityCell}
+            cell={gainCell}
             showGroupNumbers
-            title="Heatmap of electron affinity for the fixture elements, diverging around zero"
+            title="Heatmap of electron gain enthalpy for all elements, diverging around zero"
           />
           <div style={{ marginTop: 16 }}>
             <ScaleLegend
               stops={divergingRamp()}
-              domain={AFFINITY_DOMAIN}
-              unit="eV"
-              label="Electron affinity"
+              domain={GAIN_DOMAIN}
+              unit="kJ mol⁻¹"
+              label="Electron gain enthalpy"
               kind="diverging"
               midpoint={0}
             />
@@ -139,17 +161,22 @@ export function PeriodicDemo() {
 
       <Divider />
 
-      {/* 3. Trend chart with an anomaly callout for each dip in period 2 */}
+      {/* 3. Ionization enthalpy across period 2, with the data's own dips called out */}
       <TrendChart
         points={PERIOD_TWO_POINTS}
         xLabel="Atomic number, Z"
-        yLabel="First ionisation energy (eV)"
-        yDomain={[0, 25]}
-        highlight={[
-          { index: B_INDEX, text: 'B dips: the 2p electron is shielded' },
-          { index: O_INDEX, text: 'O dips: paired electrons repel' },
-        ].filter((h) => h.index >= 0)}
-        title="First ionisation energy across period 2, with dips at boron and oxygen"
+        yLabel={
+          <>
+            First ionization enthalpy, <tspan className="sym">Δ</tspan>
+            <tspan className="sym" baselineShift="sub" fontSize="0.75em">
+              i
+            </tspan>
+            <tspan className="sym">H</tspan> / kJ mol⁻¹
+          </>
+        }
+        yDomain={[0, 2500]}
+        highlight={PERIOD_TWO_HIGHLIGHTS}
+        title="First ionization enthalpy across period 2, with dips at boron and oxygen"
       />
 
       <Divider />
@@ -170,10 +197,9 @@ export function PeriodicDemo() {
 
       {/* 5. Element tiles: one observed, one predicted */}
       <div style={{ display: 'flex', flexWrap: 'wrap', gap: 24 }}>
-        <ElementTile element={SODIUM} configuration="[Ne] 3s1" />
+        <ElementTile element={SODIUM} configuration={outerConfiguration(11) ?? undefined} />
         <ElementTile element={EKA_ALUMINIUM} predicted />
       </div>
-
     </div>
   )
 }

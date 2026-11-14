@@ -5,11 +5,29 @@ import type { ElementRecord, PositionFn, TablePosition } from './types'
  * of React so every rule can be unit tested.
  */
 
+/** The name shown to learners: NCERT's spelling where it differs from the data name. */
+export function displayName(el: ElementRecord): string {
+  return el.ncertName ?? el.name
+}
+
 export const COLS = 18
 /** Distance between cell origins, in SVG user units. */
-export const PITCH = 56
+export const PITCH = 60
 /** Side of a square cell. The gap between cells is PITCH - CELL. */
-export const CELL = 50
+export const CELL = 54
+/** Font size of the cell name, in user units (about 10 px at 1440 px). */
+export const NAME_FONT = 10
+/** Estimated average glyph width as a fraction of the font size, for fit checks. */
+const AVG_GLYPH_EM = 0.5
+
+/**
+ * Whether a name fits on one line inside a cell at NAME_FONT. Names that do
+ * not fit are left off the cell. They still appear in the aria-label and the
+ * selection caption, so nothing is lost. Names are never shrunk below NAME_FONT.
+ */
+export function nameFits(name: string): boolean {
+  return name.length * AVG_GLYPH_EM * NAME_FONT <= CELL - 8
+}
 /** Width of the left gutter that holds period numbers. */
 export const GUTTER_LEFT = 34
 /** Height of the top band that holds group numbers. */

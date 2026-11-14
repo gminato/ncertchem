@@ -71,6 +71,12 @@
   stroke-width: 1;
 }
 
+.calloutBox {
+  fill: var(--surface);
+  stroke: var(--border);
+  stroke-width: 1;
+}
+
 .callout {
   font-family: var(--font-sans);
   font-size: 12px;
