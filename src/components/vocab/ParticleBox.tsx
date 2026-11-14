@@ -100,12 +100,13 @@ export const ParticleBox = forwardRef<SVGGElement, ParticleBoxProps>(function Pa
         )}
       </g>
 
-      {/* A soft highlight along the top-left of the wall */}
+      {/* A faint, short glare in the top-left corner, fading along its length */}
       <path
-        d={`M ${radius * 0.4} ${height * 0.4} Q ${radius * 0.4} ${radius * 0.4} ${radius * 1.3} ${radius * 0.4} L ${width * 0.2} ${radius * 0.4}`}
+        d={`M ${radius * 0.3} ${radius * 1.6} Q ${radius * 0.3} ${radius * 0.4} ${radius * 1.6} ${radius * 0.3}`}
         fill="none"
         stroke="var(--glass-sheen)"
-        strokeWidth={2}
+        strokeOpacity={0.35}
+        strokeWidth={1.5}
         strokeLinecap="round"
         style={{ pointerEvents: 'none' }}
       />

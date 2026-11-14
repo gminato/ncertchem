@@ -14,6 +14,15 @@ export interface NumberFieldProps {
   unit?: string
   /** Decimal places used when the field is tidied on blur. */
   precision?: number
+  /**
+   * Text shown while the field is not being edited, e.g. "2.000" or "1.204".
+   * The numeric `value` is still what the field reports and clamps. While the
+   * Learner types, the typed text is kept, so a formatted display never
+   * interrupts typing.
+   */
+  displayValue?: string
+  /** Called with the raw text on every keystroke, before any parsing or clamping. */
+  onRawChange?: (raw: string) => void
   id?: string
   disabled?: boolean
 }
@@ -38,19 +47,30 @@ export function NumberField({
   step = 'any',
   unit,
   precision = 3,
+  displayValue,
+  onRawChange,
   id,
   disabled = false,
 }: NumberFieldProps) {
   const autoId = useId()
   const inputId = id ?? autoId
   const format = (v: number) => String(Number(v.toFixed(precision)))
+  const shown = displayValue ?? format(value)
 
-  // The text the Learner is typing. It re-syncs whenever the value changes from outside.
-  const [draft, setDraft] = useState(() => format(value))
+  // The text the Learner is typing. A change of `value` from outside always
+  // re-syncs it. A change of the display text re-syncs it only while the field
+  // is not focused, so a formatted display never breaks typing.
+  const [draft, setDraft] = useState(shown)
   const [lastValue, setLastValue] = useState(value)
+  const [lastShown, setLastShown] = useState(shown)
+  const [focused, setFocused] = useState(false)
   if (value !== lastValue) {
     setLastValue(value)
-    setDraft(format(value))
+    setLastShown(shown)
+    setDraft(shown)
+  } else if (!focused && shown !== lastShown) {
+    setLastShown(shown)
+    setDraft(shown)
   }
 
   const commit = (text: string) => {
@@ -68,6 +88,7 @@ export function NumberField({
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
     const text = event.target.value
     setDraft(text)
+    onRawChange?.(text)
     const parsed = Number(text)
     if (text.trim() !== '' && !Number.isNaN(parsed)) {
       const next = clampTo(parsed, min, max)
@@ -99,7 +120,13 @@ export function NumberField({
           step={step}
           disabled={disabled}
           onChange={handleChange}
-          onBlur={(event) => commit(event.currentTarget.value)}
+          onFocus={() => setFocused(true)}
+          onBlur={(event) => {
+            setFocused(false)
+            // Forces the next render to show the formatted text again.
+            setLastShown('')
+            commit(event.currentTarget.value)
+          }}
           onKeyDown={handleKeyDown}
         />
         {unit && <span className={styles.numberUnit}>{unit}</span>}
