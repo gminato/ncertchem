@@ -1,5 +1,6 @@
 import type { ComponentType } from 'react'
 import { SigFigRuler } from './sims/sigfig-ruler'
+import { StatesOfMatter } from './sims/StatesOfMatter'
 
 export interface SimulationProps {
   /** True when the Learner has asked the OS for reduced motion. Skip tweens and loops when set. */
@@ -13,4 +14,5 @@ export interface SimulationProps {
  */
 export const simulations: Record<string, ComponentType<SimulationProps>> = {
   'sigfig-ruler': SigFigRuler,
+  'states-of-matter': StatesOfMatter,
 }

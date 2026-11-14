@@ -3,6 +3,8 @@ import { MassWeight } from './unit1/MassWeight'
 import { ThermometerTrio } from './unit1/ThermometerTrio'
 import { PrecisionAccuracy } from './unit1/PrecisionAccuracy'
 import { UnitFactors } from './unit1/UnitFactors'
+import { EverydayChemistry } from './unit1/EverydayChemistry'
+import { MatterClassification } from './unit1/MatterClassification'
 
 /**
  * Animations available to a Scrolly Animation, keyed by the `animation` prop.
@@ -14,6 +16,8 @@ export const animations = {
   'thermometer-trio': ThermometerTrio,
   'precision-accuracy': PrecisionAccuracy,
   'unit-factors': UnitFactors,
+  'everyday-chemistry': EverydayChemistry,
+  'matter-classification': MatterClassification,
 } as const
 
 export type AnimationName = keyof typeof animations

@@ -1,4 +1,3 @@
-/* Shared frame for the Unit 1 Scrolly Animations. */
 .wrapper {
   position: relative;
   width: 100%;
@@ -11,7 +10,6 @@
   height: 100%;
 }
 
-/* Visually hidden, but announced by screen readers. */
 .srOnly {
   position: absolute;
   width: 1px;
