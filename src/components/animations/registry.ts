@@ -14,6 +14,12 @@ import { GasLaws } from './unit1/GasLaws'
 import { DaltonPostulates } from './unit1/DaltonPostulates'
 import { IsotopeSeesaw } from './unit1/IsotopeSeesaw'
 import { MolecularMass } from './unit1/MolecularMass'
+import { CathodeRayTube } from './unit2/subatomic/CathodeRayTube'
+import { OilDropApparatus } from './unit2/subatomic/OilDropApparatus'
+import { ParticleTable } from './unit2/subatomic/ParticleTable'
+import { RutherfordScattering } from './unit2/atomic/RutherfordScattering'
+import { IsotopeNuclei } from './unit2/atomic/IsotopeNuclei'
+import { OrbitCollapse } from './unit2/atomic/OrbitCollapse'
 
 /**
  * Animations available to a Scrolly Animation, keyed by the `animation` prop.
@@ -36,6 +42,12 @@ export const animations = {
   'dalton-postulates': DaltonPostulates,
   'isotope-seesaw': IsotopeSeesaw,
   'molecular-mass': MolecularMass,
+  'subatomic-cathode-ray': CathodeRayTube,
+  'subatomic-oil-drop': OilDropApparatus,
+  'subatomic-particles': ParticleTable,
+  'atomic-rutherford': RutherfordScattering,
+  'atomic-isotopes': IsotopeNuclei,
+  'atomic-collapse': OrbitCollapse,
 } as const
 
 export type AnimationName = keyof typeof animations
