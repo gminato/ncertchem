@@ -134,15 +134,15 @@ export function MoseleyPlot({ step, reducedMotion }: MoseleyPlotProps) {
         <circle cx={LINE_START.x} cy={LINE_START.y} r={5} className={styles.interceptDot} />
         <line x1={LINE_START.x} y1={LINE_START.y} x2={CALLOUT.x - 4} y2={CALLOUT.y - 5} className={styles.leader} />
         <text x={CALLOUT.x} y={CALLOUT.y} textAnchor={CALLOUT.textAnchor} className={styles.callout}>
-          Z = 1: √ν = 0
+          <tspan className="sym">Z</tspan> = 1: <tspan className="sym">√ν</tspan> = 0
         </text>
       </g>
 
       <text x={PLOT.left} y={VIEW_HEIGHT - 26} className={styles.note}>
-        Kα approximation ν = ¾ R∞c (Z − 1)², computed here. Not measured data.
+        Kα approximation <tspan className="sym">ν</tspan> = ¾ <tspan className="sym">R</tspan>∞<tspan className="sym">c</tspan> (<tspan className="sym">Z</tspan> − 1)², computed here. Not measured data.
       </text>
       <text x={PLOT.left} y={VIEW_HEIGHT - 8} className={styles.note}>
-        Slope √(3R∞c/4) ≈ {MOSELEY_SLOPE_SCALED.toFixed(3)} × 10⁸ Hz½ for each unit of Z.
+        Slope √(3R∞c/4) ≈ {MOSELEY_SLOPE_SCALED.toFixed(3)} × 10⁸ Hz½ for each unit of <tspan className="sym">Z</tspan>.
       </text>
     </svg>
   )
