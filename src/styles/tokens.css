@@ -50,6 +50,11 @@
   --liquid: rgba(47, 111, 235, 0.2);
   --liquid-edge: rgba(47, 111, 235, 0.55);
 
+  /* Orbital lobes (3D phases) and the magnetic field of an EM wave */
+  --orbital-pos: #E0653F;
+  --orbital-neg: #17938A;
+  --field-b: #8B4FD6;
+
   /* Check feedback: calm success and gentle caution */
   --success: #1E7A4C;
   --success-soft: rgba(30, 122, 76, 0.1);
@@ -125,6 +130,10 @@
   --liquid: rgba(108, 182, 255, 0.4);
   --liquid-edge: rgba(150, 205, 255, 0.9);
 
+  --orbital-pos: #FF9B7E;
+  --orbital-neg: #4FD6C8;
+  --field-b: #C49BFF;
+
   --success: #56D364;
   --success-soft: rgba(86, 211, 100, 0.14);
   --caution: #E3B341;
@@ -175,6 +184,10 @@
     --glass-sheen: rgba(255, 255, 255, 0.24);
     --liquid: rgba(108, 182, 255, 0.4);
     --liquid-edge: rgba(150, 205, 255, 0.9);
+
+    --orbital-pos: #FF9B7E;
+    --orbital-neg: #4FD6C8;
+    --field-b: #C49BFF;
 
     --success: #56D364;
     --success-soft: rgba(86, 211, 100, 0.14);

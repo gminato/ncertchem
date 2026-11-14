@@ -1,0 +1,91 @@
+/* The stage sits on the card surface, so the canvas itself stays transparent. */
+.stage {
+  position: relative;
+  width: 100%;
+  height: 360px;
+  background: var(--surface);
+  overflow: hidden;
+  touch-action: pan-y;
+}
+
+.canvas {
+  position: absolute !important;
+  inset: 0;
+  width: 100% !important;
+  height: 100% !important;
+  background: transparent;
+  cursor: grab;
+}
+
+.canvas:active {
+  cursor: grabbing;
+}
+
+.loading {
+  width: 100%;
+  height: 360px;
+  background: var(--surface);
+}
+
+.hint {
+  position: absolute;
+  left: var(--space-4);
+  bottom: var(--space-3);
+  margin: 0;
+  font-family: var(--font-sans);
+  font-size: 0.75rem;
+  letter-spacing: 0.01em;
+  color: var(--fg-subtle);
+  pointer-events: none;
+  user-select: none;
+  transition: opacity 0.4s var(--ease-out);
+}
+
+.hint[data-hidden='true'] {
+  opacity: 0;
+}
+
+.axisLabel {
+  font-family: var(--font-sans);
+  font-size: 12px;
+  font-weight: 600;
+  pointer-events: none;
+  user-select: none;
+  white-space: nowrap;
+}
+
+/* 2D fallback, shown when WebGL is unavailable. */
+.fallback {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-3);
+  padding: var(--space-4);
+}
+
+.fallbackArt {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.fallbackArt > svg {
+  width: auto;
+  height: 80%;
+  max-width: 100%;
+}
+
+.fallbackNote {
+  position: absolute;
+  left: var(--space-4);
+  bottom: var(--space-3);
+  margin: 0;
+  font-family: var(--font-sans);
+  font-size: 0.75rem;
+  color: var(--fg-subtle);
+}
