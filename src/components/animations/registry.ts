@@ -30,6 +30,10 @@ import { OrbitalQuantumNumbers } from './unit2/orbitals/OrbitalQuantumNumbers'
 import { DeBroglieScale } from './unit2/bohr/DeBroglieScale'
 import { DeBroglieOrbit } from './unit2/bohr/DeBroglieOrbit'
 import { HeisenbergMicroscope } from './unit2/bohr/HeisenbergMicroscope'
+import { DefinitionRadii } from './unit3/radii/DefinitionRadii'
+import { PeriodTwoRadii, GroupOneRadii } from './unit3/radii/PeriodRadii'
+import { PeriodicRadiiMap } from './unit3/radii/PeriodicRadiiMap'
+import { IonicRadii } from './unit3/radii/IonicRadii'
 
 /**
  * Animations available to a Scrolly Animation, keyed by the `animation` prop.
@@ -68,6 +72,11 @@ export const animations = {
   'de-broglie-scale': DeBroglieScale,
   'de-broglie-orbit': DeBroglieOrbit,
   'heisenberg-microscope': HeisenbergMicroscope,
+  'radii-definitions': DefinitionRadii,
+  'radii-period-two': PeriodTwoRadii,
+  'radii-group-one': GroupOneRadii,
+  'radii-periodic-table': PeriodicRadiiMap,
+  'radii-ionic': IonicRadii,
 } as const
 
 export type AnimationName = keyof typeof animations
