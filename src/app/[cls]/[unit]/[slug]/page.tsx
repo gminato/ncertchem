@@ -6,6 +6,10 @@ import * as runtime from 'react/jsx-runtime'
 import { sections } from '#site/content'
 import { ThemeToggle } from '@/components/ui/ThemeToggle'
 import { Hook, KeyIdeas, Scrolly, Step } from '@/components/section'
+import { Check } from '@/components/check'
+import { Simulation } from '@/components/simulation'
+import { findUnit } from '@/content/units'
+import { parseSegment, prevNext, sectionsForUnit } from '@/lib/unit-nav'
 import styles from './section.module.css'
 
 type SectionEntry = (typeof sections)[number]
@@ -30,13 +34,6 @@ function renderMdx(code: string, components: MdxComponents): ReactNode {
   const fn = new Function(code)
   const mod = fn({ ...runtime }) as MdxModule
   return mod.default({ components })
-}
-
-/** Parses a URL segment such as "class-11" or "unit-2" against its prefix. */
-function parseSegment(segment: string, prefix: string): number | null {
-  if (!segment.startsWith(prefix)) return null
-  const value = Number(segment.slice(prefix.length))
-  return Number.isInteger(value) ? value : null
 }
 
 function findSection(params: SectionParams): SectionEntry | undefined {
@@ -81,6 +78,15 @@ export default async function SectionPage({
     section.ncert ??
     `Class ${section.class}, Unit ${section.unit}, Section ${section.section}`
 
+  const unitInfo = findUnit(section.class, section.unit)
+  const unitHref = `/class-${section.class}/unit-${section.unit}`
+  const { previous, next } = prevNext(
+    sectionsForUnit(sections, section.class, section.unit),
+    section.slug
+  )
+  const hrefFor = (entry: SectionEntry) =>
+    `/class-${entry.class}/unit-${entry.unit}/${entry.slug}`
+
   return (
     <>
       <header className={styles.topbar}>
@@ -92,15 +98,54 @@ export default async function SectionPage({
 
       <article className={styles.article}>
         <header className={styles.head}>
-          <p className={styles.eyebrow}>
-            Class {section.class} · Unit {section.unit} · Section {section.section}
-          </p>
+          <nav aria-label="Breadcrumb" className={styles.eyebrow}>
+            <Link href={unitHref} className={styles.crumb}>
+              Class {section.class} · Unit {section.unit}
+              {unitInfo ? `: ${unitInfo.title}` : ''}
+            </Link>
+            <span className={styles.crumbSep} aria-hidden="true">
+              /
+            </span>
+            <span>Section {section.section}</span>
+          </nav>
           <h1 className={styles.title}>{section.title}</h1>
         </header>
 
         <div className={styles.body}>
-          {renderMdx(section.body, { Hook, Scrolly, Step, KeyIdeas } as MdxComponents)}
+          {renderMdx(section.body, {
+            Hook,
+            Scrolly,
+            Step,
+            KeyIdeas,
+            Check,
+            Simulation,
+          } as MdxComponents)}
         </div>
+
+        {(previous || next) && (
+          <nav aria-label="Sections in this Unit" className={styles.pager}>
+            {previous ? (
+              <Link href={hrefFor(previous)} className={styles.pagerLink}>
+                <span className={styles.pagerKicker}>← Previous</span>
+                <span className={styles.pagerTitle}>
+                  {previous.section} {previous.title}
+                </span>
+              </Link>
+            ) : (
+              <span />
+            )}
+            {next ? (
+              <Link href={hrefFor(next)} className={`${styles.pagerLink} ${styles.pagerNext}`}>
+                <span className={styles.pagerKicker}>Next →</span>
+                <span className={styles.pagerTitle}>
+                  {next.section} {next.title}
+                </span>
+              </Link>
+            ) : (
+              <span />
+            )}
+          </nav>
+        )}
 
         <footer className={styles.footer}>
           Follows NCERT Chemistry {ncertReference}

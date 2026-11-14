@@ -12,6 +12,10 @@ import {
   ladderLabels,
   joulesToEv,
   orbitLabelPosition,
+  Atom,
+  Molecule,
+  ParticleBox,
+  Vessel,
 } from '@/components/vocab'
 import { energyLevel } from '@/lib/chem/bohr'
 import styles from './vocab.module.css'
@@ -578,6 +582,252 @@ export default function VocabPage() {
               </div>
               <p className={styles.cardDescription}>
                 A hydrogen atom with an electron in the active n = 2 orbit emitting a 486 nm photon.
+              </p>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      {/* Matter & molecules Section */}
+      <section className={styles.section} id="matter" aria-labelledby="matter-heading">
+        <h2 id="matter-heading" className={styles.sectionTitle}>
+          Matter &amp; molecules
+        </h2>
+        <p className={styles.sectionSubtitle}>
+          Atoms, molecules and the vessels that hold them. Each element keeps one colour and one
+          size everywhere, and molecules are drawn with their true bond angles.
+        </p>
+
+        <div className={styles.grid}>
+          {/* Card: Atoms */}
+          <article className={styles.card}>
+            <div className={styles.cardCanvas}>
+              <svg
+                viewBox="-140 -50 280 100"
+                className={styles.svgElement}
+                role="img"
+                aria-label="Six atoms in a row: hydrogen, carbon, nitrogen, oxygen, sodium and chlorine"
+              >
+                <VocabDefs />
+                {[
+                  { el: 'H', x: -110 },
+                  { el: 'C', x: -66 },
+                  { el: 'N', x: -22 },
+                  { el: 'O', x: 22 },
+                  { el: 'Na', x: 66 },
+                  { el: 'Cl', x: 110 },
+                ].map((a) => (
+                  <g key={a.el}>
+                    <Atom element={a.el} x={a.x} y={-6} />
+                    <Label x={a.x} y={34} fontSize={13}>
+                      {a.el}
+                    </Label>
+                  </g>
+                ))}
+              </svg>
+            </div>
+            <div className={styles.cardBody}>
+              <div className={styles.cardHeading}>
+                <span>Atoms</span>
+                <span className={styles.cardBadge}>--el-*</span>
+              </div>
+              <p className={styles.cardDescription}>
+                One harmonised colour per element. Hydrogen is the smallest sphere; sodium and
+                chlorine are the largest.
+              </p>
+            </div>
+          </article>
+
+          {/* Card: Vessels (three variants in one canvas) */}
+          <article className={styles.card}>
+            <div className={styles.cardCanvas}>
+              <svg
+                viewBox="-150 -72 300 150"
+                className={styles.svgElement}
+                role="img"
+                aria-label="Three vessels: a beaker 60 percent full, a conical flask 45 percent full, and a measuring cylinder 80 percent full"
+              >
+                <VocabDefs />
+                <Vessel variant="beaker" level={0.6} x={-95} y={-2} width={64} height={96} graduated />
+                <Vessel variant="flask" level={0.45} x={0} y={-2} width={72} height={96} />
+                <Vessel variant="cylinder" level={0.8} x={95} y={0} width={46} height={104} graduated />
+                <Label x={-95} y={66} fontSize={12}>
+                  Beaker
+                </Label>
+                <Label x={0} y={66} fontSize={12}>
+                  Flask
+                </Label>
+                <Label x={95} y={66} fontSize={12}>
+                  Cylinder
+                </Label>
+              </svg>
+            </div>
+            <div className={styles.cardBody}>
+              <div className={styles.cardHeading}>
+                <span>Vessels</span>
+                <span className={styles.cardBadge}>Vessel</span>
+              </div>
+              <p className={styles.cardDescription}>
+                A beaker, a conical flask and a measuring cylinder. Liquid fills from the base, and
+                graduation marks are optional.
+              </p>
+            </div>
+          </article>
+
+          {/* Card: Diatomic gases (ball-and-stick) */}
+          <article className={styles.card}>
+            <div className={styles.cardCanvas}>
+              <svg
+                viewBox="-160 -40 320 92"
+                className={styles.svgElement}
+                role="img"
+                aria-label="Four diatomic molecules in ball-and-stick style: H2, N2, O2 and Cl2"
+              >
+                <VocabDefs />
+                {[
+                  { f: 'H2', x: -120 },
+                  { f: 'N2', x: -40 },
+                  { f: 'O2', x: 40 },
+                  { f: 'Cl2', x: 120 },
+                ].map((m) => (
+                  <g key={m.f}>
+                    <Molecule formula={m.f} x={m.x} y={-4} scale={1.45} style="ball-and-stick" />
+                    <Label x={m.x} y={36} fontSize={13}>
+                      {m.f.replace(/\d/, '')}
+                      <Label.Sub>2</Label.Sub>
+                    </Label>
+                  </g>
+                ))}
+              </svg>
+            </div>
+            <div className={styles.cardBody}>
+              <div className={styles.cardHeading}>
+                <span>Diatomic gases</span>
+                <span className={styles.cardBadge}>Ball-and-stick</span>
+              </div>
+              <p className={styles.cardDescription}>
+                Two identical atoms joined by a bond. Double and triple bonds are drawn as parallel
+                bonds.
+              </p>
+            </div>
+          </article>
+
+          {/* Card: Particles in a box (full width) */}
+          <article className={`${styles.card} ${styles.wide}`}>
+            <div className={`${styles.cardCanvas} ${styles.cardCanvasTall}`}>
+              <svg
+                viewBox="0 0 560 220"
+                className={styles.svgElement}
+                role="img"
+                aria-label="A glass box holding water, carbon dioxide, nitrogen, methane, oxygen, ammonia, and a sodium, a chlorine and a hydrogen atom"
+              >
+                <VocabDefs />
+                <ParticleBox
+                  x={20}
+                  y={10}
+                  width={520}
+                  height={200}
+                  items={[
+                    { kind: 'molecule', formula: 'H2O', x: 84, y: 66, scale: 1.2 },
+                    { kind: 'molecule', formula: 'CO2', x: 196, y: 52, style: 'ball-and-stick', scale: 1.3 },
+                    { kind: 'molecule', formula: 'N2', x: 306, y: 46, scale: 1.2 },
+                    { kind: 'molecule', formula: 'CH4', x: 426, y: 74, scale: 1.2 },
+                    { kind: 'molecule', formula: 'O2', x: 112, y: 152, style: 'ball-and-stick', scale: 1.4 },
+                    { kind: 'molecule', formula: 'NH3', x: 252, y: 150, style: 'ball-and-stick', scale: 1.4 },
+                    { kind: 'atom', element: 'Na', x: 368, y: 148 },
+                    { kind: 'atom', element: 'Cl', x: 430, y: 142 },
+                    { kind: 'atom', element: 'H', x: 486, y: 172 },
+                  ]}
+                />
+              </svg>
+            </div>
+            <div className={styles.cardBody}>
+              <div className={styles.cardHeading}>
+                <span>Particles in a container</span>
+                <span className={styles.cardBadge}>ParticleBox</span>
+              </div>
+              <p className={styles.cardDescription}>
+                Molecules and atoms drawn inside a glassy wall. Each particle is clipped to the box,
+                so the container reads as a single system.
+              </p>
+            </div>
+          </article>
+
+          {/* Card: Compounds (space-filling) */}
+          <article className={`${styles.card} ${styles.wideHalf}`}>
+            <div className={styles.cardCanvas}>
+              <svg
+                viewBox="-160 -64 320 124"
+                className={styles.svgElement}
+                role="img"
+                aria-label="Four compounds in space-filling style: water, ammonia, methane and carbon dioxide"
+              >
+                <VocabDefs />
+                {[
+                  { f: 'H2O', x: -120 },
+                  { f: 'NH3', x: -40 },
+                  { f: 'CH4', x: 40 },
+                  { f: 'CO2', x: 120 },
+                ].map((m) => (
+                  <g key={m.f}>
+                    <Molecule formula={m.f} x={m.x} y={-6} style="space-filling" />
+                    <Label x={m.x} y={44} fontSize={9}>
+                      {m.f.split('').map((ch, i) =>
+                        /\d/.test(ch) ? (
+                          <Label.Sub key={i}>{ch}</Label.Sub>
+                        ) : (
+                          <React.Fragment key={i}>{ch}</React.Fragment>
+                        )
+                      )}
+                    </Label>
+                  </g>
+                ))}
+              </svg>
+            </div>
+            <div className={styles.cardBody}>
+              <div className={styles.cardHeading}>
+                <span>Compounds</span>
+                <span className={styles.cardBadge}>Space-filling</span>
+              </div>
+              <p className={styles.cardDescription}>
+                Water is bent at 104.5 degrees and methane is tetrahedral. Neighbouring spheres
+                overlap slightly to show how the atoms pack together.
+              </p>
+            </div>
+          </article>
+
+          {/* Card: Ionic pair and HCl */}
+          <article className={styles.card}>
+            <div className={styles.cardCanvas}>
+              <svg
+                viewBox="-160 -40 320 92"
+                className={styles.svgElement}
+                role="img"
+                aria-label="Sodium chloride as a ball-and-stick ion pair, sodium chloride space-filling, and hydrogen chloride space-filling"
+              >
+                <VocabDefs />
+                <Molecule formula="NaCl" x={-100} y={-4} scale={1.4} style="ball-and-stick" />
+                <Molecule formula="NaCl" x={0} y={-4} style="space-filling" />
+                <Molecule formula="HCl" x={100} y={-4} style="space-filling" />
+                <Label x={-100} y={36} fontSize={13}>
+                  NaCl
+                </Label>
+                <Label x={0} y={36} fontSize={13}>
+                  NaCl
+                </Label>
+                <Label x={100} y={36} fontSize={13}>
+                  HCl
+                </Label>
+              </svg>
+            </div>
+            <div className={styles.cardBody}>
+              <div className={styles.cardHeading}>
+                <span>Ion pair and HCl</span>
+                <span className={styles.cardBadge}>Na · Cl</span>
+              </div>
+              <p className={styles.cardDescription}>
+                Sodium chloride is drawn as an ion pair with no bond line. Hydrogen chloride is a
+                covalent molecule.
               </p>
             </div>
           </article>
