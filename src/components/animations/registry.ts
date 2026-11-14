@@ -17,6 +17,9 @@ import { MolecularMass } from './unit1/MolecularMass'
 import { AufbauDiagonal } from './unit2/filling/AufbauDiagonal'
 import { BuildUpAtoms } from './unit2/filling/BuildUpAtoms'
 import { ExchangeEnergy } from './unit2/filling/ExchangeEnergy'
+import { WaveNature } from './unit2/light/WaveNature'
+import { BlackBody } from './unit2/light/BlackBody'
+import { LineSpectra } from './unit2/light/LineSpectra'
 
 /**
  * Animations available to a Scrolly Animation, keyed by the `animation` prop.
@@ -42,6 +45,9 @@ export const animations = {
   'aufbau-diagonal': AufbauDiagonal,
   'build-up-atoms': BuildUpAtoms,
   'exchange-pairs': ExchangeEnergy,
+  'wave-nature': WaveNature,
+  'black-body': BlackBody,
+  'line-spectra': LineSpectra,
 } as const
 
 export type AnimationName = keyof typeof animations
