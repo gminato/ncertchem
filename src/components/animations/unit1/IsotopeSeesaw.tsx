@@ -128,9 +128,7 @@ export function IsotopeSeesaw({ step, reducedMotion }: IsotopeSeesawProps) {
             <g transform="translate(330 130)">
               <Atom element="Cl" x={0} y={0} r={9} defsPrefix="is" />
               <Label x={24} y={0} textAnchor="start" fontSize={17} fill="var(--fg)">
-                <tspan fontStyle="italic">
-                  ³⁵Cl
-                </tspan>{' '}
+                ³⁵Cl{' '}
                 · {light.abundancePercent} %
               </Label>
               <Label x={24} y={26} textAnchor="start" fontSize={15} fill="var(--fg-muted)">
