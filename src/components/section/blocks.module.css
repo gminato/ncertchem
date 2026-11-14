@@ -1,0 +1,68 @@
+.hook {
+  max-width: 68ch;
+  margin: var(--space-7) auto var(--space-7);
+  padding-left: var(--space-5);
+  border-left: 2px solid var(--accent);
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: clamp(1.3rem, 2.4vw, 1.5rem);
+  line-height: 1.5;
+  color: var(--fg);
+}
+
+.keyIdeas {
+  max-width: 68ch;
+  margin: var(--space-8) auto 0;
+  padding: var(--space-5) var(--space-6);
+  background: var(--surface-raised);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+}
+
+.keyIdeasTitle {
+  font-family: var(--font-sans);
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: var(--space-3);
+}
+
+.keyIdeasBody {
+  font-family: var(--font-serif);
+  font-size: 1.05rem;
+  line-height: 1.6;
+  color: var(--fg);
+}
+
+.keyIdeasBody ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.keyIdeasBody li {
+  position: relative;
+  padding-left: var(--space-5);
+  margin-bottom: var(--space-3);
+}
+
+.keyIdeasBody li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.6em;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--accent);
+}
+
+.keyIdeasBody li:last-child {
+  margin-bottom: 0;
+}
+
+.keyIdeasBody p {
+  margin: 0;
+}

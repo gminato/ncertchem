@@ -9,7 +9,9 @@ import {
   Photon,
   Label,
   ladderY,
+  ladderLabels,
   joulesToEv,
+  orbitLabelPosition,
 } from '@/components/vocab'
 import { energyLevel } from '@/lib/chem/bohr'
 import styles from './vocab.module.css'
@@ -20,18 +22,29 @@ export const metadata: Metadata = {
     'Design tokens and visual vocabulary specimen sheet for Class 11 and 12 chemistry.',
 }
 
-export default function VocabPage() {
-  // Proportional hydrogen energy levels (converted from Joules to eV)
-  const e1 = joulesToEv(energyLevel(1))
-  const e2 = joulesToEv(energyLevel(2))
-  const e3 = joulesToEv(energyLevel(3))
-  const e4 = joulesToEv(energyLevel(4))
+/** Formats a (negative) energy in eV as a magnitude, e.g. -13.6 -> "13.6". */
+function formatEvMagnitude(ev: number): string {
+  return Math.abs(ev).toPrecision(3)
+}
 
-  const ladderBounds = { top: -46, bottom: 46, eMin: e1, eMax: e4 }
-  const yLadder1 = ladderY(e1, ladderBounds)
-  const yLadder2 = ladderY(e2, ladderBounds)
-  const yLadder3 = ladderY(e3, ladderBounds)
-  const yLadder4 = ladderY(e4, ladderBounds)
+export default function VocabPage() {
+  // Proportional hydrogen energy levels (converted from Joules to eV), n = 1..4
+  const ladderEv = [1, 2, 3, 4].map((n) => joulesToEv(energyLevel(n)))
+  const ladderBounds = { top: -46, bottom: 46, eMin: ladderEv[0], eMax: ladderEv[3] }
+  const ladderRows = ladderEv.map((ev, i) => ({
+    n: i + 1,
+    ev,
+    rungY: ladderY(ev, ladderBounds),
+  }))
+  // Rung labels sit to the right of each rung; close rungs are pushed apart.
+  const ladderPlacement = ladderLabels(
+    ladderRows.map((row) => ({ y: row.rungY })),
+    13
+  )
+
+  // Orbit labels sit just outside each circle at the top, in the gap above it.
+  const orbit1Label = orbitLabelPosition(0, 0, 30, -90, 8)
+  const orbit2Label = orbitLabelPosition(0, 0, 54, -90, 8)
 
   return (
     <div className={styles.container}>
@@ -390,11 +403,24 @@ export default function VocabPage() {
                 <VocabDefs />
                 <EnergyLevel variant="orbit" r={30} active={false} />
                 <EnergyLevel variant="orbit" r={54} active={true} />
-                {/* Labels positioned along orbit at -35° outside stroke with legibility halo */}
-                <Label x={33} y={-23} fontSize={11} halo>
+                {/* Labels sit in the gap just outside each orbit, centred above it */}
+                <Label
+                  x={orbit1Label.x}
+                  y={orbit1Label.y}
+                  fontSize={11}
+                  textAnchor={orbit1Label.textAnchor}
+                  halo
+                >
                   <tspan fontStyle="italic">n</tspan> = 1
                 </Label>
-                <Label x={52} y={-37} fontSize={11} fill="var(--orbit-active)" halo>
+                <Label
+                  x={orbit2Label.x}
+                  y={orbit2Label.y}
+                  fontSize={11}
+                  textAnchor={orbit2Label.textAnchor}
+                  fill="var(--orbit-active)"
+                  halo
+                >
                   <tspan fontStyle="italic">n</tspan> = 2 (active)
                 </Label>
               </svg>
@@ -414,38 +440,49 @@ export default function VocabPage() {
           <article className={styles.card}>
             <div className={styles.cardCanvas}>
               <svg
-                viewBox="-90 -70 180 140"
+                viewBox="-95 -70 220 140"
                 className={styles.svgElement}
                 role="img"
                 aria-label="Energy levels ladder variant showing proportionally spaced hydrogen levels n=1 to 4"
               >
                 <VocabDefs />
-                <EnergyLevel variant="ladder" width={130} y={yLadder1} active={false} />
-                <Label x={-52} y={35} fontSize={10.5} textAnchor="start" halo>
-                  <tspan fontStyle="italic">n</tspan> = 1 (−13.6 eV)
-                </Label>
-
-                <EnergyLevel variant="ladder" width={130} y={yLadder2} active={true} />
-                <Label
-                  x={-52}
-                  y={-16}
-                  fontSize={10.5}
-                  textAnchor="start"
-                  fill="var(--orbit-active)"
-                  halo
-                >
-                  <tspan fontStyle="italic">n</tspan> = 2 (−3.4 eV) [active]
-                </Label>
-
-                <EnergyLevel variant="ladder" width={130} y={yLadder3} active={false} />
-                <Label x={-52} y={-34.5} fontSize={10.5} textAnchor="start" halo>
-                  <tspan fontStyle="italic">n</tspan> = 3 (−1.51 eV)
-                </Label>
-
-                <EnergyLevel variant="ladder" width={130} y={yLadder4} active={false} />
-                <Label x={-52} y={-56} fontSize={10.5} textAnchor="start" halo>
-                  <tspan fontStyle="italic">n</tspan> = 4 (−0.85 eV)
-                </Label>
+                {ladderRows.map((row, i) => {
+                  const place = ladderPlacement[i]
+                  const isActive = row.n === 2
+                  return (
+                    <g key={row.n}>
+                      <EnergyLevel
+                        variant="ladder"
+                        width={50}
+                        x={-55}
+                        y={row.rungY}
+                        active={isActive}
+                      />
+                      {place.nudged && (
+                        <line
+                          x1={-30}
+                          y1={row.rungY}
+                          x2={-26}
+                          y2={place.labelY}
+                          strokeWidth={0.8}
+                          style={{ stroke: 'var(--fg-subtle)' }}
+                        />
+                      )}
+                      <Label
+                        x={-24}
+                        y={place.labelY}
+                        fontSize={10.5}
+                        textAnchor="start"
+                        fill={isActive ? 'var(--orbit-active)' : 'var(--fg-muted)'}
+                        halo
+                      >
+                        <tspan fontStyle="italic">n</tspan> = {row.n} (
+                        {'\u2212'}
+                        {formatEvMagnitude(row.ev)} eV){isActive ? ' [active]' : ''}
+                      </Label>
+                    </g>
+                  )
+                })}
               </svg>
             </div>
             <div className={styles.cardBody}>
@@ -473,7 +510,7 @@ export default function VocabPage() {
           <article className={styles.card} style={{ gridColumn: '1 / -1' }}>
             <div className={`${styles.cardCanvas} ${styles.cardCanvasTall}`}>
               <svg
-                viewBox="-200 -130 400 260"
+                viewBox="-200 -140 400 280"
                 className={styles.svgElement}
                 role="img"
                 aria-label="Composite Bohr atom model featuring a central nucleus, three concentric orbits, an electron on n=2, and an emitted 486 nm photon"
@@ -485,14 +522,30 @@ export default function VocabPage() {
                 <EnergyLevel variant="orbit" r={78} active={true} />
                 <EnergyLevel variant="orbit" r={116} active={false} />
 
-                {/* Level Labels positioned along orbit at -35° outside stroke with legibility halo */}
-                <Label x={43} y={-30} fontSize={11} halo>
+                {/* Level labels stacked above the atom, each centred just outside its orbit */}
+                <Label
+                  x={orbitLabelPosition(0, 0, 40, -90, 10).x}
+                  y={orbitLabelPosition(0, 0, 40, -90, 10).y}
+                  fontSize={11}
+                  halo
+                >
                   <tspan fontStyle="italic">n</tspan> = 1
                 </Label>
-                <Label x={75} y={-53} fontSize={11} fill="var(--orbit-active)" halo>
+                <Label
+                  x={orbitLabelPosition(0, 0, 78, -90, 10).x}
+                  y={orbitLabelPosition(0, 0, 78, -90, 10).y}
+                  fontSize={11}
+                  fill="var(--orbit-active)"
+                  halo
+                >
                   <tspan fontStyle="italic">n</tspan> = 2 (active)
                 </Label>
-                <Label x={106} y={-75} fontSize={11} halo>
+                <Label
+                  x={orbitLabelPosition(0, 0, 116, -90, 10).x}
+                  y={orbitLabelPosition(0, 0, 116, -90, 10).y}
+                  fontSize={11}
+                  halo
+                >
                   <tspan fontStyle="italic">n</tspan> = 3
                 </Label>
 
@@ -513,7 +566,7 @@ export default function VocabPage() {
                 />
 
                 {/* Emitted Photon Annotation */}
-                <Label x={148} y={-82} fontSize={11} fill="var(--fg-muted)" halo>
+                <Label x={128} y={-12} fontSize={11} fill="var(--fg-muted)" textAnchor="start" halo>
                   hν · 486 nm
                 </Label>
               </svg>

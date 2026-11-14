@@ -107,3 +107,19 @@
     --sphere-shadow: rgba(0, 0, 0, 0.65);
   }
 }
+
+/* Spectrum strip track (the dark bar that spectral lines land on) */
+:root,
+[data-theme="light"] {
+  --spectrum-track: #1B1D21;
+}
+
+[data-theme="dark"] {
+  --spectrum-track: #05070A;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --spectrum-track: #05070A;
+  }
+}

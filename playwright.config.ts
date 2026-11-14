@@ -1,5 +1,9 @@
 import { defineConfig, devices } from '@playwright/test'
 
+// Port 3000 is often in use by another local app, so the e2e server runs on 3200.
+const PORT = 3200
+const BASE_URL = `http://localhost:${PORT}`
+
 export default defineConfig({
   testDir: './e2e',
   fullyParallel: true,
@@ -8,7 +12,7 @@ export default defineConfig({
   workers: process.env.CI ? 1 : undefined,
   reporter: 'html',
   use: {
-    baseURL: 'http://localhost:3000',
+    baseURL: BASE_URL,
     trace: 'on-first-retry',
   },
   projects: [
@@ -18,8 +22,9 @@ export default defineConfig({
     },
   ],
   webServer: {
-    command: 'npm run build && npm run start',
-    url: 'http://localhost:3000',
+    command: `npm run build && npm run start -- -p ${PORT}`,
+    url: BASE_URL,
     reuseExistingServer: !process.env.CI,
+    timeout: 240_000,
   },
 })

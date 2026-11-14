@@ -12,6 +12,7 @@ const sections = defineCollection({
     section: s.string(),
     title: s.string(),
     slug: s.slug('sections'),
+    ncert: s.string().optional(),
     body: s.mdx(),
   }),
 })

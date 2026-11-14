@@ -6,3 +6,4 @@ export * from './Photon'
 export * from './Label'
 export * from './ladder'
 
+export * from './placement'

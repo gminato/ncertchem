@@ -3,11 +3,15 @@ import type { NextConfig } from 'next'
 const isDev = process.argv.indexOf('dev') !== -1
 const isBuild = process.argv.indexOf('build') !== -1
 
-if (!process.env.VELITE_STARTED && (isDev || isBuild)) {
-  process.env.VELITE_STARTED = '1'
-  import('velite').then(m => m.build({ watch: isDev, clean: !isDev }))
-}
-
 const nextConfig: NextConfig = {}
 
-export default nextConfig
+// Velite must finish generating `.velite/` before Next compiles the app, so the
+// config is an async function that awaits the content build first.
+export default async function config(): Promise<NextConfig> {
+  if (!process.env.VELITE_STARTED && (isDev || isBuild)) {
+    process.env.VELITE_STARTED = '1'
+    const { build } = await import('velite')
+    await build({ watch: isDev, clean: !isDev })
+  }
+  return nextConfig
+}
