@@ -54,6 +54,9 @@ for (const scheme of ['light', 'dark'] as const) {
         'Properties of Matter and their Measurement'
       )
       await waitForScrolly(page)
+      // A KaTeX failure (for example, \ce{} not registered) renders as red error text.
+      await expect(page.locator('.katex-error')).toHaveCount(0)
+      await expect(page.locator('.katex').filter({ hasText: 'CH' }).first()).toBeVisible()
 
       for (const [sceneIndex, scene] of SCENES_13.entries()) {
         for (let i = 0; i < scene.steps; i++) {
@@ -83,6 +86,7 @@ for (const scheme of ['light', 'dark'] as const) {
       await page.goto(SECTION_14)
       await expect(page.getByRole('heading', { level: 1 })).toHaveText('Uncertainty in Measurement')
       await waitForScrolly(page)
+      await expect(page.locator('.katex-error')).toHaveCount(0)
 
       for (const [sceneIndex, scene] of SCENES_14.entries()) {
         for (let i = 0; i < scene.steps; i++) {
