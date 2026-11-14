@@ -36,7 +36,7 @@ The 3–5 point revision summary that closes every Section.
 The NCERT class, unit and section number that a piece of site content corresponds to. The site cites NCERT. It never reproduces NCERT text.
 
 **Showcase Unit**:
-The single Unit built first, to the full quality bar, to prove the concept. Currently Class 11, Unit 2 (Structure of Atom).
+The first Unit built completely, to the full quality bar, to prove the concept. Currently Class 11, Unit 1 (Some Basic Concepts of Chemistry). Section 2.4 (Bohr's model) was built earlier as a pilot.
 
 ### Visual content
 
