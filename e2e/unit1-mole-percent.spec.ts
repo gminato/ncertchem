@@ -122,9 +122,16 @@ test.describe('Unit 1 mole bridge behaviour', () => {
     await page.goto(MOLE_URL)
     await waitForScrolly(page)
 
-    await page.locator('#mole-bridge-particles').fill('6.022')
+    // A full value in e-notation reaches any order of magnitude.
+    await page.locator('#mole-bridge-particles').fill('6.022e23')
     await page.locator('#mole-bridge-particles').press('Enter')
     await expect(page.getByTestId('mole-bridge-calc')).toContainText('1.000 mol')
     await expect(page.locator('#mole-bridge-mass')).toHaveValue('18.02')
+
+    // A bare mantissa is scaled by the exponent the field shows (now × 10²³).
+    await page.locator('#mole-bridge-mass').focus()
+    await page.locator('#mole-bridge-particles').fill('3.011')
+    await page.locator('#mole-bridge-particles').press('Enter')
+    await expect(page.getByTestId('mole-bridge-calc')).toContainText('0.5000 mol')
   })
 })

@@ -141,13 +141,18 @@ export function MoleBridge({ reducedMotion }: SimulationProps) {
   const editMass = (grams: number) => recordEdit('mass', grams, molesFromGrams(formula, grams))
   const editAmount = (value: number) => recordEdit('amount', value, value)
   /**
-   * The particle field is in normalised scientific notation, so the typed
-   * mantissa is scaled by the exponent that the field currently shows.
+   * The particle field is in normalised scientific notation. A typed value
+   * below 10 is a mantissa, scaled by the exponent the field currently shows.
+   * A value of 10 or more cannot be a mantissa, so it is read as the full
+   * particle count; this is how a Learner enters e-notation such as 6.022e23
+   * and reaches any order of magnitude.
    */
-  const editParticles = (mantissa: number) => {
-    const exponent = scientificParts(sample.particles).exponent
-    const particles = Number(`${mantissa}e${exponent}`)
-    recordEdit('particles', mantissa, molesFromParticles(particles))
+  const editParticles = (typedValue: number) => {
+    const particles =
+      typedValue >= 10
+        ? typedValue
+        : Number(`${typedValue}e${scientificParts(sample.particles).exponent}`)
+    recordEdit('particles', typedValue, molesFromParticles(particles))
   }
   const particleParts = scientificParts(sample.particles)
   const amountText =
@@ -254,6 +259,7 @@ export function MoleBridge({ reducedMotion }: SimulationProps) {
             precision={4}
             id="mole-bridge-particles"
           />
+          <p className={styles.fieldHint}>Or type a full value, e.g. 6.022e23</p>
         </Node>
       </div>
 

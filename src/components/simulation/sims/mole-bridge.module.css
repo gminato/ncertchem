@@ -286,3 +286,10 @@
     display: none;
   }
 }
+
+.fieldHint {
+  margin-top: var(--space-1);
+  font-family: var(--font-sans);
+  font-size: 0.78rem;
+  color: var(--fg-subtle);
+}
