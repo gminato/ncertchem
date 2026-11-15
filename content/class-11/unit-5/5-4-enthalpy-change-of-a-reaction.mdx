@@ -1,0 +1,165 @@
+---
+class: 11
+unit: 5
+section: "5.4"
+order: 4
+title: "Enthalpy Change of a Reaction: Reaction Enthalpy"
+slug: "5-4-enthalpy-change-of-a-reaction"
+summary: "Every reaction has an enthalpy change that depends on the standard states of its substances, and Hess's law lets you add known steps to find the change for a route nobody has measured."
+ncert: "Class 11, Part I — Unit 5, Section 5.4"
+---
+
+<Hook>
+An ice cube in nimbu paani draws heat out of the glass as it melts, and the drink gets colder. Every such heat change has a number, and the numbers can be added together. That is how chemists work out a reaction energy that nobody has measured directly.
+</Hook>
+
+## Reaction enthalpy
+
+A chemical reaction turns reactants into products, and the enthalpy change that goes with it is the **reaction enthalpy**, written $\Delta_r H$. It is the sum of the enthalpies of the products minus the sum of the enthalpies of the reactants, each weighted by its stoichiometric coefficient:
+
+$$
+\Delta_r H = \sum_i a_i H_m(\text{products}) - \sum_i b_i H_m(\text{reactants})
+$$
+
+Here $a_i$ and $b_i$ are the coefficients in the balanced equation and $H_m$ is the molar enthalpy.
+
+### 5.4.1 Standard enthalpy of reaction
+
+An enthalpy depends on the conditions, so chemists fix a set of **standard conditions**. The **standard state** of a substance at a given temperature is its pure form at **1 bar**. Liquid ethanol at 298 K is pure liquid ethanol at 1 bar, and solid iron at 500 K is pure iron at 1 bar. This is the convention used here. It is 1 bar, not the older "STP" of 1 atm and 273 K. Data are usually given at 298 K.
+
+When every substance is in its standard state, the enthalpy change is the **standard reaction enthalpy**, written with a superscript: $\Delta_r H^\circ$.
+
+### 5.4.2 Enthalpy changes during phase transformations
+
+Phase changes carry energy too. Ice needs heat to melt, and the temperature stays at 273 K while it does. The enthalpy change for melting one mole of a solid in its standard state is the **standard enthalpy of fusion**, $\Delta_{\text{fus}}H^\circ$. Melting is endothermic, so every enthalpy of fusion is positive, and freezing gives the same amount of heat back. The **standard enthalpy of vaporisation**, $\Delta_{\text{vap}}H^\circ$, is the same idea for boiling at the boiling point. Table 5.1 lists both for some substances.
+
+| Substance | $T_f$ / K | $\Delta_{\text{fus}}H^\circ$ / kJ mol⁻¹ | $T_b$ / K | $\Delta_{\text{vap}}H^\circ$ / kJ mol⁻¹ |
+| --- | ---: | ---: | ---: | ---: |
+| N₂ | 63.15 | 0.72 | 77.35 | 5.59 |
+| NH₃ | 195.4 | 5.65 | 239.73 | 23.35 |
+| HCl | 159.0 | 1.992 | 188.0 | 16.15 |
+| CO | 68.0 | 6.836 | 82.0 | 6.04 |
+| CH₃COCH₃ | 177.8 | 5.72 | 329.4 | 29.1 |
+| CCl₄ | 250.16 | 2.5 | 349.69 | 30.0 |
+| H₂O | 273.15 | 6.01 | 373.15 | 40.79 |
+| NaCl | 1081.0 | 28.8 | 1665.0 | 170.0 |
+| C₆H₆ | 278.65 | 9.83 | 353.25 | 30.8 |
+
+*Table 5.1, NCERT Class 11 Part I, Unit 5. The values are the standard enthalpy changes at the melting and boiling points.*
+
+The size of the change follows the strength of the attractions between the molecules. Water's hydrogen bonds hold it tightly in the liquid, so vaporising a mole of water takes more heat than vaporising a mole of acetone, which has weaker dipole-dipole attractions. Take the table's 40.79 kJ mol⁻¹ for water at its boiling point. Boiling two moles of water at 373.15 K needs $2 \times 40.79 = 81.6$ kJ.
+
+<Check n={1} numeric answer={81.6} tolerance={0.1} unit="kJ" explanation="One mole of water needs 40.79 kJ to vaporise at 373.15 K (Table 5.1). Two moles need 2 × 40.79 = 81.58 kJ, which is 81.6 kJ to one decimal place.">
+How much heat is needed to vaporise 2.00 mol of water at its boiling point, 373.15 K, in kJ?
+</Check>
+
+### 5.4.3 Standard enthalpy of formation
+
+The **standard enthalpy of formation**, $\Delta_f H^\circ$, is the standard enthalpy change for making one mole of a compound from its elements, each in its reference state. The reference state of an element is its most stable form at 298 K and 1 bar. The reference state of hydrogen is $\text{H}_2$ gas, and for oxygen, carbon and sulphur it is $\text{O}_2$ gas, graphite and rhombic sulphur. By convention, $\Delta_f H^\circ$ is **zero for an element in its reference state**, because nothing has been made.
+
+Some formation equations are:
+
+$$
+\text{H}_2\text{(g)} + \tfrac12\text{O}_2\text{(g)} \to \text{H}_2\text{O(l)}, \qquad \Delta_f H^\circ = -285.83\ \text{kJ mol}^{-1}
+$$
+
+$$
+\ce{C(graphite) + 2H2(g) -> CH4(g)}, \qquad \Delta_f H^\circ = -74.81\ \text{kJ mol}^{-1}
+$$
+
+A reaction is not always a formation. Calcium carbonate made from calcium oxide and carbon dioxide has not been made from its elements, so its enthalpy change is not a formation enthalpy. Equations must also be written for one mole of the product. The reaction $\text{H}_2\text{(g)} + \text{Br}_2\text{(l)} \to 2\,\text{HBr(g)}$ makes two moles of HBr, so its enthalpy change is $2\,\Delta_f H^\circ(\text{HBr})$. Halving every coefficient gives the formation equation for one mole, $\tfrac12\text{H}_2\text{(g)} + \tfrac12\text{Br}_2\text{(l)} \to \text{HBr(g)}$, with $\Delta_f H^\circ = -36.40$ kJ mol⁻¹. Doubling that gives $-72.8$ kJ mol⁻¹ for the reaction as written. A value of $-178.3$ kJ mol⁻¹ sometimes printed for this reaction is wrong: that figure belongs to a different reaction.
+
+Table 5.2 lists formation enthalpies at 298 K. Here is a selection.
+
+| Substance | $\Delta_f H^\circ$ / kJ mol⁻¹ |
+| --- | ---: |
+| H₂O(l) | −285.83 |
+| H₂O(g) | −241.82 |
+| CO(g) | −110.53 |
+| CO₂(g) | −393.51 |
+| CH₄(g) | −74.81 |
+| CH₃OH(l) | −238.86 |
+| C₂H₅OH(l) | −277.69 |
+| NH₃(g) | −46.11 |
+| HBr(g) | −36.40 |
+| MgO(s) | −601.7 |
+| Mg(OH)₂(s) | −924.54 |
+| CaO(s) | −635.09 |
+| CaCO₃(s) | −1206.92 |
+| Fe₂O₃(s) | −824.2 |
+| H₂(g), O₂(g), Br₂(l), graphite | 0 (reference states) |
+
+*Table 5.2, selected rows, at 298 K, from NCERT Class 11 Part I, Unit 5.*
+
+The formation values give a reaction enthalpy without any new measurement. The general rule is
+
+$$
+\Delta_r H^\circ = \sum_i a_i\,\Delta_f H^\circ(\text{products}) - \sum_i b_i\,\Delta_f H^\circ(\text{reactants})
+$$
+
+For example, $\text{Mg(OH)}_2\text{(s)} \to \text{MgO(s)} + \text{H}_2\text{O(g)}$ has
+
+$$
+\Delta_r H^\circ = \big[-601.7 + (-241.82)\big] - (-924.54) = +81.0\ \text{kJ mol}^{-1}
+$$
+
+The reaction takes in heat, so it is endothermic and needs heating to decompose the hydroxide.
+
+<Check n={2} numeric answer={81.0} tolerance={0.1} unit="kJ mol⁻¹" explanation="Products: ΔfH°(MgO, s) + ΔfH°(H₂O, g) = −601.7 + (−241.82) = −843.52 kJ mol⁻¹. Reactant: ΔfH°(Mg(OH)₂, s) = −924.54 kJ mol⁻¹. So ΔrH° = −843.52 − (−924.54) = +81.02 kJ mol⁻¹, which is +81.0 to one decimal place.">
+Using Table 5.2, what is ΔrH° in kJ mol⁻¹ for Mg(OH)₂(s) → MgO(s) + H₂O(g)? Give the value to one decimal place.
+</Check>
+
+### 5.4.4 Thermochemical equations
+
+A balanced equation together with its $\Delta_r H$ is a **thermochemical equation**. The physical state of each substance must be written, and allotropes named, because the enthalpy depends on them. The methanol combustion below is one example:
+
+$$
+\text{CH}_3\text{OH(l)} + \tfrac32\,\text{O}_2\text{(g)} \to \text{CO}_2\text{(g)} + 2\,\text{H}_2\text{O(l)}, \qquad \Delta_r H^\circ = -726.3\ \text{kJ mol}^{-1}
+$$
+
+Three conventions apply to every thermochemical equation.
+
+1. The coefficients refer to moles, never molecules, of each substance. The value of $\Delta_r H$ refers to the amounts that the equation states. If you write the equation with 2 mol of methanol, the enthalpy is doubled.
+2. Enthalpy is extensive. Doubling every coefficient doubles $\Delta_r H$, and halving them halves it.
+3. Reversing the equation reverses the sign of $\Delta_r H$. The heat absorbed in one direction is the heat released in the other.
+
+### 5.4.5 Hess's law of constant heat summation
+
+Enthalpy is a state function. The change from reactants to products depends only on where the system starts and where it ends, not on the route between them. So a reaction that goes in several steps has the same overall enthalpy change as the sum of its steps, at the same temperature. This is **Hess's law**.
+
+Some reactions cannot be measured directly. Carbon burns to carbon monoxide, but CO₂ always forms as well, so the heat for $\text{C(s)} + \tfrac12\text{O}_2\text{(g)} \to \text{CO(g)}$ cannot be read from a calorimeter. Two easier reactions connect the same ends. The steps below set the two routes on an enthalpy diagram, where the height of each level is that species' enthalpy relative to the start.
+
+<Scrolly animation="thermo-hess">
+<Step>
+Begin with carbon and oxygen, C(s) + O₂(g), at zero. Burning carbon completely to CO₂ is easy to measure. That is route 1, a single step with $\Delta_r H_1 = -393.5$ kJ mol⁻¹. Its arrow runs straight from the bottom level to CO₂.
+</Step>
+<Step>
+Some carbon burns only to CO, and CO is hard to collect cleanly, so its heat cannot be measured on its own. The unknown first leg of route 2 is the step to CO(g) + ½O₂(g). Its level sits between the two ends and is the quantity we want. The diagram shows its value as −110.5 kJ mol⁻¹ from Table 5.2.
+</Step>
+<Step>
+The second leg burns the CO to CO₂, and that is easy to measure in a calorimeter: $\Delta_r H_3 = -283.0$ kJ mol⁻¹. The CO is already in the gas, so the burn is clean. Route 2 now has two steps, and both are drawn in full strength. Route 1 is faded, so the eye can follow the second route alone.
+</Step>
+<Step>
+Both routes start and finish at the same levels, so the totals must agree: $\Delta_r H_1 = \Delta_r H_2 + \Delta_r H_3$. Solving for the unknown gives $\Delta_r H_2 = -393.5 - (-283.0) = -110.5$ kJ mol⁻¹, the same as the Table 5.2 value for CO(g).
+</Step>
+</Scrolly>
+
+Hess's law is used in reverse as well as forward. The builder below gives you known equations and asks for a target reaction. Reverse each equation whose direction is wrong, scale it to match the coefficients, and add it to the route. A route is correct when its species balance the target. The diagram then shows the route level by level, with the running ΔH. Four puzzles rise in difficulty. The last one finds the enthalpy of formation of benzene from its combustion data, a route that cannot be measured directly.
+
+<Simulation name="hess-builder" title="Hess builder: reverse, scale and add equations until the route matches the target" />
+
+<Check n={3} options={["It keeps the same sign", "It changes sign", "It is doubled", "It becomes zero"]} answer={1} explanation="Reversing an equation reverses the sign of ΔrH. The heat released in the forward direction is absorbed in the reverse direction. Scaling by a factor multiplies ΔrH by the same factor, but reversal only changes the sign.">
+When you reverse a thermochemical equation, what happens to its ΔrH?
+</Check>
+
+<Check n={4} numeric answer={-72.8} tolerance={0.1} unit="kJ mol⁻¹" explanation="ΔfH°(HBr, g) = −36.40 kJ mol⁻¹ for one mole. The reaction H₂(g) + Br₂(l) → 2HBr(g) makes two moles, so ΔrH = 2 × (−36.40) = −72.8 kJ mol⁻¹. NCERT's printed −178.3 kJ mol⁻¹ for this reaction is a copying error.">
+What is ΔrH, in kJ mol⁻¹, for H₂(g) + Br₂(l) → 2HBr(g)?
+</Check>
+
+<KeyIdeas>
+- Standard states are pure forms at 1 bar. The standard enthalpy of reaction, $\Delta_r H^\circ$, is the enthalpy change with every substance in its standard state.
+- The standard enthalpy of formation is zero for an element in its reference state, and every formation value in Table 5.2 is for one mole of compound.
+- $\Delta_r H^\circ = \sum a_i\,\Delta_f H^\circ(\text{products}) - \sum b_i\,\Delta_f H^\circ(\text{reactants})$. For $\text{Mg(OH)}_2 \to \text{MgO} + \text{H}_2\text{O}$ this gives $+81.0$ kJ mol⁻¹.
+- Doubling a thermochemical equation doubles its ΔrH, and reversing it changes the sign. Each stated ΔrH refers to the amounts in the equation as written.
+- Hess's law follows from enthalpy being a state function: a route in several steps has the same overall ΔrH as the sum of its steps. The carbon route gives $\Delta_r H_2 = -393.5 - (-283.0) = -110.5$ kJ mol⁻¹.
+</KeyIdeas>

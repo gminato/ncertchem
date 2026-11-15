@@ -1,0 +1,92 @@
+---
+class: 11
+unit: 5
+section: "5.3"
+order: 3
+title: "Measurement of ΔU and ΔH: Calorimetry"
+slug: "5-3-measurement-of-du-and-dh"
+summary: "A calorimeter turns a temperature rise into a heat change: a sealed bomb at constant volume gives ΔU, and an open cup at constant pressure gives ΔH."
+ncert: "Class 11, Part I — Unit 5, Section 5.3"
+---
+
+<Hook>
+A food laboratory can tell you how many kilojoules a samosa holds without eating it. It burns a sample in a sealed steel can, sitting in a bath of water, and watches the water warm. The temperature rise is the only thing it reads.
+</Hook>
+
+## Calorimetry
+
+Energy changes in chemistry are measured with a **calorimeter**. The reaction takes place inside a vessel, and the vessel is immersed in a known volume of liquid, usually water. The heat released by the reaction passes into the vessel and the liquid, and the temperature of the whole apparatus rises. If you know the **heat capacity** of the apparatus, $C$ (the heat needed to raise its temperature by one kelvin), the heat follows directly:
+
+$$
+q_{\text{calorimeter}} = C\,\Delta T
+$$
+
+The reaction gives out the same amount of heat that the calorimeter takes in, but with the opposite sign. So $q_{\text{reaction}} = -C\,\Delta T$. Throughout this unit, $q$ and $w$ are positive when energy enters the system, and $\Delta U = q + w$. An exothermic reaction therefore has a negative $q$.
+
+The conditions under which the reaction runs decide which energy change is measured. There are two cases.
+
+### 5.3.1 Constant volume: the bomb calorimeter
+
+For combustion, the reaction is carried out in a steel **bomb**, filled with pure oxygen and sealed. Because the bomb is rigid, its volume cannot change, so $\Delta V = 0$ and no pressure-volume work is done. This holds even when gases take part in the reaction. The heat measured is then $q_V$, and by the rule above, $q_V = \Delta U$.
+
+<Scrolly animation="thermo-bomb">
+<Step>
+Start with a rigid steel bomb holding a weighed sample of butane and an excess of oxygen, and seal it. The volume of the bomb cannot change, so $\Delta V = 0$ and $w = 0$. The bomb sits in a water bath whose temperature we can read on a thermometer.
+</Step>
+<Step>
+A short ignition wire is heated electrically and sets the mixture alight. Butane burns in the oxygen and releases heat. None of that heat can escape the sealed bomb, so it passes into the steel, into the water bath and into the thermometer around it.
+</Step>
+<Step>
+The bath warms as the heat flows out of the bomb. The thermometer reads a rise of $\Delta T = +2.20\ \text{K}$ above the starting temperature of $298\ \text{K}$. Stirring keeps the bath at one temperature, so the reading is a fair average. The temperature rise is the only quantity measured directly.
+</Step>
+<Step>
+The heat lost by the reaction equals the heat gained by the calorimeter. The apparatus has a heat capacity of $C = 9.80\ \text{kJ K}^{-1}$, so it gains $q = C\,\Delta T = +21.56\ \text{kJ}$. The reaction therefore has $q_{\text{reaction}} = -21.56\ \text{kJ}$.
+</Step>
+<Step>
+Divide by the amount of butane burnt. A 0.40 g sample of butane, with molar mass $58.12\ \text{g mol}^{-1}$, is $6.88 \times 10^{-3}$ mol. So $\Delta U = q_V / n = -3133\ \text{kJ mol}^{-1}$. The sign is negative because the reaction is exothermic.
+</Step>
+</Scrolly>
+
+The numbers in this example are chosen for illustration. In practice the heat capacity of the bomb is found first, by burning a substance of known energy in the same apparatus, so that $C$ is known before the unknown reaction is run.
+
+<Check n={1} numeric answer={-3133} tolerance={2} unit="kJ mol⁻¹" explanation="The heat released is q = −C ΔT = −9.80 kJ K⁻¹ × 2.20 K = −21.56 kJ. The amount of butane is 0.40 g ÷ 58.12 g mol⁻¹ = 6.88 × 10⁻³ mol. So ΔU = −21.56 kJ ÷ 6.88 × 10⁻³ mol = −3133 kJ mol⁻¹, to the nearest kilojoule.">
+Using the bomb data above, what is ΔU per mole of butane, in kJ mol⁻¹?
+</Check>
+
+<Check n={2} options={["Its volume is fixed, so no pressure-volume work is done and q_V = ΔU", "The reaction always happens at 1 bar, so ΔU is the same as ΔH", "The heat capacity of the bomb is zero", "The bomb is open to the air, so the pressure stays constant"]} answer={0} explanation="A rigid bomb keeps its volume fixed. With ΔV = 0 there is no pressure-volume work, so the heat measured is q_V, which equals ΔU. The other options describe a different set-up or are false.">
+Why does a bomb calorimeter measure ΔU, and not ΔH?
+</Check>
+
+### 5.3.2 Constant pressure: the coffee-cup calorimeter
+
+Most reactions in the laboratory run in open vessels at atmospheric pressure. For these, the measured heat is $q_p$, and by definition $q_p = \Delta H$. A simple **coffee-cup calorimeter** does the job: two nested insulated cups, a lid with a thermometer, and a stirrer. The reaction takes place in the solution, and the solution is the calorimeter's main heat sink.
+
+Take 50.0 cm³ of 1.00 mol dm⁻³ hydrochloric acid and mix it with 50.0 cm³ of 1.00 mol dm⁻³ sodium hydroxide. The neutralisation makes $0.0500$ mol of water, and the 100 g of solution warms by $6.8$ K. Taking the specific heat of the solution as $4.18\ \text{J g}^{-1}\text{K}^{-1}$, the heat capacity of the solution is $0.418\ \text{kJ K}^{-1}$. So
+
+$$
+q_p = -(0.418\ \text{kJ K}^{-1})(6.8\ \text{K}) = -2.84\ \text{kJ}
+$$
+
+and per mole of water formed, $\Delta H = -2.84\ \text{kJ} / 0.0500\ \text{mol} = -56.8\ \text{kJ mol}^{-1}$. The sign is negative, as expected for neutralisation.
+
+<Check n={3} numeric answer={-56.8} tolerance={0.2} unit="kJ mol⁻¹" explanation="The solution's heat capacity is 100 g × 4.18 J g⁻¹ K⁻¹ = 418 J K⁻¹ = 0.418 kJ K⁻¹. The heat from the reaction is −0.418 × 6.8 = −2.84 kJ. Per mole of water, −2.84 kJ ÷ 0.0500 mol = −56.8 kJ mol⁻¹.">
+In the coffee-cup example above, what is ΔH per mole of water formed, in kJ mol⁻¹, to one decimal place?
+</Check>
+
+### 5.3.3 Connecting ΔH and ΔU
+
+The two measurements are related. For the constant-pressure case, the work is $-p\,\Delta V$, which is not zero if the number of gas molecules changes. The relation is
+
+$$
+\Delta H = \Delta U + \Delta n_g\,RT
+$$
+
+where $\Delta n_g$ is the change in the number of moles of gas. For butane burning, $\Delta n_g = 4 - 7.5 = -3.5$, because 7.5 moles of gas (butane and oxygen) give 4 moles of carbon dioxide and the water is a liquid. At 298 K this correction is $-8.7\ \text{kJ mol}^{-1}$, so $\Delta H = -3133 - 8.7 = -3142\ \text{kJ mol}^{-1}$. For a reaction with no gas change, such as the neutralisation above, $\Delta H$ and $\Delta U$ are equal.
+
+<KeyIdeas>
+- A calorimeter measures a heat change from the temperature rise and the heat capacity: $q = C\,\Delta T$, and the reaction's heat is $-C\,\Delta T$.
+- A sealed bomb keeps its volume fixed, so it measures $q_V = \Delta U$.
+- An open cup at atmospheric pressure measures $q_p = \Delta H$. Neutralisation gives about $-56.8$ kJ mol⁻¹ of water in the example above.
+- $\Delta H = \Delta U + \Delta n_g\,RT$. The two agree only when the number of moles of gas does not change.
+- Keep the sign convention fixed: $q$ and $w$ are positive when energy enters the system, and $\Delta U = q + w$.
+</KeyIdeas>
