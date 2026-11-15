@@ -31,10 +31,14 @@ import styles from './lewis-builder.module.css'
 // Sized for the simulation stage: 560 units wide, read at about 14 px in the card.
 const VIEW_WIDTH = 560
 const VIEW_HEIGHT = 280
-const FIT_PADDING = 56
-const FIT_MAX_SCALE = 96
-/** The diagram's bond clearances are sized for its 16-unit default symbol font. */
-const SYMBOL_FONT = 16
+/** The drawn box for the species, in stage units: about 60% of the stage width, centred. */
+const DRAWN = { width: 340, height: 236 }
+const REACH = 34
+const FIT_MAX_SCALE = 200
+/** Symbols at 28 units, with dots and lone pairs sized to match. */
+const SYMBOL_FONT = 28
+const DOT_RADIUS = 3
+const LONE_PAIR_RADIUS = 12
 
 const SUBSCRIPT: Readonly<Record<string, string>> = {
   '0': '₀',
@@ -99,9 +103,9 @@ export function LewisBuilder() {
 
   const fit = fitLayout(
     target.atoms.map((a) => ({ x: a.x, y: a.y })),
-    VIEW_WIDTH,
-    VIEW_HEIGHT,
-    FIT_PADDING,
+    DRAWN.width,
+    DRAWN.height,
+    REACH,
     FIT_MAX_SCALE
   )
   const points = target.atoms.map((a) => applyFit(fit, { x: a.x, y: a.y }))
@@ -133,7 +137,7 @@ export function LewisBuilder() {
           {
             atoms: learner.atoms.map((_a, i) => `a${i}`),
             charge: (
-              <tspan fontSize={16} dy="-2">
+              <tspan fontSize={22} dy="-4">
                 {chargeMark(target.charge)}
               </tspan>
             ),
@@ -142,7 +146,6 @@ export function LewisBuilder() {
       : []
 
   const selectedAtom = learner.atoms[selected]
-  const selectedPoint = points[selected]
 
   const verdict = (() => {
     if (stage === 'count' || stage === 'skeleton') return ''
@@ -165,24 +168,16 @@ export function LewisBuilder() {
         aria-label={`Lewis structure of ${name} as built so far: ${placed} of ${total} valence electrons placed.`}
         data-testid="lewis-builder"
       >
-        <LewisDiagram
-          atoms={diagramAtoms}
-          bonds={bonds}
-          brackets={brackets}
-          fontSize={SYMBOL_FONT}
-          dotRadius={2.2}
-          pairHalfGap={2.8}
-          lonePairRadius={10}
-        />
-        {selectedAtom && selectedPoint && (
-          <circle
-            cx={selectedPoint.x}
-            cy={selectedPoint.y}
-            r={34}
-            className={styles.focusRing}
-            data-testid="builder-focus"
+        <g transform={`translate(${(VIEW_WIDTH - DRAWN.width) / 2} ${(VIEW_HEIGHT - DRAWN.height) / 2})`}>
+          <LewisDiagram
+            atoms={diagramAtoms}
+            bonds={bonds}
+            brackets={brackets}
+            fontSize={SYMBOL_FONT}
+            dotRadius={DOT_RADIUS}
+            lonePairRadius={LONE_PAIR_RADIUS}
           />
-        )}
+        </g>
       </svg>
 
       <div className={styles.readout}>
@@ -190,6 +185,12 @@ export function LewisBuilder() {
           {stageMessage(stage, remaining)}
           {verdict && <span className={styles.verdict}> {verdict}</span>}
         </p>
+
+        {selectedAtom && (
+          <p className={styles.around} data-testid="builder-around">
+            {selectedAtom.element} (atom {selected + 1}) has {octets[selected].electrons} electrons around it.
+          </p>
+        )}
 
         <dl className={styles.tally} aria-label="Electron bookkeeping">
           <div>
@@ -209,8 +210,9 @@ export function LewisBuilder() {
         <ul className={styles.atomList} aria-label="Formal charge and octet of each atom">
           {learner.atoms.map((atom, i) => (
             <li key={`atom-${i}`} className={styles.atomChip} data-testid="atom-chip">
-              {i + 1}. {atom.element}: formal charge {anyBond ? signedCharge(charges[i]) : 'not yet'},{' '}
-              {describeOctet(octets[i])}
+              {anyBond
+                ? `${i + 1}. ${atom.element}: formal charge ${signedCharge(charges[i])}, ${describeOctet(octets[i])}`
+                : `${i + 1}. ${atom.element}: not bonded yet`}
             </li>
           ))}
         </ul>

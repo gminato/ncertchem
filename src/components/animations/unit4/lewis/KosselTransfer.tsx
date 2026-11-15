@@ -15,30 +15,17 @@ export interface KosselTransferProps {
   reducedMotion: boolean
 }
 
-// Sized for a ~570 px visual panel: captions are 15 to 17 units and read at about 15 px.
+// Sized for a ~570 px visual panel. Symbols are 28 units, so the pair spans about two thirds of the width.
 const VIEW_WIDTH = 560
 const VIEW_HEIGHT = 380
-const CENTRE = { x: VIEW_WIDTH / 2, y: 190 }
-/** Atom centres in layout units, before the diagram is scaled about CENTRE. */
-const NA_LAYOUT = { x: 150, y: 190 }
-const CL_LAYOUT = { x: 410, y: 190 }
-/** The diagram is drawn larger than its default so the Lewis dots read at a glance. */
-const DIAGRAM_SCALE = 1.3
-/** The diagram's bond clearances are sized for its 16-unit default symbol font. */
-const SYMBOL_FONT = 16
-/** Lone pairs sit 19 units from the atom centre, clear of the ion brackets 24 units out. */
-const LONE_PAIR_RADIUS = 10
-
-/** A layout point mapped to its drawn position on the scaled diagram. */
-function drawn(p: { x: number; y: number }): { x: number; y: number } {
-  return {
-    x: CENTRE.x + (p.x - CENTRE.x) * DIAGRAM_SCALE,
-    y: CENTRE.y + (p.y - CENTRE.y) * DIAGRAM_SCALE,
-  }
-}
-
-const NA = drawn(NA_LAYOUT)
-const CL = drawn(CL_LAYOUT)
+const CENTRE_Y = 190
+/** Atom centres in panel units. Na sits left of centre and the bracketed Cl⁻ right of it. */
+const NA = { x: 135, y: CENTRE_Y }
+const CL = { x: 420, y: CENTRE_Y }
+const SYMBOL_FONT = 28
+const DOT_RADIUS = 3
+/** Lone pairs sit clear of the symbol, and the ion brackets pad out to their dots. */
+const LONE_PAIR_RADIUS = 12
 
 /** One headline per Step, in the words the Learner reads on screen. */
 const HEADLINES: readonly string[] = [
@@ -50,7 +37,7 @@ const HEADLINES: readonly string[] = [
 
 /** The sign drawn on the bracketed chloride ion, at a size the brackets can carry. */
 const MINUS = (
-  <tspan fontSize={18} dy="-3">
+  <tspan fontSize={22} dy="-4">
     −
   </tspan>
 )
@@ -70,8 +57,8 @@ export function KosselTransfer({ step, reducedMotion }: KosselTransferProps) {
     {
       id: 'na',
       element: 'Na',
-      x: NA_LAYOUT.x,
-      y: NA_LAYOUT.y,
+      x: NA.x,
+      y: NA.y,
       lonePairs: 0,
       unpaired: frame.sodiumDot ? 1 : 0,
       ionCharge: frame.transferred ? '+' : undefined,
@@ -80,10 +67,11 @@ export function KosselTransfer({ step, reducedMotion }: KosselTransferProps) {
     {
       id: 'cl',
       element: 'Cl',
-      x: CL_LAYOUT.x,
-      y: CL_LAYOUT.y,
+      x: CL.x,
+      y: CL.y,
       lonePairs: frame.transferred ? 4 : 3,
       unpaired: frame.transferred ? 0 : 1,
+      // The transferred electron is one dot of the fourth pair, coloured as sodium's own dot is.
       pairOrigins: frame.transferred ? [null, null, null, 'na'] : [null, null, null],
     },
   ]
@@ -106,11 +94,11 @@ export function KosselTransfer({ step, reducedMotion }: KosselTransferProps) {
 
   const headline = HEADLINES[s]
   const fadeClass = reducedMotion ? undefined : styles.fadeIn
-  const captionY = CENTRE.y + 66
-  const noteY = CENTRE.y + 92
-  // The attraction arrow runs between the two ions, stopping short of the bracket and the symbol.
-  const arrowFrom = NA.x + 30
-  const arrowTo = CL.x - 42
+  const captionY = CENTRE_Y + 104
+  const noteY = CENTRE_Y + 128
+  // The attraction arrow runs between the two ions, stopping short of the symbol and the bracket.
+  const arrowFrom = NA.x + 40
+  const arrowTo = CL.x - 54
 
   return (
     <div className={styles.wrapper}>
@@ -122,25 +110,22 @@ export function KosselTransfer({ step, reducedMotion }: KosselTransferProps) {
         data-testid="kossel-transfer"
         data-step={s}
       >
-        <Label x={VIEW_WIDTH / 2} y={60} fontSize={16} fill="var(--fg)">
+        <Label x={VIEW_WIDTH / 2} y={58} fontSize={17} fill="var(--fg)">
           {headline}
         </Label>
 
-        <g transform={`translate(${CENTRE.x} ${CENTRE.y}) scale(${DIAGRAM_SCALE}) translate(${-CENTRE.x} ${-CENTRE.y})`}>
-          <LewisDiagram
-            key={`frame-${s}`}
-            className={fadeClass}
-            atoms={atoms}
-            bonds={[]}
-            brackets={brackets}
-            transfer={transfer}
-            colourByOrigin
-            fontSize={SYMBOL_FONT}
-            dotRadius={2.2}
-            pairHalfGap={2.8}
-            lonePairRadius={LONE_PAIR_RADIUS}
-          />
-        </g>
+        <LewisDiagram
+          key={`frame-${s}`}
+          className={fadeClass}
+          atoms={atoms}
+          bonds={[]}
+          brackets={brackets}
+          transfer={transfer}
+          colourByOrigin
+          fontSize={SYMBOL_FONT}
+          dotRadius={DOT_RADIUS}
+          lonePairRadius={LONE_PAIR_RADIUS}
+        />
 
         {frame.attraction && (
           <g data-testid="kossel-attraction">
@@ -149,27 +134,27 @@ export function KosselTransfer({ step, reducedMotion }: KosselTransferProps) {
               y1={NA.y}
               x2={arrowTo}
               y2={NA.y}
-              strokeWidth={1.4}
+              strokeWidth={1.6}
               style={{ stroke: 'var(--accent)' }}
             />
-            <path d={`M${arrowFrom},${NA.y} l8,-4 v8 Z`} style={{ fill: 'var(--accent)' }} />
-            <path d={`M${arrowTo},${NA.y} l-8,-4 v8 Z`} style={{ fill: 'var(--accent)' }} />
-            <Label x={(NA.x + CL.x) / 2} y={NA.y - 34} fontSize={15} fill="var(--accent)">
+            <path d={`M${arrowFrom},${NA.y} l9,-5 v10 Z`} style={{ fill: 'var(--accent)' }} />
+            <path d={`M${arrowTo},${NA.y} l-9,-5 v10 Z`} style={{ fill: 'var(--accent)' }} />
+            <Label x={(NA.x + CL.x) / 2} y={NA.y - 40} fontSize={16} fill="var(--accent)">
               electrostatic attraction
             </Label>
           </g>
         )}
 
-        <Label x={NA.x} y={captionY} fontSize={17} fill="var(--fg)">
+        <Label x={NA.x} y={captionY} fontSize={18} fill="var(--fg)">
           {captions.na}
         </Label>
-        <Label x={NA.x} y={noteY} fontSize={15} fill="var(--fg-muted)">
+        <Label x={NA.x} y={noteY} fontSize={16} fill="var(--fg-muted)">
           {captions.naNote}
         </Label>
-        <Label x={CL.x} y={captionY} fontSize={17} fill="var(--fg)">
+        <Label x={CL.x} y={captionY} fontSize={18} fill="var(--fg)">
           {captions.cl}
         </Label>
-        <Label x={CL.x} y={noteY} fontSize={15} fill="var(--fg-muted)">
+        <Label x={CL.x} y={noteY} fontSize={16} fill="var(--fg-muted)">
           {captions.clNote}
         </Label>
       </svg>

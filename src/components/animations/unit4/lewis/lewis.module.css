@@ -10,7 +10,7 @@
   display: block;
   width: 100%;
   height: auto;
-  max-height: 340px;
+  max-height: 420px;
 }
 
 .headline {
@@ -35,13 +35,6 @@
   font-family: var(--font-sans);
   font-size: 15px;
   fill: var(--accent);
-}
-
-.focusRing {
-  fill: none;
-  stroke: var(--accent);
-  stroke-width: 1.5;
-  stroke-dasharray: 3 4;
 }
 
 /* A Step's diagram fades in when the Step changes. Reduced motion skips the class. */

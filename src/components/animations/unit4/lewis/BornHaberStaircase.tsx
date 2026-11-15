@@ -10,17 +10,17 @@ export interface BornHaberStaircaseProps {
   reducedMotion: boolean
 }
 
-// Sized for a ~570 px visual panel: category labels are 13 units and value labels 15.
+// Sized for a ~570 px visual panel: category and tick labels are 14 units, value labels 16.
 const VIEW_WIDTH = 560
-const VIEW_HEIGHT = 360
-const PLOT = { left: 64, right: 548, top: 34, bottom: 296 }
-const SLOTS = BORN_HABER_STEP_COUNT
+const VIEW_HEIGHT = 400
+const PLOT = { left: 84, right: 548, top: 40, bottom: 326 }
+/** One slot per bar. The reference state is the zero line itself, so it takes no slot. */
+const SLOTS = BORN_HABER_STEP_COUNT - 1
 const SLOT_WIDTH = (PLOT.right - PLOT.left) / SLOTS
 const BAR_WIDTH = 50
 
 /** Two-line category labels, one per Step (Step 0 is the reference state). */
 const CATEGORY: readonly (readonly string[])[] = [
-  ['Na(s) +', '½Cl₂(g)'],
   ['Sublimation'],
   ['Dissociation'],
   ['Ionisation'],
@@ -92,7 +92,7 @@ export function BornHaberStaircase({ step, reducedMotion }: BornHaberStaircasePr
               strokeDasharray={tick === 0 ? undefined : '2 5'}
               style={{ stroke: tick === 0 ? 'var(--fg-muted)' : 'var(--border)' }}
             />
-            <Label x={PLOT.left - 10} y={yOf(tick)} textAnchor="end" fontSize={13} fill="var(--fg-muted)">
+            <Label x={PLOT.left - 10} y={yOf(tick)} textAnchor="end" fontSize={14} fill="var(--fg-muted)">
               {signedKj(tick)}
             </Label>
           </g>
@@ -103,9 +103,9 @@ export function BornHaberStaircase({ step, reducedMotion }: BornHaberStaircasePr
           <Label
             key={`cat-${slot}`}
             x={slotLeft(slot) + SLOT_WIDTH / 2}
-            y={lines.length === 1 ? 320 : 314}
-            fontSize={13}
-            fill={slot === s ? 'var(--fg)' : 'var(--fg-muted)'}
+            y={lines.length === 1 ? 356 : 350}
+            fontSize={14}
+            fill={slot === s - 1 ? 'var(--fg)' : 'var(--fg-muted)'}
           >
             {lines.map((line, k) => (
               <tspan key={line} x={slotLeft(slot) + SLOT_WIDTH / 2} dy={k === 0 ? 0 : 16}>
@@ -118,7 +118,7 @@ export function BornHaberStaircase({ step, reducedMotion }: BornHaberStaircasePr
         {/* Bars, growing as each Step is reached */}
         {bars.map((bar, i) => {
           const p = progressOf(i)
-          const slot = i + 1
+          const slot = i
           const x = slotLeft(slot) + (SLOT_WIDTH - BAR_WIDTH) / 2
           const end = bar.from + (bar.to - bar.from) * p
           const top = Math.min(yOf(bar.from), yOf(end))
@@ -148,7 +148,7 @@ export function BornHaberStaircase({ step, reducedMotion }: BornHaberStaircasePr
                 <Label
                   x={x + BAR_WIDTH / 2}
                   y={valueY}
-                  fontSize={15}
+                  fontSize={16}
                   fill={isCurrent ? 'var(--fg)' : 'var(--fg-muted)'}
                 >
                   {signedKj(bar.enthalpyKj)}
@@ -166,8 +166,8 @@ export function BornHaberStaircase({ step, reducedMotion }: BornHaberStaircasePr
           return (
             <line
               key={`conn-${i}`}
-              x1={slotLeft(i + 1) + (SLOT_WIDTH + BAR_WIDTH) / 2}
-              x2={slotLeft(i + 2) + (SLOT_WIDTH - BAR_WIDTH) / 2}
+              x1={slotLeft(i) + (SLOT_WIDTH + BAR_WIDTH) / 2}
+              x2={slotLeft(i + 1) + (SLOT_WIDTH - BAR_WIDTH) / 2}
               y1={y}
               y2={y}
               strokeWidth={1}
@@ -189,7 +189,7 @@ export function BornHaberStaircase({ step, reducedMotion }: BornHaberStaircasePr
               strokeDasharray="5 4"
               style={{ stroke: 'var(--fg-muted)' }}
             />
-            <Label x={PLOT.left + 6} y={yOf(FORMATION_KJ) - 12} textAnchor="start" fontSize={15} fill="var(--fg)">
+            <Label x={PLOT.left + 6} y={yOf(FORMATION_KJ) - 12} textAnchor="start" fontSize={16} fill="var(--fg)">
               <tspan className="sym">Δ</tspan>
               <tspan dy="4" fontSize={11}>
                 f
@@ -200,6 +200,10 @@ export function BornHaberStaircase({ step, reducedMotion }: BornHaberStaircasePr
           </g>
         )}
 
+        {/* The zero line is the elements. Its label sits below the line, clear of every bar. */}
+        <Label x={PLOT.left + 6} y={yOf(0) + 17} textAnchor="start" fontSize={14} fill="var(--fg-muted)">
+          0: Na(s) + ½Cl₂(g)
+        </Label>
       </svg>
 
       <p className={styles.note} aria-live="polite" data-testid="born-haber-readout">

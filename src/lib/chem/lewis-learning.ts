@@ -303,7 +303,7 @@ export function describeOctet(status: AtomOctet): string {
   const e = status.electrons
   switch (status.status) {
     case 'complete':
-      return `${e} electrons: complete octet`
+      return status.element === 'H' ? `${e} electrons: complete (duet, like helium)` : `${e} electrons: complete octet`
     case 'incomplete':
       return `${e} electrons: incomplete octet`
     case 'expanded':
