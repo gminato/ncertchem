@@ -18,7 +18,8 @@ describe('isomerFamily', () => {
     expect(isomerFamily('C6H14').members).toHaveLength(5)
     expect(isomerFamily('C7H16').members).toHaveLength(9)
     expect(alkaneIsomerCount(7)).toBe(9)
-  })
+    // Enumerating and naming every C7 isomer takes ~2 s alone and longer in a busy full run.
+  }, 20_000)
 
   it('gives every member the formula of its family', () => {
     for (const id of FAMILY_IDS) {

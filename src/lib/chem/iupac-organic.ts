@@ -653,10 +653,9 @@ function analyse(g: MolGraph): Analysis {
     if (principal === 'alcohol' && principalSites.length === 1) parentName = 'phenol'
     else if (principal === 'amine' && principalSites.length === 1) parentName = 'aniline'
     else if (anisoleCarbon !== null && subCount > 0) parentName = 'anisole'
+    // Anisole alone: NCERT gives the systematic name, methoxybenzene.
+    else if (anisoleCarbon !== null) parentName = 'methoxybenzene'
     else parentName = 'benzene'
-    if (parentName !== 'benzene' && subCount > 0 && principal === 'alcohol') {
-      // phenol with substituents: locants are needed
-    }
     const benzeneOmit = parentName === 'benzene' && subCount === 1
     const body = formatPrefixes(prefixes, benzeneOmit)
     const name = body ? (anisoleCarbon !== null && parentName === 'anisole' ? body + parentName : body + parentName) : parentName
@@ -775,6 +774,7 @@ function compareSignatures(a: number[][], b: number[][]): number {
  * @throws {RangeError} If the molecule is outside the supported scope
  */
 export function iupacName(g: MolGraph): string {
+  if (g.atoms.some((a) => a.radical)) throw new RangeError('Radicals are not named here; they would read as the parent compound')
   if (isUrea(g)) return 'urea'
   const retained = retainedNames().get(canonicalKey(g))
   if (retained) return retained

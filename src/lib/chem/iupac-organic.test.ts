@@ -221,3 +221,12 @@ describe('iupacName: retained names', () => {
     expect(iupacName(parseSmiles(smiles))).toBe(name)
   })
 })
+
+describe('iupacName: anisole and radicals', () => {
+  it('names anisole alone as methoxybenzene', () => {
+    expect(iupacName(parseSmiles('COC1=CC=CC=C1'))).toBe('methoxybenzene')
+  })
+  it('refuses to name a radical rather than calling it the parent alkane', () => {
+    expect(() => iupacName(parseSmiles('C[CH2]'))).toThrow(RangeError)
+  })
+})
