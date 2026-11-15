@@ -336,7 +336,8 @@ export const SkeletalFormula = forwardRef<SVGGElement, SkeletalFormulaProps>(fun
       })}
       {partialCharges.map((m, k) => {
         const th = freeAngle(points, adj, m.atom, [])
-        const c = lonePairPoint(points[m.atom], th, 0.74 * scale)
+        // Close to its atom: the label sits just outside the letter, not off in the margin.
+        const c = lonePairPoint(points[m.atom], th, 0.4 * scale)
         const pos = m.label.includes('+')
         return (
           <text

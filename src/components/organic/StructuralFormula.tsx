@@ -199,18 +199,22 @@ function Morphed({ graph, t, frame, complete, scale, completeScale }: MorphedPro
   const blShrink = LABEL_GAP * scale
   // Hydrogens stay opaque through the slide and vanish once they reach their carbon.
   const hydrogenOpacity = T < 0.45 ? 1 : 1 - ease((T - 0.45) / 0.05)
-  const letterOpacity = 1 - slide
+  // Carbon letters ghost to half opacity as the hydrogens fold in (0 to 0.5), so the chain still reads
+  // as a chain at mid-frame; they leave completely during the bend (0.5 to 1).
+  const carbonLetterOpacity = T <= 0.5 ? 1 - 0.5 * slide : 0.5 * (1 - ease((T - 0.5) * 2))
+  const carbonShrinkScale = T <= 0.5 ? 1 : 1 - ease((T - 0.5) * 2)
   // Heteroatom letters stay through the slide and cross-fade with their bond-line labels in the bend.
-  const heteroLetterOpacity = 1 - ease((T - 0.5) * 2)
-  const bondLineLabelOpacity = ease((T - 0.5) * 2)
+  // The heteroatom letter is gone before its bond-line label starts, so the two never overlap.
+  const heteroLetterOpacity = 1 - ease(Math.min(1, Math.max(0, (T - 0.5) / 0.15)))
+  const bondLineLabelOpacity = ease(Math.min(1, Math.max(0, (T - 0.65) / 0.2)))
   const fs = Math.round(0.36 * scale)
   const hFs = Math.round(0.34 * scale)
   const lineW = Math.max(1.6, 0.045 * scale)
 
-  // A carbon's letter leaves during the slide, so its bonds lose their clearance then.
+  // A carbon's bonds keep their clearance while its letter is visible, then lose it as the letter leaves.
   // A heteroatom keeps its letter until the bend, then takes its bond-line label's clearance.
   const shrinkOf = (a: number): number => {
-    if (graph.atoms[a].element === 'C') return csShrink * (1 - slide)
+    if (graph.atoms[a].element === 'C') return csShrink * carbonShrinkScale
     return csShrink + (blShrink - csShrink) * bend
   }
 
@@ -254,7 +258,7 @@ function Morphed({ graph, t, frame, complete, scale, completeScale }: MorphedPro
         const p = pos[a]
         const elements: React.ReactNode[] = []
         const isC = atom.element === 'C'
-        const lettersOpacity = isC ? letterOpacity : heteroLetterOpacity
+        const lettersOpacity = isC ? carbonLetterOpacity : heteroLetterOpacity
         if (lettersOpacity > 0.01) {
           elements.push(
             <text
