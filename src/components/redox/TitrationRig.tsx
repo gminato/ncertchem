@@ -184,8 +184,8 @@ export const TitrationRig = forwardRef<SVGGElement, TitrationRigProps>(function 
             y={flaskLiquidSurfaceY}
             width={baseHalfW * 2 + 16}
             height={flaskBottomY - flaskLiquidSurfaceY + 8}
-            fill={isAtEndPoint ? endTint : 'var(--glass-fill)'}
-            opacity={isAtEndPoint ? 0.85 : 0.45}
+            fill={isAtEndPoint ? endTint : startTint === 'clear' ? 'var(--glass-fill)' : startTint}
+            opacity={isAtEndPoint || startTint !== 'clear' ? 0.85 : 0.45}
           />
           {/* Surface meniscus line */}
           <line
@@ -193,7 +193,7 @@ export const TitrationRig = forwardRef<SVGGElement, TitrationRigProps>(function 
             y1={flaskLiquidSurfaceY}
             x2={baseHalfW}
             y2={flaskLiquidSurfaceY}
-            stroke={isAtEndPoint ? endTint : 'var(--liquid-edge)'}
+            stroke={isAtEndPoint ? endTint : startTint === 'clear' ? 'var(--liquid-edge)' : startTint}
             strokeWidth={2}
             opacity={0.9}
           />
