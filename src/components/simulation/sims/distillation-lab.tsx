@@ -119,7 +119,9 @@ export function DistillationLab({ reducedMotion }: SimulationProps) {
   const isSteam = mixture === 'toluene-water'
   const progress = collected / MAX_COLLECT
   // The head thermometer reads the vapour leaving the column top; the flask has its own temperature.
-  const thermometer = tenth(isSteam ? steam.tC : here.headC)
+  // Before any heating the head holds only air at room temperature (25 °C).
+  const cold = collected === 0 && !isRunning
+  const thermometer = cold ? 25 : tenth(isSteam ? steam.tC : here.headC)
   const stillC = tenth(here.boilingPointC)
   const heatLabel = isRunning ? 'Pause' : finished ? 'Heat again' : collected > 0 ? 'Resume' : 'Heat'
 
