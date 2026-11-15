@@ -49,6 +49,9 @@ import { ChemicalProperties } from './unit3/chemical/ChemicalProperties'
 import { KosselTransfer } from './unit4/lewis/KosselTransfer'
 import { OctetExceptions } from './unit4/lewis/OctetExceptions'
 import { BornHaberStaircase } from './unit4/lewis/BornHaberStaircase'
+import { BondLengthRadii } from './unit4/parameters/BondLengthRadii'
+import { BondOrderScale } from './unit4/parameters/BondOrderScale'
+import { OzoneResonance } from './unit4/parameters/OzoneResonance'
 import { MOWaveCombination } from './unit4/mo/MOWaveCombination'
 import { MOEnergyOrders } from './unit4/mo/MOEnergyOrders'
 import { MOO2Filling } from './unit4/mo/MOO2Filling'
@@ -117,6 +120,9 @@ export const animations = {
   'lewis-kossel-transfer': KosselTransfer,
   'lewis-octet-exceptions': OctetExceptions,
   'lewis-born-haber': BornHaberStaircase,
+  'bond-length-radii': BondLengthRadii,
+  'bond-order-scale': BondOrderScale,
+  'resonance-ozone': OzoneResonance,
   'mo-wave-combination': MOWaveCombination,
   'mo-energy-orders': MOEnergyOrders,
   'mo-o2-filling': MOO2Filling,

@@ -14,6 +14,7 @@ import { MendeleevPredict } from './sims/mendeleev-predict'
 import { OxideLab } from './sims/oxide-lab'
 import { LewisBuilder } from './sims/lewis-builder'
 import { VseprBuilder } from './sims/vsepr-builder'
+import { DipoleLab } from './sims/dipole-lab'
 import { MOBuilder } from './sims/mo-builder'
 import { HybridExplorer } from './sims/hybrid-explorer'
 
@@ -43,6 +44,7 @@ export const simulations: Record<string, ComponentType<SimulationProps>> = {
   'oxide-lab': OxideLab,
   'lewis-builder': LewisBuilder,
   'vsepr-builder': VseprBuilder,
+  'dipole-lab': DipoleLab,
   'mo-builder': MOBuilder,
   'hybrid-explorer': HybridExplorer,
 }
