@@ -201,7 +201,7 @@ describe('iupacName: locants on one-carbon parents and with a principal group', 
     ['ClC(Cl)(Cl)Cl', 'tetrachloromethane'],
     ['ClC(Cl)Cl', 'trichloromethane'],
     ['ClCCl', 'dichloromethane'],
-    ['ClCC(=O)O', '2-chloroethanoic acid'],
+    ['ClCC(=O)O', '2-chloroethanoic acid'], ['BrC(Cl)', 'bromochloromethane'], ['ClCC1=CC=CC=C1', 'chlorophenylmethane'], ['NC(=O)N', 'urea'],
     ['CC1CCCCC1O', '2-methylcyclohexanol'], ['ClCCN', '2-chloroethanamine'],
   ])('%s is %s', (smiles, name) => {
     expect(iupacName(parseSmiles(smiles))).toBe(name)

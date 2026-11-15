@@ -234,7 +234,8 @@ function formatPrefixes(prefixes: Prefix[], omitLocants: boolean): string {
     return { key: alphaKey(name), text }
   })
   entries.sort((a, b) => (a.key < b.key ? -1 : a.key > b.key ? 1 : 0))
-  return entries.map((e) => e.text).join('-')
+  // Without locants the prefixes run together: bromochloromethane, chlorophenylmethane.
+  return entries.map((e) => e.text).join(omitLocants ? '' : '-')
 }
 
 /** Principal-group sites and the heteroatoms they consume, read from the carbonyl and OH/NH2 groups. */
@@ -774,7 +775,18 @@ function compareSignatures(a: number[][], b: number[][]): number {
  * @throws {RangeError} If the molecule is outside the supported scope
  */
 export function iupacName(g: MolGraph): string {
+  if (isUrea(g)) return 'urea'
   return analyse(g).name
+}
+
+/** Urea, H₂N–CO–NH₂, keeps its retained name (it has no carbon chain to name). */
+function isUrea(g: MolGraph): boolean {
+  const count = (el: string) => g.atoms.filter((a) => a.element === el).length
+  if (g.atoms.length !== 4 || count('C') !== 1 || count('N') !== 2 || count('O') !== 1) return false
+  const c = g.atoms.findIndex((a) => a.element === 'C')
+  const nbs = neighbours(g, c)
+  return nbs.length === 3 && nbs.some((x) => x.order === 2 && g.atoms[x.atom].element === 'O') &&
+    nbs.filter((x) => x.order === 1 && g.atoms[x.atom].element === 'N').length === 2
 }
 
 /**
