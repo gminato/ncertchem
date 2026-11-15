@@ -87,6 +87,7 @@ import { Heterogeneous } from './unit6/heterogeneous/Heterogeneous'
 import { QAndK } from './unit6/qk/QAndK'
 import { IceMethod } from './unit6/qk/IceMethod'
 import { GibbsCurve } from './unit6/qk/GibbsCurve'
+import { PhLadder } from './unit6/ph/PhLadder'
 
 /**
  * Animations available to a Scrolly Animation, keyed by the `animation` prop.
@@ -184,6 +185,7 @@ export const animations = {
   'q-and-k': QAndK,
   'ice-method': IceMethod,
   'qk-gibbs': GibbsCurve,
+  'ph-scale': PhLadder,
 } as const
 
 export type AnimationName = keyof typeof animations
