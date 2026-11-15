@@ -75,13 +75,13 @@ export function VitalForce({ step, reducedMotion }: VitalForceProps) {
         {index === 1 && <Specimen m={ms[0]} x={290} y={230} scale={LARGE * 1.15} nameSize={17} />}
         {index === 2 && (
           <>
-            <g transform="translate(290 220) scale(1.5)">
+            <g transform="translate(290 226) scale(1.1)">
               <Wedge3D captions={false} />
             </g>
-            <Label x={290} y={370} fontSize={18} fill="var(--fg)">
+            <Label x={290} y={394} fontSize={18} fill="var(--fg)">
               {subscriptDigits(ms[0].formula)}
             </Label>
-            <Label x={290} y={396} fontSize={17} fill="var(--fg-muted)">
+            <Label x={290} y={420} fontSize={17} fill="var(--fg-muted)">
               {nameLine(ms[0])}
             </Label>
           </>
