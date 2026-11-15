@@ -276,6 +276,7 @@ export function Molecule3D({ atoms, bonds, lonePairs = [], angleArcs = [], dipol
   const colours = useTokenColours()
   const at = useMemo(() => atomPositionMap(atoms, positions), [atoms, positions])
   const pos = (id: string): Vec3 => at.get(id) ?? [0, 0, 0]
+  const elementOf = new Map(atoms.map((a) => [a.id, a.element]))
 
   return (
     <group>
@@ -312,7 +313,7 @@ export function Molecule3D({ atoms, bonds, lonePairs = [], angleArcs = [], dipol
       ))}
 
       {angleArcs.map((arc, i) => (
-        <AngleArcOverlay key={`arc-${i}`} arc={arc} at={pos} colour={colours.fgMuted} />
+        <AngleArcOverlay key={`arc-${i}`} arc={arc} at={pos} colour={colours.fgMuted} outset={arcLabelOutset(elementOf, arc)} />
       ))}
 
       {dipoles.map((d, i) => (
@@ -322,13 +323,28 @@ export function Molecule3D({ atoms, bonds, lonePairs = [], angleArcs = [], dipol
   )
 }
 
-function AngleArcOverlay({ arc, at, colour }: { arc: AngleArc3D; at: (id: string) => Vec3; colour: string }) {
+/** Gap between the largest atom on an angle and the angle's label. */
+const ARC_LABEL_GAP = 0.16
+/** Arc radius for every angle drawing, in scene units. */
+const ARC_RADIUS = 0.5
+
+/**
+ * How far an angle label sits beyond the arc, measured from the vertex along the bisector: past
+ * the larger of the two atoms it spans, so the label never lands on an atom.
+ */
+export function arcLabelOutset(elementOf: Map<string, string>, arc: AngleArc3D): number {
+  const ra = radius3D(elementOf.get(arc.a) ?? '')
+  const rb = radius3D(elementOf.get(arc.b) ?? '')
+  return Math.max(ra, rb) + ARC_LABEL_GAP
+}
+
+function AngleArcOverlay({ arc, at, colour, outset }: { arc: AngleArc3D; at: (id: string) => Vec3; colour: string; outset: number }) {
   const centre = at(arc.centre)
   const a = at(arc.a)
   const b = at(arc.b)
-  const radius = 0.5
+  const radius = ARC_RADIUS
   const pts = angleArcPoints(centre, a, b, radius, 28)
-  const labelAt = angleLabelPoint(centre, a, b, radius, 0.16)
+  const labelAt = angleLabelPoint(centre, a, b, radius, outset)
   return (
     <group>
       <Line points={pts} color={colour} lineWidth={1.2} />
@@ -365,6 +381,7 @@ export function Molecule3DFallback({
   const basis = cameraBasis(MOLECULE_CAMERA)
   const at = atomPositionMap(atoms, positions)
   const pos = (id: string): Vec3 => at.get(id) ?? [0, 0, 0]
+  const elementOf = new Map(atoms.map((a) => [a.id, a.element]))
 
   // Project the atoms, then fit them into the viewBox with room for the spheres.
   const projected = atoms.map((atom) => projectOrthographic(pos(atom.id), basis))
@@ -437,8 +454,8 @@ export function Molecule3DFallback({
 
       {angleArcs.map((arc, i) => {
         const centre = pos(arc.centre)
-        const pts = angleArcPoints(centre, pos(arc.a), pos(arc.b), 0.5, 28).map(toPx)
-        const label = toPx(angleLabelPoint(centre, pos(arc.a), pos(arc.b), 0.5, 0.16))
+        const pts = angleArcPoints(centre, pos(arc.a), pos(arc.b), ARC_RADIUS, 28).map(toPx)
+        const label = toPx(angleLabelPoint(centre, pos(arc.a), pos(arc.b), ARC_RADIUS, arcLabelOutset(elementOf, arc)))
         return (
           <g key={`arc-${i}`}>
             <path

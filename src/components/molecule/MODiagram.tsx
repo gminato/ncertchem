@@ -18,7 +18,7 @@ const PI_CENTRE = 30
 const PI_HALF = 22
 const AO_A = { from: 70, to: 210 }
 const AO_B = { from: 430, to: 570 }
-const LABEL_SIZE = 8.6
+const LABEL_SIZE = 14.5
 const ARROW_HALF = 6.5
 const ARROW_SPREAD = 6
 
@@ -131,7 +131,7 @@ export const MODiagram = forwardRef<SVGGElement, MODiagramProps>(function MODiag
                 textAnchor={isA ? 'end' : 'start'}
                 dominantBaseline="central"
                 fontFamily="var(--font-sans)"
-                fontSize={LABEL_SIZE + 0.6}
+                fontSize={LABEL_SIZE}
                 style={{ fill: 'var(--fg-muted)' }}
               >
                 <tspan className="sym">{ao.key}</tspan>
@@ -147,7 +147,7 @@ export const MODiagram = forwardRef<SVGGElement, MODiagramProps>(function MODiag
         const ao = aoRows.find((a) => a.key === correlatedAO(level.label)) ?? aoRows[0]
         const isPi = level.degeneracy === 2
         const isHighlighted = highlighted.has(level.label)
-        const labelY = yy - 11
+        const labelY = yy - 19
         const leftEnd = isPi ? CX - PI_CENTRE - PI_HALF : CX - SIGMA_HALF
         const rightEnd = isPi ? CX + PI_CENTRE + PI_HALF : CX + SIGMA_HALF
         const counts = drawnOrbitalCounts(level.electrons, level.unpaired, level.degeneracy)
@@ -155,9 +155,9 @@ export const MODiagram = forwardRef<SVGGElement, MODiagramProps>(function MODiag
         const highlightBox = isHighlighted && (
           <rect
             x={leftEnd - 6}
-            y={labelY - 10}
+            y={labelY - 12}
             width={rightEnd - leftEnd + 12}
-            height={yy - labelY + 18}
+            height={yy - labelY + 20}
             rx={7}
             strokeWidth={1}
             style={{ fill: 'var(--accent-soft)', stroke: 'var(--accent)' }}
@@ -198,7 +198,7 @@ export const MODiagram = forwardRef<SVGGElement, MODiagramProps>(function MODiag
       <line x1={60} y1={H - 42} x2={W - 60} y2={H - 42} strokeWidth={1} style={{ stroke: 'var(--border)' }} />
       {bondOrder !== undefined && (
         <g data-testid="mo-bond-order">
-          <text x={230} y={H - 16} textAnchor="end" fontFamily="var(--font-sans)" fontSize={11} style={{ fill: 'var(--fg-muted)' }}>
+          <text x={230} y={H - 16} textAnchor="end" fontFamily="var(--font-sans)" fontSize={14} style={{ fill: 'var(--fg-muted)' }}>
             Bond order
           </text>
           <text x={242} y={H - 15} fontFamily="var(--font-sans)" fontSize={17} fontWeight={600} style={{ fill: 'var(--fg)' }}>
@@ -208,7 +208,7 @@ export const MODiagram = forwardRef<SVGGElement, MODiagramProps>(function MODiag
       )}
       {magnetism !== undefined && (
         <g data-testid="mo-magnetism">
-          <text x={410} y={H - 16} textAnchor="end" fontFamily="var(--font-sans)" fontSize={11} style={{ fill: 'var(--fg-muted)' }}>
+          <text x={410} y={H - 16} textAnchor="end" fontFamily="var(--font-sans)" fontSize={14} style={{ fill: 'var(--fg-muted)' }}>
             Magnetism
           </text>
           <text x={422} y={H - 15} fontFamily="var(--font-sans)" fontSize={15} fontWeight={600} style={{ fill: 'var(--fg)' }}>
