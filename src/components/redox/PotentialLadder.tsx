@@ -65,7 +65,8 @@ export const PotentialLadder = forwardRef<SVGGElement, PotentialLadderProps>(fun
     return couples.filter((c) => c.e0 >= eMin - 0.05 && c.e0 <= eMax + 0.05)
   }, [couples, eMin, eMax])
 
-  // Position layout for couple labels with generous collision avoidance (minGap = 22)
+  // Couple labels are ~16 units tall: reserve 22 units per label (no extra gap), so labels move off
+  // their rung only when two couples really collide (e.g. the 1.23 V pair), and only by a little.
   const laidOutCouples = useMemo(() => {
     const rawItems = visibleCouples.map((c) => ({
       id: c.id,
@@ -74,7 +75,7 @@ export const PotentialLadder = forwardRef<SVGGElement, PotentialLadderProps>(fun
       couple: c,
     }))
 
-    const resolved = resolveBadgePositions(rawItems, 22)
+    const resolved = resolveBadgePositions(rawItems, 0)
     const map = new Map<string | number, number>()
     for (const r of resolved) {
       map.set(r.id, r.x)
