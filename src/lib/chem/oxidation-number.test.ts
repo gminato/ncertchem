@@ -325,3 +325,14 @@ describe('oxidation-number.ts', () => {
     })
   })
 })
+
+describe('explainOxidationNumber: oxygen exceptions are named correctly', () => {
+  const ruleFor = (f: string, el: string) => JSON.stringify(explainOxidationNumber(f, 0, el))
+  it('names superoxide, peroxide and fluoride cases', () => {
+    // The oxygen rule appears as a step when another element is the one being solved for.
+    expect(ruleFor('KO2', 'K')).toContain('superoxides')
+    expect(ruleFor('KO2', 'K')).not.toContain('in peroxides')
+    expect(ruleFor('H2O2', 'H')).toContain('in peroxides')
+    expect(ruleFor('OF2', 'F')).toContain('fluorine')
+  })
+})
