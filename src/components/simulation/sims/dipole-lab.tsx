@@ -2,7 +2,8 @@
 
 import { useEffect, useMemo, useState } from 'react'
 import gsap from 'gsap'
-import { Atom, Label, VocabDefs } from '@/components/vocab'
+import { Label, VocabDefs } from '@/components/vocab'
+import { atomColor } from '@/components/vocab/atom'
 import { DipoleArrow } from '@/components/molecule/DipoleArrow'
 import { Button, Toggle } from '@/components/controls'
 import { SimulationControls } from '@/components/simulation/Simulation'
@@ -19,25 +20,30 @@ import {
 } from './dipole-lab-model'
 import styles from './dipole-lab.module.css'
 
-// Two panels in one SVG (viewBox 720 × 380). Left: the molecule with each bond dipole on its bond.
-// Right: the same dipoles laid tip to tail, ending in the net dipole or the μ = 0 badge.
-const VIEW = { width: 720, height: 380 }
+// One SVG (viewBox 760 × 400), two equal panels. Left: the molecule with each bond dipole on its
+// bond. Right: the same dipoles tip to tail, from a marked origin, ending in the bold net dipole.
+const VIEW = { width: 760, height: 400 }
 const PANEL_Y = 36
-const PANEL_H = 336
-const PANEL_W = 344
-const LEFT = { x: 8, cx: 180, cy: 206 }
-const RIGHT = { x: 368, cx: 540, cy: 206 }
+const PANEL_H = 340
+const PANEL_W = 368
+const LEFT = { x: 8, cx: 192, cy: 206 }
+const RIGHT = { x: 384, cx: 568, cy: 206 }
+/** Vertical band for the tip-to-tail chain: below the panel title and above the badge. */
+const CHAIN_TOP = 84
+const CHAIN_BOTTOM = 316
+const CHAIN_CENTRE_Y = (CHAIN_TOP + CHAIN_BOTTOM) / 2
 
-/** Atom radius on the left panel, in SVG units. Chosen so each symbol reads at 16 px. */
-const ATOM_R = 22
+/** Atom radius on the left panel, in SVG units. */
+const ATOM_R = 25
 /** Distance from the centre to each ligand nucleus on the left panel, in SVG units. */
-const BOND_R = 128
+const BOND_R = 136
 /** Bond and lone-pair arrows run from INNER·BOND_R to OUTER·BOND_R along their direction. */
 const INNER = 0.36
 const OUTER = 0.76
-/** Arrows are drawn larger with a transform around their midpoint; DipoleArrow's own size is fixed. */
+/** Left-panel arrows are drawn larger with a transform around their midpoint. */
 const ARROW_SCALE = 1.45
-const NET_SCALE = 1.5
+/** Shortest drawn length of the net arrow on the right, in SVG units. Shorter nets are drawn at this length. */
+const NET_MIN_PX = 56
 const DURATION = 1.8
 
 function clamp01(v: number): number {
@@ -60,7 +66,42 @@ function formatDebye(value: number): string {
   return value === 0 ? '0' : value.toFixed(2)
 }
 
-/** A DipoleArrow enlarged by a transform about its midpoint. */
+/**
+ * Symbol ink for each element, so the symbol contrasts with its disc in both themes. The disc
+ * colours come from --el-* tokens that change lightness between themes, so the ink is set by
+ * CSS class (see dipole-lab.module.css) rather than a fixed colour.
+ */
+const WHITE_ON_BOTH = new Set(['C'])
+const WHITE_IN_LIGHT_ONLY = new Set(['O', 'N', 'Cl', 'Na', 'Fe', 'Cu'])
+function inkClass(element: string): string {
+  if (WHITE_ON_BOTH.has(element)) return styles.inkWhite
+  if (WHITE_IN_LIGHT_ONLY.has(element)) return styles.inkFlip
+  return styles.inkDark
+}
+
+/** A plain disc with the element symbol centred on it. No outline, no halo. */
+function Disc({ element, x, y }: { element: string; x: number; y: number }) {
+  return (
+    <g>
+      <circle cx={x} cy={y} r={ATOM_R} fill={atomColor(element)} />
+      <text
+        x={x}
+        y={y}
+        textAnchor="middle"
+        dominantBaseline="central"
+        fontFamily="var(--font-sans)"
+        fontStyle="normal"
+        fontWeight={600}
+        fontSize={17}
+        className={inkClass(element)}
+      >
+        {element}
+      </text>
+    </g>
+  )
+}
+
+/** A DipoleArrow enlarged by a transform about its midpoint. Used on the left panel only. */
 function BigArrow({ from, to, scale }: { from: Point; to: Point; scale: number }) {
   const mx = (from.x + to.x) / 2
   const my = (from.y + to.y) / 2
@@ -68,6 +109,66 @@ function BigArrow({ from, to, scale }: { from: Point; to: Point; scale: number }
     <g transform={`translate(${mx} ${my}) scale(${scale}) translate(${-mx} ${-my})`}>
       <DipoleArrow from={from} to={to} positiveLabel="" negativeLabel="" />
     </g>
+  )
+}
+
+/**
+ * A plain vector arrow with no crossed tail, for the tip-to-tail panel. The head sits at `to`.
+ */
+function Vector({
+  from,
+  to,
+  colour,
+  width,
+  dashed = false,
+}: {
+  from: Point
+  to: Point
+  colour: string
+  width: number
+  dashed?: boolean
+}) {
+  const dx = to.x - from.x
+  const dy = to.y - from.y
+  const len = Math.hypot(dx, dy)
+  if (len < 0.5) return null
+  const ux = dx / len
+  const uy = dy / len
+  const head = Math.min(len * 0.6, 8 + width * 1.5)
+  const halfWidth = 3.5 + width * 0.7
+  const bx = to.x - ux * head
+  const by = to.y - uy * head
+  return (
+    <g>
+      <line
+        x1={from.x}
+        y1={from.y}
+        x2={dashed ? to.x : bx}
+        y2={dashed ? to.y : by}
+        stroke={colour}
+        strokeWidth={width}
+        strokeLinecap="round"
+        strokeDasharray={dashed ? '5 4' : undefined}
+      />
+      {!dashed && (
+        <path
+          d={`M${to.x},${to.y} L${bx - uy * halfWidth},${by + ux * halfWidth} L${bx + uy * halfWidth},${by - ux * halfWidth} Z`}
+          fill={colour}
+        />
+      )}
+    </g>
+  )
+}
+
+/** The subscript-numbered dipole symbol, e.g. μ₁, with the μ set in the .sym style. */
+function MuSub({ sub }: { sub: string }) {
+  return (
+    <>
+      <tspan className="sym">μ</tspan>
+      <tspan dy="0.3em" fontSize="0.7em">
+        {sub}
+      </tspan>
+    </>
   )
 }
 
@@ -111,20 +212,27 @@ export function DipoleLab({ reducedMotion }: SimulationProps) {
   const netAlpha = smooth((shown - 0.8) / 0.2)
   const bondsAlpha = smooth(shown * count - bondCount)
 
-  // Right panel: fit the chain (and the bond resultant) inside the panel, centred.
-  const chain = useMemo(() => {
+  // Right panel: scale the chain so it fills the band, centred. The net arrow has a minimum length.
+  const fit = useMemo(() => {
     const pts: Point[] = [{ x: 0, y: 0 }, scene.net, scene.bondResultant]
     for (const a of scene.arrows) pts.push(a.chainStart, a.chainEnd)
     const minX = Math.min(...pts.map((p) => p.x))
     const maxX = Math.max(...pts.map((p) => p.x))
     const minY = Math.min(...pts.map((p) => p.y))
     const maxY = Math.max(...pts.map((p) => p.y))
-    const s = Math.min(2.2, 280 / Math.max(maxX - minX, 1), 180 / Math.max(maxY - minY, 1))
+    const s = Math.min(2.6, 290 / Math.max(maxX - minX, 1), (CHAIN_BOTTOM - CHAIN_TOP) / Math.max(maxY - minY, 1))
     const mx = (minX + maxX) / 2
     const my = (minY + maxY) / 2
-    return { s, ox: RIGHT.cx - s * mx, oy: RIGHT.cy - s * my }
+    const netLen = Math.hypot(scene.net.x, scene.net.y)
+    const netSmall = !scene.netIsZero && netLen * s < NET_MIN_PX
+    const netDraw =
+      netSmall && netLen > 1e-9
+        ? { x: (scene.net.x / netLen) * (NET_MIN_PX / s), y: (scene.net.y / netLen) * (NET_MIN_PX / s) }
+        : scene.net
+    return { s, ox: RIGHT.cx - s * mx, oy: CHAIN_CENTRE_Y - s * my, netDraw, netSmall }
   }, [scene])
-  const toRight = (p: Point): Point => ({ x: chain.ox + chain.s * p.x, y: chain.oy + chain.s * p.y })
+  const toRight = (p: Point): Point => ({ x: fit.ox + fit.s * p.x, y: fit.oy + fit.s * p.y })
+  const origin = toRight({ x: 0, y: 0 })
 
   const shapeText = printedRow(molecule).geometry
   const shapeLabel = shapeText.charAt(0).toUpperCase() + shapeText.slice(1)
@@ -143,6 +251,11 @@ export function DipoleLab({ reducedMotion }: SimulationProps) {
       : 'With the lone pair switched off, only the bond dipoles are summed.'
 
   const summary = `${molecule.label}: ${shapeText}. NCERT Table 4.5: μ = ${formatDebye(row.dipoleD)} D. ${magnitudeText}`
+
+  // Bond arrows are numbered μ₁, μ₂ … in the order the ligands are listed.
+  const bondNumbers = scene.arrows.map(
+    (_, i) => scene.arrows.slice(0, i + 1).filter((b) => b.kind === 'bond').length
+  )
 
   return (
     <div className={styles.root} data-dipole-molecule={key}>
@@ -189,9 +302,9 @@ export function DipoleLab({ reducedMotion }: SimulationProps) {
                 data-layer="lone-pair-lobe"
                 cx={LEFT.cx + d.x * OUTER * BOND_R * 0.8}
                 cy={LEFT.cy + d.y * OUTER * BOND_R * 0.8}
-                r={24}
-                fill="var(--fg-subtle)"
-                opacity={hasLonePairs ? (lonePairActive ? 0.28 : 0.12) : 0}
+                r={26}
+                fill="var(--lone-pair)"
+                opacity={hasLonePairs ? (lonePairActive ? 0.3 : 0.12) : 0}
               />
             )
           })}
@@ -203,10 +316,7 @@ export function DipoleLab({ reducedMotion }: SimulationProps) {
             const from = a.headOutward ? inner : outer
             const to = a.headOutward ? outer : inner
             return (
-              <g
-                key={`left-${a.kind}-${i}`}
-                data-layer={a.kind === 'bond' ? 'bond-dipole' : 'lone-pair-dipole'}
-              >
+              <g key={`left-${a.kind}-${i}`} data-layer={a.kind === 'bond' ? 'bond-dipole' : 'lone-pair-dipole'}>
                 <BigArrow from={from} to={to} scale={ARROW_SCALE} />
               </g>
             )
@@ -216,23 +326,13 @@ export function DipoleLab({ reducedMotion }: SimulationProps) {
             .filter((a) => a.kind === 'bond' && a.nucleus)
             .map((a, i) => {
               const p = { x: LEFT.cx + a.direction.x * BOND_R, y: LEFT.cy + a.direction.y * BOND_R }
-              return (
-                <g key={`nucleus-${i}`}>
-                  <Atom element={a.label} x={p.x} y={p.y} r={ATOM_R} />
-                  <Label x={p.x} y={p.y} fontSize={18} fill="var(--fg)" halo>
-                    {a.label}
-                  </Label>
-                </g>
-              )
+              return <Disc key={`nucleus-${i}`} element={a.label} x={p.x} y={p.y} />
             })}
 
-          <Atom element={molecule.centre} x={LEFT.cx} y={LEFT.cy} r={ATOM_R} />
-          <Label x={LEFT.cx} y={LEFT.cy} fontSize={18} fill="var(--fg)" halo>
-            {molecule.centre}
-          </Label>
+          <Disc element={molecule.centre} x={LEFT.cx} y={LEFT.cy} />
         </g>
 
-        {/* Right panel: the same dipoles tip to tail, then the net dipole. */}
+        {/* Right panel: the same dipoles tip to tail from a marked origin, then the net dipole. */}
         <g data-panel="sum">
           <rect x={RIGHT.x} y={PANEL_Y} width={PANEL_W} height={PANEL_H} rx={8} fill="none" stroke="var(--border)" />
           <Label x={RIGHT.x + 16} y={24} fontSize={14} fill="var(--fg-muted)" textAnchor="start">
@@ -241,18 +341,10 @@ export function DipoleLab({ reducedMotion }: SimulationProps) {
 
           {lonePairActive && (
             <g data-layer="bond-resultant" opacity={bondsAlpha}>
-              <line
-                x1={toRight({ x: 0, y: 0 }).x}
-                y1={toRight({ x: 0, y: 0 }).y}
-                x2={toRight(scene.bondResultant).x}
-                y2={toRight(scene.bondResultant).y}
-                stroke="var(--fg-muted)"
-                strokeWidth={2}
-                strokeDasharray="5 4"
-              />
+              <Vector from={origin} to={toRight(scene.bondResultant)} colour="var(--fg-muted)" width={2} dashed />
               <Label
-                x={toRight(scene.bondResultant).x + 12}
-                y={toRight(scene.bondResultant).y}
+                x={toRight(scene.bondResultant).x + 10}
+                y={toRight(scene.bondResultant).y - 10}
                 fontSize={13}
                 fill="var(--fg-muted)"
                 textAnchor="start"
@@ -266,31 +358,49 @@ export function DipoleLab({ reducedMotion }: SimulationProps) {
             if (a.kind === 'lone-pair' && !lonePairActive) return null
             const f = smooth(shown * count - i)
             if (f <= 0.001) return null
+            const isBond = a.kind === 'bond'
+            const n = bondNumbers[i]
             const from = toRight(a.chainStart)
             const to = toRight(lerpPoint(a.chainStart, a.chainEnd, f))
+            const mid = { x: (from.x + to.x) / 2, y: (from.y + to.y) / 2 }
+            const dx = to.x - from.x
+            const dy = to.y - from.y
+            const len = Math.hypot(dx, dy) || 1
+            const offset = { x: (-dy / len) * 14, y: (dx / len) * 14 }
             return (
-              <g
-                key={`chain-${a.kind}-${i}`}
-                data-layer={a.kind === 'bond' ? 'chain-bond-dipole' : 'chain-lone-pair-dipole'}
-              >
-                <BigArrow from={from} to={to} scale={ARROW_SCALE} />
+              <g key={`chain-${a.kind}-${i}`} opacity={f} data-layer={isBond ? 'chain-bond-dipole' : 'chain-lone-pair-dipole'}>
+                <Vector
+                  from={from}
+                  to={to}
+                  colour={isBond ? 'var(--bond)' : 'var(--lone-pair-edge)'}
+                  width={2}
+                />
+                {len > 14 && (
+                  <Label x={mid.x + offset.x} y={mid.y + offset.y} fontSize={13} fill={isBond ? 'var(--fg)' : 'var(--lone-pair-edge)'}>
+                    {isBond ? <MuSub sub={String(n)} /> : <MuSub sub="lp" />}
+                  </Label>
+                )}
               </g>
             )
           })}
 
-          <circle cx={toRight({ x: 0, y: 0 }).x} cy={toRight({ x: 0, y: 0 }).y} r={3} fill="var(--fg-muted)" />
+          <circle cx={origin.x} cy={origin.y} r={4.5} fill="var(--fg)" data-layer="origin" />
 
           <g data-layer="net-dipole" opacity={netAlpha}>
             {!scene.netIsZero && (
               <>
-                <BigArrow from={toRight({ x: 0, y: 0 })} to={toRight(scene.net)} scale={NET_SCALE} />
+                <Vector from={origin} to={toRight(fit.netDraw)} colour="var(--dipole)" width={5} />
                 <Label
-                  x={toRight(scene.net).x + 16}
-                  y={toRight(scene.net).y - 16}
-                  fontSize={18}
+                  x={toRight(fit.netDraw).x + 14}
+                  y={toRight(fit.netDraw).y + 4}
+                  fontSize={16}
                   fill="var(--dipole)"
+                  textAnchor="start"
                 >
-                  <tspan className="sym">μ</tspan>
+                  <MuSub sub="" />
+                  {' (net'}
+                  {fit.netSmall ? ', small' : ''}
+                  {')'}
                 </Label>
               </>
             )}
@@ -325,6 +435,12 @@ export function DipoleLab({ reducedMotion }: SimulationProps) {
         </p>
         <p className={styles.line}>{magnitudeText}</p>
         {hasLonePairs && <p className={styles.line}>{lonePairNote}</p>}
+        {fit.netSmall && (
+          <p className={styles.line}>
+            The net arrow on the right is drawn at a minimum length, so the small net stays readable. Its true model
+            value is small.
+          </p>
+        )}
         {hasLonePairs && (
           <p className={styles.line}>
             Model, in arbitrary units: the bond dipoles alone give {comparison.bondsOnly.toFixed(2)}; with the lone
