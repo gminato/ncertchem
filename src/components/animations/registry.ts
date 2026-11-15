@@ -44,6 +44,9 @@ import { NewlandsOctaves } from './unit3/history/NewlandsOctaves'
 import { MeyerVolume } from './unit3/history/MeyerVolume'
 import { MendeleevGaps } from './unit3/history/MendeleevGaps'
 import { ChemicalProperties } from './unit3/chemical/ChemicalProperties'
+import { BondLengthRadii } from './unit4/parameters/BondLengthRadii'
+import { BondOrderScale } from './unit4/parameters/BondOrderScale'
+import { OzoneResonance } from './unit4/parameters/OzoneResonance'
 
 /**
  * Animations available to a Scrolly Animation, keyed by the `animation` prop.
@@ -98,6 +101,9 @@ export const animations = {
   'history-meyer': MeyerVolume,
   'history-mendeleev-gaps': MendeleevGaps,
   'chemical-properties': ChemicalProperties,
+  'bond-length-radii': BondLengthRadii,
+  'bond-order-scale': BondOrderScale,
+  'resonance-ozone': OzoneResonance,
 } as const
 
 export type AnimationName = keyof typeof animations
