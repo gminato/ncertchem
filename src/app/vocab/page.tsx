@@ -80,6 +80,25 @@ import {
   PISTON_DEMO,
   NRT_300,
 } from '@/components/thermo/fixture'
+import {
+  OxidationTag,
+  ElectronTransfer,
+  ONLadder,
+  ReactionBeaker,
+  DaniellCell,
+  PotentialLadder,
+  TitrationRig,
+  HalfEquationCard,
+  CR2O7_TAGS,
+  MNO4_TAGS,
+  S4O6_TAGS,
+  NA_CL_TRANSFER_BASE,
+  CL2_DISPROPORTIONATION_SPECIES,
+  CL2_DISPROPORTIONATION_TRANSITIONS,
+  TABLE_7_1_COUPLES,
+  ZN_CU_HIGHLIGHT,
+  FE_CR2O7_MID_BALANCE,
+} from '@/components/redox'
 import styles from './vocab.module.css'
 
 export const metadata: Metadata = {
@@ -1824,6 +1843,317 @@ export default function VocabPage() {
               <p className={styles.cardDescription}>
                 The same particles, in three states. Going from solid to liquid to gas, each particle
                 gains more arrangements, so the entropy <span className="sym">S</span> increases.
+              </p>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      {/* Redox and electrochemistry */}
+      <section className={styles.section} id="redox" aria-labelledby="redox-heading">
+        <h2 id="redox-heading" className={styles.sectionTitle}>
+          Redox and electrochemistry
+        </h2>
+        <p className={styles.sectionSubtitle}>
+          Oxidation numbers, electron transfer along curved trajectories, disproportionation ladders,
+          direct beaker displacement, the Daniell galvanic cell, the electrochemical series, and
+          self-indicating redox titrations. Oxidation is warm electron loss; reduction is cool electron gain.
+        </p>
+
+        <div className={styles.grid}>
+          {/* Card 1: Oxidation-number tags */}
+          <article className={`${styles.card} ${styles.wide}`}>
+            <div className={`${styles.cardCanvas} ${styles.cardCanvasTall}`}>
+              <svg
+                viewBox="-280 -60 560 110"
+                className={styles.svgElement}
+                role="img"
+                aria-label="Oxidation number tags above atoms in Cr2O7 2-, MnO4 -, and S4O6 2-"
+              >
+                <OxidationTag formula="Cr2O7" charge="2−" tags={CR2O7_TAGS} x={-180} y={-4} />
+                <OxidationTag formula="MnO4" charge="−" tags={MNO4_TAGS} x={0} y={-4} />
+                <OxidationTag formula="S4O6" charge="2−" tags={S4O6_TAGS} x={180} y={-4} />
+                <Label x={-180} y={42} fontSize={13} fill="var(--fg-muted)">Dichromate</Label>
+                <Label x={0} y={42} fontSize={13} fill="var(--fg-muted)">Permanganate</Label>
+                <Label x={180} y={42} fontSize={13} fill="var(--fg-muted)">Tetrathionate</Label>
+              </svg>
+            </div>
+            <div className={styles.cardBody}>
+              <div className={styles.cardHeading}>
+                <span>Oxidation-number tags</span>
+                <span className={styles.cardBadge}>Cr₂O₇²⁻ · MnO₄⁻ · S₄O₆²⁻</span>
+              </div>
+              <p className={styles.cardDescription}>
+                Badges sit cleanly above atoms without colliding with subscripts or charges.
+                Negative values use a true minus sign (U+2212), and fractional numbers like +2.5 on sulfur
+                reflect resonance-averaged structures.
+              </p>
+            </div>
+          </article>
+
+          {/* Card 2: Electron transfer arc */}
+          <article className={`${styles.card} ${styles.wide}`}>
+            <div className={`${styles.cardCanvas} ${styles.cardCanvasTall}`}>
+              <svg
+                viewBox="-480 -80 960 190"
+                className={styles.svgElement}
+                role="img"
+                aria-label="Electron transfer from sodium to chlorine at progress 0, 0.5, and 1"
+              >
+                <ElectronTransfer
+                  {...NA_CL_TRANSFER_BASE}
+                  progress={0}
+                  donorCaption="Oxidation: Na"
+                  acceptorCaption="Reduction: Cl"
+                  x={-310}
+                  y={-8}
+                />
+                <ElectronTransfer
+                  {...NA_CL_TRANSFER_BASE}
+                  progress={0.5}
+                  donorCaption="Na → Na⁺ + e⁻"
+                  acceptorCaption="Cl + e⁻ → Cl⁻"
+                  x={0}
+                  y={-8}
+                />
+                <ElectronTransfer
+                  {...NA_CL_TRANSFER_BASE}
+                  progress={1}
+                  donorCaption="Na⁺ cation"
+                  acceptorCaption="Cl⁻ anion"
+                  x={310}
+                  y={-8}
+                />
+                <Label x={-310} y={78} fontSize={13} fill="var(--fg-muted)">Progress 0: neutral atoms</Label>
+                <Label x={0} y={78} fontSize={13} fill="var(--fg-muted)">Progress 0.5: <tspan className="sym">e</tspan>⁻ in transit</Label>
+                <Label x={310} y={78} fontSize={13} fill="var(--fg-muted)">Progress 1: ions formed</Label>
+              </svg>
+            </div>
+            <div className={styles.cardBody}>
+              <div className={styles.cardHeading}>
+                <span>Electron transfer along an arc</span>
+                <span className={styles.cardBadge}>Na + Cl → Na⁺ + Cl⁻</span>
+              </div>
+              <p className={styles.cardDescription}>
+                Electrons travel along a flight arc from donor to acceptor. The donor ring turns warm amber (--ox)
+                and gains a positive charge; the acceptor ring turns cool indigo (--red) and gains a negative charge.
+              </p>
+            </div>
+          </article>
+
+          {/* Card 3: ONLadder for Cl2 disproportionation */}
+          <article className={`${styles.card} ${styles.wideHalf}`}>
+            <div className={`${styles.cardCanvas} ${styles.cardCanvasTall}`}>
+              <svg
+                viewBox="0 0 360 380"
+                className={styles.svgElement}
+                role="img"
+                aria-label="Oxidation number ladder showing disproportionation of chlorine in alkali"
+              >
+                <ONLadder
+                  species={CL2_DISPROPORTIONATION_SPECIES}
+                  transitions={CL2_DISPROPORTIONATION_TRANSITIONS}
+                  progress={1}
+                  range={[-3, 3]}
+                />
+              </svg>
+            </div>
+            <div className={styles.cardBody}>
+              <div className={styles.cardHeading}>
+                <span>Oxidation-number ladder</span>
+                <span className={styles.cardBadge}>Cl₂ disproportionation</span>
+              </div>
+              <p className={styles.cardDescription}>
+                Species placed on a vertical number line. In alkaline solution, elemental chlorine at 0
+                simultaneously oxidises up to hypochlorite (+1) and reduces down to chloride (−1).
+              </p>
+            </div>
+          </article>
+
+          {/* Card 4: Reaction beaker Zn in Cu2+ */}
+          <article className={`${styles.card} ${styles.wideHalf}`}>
+            <div className={`${styles.cardCanvas} ${styles.cardCanvasTall}`}>
+              <svg
+                viewBox="-270 -130 540 270"
+                className={styles.svgElement}
+                role="img"
+                aria-label="Zinc strip in copper sulfate solution at start and after reaction"
+              >
+                <ReactionBeaker
+                  solutionTint="var(--sol-cu)"
+                  tintStrength={1}
+                  stripMetal="Zn"
+                  coating={0}
+                  progress={0}
+                  x={-135}
+                  y={-5}
+                />
+                <ReactionBeaker
+                  solutionTint="var(--sol-cu)"
+                  tintStrength={0.10}
+                  stripMetal="Zn"
+                  coating={0.85}
+                  progress={1}
+                  x={135}
+                  y={-5}
+                />
+                <Label x={-135} y={118} fontSize={13} fill="var(--fg)">Initial: Zn in blue Cu²⁺</Label>
+                <Label x={135} y={118} fontSize={13} fill="var(--fg)">After: Cu coating, solution fades</Label>
+              </svg>
+            </div>
+            <div className={styles.cardBody}>
+              <div className={styles.cardHeading}>
+                <span>Direct redox reaction in a beaker</span>
+                <span className={styles.cardBadge}>Zn(s) + Cu²⁺(aq) → Zn²⁺(aq) + Cu(s)</span>
+              </div>
+              <p className={styles.cardDescription}>
+                Zinc dipped into copper sulfate. Direct surface electron transfer dissolves zinc into solution,
+                deposits metallic copper onto the strip, and discharges the blue Cu²⁺ tint.
+              </p>
+            </div>
+          </article>
+
+          {/* Card 5: Daniell cell switched off and on */}
+          <article className={`${styles.card} ${styles.wide}`}>
+            <div className={`${styles.cardCanvas} ${styles.cardCanvasTall}`}>
+              <svg
+                viewBox="-480 -130 960 345"
+                className={styles.svgElement}
+                role="img"
+                aria-label="Daniell cell switched off at 0 V and switched on at 1.10 V"
+              >
+                <DaniellCell
+                  switchOn={false}
+                  progress={0}
+                  voltage="0.00 V"
+                  zincMass={0.9}
+                  copperMass={0.2}
+                  solutionTint={0.9}
+                  x={-235}
+                  y={-10}
+                />
+                <DaniellCell
+                  switchOn={true}
+                  progress={0.65}
+                  voltage="1.10 V"
+                  zincMass={0.4}
+                  copperMass={0.8}
+                  solutionTint={0.30}
+                  x={235}
+                  y={-10}
+                />
+              </svg>
+            </div>
+            <div className={styles.cardBody}>
+              <div className={styles.cardHeading}>
+                <span>Daniell cell: indirect electron transfer</span>
+                <span className={styles.cardBadge}>1.10 V · Zn | Zn²⁺ || Cu²⁺ | Cu</span>
+              </div>
+              <p className={styles.cardDescription}>
+                Separating half-cells with a salt bridge forces electrons through an external wire from Zn to Cu,
+                generating a 1.10 <span className="sym">V</span> potential. Anions migrate through the agar bridge
+                towards the anode to keep solutions neutral.
+              </p>
+            </div>
+          </article>
+
+          {/* Card 6: Potential ladder */}
+          <article className={`${styles.card} ${styles.wideHalf}`}>
+            <div className={`${styles.cardCanvas} ${styles.cardCanvasTall}`}>
+              <svg
+                viewBox="0 0 450 440"
+                className={styles.svgElement}
+                role="img"
+                aria-label="Standard electrode potential ladder Table 7.1 with Zn and Cu highlighted"
+              >
+                <PotentialLadder
+                  couples={TABLE_7_1_COUPLES}
+                  highlight={ZN_CU_HIGHLIGHT}
+                  range={[-1.0, 1.0]}
+                />
+              </svg>
+            </div>
+            <div className={styles.cardBody}>
+              <div className={styles.cardHeading}>
+                <span>Standard reduction potentials (Table 7.1)</span>
+                <span className={styles.cardBadge}>
+                  <span className="sym">E</span>°cell = +1.10 <span className="sym">V</span>
+                </span>
+              </div>
+              <p className={styles.cardDescription}>
+                Couples arranged by standard reduction potential <span className="sym">E</span>°.
+                A couple higher on the ladder spontaneously oxidises one lower down, yielding the cell potential
+                <span className="sym"> E</span>°cell = +1.10 <span className="sym">V</span> for Zn and Cu.
+              </p>
+            </div>
+          </article>
+
+          {/* Card 7: Titration rig */}
+          <article className={`${styles.card} ${styles.wide}`}>
+            <div className={`${styles.cardCanvas} ${styles.cardCanvasTall}`}>
+              <svg
+                viewBox="-390 -185 780 405"
+                className={styles.svgElement}
+                role="img"
+                aria-label="Redox titration rig with KMnO4 burette and conical flask at 0.0 mL, 19.4 mL, and 20.0 mL endpoint"
+              >
+                <TitrationRig
+                  addedMl={0}
+                  dropping={false}
+                  endPoint={false}
+                  subLabel="0.0 mL: Clear Fe²⁺ analyte"
+                  x={-260}
+                  y={-5}
+                  scale={0.78}
+                />
+                <TitrationRig
+                  addedMl={19.4}
+                  dropping={true}
+                  endPoint={false}
+                  subLabel="19.4 mL: Droplet in transit"
+                  x={0}
+                  y={-5}
+                  scale={0.78}
+                />
+                <TitrationRig
+                  addedMl={20.0}
+                  dropping={false}
+                  endPoint={true}
+                  subLabel="20.0 mL: Pink endpoint"
+                  x={260}
+                  y={-5}
+                  scale={0.78}
+                />
+              </svg>
+            </div>
+            <div className={styles.cardBody}>
+              <div className={styles.cardHeading}>
+                <span>Redox titration: KMnO₄ endpoint</span>
+                <span className={styles.cardBadge}>Burette · Flask · White tile</span>
+              </div>
+              <p className={styles.cardDescription}>
+                Graduated burette with meniscus reading, stopcock, and conical flask over a white tile.
+                Permanganate acts as a self-indicator: the first unconsumed drop of MnO₄⁻ imparts a permanent
+                faint pink tint to the solution.
+              </p>
+            </div>
+          </article>
+
+          {/* Card 8: HalfEquationCard */}
+          <article className={`${styles.card} ${styles.wideHalf}`}>
+            <HalfEquationCard
+              oxHalf={FE_CR2O7_MID_BALANCE.oxHalf}
+              redHalf={FE_CR2O7_MID_BALANCE.redHalf}
+              overallEquation={FE_CR2O7_MID_BALANCE.overallEquation}
+            />
+            <div className={styles.cardBody}>
+              <div className={styles.cardHeading}>
+                <span>Ion-electron half-reaction method</span>
+                <span className={styles.cardBadge}>Fe²⁺ + Cr₂O₇²⁻ mid-balance</span>
+              </div>
+              <p className={styles.cardDescription}>
+                Mass and charge tallies for each half-reaction. An unbalanced electron count chip immediately
+                flags the multiplier needed (× 6 on iron) before the two half-equations can be added.
               </p>
             </div>
           </article>

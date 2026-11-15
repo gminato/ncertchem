@@ -73,6 +73,19 @@
   --heat: #C2410C;
   --work: #0F766E;
 
+  /* Redox: oxidation (amber) and reduction (indigo) */
+  --ox: #D97706;
+  --red: #4338CA;
+
+  /* Redox solution and metal tints */
+  --sol-cu: #1E88E5;
+  --sol-mno4: #7B1FA2;
+  --sol-starch: #0F172A;
+  --sol-pink: #EC4899;
+  --metal-cu: #B45309;
+  --metal-zn: #71717A;
+  --metal-ag: #CBD5E1;
+
   /* Spacing Scale */
   --space-1: 4px;
   --space-2: 8px;
@@ -161,6 +174,19 @@
 
   --heat: #FFA15C;
   --work: #6FD6C0;
+
+  /* Redox: oxidation (amber) and reduction (indigo) */
+  --ox: #FBBF24;
+  --red: #818CF8;
+
+  /* Redox solution and metal tints */
+  --sol-cu: #38BDF8;
+  --sol-mno4: #D946EF;
+  --sol-starch: #1E293B;
+  --sol-pink: #F472B6;
+  --metal-cu: #E07A5F;
+  --metal-zn: #A1A1AA;
+  --metal-ag: #E2E8F0;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -227,6 +253,19 @@
 
     --heat: #FFA15C;
     --work: #6FD6C0;
+
+    /* Redox: oxidation (amber) and reduction (indigo) */
+    --ox: #FBBF24;
+    --red: #818CF8;
+
+    /* Redox solution and metal tints */
+    --sol-cu: #38BDF8;
+    --sol-mno4: #D946EF;
+    --sol-starch: #1E293B;
+    --sol-pink: #F472B6;
+    --metal-cu: #E07A5F;
+    --metal-zn: #A1A1AA;
+    --metal-ag: #E2E8F0;
   }
 }
 

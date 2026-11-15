@@ -1,0 +1,211 @@
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: var(--space-4);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  font-family: var(--font-sans);
+  color: var(--fg);
+}
+
+.cardHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid var(--border);
+  padding-bottom: var(--space-2);
+}
+
+.cardTitle {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--fg);
+}
+
+.statusChip {
+  font-size: 13px;
+  font-weight: 600;
+  padding: 2px 8px;
+  border-radius: var(--radius-sm);
+  background: var(--caution-soft);
+  color: var(--caution);
+  border: 1px solid currentColor;
+}
+
+.statusChipBalanced {
+  background: var(--success-soft);
+  color: var(--success);
+}
+
+.rowsContainer {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.halfRow {
+  background: var(--surface-raised);
+  border-radius: var(--radius-sm);
+  padding: var(--space-3) var(--space-4);
+  border-left: 4px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.halfRowOx {
+  border-left-color: var(--ox);
+}
+
+.halfRowRed {
+  border-left-color: var(--red);
+}
+
+.rowHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+.rowTitleGroup {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.rowToneBadge {
+  font-size: 13px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.toneOx {
+  color: var(--ox);
+}
+
+.toneRed {
+  color: var(--red);
+}
+
+.chipsGroup {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.electronChip {
+  font-size: 13px;
+  font-weight: 600;
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  color: var(--fg);
+}
+
+.chipOx {
+  border-color: var(--ox);
+  color: var(--ox);
+}
+
+.chipRed {
+  border-color: var(--red);
+  color: var(--red);
+}
+
+.multiplierChip {
+  font-size: 13px;
+  font-weight: 600;
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  color: var(--fg-muted);
+}
+
+.equation {
+  font-size: 17px;
+  font-weight: 500;
+  line-height: 1.5;
+  color: var(--fg);
+}
+
+.tallyTable {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+  margin-top: var(--space-1);
+}
+
+.tallyTable th {
+  text-align: left;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--fg-muted);
+  padding: 4px 8px;
+  border-bottom: 1px solid var(--border);
+}
+
+.tallyTable td {
+  padding: 4px 8px;
+  border-bottom: 1px solid var(--border);
+  color: var(--fg);
+}
+
+.tallyElement {
+  font-weight: 600;
+}
+
+.tallyNumber {
+  font-variant-numeric: tabular-nums;
+}
+
+.matchCell {
+  text-align: right;
+}
+
+.matchBadge {
+  display: inline-block;
+  font-size: 13px;
+  font-weight: 600;
+  padding: 1px 6px;
+  border-radius: var(--radius-sm);
+  background: var(--success-soft);
+  color: var(--success);
+}
+
+.mismatchBadge {
+  display: inline-block;
+  font-size: 13px;
+  font-weight: 600;
+  padding: 1px 6px;
+  border-radius: var(--radius-sm);
+  background: var(--caution-soft);
+  color: var(--caution);
+}
+
+.overallRow {
+  background: var(--surface);
+  border-top: 1px solid var(--border);
+  padding-top: var(--space-3);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.overallLabel {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--fg-muted);
+}
+
+.overallEquation {
+  font-size: 16px;
+  font-weight: 500;
+  color: var(--fg);
+}
