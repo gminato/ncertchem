@@ -1,0 +1,489 @@
+/* Redox Equation Balancer: a full-width stage built around the equation hero. */
+
+.root {
+  width: 100%;
+  container-type: inline-size;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  font-family: var(--font-sans);
+  color: var(--fg);
+}
+
+/* Toolbar */
+.toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: var(--space-3) var(--space-5);
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+}
+
+.field:first-child {
+  flex: 1 1 280px;
+}
+
+.label {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--fg-muted);
+}
+
+.select {
+  appearance: none;
+  background: var(--surface-raised)
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' fill='none' stroke='%238C8A82' stroke-width='1.6'/%3E%3C/svg%3E")
+    no-repeat right 12px center;
+  color: var(--fg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 9px 34px 9px 12px;
+  font-size: 15px;
+  font-weight: 600;
+  min-width: 0;
+  width: 100%;
+  cursor: pointer;
+}
+
+.select:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/* Step rail */
+.rail {
+  list-style: none;
+  margin: 0;
+  padding: var(--space-2) 0;
+  display: flex;
+  align-items: flex-start;
+  overflow-x: auto;
+  gap: 0;
+}
+
+.railItem {
+  display: flex;
+  align-items: flex-start;
+  flex: 1 0 auto;
+  min-width: 0;
+}
+
+.railButton {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  background: none;
+  border: 0;
+  padding: 0 4px;
+  cursor: pointer;
+  color: var(--fg-muted);
+  font: inherit;
+  min-width: 78px;
+}
+
+.railButton:disabled {
+  cursor: not-allowed;
+  opacity: 0.45;
+}
+
+.railButton:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+  border-radius: 8px;
+}
+
+.railDot {
+  display: grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: var(--surface-raised);
+  border: 2px solid var(--border);
+  font-size: 13px;
+  font-weight: 800;
+  color: var(--fg-muted);
+  transition: background-color 0.35s ease, border-color 0.35s ease, color 0.35s ease, transform 0.35s ease;
+}
+
+.railLabel {
+  font-size: 12px;
+  font-weight: 600;
+  text-align: center;
+  line-height: 1.25;
+  white-space: nowrap;
+}
+
+.railCurrent .railDot {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: var(--accent-fg);
+  transform: scale(1.12);
+  box-shadow: 0 0 0 5px var(--accent-soft);
+}
+
+.railCurrent .railLabel {
+  color: var(--fg);
+  font-weight: 800;
+}
+
+.railDone .railDot {
+  background: var(--success-soft);
+  border-color: var(--success);
+  color: var(--success);
+}
+
+.railLine {
+  flex: 1 1 12px;
+  min-width: 12px;
+  height: 2px;
+  margin-top: 15px;
+  background: var(--border);
+  transition: background-color 0.35s ease;
+}
+
+.railItem:has(.railDone) .railLine {
+  background: var(--success);
+}
+
+/* Step heading */
+.stepHead {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.stepCount {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--fg);
+}
+
+.stepDesc {
+  font-size: 15px;
+  line-height: 1.5;
+  color: var(--fg-muted);
+  max-width: 78ch;
+}
+
+/* Stage: hero equation, with the try-it card beside it when there is one */
+.stage {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.hero {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-3);
+  padding: var(--space-6) var(--space-5);
+  border-radius: 18px;
+  border: 1px solid var(--border);
+  background:
+    radial-gradient(120% 90% at 50% 0%, var(--accent-soft), transparent 60%),
+    var(--surface);
+  min-height: 150px;
+  min-width: 0;
+}
+
+.hero :global(.katex) {
+  color: var(--fg);
+}
+
+.legend {
+  display: flex;
+  gap: var(--space-4);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.legendOx,
+.legendRed {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.legendOx {
+  color: var(--ox);
+}
+
+.legendRed {
+  color: var(--red);
+}
+
+.legendOx::before,
+.legendRed::before {
+  content: '';
+  width: 10px;
+  height: 10px;
+  border-radius: 3px;
+  background: currentColor;
+}
+
+.tryCard {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  padding: var(--space-4) var(--space-5);
+  border-radius: 18px;
+  border: 1px solid color-mix(in srgb, var(--accent) 35%, var(--border));
+  background: var(--surface);
+  box-shadow: 0 0 0 4px var(--accent-soft);
+}
+
+.tryHead {
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
+.tryPrompt {
+  font-size: 17px;
+  font-weight: 700;
+  line-height: 1.4;
+  color: var(--fg);
+}
+
+.tryFields {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+}
+
+.tryField {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  flex: 1 1 160px;
+  min-width: 0;
+}
+
+.tryFieldLabel {
+  font-size: 13px;
+  color: var(--fg-muted);
+}
+
+.tryInput {
+  width: 100%;
+  font: inherit;
+  font-size: 22px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  padding: 8px 12px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border);
+  background: var(--surface-raised);
+  color: var(--fg);
+}
+
+.tryInput:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 1px;
+}
+
+.tryInput:disabled {
+  opacity: 0.7;
+}
+
+.tryActions {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+}
+
+.tryTries {
+  font-size: 13px;
+  color: var(--fg-muted);
+}
+
+.feedbackWrong,
+.feedbackRight,
+.feedbackReveal {
+  margin: 0;
+  padding: 10px 12px;
+  border-radius: var(--radius-md);
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.feedbackWrong {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  background: var(--caution-soft);
+  color: var(--caution);
+  border: 1px solid color-mix(in srgb, var(--caution) 30%, transparent);
+}
+
+.feedbackRight {
+  background: var(--success-soft);
+  color: var(--success);
+  border: 1px solid color-mix(in srgb, var(--success) 30%, transparent);
+}
+
+.feedbackReveal {
+  background: var(--accent-soft);
+  color: var(--fg);
+  border: 1px solid color-mix(in srgb, var(--accent) 30%, transparent);
+}
+
+@container (min-width: 760px) {
+  .stageWithTry {
+    display: grid;
+    grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr);
+    align-items: stretch;
+  }
+}
+
+/* Half-reaction and oxidation-number cards: side by side on wide screens */
+.cards {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+@container (min-width: 760px) {
+  .cards {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    align-items: stretch;
+  }
+}
+
+.cards > * {
+  min-width: 0;
+}
+
+.oxCard {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 6px;
+  padding: 16px 18px;
+  border-radius: 16px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-top: 3px solid var(--border);
+}
+
+.oxCardOx {
+  border-top-color: var(--ox);
+}
+
+.oxCardRed {
+  border-top-color: var(--red);
+}
+
+.oxTag {
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.oxCardOx .oxTag {
+  color: var(--ox);
+}
+
+.oxCardRed .oxTag {
+  color: var(--red);
+}
+
+.oxSpecies {
+  font-size: 24px;
+  color: var(--fg);
+}
+
+.oxNums {
+  font-size: 22px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.oxNote {
+  font-size: 14px;
+  color: var(--fg-muted);
+}
+
+.oxNote strong {
+  color: var(--fg);
+}
+
+.lcm {
+  grid-column: 1 / -1;
+  margin: 0;
+  font-size: 15px;
+  text-align: center;
+  color: var(--fg-muted);
+}
+
+.lcm strong {
+  color: var(--fg);
+  font-size: 18px;
+}
+
+.quiet {
+  margin: 0;
+  font-size: 14px;
+  color: var(--fg-muted);
+  text-align: center;
+}
+
+/* Navigation */
+.navRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+  padding-top: var(--space-3);
+  border-top: 1px solid var(--border);
+}
+
+.navCount {
+  font-size: 13px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  color: var(--fg-muted);
+}
+
+.navHint {
+  font-size: 13px;
+  color: var(--caution);
+}
+
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .railDot,
+  .railLine {
+    transition: none;
+  }
+}
