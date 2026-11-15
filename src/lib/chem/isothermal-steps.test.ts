@@ -1,11 +1,11 @@
 import { describe, expect, it } from 'vitest'
-import { BAR_PER_ATM, reversibleIsothermalWork } from './pv-work'
+import { reversibleIsothermalWork } from './pv-work'
 import {
   externalPressureAt,
   gasPressureBar,
   nRTBar,
   processFor,
-  pvPathAtm,
+  pvPath,
   stepPressuresBar,
   stepVolumes,
   totalWork,
@@ -150,7 +150,7 @@ describe('progress through a process', () => {
 })
 
 describe('the PV path', () => {
-  function trapezoidWorkAtm(points: Array<{ v: number; p: number }>): number {
+  function trapezoidWorkBar(points: Array<{ v: number; p: number }>): number {
     let integral = 0
     for (let i = 0; i < points.length - 1; i++) {
       integral += ((points[i + 1].v - points[i].v) * (points[i].p + points[i + 1].p)) / 2
@@ -158,25 +158,25 @@ describe('the PV path', () => {
     return -integral
   }
 
-  it('encloses the same work as the N-step sum, in atm', () => {
+  it('encloses the same work as the N-step sum, in L bar', () => {
     for (const steps of STEP_COUNTS) {
       for (const direction of [EXPANSION, COMPRESSION]) {
-        const path = pvPathAtm(direction, steps, 1)
-        const expectedAtm = totalWork(direction, steps).litreBar / BAR_PER_ATM
-        expect(trapezoidWorkAtm(path)).toBeCloseTo(expectedAtm, 9)
+        const path = pvPath(direction, steps, 1)
+        const expected = totalWork(direction, steps).litreBar
+        expect(trapezoidWorkBar(path)).toBeCloseTo(expected, 9)
       }
     }
   })
 
   it('encloses the partial work at an intermediate progress', () => {
     const s = 0.4
-    const path = pvPathAtm(EXPANSION, 4, s)
-    expect(trapezoidWorkAtm(path)).toBeCloseTo(workSoFar(EXPANSION, 4, s).litreBar / BAR_PER_ATM, 9)
+    const path = pvPath(EXPANSION, 4, s)
+    expect(trapezoidWorkBar(path)).toBeCloseTo(workSoFar(EXPANSION, 4, s).litreBar, 9)
   })
 
   it('starts on the isotherm at the start volume', () => {
-    const path = pvPathAtm(EXPANSION, 2, 0)
+    const path = pvPath(EXPANSION, 2, 0)
     expect(path[0].v).toBe(6)
-    expect(path[0].p).toBeCloseTo(24.942 / 6 / BAR_PER_ATM, 10)
+    expect(path[0].p).toBeCloseTo(24.942 / 6, 10)
   })
 })

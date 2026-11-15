@@ -7,15 +7,13 @@
  *
  * The functions here describe a process as a function of its progress s (0 to 1). They feed the
  * pv-work-lab Simulation and the Scrolly that compares one step, many steps and the reversible
- * limit. All work values are in L bar, from pv-work.ts, and the PV path is in atm, the unit on
- * PVDiagram's axes.
+ * limit. Pressures, work and nRT are all in bar and L bar, so the PV path needs no conversion.
  *
  * Sign convention (IUPAC, as Section 5.1.4): w is positive when work is done on the gas. An
  * expansion therefore has negative w, and a compression positive w.
  */
 
 import {
-  BAR_PER_ATM,
   R_LITRE_BAR_PER_MOL_K,
   reversibleIsothermalWork,
   steppedIsothermalWork,
@@ -156,11 +154,11 @@ export function workSoFar(process: IsothermalProcess, steps: StepCount, s: numbe
 }
 
 /**
- * The p–V path at progress s, in atm and L, as corner points for PVDiagram. N steps draw the
+ * The p–V path at progress s, in bar and L, as corner points for PVDiagram (pressureUnit 'bar'). N steps draw the
  * staircase: a drop (or rise) at each step boundary, then a horizontal run at the step's external
  * pressure. The reversible limit draws the isotherm. The shaded area under the path is the work.
  */
-export function pvPathAtm(process: IsothermalProcess, steps: StepCount, s: number): Array<{ v: number; p: number }> {
+export function pvPath(process: IsothermalProcess, steps: StepCount, s: number): Array<{ v: number; p: number }> {
   const progress = clampProgress(s)
   const nRT = nRTBar(process)
   if (steps === 'reversible') {
@@ -168,7 +166,7 @@ export function pvPathAtm(process: IsothermalProcess, steps: StepCount, s: numbe
     const samples = 48
     return Array.from({ length: samples + 1 }, (_, i) => {
       const v = process.startL + ((end - process.startL) * i) / samples
-      return { v, p: nRT / v / BAR_PER_ATM }
+      return { v, p: nRT / v }
     })
   }
   const volumes = stepVolumes(process, steps)
@@ -176,14 +174,14 @@ export function pvPathAtm(process: IsothermalProcess, steps: StepCount, s: numbe
   const x = progress * steps
   const full = Math.min(steps, Math.floor(x))
   const t = full < steps ? x - full : 0
-  const pts = [{ v: volumes[0], p: gasPressureBar(process, volumes[0]) / BAR_PER_ATM }]
+  const pts = [{ v: volumes[0], p: gasPressureBar(process, volumes[0]) }]
   for (let j = 0; j < full; j++) {
-    pts.push({ v: volumes[j], p: pressures[j] / BAR_PER_ATM })
-    pts.push({ v: volumes[j + 1], p: pressures[j] / BAR_PER_ATM })
+    pts.push({ v: volumes[j], p: pressures[j] })
+    pts.push({ v: volumes[j + 1], p: pressures[j] })
   }
   if (full < steps) {
-    pts.push({ v: volumes[full], p: pressures[full] / BAR_PER_ATM })
-    pts.push({ v: volumes[full] + t * (volumes[full + 1] - volumes[full]), p: pressures[full] / BAR_PER_ATM })
+    pts.push({ v: volumes[full], p: pressures[full] })
+    pts.push({ v: volumes[full] + t * (volumes[full + 1] - volumes[full]), p: pressures[full] })
   }
   return pts
 }

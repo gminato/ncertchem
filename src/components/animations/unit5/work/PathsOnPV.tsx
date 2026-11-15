@@ -3,8 +3,7 @@
 import { PVDiagram } from '@/components/thermo'
 import { Label, VocabDefs } from '@/components/vocab'
 import { useReveal } from '@/components/animations/unit4/vbt/useStepTween'
-import { BAR_PER_ATM } from '@/lib/chem/pv-work'
-import { nRTBar, processFor, pvPathAtm } from '@/lib/chem/isothermal-steps'
+import { nRTBar, processFor, pvPath } from '@/lib/chem/isothermal-steps'
 import { Symbolised } from './symbols'
 import { PATH_STEP_COUNT, pathStep, percentOfReversible, signedJoule, signedLitreBar } from './work-steps'
 
@@ -23,8 +22,8 @@ export function PathsOnPV({ step, reducedMotion }: PathsOnPVProps) {
   const current = pathStep(index)
   const expansion = processFor('expansion')
   const drawn = useReveal(index, reducedMotion)
-  const points = pvPathAtm(expansion, current.steps, 1)
-  const nRTAtm = nRTBar(expansion) / BAR_PER_ATM
+  const points = pvPath(expansion, current.steps, 1)
+  const nRT = nRTBar(expansion)
 
   return (
     <svg
@@ -39,7 +38,8 @@ export function PathsOnPV({ step, reducedMotion }: PathsOnPVProps) {
         <PVDiagram
           series={[{ id: 'path', points, style: 'straight', tone: 'accent', label: current.label }]}
           shade="path"
-          nRT={nRTAtm}
+          nRT={nRT}
+          pressureUnit="bar"
           progress={drawn}
           vMax={14}
           pMax={5.5}

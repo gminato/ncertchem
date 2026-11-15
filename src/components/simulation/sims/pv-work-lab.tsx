@@ -8,13 +8,14 @@ import { SimulationControls } from '@/components/simulation/Simulation'
 import { useIsActive } from '@/components/simulation/useIsActive'
 import type { SimulationProps } from '@/components/simulation/registry'
 import { CYLINDER_FULL_L, signedJoule, signedLitreBar } from '@/components/animations/unit5/work/work-steps'
+import { WeightBlock, type CylinderGeometry } from '@/components/animations/unit5/work/cylinder'
 import { Symbolised } from '@/components/animations/unit5/work/symbols'
-import { BAR_PER_ATM, workFromLitreBar, type Work } from '@/lib/chem/pv-work'
+import { workFromLitreBar, type Work } from '@/lib/chem/pv-work'
 import {
   externalPressureAt,
   nRTBar,
   processFor,
-  pvPathAtm,
+  pvPath,
   totalWork,
   volumeAt,
   workFraction,
@@ -30,7 +31,7 @@ import styles from './pv-work-lab.module.css'
 
 const VIEW_WIDTH = 840
 const VIEW_HEIGHT = 400
-const CYL = { x: 190, base: 336, width: 130, height: 250 }
+const CYL: CylinderGeometry = { x: 190, base: 340, width: 130, height: 280, fullL: CYLINDER_FULL_L }
 /** The p–V diagram's group: PVDiagram is drawn in its own 380 × 262 units, scaled to fit. */
 const PV = { x: 420, y: 36, scale: 1.08 }
 /** Plot box of PVDiagram in its own units, used for the free-expansion end markers. */
@@ -161,12 +162,9 @@ export function PVWorkLab({ reducedMotion }: SimulationProps) {
   const soFar = free ? workFromLitreBar(0) : workSoFar(process, steps, s)
   const fraction = free ? 0 : workFraction(process, steps)
   const pExtBar = free ? 0 : externalPressureAt(process, steps, s)
-  const pExtAtm = pExtBar / BAR_PER_ATM
-  const plates = Math.round(pExtAtm)
   const volume = free ? (s > 0 ? process.endL : process.startL) : volumeAt(process, steps, s)
   const nRT = nRTBar(process)
-  const nRTAtm = nRT / BAR_PER_ATM
-  const pathPoints = free ? [] : pvPathAtm(process, steps, s)
+  const pathPoints = free ? [] : pvPath(process, steps, s)
 
   const fractionText = (() => {
     if (free) return 'No work: the gas meets no pressure'
@@ -196,11 +194,12 @@ export function PVWorkLab({ reducedMotion }: SimulationProps) {
           y={CYL.base}
           width={CYL.width}
           height={CYL.height}
-          volume={volume / CYLINDER_FULL_L}
-          externalPressure={plates}
+          volume={volume / CYL.fullL}
+          externalPressure={0}
           particles={18}
           seed={9}
         />
+        {!free && <WeightBlock geo={CYL} volumeL={volume} pBar={pExtBar} />}
         <Label x={CYL.x} y={CYL.base + 24} fontSize={16} fill="var(--fg)">
           <Symbolised text={`V = ${volume.toFixed(2)} L`} />
         </Label>
@@ -214,7 +213,8 @@ export function PVWorkLab({ reducedMotion }: SimulationProps) {
                 : [{ id: 'path', points: pathPoints, style: 'straight', tone: 'accent', label: stepsWord(steps) }]
             }
             shade="path"
-            nRT={nRTAtm}
+            nRT={nRT}
+            pressureUnit="bar"
             vMax={V_MAX}
             pMax={P_MAX}
             vTicks={[2, 4, 6, 8, 10, 12, 14]}
@@ -223,8 +223,8 @@ export function PVWorkLab({ reducedMotion }: SimulationProps) {
           />
           {free && (
             <g data-testid="free-markers">
-              <circle cx={pvX(process.startL)} cy={pvY(nRT / process.startL / BAR_PER_ATM)} r={5} style={{ fill: 'var(--fg)' }} />
-              <circle cx={pvX(process.endL)} cy={pvY(nRT / process.endL / BAR_PER_ATM)} r={5} style={{ fill: 'var(--fg)' }} />
+              <circle cx={pvX(process.startL)} cy={pvY(nRT / process.startL)} r={5} style={{ fill: 'var(--fg)' }} />
+              <circle cx={pvX(process.endL)} cy={pvY(nRT / process.endL)} r={5} style={{ fill: 'var(--fg)' }} />
             </g>
           )}
         </g>
@@ -234,7 +234,7 @@ export function PVWorkLab({ reducedMotion }: SimulationProps) {
             text={
               free
                 ? 'Free expansion: the gas fills the vacuum, and no weight is lifted.'
-                : `p_ex = ${pExtAtm.toFixed(2)} atm now (weights drawn to whole atm)`
+                : `p_ex = ${pExtBar.toFixed(2)} bar now (weights drawn in proportion)`
             }
           />
         </Label>
