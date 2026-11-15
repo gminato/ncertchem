@@ -1,0 +1,79 @@
+---
+class: 11
+unit: 6
+section: "6.7"
+order: 7
+title: "Relationship between Equilibrium Constant K, Reaction Quotient Q and Gibbs Energy G"
+slug: "6-7-k-q-and-gibbs-energy"
+summary: "The Gibbs energy change of a mixture is ΔG° + RT ln Q, and at equilibrium that sum is zero, which gives ΔG° = −RT ln K. The constant, the quotient and the Gibbs energy are three views of one fact."
+ncert: "Class 11, Part I — Unit 6, Section 6.7"
+---
+
+<Hook>
+Open a sealed bottle of cold drink and it hisses. The gas inside was dissolved under pressure, and it escapes until the liquid and the gas above it settle into a balance. Is that change running downhill in energy, moving towards a balance of composition, or both? One number answers all three questions.
+</Hook>
+
+Section 6.6 showed that $K$ fixes where a reaction ends and $Q$ shows where a mixture is now. Unit 5 gave the Gibbs energy change as the test of spontaneity, from the balance of enthalpy and entropy at constant temperature and pressure (see [Section 5.7](/class-11/unit-5/5-7-gibbs-energy-and-equilibrium)). Both views describe the same reaction, and this Section joins them.
+
+The Gibbs energy change of a reaction depends on how far it has gone. Its value under standard conditions is $\Delta G^\circ$, and for a mixture with reaction quotient $Q$ it is
+
+$$
+\Delta G = \Delta G^\circ + RT \ln Q
+$$
+
+Here $R = 8.314\ \text{J K}^{-1}\,\text{mol}^{-1}$, and the $RT$ term must be converted from joules to kilojoules before adding it to $\Delta G^\circ$ in kJ mol⁻¹. When $Q = 1$, the logarithm is zero and $\Delta G = \Delta G^\circ$, which is why the standard value is a reference point and not a fact about any particular mixture.
+
+The sign of $\Delta G$ tells the direction, just as $Q$ compared with $K$ did in Section 6.6:
+
+- $\Delta G < 0$: the reaction proceeds forward.
+- $\Delta G > 0$: the reverse reaction proceeds.
+- $\Delta G = 0$: the reaction has reached equilibrium.
+
+At equilibrium $Q = K$ and $\Delta G = 0$, so the equation becomes
+
+$$
+0 = \Delta G^\circ + RT \ln K \quad \Longrightarrow \quad \Delta G^\circ = -RT \ln K
+$$
+
+or, equivalently, $K = e^{-\Delta G^\circ / RT}$. Each $K$ fixes one value of $\Delta G^\circ$ at a given temperature, and the reverse is also true.
+
+The scrolly uses a simple one-step model, $\ce{A} \rightleftharpoons \ce{B}$, with one mole of A at the start. Its standard value is $\Delta G^\circ = -5.00$ kJ mol⁻¹ at 298 K, which gives $K = 7.52$. The curve is the Gibbs energy of the mixture against the extent $\xi$, the fraction of A that has become B. Its slope is $\Delta G$ at each point, so the marker rolls downhill and stops at the lowest point, where $\Delta G = 0$.
+
+<Scrolly animation="qk-gibbs">
+<Step>
+Take an extent of $\xi = 0.20$, where a fifth of A has turned into B. Then $Q = 0.25$, and $\Delta G = -5.00 + 2.478 \times \ln 0.25 = -8.43$ kJ mol⁻¹. The slope is negative, so the marker is pushed to the right, which is the forward direction.
+</Step>
+<Step>
+At $\xi = 0.50$ the mixture holds equal amounts of A and B, so $Q = 1$ and $\ln Q = 0$. The Gibbs energy change is then just the standard value, $\Delta G = \Delta G^\circ = -5.00$ kJ mol⁻¹. The standard value is the change for a mixture in which every component is at its standard state, not the change of any mixture you might happen to have.
+</Step>
+<Step>
+The marker reaches the lowest point at $\xi = 0.883$, where $Q = 7.52 = K$. Here $\Delta G = 0$, the curve is flat and the marker stops. The minimum of the curve is the equilibrium composition. Nothing is left to drive the reaction, which is the same as saying the Gibbs energy is at its lowest point.
+</Step>
+<Step>
+Push the marker past equilibrium, to $\xi = 0.97$. Now $Q = 32.3$, which is larger than $K$, and $\Delta G = -5.00 + 2.478 \times \ln 32.3 = +3.61$ kJ mol⁻¹. The slope is positive and the marker rolls back to the left, so the reverse reaction runs until the minimum is reached again.
+</Step>
+</Scrolly>
+
+<Check n={1} numeric answer={-5.70} tolerance={0.02} unit="kJ mol⁻¹" explanation="ΔG° = −RT ln K = −(8.314 J K⁻¹ mol⁻¹)(298 K)(ln 10) = −5 705 J mol⁻¹, which is −5.70 kJ mol⁻¹. A K of 10 is a product-favoured reaction at 298 K, so ΔG° is negative.">
+A reaction has $K = 10$ at 298 K. What is its standard Gibbs energy change, $\Delta G^\circ$, in kJ mol⁻¹, to two decimal places?
+</Check>
+
+## Working the other way
+
+The relation runs in both directions, so a Gibbs energy value gives a constant. Take a reaction with $\Delta G^\circ = +5.00$ kJ mol⁻¹ at 298 K. Then $K = e^{-5000/(8.314 \times 298)} = 0.133$. A positive $\Delta G^\circ$ means K is below one: the reaction is non-spontaneous under standard conditions, and only a small amount of product forms at equilibrium.
+
+The ICE solver below reports ΔG° for whatever K you enter at a temperature you choose. Enter the equilibrium constant of any preset, and the Gibbs panel shows the matching ΔG°.
+
+<Simulation name="ice-solver" title="Equilibrium constant and Gibbs energy at a chosen temperature" />
+
+<Check n={2} options={["K is greater than 1, and the products are favoured", "K is less than 1, and the reactants are favoured", "K is exactly 1, and nothing changes"]} answer={1} explanation="A positive ΔG° gives ln K < 0, so K < 1. The reactants are favoured at equilibrium, and only a small amount of product forms. The sign of ΔG° alone fixes the side that K favours.">
+A reaction has $\Delta G^\circ = +5.00$ kJ mol⁻¹ at 298 K. What can you say about K?
+</Check>
+
+<KeyIdeas>
+- The Gibbs energy change of a mixture is $\Delta G = \Delta G^\circ + RT \ln Q$, with $\Delta G^\circ$ in kJ mol⁻¹ and $RT$ converted to kJ.
+- $\Delta G < 0$ means the forward reaction proceeds, $\Delta G > 0$ means the reverse does, and $\Delta G = 0$ means equilibrium.
+- At equilibrium $\Delta G^\circ = -RT \ln K$, so K and $\Delta G^\circ$ fix one another at a given temperature.
+- $\Delta G^\circ$ is the Gibbs energy change when $Q = 1$, the standard reference point, and it is not the change of an arbitrary mixture.
+- A negative $\Delta G$ shows that a process can go, but says nothing about how fast it goes.
+</KeyIdeas>
