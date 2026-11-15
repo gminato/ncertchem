@@ -32,6 +32,7 @@ import { KpKcConverter, HeterogeneousConverter } from './sims/kp-kc-converter'
 import { IceSolver } from './sims/ice-solver'
 import { SealedContainerLab } from './sims/sealed-container-lab'
 import { ApproachToEquilibrium } from './sims/approach-to-equilibrium'
+import { BufferDesigner } from './sims/buffer-designer'
 
 export interface SimulationProps {
   /** True when the Learner has asked the OS for reduced motion. Skip tweens and loops when set. */
@@ -78,4 +79,5 @@ export const simulations: Record<string, ComponentType<SimulationProps>> = {
   'ice-solver': IceSolver,
   'sealed-container-lab': SealedContainerLab,
   'approach-to-equilibrium': ApproachToEquilibrium,
+  'buffer-designer': BufferDesigner,
 }

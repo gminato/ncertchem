@@ -90,6 +90,7 @@ import { GibbsCurve } from './unit6/qk/GibbsCurve'
 import { PhysicalEquilibria } from './unit6/physical/PhysicalEquilibria'
 import { DynamicEquilibrium } from './unit6/dynamic/DynamicEquilibrium'
 import { MassAction } from './unit6/massaction/MassAction'
+import { BufferAction } from './unit6/buffer/BufferAction'
 
 /**
  * Animations available to a Scrolly Animation, keyed by the `animation` prop.
@@ -190,6 +191,7 @@ export const animations = {
   'physical-equilibria': PhysicalEquilibria,
   'unit6-dynamic-equilibrium': DynamicEquilibrium,
   'unit6-mass-action': MassAction,
+  'buffer-action': BufferAction,
 } as const
 
 export type AnimationName = keyof typeof animations
