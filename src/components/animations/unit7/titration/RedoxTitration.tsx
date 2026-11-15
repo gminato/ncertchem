@@ -8,6 +8,7 @@ import {
   titrationStep,
   SCROLLY_EQUIVALENCE_VOLUME_ML,
   SCROLLY_TITRATION_CONFIG,
+  SCROLLY_INITIAL_FE_MMOL,
 } from './titration-steps'
 
 export interface RedoxTitrationProps {
@@ -98,25 +99,13 @@ export function RedoxTitration({ step, reducedMotion }: RedoxTitrationProps) {
         />
 
         {/* Header banner */}
-        <rect x={1} y={1} width={210} height={38} rx={7} fill="var(--surface)" />
-        <line x1={0} y1={39} x2={212} y2={39} stroke="var(--border)" strokeWidth={1} />
+        <rect x={1} y={1} width={210} height={42} rx={7} fill="var(--surface)" />
+        <line x1={0} y1={43} x2={212} y2={43} stroke="var(--border)" strokeWidth={1} />
         <text
           x={14}
-          y={18}
-          fontSize={11}
+          y={28}
+          fontSize={16}
           fontWeight={700}
-          letterSpacing="0.06em"
-          fontFamily="var(--font-sans)"
-          fill="var(--fg-muted)"
-          style={{ textTransform: 'uppercase', userSelect: 'none' }}
-        >
-          REDOX TITRATION HUD
-        </text>
-        <text
-          x={14}
-          y={32}
-          fontSize={13}
-          fontWeight={600}
           fontFamily="var(--font-sans)"
           fill="var(--fg)"
           style={{ userSelect: 'none' }}
@@ -124,133 +113,112 @@ export function RedoxTitration({ step, reducedMotion }: RedoxTitrationProps) {
           {target.stageLabel}
         </text>
 
-        {/* Section A: Delivered Volume & Progress */}
-        <g transform="translate(14, 52)">
+        {/* Section 1: Titrant Added */}
+        <g transform="translate(14, 58)">
           <text
             x={0}
-            y={12}
-            fontSize={12}
+            y={15}
+            fontSize={15}
             fontWeight={600}
             fontFamily="var(--font-sans)"
             fill="var(--fg-muted)"
             style={{ userSelect: 'none' }}
           >
-            Delivered KMnO₄ (<tspan className="sym">V</tspan>)
+            Titrant Added
           </text>
           <text
             x={0}
-            y={32}
-            fontSize={18}
+            y={45}
+            fontSize={24}
             fontWeight={700}
             fontFamily="var(--font-sans)"
             fill="var(--fg)"
             style={{ userSelect: 'none' }}
           >
-            {vol.toFixed(1)} <tspan fontSize={14} fontWeight={500} fill="var(--fg-muted)">/ 20.0 mL</tspan>
+            {vol.toFixed(1)} <tspan fontSize={16} fontWeight={500} fill="var(--fg-muted)">mL</tspan>
           </text>
 
           {/* Progress bar */}
-          <rect x={0} y={42} width={184} height={8} rx={4} fill="var(--border)" />
+          <rect x={0} y={58} width={184} height={8} rx={4} fill="var(--border)" />
           <rect
             x={0}
-            y={42}
+            y={58}
             width={Math.max(4, (progressPct / 100) * 184)}
             height={8}
             rx={4}
             fill={target.endPoint ? 'var(--sol-pink)' : 'var(--sol-mno4)'}
           />
           <text
-            x={184}
-            y={62}
-            textAnchor="end"
-            fontSize={12}
-            fontWeight={600}
+            x={0}
+            y={84}
+            fontSize={15}
+            fontWeight={500}
             fontFamily="var(--font-sans)"
             fill="var(--fg-muted)"
             style={{ userSelect: 'none' }}
           >
-            {progressPct.toFixed(0)}% Equivalence
+            {progressPct.toFixed(0)}% of 20.0 mL
           </text>
         </g>
 
-        {/* Section B: Analyte & Titrant Ledger */}
-        <g transform="translate(14, 134)">
+        {/* Section 2: Fe²⁺ Remaining */}
+        <g transform="translate(14, 168)">
           <line x1={-14} y1={0} x2={198} y2={0} stroke="var(--border)" strokeWidth={1} strokeDasharray="3 3" />
           <text
             x={0}
-            y={16}
-            fontSize={12}
+            y={22}
+            fontSize={15}
             fontWeight={600}
             fontFamily="var(--font-sans)"
             fill="var(--fg-muted)"
             style={{ userSelect: 'none' }}
           >
-            Unreacted Fe²⁺ in flask
+            Fe²⁺ Remaining
           </text>
           <text
             x={0}
-            y={34}
-            fontSize={16}
+            y={52}
+            fontSize={24}
             fontWeight={700}
             fontFamily="var(--font-sans)"
             fill="var(--fg)"
             style={{ userSelect: 'none' }}
           >
-            {feRemaining.toFixed(2)} <tspan fontSize={13} fontWeight={500} fill="var(--fg-muted)">mmol</tspan>
+            {feRemaining.toFixed(2)} <tspan fontSize={16} fontWeight={500} fill="var(--fg-muted)">mmol</tspan>
           </text>
-
           <text
             x={0}
-            y={58}
-            fontSize={12}
-            fontWeight={600}
+            y={78}
+            fontSize={15}
+            fontWeight={500}
             fontFamily="var(--font-sans)"
             fill="var(--fg-muted)"
             style={{ userSelect: 'none' }}
           >
-            Delivered MnO₄⁻
-          </text>
-          <text
-            x={0}
-            y={76}
-            fontSize={16}
-            fontWeight={700}
-            fontFamily="var(--font-sans)"
-            fill="var(--fg)"
-            style={{ userSelect: 'none' }}
-          >
-            {mno4Delivered.toFixed(3)} <tspan fontSize={13} fontWeight={500} fill="var(--fg-muted)">mmol</tspan>
+            {target.endPoint
+              ? '0.00 mmol unreacted'
+              : `${((feRemaining / SCROLLY_INITIAL_FE_MMOL) * 100).toFixed(0)}% unreacted`}
           </text>
         </g>
 
-        {/* Section C: Indicator Status Callout */}
-        <g transform="translate(14, 234)">
-          <rect
-            x={0}
-            y={0}
-            width={184}
-            height={68}
-            rx={6}
-            fill={target.endPoint ? 'rgba(236, 72, 153, 0.12)' : 'var(--surface)'}
-            stroke={target.endPoint ? 'var(--sol-pink)' : 'var(--border)'}
-            strokeWidth={1.2}
-          />
+        {/* Section 3: Flask Colour / Indicator State */}
+        <g transform="translate(14, 272)">
+          <line x1={-14} y1={0} x2={198} y2={0} stroke="var(--border)" strokeWidth={1} strokeDasharray="3 3" />
           <text
-            x={10}
-            y={18}
-            fontSize={11}
-            fontWeight={700}
-            letterSpacing="0.04em"
+            x={0}
+            y={22}
+            fontSize={15}
+            fontWeight={600}
             fontFamily="var(--font-sans)"
             fill="var(--fg-muted)"
-            style={{ textTransform: 'uppercase', userSelect: 'none' }}
+            style={{ userSelect: 'none' }}
           >
-            INDICATOR: SELF (MnO₄⁻)
+            Flask Colour
           </text>
           <text
-            x={10}
-            y={37}
-            fontSize={14}
+            x={0}
+            y={52}
+            fontSize={22}
             fontWeight={700}
             fontFamily="var(--font-sans)"
             fill={target.endPoint ? 'var(--sol-pink)' : 'var(--fg)'}
@@ -258,71 +226,38 @@ export function RedoxTitration({ step, reducedMotion }: RedoxTitrationProps) {
           >
             {target.flaskAppearance}
           </text>
+          <rect
+            x={0}
+            y={66}
+            width={184}
+            height={66}
+            rx={6}
+            fill={target.endPoint ? 'rgba(236, 72, 153, 0.12)' : 'var(--surface)'}
+            stroke={target.endPoint ? 'var(--sol-pink)' : 'var(--border)'}
+            strokeWidth={1.2}
+          />
           <text
             x={10}
-            y={54}
-            fontSize={11}
+            y={90}
+            fontSize={15}
+            fontWeight={600}
+            fontFamily="var(--font-sans)"
+            fill={target.endPoint ? 'var(--sol-pink)' : 'var(--fg)'}
+            style={{ userSelect: 'none' }}
+          >
+            {target.endPoint ? 'End point reached' : 'Self-indicator MnO₄⁻'}
+          </text>
+          <text
+            x={10}
+            y={116}
+            fontSize={15}
+            fontWeight={500}
             fontFamily="var(--font-sans)"
             fill="var(--fg-muted)"
             style={{ userSelect: 'none' }}
           >
-            {target.endPoint ? 'Excess MnO₄⁻ ≥ 10⁻⁶ mol L⁻¹' : 'MnO₄⁻ instantly bleaches to Mn²⁺'}
+            {target.endPoint ? 'Excess MnO₄⁻ ≥ 10⁻⁶ M' : 'Bleaches instantly'}
           </text>
-        </g>
-
-        {/* Section D: Balanced Redox Stoichiometry */}
-        <g transform="translate(14, 320)">
-          <line x1={-14} y1={0} x2={198} y2={0} stroke="var(--border)" strokeWidth={1} strokeDasharray="3 3" />
-          <text
-            x={0}
-            y={16}
-            fontSize={11}
-            fontWeight={700}
-            letterSpacing="0.04em"
-            fontFamily="var(--font-sans)"
-            fill="var(--fg-muted)"
-            style={{ textTransform: 'uppercase', userSelect: 'none' }}
-          >
-            REDOX REACTION (1 : 5)
-          </text>
-          <text
-            x={0}
-            y={34}
-            fontSize={12}
-            fontFamily="var(--font-sans)"
-            fill="var(--fg)"
-            fontWeight={500}
-            style={{ userSelect: 'none' }}
-          >
-            MnO₄⁻ + 5Fe²⁺ + 8H⁺
-          </text>
-          <text
-            x={0}
-            y={50}
-            fontSize={12}
-            fontFamily="var(--font-sans)"
-            fill="var(--fg)"
-            fontWeight={500}
-            style={{ userSelect: 'none' }}
-          >
-            → Mn²⁺ + 5Fe³⁺ + 4H₂O
-          </text>
-          <g transform="translate(0, 62)">
-            <rect x={0} y={0} width={184} height={26} rx={4} fill="var(--surface)" />
-            <text
-              x={92}
-              y={14}
-              textAnchor="middle"
-              dominantBaseline="central"
-              fontSize={12}
-              fontWeight={600}
-              fontFamily="var(--font-sans)"
-              fill="var(--fg)"
-              style={{ userSelect: 'none' }}
-            >
-              1 mol MnO₄⁻ ≡ 5 mol Fe²⁺
-            </text>
-          </g>
         </g>
       </g>
     </svg>

@@ -78,28 +78,77 @@ for (const scheme of ['light', 'dark'] as const) {
       })
 
       // State B: Changed state 1 - Jump to End Point in Permanganate titration
-      await sim.getByRole('button', { name: 'Jump to End Point' }).click()
+      await sim.getByRole('button', { name: /Jump to End Point/ }).click()
       await page.waitForTimeout(500)
-      await expect(sim.getByText('Equivalence Reached')).toBeVisible()
+      await expect(sim.getByText('Equivalence Reached', { exact: true })).toBeVisible()
       await expect(sim.getByText('Stoichiometric Deduction of Unknown Concentration')).toBeVisible()
       await sim.screenshot({
         path: path.join(SCREEN_DIR, `u7-7-3-3-sim-endpoint-${scheme}.png`),
       })
 
-      // State C: Changed state 2 - Dichromate with diphenylamine
+      // State C: Dichromate with diphenylamine
       await sim.getByRole('radio', { name: 'Cr₂O₇²⁻ / Fe²⁺' }).click()
       await page.waitForTimeout(500)
-      await expect(sim.getByText('K₂Cr₂O₇ vs Fe²⁺ (Mohr salt)')).toBeVisible()
+      await expect(sim.getByText('K₂Cr₂O₇ vs Fe²⁺ (Mohr salt)', { exact: true })).toBeVisible()
+
+      // At 0 mL the flask is nearly colourless, never green
+      await expect(sim.getByText('Nearly colourless (faint Fe²⁺)', { exact: true })).toBeVisible()
+      await expect(sim.getByText('Green (Cr³⁺ accumulating)', { exact: true })).toHaveCount(0)
+
+      // Deliver 5.0 mL (mid-titration: 50% of 10.0 mL) -> green from Cr3+
+      await sim.getByRole('button', { name: '+5.0 mL' }).click()
+      await page.waitForTimeout(500)
+      await expect(sim.getByText('Green (Cr³⁺ accumulating)', { exact: true })).toBeVisible()
       await sim.screenshot({
-        path: path.join(SCREEN_DIR, `u7-7-3-3-sim-dichromate-${scheme}.png`),
+        path: path.join(SCREEN_DIR, `u7-7-3-3-dichromate-mid-${scheme}.png`),
       })
 
-      // State D: Changed state 3 - Iodometry with thiosulphate and starch
+      // Jump to End Point -> intense violet-blue (diphenylamine)
+      await sim.getByRole('button', { name: /Jump to End Point/ }).click()
+      await page.waitForTimeout(500)
+      await expect(sim.getByText('Equivalence Reached', { exact: true })).toBeVisible()
+      await expect(sim.getByText('Intense violet-blue', { exact: true })).toBeVisible()
+      await sim.screenshot({
+        path: path.join(SCREEN_DIR, `u7-7-3-3-dichromate-endpoint-${scheme}.png`),
+      })
+
+      // State D: Iodometry with thiosulphate and starch
       await sim.getByRole('radio', { name: 'Iodometry (Cu²⁺ / S₂O₃²⁻)' }).click()
       await page.waitForTimeout(500)
-      await expect(sim.getByText('Na₂S₂O₃ vs Cu²⁺ (with excess KI)')).toBeVisible()
+      await expect(sim.getByText('Na₂S₂O₃ vs Cu²⁺ (with excess KI)', { exact: true })).toBeVisible()
+
+      // At 0 mL: brown with I3- and Cu2I2 precipitate; starch is not yet added
+      await expect(sim.getByText('Brown (I₃⁻ with Cu₂I₂ precipitate)', { exact: true })).toBeVisible()
+      await expect(sim.getByRole('button', { name: 'Add Starch Indicator' })).toBeDisabled()
+
+      // 1. Before starch: deliver 15.0 mL -> fades to pale yellow (75% of 20 mL)
+      await sim.getByRole('button', { name: '+5.0 mL' }).click()
+      await page.waitForTimeout(200)
+      await sim.getByRole('button', { name: '+5.0 mL' }).click()
+      await page.waitForTimeout(200)
+      await sim.getByRole('button', { name: '+5.0 mL' }).click()
+      await page.waitForTimeout(500)
+      await expect(sim.getByText('Pale straw yellow (ready for starch)', { exact: true })).toBeVisible()
       await sim.screenshot({
-        path: path.join(SCREEN_DIR, `u7-7-3-3-sim-iodometry-${scheme}.png`),
+        path: path.join(SCREEN_DIR, `u7-7-3-3-iodometry-before-starch-${scheme}.png`),
+      })
+
+      // 2. With starch: click 'Add Starch Indicator' -> turns deep blue-black
+      await sim.getByRole('button', { name: 'Add Starch Indicator' }).click()
+      await page.waitForTimeout(500)
+      await expect(sim.getByText('Deep blue-black (starch–iodine)', { exact: true })).toBeVisible()
+      await sim.screenshot({
+        path: path.join(SCREEN_DIR, `u7-7-3-3-iodometry-with-starch-${scheme}.png`),
+      })
+
+      // 3. End point: Jump to End Point -> blue-black discharges to off-white Cu2I2 suspension
+      await sim.getByRole('button', { name: /Jump to End Point/ }).click()
+      await page.waitForTimeout(500)
+      await expect(sim.getByText('Equivalence Reached', { exact: true })).toBeVisible()
+      await expect(sim.getByText('Off-white Cu₂I₂ (blue discharged)', { exact: true })).toBeVisible()
+      await expect(sim.getByText('Stoichiometric Deduction of Unknown Concentration')).toBeVisible()
+      await sim.screenshot({
+        path: path.join(SCREEN_DIR, `u7-7-3-3-iodometry-endpoint-${scheme}.png`),
       })
 
       // Assert no console or page errors

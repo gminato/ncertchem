@@ -1,6 +1,8 @@
 'use client'
 
-import React, { useRef, useState, useId } from 'react'
+import React, { useRef, useState, useId, useMemo } from 'react'
+import katex from 'katex'
+import 'katex/contrib/mhchem'
 import { Button, Segmented, Slider } from '@/components/controls'
 import { SimulationControls } from '@/components/simulation/Simulation'
 import { useIsActive } from '@/components/simulation/useIsActive'
@@ -11,7 +13,22 @@ import {
   titrationState,
   type RedoxTitrationType,
 } from '@/lib/chem/redox-titration'
+import {
+  TITRATION_EQUATIONS_MHCHEM,
+  flaskAppearance,
+  formatMolesText,
+  progressToward,
+} from '@/lib/chem/redox-titration-display'
 import styles from './redox-titration-lab.module.css'
+
+/** One mhchem equation (pure mhchem, no outer \\ce{}) rendered with KaTeX. */
+function MhchemEquation({ equation }: { equation: string }) {
+  const html = useMemo(
+    () => katex.renderToString(`\\ce{${equation}}`, { throwOnError: false }),
+    [equation],
+  )
+  return <span className={styles.chemEquation} dangerouslySetInnerHTML={{ __html: html }} />
+}
 
 interface TitrationPreset {
   titrantMolarity: number
@@ -80,6 +97,7 @@ export function RedoxTitrationLab({ reducedMotion }: SimulationProps) {
   const [titrantMolarity, setTitrantMolarity] = useState(0.02)
   const [addedMl, setAddedMl] = useState(0.0)
   const [dropping, setDropping] = useState(false)
+  const [starchAdded, setStarchAdded] = useState(false)
 
   const preset = PRESETS[type]
   const stoichiometry = REDOX_TITRATIONS[type]
@@ -92,18 +110,20 @@ export function RedoxTitrationLab({ reducedMotion }: SimulationProps) {
     type
   )
 
-  // Current titration state
+  // Current titration state (volumes, moles, equivalence) from the foundation lib
   const state = titrationState(addedMl, {
     titrationType: type,
     titrantMolarity,
     analyteMolarity,
     analyteVolumeMl,
   })
+  const isPastOrAt = state.isAtEquivalence || state.isPastEquivalence
+  const appearance = flaskAppearance({ type, addedMl, eqVolMl: eqVol, starchAdded })
+  const progress = progressToward(addedMl, eqVol)
 
-  // Flask solution color based on titration type and stage
+  // Flask solution colour: the stage decides the hue, the fraction decides the strength
   let flaskColor = 'var(--glass-fill)'
   let flaskOpacity = 0.45
-  const isPastOrAt = state.isAtEquivalence || state.isPastEquivalence
 
   if (type === 'permanganate-fe' || type === 'permanganate-oxalate') {
     if (isPastOrAt) {
@@ -115,21 +135,46 @@ export function RedoxTitrationLab({ reducedMotion }: SimulationProps) {
     }
   } else if (type === 'dichromate-fe') {
     if (isPastOrAt) {
-      flaskColor = '#2563EB' // intense diphenylamine blue
-      flaskOpacity = 0.9
+      // Diphenylamine after equivalence: intense violet-blue
+      flaskColor = '#2563EB'
+      flaskOpacity = 0.92
     } else {
-      flaskColor = '#10B981' // Cr3+ green
-      flaskOpacity = 0.7
+      // Faint green from Fe2+ at 0 mL, deepening to green as Cr3+ accumulates
+      flaskColor = '#10B981'
+      flaskOpacity = 0.12 + 0.6 * progress
     }
   } else if (type === 'iodometric-cu-thiosulphate') {
     if (isPastOrAt) {
-      flaskColor = 'var(--surface-raised)' // discharge to milky/clear
-      flaskOpacity = 0.4
+      // Blue-black discharged: off-white Cu2I2 suspension
+      flaskColor = '#F8FAFC'
+      flaskOpacity = 0.75
+    } else if (starchAdded) {
+      // Starch-iodine complex: intense blue-black
+      flaskColor = '#0F172A'
+      flaskOpacity = 0.95
+    } else if (addedMl <= 0) {
+      // Excess KI: brown with I3- and an off-white Cu2I2 precipitate
+      flaskColor = '#92400E'
+      flaskOpacity = 0.88
+    } else if (progress >= 0.75) {
+      // Fading to pale straw yellow: time to add starch
+      flaskColor = '#FEF08A'
+      flaskOpacity = 0.6
     } else {
-      flaskColor = '#0F172A' // deep starch-iodine blue
-      flaskOpacity = 0.92
+      flaskColor = '#D97706'
+      flaskOpacity = 0.75
     }
   }
+
+  // Read-only summary for screen readers, with moles in scientific notation
+  const srSummary =
+    `Delivered ${addedMl.toFixed(2)} mL of ${preset.titrantName} out of ${eqVol.toFixed(2)} mL needed. ` +
+    `Flask: ${appearance}. ` +
+    (state.isBeforeEquivalence
+      ? `Analyte remaining: ${formatMolesText(state.remainingAnalyteMoles)}.`
+      : state.isAtEquivalence
+        ? 'At the equivalence point there is no excess titrant.'
+        : `Titrant in excess: ${formatMolesText(state.excessTitrantMoles)}.`)
 
   // Switch titration preset
   const handleTypeChange = (newType: RedoxTitrationType) => {
@@ -140,12 +185,14 @@ export function RedoxTitrationLab({ reducedMotion }: SimulationProps) {
     setAnalyteVolumeMl(p.analyteVolumeMl)
     setAddedMl(0.0)
     setDropping(false)
+    setStarchAdded(false)
   }
 
   // Add titrant increment
   const deliverTitrant = (deltaMl: number) => {
     setDropping(true)
-    setAddedMl((prev) => Math.min(25.0, Math.max(0, +(prev + deltaMl).toFixed(2))))
+    const next = Math.min(25.0, Math.max(0, +(addedMl + deltaMl).toFixed(2)))
+    setAddedMl(next)
     if (!reducedMotion) {
       setTimeout(() => setDropping(false), 300)
     } else {
@@ -157,6 +204,9 @@ export function RedoxTitrationLab({ reducedMotion }: SimulationProps) {
   const jumpToEquivalence = () => {
     setDropping(true)
     setAddedMl(+eqVol.toFixed(2))
+    if (type === 'iodometric-cu-thiosulphate') {
+      setStarchAdded(true)
+    }
     if (!reducedMotion) {
       setTimeout(() => setDropping(false), 300)
     } else {
@@ -168,6 +218,7 @@ export function RedoxTitrationLab({ reducedMotion }: SimulationProps) {
   const resetBurette = () => {
     setAddedMl(0.0)
     setDropping(false)
+    setStarchAdded(false)
   }
 
   // Step-by-step stoichiometric deduction values
@@ -274,11 +325,32 @@ export function RedoxTitrationLab({ reducedMotion }: SimulationProps) {
               >
                 Jump to End Point ({eqVol.toFixed(1)} mL)
               </Button>
+              {type === 'iodometric-cu-thiosulphate' && (
+                <Button
+                  variant={addedMl >= 0.75 * eqVol && !starchAdded ? 'primary' : 'secondary'}
+                  onClick={() => setStarchAdded(true)}
+                  disabled={starchAdded || addedMl < 0.75 * eqVol}
+                >
+                  {starchAdded ? '✓ Starch Indicator Added' : 'Add Starch Indicator'}
+                </Button>
+              )}
               <Button variant="secondary" onClick={resetBurette}>
                 Reset
               </Button>
             </div>
           </div>
+
+          {/* Iodometry contextual starch guidance note */}
+          {type === 'iodometric-cu-thiosulphate' && addedMl >= 0.75 * eqVol && !starchAdded && !isPastOrAt && (
+            <div className={styles.starchNotice}>
+              <strong>Indicator notice:</strong> Solution has faded to pale straw yellow. Click <strong>Add Starch Indicator</strong> now to form the deep blue-black polyiodide complex before titrating to the end point!
+            </div>
+          )}
+          {type === 'iodometric-cu-thiosulphate' && starchAdded && !isPastOrAt && (
+            <div className={styles.starchNoticeActive}>
+              <strong>Starch added:</strong> Deep blue-black complex formed. Deliver titrant drop by drop (+0.05 mL) until the blue colour completely discharges!
+            </div>
+          )}
         </div>
       </SimulationControls>
 
@@ -290,7 +362,7 @@ export function RedoxTitrationLab({ reducedMotion }: SimulationProps) {
             viewBox="-160 -230 320 480"
             className={styles.rigSvg}
             role="img"
-            aria-label={`Burette at ${addedMl.toFixed(2)} mL, flask solution colour: ${state.indicatorColor}`}
+            aria-label={`Burette at ${addedMl.toFixed(2)} mL, flask: ${appearance}`}
           >
             <defs>
               {/* Burette interior clip */}
@@ -350,7 +422,7 @@ export function RedoxTitrationLab({ reducedMotion }: SimulationProps) {
               White tile
             </text>
 
-            {/* Conical Flask */}
+            {/* Conical Flask Solution */}
             <g clipPath={`url(#flask-clip-${clipId})`}>
               <rect
                 x={-75}
@@ -369,6 +441,26 @@ export function RedoxTitrationLab({ reducedMotion }: SimulationProps) {
                 strokeWidth={2}
                 opacity={0.9}
               />
+              {/* For iodometric titration, render the insoluble off-white Cu2I2 precipitate */}
+              {type === 'iodometric-cu-thiosulphate' && (
+                <g>
+                  <ellipse cx={0} cy={204} rx={50} ry={5} fill="#F8FAFC" opacity={0.88} stroke="#CBD5E1" strokeWidth={0.8} />
+                  <text
+                    x={0}
+                    y={201}
+                    textAnchor="middle"
+                    fontSize={9}
+                    fontWeight={600}
+                    fontFamily="var(--font-sans)"
+                    fill="#475569"
+                    stroke="var(--surface-raised)"
+                    strokeWidth={3}
+                    paintOrder="stroke"
+                  >
+                    Cu₂I₂ (off-white ppt)
+                  </text>
+                </g>
+              )}
             </g>
             {/* Flask glass contour */}
             <path
@@ -520,8 +612,8 @@ export function RedoxTitrationLab({ reducedMotion }: SimulationProps) {
             </div>
             <div className={styles.metricBox}>
               <span className={styles.metricLabel}>Flask Colour</span>
-              <span className={styles.metricValue} style={{ fontSize: '15px' }}>
-                {state.indicatorColor}
+              <span className={styles.metricValue} style={{ fontSize: '14px', lineHeight: 1.25 }}>
+                {appearance}
               </span>
             </div>
           </div>
@@ -554,7 +646,9 @@ export function RedoxTitrationLab({ reducedMotion }: SimulationProps) {
                   <div className={styles.stepNum}>1</div>
                   <div className={styles.stepContent}>
                     <strong>Balanced Redox Reaction:</strong>
-                    <span>{stoichiometry.equation}</span>
+                    {TITRATION_EQUATIONS_MHCHEM[type].map((eq) => (
+                      <MhchemEquation key={eq} equation={eq} />
+                    ))}
                     <span>
                       Molar ratio: {stoichiometry.titrantPerAnalyteRatio === 1 ? '1 : 1' : `1 mol titrant ≡ ${(1 / stoichiometry.titrantPerAnalyteRatio).toFixed(1)} mol analyte`}
                     </span>
@@ -605,7 +699,7 @@ export function RedoxTitrationLab({ reducedMotion }: SimulationProps) {
 
       {/* Screen reader live region */}
       <p className="sr-only" aria-live="polite">
-        {state.description}
+        {srSummary}
       </p>
     </div>
   )
