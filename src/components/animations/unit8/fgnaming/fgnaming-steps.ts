@@ -200,7 +200,7 @@ export function functionalNamingSteps(): FgStep[] {
   const ringRow = (relation: RingRow['relation'], locants: string, subs: (RingGroupId | null)[], y: number): RingRow => ({
     relation,
     locants,
-    molecule: ringDrawing(subs, { x: 170, y, scale: 44 }),
+    molecule: ringDrawing(subs, { x: 218, y, scale: 44 }),
   })
 
   return [

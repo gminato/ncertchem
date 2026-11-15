@@ -116,7 +116,7 @@ function Rows({ rows }: { rows: RingRow[] }) {
             {`positions ${row.locants}`}
           </Label>
           <Drawing molecule={row.molecule} />
-          <Label x={300} y={row.molecule.y + 7} fontSize={20} fill="var(--fg)" fontWeight={600} textAnchor="start">
+          <Label x={338} y={row.molecule.y + 6} fontSize={17} fill="var(--fg)" fontWeight={600} textAnchor="start">
             {row.molecule.name}
           </Label>
         </g>
