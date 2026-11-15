@@ -90,9 +90,17 @@ test.describe('Unit navigation', () => {
   })
 
   test('a Unit with no Sections yet shows a calm empty state', async ({ page }) => {
-    await page.goto('/class-11/unit-5')
-    await expect(page.getByRole('heading', { level: 1 })).toHaveText('Thermodynamics')
+    await page.goto('/class-11/unit-6')
+    await expect(page.getByRole('heading', { level: 1 })).toHaveText('Equilibrium')
     await expect(page.getByText('The Sections of this Unit are being written.')).toBeVisible()
+  })
+
+  test('Unit 5 lists its seven Sections in order', async ({ page }) => {
+    await page.goto('/class-11/unit-5')
+    const links = page.locator('a[href^="/class-11/unit-5/"]')
+    await expect(links).toHaveCount(7)
+    await expect(links.first()).toHaveAttribute('href', /5-1-thermodynamic-terms$/)
+    await expect(links.last()).toHaveAttribute('href', /5-7-gibbs-energy-and-equilibrium$/)
   })
 
   test('Unit 4 lists its eight Sections in order', async ({ page }) => {
