@@ -97,6 +97,8 @@ import { LeChatelierStress } from './unit6/lechatelier/LeChatelierStress'
 import { SolubilityProduct } from './unit6/solubility/SolubilityProduct'
 import { PhLadder } from './unit6/ph/PhLadder'
 import { WeakAcid } from './unit6/weakacid/WeakAcid'
+import { CarbonShapes } from './unit8/shapes/CarbonShapes'
+import { VitalForce } from './unit8/intro/VitalForce'
 import { Chromatography } from './unit8/chromatography/Chromatography'
 import { IsomerFamily } from './unit8/isomers/IsomerFamily'
 import { ClassificationTree } from './unit8/classification/ClassificationTree'
@@ -211,6 +213,8 @@ export const animations = {
   'solubility-product': SolubilityProduct,
   'ph-scale': PhLadder,
   'weak-acid': WeakAcid,
+  'vital-force': VitalForce,
+  'carbon-shapes': CarbonShapes,
   chromatography: Chromatography,
   'isomer-family': IsomerFamily,
   'classification-tree': ClassificationTree,

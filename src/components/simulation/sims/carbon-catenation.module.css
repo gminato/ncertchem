@@ -1,0 +1,27 @@
+.sim {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  font-family: var(--font-sans);
+  color: var(--fg);
+}
+
+.stage {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.readout {
+  margin: 0;
+  font-size: 1rem;
+  line-height: 1.5;
+  min-height: 3em;
+}
+
+.note {
+  margin: 0;
+  font-size: 0.875rem;
+  color: var(--fg-subtle);
+}
