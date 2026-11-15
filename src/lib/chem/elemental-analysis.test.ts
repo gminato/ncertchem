@@ -38,9 +38,14 @@ describe('sample presets', () => {
   })
 
   it('a structure the lib cannot name keeps its formula and has no name', () => {
-    const s = sampleFromSmiles('pyridine', 'C1=CC=NC=C1')
+    // Methanethiol: sulphur compounds have no naming rules yet.
+    const s = sampleFromSmiles('methanethiol', 'CS')
     expect(s.name).toBeUndefined()
-    expect(s.formula).toBe('C5H5N')
+    expect(s.formula).toBe('CH4S')
+  })
+
+  it('pyridine takes its retained name', () => {
+    expect(sampleFromSmiles('pyridine', 'C1=CC=NC=C1').name).toBe('pyridine')
   })
 })
 
