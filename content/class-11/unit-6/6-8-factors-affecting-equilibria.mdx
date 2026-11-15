@@ -1,0 +1,125 @@
+---
+class: 11
+unit: 6
+section: "6.8"
+order: 8
+title: "Factors Affecting Equilibria"
+slug: "6-8-factors-affecting-equilibria"
+summary: "A system at equilibrium moves to partly oppose a stress. Only temperature changes K; concentration and pressure move the mixture, while a catalyst and an inert gas at constant volume leave it where it is."
+ncert: "Class 11, Part I — Unit 6, Section 6.8"
+---
+
+<Hook>
+Ammonia for fertiliser is made at about 500 °C, although the reaction gives a larger yield of ammonia when it is colder. A plant that runs hotter is not being careless. What does it give up, and what does it buy with the heat?
+</Hook>
+
+## Le Chatelier's principle
+
+A mixture at equilibrium is two reactions running at equal rates. Disturb one of the conditions and the two rates no longer match, so the mixture moves until they match again. Le Chatelier's principle says which way it moves: the change is opposed. Add a reactant and some of it is used up. Squeeze a gas and the mixture shifts towards the side with fewer gas molecules. The opposition is only partial. The new equilibrium sits between the old state and the fully disturbed one, and the stress is never completely undone.
+
+The Haber mixture, N₂ + 3H₂ ⇌ 2NH₃, is the example this Section follows. NCERT's Kp table gives 3.6 × 10⁻² at 500 K for this reaction. Converting it to concentrations with $K_c = K_p (RT)^{-\Delta n}$ and Δn = 2 − 4 = −2 gives $K_c = 62.2\ \text{M}^{-2}$ at 500 K. The Scrolly below takes one stress at a time from this same starting point.
+
+<Scrolly animation="le-chatelier" layout="wide">
+<Step>
+Start from 1.0 M N₂ and 3.0 M H₂ at 500 K. Left alone, the mixture runs forward and backward until the ratio matches $K_c = 62.2\ \text{M}^{-2}$. The settled amounts are $[\ce{N2}] = 0.198$ M, $[\ce{H2}] = 0.594$ M and $[\ce{NH3}] = 1.604$ M. Q equals K here. Both reactions still run, at the same rate, so the amounts stop changing without the reactions stopping.
+</Step>
+<Step>
+Add 0.50 M of N₂ at constant volume and temperature. Right after the addition, Q is 17.6, below K = 62.2, so the mixture moves forward. Some of the new N₂ is used up. The new equilibrium has $[\ce{N2}] = 0.640$ M, higher than before, but lower than the 0.698 M it had just after the addition. The stress is partly relieved.
+</Step>
+<Step>
+Push the piston to half the volume at constant temperature. Every concentration doubles at once, and $Q = K/4 = 15.5\ \text{M}^{-2}$. There are four gas molecules on the left and two on the right, so the mixture shifts forward. The new equilibrium has $[\ce{NH3}] = 3.42$ M, up from the 3.21 M it had just after the squeeze.
+</Step>
+<Step>
+Add argon at constant volume. Argon takes no part in the reaction, and at fixed volume it changes no partial pressure and no concentration of N₂, H₂ or NH₃. Q stays at K = 62.2 M⁻², so the curves stay flat. The total pressure rises, but that alone does not move the equilibrium.
+</Step>
+<Step>
+Heat the vessel by 50 K, from 500 K to 550 K. The forward reaction releases heat, with ΔH = −92.2 kJ mol⁻¹, so K falls from 62.2 to 8.3 M⁻². The old composition now gives Q = 62.2, far above the new K. The mixture shifts towards reactants, and the amount of NH₃ settles at 1.39 M. The reverse reaction takes in heat, which opposes the rise in temperature.
+</Step>
+<Step>
+Add a catalyst, such as the iron used in the Haber process. The rate constants of both reactions rise by the same factor, so the solid [NH₃] curve reaches its plateau sooner than the dashed one. Both curves settle at 1.60 M. K is still 62.2 M⁻², because the catalyst does not appear in the equilibrium expression.
+</Step>
+</Scrolly>
+
+## 6.8.1 Effect of a change in concentration
+
+Adding a reactant or a product pushes the mixture to use it up. Removing a reactant or a product pushes the mixture to replace it. The same result follows from Q: an added reactant makes Q smaller than K, so the reaction runs forward until Q climbs back to K. Removing a product does the same. This is why an ammonia plant that takes ammonia off as a liquid keeps the reaction moving towards products.
+
+NCERT describes a classic demonstration with iron(III) and thiocyanate. Iron(III) ions and thiocyanate ions form a deep red complex:
+
+$$
+\ce{Fe^{3+}(aq) + SCN^{-}(aq) <=> [Fe(SCN)]^{2+}(aq)}
+$$
+
+Adding oxalic acid removes Fe³⁺ by forming the stable complex $[\ce{Fe(C2O4)3}]^{3-}$, so the red complex dissociates to refill the iron and the colour fades. Mercury(II) chloride does the same by pinning thiocyanate in $[\ce{Hg(SCN)4}]^{2-}$. Adding more thiocyanate deepens the red, because the equilibrium moves to the right.
+
+<Check n={1} numeric answer={17.6} tolerance={0.1} unit="M⁻²" explanation="Q = [NH₃]²/([N₂][H₂]³). Right after the addition, [N₂] = 0.198 + 0.50 = 0.698 M while [H₂] = 0.594 M and [NH₃] = 1.604 M. So Q = 1.604² / (0.698 × 0.594³) = 2.573 / 0.1462 = 17.6 M⁻². Since 17.6 is below K = 62.2 M⁻², the reaction runs forward.">
+The mixture is at equilibrium at 500 K, with $[\ce{N2}] = 0.198$ M, $[\ce{H2}] = 0.594$ M and $[\ce{NH3}] = 1.604$ M. Then 0.50 M of N₂ is added at constant volume. What is Q immediately after the addition, in M⁻²?
+</Check>
+
+## 6.8.2 Effect of a change in pressure
+
+A change in pressure matters only when the volume changes and the number of gas molecules on the two sides differs. Compressing a mixture in which both sides have the same number of gas molecules changes nothing. Pressure has no effect on solids or liquids, because their volume hardly changes with pressure.
+
+Take a gas reaction in which four molecules become two. Halving the volume doubles every partial pressure and concentration. Q then changes by 2 raised to the power of the net change in gas molecules, which is 2 − 4 = −2 here. Q falls to K/4, below K, and the reaction runs forward, towards the side with fewer molecules:
+
+$$
+Q = \frac{[\ce{NH3}]^2}{[\ce{N2}]\,[\ce{H2}]^3} = \frac{K_c}{4} = 15.5\ \text{M}^{-2}
+$$
+
+The opposite holds for a reaction that makes more gas molecules. Expanding the vessel then moves the mixture towards the products.
+
+## 6.8.3 Effect of adding an inert gas
+
+Argon does not take part in the reaction. In a vessel of fixed volume, adding it raises the total pressure but leaves every partial pressure of the reacting gases unchanged, so Q is unchanged and nothing moves. The reaction quotient changes only when the added gas is itself a reactant or a product.
+
+If the same argon is added at constant pressure instead, the vessel must expand. Each concentration then falls by the same factor, which acts like an expansion. For the Haber mixture this shifts the equilibrium towards reactants, the side with more gas molecules.
+
+<Check n={2} options={["K rises, so NH₃ is made faster", "The reaction stops until the argon is removed", "Nothing moves: partial pressures and concentrations are unchanged, so Q stays equal to K", "Q falls, and the mixture moves towards products"]} answer={2} explanation="At constant volume, argon changes no partial pressure and no molar concentration of N₂, H₂ or NH₃. Q is therefore unchanged and equal to K, so there is no shift. The total pressure does rise, but the reacting gases are not affected.">
+A little argon is added to an equilibrium mixture of N₂, H₂ and NH₃ in a sealed vessel of fixed volume. Which statement is correct?
+</Check>
+
+## 6.8.4 Effect of a change in temperature
+
+Temperature is the only stress that changes K. For an exothermic reaction (negative ΔH), K falls as the temperature rises; for an endothermic reaction (positive ΔH), it rises. The temperature dependence follows the van 't Hoff relation, which uses the enthalpy change for the equation as written:
+
+$$
+\ln\frac{K_2}{K_1} = -\frac{\Delta H^\circ}{R}\left(\frac{1}{T_2} - \frac{1}{T_1}\right)
+$$
+
+For the Haber reaction, with $\Delta H^\circ = -92.2$ kJ mol⁻¹ from the enthalpies of formation in Table 5.2, heating from 500 K to 550 K lowers $K_c$ from 62.2 to 8.3 M⁻². NCERT quotes −92.38 kJ mol⁻¹ in this Section; the Table 5.2 values give −92.22, which the Lab uses.
+
+<Check n={3} numeric answer={8.3} tolerance={0.1} unit="M⁻²" explanation="ln(K₂/K₁) = −(ΔH/R)(1/T₂ − 1/T₁) = (92 220 / 8.314)(1/550 − 1/500) = 11 091 × (−1.818 × 10⁻⁴) = −2.017. So K₂ = 62.2 × e^(−2.017) = 62.2 × 0.1331 = 8.3 M⁻². Heating lowers K, as it should for an exothermic reaction.">
+The Haber reaction has $K_c = 62.2\ \text{M}^{-2}$ at 500 K and $\Delta H^\circ = -92.2$ kJ mol⁻¹. Using the van 't Hoff relation, what is $K_c$ at 550 K, in M⁻²?
+</Check>
+
+Two demonstrations make the point with colour. Nitrogen dioxide is brown, and it dimerises into colourless dinitrogen tetroxide:
+
+$$
+\ce{2NO2(g) <=> N2O4(g)}, \qquad \Delta H = -57.2\ \text{kJ mol}^{-1}
+$$
+
+Cooling the sealed tube pushes the forward, exothermic reaction, so the brown fades. Warming it pushes the reverse reaction and the brown deepens. The Lab's N₂O₄ system shows the same effect with a heat press.
+
+A cobalt complex does the same job in the opposite direction. A pink aqua complex and a blue chloro complex are in equilibrium:
+
+$$
+\ce{[Co(H2O)6]^{2+}(aq) + 4Cl^{-}(aq) <=> [CoCl4]^{2-}(aq) + 6H2O(l)}
+$$
+
+The forward reaction is endothermic. At room temperature the mixture is blue. Cooled in a freezing mixture, it turns pink. NCERT prints the aqua ion with a 3+ charge, but the equation balances only with 2+, which is what is written here.
+
+## 6.8.5 Effect of a catalyst
+
+A catalyst gives the reaction a lower-energy pathway. It lowers the activation energy of the forward and reverse reactions by the same amount, so both rates rise by the same factor. The equilibrium composition does not change, and neither does K, because a catalyst appears in neither the balanced equation nor the equilibrium expression. It only shortens the time needed to reach equilibrium.
+
+This matters for the Haber process. The synthesis is exothermic and has fewer gas molecules after the reaction, so low temperature and high pressure favour ammonia. At low temperature, though, the rate is too slow to be useful. Fritz Haber found that iron catalyses the reaction well enough at temperatures where the equilibrium is still favourable. The optimum conditions quoted for the iron-catalysed process are about 500 °C and 200 atm. A catalyst helps only when K is not hopelessly small: if the equilibrium lies far to the reactant side, no catalyst makes the reaction useful.
+
+<Simulation name="le-chatelier-lab" title="Le Chatelier Lab: one piston, three equilibria" />
+
+<KeyIdeas>
+- Le Chatelier's principle: a stress makes the mixture move to partly oppose it. The shift is partial, so the stress is never fully undone.
+- Concentration, pressure and volume move a mixture by changing Q away from K; temperature is the only stress that changes K itself.
+- Pressure matters only when the number of gas molecules changes. An inert gas at constant volume changes no partial pressure, so it causes no shift.
+- A catalyst changes neither K nor the composition at equilibrium. It only speeds the approach to equilibrium.
+- For an exothermic reaction, heating lowers K, and the mixture shifts towards reactants; for an endothermic one, heating raises K.
+</KeyIdeas>

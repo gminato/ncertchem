@@ -89,6 +89,10 @@ import { IceMethod } from './unit6/qk/IceMethod'
 import { GibbsCurve } from './unit6/qk/GibbsCurve'
 import { AcidBaseConcepts } from './unit6/acidbase/AcidBaseConcepts'
 import { IonicElectrolytes } from './unit6/acidbase/IonicElectrolytes'
+import { PhysicalEquilibria } from './unit6/physical/PhysicalEquilibria'
+import { DynamicEquilibrium } from './unit6/dynamic/DynamicEquilibrium'
+import { MassAction } from './unit6/massaction/MassAction'
+import { LeChatelierStress } from './unit6/lechatelier/LeChatelierStress'
 
 /**
  * Animations available to a Scrolly Animation, keyed by the `animation` prop.
@@ -188,6 +192,10 @@ export const animations = {
   'qk-gibbs': GibbsCurve,
   'acid-base-concepts': AcidBaseConcepts,
   'ionic-electrolytes': IonicElectrolytes,
+  'physical-equilibria': PhysicalEquilibria,
+  'unit6-dynamic-equilibrium': DynamicEquilibrium,
+  'unit6-mass-action': MassAction,
+  'le-chatelier': LeChatelierStress,
 } as const
 
 export type AnimationName = keyof typeof animations

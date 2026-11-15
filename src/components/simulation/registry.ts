@@ -31,6 +31,9 @@ import { RedoxBalancer } from './sims/redox-balancer'
 import { KpKcConverter, HeterogeneousConverter } from './sims/kp-kc-converter'
 import { IceSolver } from './sims/ice-solver'
 import { ConjugatePairSorter } from './sims/conjugate-pair-sorter'
+import { SealedContainerLab } from './sims/sealed-container-lab'
+import { ApproachToEquilibrium } from './sims/approach-to-equilibrium'
+import { LeChatelierLab } from './sims/le-chatelier-lab'
 
 export interface SimulationProps {
   /** True when the Learner has asked the OS for reduced motion. Skip tweens and loops when set. */
@@ -76,4 +79,7 @@ export const simulations: Record<string, ComponentType<SimulationProps>> = {
   'heterogeneous-converter': HeterogeneousConverter,
   'ice-solver': IceSolver,
   'conjugate-pair-sorter': ConjugatePairSorter,
+  'sealed-container-lab': SealedContainerLab,
+  'approach-to-equilibrium': ApproachToEquilibrium,
+  'le-chatelier-lab': LeChatelierLab,
 }

@@ -1,0 +1,156 @@
+.sim {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  font-family: var(--font-sans);
+  color: var(--fg);
+}
+
+.layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--space-4);
+  align-items: start;
+}
+
+@media (min-width: 900px) {
+  .layout {
+    grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.5fr);
+    grid-template-areas:
+      'vessel plot'
+      'balance readout';
+  }
+  .layout > :nth-child(1) {
+    grid-area: vessel;
+  }
+  .layout > :nth-child(2) {
+    grid-area: plot;
+  }
+  .layout > :nth-child(3) {
+    grid-area: balance;
+  }
+  .layout > :nth-child(4) {
+    grid-area: readout;
+  }
+}
+
+.card {
+  background: var(--surface-raised);
+  border-radius: var(--radius-md, 10px);
+  padding: var(--space-4);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  min-width: 0;
+}
+
+.vessel {
+  width: 100%;
+  max-width: 300px;
+  height: auto;
+  display: block;
+  margin: 0 auto;
+}
+
+.plot {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.balance {
+  width: 100%;
+  max-width: 380px;
+  height: auto;
+  display: block;
+  margin: 0 auto;
+}
+
+.legend {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2) var(--space-4);
+  font-size: 0.95rem;
+}
+
+.legend li {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.swatch {
+  width: 0.8rem;
+  height: 0.8rem;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  display: inline-block;
+}
+
+.num {
+  font-variant-numeric: tabular-nums;
+}
+
+.readout {
+  margin: 0;
+  background: var(--surface-raised);
+  border-radius: var(--radius-md, 10px);
+  padding: var(--space-4);
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: var(--space-3);
+  align-content: start;
+}
+
+.item {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.item dt {
+  font-size: 0.85rem;
+  color: var(--fg-muted);
+}
+
+.item dd {
+  margin: 0;
+  font-size: 1.05rem;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+.note {
+  margin: 0;
+  font-size: 0.85rem;
+  color: var(--fg-muted);
+}
+
+.group {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.groupLabel {
+  font-size: 0.8rem;
+  color: var(--fg-muted);
+  text-transform: none;
+  margin-right: var(--space-1);
+  min-width: 7rem;
+}
+
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}

@@ -1,0 +1,68 @@
+---
+class: 11
+unit: 6
+section: "6.3"
+order: 3
+title: "Law of Chemical Equilibrium and Equilibrium Constant"
+slug: "6-3-law-of-chemical-equilibrium"
+summary: "At a fixed temperature, one ratio of product and reactant concentrations, each raised to its stoichiometric coefficient, stays constant; that equilibrium constant changes when the equation is reversed or scaled."
+ncert: "Class 11, Part I — Unit 6, Section 6.3"
+---
+
+<Hook>
+Two students seal hydrogen and iodine in separate glass vessels at the same high temperature. One starts with more iodine, the other with more hydrogen. When the purple colour stops changing, the two mixtures have different compositions, yet one number worked out from each of them comes out the same. What is that number, and how is it built from the amounts?
+</Hook>
+
+## The data and the first guess
+
+Consider the reaction of hydrogen with iodine vapour, $\ce{H2(g) + I2(g) <=> 2HI(g)}$, carried out at 731 K in sealed vessels. Six experiments were run. Four began with H₂ and I₂ in different proportions, and two began with HI alone. In every case the mixture was left until it stopped changing, and the amounts were measured. The six equilibrium mixtures are the data for everything that follows.
+
+The simplest guess for a constant is the ratio of the HI amount to the product of the H₂ and I₂ amounts, $[\ce{HI}]/([\ce{H2}][\ce{I2}])$. It fails. Across the six experiments this quotient ranges from about 800 to about 2000 L mol⁻¹. A quantity that changes that much with the starting amounts cannot be the constant of the reaction. The scrolly follows the search, step by step.
+
+<Scrolly animation="unit6-mass-action">
+<Step>
+Here are the six experiments, with starting and equilibrium amounts in units of 10⁻² mol L⁻¹. Experiments 1 to 4 start from H₂ and I₂ in different ratios, and 5 and 6 start from HI alone. Every flask reaches the same kind of equilibrium, but the amounts at equilibrium depend on where each experiment began. The table is the raw data, and nothing in it is adjusted.
+</Step>
+<Step>
+Try the simplest quotient, $[\ce{HI}]/([\ce{H2}][\ce{I2}])$, with every amount in mol L⁻¹. Experiment 1 gives about 1840 L mol⁻¹, and experiment 6 gives about 790 L mol⁻¹. The values wander with the starting mixture, so this expression cannot be the constant, because a constant must come out the same in every experiment.
+</Step>
+<Step>
+Square the HI term and the values settle. $[\ce{HI}]^2/([\ce{H2}][\ce{I2}])$ is 46.4 for experiment 1 and 47.6 for experiment 2, and it stays within about 2 % of 46.7 in all six. This constant is written $K_c$, the subscript c meaning that the amounts are molar concentrations. Its value is the same whichever side the reaction starts from.
+</Step>
+<Step>
+The squared form is the law of chemical equilibrium, proposed by Guldberg and Waage in 1864. For a general reaction $aA + bB \rightleftharpoons cC + dD$, the equilibrium constant is $K_c = [C]^c[D]^d/([A]^a[B]^b)$. Each power is the stoichiometric coefficient of its species, which is why the HI term is squared. Pure solids and liquids are left out of the expression.
+</Step>
+<Step>
+Changing the equation changes the constant. Reverse the reaction and $K$ becomes $1/K$, so $2\ce{HI} \rightleftharpoons \ce{H2} + \ce{I2}$ has a constant of about 0.0214. Double every coefficient and $K$ is squared, which gives about 2.19 × 10³ for $2\ce{H2} + 2\ce{I2} \rightleftharpoons 4\ce{HI}$. Halve every coefficient and $K$ takes a square root, giving about 6.84 for $\tfrac12\ce{H2} + \tfrac12\ce{I2} \rightleftharpoons \ce{HI}$.
+</Step>
+</Scrolly>
+
+## Reading K
+
+The value of $K_c$ at a given temperature is a single number that summarises where equilibrium lies. A large $K_c$ means the products predominate at equilibrium, and a small one means the reactants predominate. The reaction quotient, $Q$, has the same form as $K_c$ but uses the amounts at any moment. Section 6.6 uses that comparison to predict which way a mixture will move.
+
+Because H₂ + I₂ ⇌ 2HI has the same number of moles of gas on each side, $K_c$ for it has no unit. Reactions whose coefficients differ on the two sides give $K_c$ a unit, and the unit must be quoted with the number. For the same reason, the equation has to be written before a constant is given: the same reaction written in another way has a different $K_c$.
+
+<Check n={1} numeric answer={46.4} tolerance={0.2} explanation="Experiment 1 at equilibrium: [HI] = 2.52 × 10⁻², [H₂] = 1.14 × 10⁻², [I₂] = 0.12 × 10⁻² mol L⁻¹. Then [HI]² = (0.0252)² = 6.35 × 10⁻⁴ and [H₂][I₂] = 0.0114 × 0.0012 = 1.37 × 10⁻⁵, so Kc = 46.4. This is the constant of the table, to within rounding.">
+Experiment 1 of the Table 6.2 data ends with [HI] = 2.52 × 10⁻², [H₂] = 1.14 × 10⁻² and [I₂] = 0.12 × 10⁻² mol L⁻¹. Calculate $K_c = [\ce{HI}]^2/([\ce{H2}][\ce{I2}])$ for this mixture.
+</Check>
+
+## Reversing and scaling the equation
+
+The constant of a reaction depends on how its equation is balanced, so the three rules in Table 6.4 are worth keeping in mind. Reversing the equation takes the reciprocal. Multiplying every coefficient by $n$ raises $K$ to the power $n$. Dividing every coefficient by $n$ takes the $n$th root. These follow directly from the law: each rule just rewrites the same ratio of concentrations.
+
+<Check n={2} numeric answer={0.0214} tolerance={0.0002} explanation="Reversing an equation takes the reciprocal of K. With K = 46.7 at 731 K, the constant for 2HI ⇌ H₂ + I₂ is 1/46.7 = 0.0214, as the rule in Table 6.4 says.">
+The mean constant for $\ce{H2 + I2 <=> 2HI}$ at 731 K is 46.7. What is the constant for the reverse reaction, $2\ce{HI} \rightleftharpoons \ce{H2} + \ce{I2}$?
+</Check>
+
+<Check n={3} numeric answer={6.84} tolerance={0.05} explanation="Halving every coefficient takes the square root: K for ½H₂ + ½I₂ ⇌ HI is √46.7 = 6.84 at 731 K.">
+What is the equilibrium constant of $\tfrac12\ce{H2} + \tfrac12\ce{I2} \rightleftharpoons \ce{HI}$ at 731 K, given that $K_c$ for the original equation is 46.7?
+</Check>
+
+<KeyIdeas>
+- At a fixed temperature, $K_c = [C]^c[D]^d/([A]^a[B]^b)$ for $aA + bB \rightleftharpoons cC + dD$, with the concentrations taken at equilibrium and each power equal to its stoichiometric coefficient.
+- For H₂ + I₂ ⇌ 2HI, $K_c = [\ce{HI}]^2/([\ce{H2}][\ce{I2}])$, and its mean value over the six experiments at 731 K is 46.7.
+- The first guess, $[\ce{HI}]/([\ce{H2}][\ce{I2}])$, changes from about 800 to about 2000 across the data. The squared form stays constant, and that is why it is the equilibrium constant.
+- Reversing the equation gives $1/K_c$. Doubling every coefficient gives $K_c^2$. Halving every coefficient gives $K_c^{1/2}$.
+- Pure solids and liquids are left out of $K_c$. The value of $K_c$ changes only with temperature, not with the starting amounts.
+</KeyIdeas>

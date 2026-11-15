@@ -5,7 +5,8 @@ import { clipCurve, concentrationAt, curvePath, settleTime, type TimePoint } fro
 export const EQUILIBRIUM_CURVES_SIZE = { width: 640, height: 300 } as const
 
 const GAP = 16
-const PLOT = { left: 56, right: 46, top: 74, bottom: 246 }
+// left leaves room for 4-character tick labels (e.g. "0.15") AND the rotated axis title without overlap.
+const PLOT = { left: 66, right: 46, top: 74, bottom: 246 }
 
 export interface CurveSeries {
   id: string
@@ -167,7 +168,7 @@ export const EquilibriumCurves = forwardRef<SVGGElement, EquilibriumCurvesProps>
             <text x={(left + right) / 2} y={bottom + 38} textAnchor="middle" dominantBaseline="central" fontSize={14} fontFamily="var(--font-sans)" fill="var(--fg-muted)" style={{ userSelect: 'none' }}>
               {xLabel}
             </text>
-            <text x={ox + 14} y={(top + bottom) / 2} textAnchor="middle" dominantBaseline="central" transform={`rotate(-90 ${ox + 14} ${(top + bottom) / 2})`} fontSize={14} fontFamily="var(--font-sans)" fill="var(--fg-muted)" style={{ userSelect: 'none' }}>
+            <text x={ox + 12} y={(top + bottom) / 2} textAnchor="middle" dominantBaseline="central" transform={`rotate(-90 ${ox + 12} ${(top + bottom) / 2})`} fontSize={14} fontFamily="var(--font-sans)" fill="var(--fg-muted)" style={{ userSelect: 'none' }}>
               {yLabel}
             </text>
 
