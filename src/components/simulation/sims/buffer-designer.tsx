@@ -202,7 +202,12 @@ export function BufferDesigner(_props: SimulationProps) {
           <div className={styles.outputs}>
             <div className={styles.readout} aria-live="polite" data-testid="buffer-readout">
               <Tex
-                tex={`\\mathrm{pH} = \\mathrm{p}K_a + \\log\\frac{[\\mathrm{${baseSymbol}}]}{[\\mathrm{${acidSymbol}}]} = ${phText(pair.pKa)} + \\log\\frac{${design.baseConc.toFixed(3)}}{${design.acidConc.toFixed(3)}}`}
+                tex={`\\begin{aligned}\\mathrm{pH} &= \\mathrm{p}K_a + \\log\\frac{[\\mathrm{${baseSymbol}}]}{[\\mathrm{${acidSymbol}}]} \\\\ &= ${phText(pair.pKa)}${
+                  // The ratio of the buffer NOW (after any addition), in mmol: the same volume cancels.
+                  design.exceedsCapacity || design.baseMmol <= 0 || design.acidMmol <= 0
+                    ? ''
+                    : ` + \\log\\frac{${design.baseMmol.toFixed(1)}\\ \\text{mmol}}{${design.acidMmol.toFixed(1)}\\ \\text{mmol}} = ${phText(design.pHBuffer)}`
+                }\\end{aligned}`}
               />
               <Row label={<span className="sym">pKa</span>} testId="pka">{phText(pair.pKa)}</Row>
               <Row label="Start pH" testId="ph-start">{phText(design.pHStart)}</Row>
