@@ -1,17 +1,15 @@
 'use client'
 
 import React, { useEffect, useId, useMemo, useRef, useState } from 'react'
+import katex from 'katex'
+import 'katex/contrib/mhchem'
 import { Button, Segmented, Slider } from '@/components/controls'
-import { ReactionBeaker, type IonParticle } from '@/components/redox/ReactionBeaker'
+import { clamp01 } from '@/components/redox/geometry'
 import { SimulationControls } from '@/components/simulation/Simulation'
 import { useIsActive } from '@/components/simulation/useIsActive'
 import type { SimulationProps } from '@/components/simulation/registry'
-import {
-  cellEmf,
-  displacementOutcome,
-  lookupPotential,
-} from '@/lib/chem/electrode-potentials'
-import { balanceRedox } from '@/lib/chem/redox-balance'
+import { cellEmf, lookupPotential } from '@/lib/chem/electrode-potentials'
+import { displacementEquation, splitCation } from '@/lib/chem/metal-displacement'
 import styles from './metal-displacement-lab.module.css'
 
 export type StripMetal = 'Mg' | 'Zn' | 'Fe' | 'Pb' | 'Cu' | 'Ag' | 'Co'
@@ -34,14 +32,8 @@ const SOLUTION_OPTIONS: ReadonlyArray<{ value: SolutionIon; label: string }> = [
   { value: 'Pb2+', label: 'Pb²⁺' },
 ]
 
-/** Full activity series subset displayed in the series strip. */
-interface ActivitySeriesItem {
-  symbol: string
-  e0: number
-  isNonNcert?: boolean
-}
-
-const ACTIVITY_SERIES_DISPLAY: readonly ActivitySeriesItem[] = [
+/** Activity series shown in the strip. Co is not in NCERT Table 7.1 and is marked. */
+const ACTIVITY_SERIES_DISPLAY: ReadonlyArray<{ symbol: string; e0: number; isNonNcert?: boolean }> = [
   { symbol: 'Mg', e0: -2.36 },
   { symbol: 'Zn', e0: -0.76 },
   { symbol: 'Fe', e0: -0.44 },
@@ -49,36 +41,260 @@ const ACTIVITY_SERIES_DISPLAY: readonly ActivitySeriesItem[] = [
   { symbol: 'Ni', e0: -0.25 },
   { symbol: 'Pb', e0: -0.13 },
   { symbol: 'Cu', e0: 0.34 },
-  { symbol: 'Ag', e0: 0.80 },
+  { symbol: 'Ag', e0: 0.8 },
 ]
 
-/** Formats signed volts e.g. +1.10 V or −0.76 V using true unicode minus. */
+const SUPERSCRIPT: Record<string, string> = { '1': '¹', '2': '²', '3': '³' }
+
+/** Signed volts with a true minus sign, e.g. +1.10 V or −0.76 V. */
 function formatSignedVolts(val: number): string {
   const sign = val >= 0 ? '+' : '−'
-  const absStr = Math.abs(val).toFixed(2)
-  return `${sign}${absStr} V`
+  return `${sign}${Math.abs(val).toFixed(2)} V`
 }
 
-/** Formats an ion key with proper superscript charge notation. */
-function formatIonDisplay(ion: string): string {
-  return ion.replace('2+', '²⁺').replace('+', '⁺')
+/** Ion label with Unicode superscript charge, e.g. Cu2+ becomes Cu²⁺ and Ag+ becomes Ag⁺. */
+function ionLabel(cation: string): string {
+  const { metal, charge } = splitCation(cation)
+  return `${metal}${charge === 1 ? '' : SUPERSCRIPT[String(charge)] ?? ''}⁺`
+}
+
+/** Strip colour per metal. Mg, Fe, Pb and Co have no token, so they use neutral greys. */
+const STRIP_COLOUR: Record<StripMetal, string> = {
+  Mg: '#D4D4D8',
+  Zn: 'var(--metal-zn)',
+  Fe: '#6B7280',
+  Pb: '#4B5563',
+  Cu: 'var(--metal-cu)',
+  Ag: 'var(--metal-ag)',
+  Co: '#7C8798',
+}
+
+/** Colour of the deposit, which is the metal of the cation. */
+function depositColour(metal: string): string {
+  if (metal === 'Cu') return 'var(--metal-cu)'
+  if (metal === 'Ag') return 'var(--metal-ag)'
+  if (metal === 'Zn') return 'var(--metal-zn)'
+  if (metal === 'Ni') return '#8B9A8E'
+  return '#6B7280'
+}
+
+/** Renders a mhchem equation with KaTeX. The strings come from the tested lib. */
+function Ce({ mhchem }: { mhchem: string }) {
+  const html = useMemo(
+    () => katex.renderToString(`\\ce{${mhchem}}`, { throwOnError: false }),
+    [mhchem],
+  )
+  return <span className={styles.ce} dangerouslySetInnerHTML={{ __html: html }} />
+}
+
+// Stage geometry, in the stage group's own units (the stage is 374 × 394).
+const CX = 187
+const RIM_Y = 190
+const LIQUID_Y = 222
+const BEAKER_BOTTOM = 340
+const BEAKER_HALF = 85
+/** How far the strip moves when it is dipped. The strip is 110 units long. */
+const DIP_SHIFT = 94
+const STRIP_W = 34
+const STRIP_TOP = 56
+const STRIP_LEN = 110
+
+interface DipCellProps {
+  stripMetal: StripMetal
+  stripMetalLabel: string
+  depositMetal: string
+  depositLabel: string
+  coat: number
+  dipped: boolean
+  reducedMotion: boolean
+  tint: string
+  tintStrength: number
+  ionProgress: number
+  showIons: boolean
+  dissolvingLabel: string
+  id: string
+}
+
+/**
+ * The beaker and strip for the displacement lab. The strip sits above the liquid
+ * before dipping and moves down into it when dipped. The shared ReactionBeaker always
+ * draws its strip submerged, so the lab draws its own beaker here.
+ */
+function DipCell({
+  stripMetal,
+  stripMetalLabel,
+  depositMetal,
+  depositLabel,
+  coat,
+  dipped,
+  reducedMotion,
+  tint,
+  tintStrength,
+  ionProgress,
+  showIons,
+  dissolvingLabel,
+  id,
+}: DipCellProps) {
+  const clipId = `dc-clip-${id}`
+  const c = clamp01(coat)
+  const ionP = clamp01(ionProgress)
+  const left = CX - BEAKER_HALF
+  const right = CX + BEAKER_HALF
+  const glass = `M ${left - 4} ${RIM_Y} L ${left} ${RIM_Y + 4} L ${left} ${BEAKER_BOTTOM - 10} Q ${left} ${BEAKER_BOTTOM} ${left + 10} ${BEAKER_BOTTOM} L ${right - 10} ${BEAKER_BOTTOM} Q ${right} ${BEAKER_BOTTOM} ${right} ${BEAKER_BOTTOM - 10} L ${right} ${RIM_Y + 4} L ${right + 4} ${RIM_Y}`
+  const clipPath = `M ${left} ${RIM_Y} L ${left} ${BEAKER_BOTTOM - 10} Q ${left} ${BEAKER_BOTTOM} ${left + 10} ${BEAKER_BOTTOM} L ${right - 10} ${BEAKER_BOTTOM} Q ${right} ${BEAKER_BOTTOM} ${right} ${BEAKER_BOTTOM - 10} L ${right} ${RIM_Y} Z`
+
+  // Strip coordinates are the undipped ones; the group moves the strip down into the liquid.
+  // The part of the strip below the liquid surface, in strip coordinates.
+  const coatTop = LIQUID_Y - DIP_SHIFT
+  const coatHeight = STRIP_TOP + STRIP_LEN - coatTop
+
+  const ionOpacityDeposit = Math.max(0, 1 - 1.1 * ionP)
+  const ionOpacityDissolve = Math.min(1, 1.2 * ionP)
+  const transition = reducedMotion ? 'none' : 'transform 0.7s ease'
+
+  const ions: Array<{ key: string; label: string; from: [number, number]; to: [number, number]; tone: 'ox' | 'red'; opacity: number }> = [
+    // Pills are 48 wide, so the paths stay between the glass walls (CX ± 85).
+    { key: 'd1', label: depositLabel, from: [CX - 54, 262], to: [CX - 26, 268], tone: 'red', opacity: ionOpacityDeposit },
+    { key: 'd2', label: depositLabel, from: [CX + 54, 300], to: [CX + 26, 294], tone: 'red', opacity: ionOpacityDeposit },
+    { key: 's1', label: dissolvingLabel, from: [CX - 22, 250], to: [CX - 52, 246], tone: 'ox', opacity: ionOpacityDissolve },
+    { key: 's2', label: dissolvingLabel, from: [CX + 22, 282], to: [CX + 52, 278], tone: 'ox', opacity: ionOpacityDissolve },
+  ]
+
+  return (
+    <g>
+      <defs>
+        <clipPath id={clipId}>
+          <path d={clipPath} />
+        </clipPath>
+      </defs>
+
+      {/* Liquid, clipped to the beaker */}
+      <g clipPath={`url(#${clipId})`}>
+        <rect
+          x={left - 10}
+          y={LIQUID_Y}
+          width={BEAKER_HALF * 2 + 20}
+          height={BEAKER_BOTTOM - LIQUID_Y + 10}
+          fill={tint}
+          opacity={0.1 + 0.7 * clamp01(tintStrength)}
+        />
+        <line
+          x1={left}
+          y1={LIQUID_Y}
+          x2={right}
+          y2={LIQUID_Y}
+          stroke={tint}
+          strokeWidth={2}
+          opacity={0.3 + 0.7 * clamp01(tintStrength)}
+        />
+      </g>
+
+      {/* Strip, which moves down into the liquid when dipped */}
+      <g style={{ transform: `translateY(${dipped ? DIP_SHIFT : 0}px)`, transition }}>
+        <rect
+          x={CX - STRIP_W / 2}
+          y={STRIP_TOP}
+          width={STRIP_W}
+          height={STRIP_LEN}
+          rx={3}
+          fill={STRIP_COLOUR[stripMetal]}
+          stroke="var(--fg-muted)"
+          strokeWidth={1.2}
+        />
+        {c > 0 && (
+          <rect
+            x={CX - STRIP_W / 2 - 3 * c}
+            y={coatTop}
+            width={STRIP_W + 6 * c}
+            height={coatHeight}
+            rx={3}
+            fill={depositColour(depositMetal)}
+            stroke="var(--fg-muted)"
+            strokeWidth={1}
+          />
+        )}
+        <text
+          x={CX}
+          y={STRIP_TOP - 12}
+          textAnchor="middle"
+          dominantBaseline="central"
+          fontSize={14}
+          fontWeight={600}
+          fontFamily="var(--font-sans)"
+          fill="var(--fg)"
+        >
+          {stripMetalLabel} strip
+        </text>
+      </g>
+
+      {/* Deposit label, shown once the coating is visible */}
+      {c >= 0.25 && (
+        <text
+          x={CX + STRIP_W / 2 + 10}
+          y={LIQUID_Y + 14}
+          dominantBaseline="central"
+          fontSize={14}
+          fontWeight={600}
+          fontFamily="var(--font-sans)"
+          fill={depositColour(depositMetal)}
+        >
+          {depositLabel} deposit
+        </text>
+      )}
+
+      {/* Ions moving through the liquid */}
+      {showIons &&
+        ions.map((ion) => {
+          if (ion.opacity <= 0.05) return null
+          const x = ion.from[0] + (ion.to[0] - ion.from[0]) * ionP
+          const y = ion.from[1] + (ion.to[1] - ion.from[1]) * ionP
+          const stroke = ion.tone === 'ox' ? 'var(--ox)' : 'var(--red)'
+          return (
+            <g key={ion.key} transform={`translate(${x}, ${y})`} opacity={ion.opacity}>
+              <rect x={-24} y={-12} width={48} height={24} rx={6} fill="var(--surface-raised)" stroke={stroke} strokeWidth={1.4} />
+              <text
+                x={0}
+                y={1}
+                textAnchor="middle"
+                dominantBaseline="central"
+                fontSize={14}
+                fontWeight={600}
+                fontFamily="var(--font-sans)"
+                fill={stroke}
+              >
+                {ion.label}
+              </text>
+            </g>
+          )
+        })}
+
+      {/* Glass */}
+      <path d={glass} fill="none" stroke="var(--glass-wall)" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" />
+      <line
+        x1={left + 10}
+        y1={LIQUID_Y + 10}
+        x2={left + 10}
+        y2={BEAKER_BOTTOM - 18}
+        stroke="var(--glass-sheen)"
+        strokeWidth={2.4}
+        strokeLinecap="round"
+        style={{ pointerEvents: 'none' }}
+      />
+    </g>
+  )
 }
 
 /**
  * Metal Displacement Lab Simulation (Unit 7, Section 7.2.1).
  *
- * Demonstrates competitive electron transfer:
- * - Dip various metal strips into metal cation solutions
- * - Spontaneous displacement occurs only when E°cell > 0
- * - Coating and solution colour change dynamically via ReactionBeaker
- * - Balance and E°cell are verified through chem libs
- * - Clearly highlights activity series hierarchy (Mg > Zn > Fe > Pb > Cu > Ag)
- * - Flags Co/Ni as non-NCERT value when loaded.
+ * Dip a metal strip into a solution of another metal's cations. Displacement shows only when
+ * E°cell > 0; the equation, E°cell and the activity-series readouts come from the tested libs.
  */
 export function MetalDisplacementLab({ reducedMotion }: SimulationProps) {
   const rootRef = useRef<HTMLDivElement>(null)
   const active = useIsActive(rootRef)
-  const seriesGradId = `mdl-grad-${useId().replace(/[^a-zA-Z0-9]/g, '')}`
+  const uid = useId().replace(/[^a-zA-Z0-9]/g, '')
+  const seriesGradId = `mdl-grad-${uid}`
 
   const [metal, setMetal] = useState<StripMetal>('Zn')
   const [ion, setIon] = useState<SolutionIon>('Cu2+')
@@ -87,89 +303,44 @@ export function MetalDisplacementLab({ reducedMotion }: SimulationProps) {
   const [isAnimating, setIsAnimating] = useState(false)
   const [isCoNiCase, setIsCoNiCase] = useState(false)
 
-  // Determine active species based on case
   const activeMetal: StripMetal = isCoNiCase ? 'Co' : metal
   const activeIon: SolutionIon = isCoNiCase ? 'Ni2+' : ion
+  const activeCationMetal = splitCation(activeIon).metal
 
-  // Chemistry calculations from libraries
   const eCathode = lookupPotential(activeIon)
   const eAnode = lookupPotential(activeMetal)
   const emf = cellEmf(activeIon, activeMetal)
-  const outcome = displacementOutcome(activeMetal, activeIon)
+  const equation = displacementEquation(activeMetal, activeIon)
+  const outcome = equation.outcome
+  const isSame = activeMetal === activeCationMetal
 
-  // Calculate balanced equation via lib
-  const equationData = useMemo(() => {
-    const cleanIonMetal = activeIon === 'Ag+' ? 'Ag' : activeIon.replace('2+', '')
-    if (activeMetal === cleanIonMetal) {
-      return {
-        equationText: `${activeMetal}(s) + ${activeIon}(aq) ⇌ ${activeMetal}²⁺(aq) + ${activeMetal}(s)`,
-        isReaction: false,
-      }
-    }
-    if (outcome === 'no visible reaction') {
-      return {
-        equationText: 'No visible reaction (thermodynamically non-spontaneous)',
-        isReaction: false,
-      }
-    }
-    if (outcome === 'moderate both ways') {
-      return {
-        equationText: `${activeMetal}(s) + ${activeIon}(aq) ⇌ ${activeMetal}²⁺(aq) + ${cleanIonMetal}(s)`,
-        isReaction: true,
-      }
-    }
-
-    try {
-      const ionProduct = activeIon === 'Ag+' ? 'Ag' : cleanIonMetal
-      const skel = `${activeMetal} + ${activeIon} -> ${activeMetal}2+ + ${ionProduct}`
-      const balanced = balanceRedox(skel, 'acidic')
-      return {
-        equationText: balanced.equationString
-          .replace('->', '→')
-          .replace('2+', '²⁺')
-          .replace('+', '⁺'),
-        isReaction: true,
-      }
-    } catch {
-      return {
-        equationText: `${activeMetal}(s) + ${activeIon}(aq) → ${activeMetal}²⁺(aq) + ${cleanIonMetal}(s)`,
-        isReaction: true,
-      }
-    }
-  }, [activeMetal, activeIon, outcome])
-
-  // Observation description based on selected species and progress
   const observation = useMemo(() => {
     if (!isDipped) {
-      return 'Strip held above solution. Press "Dip strip" to submerge.'
+      return 'Strip held above the solution. Press "Dip strip" to lower it in.'
     }
-    if (activeMetal === (activeIon === 'Ag+' ? 'Ag' : activeIon.replace('2+', ''))) {
-      return 'Identical metal and cation: dynamic equilibrium at E°cell = 0.00 V.'
+    if (isSame) {
+      return `Identical metal and cation: E°cell = 0.00 V, so nothing changes overall.`
     }
     if (outcome === 'no visible reaction') {
-      return `No visible reaction observed. ${activeMetal} has a higher reduction potential than ${activeIon}, so electron transfer is non-spontaneous.`
+      return `No visible reaction. ${equation.noReactionReason ?? ''}`
     }
     if (outcome === 'moderate both ways') {
-      return `Dynamic equilibrium attained. Both Co²⁺(aq) and Ni²⁺(aq) are present at moderate concentrations because E°cell is close to 0 V (+0.03 V).`
+      return 'Dynamic equilibrium: Co²⁺(aq) and Ni²⁺(aq) both stay at moderate concentrations, because E°cell is only +0.03 V.'
     }
     if (activeMetal === 'Zn' && activeIon === 'Cu2+') {
-      return `Reddish copper coats the zinc strip; blue Cu²⁺ colour fades to colourless as Zn²⁺ ions dissolve.`
+      return 'Reddish copper coats the zinc strip, and the blue Cu²⁺ colour fades as Zn²⁺ ions enter the solution.'
     }
     if (activeMetal === 'Cu' && activeIon === 'Ag+') {
-      return `Glistening silver dendrites deposit on the copper strip; solution turns blue as Cu²⁺ ions enter.`
+      return 'Silver deposits on the copper strip, and the solution turns blue as Cu²⁺ ions form.'
     }
     if (activeIon === 'Ag+') {
-      return `Silvery metallic deposits coat the ${activeMetal} strip; solution remains colourless.`
+      return `Silvery deposits coat the ${activeMetal} strip, and the solution stays colourless.`
     }
-    if (activeIon === 'Cu2+') {
-      return `Reddish copper deposit coats the ${activeMetal} strip; blue solution fades.`
-    }
-    return `Displacement active: ${activeMetal} dissolves while depositing metallic cations from solution.`
-  }, [isDipped, activeMetal, activeIon, outcome])
+    return `${activeMetal} dissolves as ${activeCationMetal} deposits from the solution.`
+  }, [isDipped, isSame, outcome, equation.noReactionReason, activeMetal, activeIon, activeCationMetal])
 
-  // Animation frame loop
+  // Reaction progress animates from 0 to its end point after dipping.
   const pRef = useRef(progress)
-
   useEffect(() => {
     pRef.current = progress
   }, [progress])
@@ -183,12 +354,9 @@ export function MetalDisplacementLab({ reducedMotion }: SimulationProps) {
     const tick = (now: number) => {
       const dt = (now - lastTime) / 1000
       lastTime = now
-
-      // Spontaneous reactions take ~2.2 seconds to reach completion
       const targetMax = outcome === 'moderate both ways' ? 0.35 : 1.0
       const nextP = Math.min(targetMax, pRef.current + dt / 2.2)
       setProgress(nextP)
-
       if (nextP >= targetMax) {
         setIsAnimating(false)
       } else {
@@ -200,24 +368,23 @@ export function MetalDisplacementLab({ reducedMotion }: SimulationProps) {
     return () => cancelAnimationFrame(frameId)
   }, [isAnimating, active, reducedMotion, outcome])
 
-  // Dip strip handler
   const handleDipToggle = () => {
     if (isDipped) {
-      // Lift strip
       setIsDipped(false)
       setIsAnimating(false)
       setProgress(0)
+      return
+    }
+    setIsDipped(true)
+    if (outcome === 'no visible reaction') {
+      setProgress(0)
+      return
+    }
+    if (reducedMotion) {
+      setProgress(outcome === 'moderate both ways' ? 0.35 : 1.0)
     } else {
-      // Dip strip
-      setIsDipped(true)
-      if (reducedMotion) {
-        setProgress(outcome === 'moderate both ways' ? 0.35 : outcome === 'products strongly favoured' ? 1.0 : 0)
-      } else if (outcome !== 'no visible reaction') {
-        setProgress(0)
-        setIsAnimating(true)
-      } else {
-        setProgress(0)
-      }
+      setProgress(0)
+      setIsAnimating(true)
     }
   }
 
@@ -227,89 +394,57 @@ export function MetalDisplacementLab({ reducedMotion }: SimulationProps) {
     setProgress(0)
   }
 
-  // Determine beaker graphics parameters
-  const effectiveProgress = isDipped ? progress : 0
-  const coatingMetal = activeIon === 'Ag+' ? 'Ag' : activeIon.replace('2+', '')
+  const reacting = isDipped && outcome !== 'no visible reaction' && !isSame
+  const effectiveProgress = reacting ? progress : 0
 
-  // Solution tinting: Cu²⁺ is blue, Fe²⁺ pale green, Ni²⁺ pale emerald, others clear
-  let baseTint = 'transparent'
-  let initialTintStrength = 0
+  // Solution tint: Cu²⁺ blue, Fe²⁺ pale green, Ni²⁺ pale emerald, the rest clear.
+  // When copper strip is dipped in silver nitrate, the solution turns blue as Cu²⁺ forms.
+  let tint = 'transparent'
+  let tintStrength = 0
   if (activeIon === 'Cu2+') {
-    baseTint = 'var(--sol-cu)'
-    initialTintStrength = 1
+    tint = 'var(--sol-cu)'
+    tintStrength = Math.max(0, 1 - (reacting ? effectiveProgress * 0.92 : 0))
   } else if (activeIon === 'Fe2+') {
-    baseTint = 'rgba(74, 222, 128, 0.45)'
-    initialTintStrength = 0.8
+    tint = 'rgba(74, 222, 128, 0.45)'
+    tintStrength = 0.8
   } else if (activeIon === 'Ni2+') {
-    baseTint = 'rgba(52, 211, 153, 0.45)'
-    initialTintStrength = 0.7
+    tint = 'rgba(52, 211, 153, 0.45)'
+    tintStrength = 0.7
   }
-
-  // When Cu metal is oxidised (e.g. Cu in Ag+), solution turns blue over time
-  let activeTint = baseTint
-  let currentTintStrength = initialTintStrength
   if (activeMetal === 'Cu' && activeIon === 'Ag+') {
-    activeTint = 'var(--sol-cu)'
-    currentTintStrength = effectiveProgress * 0.95
-  } else if (activeIon === 'Cu2+') {
-    // Blue fades as Cu2+ is consumed
-    currentTintStrength = Math.max(0, initialTintStrength * (1 - effectiveProgress * 0.92))
+    tint = 'var(--sol-cu)'
+    tintStrength = reacting ? effectiveProgress * 0.95 : 0
   }
 
-  // Active ions in beaker
-  const beakerIons: IonParticle[] = useMemo(() => {
-    if (!isDipped || outcome === 'no visible reaction') {
-      return []
-    }
-    const cleanIonLabel = activeIon === 'Ag+' ? 'Ag⁺' : `${coatingMetal}²⁺`
-    const dissolvedLabel = `${activeMetal}²⁺`
-    return [
-      {
-        id: 'ion1',
-        label: cleanIonLabel,
-        direction: 'to-strip',
-        start: { x: -62, y: 35 },
-        end: { x: -22, y: 30 },
-        tone: 'red',
-      },
-      {
-        id: 'ion2',
-        label: cleanIonLabel,
-        direction: 'to-strip',
-        start: { x: 58, y: 55 },
-        end: { x: 22, y: 48 },
-        tone: 'red',
-      },
-      {
-        id: 'ion3',
-        label: dissolvedLabel,
-        direction: 'from-strip',
-        start: { x: -18, y: -2 },
-        end: { x: -62, y: -8 },
-        tone: 'ox',
-      },
-      {
-        id: 'ion4',
-        label: dissolvedLabel,
-        direction: 'from-strip',
-        start: { x: 18, y: 20 },
-        end: { x: 58, y: 46 },
-        tone: 'ox',
-      },
-    ]
-  }, [isDipped, outcome, activeIon, activeMetal, coatingMetal])
+  const coatMetal = activeCationMetal
+  const coat = reacting ? effectiveProgress : 0
+
+  const statusColour =
+    outcome === 'products strongly favoured'
+      ? 'var(--ox)'
+      : outcome === 'moderate both ways'
+        ? 'var(--caution)'
+        : 'var(--fg-subtle)'
+
+  const statusText = !isDipped
+    ? 'Strip above the solution (ready)'
+    : isSame
+      ? 'Same metal and cation (E°cell = 0)'
+      : outcome === 'products strongly favoured'
+        ? `Active displacement (${Math.round(effectiveProgress * 100)}%)`
+        : outcome === 'moderate both ways'
+          ? 'Dynamic equilibrium (Co/Ni, moderate)'
+          : 'No visible reaction (E°cell < 0)'
+
+  const emfRowColour = emf > 0 ? 'var(--ox)' : 'var(--fg-muted)'
 
   return (
-    <div
-      ref={rootRef}
-      className={styles.sim}
-      data-testid="metal-displacement-lab"
-    >
+    <div ref={rootRef} className={styles.sim} data-testid="metal-displacement-lab">
       <svg
         viewBox="0 0 840 430"
         className={styles.svg}
         role="img"
-        aria-label={`Metal displacement lab: ${activeMetal} strip in ${activeIon} solution. E°cell = ${formatSignedVolts(emf)}. ${observation}`}
+        aria-label={`Metal displacement lab: ${activeMetal} strip in ${ionLabel(activeIon)} solution. E°cell = ${formatSignedVolts(emf)}. ${observation}`}
       >
         <defs>
           <linearGradient id={seriesGradId} x1="0%" y1="0%" x2="100%" y2="0%">
@@ -318,59 +453,31 @@ export function MetalDisplacementLab({ reducedMotion }: SimulationProps) {
           </linearGradient>
         </defs>
 
-        {/* Outer Background Container */}
-        <rect
-          x={6}
-          y={6}
-          width={828}
-          height={418}
-          rx={14}
-          fill="var(--surface)"
-          stroke="var(--border)"
-          strokeWidth={1.2}
-        />
+        <rect x={6} y={6} width={828} height={418} rx={14} fill="var(--surface)" stroke="var(--border)" strokeWidth={1.2} />
 
-        {/* LEFT PANEL: Beaker Stage (width 390) */}
+        {/* LEFT: displacement cell */}
         <g transform="translate(18, 18)">
-          <rect
-            x={0}
-            y={0}
-            width={374}
-            height={394}
-            rx={10}
-            fill="var(--surface-raised)"
-            stroke="var(--border)"
-            strokeWidth={1}
-          />
-
-          {/* Stage Label */}
-          <text
-            x={20}
-            y={24}
-            fontSize={12}
-            fontWeight={700}
-            fill="var(--fg-subtle)"
-            fontFamily="var(--font-sans)"
-            style={{ letterSpacing: '0.04em' }}
-          >
+          <rect x={0} y={0} width={374} height={394} rx={10} fill="var(--surface-raised)" stroke="var(--border)" strokeWidth={1} />
+          <text x={20} y={24} fontSize={12} fontWeight={700} fill="var(--fg-subtle)" fontFamily="var(--font-sans)" style={{ letterSpacing: '0.04em' }}>
             DISPLACEMENT CELL
           </text>
 
-          {/* Strip position shifts vertically when dipped */}
-          <g transform={`translate(187, ${isDipped ? 230 : 190})`}>
-            <ReactionBeaker
-              stripMetal={activeMetal}
-              coatingMetal={coatingMetal}
-              coating={outcome === 'no visible reaction' ? 0 : effectiveProgress}
-              solutionTint={activeTint}
-              tintStrength={currentTintStrength}
-              progress={effectiveProgress}
-              ions={beakerIons}
-              title={`${activeMetal} in ${activeIon}`}
-            />
-          </g>
+          <DipCell
+            id={uid}
+            stripMetal={activeMetal}
+            stripMetalLabel={activeMetal}
+            depositMetal={coatMetal}
+            depositLabel={activeCationMetal}
+            coat={coat}
+            dipped={isDipped}
+            reducedMotion={!!reducedMotion}
+            tint={tint}
+            tintStrength={tintStrength}
+            ionProgress={effectiveProgress}
+            showIons={reacting}
+            dissolvingLabel={`${activeMetal}²⁺`}
+          />
 
-          {/* Status Overlay Tag */}
           <g transform="translate(20, 350)">
             <rect
               x={0}
@@ -379,240 +486,122 @@ export function MetalDisplacementLab({ reducedMotion }: SimulationProps) {
               height={32}
               rx={6}
               fill="var(--surface)"
-              stroke={
-                outcome === 'products strongly favoured'
-                  ? 'var(--ox)'
-                  : outcome === 'moderate both ways'
-                    ? 'var(--caution)'
-                    : 'var(--border)'
-              }
+              stroke={statusColour === 'var(--fg-subtle)' ? 'var(--border)' : statusColour}
               strokeWidth={1.2}
             />
-            <circle
-              cx={16}
-              cy={16}
-              r={5}
-              fill={
-                outcome === 'products strongly favoured'
-                  ? 'var(--ox)'
-                  : outcome === 'moderate both ways'
-                    ? 'var(--caution)'
-                    : 'var(--fg-subtle)'
-              }
-            />
-            <text
-              x={30}
-              y={17}
-              dominantBaseline="central"
-              fontSize={12}
-              fontWeight={600}
-              fill="var(--fg)"
-              fontFamily="var(--font-sans)"
-            >
-              {isDipped
-                ? outcome === 'products strongly favoured'
-                  ? `Active Displacement (${Math.round(effectiveProgress * 100)}%)`
-                  : outcome === 'moderate both ways'
-                    ? 'Dynamic Equilibrium (Co/Ni moderate)'
-                    : 'No Visible Reaction (E° < 0)'
-                : 'Strip Undipped (Ready)'}
+            <circle cx={16} cy={16} r={5} fill={statusColour} />
+            <text x={30} y={17} dominantBaseline="central" fontSize={13} fontWeight={600} fill="var(--fg)" fontFamily="var(--font-sans)">
+              {statusText}
             </text>
           </g>
         </g>
 
-        {/* RIGHT PANEL: Activity Series & Quantitative Readouts (x = 410, width 412) */}
+        {/* RIGHT: activity series and readouts */}
         <g transform="translate(410, 18)">
-          {/* Activity Series Strip Card */}
-          <g transform="translate(0, 0)">
-            <rect
-              x={0}
-              y={0}
-              width={412}
-              height={148}
-              rx={10}
-              fill="var(--surface-raised)"
-              stroke="var(--border)"
-              strokeWidth={1}
-            />
-
-            <text
-              x={20}
-              y={24}
-              fontSize={12}
-              fontWeight={700}
-              fill="var(--fg-subtle)"
-              fontFamily="var(--font-sans)"
-              style={{ letterSpacing: '0.04em' }}
-            >
-              ACTIVITY SERIES (REDUCING POWER HIERARCHY)
+          <g>
+            <rect x={0} y={0} width={412} height={148} rx={10} fill="var(--surface-raised)" stroke="var(--border)" strokeWidth={1} />
+            <text x={20} y={24} fontSize={12} fontWeight={700} fill="var(--fg-subtle)" fontFamily="var(--font-sans)" style={{ letterSpacing: '0.04em' }}>
+              ACTIVITY SERIES (REDUCING POWER)
             </text>
 
-            {/* Gradient Line */}
             <g transform="translate(20, 48)">
               <rect x={0} y={0} width={372} height={4} rx={2} fill={`url(#${seriesGradId})`} />
-              <text x={0} y={-8} fontSize={10} fontWeight={700} fill="var(--ox)" fontFamily="var(--font-sans)">
-                STRONGER REDUCTANT (Lower E°)
+              <text x={0} y={-8} fontSize={12} fontWeight={700} fill="var(--ox)" fontFamily="var(--font-sans)">
+                STRONGER REDUCTANT
               </text>
-              <text x={372} y={-8} textAnchor="end" fontSize={10} fontWeight={700} fill="var(--red)" fontFamily="var(--font-sans)">
+              <text x={372} y={-8} textAnchor="end" fontSize={12} fontWeight={700} fill="var(--red)" fontFamily="var(--font-sans)">
                 WEAKER REDUCTANT
               </text>
             </g>
 
-            {/* Metal badges along the series */}
             <g transform="translate(20, 72)">
               {ACTIVITY_SERIES_DISPLAY.map((item, idx) => {
-                const stepX = idx * 52
-                const isSelectedAnode = item.symbol === activeMetal
-                const isSelectedCathode =
-                  item.symbol === (activeIon === 'Ag+' ? 'Ag' : activeIon.replace('2+', ''))
-
-                const badgeStroke = isSelectedAnode
-                  ? 'var(--ox)'
-                  : isSelectedCathode
-                    ? 'var(--red)'
-                    : 'var(--border)'
-                const badgeFill = isSelectedAnode || isSelectedCathode ? 'var(--surface)' : 'var(--surface-raised)'
-
+                const isAnode = item.symbol === activeMetal
+                const isCathode = item.symbol === activeCationMetal
+                const stroke = isAnode ? 'var(--ox)' : isCathode ? 'var(--red)' : 'var(--border)'
+                const fill = isAnode || isCathode ? 'var(--surface)' : 'var(--surface-raised)'
+                const textFill = isAnode ? 'var(--ox)' : isCathode ? 'var(--red)' : 'var(--fg)'
                 return (
-                  <g key={item.symbol} transform={`translate(${stepX}, 0)`}>
-                    {/* Metal Pill */}
-                    <rect
-                      x={0}
-                      y={0}
-                      width={46}
-                      height={32}
-                      rx={6}
-                      fill={badgeFill}
-                      stroke={badgeStroke}
-                      strokeWidth={isSelectedAnode || isSelectedCathode ? 2 : 1}
-                    />
-                    <text
-                      x={23}
-                      y={16}
-                      textAnchor="middle"
-                      dominantBaseline="central"
-                      fontSize={13}
-                      fontWeight={700}
-                      fontFamily="var(--font-sans)"
-                      fill={
-                        isSelectedAnode
-                          ? 'var(--ox)'
-                          : isSelectedCathode
-                            ? 'var(--red)'
-                            : 'var(--fg)'
-                      }
-                    >
+                  <g key={item.symbol} transform={`translate(${idx * 46.5}, 0)`}>
+                    <rect x={0} y={0} width={40} height={32} rx={6} fill={fill} stroke={stroke} strokeWidth={isAnode || isCathode ? 2 : 1} />
+                    <text x={20} y={16} textAnchor="middle" dominantBaseline="central" fontSize={14} fontWeight={700} fontFamily="var(--font-sans)" fill={textFill}>
                       {item.symbol}
                       {item.isNonNcert ? '*' : ''}
                     </text>
-                    {/* Potential text underneath */}
-                    <text
-                      x={23}
-                      y={44}
-                      textAnchor="middle"
-                      fontSize={9.5}
-                      fontFamily="var(--font-sans)"
-                      fill="var(--fg-muted)"
-                    >
-                      {item.e0.toFixed(2)}
+                    <text x={20} y={46} textAnchor="middle" fontSize={12} fontFamily="var(--font-sans)" fill="var(--fg-muted)">
+                      {item.e0.toFixed(2).replace('-', '−')}
                     </text>
                   </g>
                 )
               })}
             </g>
 
-            {/* Non-NCERT disclaimer flag */}
             {isCoNiCase && (
-              <text x={20} y={136} fontSize={10} fill="var(--ox)" fontFamily="var(--font-sans)" fontWeight={600}>
-                * Co potential (−0.28 V) from standard tables (not in NCERT Table 7.1).
+              <text x={20} y={138} fontSize={12} fill="var(--ox)" fontFamily="var(--font-sans)" fontWeight={600}>
+                * Co (−0.28 V) is from standard tables, not NCERT Table 7.1.
               </text>
             )}
           </g>
 
-          {/* Quantitative EMF & Equation Card */}
           <g transform="translate(0, 162)">
-            <rect
-              x={0}
-              y={0}
-              width={412}
-              height={232}
-              rx={10}
-              fill="var(--surface-raised)"
-              stroke="var(--border)"
-              strokeWidth={1}
-            />
+            <rect x={0} y={0} width={412} height={232} rx={10} fill="var(--surface-raised)" stroke="var(--border)" strokeWidth={1} />
 
-            {/* Standard Cell Potential Breakdown */}
-            <g transform="translate(20, 20)">
-              <text x={0} y={10} fontSize={12} fontWeight={700} fill="var(--fg-subtle)" fontFamily="var(--font-sans)">
+            <g transform="translate(20, 18)">
+              <text x={0} y={10} fontSize={12} fontWeight={700} fill="var(--fg-subtle)" fontFamily="var(--font-sans)" style={{ letterSpacing: '0.04em' }}>
                 STANDARD CELL POTENTIAL
               </text>
-              <text x={0} y={36} fontSize={22} fontWeight={700} fill="var(--fg)" fontFamily="var(--font-sans)">
+              <text x={0} y={38} fontSize={22} fontWeight={700} fill="var(--fg)" fontFamily="var(--font-sans)">
                 <tspan className="sym">E</tspan>
                 <tspan dy="-0.4em" fontSize="0.75em">°</tspan>
                 <tspan dy="0.4em">cell = </tspan>
-                <tspan fill={emf > 0 ? 'var(--ox)' : 'var(--fg-muted)'}>
-                  {formatSignedVolts(emf)}
-                </tspan>
+                <tspan fill={emfRowColour}>{formatSignedVolts(emf)}</tspan>
               </text>
-
-              <text x={0} y={64} fontSize={13} fill="var(--fg-muted)" fontFamily="var(--font-sans)">
+              <text x={0} y={62} fontSize={13} fill="var(--fg-muted)" fontFamily="var(--font-sans)">
                 = <tspan className="sym">E</tspan>°(cathode) − <tspan className="sym">E</tspan>°(anode)
               </text>
-              <text x={0} y={84} fontSize={13} fill="var(--fg)" fontFamily="var(--font-sans)">
-                = {formatSignedVolts(eCathode)} ({formatIonDisplay(activeIon)}) − ({formatSignedVolts(eAnode)} ({activeMetal}))
+              <text x={0} y={80} fontSize={13} fill="var(--fg)" fontFamily="var(--font-sans)">
+                = {formatSignedVolts(eCathode)} ({ionLabel(activeIon)}) − ({formatSignedVolts(eAnode)} ({activeMetal}))
               </text>
             </g>
 
-            {/* Ionic Equation Box */}
-            <g transform="translate(20, 128)">
-              <rect
-                x={0}
-                y={0}
-                width={372}
-                height={84}
-                rx={8}
-                fill="var(--surface)"
-                stroke="var(--border)"
-                strokeWidth={1}
-              />
-              <text x={14} y={22} fontSize={11} fontWeight={700} fill="var(--fg-subtle)" fontFamily="var(--font-sans)">
-                REPRESENTATIVE IONIC EQUATION
+            {/* Equation box: KaTeX inside a foreignObject so the mhchem wraps the same way as the prose */}
+            <g transform="translate(20, 116)">
+              <rect x={0} y={0} width={372} height={104} rx={8} fill="var(--surface)" stroke="var(--border)" strokeWidth={1} />
+              <text x={14} y={20} fontSize={11} fontWeight={700} fill="var(--fg-subtle)" fontFamily="var(--font-sans)" style={{ letterSpacing: '0.04em' }}>
+                {equation.mhchem === null ? 'NO REACTION' : 'BALANCED IONIC EQUATION'}
               </text>
-              <text
-                x={14}
-                y={48}
-                fontSize={15}
-                fontWeight={700}
-                fill={outcome === 'no visible reaction' ? 'var(--fg-subtle)' : 'var(--fg)'}
-                fontFamily="var(--font-sans)"
-              >
-                {equationData.equationText}
-              </text>
-              <text x={14} y={70} fontSize={11} fill="var(--fg-muted)" fontFamily="var(--font-sans)">
+              <foreignObject x={10} y={28} width={352} height={40}>
+                <div className={styles.eqBox}>
+                  {equation.mhchem === null ? (
+                    <span className={styles.noReaction}>{equation.noReactionReason}</span>
+                  ) : (
+                    <Ce mhchem={equation.mhchem} />
+                  )}
+                </div>
+              </foreignObject>
+              <text x={14} y={88} fontSize={12} fill="var(--fg-muted)" fontFamily="var(--font-sans)">
                 {outcome === 'products strongly favoured'
                   ? 'Thermodynamically spontaneous (E°cell > 0)'
                   : outcome === 'moderate both ways'
-                    ? 'Both reactants and products present at equilibrium'
-                    : 'Non-spontaneous under standard conditions'}
+                    ? 'Reactants and products both present at equilibrium'
+                    : 'Stays unchanged under standard conditions'}
               </text>
             </g>
           </g>
         </g>
       </svg>
 
-      {/* Accessible Readout Table */}
       <dl className={styles.readout}>
         <div className={styles.item}>
-          <dt>Metal Strip (Anode / Reductant)</dt>
+          <dt>Metal strip (anode, reductant)</dt>
           <dd data-testid="readout-metal">
             {activeMetal} (<span className="sym">E</span>° = {formatSignedVolts(eAnode)})
           </dd>
         </div>
         <div className={styles.item}>
-          <dt>Solution Cation (Cathode / Oxidant)</dt>
+          <dt>Solution cation (cathode, oxidant)</dt>
           <dd data-testid="readout-ion">
-            {formatIonDisplay(activeIon)} (<span className="sym">E</span>° = {formatSignedVolts(eCathode)})
+            {ionLabel(activeIon)} (<span className="sym">E</span>° = {formatSignedVolts(eCathode)})
           </dd>
         </div>
         <div className={styles.item}>
@@ -620,7 +609,7 @@ export function MetalDisplacementLab({ reducedMotion }: SimulationProps) {
           <dd data-testid="readout-emf">{formatSignedVolts(emf)}</dd>
         </div>
         <div className={styles.item}>
-          <dt>Displacement Outcome</dt>
+          <dt>Displacement outcome</dt>
           <dd data-testid="readout-outcome">
             {outcome === 'products strongly favoured'
               ? 'Displacement Spontaneous'
@@ -631,20 +620,17 @@ export function MetalDisplacementLab({ reducedMotion }: SimulationProps) {
         </div>
       </dl>
 
-      {/* Live region for assistive tech */}
       <p className={styles.live} aria-live="polite" data-testid="metal-displacement-live">
         {observation}
       </p>
 
-      {/* Co/Ni footnote notice */}
       {isCoNiCase && (
         <p className={styles.footnote} data-testid="co-ni-footnote">
-          Note: Cobalt reduction potential <span className="sym">E</span>°(Co²⁺/Co) = −0.28 V is cited
-          from standard electrochemical tables and is not printed in NCERT Table 7.1.
+          Note: the cobalt reduction potential <span className="sym">E</span>°(Co²⁺/Co) = −0.28 V is cited from standard
+          electrochemical tables and is not printed in NCERT Table 7.1.
         </p>
       )}
 
-      {/* Interactive Controls */}
       <SimulationControls>
         {!isCoNiCase ? (
           <>
@@ -673,15 +659,11 @@ export function MetalDisplacementLab({ reducedMotion }: SimulationProps) {
           </>
         ) : (
           <p style={{ margin: 0, fontSize: '0.85rem', color: 'var(--fg-muted)' }}>
-            Preset: Metallic Cobalt (Co) placed in Nickel sulphate (Ni²⁺) solution (NCERT §7.2.1).
+            Preset: metallic cobalt in nickel(II) sulphate solution (NCERT §7.2.1).
           </p>
         )}
 
-        <Button
-          variant="primary"
-          onClick={handleDipToggle}
-          data-testid="dip-button"
-        >
+        <Button variant="primary" onClick={handleDipToggle} data-testid="dip-button">
           {isDipped ? 'Lift strip' : 'Dip strip'}
         </Button>
 
@@ -695,14 +677,14 @@ export function MetalDisplacementLab({ reducedMotion }: SimulationProps) {
           }}
           data-testid="co-ni-toggle"
         >
-          {isCoNiCase ? 'Exit Co/Ni Case' : 'NCERT Co in Ni²⁺ Case'}
+          {isCoNiCase ? 'Exit Co/Ni case' : 'NCERT Co in Ni²⁺ case'}
         </Button>
 
         <Button variant="secondary" onClick={handleReset}>
           Reset
         </Button>
 
-        {isDipped && outcome !== 'no visible reaction' && (
+        {reacting && (
           <Slider
             label="Reaction progress"
             value={Math.round(progress * 100)}

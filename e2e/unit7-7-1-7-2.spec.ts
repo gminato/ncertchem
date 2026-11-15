@@ -59,6 +59,9 @@ for (const scheme of ['light', 'dark'] as const) {
       // Scrolly: redox-classical (5 steps)
       await waitForScrolly(page, 'redox-classical')
       await expect(page.locator('[data-animation="redox-classical"] [data-scrolly-step]')).toHaveCount(5)
+      // Every equation is typeset: no KaTeX parse errors and the reaction is rendered (step 1 shows one).
+      await expect(page.locator('[data-animation="redox-classical"] .katex-error')).toHaveCount(0)
+      await expect(page.locator('[data-animation="redox-classical"] .katex').first()).toBeVisible()
 
       for (let i = 0; i < 5; i++) {
         await shotStep(page, 'redox-classical', i, '7-1-classical', scheme)
@@ -85,6 +88,7 @@ for (const scheme of ['light', 'dark'] as const) {
       for (let i = 0; i < 5; i++) {
         await shotStep(page, 'redox-electron-transfer', i, '7-2-transfer', scheme)
       }
+      await expect(page.locator('[data-animation="redox-electron-transfer"] .katex-error')).toHaveCount(0)
 
       // Simulation: Metal Displacement Lab
       const lab = page.locator('[data-simulation="metal-displacement-lab"]')

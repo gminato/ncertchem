@@ -61,3 +61,25 @@
   color: var(--fg-muted);
   border-left: 3px solid var(--ox);
 }
+
+/* KaTeX sits at 1.21em, so 16px gives an equation of about 19px. */
+.ce {
+  display: inline-block;
+  font-size: 16px;
+  color: var(--fg);
+}
+
+.eqBox {
+  display: flex;
+  align-items: center;
+  height: 100%;
+  font-family: var(--font-sans);
+  overflow: hidden;
+}
+
+.noReaction {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--fg-muted);
+  line-height: 1.35;
+}

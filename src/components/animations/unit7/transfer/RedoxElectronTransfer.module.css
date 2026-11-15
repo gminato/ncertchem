@@ -1,0 +1,19 @@
+/* Half-equation rows inside the electron-transfer Scrolly. KaTeX renders at 1.21em, so 20px gives about 24px. */
+.halfEq {
+  display: flex;
+  align-items: center;
+  height: 100%;
+  font-size: 20px;
+  color: var(--fg);
+  font-family: var(--font-sans);
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+/* Narrative detail under the mechanism title; wraps inside its card. */
+.detail {
+  font-family: var(--font-sans);
+  font-size: 14px;
+  line-height: 1.4;
+  color: var(--fg-muted);
+}

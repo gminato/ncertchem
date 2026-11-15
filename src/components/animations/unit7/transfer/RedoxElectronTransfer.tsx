@@ -1,9 +1,18 @@
 'use client'
 
-import React from 'react'
+import React, { useMemo } from 'react'
+import katex from 'katex'
+import 'katex/contrib/mhchem'
 import { ElectronTransfer } from '@/components/redox/ElectronTransfer'
 import { useStepTween } from '@/components/animations/unit4/vbt/useStepTween'
 import { transferStep, TRANSFER_STEP_COUNT } from './transfer-steps'
+import styles from './RedoxElectronTransfer.module.css'
+
+/** Renders one mhchem reaction with KaTeX. The strings come from the tested step data. */
+function Ce({ mhchem }: { mhchem: string }) {
+  const html = useMemo(() => katex.renderToString(`\\ce{${mhchem}}`, { throwOnError: false }), [mhchem])
+  return <span dangerouslySetInnerHTML={{ __html: html }} />
+}
 
 export interface RedoxElectronTransferProps {
   step: number
@@ -31,6 +40,9 @@ export function RedoxElectronTransfer({ step, reducedMotion }: RedoxElectronTran
 
   const isHalfReactions = index === 3
   const isAgentRoles = index === 4
+  const oxHalf = data.oxHalfMhchem ?? ''
+  const redHalf = data.redHalfMhchem ?? ''
+  const overall = data.overallMhchem ?? ''
 
   return (
     <svg
@@ -98,7 +110,7 @@ export function RedoxElectronTransfer({ step, reducedMotion }: RedoxElectronTran
         /* Steps 0, 1, 2: Interactive Electron Transfer Visual */
         <g>
           {/* Main Electron Transfer Component Stage */}
-          <g transform="translate(290, 155)">
+          <g transform="translate(290, 160) scale(1.25)">
             <ElectronTransfer
               donor={{
                 symbol: 'Na',
@@ -117,72 +129,42 @@ export function RedoxElectronTransfer({ step, reducedMotion }: RedoxElectronTran
               particleDistance={220}
               showFlightArc={true}
               donorCaption={
-                <g transform="translate(0, 56)">
-                  <text
-                    x={0}
-                    y={0}
-                    textAnchor="middle"
-                    fontSize={13}
-                    fontWeight={600}
-                    fontFamily="var(--font-sans)"
-                    fill={p > 0.1 ? 'var(--ox)' : 'var(--fg-muted)'}
-                  >
+                <>
+                  <tspan x={0} dy={0} fontSize={16} fontWeight={600} fill={p > 0.1 ? 'var(--ox)' : 'var(--fg-muted)'}>
                     {p >= 0.8 ? 'Na⁺ (2, 8)' : 'Na atom (2, 8, 1)'}
-                  </text>
-                  <text
-                    x={0}
-                    y={16}
-                    textAnchor="middle"
-                    fontSize={11}
-                    fontFamily="var(--font-sans)"
-                    fill="var(--fg-subtle)"
-                  >
-                    {p >= 0.8 ? 'Cation ([Ne] octet)' : 'Low ionisation E'}
-                  </text>
-                </g>
+                  </tspan>
+                  <tspan x={0} dy={21} fontSize={14} fontWeight={500} fill="var(--fg-muted)">
+                    {p >= 0.8 ? '[Ne] octet' : 'Low ionisation enthalpy'}
+                  </tspan>
+                </>
               }
               acceptorCaption={
-                <g transform="translate(0, 56)">
-                  <text
-                    x={0}
-                    y={0}
-                    textAnchor="middle"
-                    fontSize={13}
-                    fontWeight={600}
-                    fontFamily="var(--font-sans)"
-                    fill={p >= 0.7 ? 'var(--red)' : 'var(--fg-muted)'}
-                  >
+                <>
+                  <tspan x={0} dy={0} fontSize={16} fontWeight={600} fill={p >= 0.7 ? 'var(--red)' : 'var(--fg-muted)'}>
                     {p >= 0.8 ? 'Cl⁻ (2, 8, 8)' : 'Cl atom (2, 8, 7)'}
-                  </text>
-                  <text
-                    x={0}
-                    y={16}
-                    textAnchor="middle"
-                    fontSize={11}
-                    fontFamily="var(--font-sans)"
-                    fill="var(--fg-subtle)"
-                  >
-                    {p >= 0.8 ? 'Anion ([Ar] octet)' : 'High electron affinity'}
-                  </text>
-                </g>
+                  </tspan>
+                  <tspan x={0} dy={21} fontSize={14} fontWeight={500} fill="var(--fg-muted)">
+                    {p >= 0.8 ? '[Ar] octet' : 'High electron affinity'}
+                  </tspan>
+                </>
               }
             />
           </g>
 
           {/* Bottom Narrative / Insight Box */}
-          <g transform="translate(24, 280)">
+          <g transform="translate(24, 284)">
             <rect
               x={0}
               y={0}
               width={532}
-              height={124}
+              height={130}
               rx={10}
               fill="var(--surface-raised)"
               stroke="var(--border)"
               strokeWidth={1.2}
             />
 
-            <g transform="translate(20, 20)">
+            <g transform="translate(20, 16)">
               {/* Pillar Label */}
               <text
                 x={0}
@@ -205,18 +187,13 @@ export function RedoxElectronTransfer({ step, reducedMotion }: RedoxElectronTran
               >
                 {data.conceptTitle}
               </text>
-              <text
-                x={0}
-                y={56}
-                fontSize={13}
-                fill="var(--fg-muted)"
-                fontFamily="var(--font-sans)"
-              >
-                {data.conceptDetail}
-              </text>
+              {/* Wrapped detail text, so long sentences never run past the card */}
+              <foreignObject x={0} y={38} width={492} height={46}>
+                <div className={styles.detail}>{data.conceptDetail}</div>
+              </foreignObject>
 
               {/* Status indicators */}
-              <g transform="translate(0, 78)">
+              <g transform="translate(0, 96)">
                 <circle cx={6} cy={0} r={4} fill={p >= 0.2 ? 'var(--ox)' : 'var(--border)'} />
                 <text x={16} y={4} fontSize={12} fontWeight={600} fill="var(--fg)" fontFamily="var(--font-sans)">
                   {p < 0.2
@@ -252,45 +229,51 @@ export function RedoxElectronTransfer({ step, reducedMotion }: RedoxElectronTran
             Loss of electrons must exactly equal gain of electrons.
           </text>
 
-          {/* Oxidation Half Card */}
+          {/* Oxidation half */}
           <g transform="translate(20, 64)">
             <rect x={0} y={0} width={492} height={80} rx={8} fill="var(--surface)" stroke="var(--ox)" strokeWidth={1.6} />
-            <rect x={14} y={12} width={130} height={22} rx={4} fill="var(--ox)" />
-            <text x={79} y={23} textAnchor="middle" dominantBaseline="central" fontSize={11} fontWeight={700} fill="#ffffff" fontFamily="var(--font-sans)">
+            <rect x={14} y={12} width={150} height={22} rx={4} fill="var(--ox)" />
+            <text x={89} y={23} textAnchor="middle" dominantBaseline="central" fontSize={12} fontWeight={700} fill="#ffffff" fontFamily="var(--font-sans)">
               OXIDATION HALF
             </text>
-            <text x={156} y={23} dominantBaseline="central" fontSize={12} fill="var(--fg-muted)" fontFamily="var(--font-sans)">
-              (Loss of 2 electrons)
+            <text x={176} y={23} dominantBaseline="central" fontSize={14} fill="var(--fg-muted)" fontFamily="var(--font-sans)">
+              Loss of 2 electrons
             </text>
-            <text x={24} y={56} fontSize={18} fontWeight={700} fill="var(--fg)" fontFamily="var(--font-sans)">
-              2Na(s) → 2Na⁺(s) + 2e⁻
-            </text>
+            <foreignObject x={16} y={38} width={460} height={40}>
+              <div className={styles.halfEq}>
+                <Ce mhchem={oxHalf} />
+              </div>
+            </foreignObject>
           </g>
 
-          {/* Reduction Half Card */}
+          {/* Reduction half */}
           <g transform="translate(20, 154)">
             <rect x={0} y={0} width={492} height={80} rx={8} fill="var(--surface)" stroke="var(--red)" strokeWidth={1.6} />
-            <rect x={14} y={12} width={130} height={22} rx={4} fill="var(--red)" />
-            <text x={79} y={23} textAnchor="middle" dominantBaseline="central" fontSize={11} fontWeight={700} fill="#ffffff" fontFamily="var(--font-sans)">
+            <rect x={14} y={12} width={150} height={22} rx={4} fill="var(--red)" />
+            <text x={89} y={23} textAnchor="middle" dominantBaseline="central" fontSize={12} fontWeight={700} fill="#ffffff" fontFamily="var(--font-sans)">
               REDUCTION HALF
             </text>
-            <text x={156} y={23} dominantBaseline="central" fontSize={12} fill="var(--fg-muted)" fontFamily="var(--font-sans)">
-              (Gain of 2 electrons)
+            <text x={176} y={23} dominantBaseline="central" fontSize={14} fill="var(--fg-muted)" fontFamily="var(--font-sans)">
+              Gain of 2 electrons
             </text>
-            <text x={24} y={56} fontSize={18} fontWeight={700} fill="var(--fg)" fontFamily="var(--font-sans)">
-              Cl₂(g) + 2e⁻ → 2Cl⁻(s)
-            </text>
+            <foreignObject x={16} y={38} width={460} height={40}>
+              <div className={styles.halfEq}>
+                <Ce mhchem={redHalf} />
+              </div>
+            </foreignObject>
           </g>
 
-          {/* Sum Equation Card */}
+          {/* Overall equation */}
           <g transform="translate(20, 244)">
             <rect x={0} y={0} width={492} height={82} rx={8} fill="var(--surface)" stroke="var(--border)" strokeWidth={1.4} />
             <text x={16} y={24} fontSize={12} fontWeight={700} fill="var(--fg-subtle)" fontFamily="var(--font-sans)">
               OVERALL REDOX REACTION (ELECTRONS CANCEL)
             </text>
-            <text x={16} y={54} fontSize={20} fontWeight={700} fill="var(--fg)" fontFamily="var(--font-sans)">
-              2Na(s) + Cl₂(g) → 2NaCl(s)
-            </text>
+            <foreignObject x={16} y={32} width={460} height={46}>
+              <div className={styles.halfEq}>
+                <Ce mhchem={overall} />
+              </div>
+            </foreignObject>
           </g>
         </g>
       ) : (

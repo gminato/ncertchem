@@ -22,6 +22,7 @@ export interface TransferStepData {
   electrons: number
   conceptTitle: string
   conceptDetail: string
+  /** Mhchem reaction without the \\ce{} wrapper; the view typesets it with KaTeX. */
   oxHalfMhchem?: string
   redHalfMhchem?: string
   overallMhchem?: string
@@ -81,9 +82,9 @@ export const TRANSFER_STEPS: readonly TransferStepData[] = [
     electrons: 1,
     conceptTitle: 'Splitting the Net Change',
     conceptDetail: 'Every redox equation splits into an electron-loss half and an electron-gain half. Total electrons balance.',
-    oxHalfMhchem: '\\ce{2Na(s) -> 2Na+ + 2e-}',
-    redHalfMhchem: '\\ce{Cl2(g) + 2e- -> 2Cl-}',
-    overallMhchem: '\\ce{2Na(s) + Cl2(g) -> 2NaCl(s)}',
+    oxHalfMhchem: '2Na(s) -> 2Na+ + 2e-',
+    redHalfMhchem: 'Cl2(g) + 2e- -> 2Cl-',
+    overallMhchem: '2Na(s) + Cl2(g) -> 2NaCl(s)',
   },
   {
     index: 4,

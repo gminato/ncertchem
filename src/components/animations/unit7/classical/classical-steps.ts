@@ -1,30 +1,32 @@
 /**
- * Step targets and verified chemistry data for the Classical Redox Scrolly Animation
- * (Unit 7, Section 7.1).
+ * Step data for the Classical Redox Scrolly (Unit 7, Section 7.1).
  *
- * Covers the classical broadening of oxidation and reduction definitions:
- * Step 0: Addition of oxygen (oxidation) and removal of oxygen (reduction)
- * Step 1: Removal of hydrogen (oxidation) and addition of hydrogen (reduction)
- * Step 2: Addition of electronegative element (oxidation)
- * Step 3: Removal of electropositive element (oxidation)
- * Step 4: The unified classical redox ledger and simultaneous occurrence
+ * Each equation is kept as tokens so the view can typeset every formula with KaTeX
+ * and put an underline and a label under the oxidised and the reduced species.
+ * The joined tokens are checked by equations.test.ts, so every equation balances.
  */
+
+export type EquationRole = 'ox' | 'red'
+
+export interface EquationToken {
+  /** Mhchem for one species, e.g. "2CuO(s)". Operators use "+" and "->". */
+  mhchem: string
+  /** Set on the species that is oxidised (ox) or reduced (red). */
+  role?: EquationRole
+  /** Short label set under a role species, e.g. "gains oxygen". */
+  label?: string
+}
 
 export interface ClassicalStepData {
   index: number
   stageNumber: string
   title: string
-  ruleTitle: string
+  /** One line for the oxidation column of the rule bar. */
   oxRule: string
+  /** One line for the reduction column of the rule bar. */
   redRule: string
-  reactionMhchem: string
-  equationDisplay: string
-  oxidisedSpecies: string
-  reducedSpecies: string
-  oxProduct: string
-  redProduct: string
-  oxReason: string
-  redReason: string
+  /** Worked reaction as tokens; empty for the summary step. */
+  equation: readonly EquationToken[]
   matrixRows?: ReadonlyArray<{
     criterion: string
     oxidation: string
@@ -32,91 +34,89 @@ export interface ClassicalStepData {
   }>
 }
 
+/** Joins the tokens of one step into a single mhchem reaction string. */
+export function equationMhchem(tokens: readonly EquationToken[]): string {
+  return tokens.map((t) => t.mhchem).join(' ')
+}
+
+const PLUS: EquationToken = { mhchem: '+' }
+const ARROW: EquationToken = { mhchem: '->' }
+
 export const CLASSICAL_STEPS: readonly ClassicalStepData[] = [
   {
     index: 0,
     stageNumber: 'Stage 1 of 4',
-    title: 'Addition & Removal of Oxygen',
-    ruleTitle: 'The Historical Origin',
-    oxRule: 'Oxidation: Addition of oxygen',
-    redRule: 'Reduction: Removal of oxygen',
-    reactionMhchem: '\\ce{2CuO(s) + C(s) -> 2Cu(s) + CO2(g)}',
-    equationDisplay: '2CuO(s) + C(s) → 2Cu(s) + CO₂(g)',
-    oxidisedSpecies: 'C(s)',
-    reducedSpecies: 'CuO(s)',
-    oxProduct: 'CO₂(g)',
-    redProduct: 'Cu(s)',
-    oxReason: 'Gains oxygen to form carbon dioxide (+O)',
-    redReason: 'Loses oxygen to leave elemental copper (−O)',
+    title: 'Addition and removal of oxygen',
+    oxRule: 'Oxidation: adding oxygen',
+    redRule: 'Reduction: removing oxygen',
+    equation: [
+      { mhchem: '2CuO(s)', role: 'red', label: 'loses oxygen' },
+      PLUS,
+      { mhchem: 'C(s)', role: 'ox', label: 'gains oxygen' },
+      ARROW,
+      { mhchem: '2Cu(s)' },
+      PLUS,
+      { mhchem: 'CO2(g)' },
+    ],
   },
   {
     index: 1,
     stageNumber: 'Stage 2 of 4',
-    title: 'Removal & Addition of Hydrogen',
-    ruleTitle: 'Broadening to Hydrogen',
-    oxRule: 'Oxidation: Removal of hydrogen',
-    redRule: 'Reduction: Addition of hydrogen',
-    reactionMhchem: '\\ce{2H2S(g) + Cl2(g) -> 2HCl(g) + S(s)}',
-    equationDisplay: '2H₂S(g) + Cl₂(g) → 2HCl(g) + S(s)',
-    oxidisedSpecies: 'H₂S(g)',
-    reducedSpecies: 'Cl₂(g)',
-    oxProduct: 'S(s)',
-    redProduct: 'HCl(g)',
-    oxReason: 'Hydrogen is stripped away from sulphur (−H)',
-    redReason: 'Chlorine acquires hydrogen to form HCl (+H)',
+    title: 'Removal and addition of hydrogen',
+    oxRule: 'Oxidation: removing hydrogen',
+    redRule: 'Reduction: adding hydrogen',
+    equation: [
+      { mhchem: 'H2S(g)', role: 'ox', label: 'loses hydrogen' },
+      PLUS,
+      { mhchem: 'Cl2(g)', role: 'red', label: 'gains hydrogen' },
+      ARROW,
+      { mhchem: '2HCl(g)' },
+      PLUS,
+      { mhchem: 'S(s)' },
+    ],
   },
   {
     index: 2,
     stageNumber: 'Stage 3 of 4',
-    title: 'Addition of Electronegative Elements',
-    ruleTitle: 'Beyond Oxygen',
-    oxRule: 'Oxidation: Addition of electronegative element',
-    redRule: 'Reduction: Removal of electronegative element',
-    reactionMhchem: '\\ce{Ca(s) + Cl2(g) -> CaCl2(s)}',
-    equationDisplay: 'Ca(s) + Cl₂(g) → CaCl₂(s)',
-    oxidisedSpecies: 'Ca(s)',
-    reducedSpecies: 'Cl₂(g)',
-    oxProduct: 'CaCl₂(s)',
-    redProduct: 'CaCl₂(s)',
-    oxReason: 'Combines with electronegative chlorine (+Cl)',
-    redReason: 'Chlorine accepts electropositive calcium (+Ca)',
+    title: 'Addition of an electronegative element',
+    oxRule: 'Oxidation: adding an electronegative element',
+    redRule: 'Reduction: removing an electronegative element',
+    equation: [
+      { mhchem: 'Ca(s)', role: 'ox', label: 'gains chlorine' },
+      PLUS,
+      { mhchem: 'Cl2(g)', role: 'red', label: 'gains calcium' },
+      ARROW,
+      { mhchem: 'CaCl2(s)' },
+    ],
   },
   {
     index: 3,
     stageNumber: 'Stage 4 of 4',
-    title: 'Removal of Electropositive Elements',
-    ruleTitle: 'Beyond Hydrogen',
-    oxRule: 'Oxidation: Removal of electropositive element',
-    redRule: 'Reduction: Addition of electropositive element',
-    reactionMhchem: '\\ce{2KI(aq) + Cl2(g) -> 2KCl(aq) + I2(s)}',
-    equationDisplay: '2KI(aq) + Cl₂(g) → 2KCl(aq) + I₂(s)',
-    oxidisedSpecies: 'KI(aq)',
-    reducedSpecies: 'Cl₂(g)',
-    oxProduct: 'I₂(s)',
-    redProduct: 'KCl(aq)',
-    oxReason: 'Electropositive potassium is stripped from iodide (−K)',
-    redReason: 'Chlorine acquires electropositive potassium (+K)',
+    title: 'Removal of an electropositive element',
+    oxRule: 'Oxidation: removing an electropositive element',
+    redRule: 'Reduction: adding an electropositive element',
+    equation: [
+      { mhchem: '2KI(aq)', role: 'ox', label: 'loses potassium' },
+      PLUS,
+      { mhchem: 'Cl2(g)', role: 'red', label: 'gains potassium' },
+      ARROW,
+      { mhchem: '2KCl(aq)' },
+      PLUS,
+      { mhchem: 'I2(s)' },
+    ],
   },
   {
     index: 4,
     stageNumber: 'Summary',
-    title: 'The Unified Classical Ledger',
-    ruleTitle: 'Redox is Simultaneous',
-    oxRule: 'Oxidation = +O, −H, +electronegative, −electropositive',
-    redRule: 'Reduction = −O, +H, −electronegative, +electropositive',
-    reactionMhchem: '\\ce{Oxidation + Reduction <=> Redox}',
-    equationDisplay: 'Oxidation & Reduction Always Occur Together',
-    oxidisedSpecies: 'Reducing Agent (Oxidised)',
-    reducedSpecies: 'Oxidising Agent (Reduced)',
-    oxProduct: 'Electron / Partner Donor',
-    redProduct: 'Electron / Partner Acceptor',
-    oxReason: 'Cannot occur alone: lost atoms/electrons must have a recipient',
-    redReason: 'Cannot occur alone: gained atoms/electrons must come from a donor',
+    title: 'The unified classical ledger',
+    oxRule: 'Oxidation',
+    redRule: 'Reduction',
+    equation: [],
     matrixRows: [
-      { criterion: 'Oxygen (O)', oxidation: 'Addition (+O)', reduction: 'Removal (−O)' },
-      { criterion: 'Hydrogen (H)', oxidation: 'Removal (−H)', reduction: 'Addition (+H)' },
-      { criterion: 'Electronegative Element', oxidation: 'Addition (+EN)', reduction: 'Removal (−EN)' },
-      { criterion: 'Electropositive Element', oxidation: 'Removal (−EP)', reduction: 'Addition (+EP)' },
+      { criterion: 'Oxygen', oxidation: 'Added (+O)', reduction: 'Removed (−O)' },
+      { criterion: 'Hydrogen', oxidation: 'Removed (−H)', reduction: 'Added (+H)' },
+      { criterion: 'Electronegative element', oxidation: 'Added', reduction: 'Removed' },
+      { criterion: 'Electropositive element', oxidation: 'Removed', reduction: 'Added' },
     ],
   },
 ]

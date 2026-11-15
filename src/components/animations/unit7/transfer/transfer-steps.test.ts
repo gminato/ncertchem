@@ -27,9 +27,9 @@ describe('transfer-steps', () => {
 
   it('contains valid mhchem equations for half-reactions in step 3', () => {
     const s3 = transferStep(3)
-    expect(s3.oxHalfMhchem).toContain('\\ce{2Na(s) -> 2Na+ + 2e-}')
-    expect(s3.redHalfMhchem).toContain('\\ce{Cl2(g) + 2e- -> 2Cl-}')
-    expect(s3.overallMhchem).toContain('\\ce{2Na(s) + Cl2(g) -> 2NaCl(s)}')
+    expect(s3.oxHalfMhchem).toContain('2Na(s) -> 2Na+ + 2e-')
+    expect(s3.redHalfMhchem).toContain('Cl2(g) + 2e- -> 2Cl-')
+    expect(s3.overallMhchem).toContain('2Na(s) + Cl2(g) -> 2NaCl(s)')
   })
 
   it('clearly assigns oxidant and reductant roles in step 4', () => {
