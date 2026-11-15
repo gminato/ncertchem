@@ -243,9 +243,10 @@ export function layout2D(g: MolGraph): Point[] {
       } else {
         out = Math.atan2(-s.y, -s.x)
       }
-      if (k <= 1) return [out]
-      if (k === 2) return [out + Math.PI / 3, out - Math.PI / 3]
-      return [out, out + Math.PI / 2, out - Math.PI / 2]
+      // The bisector first, then its opposite and the perpendiculars. bestAngle scores each against
+      // the existing bonds and clashes, so a branch collinear with a chain bond is never picked.
+      if (k <= 1) return [out, out + Math.PI / 2, out - Math.PI / 2, out + Math.PI]
+      return [out, out + Math.PI, out + Math.PI / 2, out - Math.PI / 2]
     }
 
     const bestAngle = (p: number): number => {

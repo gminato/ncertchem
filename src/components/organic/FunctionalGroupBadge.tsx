@@ -28,8 +28,9 @@ export const FunctionalGroupBadge = forwardRef<SVGGElement, FunctionalGroupBadge
     <g ref={ref} {...rest}>
       {anchor && (
         <line
-          x1={anchor.x}
-          y1={anchor.y}
+          // The leader starts clear of the atom's letter, so it never strikes through it.
+          x1={Math.abs(anchor.x - x) > Math.abs(anchor.y - y) ? anchor.x + Math.sign(x - anchor.x) * 16 : anchor.x}
+          y1={Math.abs(anchor.x - x) > Math.abs(anchor.y - y) ? anchor.y : anchor.y + Math.sign(y - anchor.y) * 14}
           x2={Math.abs(anchor.x - x) > Math.abs(anchor.y - y) ? (anchor.x < x ? x - w / 2 : x + w / 2) : x}
           y2={Math.abs(anchor.x - x) > Math.abs(anchor.y - y) ? y : y + (anchor.y < y ? -h / 2 : h / 2)}
           stroke={stroke}

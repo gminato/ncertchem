@@ -1,37 +1,33 @@
 import React, { forwardRef } from 'react'
 import { condensedWidth } from './condensed'
-import { arrowHeadPoints, curvedArrowGeometry } from './arrows'
 import { deltaText } from './delta'
 
 export interface InductiveNode {
   /** Text on the node, e.g. "Cl", "CH₂". */
   label: string
-  /** Partial-charge label under the node, e.g. "δδ+". Empty for none. */
+  /** Partial-charge label under the node, e.g. "δ+". Empty for none. */
   charge?: string
-  /** Opacity of the charge label: 1 next to the group, fading with distance. */
+  /** Opacity of the charge label, fading with distance from the group. */
   chargeOpacity?: number
 }
 
 export interface InductiveChainProps extends Omit<React.SVGAttributes<SVGGElement>, 'children'> {
-  /** Atoms in order from the group that withdraws or releases electrons. */
+  /** Atoms in order from the group that withdraws electrons. */
   nodes: readonly InductiveNode[]
   /** Pixels between node centres. */
   spacing?: number
-  /** Direction of the sigma-bond arrows: `towards` the first node (-I) or `away` from it (+I). */
-  direction?: 'towards' | 'away'
   x?: number
   y?: number
 }
 
-const FONT = 22
-const ARROW_Y = -30
+const FONT = 24
 
 /**
- * A chain of sigma bonds with arrows along each bond showing the inductive pull of the group
- * at the start (-I: electrons drawn towards it). Charge labels fade with distance.
+ * A chain of sigma bonds. Each bond carries an arrowhead on it, pointing towards the group at the
+ * start (the -I pull). Charge labels sit under the carbons and fade with distance.
  */
 export const InductiveChain = forwardRef<SVGGElement, InductiveChainProps>(function InductiveChain(
-  { nodes, spacing = 96, direction = 'towards', x = 0, y = 0, ...rest },
+  { nodes, spacing = 96, x = 0, y = 0, ...rest },
   ref
 ) {
   const widths = nodes.map((n) => condensedWidth(n.label) * FONT)
@@ -44,21 +40,14 @@ export const InductiveChain = forwardRef<SVGGElement, InductiveChainProps>(funct
       {nodes.slice(0, -1).map((_, i) => {
         const xa = xs[i] + half(i)
         const xb = xs[i + 1] - half(i + 1)
+        // Arrow on the bond itself, from the far carbon towards the nearer atom (the head sits on the bond).
+        const tip = xa
+        const tail = xb
         return (
-          <line key={`bond-${i}`} x1={xa} y1={0} x2={xb} y2={0} stroke="var(--fg)" strokeWidth={2.4} strokeLinecap="round" />
-        )
-      })}
-      {nodes.slice(0, -1).map((_, i) => {
-        const xa = xs[i] + half(i)
-        const xb = xs[i + 1] - half(i + 1)
-        // The arrow runs above the bond, from the pulled-away end towards the withdrawing group.
-        const from = direction === 'towards' ? { x: xb - 4, y: ARROW_Y } : { x: xa + 4, y: ARROW_Y }
-        const to = direction === 'towards' ? { x: xa + 4, y: ARROW_Y } : { x: xb - 4, y: ARROW_Y }
-        const geo = curvedArrowGeometry(from, to, { bend: 0, gap: 0, headSize: 10 })
-        return (
-          <g key={`arrow-${i}`}>
-            <line x1={geo.start.x} y1={geo.start.y} x2={geo.shaftEnd.x} y2={geo.shaftEnd.y} stroke="var(--e-arrow)" strokeWidth={2.2} strokeLinecap="round" />
-            <polygon points={arrowHeadPoints(geo)} fill="var(--e-arrow)" />
+          <g key={`bond-${i}`}>
+            <line x1={xa} y1={0} x2={xb} y2={0} stroke="var(--fg)" strokeWidth={2.4} strokeLinecap="round" />
+            <line x1={tail} y1={0} x2={tip + 9} y2={0} stroke="var(--e-arrow)" strokeWidth={3} strokeLinecap="round" />
+            <polygon points={`${tip},0 ${tip + 11},-6 ${tip + 11},6`} fill="var(--e-arrow)" />
           </g>
         )
       })}
@@ -72,7 +61,7 @@ export const InductiveChain = forwardRef<SVGGElement, InductiveChainProps>(funct
             fontSize={FONT}
             fontWeight={600}
             fontFamily="var(--font-sans)"
-            fill={n.label.startsWith('Cl') || n.label.startsWith('Br') || n.label.startsWith('F') ? 'var(--atom-hal)' : 'var(--fg)'}
+            fill={/^(Cl|Br|F|I)/.test(n.label) ? 'var(--atom-hal)' : 'var(--fg)'}
             style={{ userSelect: 'none' }}
           >
             {n.label}
@@ -83,7 +72,7 @@ export const InductiveChain = forwardRef<SVGGElement, InductiveChainProps>(funct
               y={FONT * 1.7}
               textAnchor="middle"
               dominantBaseline="central"
-              fontSize={16}
+              fontSize={18}
               fontWeight={600}
               fontFamily="var(--font-sans)"
               fill="var(--delta-plus)"

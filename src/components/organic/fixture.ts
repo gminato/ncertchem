@@ -222,3 +222,21 @@ export const ETHENE: MolGraph = {
   ],
   bonds: [{ a: 0, b: 1, order: 2 }],
 }
+
+/** Bromomethane, CH3Br: the C-Br bond breaks heterolytically in the curved-arrow demo. */
+export const METHYL_BROMIDE: MolGraph = {
+  atoms: [
+    { element: 'C', hCount: 3 },
+    { element: 'Br', hCount: 0 },
+  ],
+  bonds: [{ a: 0, b: 1, order: 1 }],
+}
+
+/** Chlorine, Cl2: the Cl-Cl bond breaks homolytically in the curved-arrow demo. */
+export const CHLORINE: MolGraph = {
+  atoms: [
+    { element: 'Cl', hCount: 0 },
+    { element: 'Cl', hCount: 0 },
+  ],
+  bonds: [{ a: 0, b: 1, order: 1 }],
+}

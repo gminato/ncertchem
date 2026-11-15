@@ -17,7 +17,7 @@ import {
 export const DEFAULT_SCALE = 54
 
 /** Shortening at a labelled heteroatom, in bond lengths. */
-export const LABEL_GAP = 0.3
+export const LABEL_GAP = 0.36
 
 /** Group valence electrons used for lone-pair counts. */
 const GROUP_ELECTRONS: Record<string, number> = {
@@ -122,7 +122,7 @@ export function lonePairCount(element: string, charge: number, bondOrderSum: num
 export function lonePairAngles(points: readonly Point[], adj: readonly number[][], a: number, count: number): number[] {
   if (count <= 0) return []
   const base = freeAngle(points, adj, a)
-  const step = 0.95
+  const step = 1.2
   return Array.from({ length: count }, (_, i) => base + (i - (count - 1) / 2) * step)
 }
 

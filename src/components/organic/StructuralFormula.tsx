@@ -16,7 +16,7 @@ import {
   lonePairPoint,
   type Bounds,
 } from './frame'
-import { ease, foldOpacity, lerpPoint } from './morph'
+import { ease, lerpPoint } from './morph'
 
 export type StructuralMode = 'complete' | 'condensed' | 'bond-line'
 
@@ -184,34 +184,40 @@ interface MorphedProps {
   completeScale: number
 }
 
-/** The morphing drawing. At t = 0 it is the complete formula; at t = 1 the bond-line drawing. */
+/**
+ * The morphing drawing. At t = 0 it is the complete formula; at t = 1 the bond-line drawing.
+ * Two stages: 0 to 0.5, the hydrogens slide into their carbons while still opaque and the carbon
+ * letters leave; 0.5 to 1, the chain bends into its zig-zag and the bond-line labels arrive.
+ */
 function Morphed({ graph, t, frame, complete, scale, completeScale }: MorphedProps) {
-  const u = ease(t)
   const T = Math.min(1, Math.max(0, t))
+  const slide = ease(T / 0.5)
+  const bend = ease((T - 0.5) / 0.5)
   const n = graph.atoms.length
-  const pos: Point[] = Array.from({ length: n }, (_, a) => lerpPoint(complete.heavy[a], frame.points[a], u))
-  const bondOrder = graph.bonds
+  const pos: Point[] = Array.from({ length: n }, (_, a) => lerpPoint(complete.heavy[a], frame.points[a], bend))
   const csShrink = LABEL_GAP * completeScale
   const blShrink = LABEL_GAP * scale
-  const hydrogenOpacity = foldOpacity(T)
-  // The complete letters leave in the first half of the morph, the bond-line labels arrive in the second.
+  // Hydrogens stay opaque through the slide and vanish once they reach their carbon.
+  const hydrogenOpacity = T < 0.45 ? 1 : 1 - ease((T - 0.45) / 0.05)
+  const letterOpacity = 1 - slide
+  // Heteroatom letters stay through the slide and cross-fade with their bond-line labels in the bend.
+  const heteroLetterOpacity = 1 - ease((T - 0.5) * 2)
   const bondLineLabelOpacity = ease((T - 0.5) * 2)
-  const completeLabelOpacity = ease(1 - T * 2)
   const fs = Math.round(0.36 * scale)
   const hFs = Math.round(0.34 * scale)
+  const lineW = Math.max(1.6, 0.045 * scale)
 
+  // A carbon's letter leaves during the slide, so its bonds lose their clearance then.
+  // A heteroatom keeps its letter until the bend, then takes its bond-line label's clearance.
   const shrinkOf = (a: number): number => {
-    const bl = isLabelled(graph.atoms[a].element) ? blShrink : 0
-    return csShrink + (bl - csShrink) * u
+    if (graph.atoms[a].element === 'C') return csShrink * (1 - slide)
+    return csShrink + (blShrink - csShrink) * bend
   }
 
   return (
     <g>
-      {/* Heavy-atom bonds */}
-      {bondOrder.map((b, i) => {
-        const p = pos[b.a]
-        const q = pos[b.b]
-        const segs = bondSegments(p, q, b.order, {
+      {graph.bonds.map((b, i) => {
+        const segs = bondSegments(pos[b.a], pos[b.b], b.order, {
           shrinkA: shrinkOf(b.a),
           shrinkB: shrinkOf(b.b),
           spacing: 0.12 * scale,
@@ -219,63 +225,37 @@ function Morphed({ graph, t, frame, complete, scale, completeScale }: MorphedPro
         return (
           <g key={`mb-${i}`}>
             {segs.map((s, k) => (
-              <line
-                key={k}
-                x1={s.x1}
-                y1={s.y1}
-                x2={s.x2}
-                y2={s.y2}
-                stroke="var(--fg)"
-                strokeWidth={Math.max(1.6, 0.045 * scale)}
-                strokeLinecap="round"
-              />
+              <line key={k} x1={s.x1} y1={s.y1} x2={s.x2} y2={s.y2} stroke="var(--fg)" strokeWidth={lineW} strokeLinecap="round" />
             ))}
           </g>
         )
       })}
 
-      {/* Hydrogens: drawn at their grid spot, folding into the parent atom */}
+      {/* Hydrogens slide into their parent atom, then disappear */}
       {hydrogenOpacity > 0.01 &&
         complete.hydrogens.map((h, k) => {
           const parent = pos[h.parent]
-          const at = lerpPoint(h.pos, parent, u)
-          const segs = bondSegments(parent, at, 1, { shrinkB: csShrink })
+          const at = lerpPoint(h.pos, parent, slide)
+          const hasBond = slide < 0.98
+          const segs = hasBond ? bondSegments(parent, at, 1, { shrinkA: csShrink, shrinkB: csShrink }) : []
           return (
             <g key={`h-${k}`} opacity={hydrogenOpacity}>
               {segs.map((s, j) => (
-                <line
-                  key={j}
-                  x1={s.x1}
-                  y1={s.y1}
-                  x2={s.x2}
-                  y2={s.y2}
-                  stroke="var(--fg)"
-                  strokeWidth={Math.max(1.6, 0.045 * scale)}
-                  strokeLinecap="round"
-                />
+                <line key={j} x1={s.x1} y1={s.y1} x2={s.x2} y2={s.y2} stroke="var(--fg)" strokeWidth={lineW} strokeLinecap="round" />
               ))}
-              <text
-                x={at.x}
-                y={at.y}
-                textAnchor="middle"
-                dominantBaseline="central"
-                fontSize={hFs}
-                fontWeight={600}
-                fontFamily="var(--font-sans)"
-                fill="var(--fg-muted)"
-                style={{ userSelect: 'none' }}
-              >
+              <text x={at.x} y={at.y} textAnchor="middle" dominantBaseline="central" fontSize={hFs} fontWeight={600} fontFamily="var(--font-sans)" fill="var(--fg-muted)" style={{ userSelect: 'none' }}>
                 H
               </text>
             </g>
           )
         })}
 
-      {/* Atom labels: the complete letters fade out, the bond-line labels fade in */}
       {graph.atoms.map((atom, a) => {
         const p = pos[a]
         const elements: React.ReactNode[] = []
-        if (completeLabelOpacity > 0.01) {
+        const isC = atom.element === 'C'
+        const lettersOpacity = isC ? letterOpacity : heteroLetterOpacity
+        if (lettersOpacity > 0.01) {
           elements.push(
             <text
               key="c"
@@ -287,7 +267,7 @@ function Morphed({ graph, t, frame, complete, scale, completeScale }: MorphedPro
               fontWeight={600}
               fontFamily="var(--font-sans)"
               fill={atom.element === 'C' ? 'var(--fg)' : elementColour(atom.element)}
-              opacity={completeLabelOpacity}
+              opacity={lettersOpacity}
               style={{ userSelect: 'none' }}
             >
               {atom.element}

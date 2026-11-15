@@ -1,6 +1,6 @@
 import React, { forwardRef, useMemo } from 'react'
 import type { MolGraph } from '@/lib/chem/molecule-graph'
-import { freeAngle } from './layout'
+import { freeAngle, type Point } from './layout'
 import { deltaText } from './delta'
 import {
   DEFAULT_SCALE,
@@ -23,6 +23,8 @@ import {
 export interface SkeletalMark {
   atom: number
   label: string
+  /** Optional direction of the label in degrees (SVG, y down). Default: the atom's free side. */
+  angle?: number
 }
 
 export interface SkeletalFormulaProps extends Omit<React.SVGAttributes<SVGGElement>, 'children'> {
@@ -42,8 +44,10 @@ export interface SkeletalFormulaProps extends Omit<React.SVGAttributes<SVGGEleme
   locants?: readonly SkeletalMark[]
   /** Partial-charge labels such as δ+ or δ−, placed away from the bonds. */
   partialCharges?: readonly SkeletalMark[]
-  /** Bonds drawn dashed (e.g. the partial bonds of a resonance hybrid). */
-  dashedBonds?: readonly number[]
+  /** Bonds of order 1.5: a solid line plus a parallel dashed line (resonance hybrid). */
+  partialBonds?: readonly number[]
+  /** Draws an inscribed circle in each ring (the benzene hybrid). */
+  innerCircles?: boolean
   /** Extra SVG drawn in the same frame, such as curved arrows. */
   overlay?: React.ReactNode
 }
@@ -73,6 +77,21 @@ export function elementColour(element: string): string {
   return ELEMENT_COLOUR[element] ?? 'var(--fg)'
 }
 
+/** The parallel line of a 1.5 bond: offset by `off` on the side of the bond's left normal. */
+function partialLine(p: Point, q: Point, shrinkA: number, shrinkB: number, off: number) {
+  const len = Math.hypot(q.x - p.x, q.y - p.y) || 1
+  const ux = (q.x - p.x) / len
+  const uy = (q.y - p.y) / len
+  const nx = -uy * off
+  const ny = ux * off
+  return {
+    x1: p.x + ux * shrinkA + nx,
+    y1: p.y + uy * shrinkA + ny,
+    x2: q.x - ux * shrinkB + nx,
+    y2: q.y - uy * shrinkB + ny,
+  }
+}
+
 export const SkeletalFormula = forwardRef<SVGGElement, SkeletalFormulaProps>(function SkeletalFormula(
   {
     graph,
@@ -84,7 +103,8 @@ export const SkeletalFormula = forwardRef<SVGGElement, SkeletalFormulaProps>(fun
     highlightBonds = [],
     locants = [],
     partialCharges = [],
-    dashedBonds = [],
+    partialBonds = [],
+    innerCircles = false,
     overlay,
     ...rest
   },
@@ -97,7 +117,7 @@ export const SkeletalFormula = forwardRef<SVGGElement, SkeletalFormulaProps>(fun
   const spacing = 0.12 * scale
   const hiBonds = new Set(highlightBonds)
   const hiAtoms = new Set(highlightAtoms)
-  const dashed = new Set(dashedBonds)
+  const partial = new Set(partialBonds)
 
   const bondOrderSum = graph.atoms.map(() => 0)
   for (const b of graph.bonds) {
@@ -135,7 +155,6 @@ export const SkeletalFormula = forwardRef<SVGGElement, SkeletalFormulaProps>(fun
         const shrinkA = shrinkFor(graph.atoms[b.a].element, scale)
         const shrinkB = shrinkFor(graph.atoms[b.b].element, scale)
         const ring = rings.findIndex((r) => r.includes(b.a) && r.includes(b.b))
-        const stroke = dashed.has(i) ? { strokeDasharray: `${0.1 * scale} ${0.09 * scale}` } : {}
         if (b.stereo) {
           const len = Math.hypot(q.x - p.x, q.y - p.y) || 1
           const qs = along(p, q, 1 - shrinkB / len)
@@ -156,8 +175,9 @@ export const SkeletalFormula = forwardRef<SVGGElement, SkeletalFormulaProps>(fun
           spacing,
           ringCentre: ring >= 0 && b.order === 2 ? ringCentres[ring] : undefined,
         })
+        const dashedLine = partial.has(i) ? partialLine(p, q, shrinkA, shrinkB, 0.16 * scale) : null
         return (
-          <g key={`b-${i}`} {...stroke}>
+          <g key={`b-${i}`}>
             {segs.map((s, k) => (
               <line
                 key={k}
@@ -170,9 +190,37 @@ export const SkeletalFormula = forwardRef<SVGGElement, SkeletalFormulaProps>(fun
                 strokeLinecap="round"
               />
             ))}
+            {dashedLine && (
+              <line
+                x1={dashedLine.x1}
+                y1={dashedLine.y1}
+                x2={dashedLine.x2}
+                y2={dashedLine.y2}
+                stroke="var(--fg)"
+                strokeWidth={bondStroke}
+                strokeDasharray={`${0.12 * scale} ${0.08 * scale}`}
+                strokeLinecap="butt"
+              />
+            )}
           </g>
         )
       })}
+      {innerCircles &&
+        rings.map((ring, ri) => {
+          const apothem = 1 / (2 * Math.tan(Math.PI / ring.length))
+          return (
+            <circle
+              key={`ic-${ri}`}
+              cx={ringCentres[ri].x}
+              cy={ringCentres[ri].y}
+              r={apothem * scale * 0.92}
+              fill="none"
+              stroke="var(--fg)"
+              strokeWidth={bondStroke}
+              strokeDasharray={`${0.12 * scale} ${0.08 * scale}`}
+            />
+          )
+        })}
 
       {/* Atom marks: labels, lone pairs, charges, radicals */}
       {graph.atoms.map((atom, i) => {
@@ -182,7 +230,7 @@ export const SkeletalFormula = forwardRef<SVGGElement, SkeletalFormulaProps>(fun
         const radical = atom.radical ?? 0
         const nlp = showLonePairs ? lonePairCount(atom.element, charge, bondOrderSum[i], h, radical) : 0
         const lpAngles = lonePairAngles(points, adj, i, nlp)
-        const lpRadius = 0.5 * scale
+        const lpRadius = 0.55 * scale
         const occupied = [...lpAngles]
         const chargeAngle = charge !== 0 ? freeAngle(points, adj, i, occupied) : null
         if (chargeAngle !== null) occupied.push(chargeAngle)
@@ -217,13 +265,13 @@ export const SkeletalFormula = forwardRef<SVGGElement, SkeletalFormulaProps>(fun
             {lpAngles.flatMap((th, k) => {
               const c = lonePairPoint(p, th, lpRadius)
               const perp = th + Math.PI / 2
-              const off = 0.1 * scale
+              const off = 0.06 * scale
               return [-1, 1].map((s) => (
                 <circle
                   key={`lp-${k}-${s}`}
                   cx={c.x + Math.cos(perp) * off * s}
                   cy={c.y + Math.sin(perp) * off * s}
-                  r={2.8}
+                  r={2.4}
                   fill="var(--fg)"
                 />
               ))
@@ -267,7 +315,7 @@ export const SkeletalFormula = forwardRef<SVGGElement, SkeletalFormulaProps>(fun
       {/* Locants and partial charges, each on a free side of its atom */}
       {locants.map((m, k) => {
         const extra: number[] = []
-        const th = freeAngle(points, adj, m.atom, extra)
+        const th = m.angle !== undefined ? (m.angle * Math.PI) / 180 : freeAngle(points, adj, m.atom, extra)
         const c = lonePairPoint(points[m.atom], th, 0.66 * scale)
         return (
           <text

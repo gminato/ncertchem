@@ -23,8 +23,10 @@ export interface ResonanceContributor {
 
 export interface ResonanceHybrid {
   graph: MolGraph
-  /** Bonds drawn dashed: the partial bonds of the hybrid. */
-  dashedBonds?: readonly number[]
+  /** Bonds of order 1.5: a solid line plus a dashed parallel line. */
+  partialBonds?: readonly number[]
+  /** Inscribed circle in each ring (benzene). */
+  innerCircles?: boolean
   /** Partial charges such as δ− on the atoms that share the charge. */
   partialCharges?: readonly SkeletalMark[]
 }
@@ -155,7 +157,8 @@ export const ResonanceSet = forwardRef<SVGGElement, ResonanceSetProps>(function 
           <SkeletalFormula
             graph={hybrid.graph}
             scale={scale}
-            dashedBonds={hybrid.dashedBonds}
+            partialBonds={hybrid.partialBonds}
+            innerCircles={hybrid.innerCircles}
             partialCharges={hybrid.partialCharges}
           />
           <text
