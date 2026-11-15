@@ -41,6 +41,7 @@ import { WeakAcidLab } from './sims/weak-acid-lab'
 import { IsomerExplorer } from './sims/isomer-explorer'
 import { DistillationLab } from './sims/distillation-lab'
 import { ElementDetective } from './sims/element-detective'
+import { FunctionalGroupNamer } from './sims/functional-group-namer'
 
 export interface SimulationProps {
   /** True when the Learner has asked the OS for reduced motion. Skip tweens and loops when set. */
@@ -96,4 +97,5 @@ export const simulations: Record<string, ComponentType<SimulationProps>> = {
   'isomer-explorer': IsomerExplorer,
   'distillation-lab': DistillationLab,
   'element-detective': ElementDetective,
+  'functional-group-namer': FunctionalGroupNamer,
 }
