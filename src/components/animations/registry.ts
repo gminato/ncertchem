@@ -84,6 +84,9 @@ import { RedoxBalanceON } from './unit7/balance/RedoxBalanceON'
 import { RedoxBalanceHalf } from './unit7/balance/RedoxBalanceHalf'
 import { KpKc } from './unit6/kpkc/KpKc'
 import { Heterogeneous } from './unit6/heterogeneous/Heterogeneous'
+import { QAndK } from './unit6/qk/QAndK'
+import { IceMethod } from './unit6/qk/IceMethod'
+import { GibbsCurve } from './unit6/qk/GibbsCurve'
 
 /**
  * Animations available to a Scrolly Animation, keyed by the `animation` prop.
@@ -178,6 +181,9 @@ export const animations = {
   'redox-balance-half': RedoxBalanceHalf,
   'kp-kc': KpKc,
   heterogeneous: Heterogeneous,
+  'q-and-k': QAndK,
+  'ice-method': IceMethod,
+  'qk-gibbs': GibbsCurve,
 } as const
 
 export type AnimationName = keyof typeof animations

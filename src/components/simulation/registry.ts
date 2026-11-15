@@ -29,6 +29,7 @@ import { RedoxClassifier } from './sims/redox-classifier'
 import { MetalDisplacementLab } from './sims/metal-displacement-lab'
 import { RedoxBalancer } from './sims/redox-balancer'
 import { KpKcConverter, HeterogeneousConverter } from './sims/kp-kc-converter'
+import { IceSolver } from './sims/ice-solver'
 
 export interface SimulationProps {
   /** True when the Learner has asked the OS for reduced motion. Skip tweens and loops when set. */
@@ -72,4 +73,5 @@ export const simulations: Record<string, ComponentType<SimulationProps>> = {
   'redox-balancer': RedoxBalancer,
   'kp-kc-converter': KpKcConverter,
   'heterogeneous-converter': HeterogeneousConverter,
+  'ice-solver': IceSolver,
 }

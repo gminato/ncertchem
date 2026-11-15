@@ -1,0 +1,114 @@
+---
+class: 11
+unit: 6
+section: "6.6"
+order: 6
+title: "Applications of Equilibrium Constants"
+slug: "6-6-applications-of-equilibrium-constants"
+summary: "A value of K tells you how far a reaction goes, the reaction quotient Q tells you which way it will move from where it is now, and the ICE table turns K into equilibrium amounts."
+ncert: "Class 11, Part I — Unit 6, Section 6.6"
+---
+
+<Hook>
+Two sealed glass jars look identical on a shelf. Each holds a mixture of the same two gases, and each is slowly changing. One will go on making more product, and the other will slowly fall back to its starting gases. Nothing on the outside tells you which is which. How would a chemist know which way a mixture will move before waiting to see?
+</Hook>
+
+Once a reaction reaches equilibrium, its equilibrium constant gives the composition that every mixture of those substances settles into at that temperature. The constant is fixed by the balanced equation and the temperature alone. It does not depend on how much you started with, and a catalyst does not change it. Equilibrium is also dynamic. The forward and reverse reactions keep running at equal rates, so the composition is steady but nothing has stopped.
+
+Equilibrium constants do two jobs. They tell you how far a reaction goes, and, together with the reaction quotient $Q$, they tell you which way a mixture will move from where it is now. A third job follows from the first two: working out the equilibrium amounts from the starting amounts.
+
+## 6.6.1 Predicting the extent of a reaction
+
+The size of $K$ is a direct summary of the composition. Products sit in the numerator of the expression and reactants in the denominator, so a large $K$ means the products outweigh the reactants at equilibrium, and a small $K$ means the reverse. The constant says nothing about speed, though. A reaction with a very large $K$ can still be too slow to notice.
+
+Three rough bands cover most cases:
+
+- If $K > 10^{3}$, products predominate, and the reaction goes close to completion.
+- If $K < 10^{-3}$, reactants predominate, and the reaction barely starts.
+- If $10^{-3} \le K \le 10^{3}$, both reactants and products are present in appreciable amounts.
+
+Take three hypothetical reactions at one temperature, with $K = 2.0 \times 10^{4}$, $K = 3.0 \times 10^{-5}$ and $K = 0.50$. The first is in the top band, the second in the bottom band, and the third in the middle, where both sides are present in comparable amounts.
+
+<Check n={1} options={["Products predominate at equilibrium", "Reactants predominate at equilibrium", "Both reactants and products are present in appreciable amounts"]} answer={1} explanation="K is far below 10⁻³, so the denominator, the reactants, outweighs the numerator at equilibrium. The reaction goes only a short way, though the rate is a separate question.">
+Which statement about a reaction with $K = 3.0 \times 10^{-5}$ at equilibrium is correct?
+</Check>
+
+## 6.6.2 Predicting the direction of the reaction
+
+The equilibrium constant tells you where a reaction ends. To know where a mixture is heading now, use the reaction quotient. For $a\ce{A} + b\ce{B} \rightleftharpoons c\ce{C} + d\ce{D}$, $Q$ has the same form as $K$, but its concentrations need not be the equilibrium values:
+
+$$
+Q_c = \frac{[\ce{C}]^c [\ce{D}]^d}{[\ce{A}]^a [\ce{B}]^b}
+$$
+
+Compare $Q$ with $K$ to see the direction. If $Q < K$, the ratio of products to reactants is too low, and the reaction proceeds forward. If $Q > K$, there is too much product, and the reverse reaction takes over. If $Q = K$, the mixture is already at equilibrium and there is no net change.
+
+The worked example is $2\ce{NO(g)} + \ce{Cl2(g)} \rightleftharpoons 2\ce{NOCl(g)}$ with $K_c = 2.0$, a value chosen for this example. The scrolly below places three mixtures on the same scale: one with Q below K, one with Q above K and one at equilibrium. The gauge on each Step holds Q and K on a log scale, and the vessel draws the particles of that mixture.
+
+<Scrolly animation="q-and-k">
+<Step>
+Begin with a mixture that holds very little NOCl: $[\ce{NOCl}] = 0.20$ mol L⁻¹, against 1.00 mol L⁻¹ of each reactant. The reaction quotient is $Q_c = [\ce{NOCl}]^2 / ([\ce{NO}]^2 [\ce{Cl2}]) = 0.040$. That is far below $K_c = 2.0$, so the marker sits left of K on the log scale. The arrow points right, the forward reaction runs, and NOCl builds up until Q climbs to K.
+</Step>
+<Step>
+Now the mixture is rich in product: $[\ce{NOCl}] = 3.0$ mol L⁻¹, and NO and Cl₂ are 0.50 mol L⁻¹ each. The quotient is $Q_c = 72$, well above K. The reverse reaction now runs, NOCl breaks back into its reactants, and the reactants rise until Q falls to K. The vessel holds far more NOCl particles than in the first Step.
+</Step>
+<Step>
+Last, the composition at equilibrium: NO 1.00, Cl₂ 0.50 and NOCl 1.00 mol L⁻¹. Here $Q_c = 2.00 = K_c$. The marker sits on K, and the pill reads at equilibrium. Forward and reverse reactions still run, at equal rates, so the composition stays steady and the mixture moves on neither side.
+</Step>
+</Scrolly>
+
+<Check n={2} options={["Forward, towards more NOCl", "Reverse, towards NO and Cl₂", "No net change"]} answer={1} explanation="Q is far above K, so the mixture has too much product. The reverse reaction runs, NOCl breaks down into NO and Cl₂, and Q falls until it equals K.">
+A mixture of NO, Cl₂ and NOCl has $Q_c = 72$ while $K_c = 2.0$. Which way does the reaction proceed?
+</Check>
+
+## 6.6.3 Calculating equilibrium concentrations
+
+Often you know the starting amounts and K, but not the equilibrium amounts. The ICE method solves that problem in five stages:
+
+1. Write the balanced equation.
+2. Set up a table with three rows for each substance: the initial amount (I), the change on going to equilibrium (C), and the equilibrium amount (E).
+3. Define $x$ as the change in one species, and use the coefficients to write every other change in terms of $x$.
+4. Put the equilibrium amounts into the expression for $K$, and solve for $x$. A quadratic or higher-order equation must be solved for the root that makes chemical sense: no amount may come out negative.
+5. Substitute $x$ back, then check that $Q$ at the equilibrium amounts equals $K$.
+
+The scrolly below works through the NOCl example, filling the table one row at a time.
+
+<Scrolly animation="ice-method">
+<Step>
+Write the balanced equation and fill the initial row: NO 2.00 mol L⁻¹, Cl₂ 1.00 mol L⁻¹ and no NOCl. The constant $K_c = 2.00$ is given, as the example's value. Every number in the table is in mol L⁻¹, so the units stay the same throughout.
+</Step>
+<Step>
+Let $x$ be the amount of Cl₂ that reacts, in mol L⁻¹. Two moles of NO are used for each mole of Cl₂, so NO falls by $2x$, while NOCl rises by $2x$. The change row reads $-2x$, $-x$ and $+2x$, because the coefficients fix the ratio of the changes.
+</Step>
+<Step>
+Add each change to its initial amount to fill the equilibrium row. NO is $2.00 - 2x$, Cl₂ is $1.00 - x$, and NOCl is $2x$. Nothing is solved yet. The table is bookkeeping, and every entry depends on the one unknown, $x$. The NOCl entry has no starting amount to add to, so it is simply $2x$.
+</Step>
+<Step>
+Substitute the equilibrium amounts into $K_c$. The expression becomes a cubic in $x$, and the library solves it numerically, keeping every amount positive. The root in the allowed range is $x = 0.50$ mol L⁻¹, so the equilibrium amounts are NO 1.00, Cl₂ 0.50 and NOCl 1.00 mol L⁻¹.
+</Step>
+<Step>
+Check the answer by putting the equilibrium amounts back into Q. The result is $Q_c = (1.00)^2 / ((1.00)^2 \times 0.50) = 2.00$, which equals $K_c$. The table is complete and the answer is consistent. Every amount stays positive, because the solver searches only the range in which all of them do, so the root it returns is the physical one.
+</Step>
+</Scrolly>
+
+<Check n={3} numeric answer={1} tolerance={0.01} unit="mol L⁻¹" explanation="The solved extent is x = 0.50 mol L⁻¹. NOCl starts at zero and gains 2x, so [NOCl] at equilibrium is 2 × 0.50 = 1.00 mol L⁻¹. NO also comes out at 1.00 mol L⁻¹, which is 2.00 − 2 × 0.50.">
+In the NOCl example, what is the equilibrium concentration of NOCl, in mol L⁻¹?
+</Check>
+
+## The ICE solver
+
+The simulation below is a general version of the same method. Choose one of six reactions, which differ in their coefficients and in whether the constant is Kc or Kp. Change the starting amounts or K, and the table, the equation in $x$ and the check all update. The Gibbs panel at the foot shows ΔG° = −RT ln K, which links to the last Section.
+
+<Simulation name="ice-solver" title="ICE solver: from starting amounts to equilibrium" />
+
+<Check n={4} numeric answer={1.30} tolerance={0.02} unit="bar" explanation="Set up the ICE table for 2SO₂ + O₂ ⇌ 2SO₃ with Kp = 10 bar⁻¹ and starting pressures SO₂ 2.00, O₂ 1.00 and SO₃ 0. The library gives x = 0.65 bar, so the equilibrium SO₃ pressure is 2 × 0.65 = 1.30 bar.">
+Use the ICE solver. For the 2SO₂ + O₂ ⇌ 2SO₃ preset, what is the equilibrium SO₃ pressure, in bar?
+</Check>
+
+<KeyIdeas>
+- The size of $K$ indicates the extent: above $10^{3}$ products predominate, below $10^{-3}$ reactants predominate, and in between both are present.
+- Compare $Q$ with $K$ to predict direction: $Q < K$ runs forward, $Q > K$ runs in reverse, and $Q = K$ means the mixture is already at equilibrium.
+- The ICE table turns the starting amounts into equilibrium amounts with one unknown, $x$, and the coefficients fix every other change.
+- A solution for $x$ must keep every amount zero or positive. Substitute it back and check that $Q$ equals $K$.
+- $K$ says nothing about speed. A large $K$ can still be a slow reaction, and the rate is a separate question.
+</KeyIdeas>
