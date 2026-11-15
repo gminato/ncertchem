@@ -673,11 +673,15 @@ export function explainOxidationNumber(
     } else if (s === 'F') {
       rule = 'Fluorine is always -1 in all its compounds (Rule 5)'
     } else if (s === 'H') {
-      rule = val.num < 0 ? 'Hydrogen is -1 in metal hydrides (Rule 4 exception)' : 'Hydrogen is +1 in compounds with non-metals (Rule 4)'
+      rule = val.num < 0 ? 'Hydrogen is −1 in metal hydrides (Rule 4 exception)' : 'Hydrogen is +1 in compounds with non-metals (Rule 4)'
     } else if (s === 'O') {
-      rule = val.num === -1 ? 'Oxygen is -1 in peroxides (Rule 3 exception)' : 'Oxygen is -2 in most compounds (Rule 3)'
+      if (val.num === -1 && val.den === 1) rule = 'Oxygen is −1 in peroxides (Rule 3 exception)'
+      else if (val.num === -1 && val.den === 2) rule = 'Oxygen is −1/2 in superoxides (Rule 3 exception)'
+      else if (val.num > 0) rule = `Oxygen is positive (${rationalToString(val)}) when bonded to fluorine (Rule 3 exception)`
+      else if (val.num === -2 && val.den === 1) rule = 'Oxygen is −2 in most compounds (Rule 3)'
+      else rule = `Oxygen is ${rationalToString(val)} here, fixed by the sum rule (Rule 6)`
     } else if (s === 'Cl' || s === 'Br' || s === 'I') {
-      rule = `Halogen ${s} has oxidation number -1 as halide (Rule 5)`
+      rule = `Halogen ${s} has oxidation number −1 as halide (Rule 5)`
     }
     steps.push({
       element: s,
