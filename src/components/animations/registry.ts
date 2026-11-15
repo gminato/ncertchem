@@ -98,6 +98,7 @@ import { SolubilityProduct } from './unit6/solubility/SolubilityProduct'
 import { PhLadder } from './unit6/ph/PhLadder'
 import { WeakAcid } from './unit6/weakacid/WeakAcid'
 import { IsomerFamily } from './unit8/isomers/IsomerFamily'
+import { ClassificationTree } from './unit8/classification/ClassificationTree'
 
 /**
  * Animations available to a Scrolly Animation, keyed by the `animation` prop.
@@ -206,6 +207,7 @@ export const animations = {
   'ph-scale': PhLadder,
   'weak-acid': WeakAcid,
   'isomer-family': IsomerFamily,
+  'classification-tree': ClassificationTree,
 } as const
 
 export type AnimationName = keyof typeof animations
