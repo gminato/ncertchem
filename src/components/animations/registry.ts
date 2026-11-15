@@ -106,6 +106,7 @@ import { PurificationMethods } from './unit8/purification/PurificationMethods'
 import { LassaigneBench } from './unit8/lassaigne/LassaigneBench'
 import { CombustionAnalysis } from './unit8/quantitative/CombustionAnalysis'
 import { AlkaneNaming } from './unit8/naming/AlkaneNaming'
+import { RepresentationsMorph } from './unit8/representations/RepresentationsMorph'
 
 /**
  * Animations available to a Scrolly Animation, keyed by the `animation` prop.
@@ -222,6 +223,7 @@ export const animations = {
   'lassaigne': LassaigneBench,
   'combustion-analysis': CombustionAnalysis,
   'alkane-naming': AlkaneNaming,
+  'structure-morph': RepresentationsMorph,
 } as const
 
 export type AnimationName = keyof typeof animations
