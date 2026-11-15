@@ -64,6 +64,9 @@ function barX(conc: number): number {
 const CATION_OPTIONS = CATION_SOURCES.map((c) => ({ value: c.id, label: `${c.ion} (${c.salt})` }))
 const ANION_OPTIONS = ANION_SOURCES.map((a) => ({ value: a.id, label: `${a.ion} (${a.salt})` }))
 const SALT_LABEL: Record<string, string> = { AgCl: 'AgCl', BaSO4: 'BaSO₄', PbI2: 'PbI₂' }
+/** Display form of a neutral formula: digits become subscripts (BaSO4 → BaSO₄). */
+const sub = (formula: string) => formula.replace(/\d/g, (d) => '₀₁₂₃₄₅₆₇₈₉'[Number(d)])
+
 const SALT_OPTIONS = commonIonSalts().map((s) => ({ value: s.formula, label: SALT_LABEL[s.formula] ?? s.formula }))
 
 /**
@@ -96,11 +99,11 @@ export function PrecipitationLab({ reducedMotion }: SimulationProps) {
   const foldText = added === 0 ? 'the solubility is unchanged' : `about ${fold >= 100 ? Math.round(fold / 10) * 10 : fold.toFixed(1)} times less`
 
   const mixText = mix
-    ? `Qsp = [${cationSource.ion}][${anionSource.ion}] = ${sci(mix.qsp)}; Ksp(${mix.salt.formula}) = ${sci(mix.salt.ksp)}; Qsp/Ksp = ${mix.ratio < 10 ? mix.ratio.toFixed(2) : Math.round(mix.ratio)}. ${BADGE[mix.verdict]}.`
+    ? `Qsp = [${cationSource.ion}][${anionSource.ion}] = ${sci(mix.qsp)}; Ksp(${sub(mix.salt.formula)}) = ${sci(mix.salt.ksp)}; Qsp/Ksp = ${mix.ratio < 10 ? mix.ratio.toFixed(2) : Math.round(mix.ratio)}. ${BADGE[mix.verdict]}.`
     : `Table 6.9 lists no salt for ${cationSource.ion} and ${anionSource.ion}, so there is no Ksp to compare Qsp with.`
   const commonText = added === 0
-    ? `${salt.formula} in water: S = ${sci(pure, 2)} mol L⁻¹. No ion is added, so ${foldText}.`
-    : `${salt.formula} in water: S = ${sci(pure, 2)} mol L⁻¹. With ${sci(added, 1)} mol L⁻¹ of ${salt.commonIon} added, S = ${sci(withIon, 2)} mol L⁻¹, ${foldText}.`
+    ? `${sub(salt.formula)} in water: S = ${sci(pure, 2)} mol L⁻¹. No ion is added, so ${foldText}.`
+    : `${sub(salt.formula)} in water: S = ${sci(pure, 2)} mol L⁻¹. With ${sci(added, 1)} mol L⁻¹ of ${salt.commonIon} added, S = ${sci(withIon, 2)} mol L⁻¹, ${foldText}.`
 
   return (
     <div className={styles.sim} data-testid="precipitation-lab">
@@ -164,7 +167,7 @@ export function PrecipitationLab({ reducedMotion }: SimulationProps) {
               </div>
               <div className={styles.row}>
                 <dt>Ksp</dt>
-                <dd data-testid="lab-ksp">{mix ? `${sci(mix.salt.ksp)} (${mix.salt.formula})` : 'not listed in Table 6.9'}</dd>
+                <dd data-testid="lab-ksp">{mix ? `${sci(mix.salt.ksp)} (${sub(mix.salt.formula)})` : 'not listed in Table 6.9'}</dd>
               </div>
               <div className={styles.row}>
                 <dt>Verdict</dt>
@@ -191,7 +194,7 @@ export function PrecipitationLab({ reducedMotion }: SimulationProps) {
           <Segmented<string> label="Sparingly soluble salt" options={SALT_OPTIONS} value={saltFormula} onChange={setSaltFormula} />
           <Slider label="Added common ion" value={addedIndex} min={0} max={ADDED.length - 1} step={1} format={(i) => `${ADDED[i] === 0 ? '0' : sci(ADDED[i])} mol L⁻¹ ${salt.commonIon}`} onChange={setAddedIndex} />
         </div>
-        <svg viewBox="0 0 560 170" role="img" aria-label={`Molar solubility of ${salt.formula} in water ${sci(pure, 2)} mol per litre, and ${sci(withIon, 2)} with the added ion`} className={styles.bars} data-testid="common-bars">
+        <svg viewBox="0 0 560 170" role="img" aria-label={`Molar solubility of ${sub(salt.formula)} in water ${sci(pure, 2)} mol per litre, and ${sci(withIon, 2)} with the added ion`} className={styles.bars} data-testid="common-bars">
           <BarRow y={34} label="Pure water" value={pure} color="var(--fg-subtle)" />
           <BarRow y={108} label={added === 0 ? 'No ion added' : `+ ${salt.commonIon}`} value={withIon} color="var(--fwd)" />
           {[-10, -8, -6, -4, -2].map((e) => (

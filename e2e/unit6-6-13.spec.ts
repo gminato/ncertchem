@@ -82,7 +82,7 @@ for (const scheme of ['light', 'dark'] as const) {
       await sim.getByRole('radio', { name: 'Pb²⁺ (Pb(NO₃)₂)' }).click()
       await sim.getByRole('radio', { name: 'I⁻ (KI)' }).click()
       await expect(sim.getByTestId('lab-qsp')).toContainText('1.0 × 10⁻¹²')
-      await expect(sim.getByTestId('lab-ksp')).toContainText('7.1 × 10⁻⁹ (PbI2)')
+      await expect(sim.getByTestId('lab-ksp')).toContainText('7.1 × 10⁻⁹ (PbI₂)')
       await expect(sim.getByTestId('lab-verdict')).toContainText('no precipitate')
       await sim.screenshot({ path: path.join(SCREEN_DIR, `u6-6-13-lab-no-precipitate-${scheme}.png`) })
 
