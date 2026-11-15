@@ -106,6 +106,7 @@ import { PurificationMethods } from './unit8/purification/PurificationMethods'
 import { LassaigneBench } from './unit8/lassaigne/LassaigneBench'
 import { FunctionalNaming } from './unit8/fgnaming/FunctionalNaming'
 import { CombustionAnalysis } from './unit8/quantitative/CombustionAnalysis'
+import { ElectronEffects } from './unit8/effects/ElectronEffects'
 import { AlkaneNaming } from './unit8/naming/AlkaneNaming'
 import { RepresentationsMorph } from './unit8/representations/RepresentationsMorph'
 import { BondFission } from './unit8/fission/BondFission'
@@ -225,6 +226,7 @@ export const animations = {
   'lassaigne': LassaigneBench,
   'functional-naming': FunctionalNaming,
   'combustion-analysis': CombustionAnalysis,
+  'electron-effects': ElectronEffects,
   'alkane-naming': AlkaneNaming,
   'structure-morph': RepresentationsMorph,
   'bond-fission': BondFission,

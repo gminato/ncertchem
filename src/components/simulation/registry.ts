@@ -47,6 +47,7 @@ import { DistillationLab } from './sims/distillation-lab'
 import { ElementDetective } from './sims/element-detective'
 import { FunctionalGroupNamer } from './sims/functional-group-namer'
 import { ElementalAnalyser } from './sims/elemental-analyser'
+import { ResonanceLab } from './sims/resonance-lab'
 import { AlkaneNamer } from './sims/alkane-namer'
 import { FormulaTranslator } from './sims/formula-translator'
 import { ArrowPusher } from './sims/arrow-pusher'
@@ -111,6 +112,7 @@ export const simulations: Record<string, ComponentType<SimulationProps>> = {
   'element-detective': ElementDetective,
   'functional-group-namer': FunctionalGroupNamer,
   'elemental-analyser': ElementalAnalyser,
+  'resonance-lab': ResonanceLab,
   'alkane-namer': AlkaneNamer,
   'formula-translator': FormulaTranslator,
   'arrow-pusher': ArrowPusher,
