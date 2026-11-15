@@ -95,6 +95,22 @@ test.describe('Unit navigation', () => {
     await expect(page.getByText('The Sections of this Unit are being written.')).toBeVisible()
   })
 
+  test('Unit 7 lists its seven Sections in order', async ({ page }) => {
+    await page.goto('/class-11/unit-7')
+    const links = page.locator('a[href^="/class-11/unit-7/"]')
+    await expect(links).toHaveCount(7)
+    const hrefs = await links.evaluateAll((els) => els.map((e) => e.getAttribute('href')))
+    expect(hrefs.map((h) => h?.split('/').pop())).toEqual([
+      '7-1-classical-idea-of-redox-reactions',
+      '7-2-redox-reactions-in-terms-of-electron-transfer',
+      '7-3-oxidation-number',
+      '7-3-1-types-of-redox-reactions',
+      '7-3-2-balancing-of-redox-reactions',
+      '7-3-3-redox-reactions-as-the-basis-for-titrations',
+      '7-4-redox-reactions-and-electrode-processes',
+    ])
+  })
+
   test('Unit 5 lists its seven Sections in order', async ({ page }) => {
     await page.goto('/class-11/unit-5')
     const links = page.locator('a[href^="/class-11/unit-5/"]')
