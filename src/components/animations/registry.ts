@@ -97,6 +97,7 @@ import { LeChatelierStress } from './unit6/lechatelier/LeChatelierStress'
 import { SolubilityProduct } from './unit6/solubility/SolubilityProduct'
 import { PhLadder } from './unit6/ph/PhLadder'
 import { WeakAcid } from './unit6/weakacid/WeakAcid'
+import { Chromatography } from './unit8/chromatography/Chromatography'
 import { IsomerFamily } from './unit8/isomers/IsomerFamily'
 import { PurificationMethods } from './unit8/purification/PurificationMethods'
 import { LassaigneBench } from './unit8/lassaigne/LassaigneBench'
@@ -207,6 +208,7 @@ export const animations = {
   'solubility-product': SolubilityProduct,
   'ph-scale': PhLadder,
   'weak-acid': WeakAcid,
+  chromatography: Chromatography,
   'isomer-family': IsomerFamily,
   'purification-methods': PurificationMethods,
   'lassaigne': LassaigneBench,

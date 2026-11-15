@@ -38,6 +38,7 @@ import { LeChatelierLab } from './sims/le-chatelier-lab'
 import { PrecipitationLab } from './sims/precipitation-lab'
 import { PhExplorer } from './sims/ph-explorer'
 import { WeakAcidLab } from './sims/weak-acid-lab'
+import { TlcLab } from './sims/tlc-lab'
 import { IsomerExplorer } from './sims/isomer-explorer'
 import { DistillationLab } from './sims/distillation-lab'
 import { ElementDetective } from './sims/element-detective'
@@ -93,6 +94,7 @@ export const simulations: Record<string, ComponentType<SimulationProps>> = {
   'precipitation-lab': PrecipitationLab,
   'ph-explorer': PhExplorer,
   'weak-acid-lab': WeakAcidLab,
+  'tlc-lab': TlcLab,
   'isomer-explorer': IsomerExplorer,
   'distillation-lab': DistillationLab,
   'element-detective': ElementDetective,
