@@ -1,8 +1,9 @@
 'use client'
 
-import React, { Component, useEffect, useState, useSyncExternalStore, type ReactNode } from 'react'
+import React, { Component, createContext, useContext, useEffect, useMemo, useRef, useState, useSyncExternalStore, type ReactNode, type RefObject } from 'react'
 import { Canvas, useFrame, useThree } from '@react-three/fiber'
 import { OrbitControls } from '@react-three/drei'
+import { Vector3 } from 'three'
 import { usePrefersReducedMotion } from '@/components/section/usePrefersReducedMotion'
 import {
   STAGE_FALLBACK,
@@ -26,6 +27,12 @@ export interface Stage3DProps {
    * default StageAxes length stay inside the frame.
    */
   cameraPosition?: [number, number, number]
+  /**
+   * A controlled camera position. Unlike `cameraPosition` (used once, when the canvas starts), the
+   * camera eases to this position whenever it changes, and the orbit target stays at the origin.
+   * Leave it unset for a free camera.
+   */
+  cameraTo?: [number, number, number]
   /** Turn the gentle auto-rotation on (opt-in). It also stops for reduced motion and after the first drag. */
   autoRotate?: boolean
   /** Short hint shown in the corner until the visitor first interacts. */
@@ -35,6 +42,45 @@ export interface Stage3DProps {
 
 /** Default camera: elevated, with all axis letters inside the frame. */
 export const DEFAULT_CAMERA: [number, number, number] = [4.4, 2.4, 5.2]
+
+/**
+ * The page element that holds the stage. 3D labels (drei Html) attach here, so that they are drawn
+ * over the canvas. Without it, drei appends them to the canvas element, where they never show.
+ */
+export const StagePortalContext = createContext<RefObject<HTMLElement | null> | null>(null)
+
+/** The stage's portal, for Html labels inside it. Null outside a Stage3D. */
+export function useStagePortal(): RefObject<HTMLElement> | null {
+  return useContext(StagePortalContext) as RefObject<HTMLElement> | null
+}
+
+/** Eases the camera towards `position` whenever it changes, and aims it at the origin. */
+function CameraEase({ position }: { position: [number, number, number] }) {
+  const camera = useThree((state) => state.camera)
+  const invalidate = useThree((state) => state.invalidate)
+  const goal = useMemo(() => new Vector3(...position), [position])
+  const moving = useRef(true)
+
+  useEffect(() => {
+    goal.set(position[0], position[1], position[2])
+    moving.current = true
+    invalidate()
+  }, [goal, position, invalidate])
+
+  useFrame(() => {
+    if (!moving.current) return
+    camera.position.lerp(goal, 0.14)
+    camera.lookAt(0, 0, 0)
+    if (camera.position.distanceTo(goal) < 0.002) {
+      camera.position.copy(goal)
+      camera.lookAt(0, 0, 0)
+      moving.current = false
+    } else {
+      invalidate()
+    }
+  })
+  return null
+}
 
 let webGLCache: boolean | undefined
 
@@ -154,6 +200,7 @@ export function Stage3D({
   fallback,
   children,
   cameraPosition = DEFAULT_CAMERA,
+  cameraTo,
   autoRotate = false,
   hint = 'Drag to rotate, scroll to zoom',
   className,
@@ -181,6 +228,7 @@ export function Stage3D({
   }, [rootEl])
 
   const spinning = autoRotate && !reducedMotion && !interacted && visible
+  const portalRef = useMemo(() => ({ current: rootEl }), [rootEl])
 
   return (
     <div
@@ -194,6 +242,7 @@ export function Stage3D({
       {support === 'webgl' ? (
         <StageBoundary fallback={<StageNote>{fallback}</StageNote>}>
           <StageColorsContext.Provider value={colors}>
+           <StagePortalContext.Provider value={portalRef}>
             <Canvas
               frameloop="demand"
               dpr={[1, 2]}
@@ -204,12 +253,14 @@ export function Stage3D({
               data-testid="stage3d-canvas"
             >
               <FrameDriver spinning={spinning} />
+              {cameraTo && <CameraEase position={cameraTo} />}
               <ambientLight intensity={0.6} />
               <directionalLight position={[3.5, 4.5, 5]} intensity={1.1} />
               <directionalLight position={[-4, -2.5, -3]} intensity={0.35} />
               {children}
               <StageControls spinning={spinning} onInteract={() => setInteracted(true)} />
             </Canvas>
+           </StagePortalContext.Provider>
           </StageColorsContext.Provider>
         </StageBoundary>
       ) : support === 'none' ? (

@@ -1,4 +1,6 @@
 import { BohrEmission } from './BohrEmission'
+import { VseprRepulsion } from './unit4/vsepr/VseprRepulsion'
+import { VseprLonePairs } from './unit4/vsepr/VseprLonePairs'
 import { MassWeight } from './unit1/MassWeight'
 import { ThermometerTrio } from './unit1/ThermometerTrio'
 import { PrecisionAccuracy } from './unit1/PrecisionAccuracy'
@@ -63,6 +65,8 @@ import { HybridGeometry } from './unit4/vbt/HybridGeometry'
  */
 export const animations = {
   'bohr-emission': BohrEmission,
+  'vsepr-repulsion': VseprRepulsion,
+  'vsepr-lone-pairs': VseprLonePairs,
   'mass-weight': MassWeight,
   'thermometer-trio': ThermometerTrio,
   'precision-accuracy': PrecisionAccuracy,
