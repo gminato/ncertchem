@@ -76,6 +76,11 @@ for (const scheme of ['light', 'dark'] as const) {
       await sim.getByRole('button', { name: 'Play' }).click()
       await expect(sim.getByTestId('verdict')).toContainText('Equal rates', { timeout: 20000 })
       await sim.screenshot({ path: path.join(SCREEN_DIR, `u6-6-1-sim-ethanol-${scheme}.png`) })
+      await sim.getByRole('radio', { name: 'Iodine' }).click()
+      await expect(sim.getByTestId('p-star')).toContainText('iodine')
+      await sim.getByRole('button', { name: 'Play' }).click()
+      await expect(sim.getByTestId('verdict')).toContainText('Equal rates', { timeout: 20000 })
+      await sim.screenshot({ path: path.join(SCREEN_DIR, `u6-6-1-sim-iodine-${scheme}.png`) })
 
       await sim.getByRole('radio', { name: 'Soda bottle' }).click()
       await expect(sim.getByTestId('k-h')).toContainText('0.034')
