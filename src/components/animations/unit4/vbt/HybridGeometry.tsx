@@ -2,10 +2,10 @@
 
 import { Label, VocabDefs } from '@/components/vocab'
 import { HybridOrbitals, type HybridKind } from '@/components/molecule'
-import { moleculeGeometry } from '@/lib/chem/hybrid-explorer'
 import { vseprClass } from '@/lib/chem/vsepr'
 import { Symbolised } from './symbols'
 import { useReveal } from './useStepTween'
+import { CENTRE_RADIUS, LIGAND_RADIUS, projectShape, type ProjectedAtom } from './hybrid-view'
 import { HYBRID_STEP_COUNT, hybridStepAt, type GeometryShape } from './vbt-steps'
 
 export interface HybridGeometryProps {
@@ -33,64 +33,45 @@ function angleText(shape: GeometryShape): string {
   return `${angle}°`
 }
 
-const SHAPE_CENTRE = { x: 478, y: 118 }
-const SHAPE_SCALE = 38
-/** Yaw (about the vertical axis) so that three-dimensional shapes show their depth. */
-const YAW = (24 * Math.PI) / 180
-
-interface Projected {
-  x: number
-  y: number
-  depth: number
-  element: string
-  kind: 'centre' | 'ligand' | 'lone'
-  id: string
-}
+/** Lobe drawings are scaled to fill most of the panel width. */
+const LOBE_SCALE = 1.6
+const LOBE_X = (600 - 340 * LOBE_SCALE) / 2
+/** Where the molecule is drawn: below the lobes when there are lobes, in the upper area otherwise. */
+const ANCHOR_WITH_LOBES = { x: 300, y: 392 }
+const ANCHOR_GEOMETRY_ONLY = { x: 300, y: 230 }
 
 /**
- * Projects a scene-space geometry onto the drawing plane. The shape is yawed for depth, then
- * turned in the plane (so BeCl₂ can lie flat). Screen y points down, so it is negated.
+ * Each ligand's radius and bond style come from its depth: the back of the shape is slightly
+ * smaller, drawn fainter, and its bonds are dashed.
  */
-function project(shape: GeometryShape, turnDeg: number): Projected[] {
-  const g = moleculeGeometry(shape)
-  const turn = (turnDeg * Math.PI) / 180
-  const place = ([x, y, z]: readonly number[]) => {
-    const xr = x * Math.cos(YAW) + z * Math.sin(YAW)
-    const zr = -x * Math.sin(YAW) + z * Math.cos(YAW)
-    const sx = xr * Math.cos(turn) - y * Math.sin(turn)
-    const sy = xr * Math.sin(turn) + y * Math.cos(turn)
-    return { x: SHAPE_CENTRE.x + sx * SHAPE_SCALE, y: SHAPE_CENTRE.y - sy * SHAPE_SCALE, depth: zr }
+function depthCues(atoms: ProjectedAtom[]) {
+  const max = Math.max(1e-9, ...atoms.map((a) => Math.abs(a.depth)))
+  return (a: ProjectedAtom) => {
+    const d = a.depth / max
+    return { r: LIGAND_RADIUS * (1 + 0.1 * d), back: d < 0 }
   }
-  const out: Projected[] = g.atoms.map((a) => ({
-    ...place(a.position),
-    element: a.element,
-    kind: a.id === DOMAINS[shape].centre ? 'centre' : 'ligand',
-    id: a.id,
-  }))
-  for (const lp of g.lonePairs) {
-    const p = place(lp.direction.map((v) => v * 0.55))
-    out.push({ ...p, element: '', kind: 'lone', id: `lp-${lp.atom}-${p.x.toFixed(1)}` })
-  }
-  return out
 }
 
 /**
  * The hybrid orbitals of each step (drawn as lobes for sp, sp² and sp³) beside the shape they
  * describe. The shape comes from the VSEPR positions, and hybridisation describes the bonding
- * in it. For sp³d and sp³d² only the geometry is drawn.
+ * in it. For sp³d and sp³d² only the geometry is drawn. Each shape is drawn with a yaw and a
+ * pitch, so the back ligands sit clear of the centre and the front ones hide nothing.
  */
 export function HybridGeometry({ step, reducedMotion }: HybridGeometryProps) {
   const index = Math.min(HYBRID_STEP_COUNT - 1, Math.max(0, Math.round(step)))
   const current = hybridStepAt(index)
   const reveal = useReveal(index, reducedMotion)
-  const points = project(current.shape, current.turn)
-  const centre = points.find((p) => p.kind === 'centre')
-  const ligands = points.filter((p) => p.kind === 'ligand').sort((a, b) => a.depth - b.depth)
-  const lone = points.filter((p) => p.kind === 'lone')
+  const anchor = current.lobes ? ANCHOR_WITH_LOBES : ANCHOR_GEOMETRY_ONLY
+  const atoms = projectShape(current.shape, anchor)
+  const centre = atoms.find((a) => a.kind === 'centre')
+  const ligands = atoms.filter((a) => a.kind === 'ligand').sort((a, b) => a.depth - b.depth)
+  const lone = atoms.filter((a) => a.kind === 'lone')
+  const cue = depthCues(ligands)
 
   return (
     <svg
-      viewBox="0 0 600 340"
+      viewBox="0 0 600 594"
       role="img"
       aria-label={`Hybridisation and shape: ${current.caption}`}
       style={{ width: '100%', height: 'auto', display: 'block' }}
@@ -99,59 +80,66 @@ export function HybridGeometry({ step, reducedMotion }: HybridGeometryProps) {
     >
       <VocabDefs />
 
-      <g transform="translate(10, 40)">
-        {current.lobes ? (
+      {current.lobes ? (
+        <g transform={`translate(${LOBE_X}, 0) scale(${LOBE_SCALE})`}>
           <HybridOrbitals kind={current.lobes as HybridKind} />
-        ) : (
-          <Label x={170} y={90} fontSize={14} fill="var(--fg-muted)">
-            Geometry only: no lobes drawn for sp³d or sp³d²
-          </Label>
-        )}
-      </g>
+        </g>
+      ) : (
+        <Label x={300} y={60} fontSize={16} fill="var(--fg-muted)">
+          Geometry only: no lobes drawn for sp³d or sp³d²
+        </Label>
+      )}
 
       <g opacity={reveal} data-testid="shape">
-        {ligands.map((p) => (
-          <line
-            key={`bond-${p.id}`}
-            x1={centre?.x}
-            y1={centre?.y}
-            x2={p.x}
-            y2={p.y}
-            strokeWidth={2.6}
-            strokeLinecap="round"
-            style={{ stroke: 'var(--bond)', opacity: p.depth < 0 ? 0.45 : 0.9 }}
-          />
-        ))}
+        {ligands.map((p) => {
+          const { back } = cue(p)
+          return (
+            <line
+              key={`bond-${p.id}`}
+              x1={centre?.x}
+              y1={centre?.y}
+              x2={p.x}
+              y2={p.y}
+              strokeWidth={back ? 2 : 3}
+              strokeLinecap="round"
+              strokeDasharray={back ? '6 5' : undefined}
+              style={{ stroke: 'var(--bond)', opacity: back ? 0.5 : 0.95 }}
+            />
+          )
+        })}
         {lone.map((p) => (
-          <circle key={p.id} cx={p.x} cy={p.y} r={9} style={{ fill: 'var(--lone-pair)', fillOpacity: 0.55 }} />
+          <circle key={p.id} cx={p.x} cy={p.y} r={14} style={{ fill: 'var(--lone-pair)', fillOpacity: 0.55 }} />
         ))}
-        {ligands.map((p) => (
-          <g key={`lig-${p.id}`} opacity={p.depth < 0 ? 0.55 : 1}>
-            <circle cx={p.x} cy={p.y} r={13} style={{ fill: 'var(--surface)', stroke: 'var(--bond)' }} strokeWidth={1.4} />
-            <Label x={p.x} y={p.y} fontSize={13} fill="var(--fg)">
-              {DOMAINS[current.shape].ligand}
-            </Label>
-          </g>
-        ))}
+        {ligands.map((p) => {
+          const { r, back } = cue(p)
+          return (
+            <g key={`lig-${p.id}`} opacity={back ? 0.6 : 1}>
+              <circle cx={p.x} cy={p.y} r={r} style={{ fill: 'var(--surface)', stroke: 'var(--bond)' }} strokeWidth={back ? 1.4 : 2.2} />
+              <Label x={p.x} y={p.y} fontSize={22} fill="var(--fg)">
+                {DOMAINS[current.shape].ligand}
+              </Label>
+            </g>
+          )
+        })}
         {centre && (
           <g>
-            <circle cx={centre.x} cy={centre.y} r={15} style={{ fill: 'var(--surface-raised)', stroke: 'var(--fg-muted)' }} strokeWidth={1.4} />
-            <Label x={centre.x} y={centre.y} fontSize={14} fill="var(--fg)">
+            <circle cx={centre.x} cy={centre.y} r={CENTRE_RADIUS} style={{ fill: 'var(--surface-raised)', stroke: 'var(--fg-muted)' }} strokeWidth={2} />
+            <Label x={centre.x} y={centre.y} fontSize={26} fill="var(--fg)">
               {DOMAINS[current.shape].centre}
             </Label>
           </g>
         )}
       </g>
 
-      <Label x={478} y={248} fontSize={14} fill="var(--fg)" data-testid="hybrid-angle">
+      <Label x={300} y={532} fontSize={18} fill="var(--fg)" data-testid="hybrid-angle">
         {`${DOMAINS[current.shape].bonds} bonds: ${angleText(current.shape)}`}
       </Label>
 
-      <Label x={300} y={292} fontSize={15} fill="var(--fg)" data-testid="hybrid-caption">
+      <Label x={300} y={558} fontSize={16} fill="var(--fg)" data-testid="hybrid-caption">
         <Symbolised text={current.caption} />
       </Label>
-      <Label x={300} y={320} fontSize={13} fill="var(--fg-subtle)">
-        Coral lobes positive, teal negative. Shapes are schematic.
+      <Label x={300} y={582} fontSize={13} fill="var(--fg-subtle)">
+        Coral lobes positive, teal negative. Dashed bonds lie behind. Schematic.
       </Label>
     </svg>
   )

@@ -11,8 +11,12 @@ import type { OverlapKind, OverlapPhase } from '@/components/molecule/overlap-ge
 // H₂ formation: the potential energy curve and the overlap of two 1s orbitals
 // ---------------------------------------------------------------------------
 
-/** Internuclear distance (pm) at each Step: far apart, approaching, the minimum, too close. */
-export const H2_STEP_DISTANCES_PM = [240, 120, 74, 50] as const
+/**
+ * Internuclear distance (pm) at each Step: far apart, approaching, the minimum, too close.
+ * The last Step is 40 pm, the closest distance the curve plots (PotentialEnergyCurve starts at
+ * 40 pm). Closer than that the Morse energy is above the plotted range, so it is not shown.
+ */
+export const H2_STEP_DISTANCES_PM = [240, 120, 74, 40] as const
 
 /** Number of Steps in the H₂ curve Scrolly. */
 export const H2_STEP_COUNT = H2_STEP_DISTANCES_PM.length

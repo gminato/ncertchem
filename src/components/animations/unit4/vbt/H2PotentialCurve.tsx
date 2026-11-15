@@ -15,7 +15,7 @@ const CAPTIONS = [
   'Far apart: no interaction',
   'Closer: attraction wins, energy falls',
   'Minimum: the bond forms at 74 pm',
-  'Too close: repulsion, energy climbs',
+  'Too close: nuclei repel, energy rises steeply',
 ] as const
 
 /** A signed number with a true minus sign (U+2212), to one decimal place. */
@@ -26,8 +26,8 @@ function signedOneDecimal(value: number): string {
 
 /**
  * The H–H potential energy curve with the two 1s orbitals drawn beside it. As the Steps advance
- * the atoms move in from 240 pm to the 74 pm minimum, then to 50 pm, where the energy rises
- * again. The overlap picture tracks the same distance.
+ * the atoms move in from 240 pm to the 74 pm minimum, then to 40 pm, where the energy rises
+ * steeply because the nuclei repel. The overlap picture tracks the same distance.
  */
 export function H2PotentialCurve({ step, reducedMotion }: H2PotentialCurveProps) {
   const index = clampIndex(step, H2_STEP_DISTANCES_PM.length)
@@ -37,7 +37,7 @@ export function H2PotentialCurve({ step, reducedMotion }: H2PotentialCurveProps)
   const energy = h2EnergyAt(r)
 
   return (
-    <svg viewBox="0 0 660 272" role="img" aria-label="Potential energy against distance for two hydrogen atoms, beside their overlapping 1s orbitals" style={{ width: '100%', height: 'auto', display: 'block' }} data-step={index}>
+    <svg viewBox="0 0 660 288" role="img" aria-label="Potential energy against distance for two hydrogen atoms, beside their overlapping 1s orbitals" style={{ width: '100%', height: 'auto', display: 'block' }} data-step={index}>
       <VocabDefs />
       <Label x={160} y={16} fontSize={15} fill="var(--fg)">
         1<tspan className="sym">s</tspan> + 1<tspan className="sym">s</tspan> overlap
@@ -48,10 +48,10 @@ export function H2PotentialCurve({ step, reducedMotion }: H2PotentialCurveProps)
       <Label x={160} y={248} fontSize={14} fill="var(--fg)" data-testid="h2-caption">
         {CAPTIONS[index]}
       </Label>
-      <g transform="translate(330, 10)">
+      <g transform="translate(300, 10)">
         <PotentialEnergyCurve distance={r} params={H2_MORSE} />
       </g>
-      <Label x={650} y={262} textAnchor="end" fontSize={14} fill="var(--fg-muted)" data-testid="h2-readout">
+      <Label x={160} y={278} textAnchor="middle" fontSize={14} fill="var(--fg-muted)" data-testid="h2-readout">
         <tspan className="sym">r</tspan> = {Math.round(r)} pm, <tspan className="sym">E</tspan> = {signedOneDecimal(energy)} kJ mol⁻¹
       </Label>
     </svg>

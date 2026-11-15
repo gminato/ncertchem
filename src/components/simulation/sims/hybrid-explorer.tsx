@@ -66,6 +66,14 @@ function configurationNodes(text: string): ReactNode[] {
   )
 }
 
+/** A fraction as a percentage, with thirds written as 33⅓% and 66⅔% rather than rounded. */
+function percentText(fraction: number): string {
+  const value = fraction * 100
+  if (Math.abs(value - 100 / 3) < 0.01) return '33⅓%'
+  if (Math.abs(value - 200 / 3) < 0.01) return '66⅔%'
+  return `${Math.round(value)}%`
+}
+
 /** Width of a group of boxes, without any label. */
 const groupWidth = (count: number) => count * BOX + Math.max(0, count - 1) * GAP
 
@@ -221,7 +229,7 @@ function ShapePanel({ centre, stage }: { centre: HybridCentre; stage: Stage }) {
           Mixing {used.length} atomic orbitals gives {used.length} equivalent hybrids
           {hasLobes ? (
             <>
-              , each with {Math.round(s * 100)}% <span className="sym">s</span> character
+              , each with {percentText(s)} <span className="sym">s</span> character
             </>
           ) : null}
           .

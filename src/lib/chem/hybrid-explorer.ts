@@ -250,8 +250,10 @@ export function moleculeGeometry(id: string): MoleculeGeometry {
   if (id === 'C2H4') {
     const cc = 0.8
     const ch = 1.1
-    const hx = ch * Math.cos((59 * Math.PI) / 180)
-    const hy = ch * Math.sin((59 * Math.PI) / 180)
+    // Each H sits at θ from the C–C axis, so H–C–H = 2θ = 117.6° and H–C–C = 180° − θ = 121.2°.
+    const theta = (58.8 * Math.PI) / 180
+    const hx = ch * Math.cos(theta)
+    const hy = ch * Math.sin(theta)
     return {
       atoms: [
         { id: 'C1', element: 'C', position: [-cc, 0, 0] },
