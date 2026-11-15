@@ -52,7 +52,7 @@ export const IonisationBeaker = forwardRef<SVGGElement, IonisationBeakerProps>(f
         const m = conversionMix(i, f, molecules)
         return (
           <g key={`ha-${i}`}>
-            <circle cx={p.x} cy={p.y} r={6} fill="var(--surface)" stroke="var(--fg-muted)" strokeWidth={1.8} opacity={1 - m} style={{ transition: 'opacity 0.45s ease' }} />
+            <circle cx={p.x} cy={p.y} r={6} fill="none" stroke="var(--fg)" strokeWidth={2} opacity={1 - m} style={{ transition: 'opacity 0.45s ease' }} />
             <g opacity={m} style={{ transition: 'opacity 0.45s ease' }}>
               <circle cx={p.x - 7} cy={p.y} r={4.8} fill="var(--acid)" stroke="var(--surface)" strokeWidth={1} />
               <circle cx={p.x + 7} cy={p.y} r={4.8} fill="var(--base)" stroke="var(--surface)" strokeWidth={1} />
@@ -68,7 +68,7 @@ export const IonisationBeaker = forwardRef<SVGGElement, IonisationBeakerProps>(f
 
       {/* Legend */}
       <g transform="translate(0, 232)" fontFamily="var(--font-sans)" fontSize={14} style={{ userSelect: 'none' }}>
-        <circle cx={34} cy={0} r={6} fill="var(--surface)" stroke="var(--fg-muted)" strokeWidth={1.8} />
+        <circle cx={34} cy={0} r={6} fill="none" stroke="var(--fg)" strokeWidth={2} />
         <text x={46} y={0.5} dominantBaseline="central" fill="var(--fg)">HA</text>
         <circle cx={100} cy={0} r={5} fill="var(--acid)" />
         <text x={112} y={0.5} dominantBaseline="central" fill="var(--fg)">H₃O⁺</text>
