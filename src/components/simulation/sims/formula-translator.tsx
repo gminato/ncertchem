@@ -3,11 +3,10 @@
 import { useId, useMemo, useState } from 'react'
 import { Button, NumberField } from '@/components/controls'
 import {
-  COMPLETE_SCALE,
   SkeletalFormula,
   StructuralFormula,
-  completeGrid,
   condensedAtoms,
+  elementColour,
   skeletalBounds,
   subscriptDigits,
 } from '@/components/organic'
@@ -23,6 +22,7 @@ import {
 import type { MolGraph } from '@/lib/chem/molecule-graph'
 import { iupacName } from '@/lib/chem/iupac-organic'
 import { molecularFormula, parseSmiles } from '@/lib/chem/molecule-parse'
+import { orthogonalComplete, type OrthogonalLayout } from './formula-translator-layout'
 import styles from './formula-translator.module.css'
 
 /** Pixels per bond in the bond-line panel. */
@@ -42,23 +42,99 @@ function nameOf(g: MolGraph): string {
   }
 }
 
+/** Pixels per grid unit of the orthogonal complete formula. */
+const UNIT = 46
+/** Gap kept between a bond's end and an atom's letter, in grid units. */
+const LABEL_GAP = 0.3
+
 /**
- * The centre-relative layout of the complete formula: the same centring the StructuralFormula
- * uses, so the highlight discs sit exactly under their atoms.
+ * The complete structural formula of an open chain, drawn on the orthogonal grid from
+ * formula-translator-layout: every hydrogen and every bond is a line, and the highlighted atoms get
+ * a disc behind them.
  */
-function completeLayout(g: MolGraph) {
-  const grid = completeGrid(g)
-  const all = [...grid.heavy, ...grid.hydrogens.map((h) => h.pos)]
-  const minX = Math.min(...all.map((p) => p.x))
-  const maxX = Math.max(...all.map((p) => p.x))
-  const minY = Math.min(...all.map((p) => p.y))
-  const maxY = Math.max(...all.map((p) => p.y))
-  const cx = (minX + maxX) / 2
-  const cy = (minY + maxY) / 2
-  const to = (p: { x: number; y: number }) => ({ x: (p.x - cx) * COMPLETE_SCALE, y: -(p.y - cy) * COMPLETE_SCALE })
-  const width = (maxX - minX) * COMPLETE_SCALE + 2 * PAD + 0.6 * COMPLETE_SCALE
-  const height = (maxY - minY) * COMPLETE_SCALE + 2 * PAD + 0.6 * COMPLETE_SCALE
-  return { grid, to, width, height }
+function OrthogonalComplete({ layout, highlighted, label }: { layout: OrthogonalLayout; highlighted: Set<number>; label: (a: number) => string }) {
+  const pt = (x: number, y: number) => ({ x: x * UNIT, y: y * UNIT })
+  const posOf = new Map<number, { x: number; y: number }>()
+  layout.heavy.forEach((h) => posOf.set(h.atom, { x: h.x, y: h.y }))
+  const hPos = layout.hydrogens.map((h) => ({ parent: h.parent, x: h.x, y: h.y }))
+  const segment = (p: { x: number; y: number }, q: { x: number; y: number }, offset: number) => {
+    const dx = q.x - p.x
+    const dy = q.y - p.y
+    const len = Math.hypot(dx, dy)
+    const ux = dx / len
+    const uy = dy / len
+    const nx = -uy * offset
+    const ny = ux * offset
+    const gap = LABEL_GAP * UNIT
+    return {
+      x1: p.x * UNIT + ux * gap + nx,
+      y1: p.y * UNIT + uy * gap + ny,
+      x2: q.x * UNIT - ux * gap + nx,
+      y2: q.y * UNIT - uy * gap + ny,
+    }
+  }
+  const lines: { key: string; seg: ReturnType<typeof segment> }[] = []
+  for (const b of layout.bonds) {
+    const p = posOf.get(b.a)!
+    const q = posOf.get(b.b)!
+    const spread = b.order === 2 ? 0.1 : b.order === 3 ? 0.14 : 0
+    const offsets = b.order === 1 ? [0] : b.order === 2 ? [-spread, spread] : [-spread, 0, spread]
+    offsets.forEach((o, i) => lines.push({ key: `b${b.a}-${b.b}-${i}`, seg: segment(p, q, o) }))
+  }
+  for (const h of hPos) {
+    lines.push({ key: `h${h.parent}-${h.x}-${h.y}`, seg: segment(posOf.get(h.parent)!, { x: h.x, y: h.y }, 0) })
+  }
+  const pad = 0.9 * UNIT
+  const x0 = layout.minX * UNIT - pad
+  const y0 = layout.minY * UNIT - pad
+  const w = (layout.maxX - layout.minX) * UNIT + 2 * pad
+  const h = (layout.maxY - layout.minY) * UNIT + 2 * pad
+  return (
+    <svg viewBox={`${x0} ${y0} ${w} ${h}`} role="img" aria-label="Complete structural formula" className={styles.drawing}>
+        {[...highlighted].map((a) => {
+          const p = posOf.get(a)
+          return p ? <circle key={`hl-${a}`} cx={p.x * UNIT} cy={p.y * UNIT} r={0.42 * UNIT} fill="var(--highlight)" /> : null
+        })}
+        {hPos.map((hh, k) =>
+          highlighted.has(hh.parent) ? <circle key={`hh-${k}`} cx={hh.x * UNIT} cy={hh.y * UNIT} r={0.36 * UNIT} fill="var(--highlight)" /> : null
+        )}
+        {lines.map((l) => (
+          <line key={l.key} x1={l.seg.x1} y1={l.seg.y1} x2={l.seg.x2} y2={l.seg.y2} stroke="var(--fg)" strokeWidth={2.2} strokeLinecap="round" />
+        ))}
+        {layout.heavy.map((hv) => (
+          <text
+            key={`t${hv.atom}`}
+            x={hv.x * UNIT}
+            y={hv.y * UNIT}
+            textAnchor="middle"
+            dominantBaseline="central"
+            fontSize={20}
+            fontWeight={600}
+            fontFamily="var(--font-sans)"
+            fill={label(hv.atom) === 'C' ? 'var(--fg)' : elementColour(label(hv.atom))}
+            style={{ userSelect: 'none' }}
+          >
+            {label(hv.atom)}
+          </text>
+        ))}
+        {hPos.map((hh, k) => (
+          <text
+            key={`ht${k}`}
+            x={hh.x * UNIT}
+            y={hh.y * UNIT}
+            textAnchor="middle"
+            dominantBaseline="central"
+            fontSize={18}
+            fontWeight={600}
+            fontFamily="var(--font-sans)"
+            fill="var(--fg-muted)"
+            style={{ userSelect: 'none' }}
+          >
+            H
+          </text>
+        ))}
+      </svg>
+  )
 }
 
 /** The condensed line as text: each chain atom's label with its single-carbon branches in brackets. */
@@ -97,7 +173,10 @@ export function FormulaTranslator(_props: SimulationProps) {
   const highlighted = useMemo(() => new Set(picked.flatMap((k) => groups[k] ?? [])), [picked, groups])
   const name = useMemo(() => nameOf(graph), [graph])
   const formula = useMemo(() => molecularFormula(graph), [graph])
-  const layout = useMemo(() => completeLayout(graph), [graph])
+  const orthogonal = useMemo(
+    () => (ring ? null : orthogonalComplete(graph, segments.map((x) => x.atom))),
+    [graph, ring, segments]
+  )
   const bounds = useMemo(() => skeletalBounds(graph, SKELETAL_SCALE), [graph])
 
   const quizPreset = TRANSLATOR_PRESETS[quizIndex % TRANSLATOR_PRESETS.length]
@@ -232,20 +311,13 @@ export function FormulaTranslator(_props: SimulationProps) {
           <div className={styles.panels}>
             <section className={styles.panel} aria-label="Complete structural formula">
               <h4 className={styles.panelTitle}>Complete</h4>
-              <svg viewBox={`${-layout.width / 2} ${-layout.height / 2} ${layout.width} ${layout.height}`} role="img" aria-label={`Complete structural formula of ${name}`} className={styles.drawing}>
-                {[...highlighted].map((i) => {
-                  const p = layout.grid.heavy[i]
-                  if (!p) return null
-                  const c = layout.to(p)
-                  return <circle key={`hl-${i}`} cx={c.x} cy={c.y} r={0.46 * COMPLETE_SCALE} fill="var(--highlight)" />
-                })}
-                {layout.grid.hydrogens.map((h, k) => {
-                  if (!highlighted.has(h.parent)) return null
-                  const c = layout.to(h.pos)
-                  return <circle key={`hh-${k}`} cx={c.x} cy={c.y} r={0.4 * COMPLETE_SCALE} fill="var(--highlight)" />
-                })}
-                <StructuralFormula graph={graph} mode="complete" />
-              </svg>
+              {orthogonal ? (
+                <OrthogonalComplete layout={orthogonal} highlighted={highlighted} label={(a) => graph.atoms[a].element} />
+              ) : (
+                <svg viewBox="-200 -120 400 240" role="img" aria-label={`Complete structural formula of ${name}`} className={styles.drawing}>
+                  <StructuralFormula graph={graph} mode="complete" />
+                </svg>
+              )}
             </section>
 
             <section className={styles.panel} aria-label="Condensed structural formula">
@@ -256,8 +328,11 @@ export function FormulaTranslator(_props: SimulationProps) {
                 ) : (
                   <p className={styles.line}>
                     {segments.map((s, k) => (
-                      <span key={`seg-${k}`} className={picked.includes(k) ? styles.segOn : styles.seg} data-group={k + 1}>
-                        {sub(s.text)}
+                      <span key={`seg-${k}`}>
+                        {k > 0 ? ' ' : null}
+                        <span className={picked.includes(k) ? styles.segOn : styles.seg} data-group={k + 1}>
+                          {sub(s.text)}
+                        </span>
                       </span>
                     ))}
                   </p>

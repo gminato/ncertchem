@@ -13,13 +13,14 @@ import {
   subscriptDigits,
   type Bounds,
 } from '@/components/organic'
-import { Molecule3D, Molecule3DFallback, cameraForMolecule, type Molecule3DData } from '@/components/molecule'
+import { cameraForMolecule, type Molecule3DData } from '@/components/molecule'
 import { Stage3DLazy } from '@/components/stage3d'
 import { iupacName } from '@/lib/chem/iupac-organic'
 import { molecularFormula } from '@/lib/chem/molecule-parse'
 import type { MolGraph } from '@/lib/chem/molecule-graph'
 import { useTweenedNumber } from '../../unit5/gibbs/useTweenedNumber'
 import { WedgeLabelled } from './WedgeLabelled'
+import { TetraFallback, TetraScene } from './TetraScene'
 import {
   condensedFade,
   morphTarget,
@@ -179,35 +180,31 @@ function TetrahedralPanel({ index, reducedMotion }: { index: number; reducedMoti
   const data: Molecule3DData = tetrahedralModel(graph, carbon)
   const camera = cameraForMolecule(data, 1.25)
   const elementOf = (atomIndex: number) => graph.atoms[atomIndex].element
-  const heavy = graph.bonds.flatMap((b) => (b.a === carbon ? [b.b] : b.b === carbon ? [b.a] : []))
-  const [left, right, up] = heavy.map(elementOf)
-  // The sketch: Cl and F in the plane of the page, Br on the wedge, H on the dash.
-  const wedgeLabel = up
+  // The three heavy neighbours, then the implicit hydrogen: the same order tetrahedralModel uses.
+  const heavy = graph.bonds.flatMap((b) => (b.a === carbon ? [b.b] : b.b === carbon ? [b.a] : [])).map(elementOf)
+  const [lowerLeft, lowerRight, wedgeLabel] = heavy
   const dashLabel = 'H'
+  const description = `${caption(graph)}: ${lowerLeft} and ${lowerRight} in the plane, ${wedgeLabel} on the wedge, ${dashLabel} on the dash.`
   return (
     <div className={`${styles.panel} ${enter(reducedMotion) ?? ''}`} data-testid="structure-morph" data-step={index} data-kind="tetrahedral">
       <p className={styles.title}>{KIND_TITLE.tetrahedral}</p>
-      <svg
-        viewBox="0 0 360 300"
-        role="img"
-        aria-label={`Wedge and dash sketch of the carbon in ${caption(graph)}: ${left} and ${right} in the plane, ${wedgeLabel} on a wedge, ${dashLabel} on a dash.`}
-        className={styles.sketch}
-      >
-        <WedgeLabelled left={left} right={right} wedge={wedgeLabel} dash={dashLabel} x={180} y={150} />
+      <svg viewBox="0 0 360 300" role="img" aria-label={`Wedge and dash sketch of ${description}`} className={styles.sketch}>
+        <WedgeLabelled lowerLeft={lowerLeft} lowerRight={lowerRight} wedge={wedgeLabel} dash={dashLabel} x={180} y={150} />
       </svg>
       <div className={styles.model}>
         <Stage3DLazy
           label={`${caption(graph)} in 3D, drag to turn it`}
-          fallback={<Molecule3DFallback {...data} />}
+          fallback={<TetraFallback data={data} label={`3D model of ${description}`} />}
           cameraPosition={camera}
           hint="Drag to turn"
         >
-          <Molecule3D {...data} />
+          <TetraScene data={data} />
         </Stage3DLazy>
       </div>
       <p className={styles.caption}>
-        {caption(graph)}. The sketch uses the page convention, so the two bonds in the plane look flat. In the model every bond
-        makes an angle of 109.5° with the other three.
+        {caption(graph)}. The sketch uses the page convention: the two bonds in the plane form a V of about 110°, and the wedge and
+        the dash are splayed about 110° apart. The model uses the same element colours and symbols, and every bond makes an angle of
+        109.5° with the other three.
       </p>
     </div>
   )

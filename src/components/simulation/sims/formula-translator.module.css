@@ -116,14 +116,14 @@
 
 .line {
   margin: 0;
-  font-size: 1.25rem;
-  line-height: 2;
+  font-size: clamp(0.95rem, 1.5vw, 1.2rem);
+  line-height: 2.1;
   text-align: center;
-  overflow-wrap: anywhere;
 }
 
 .seg,
 .segOn {
+  white-space: nowrap;
   border-radius: 6px;
   padding: 0.1em 0.2em;
 }
