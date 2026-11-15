@@ -65,7 +65,7 @@ export function RedoxClassical({ step, reducedMotion: _reducedMotion }: RedoxCla
       viewBox="0 0 580 430"
       role="img"
       aria-label={`Classical redox, ${data.stageNumber}: ${data.title}. ${data.oxRule}; ${data.redRule}.${ariaEquation ? ` ${ariaEquation}.` : ''}`}
-      style={{ width: '100%', height: 'auto', display: 'block' }}
+      style={{ width: '100%', height: 'auto', display: 'block', textRendering: 'geometricPrecision' }}
       data-step={index}
       data-testid="redox-classical-svg"
     >

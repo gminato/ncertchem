@@ -49,7 +49,7 @@ export function RedoxElectronTransfer({ step, reducedMotion }: RedoxElectronTran
       viewBox="0 0 580 430"
       role="img"
       aria-label={`Electron Transfer Animation: ${data.title}. ${data.conceptDetail}`}
-      style={{ width: '100%', height: 'auto', display: 'block' }}
+      style={{ width: '100%', height: 'auto', display: 'block', textRendering: 'geometricPrecision' }}
       data-step={index}
       data-testid="redox-electron-transfer-svg"
     >
