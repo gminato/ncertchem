@@ -92,6 +92,7 @@ import { IonicElectrolytes } from './unit6/acidbase/IonicElectrolytes'
 import { PhysicalEquilibria } from './unit6/physical/PhysicalEquilibria'
 import { DynamicEquilibrium } from './unit6/dynamic/DynamicEquilibrium'
 import { MassAction } from './unit6/massaction/MassAction'
+import { BufferAction } from './unit6/buffer/BufferAction'
 import { LeChatelierStress } from './unit6/lechatelier/LeChatelierStress'
 import { PhLadder } from './unit6/ph/PhLadder'
 import { WeakAcid } from './unit6/weakacid/WeakAcid'
@@ -197,6 +198,7 @@ export const animations = {
   'physical-equilibria': PhysicalEquilibria,
   'unit6-dynamic-equilibrium': DynamicEquilibrium,
   'unit6-mass-action': MassAction,
+  'buffer-action': BufferAction,
   'le-chatelier': LeChatelierStress,
   'ph-scale': PhLadder,
   'weak-acid': WeakAcid,

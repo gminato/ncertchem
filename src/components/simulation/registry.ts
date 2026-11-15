@@ -33,6 +33,7 @@ import { IceSolver } from './sims/ice-solver'
 import { ConjugatePairSorter } from './sims/conjugate-pair-sorter'
 import { SealedContainerLab } from './sims/sealed-container-lab'
 import { ApproachToEquilibrium } from './sims/approach-to-equilibrium'
+import { BufferDesigner } from './sims/buffer-designer'
 import { LeChatelierLab } from './sims/le-chatelier-lab'
 import { PhExplorer } from './sims/ph-explorer'
 import { WeakAcidLab } from './sims/weak-acid-lab'
@@ -83,6 +84,7 @@ export const simulations: Record<string, ComponentType<SimulationProps>> = {
   'conjugate-pair-sorter': ConjugatePairSorter,
   'sealed-container-lab': SealedContainerLab,
   'approach-to-equilibrium': ApproachToEquilibrium,
+  'buffer-designer': BufferDesigner,
   'le-chatelier-lab': LeChatelierLab,
   'ph-explorer': PhExplorer,
   'weak-acid-lab': WeakAcidLab,
