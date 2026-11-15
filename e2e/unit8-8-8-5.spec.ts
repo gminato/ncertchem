@@ -75,8 +75,10 @@ for (const scheme of ['light', 'dark'] as const) {
       await sim.getByRole('button', { name: 'Reveal the unknown' }).click()
       await expect(sim.getByTestId('reveal')).toContainText('blue dye')
 
-      // Changed state 2: a more polar solvent, with iodine on the plate.
+      // Changed state 2: a more polar solvent. The marker is no longer on U, so no standard is named yet.
       await sim.getByRole('slider', { name: 'Solvent strength', exact: true }).fill('0.9')
+      await expect(sim.getByTestId('identify')).toContainText('Move the spot marker to the centre of spot U first')
+      await expect(sim.getByTestId('identify')).not.toContainText('Closest standard')
       await sim.getByRole('radio', { name: 'Iodine' }).click()
       await sim.screenshot({ path: path.join(SCREEN_DIR, `u8-8-5-tlc-lab-polar-iodine-${scheme}.png`) })
 
@@ -85,6 +87,7 @@ for (const scheme of ['light', 'dark'] as const) {
       await sim.getByRole('button', { name: 'Elute column' }).click()
       await expect(sim.getByRole('slider', { name: 'Eluent progress', exact: true })).toHaveValue('1', { timeout: 8000 })
       await expect(sim.getByTestId('column-readout')).toContainText('F1')
+      await expect(sim.getByTestId('column-readout')).toContainText('B and U together')
       await sim.screenshot({ path: path.join(SCREEN_DIR, `u8-8-5-tlc-lab-column-${scheme}.png`) })
 
       expect(errors, errors.join('\n')).toEqual([])

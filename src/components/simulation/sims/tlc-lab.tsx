@@ -15,6 +15,7 @@ import {
   analyteById,
   candidateRfTable,
   columnArrival,
+  elutionGroups,
   matchRf,
   modelRf,
   solventLabel,
@@ -114,9 +115,16 @@ export function TlcLab({ reducedMotion }: SimulationProps) {
     colourless: a.colourless,
   }))
 
-  const columnBands: ColumnBand[] = spotAnalytes
-    .map((a) => ({ id: LETTER[a.id], color: a.colourless ? 'var(--fg-subtle)' : a.color, arrival: columnArrival(a.adsorption, s) }))
-    .sort((a, b) => a.arrival - b.arrival)
+  // Substances with the same arrival (identical compounds) share one band, one fraction tube and one colour.
+  const elution = elutionGroups(spotAnalytes.map((a) => ({ arrival: columnArrival(a.adsorption, s), value: a })))
+  const columnBands: ColumnBand[] = elution.map((g) => {
+    const shown = g.members.find((m) => m.id !== 'unknown' && !m.colourless) ?? g.members[0]
+    return {
+      id: g.members.map((m) => LETTER[m.id]).join('+'),
+      color: shown.colourless ? 'var(--fg-subtle)' : shown.color,
+      arrival: g.arrival,
+    }
+  })
 
   const toggleSpot = (id: AnalyteId, on: boolean) => {
     setSpotted((prev) => {
@@ -180,7 +188,10 @@ export function TlcLab({ reducedMotion }: SimulationProps) {
   const rf = measured ? readRf(spotCm, frontCm) : null
   const modelForMeasured = measured ? modelRf(measured.adsorption, s) : null
   const agrees = rf !== null && modelForMeasured !== null && Math.abs(rf - modelForMeasured) <= RF_READING_TOLERANCE
-  const unknownMatches = measured?.id === 'unknown' && rf !== null ? matchRf(rf, s) : []
+  // A standard is named only when the reading is within the tolerance of the unknown's own model Rf.
+  const unknownModelRf = modelRf(analyteById('unknown').adsorption, s)
+  const nearUnknown = rf !== null && Math.abs(rf - unknownModelRf) <= RF_READING_TOLERANCE
+  const unknownMatches = nearUnknown && rf !== null ? matchRf(rf, s) : []
   const identity = unknownIdentity()
   const solventCm = progress * PLATE_SOLVENT_CM
   const table = candidateRfTable(s)
@@ -343,14 +354,18 @@ export function TlcLab({ reducedMotion }: SimulationProps) {
                     Standards in this solvent: {table.map((t) => `${t.analyte.label} ${t.rf.toFixed(2)}`).join(' · ')}.
                   </p>
                   <p>
-                    {unknownMatches.length === 0
-                      ? 'No standard matches this Rf within 0.03. Re-measure, or run the standards in this solvent.'
-                      : `Closest standard: ${unknownMatches.map((m) => m.analyte.label).join(' or ')}.`}
+                    {!nearUnknown
+                      ? 'Move the spot marker to the centre of spot U first.'
+                      : unknownMatches.length === 0
+                        ? 'No standard matches this Rf within 0.03. Re-measure, or run the standards in this solvent.'
+                        : `Closest standard: ${unknownMatches.map((m) => m.analyte.label).join(' or ')}.`}
                   </p>
-                  <Button variant="secondary" onClick={() => setRevealed(true)}>
-                    Reveal the unknown
-                  </Button>
-                  {revealed && identity && <p data-testid="reveal">The unknown is the {identity.label.toLowerCase()} in this model.</p>}
+                  {nearUnknown && (
+                    <Button variant="secondary" onClick={() => setRevealed(true)}>
+                      Reveal the unknown
+                    </Button>
+                  )}
+                  {revealed && nearUnknown && identity && <p data-testid="reveal">The unknown is the {identity.label.toLowerCase()} in this model.</p>}
                 </div>
               )}
             </div>
@@ -360,14 +375,20 @@ export function TlcLab({ reducedMotion }: SimulationProps) {
             <div className={styles.readout} aria-live="polite" data-testid="column-readout">
               <p className={styles.note}>Fraction tubes fill in the order the bands leave the column. Colourless bands are drawn in grey, because a colourless band cannot be seen on the column.</p>
               {columnBands.length === 0 && <p className={styles.note}>Spot at least one substance.</p>}
-              {columnBands.map((b, i) => (
-                <div key={b.id} className={styles.bandRow}>
-                  <span className={styles.rowLabel}>F{i + 1}</span>
-                  <span>
-                    {b.id} ({analyteOfLetter(b.id)}), arrives at {Math.round(b.arrival * 100)} % of the column
-                  </span>
-                </div>
-              ))}
+              {columnBands.map((b, i) => {
+                const letters = b.id.split('+')
+                const together = letters.length > 1
+                return (
+                  <div key={b.id} className={styles.bandRow}>
+                    <span className={styles.rowLabel}>F{i + 1}</span>
+                    <span>
+                      {together
+                        ? `${letters.join(' and ')} together, arrive at ${Math.round(b.arrival * 100)} % of the column: the same compound behaves the same way`
+                        : `${b.id} (${analyteOfLetter(b.id)}), arrives at ${Math.round(b.arrival * 100)} % of the column`}
+                    </span>
+                  </div>
+                )
+              })}
             </div>
           )}
         </div>

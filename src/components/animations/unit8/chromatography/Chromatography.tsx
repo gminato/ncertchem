@@ -1,6 +1,7 @@
 'use client'
 
 import { ChromatographyColumn, ChromatographyPlate } from '@/components/organic/lab'
+import { PaperStrip } from './PaperStrip'
 import { elutionOrder, paperSpots, sceneAnalyte, sceneSpots, sceneSteps, SCENE_SOLVENT } from './chromatography-steps'
 import { useTweenedNumber } from '../../unit5/gibbs/useTweenedNumber'
 
@@ -19,7 +20,6 @@ const ORDER = elutionOrder()
 /** Each apparatus sits left of centre and its key sits on the right, so the drawing fills the panel. */
 const COLUMN_T = { x: -80, y: 34, s: 1.15 }
 const PLATE_T = { x: 100, y: 34, s: 1.3 }
-const PAPER_T = { x: 71, y: 34, s: 1.3 }
 const KEY_X = 372
 
 /**
@@ -75,9 +75,7 @@ export function Chromatography({ step, reducedMotion }: ChromatographyProps) {
 
       {pose.view === 'paper' && (
         <g>
-          <g transform={`translate(${PAPER_T.x}, ${PAPER_T.y}) scale(${PAPER_T.s})`}>
-            <ChromatographyPlate kind="paper" spots={PAPER} progress={progress} title="Paper strip in a jar" />
-          </g>
+          <PaperStrip spots={PAPER} progress={progress} />
           <RfKey heading="Rf on paper" spots={PAPER} />
         </g>
       )}

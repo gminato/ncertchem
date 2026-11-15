@@ -5,6 +5,7 @@ import {
   analyteById,
   candidateRfTable,
   columnArrival,
+  elutionGroups,
   matchRf,
   modelRf,
   retentionFactor,
@@ -108,5 +109,34 @@ describe('solvent label', () => {
     expect(solventLabel(0)).toBe('less polar')
     expect(solventLabel(0.5)).toBe('medium polarity')
     expect(solventLabel(1)).toBe('more polar')
+  })
+})
+
+describe('elution groups', () => {
+  it('identical compounds (equal arrival) share one group', () => {
+    const groups = elutionGroups([
+      { arrival: 0.42, value: 'B' },
+      { arrival: 0.35, value: 'C' },
+      { arrival: 0.42, value: 'U' },
+    ])
+    expect(groups).toEqual([
+      { arrival: 0.35, members: ['C'] },
+      { arrival: 0.42, members: ['B', 'U'] },
+    ])
+  })
+
+  it('arrivals more than 1 % apart stay in separate groups', () => {
+    const groups = elutionGroups([
+      { arrival: 0.5, value: 'x' },
+      { arrival: 0.515, value: 'y' },
+    ])
+    expect(groups).toHaveLength(2)
+  })
+
+  it('the model gives the blue dye and the unknown the same column arrival', () => {
+    const b = columnArrival(analyteById('blue').adsorption, 0.9)
+    const u = columnArrival(analyteById('unknown').adsorption, 0.9)
+    expect(b).toBe(u)
+    expect(elutionGroups([{ arrival: b, value: 'B' }, { arrival: u, value: 'U' }])).toHaveLength(1)
   })
 })

@@ -118,3 +118,22 @@ export function solventLabel(s: number): string {
   if (v < 0.67) return 'medium polarity'
   return 'more polar'
 }
+
+/**
+ * Groups items whose column arrivals differ by at most `tolerance` (default 1 %). Identical compounds
+ * arrive together and must share one band and one fraction. Groups come out in elution order, each
+ * with the arrival of its first member.
+ */
+export function elutionGroups<T>(
+  items: readonly { arrival: number; value: T }[],
+  tolerance = 0.01
+): { arrival: number; members: T[] }[] {
+  const sorted = [...items].sort((a, b) => a.arrival - b.arrival)
+  const groups: { arrival: number; members: T[] }[] = []
+  for (const item of sorted) {
+    const last = groups[groups.length - 1]
+    if (last && item.arrival - last.arrival <= tolerance) last.members.push(item.value)
+    else groups.push({ arrival: item.arrival, members: [item.value] })
+  }
+  return groups
+}
