@@ -136,7 +136,7 @@ export const DistillationRig = forwardRef<SVGGElement, DistillationRigProps>(fun
         <rect x={THERMO.x - 1.5} y={mercuryTop} width={3} height={bulbY - mercuryTop} fill="var(--proton)" />
         <circle cx={THERMO.x} cy={bulbY + 4} r={6.5} fill="var(--proton)" stroke="var(--glass)" strokeWidth={1.2} />
         <Caption x={124} y={THERMO.top + 6} anchor="start" size={14} fill="var(--fg)">
-          {`${temperature} °C`}
+          {`${Number(temperature.toFixed(1))} °C`}
         </Caption>
       </g>
 
