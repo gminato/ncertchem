@@ -49,7 +49,9 @@ export function MOBuilder({ reducedMotion }: SimulationProps) {
   const [placed, setPlaced] = useState(0)
   const [choice, setChoice] = useState<OrderChoice>('ncert')
   const [playing, setPlaying] = useState(false)
-  const [visited, setVisited] = useState<string[]>([START_FORMULA])
+  // A species joins the bar chart only once all its electrons are placed, so the chart never
+  // shows a bond order the diagram has not reached yet.
+  const [visited, setVisited] = useState<string[]>([])
   const rootRef = useRef<HTMLDivElement>(null)
   const active = useIsActive(rootRef)
 
@@ -77,8 +79,10 @@ export function MOBuilder({ reducedMotion }: SimulationProps) {
     setFormula(next.formula)
     setPlaced(0)
     setPlaying(false)
-    setVisited((list) => (list.includes(next.formula) ? list : [...list, next.formula]))
   }
+
+  // Adjusting state during render (React's documented pattern for derived updates).
+  if (complete && !visited.includes(formula)) setVisited([...visited, formula])
 
   const barData = visited.map((f) => {
     const s = builderSpecies(f)
@@ -157,7 +161,8 @@ export function MOBuilder({ reducedMotion }: SimulationProps) {
         </div>
 
         <div className={styles.barCard} data-testid="mo-builder-bars">
-          <span className={styles.cardLabel}>Bond orders of the species you have visited</span>
+          <span className={styles.cardLabel}>Bond orders of the species you have filled</span>
+          {barData.length === 0 && <p className={styles.cardLabel}>Fill a species to add its bond order here.</p>}
           <div className={styles.bars} role="group" aria-label="Bond orders of visited species. Select a bar to open that species.">
             {barData.map((bar) => {
               const selected = bar.formula === formula
