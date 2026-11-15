@@ -1,0 +1,44 @@
+.container {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  color: var(--fg);
+}
+
+/* Step title: its own line, above the equation. */
+.title {
+  font-family: var(--font-sans);
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--fg-muted);
+  line-height: 1.3;
+}
+
+/* Equation: KaTeX/mhchem on its own line, at least 20 px. */
+.equation {
+  font-size: 22px;
+  line-height: 1.4;
+  text-align: center;
+  color: var(--fg);
+  overflow-x: auto;
+  padding: 2px 0;
+}
+
+.equation :global(.katex) {
+  font-size: 1em;
+}
+
+.footnote {
+  margin: 0;
+  font-family: var(--font-sans);
+  font-size: 14px;
+  line-height: 1.45;
+  color: var(--fg-muted);
+  padding: 8px 12px;
+  border-radius: 8px;
+  background: var(--surface-raised);
+  border: 1px solid var(--border);
+}

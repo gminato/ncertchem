@@ -25,6 +25,7 @@ import { HessBuilder } from './sims/hess-builder'
 import { OxidationNumberFinder } from './sims/oxidation-number-finder'
 import { RedoxTitrationLab } from './sims/redox-titration-lab'
 import { ElectrodePotentialExplorer } from './sims/electrode-potential-explorer'
+import { RedoxClassifier } from './sims/redox-classifier'
 
 export interface SimulationProps {
   /** True when the Learner has asked the OS for reduced motion. Skip tweens and loops when set. */
@@ -63,4 +64,5 @@ export const simulations: Record<string, ComponentType<SimulationProps>> = {
   'oxidation-number-finder': OxidationNumberFinder,
   'redox-titration-lab': RedoxTitrationLab,
   'electrode-potential-explorer': ElectrodePotentialExplorer,
+  'redox-classifier': RedoxClassifier,
 }

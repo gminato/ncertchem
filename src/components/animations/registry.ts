@@ -77,6 +77,7 @@ import { HessRoutes } from './unit5/enthalpy/HessRoutes'
 import { RedoxOnRules } from './unit7/onrules/RedoxOnRules'
 import { RedoxTitration } from './unit7/titration/RedoxTitration'
 import { RedoxDaniell } from './unit7/daniell/RedoxDaniell'
+import { RedoxTypes } from './unit7/types/RedoxTypes'
 
 /**
  * Animations available to a Scrolly Animation, keyed by the `animation` prop.
@@ -164,6 +165,7 @@ export const animations = {
   'redox-on-rules': RedoxOnRules,
   'redox-titration': RedoxTitration,
   'redox-daniell': RedoxDaniell,
+  'redox-types': RedoxTypes,
 } as const
 
 export type AnimationName = keyof typeof animations
