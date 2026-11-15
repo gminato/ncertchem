@@ -245,14 +245,12 @@ function RingMode({ ring, setRing, sel, setSel }: {
       </SimulationControls>
 
       <div className={styles.stage}>
-        <Stage smiles={smiles} innerCircles label={outcome.ok ? `Drawing of ${outcome.name}` : 'Drawing of the ring'} />
+        <Stage smiles={smiles} label={outcome.ok ? `Drawing of ${outcome.name}` : 'Drawing of the ring'} />
       </div>
 
       <div className={styles.readout} aria-live="polite" data-testid="namer-readout">
-        {count < 2 ? (
-          <p className={styles.notice}>
-            {count === 0 ? 'Benzene, with no substituent yet.' : 'One substituent so far. Add a second one to name a disubstituted ring.'}
-          </p>
+        {count === 0 ? (
+          <p className={styles.notice}>Benzene, with no substituent yet.</p>
         ) : outcome.ok ? (
           <>
             <p className={styles.name} data-testid="namer-name">{outcome.name}</p>

@@ -150,7 +150,7 @@ function ringDrawing(
     highlightAtoms: [],
     highlightBonds: [],
     locants: opts.locants ?? [],
-    innerCircles: true,
+    innerCircles: false,
   }
 }
 
@@ -272,7 +272,7 @@ export function functionalNamingSteps(): FgStep[] {
         'Chloro comes before methyl in the alphabet, so the chlorine carbon is C1.',
       ],
       big: nameFor(ringSmiles(ALPHA)),
-      molecules: [ringDrawing(ALPHA, { x: 290, y: 140, scale: 80, locants: [ringLocant(ALPHA, 1), ringLocant(ALPHA, 3)] })],
+      molecules: [ringDrawing(ALPHA, { x: 290, y: 186, scale: 64, locants: [ringLocant(ALPHA, 1), ringLocant(ALPHA, 3)] })],
       rows: [],
       present: [],
     },

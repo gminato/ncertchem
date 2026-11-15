@@ -72,7 +72,7 @@ function Ladder({ present }: { present: FgStep['present'] }) {
         const x = X0 + col * (CELL_W + GAP)
         const y = Y0 + row * (CELL_H + GAP)
         const picked = ranks.has(i)
-        const label = typeset(item).replace(/-$/, '–')
+        const label = typeset(item).replace(/-$/, '–').replace(/^COCl$/, '–COCl')
         return (
           <g key={item} data-picked={picked ? 'true' : 'false'}>
             <rect
@@ -127,7 +127,7 @@ function Rows({ rows }: { rows: RingRow[] }) {
 
 /** One Step's content: the title, the drawing, the name in large type, and the reasoning lines. */
 function StepPanel({ step, reducedMotion }: { step: FgStep; reducedMotion: boolean }) {
-  const lineTop = step.big ? 326 : 300
+  const lineTop = step.big ? 340 : 300
   const lines = step.lines.flatMap((line) => wrap(line, 62))
   return (
     <g className={enter(reducedMotion)} data-testid="fgnaming-step">
@@ -147,7 +147,7 @@ function StepPanel({ step, reducedMotion }: { step: FgStep; reducedMotion: boole
         : null}
       {step.layout === 'rows' ? <Rows rows={step.rows} /> : null}
       {step.big ? (
-        <Label x={VIEW_WIDTH / 2} y={282} fontSize={26} fill="var(--fg)" fontWeight={600} textAnchor="middle" data-testid="fgnaming-name">
+        <Label x={VIEW_WIDTH / 2} y={300} fontSize={26} fill="var(--fg)" fontWeight={600} textAnchor="middle" data-testid="fgnaming-name">
           {step.big}
         </Label>
       ) : null}
