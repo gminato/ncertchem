@@ -16,6 +16,8 @@ export const UNITS: readonly UnitInfo[] = [
   { class: 11, unit: 5, title: 'Thermodynamics' },
   { class: 11, unit: 6, title: 'Equilibrium' },
   { class: 11, unit: 7, title: 'Redox Reactions' },
+  { class: 11, unit: 8, title: 'Organic Chemistry – Some Basic Principles and Techniques' },
+  { class: 11, unit: 9, title: 'Hydrocarbons' },
 ]
 
 /** Finds a Unit by class and unit number. */

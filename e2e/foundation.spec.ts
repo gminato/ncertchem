@@ -90,9 +90,32 @@ test.describe('Unit navigation', () => {
   })
 
   test('a Unit with no Sections yet shows a calm empty state', async ({ page }) => {
-    await page.goto('/class-11/unit-6')
-    await expect(page.getByRole('heading', { level: 1 })).toHaveText('Equilibrium')
+    await page.goto('/class-11/unit-8')
+    await expect(page.getByRole('heading', { level: 1 })).toHaveText('Organic Chemistry – Some Basic Principles and Techniques')
     await expect(page.getByText('The Sections of this Unit are being written.')).toBeVisible()
+  })
+
+  test('Unit 6 lists its fourteen Sections in order', async ({ page }) => {
+    await page.goto('/class-11/unit-6')
+    const links = page.locator('a[href^="/class-11/unit-6/"]')
+    await expect(links).toHaveCount(14)
+    const hrefs = await links.evaluateAll((els) => els.map((e) => e.getAttribute('href')))
+    expect(hrefs.map((h) => h?.split('/').pop())).toEqual([
+      '6-1-equilibrium-in-physical-processes',
+      '6-2-dynamic-equilibrium',
+      '6-3-law-of-chemical-equilibrium',
+      '6-4-homogeneous-equilibria',
+      '6-5-heterogeneous-equilibria',
+      '6-6-applications-of-equilibrium-constants',
+      '6-7-k-q-and-gibbs-energy',
+      '6-8-factors-affecting-equilibria',
+      '6-9-ionic-equilibrium-in-solution',
+      '6-10-acids-bases-and-salts',
+      '6-11-1-ionization-kw-and-ph',
+      '6-11-3-weak-acids-and-weak-bases',
+      '6-11-8-common-ion-salt-hydrolysis-buffers',
+      '6-13-solubility-equilibria-of-sparingly-soluble-salts',
+    ])
   })
 
   test('Unit 7 lists its seven Sections in order', async ({ page }) => {

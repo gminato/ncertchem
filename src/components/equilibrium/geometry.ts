@@ -322,8 +322,9 @@ export function phColorFromStops(ph: number, stops: readonly string[]): string {
 }
 
 /** [H⁺] (mol L⁻¹) and [OH⁻] (mol L⁻¹) at 25 °C from a pH. */
-export function ionConcentrations(pH: number): { hPlus: number; oh: number } {
-  return { hPlus: 10 ** -pH, oh: 10 ** (pH - 14) }
+export function ionConcentrations(pH: number, pKw = 14): { hPlus: number; oh: number } {
+  // pKw is 14.00 only at 298 K; pass the value for another temperature.
+  return { hPlus: 10 ** -pH, oh: 10 ** (pH - pKw) }
 }
 
 // ---------------------------------------------------------------------------
