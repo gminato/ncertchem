@@ -1,0 +1,138 @@
+---
+class: 11
+unit: 4
+section: "4.1"
+order: 1
+title: "Kössel–Lewis Approach to Chemical Bonding"
+slug: "4-1-kossel-lewis-approach"
+summary: "Atoms bond to reach the eight-electron shell of a noble gas, either by handing electrons over or by sharing them, and Lewis dot structures show where those electrons are."
+ncert: "Class 11, Part I — Unit 4, Section 4.1"
+---
+
+<Hook>
+Sodium is a metal that fizzes on water, and chlorine is a yellow-green gas that was used as a weapon. Yet the crystals you sprinkle on your chaat are harmless, stable table salt. Two dangerous elements combine into something quiet. Why do they combine at all, and why does the result settle down?
+</Hook>
+
+## The idea behind the bond
+
+Kössel and Lewis, working independently, gave the first reasonable explanation of why atoms combine, and they did it by looking at the noble gases. The noble gases hardly react. Their outer shells are full, so the simplest explanation for bonding is that atoms try to acquire the same kind of outer shell.
+
+Lewis pictured each atom as a positively charged kernel surrounded by an outer shell that could hold at most eight electrons. In his picture the eight electrons sat at the corners of a cube around the kernel. An atom of sodium had one electron on one corner, while a noble gas had all eight corners filled. That filled arrangement, the **octet**, is a particularly stable one.
+
+Kössel added facts from the periodic table. The highly electronegative halogens and the highly electropositive alkali metals sit on either side of the noble gases. A halogen atom becomes a negative ion by gaining an electron, and an alkali metal atom becomes a positive ion by losing one. Both ions end up with a noble-gas configuration, and the two opposite charges hold them together by electrostatic attraction.
+
+<Scrolly animation="lewis-kossel-transfer">
+<Step>
+Put a sodium atom and a chlorine atom side by side. Only the **valence electrons**, the ones in the outer shell, take part in bonding, because the inner electrons are well protected by the nucleus. Sodium has one valence electron, shown here as a single dot. Chlorine has seven, which leaves it one electron short of the argon configuration.
+</Step>
+<Step>
+Kössel's proposal is that sodium gives its outer electron away and chlorine takes it. The arrow shows that electron leaving the sodium atom and crossing to the chlorine atom. Nothing is created or destroyed: the electron simply changes hands. Once it has moved, neither atom is neutral, and each one is an ion.
+</Step>
+<Step>
+After the transfer, sodium has lost its only outer electron, so its outer shell is now the one below, with two electrons in the first shell and eight in the second. That is the configuration of neon. Chlorine has gained one electron and holds eight in its outer shell, the argon configuration. Each ion has the electron count of a noble gas, and that is the point of the transfer.
+</Step>
+<Step>
+The positive sodium ion and the negative chloride ion pull on each other by electrostatic attraction. This is the **ionic bond**. A salt crystal is not one pair of ions, though: they pack into a three-dimensional lattice, held together by many such attractions at once. Kössel's picture explains why the two elements combine. It does not describe the whole crystal.
+</Step>
+</Scrolly>
+
+Kössel's ideas are the basis of the modern view of ion formation by electron transfer. He also recognised that a large number of compounds did not fit the picture, so it is a starting point rather than the whole story. The **electrovalence** of an element is the number of unit charges on its ion. Calcium, which loses two electrons, therefore has an electrovalence of +2, and chlorine, which gains one, has an electrovalence of −1.
+
+## 4.1.1 Octet rule
+
+Kössel and Lewis developed the **electronic theory of chemical bonding**. In it, atoms combine either by transferring valence electrons from one atom to another, gaining or losing them, or by sharing valence electrons, so that each atom has an octet in its valence shell. This is the **octet rule**. Helium is the exception that the rule adjusts for: its single shell is full with two electrons, a duplet.
+
+Lewis also introduced a simple notation for valence electrons, the **Lewis symbol**. The element symbol stands for the nucleus and the inner shells, and each dot around it stands for one valence electron. The number of dots gives the valence electrons, and the group valence of the element is either that number or eight minus that number.
+
+## 4.1.2 Covalent bond
+
+Langmuir refined Lewis's ideas. He dropped the stationary cube and introduced the term **covalent bond**, for a bond made by sharing an electron pair.
+
+Take the chlorine molecule. A chlorine atom has the configuration $3s^2\,3p^5$ and is one electron short of argon. Two chlorine atoms can each contribute one electron to a shared pair. That shared pair counts towards the octet of both atoms, so both reach the argon configuration. Diagrams of this kind, with dots for electrons, are **Lewis dot structures**.
+
+Three conditions define a covalent bond in this picture:
+
+- A covalent bond is formed by sharing one electron pair between two atoms.
+- Each combining atom contributes at least one electron to the shared pair.
+- The combining atoms reach their outer noble-gas configurations by sharing.
+
+Water and carbon tetrachloride both form their bonds this way. When two atoms share one pair, the bond is a **single bond**. When they share two pairs, it is a **double bond**, as in the two C=O bonds of carbon dioxide and the C=C bond of ethene. When they share three pairs, it is a **triple bond**, as in the N≡N bond of nitrogen and the C≡C bond of ethyne.
+
+## 4.1.3 Lewis representation of simple molecules
+
+Lewis dot structures show the shared pairs and the octet rule. They do not explain bonding and behaviour completely, but they are very useful for predicting how a molecule is put together. The method has five steps.
+
+1. **Count the valence electrons.** Add the valence electrons of all the combining atoms. Methane has eight: four from carbon and one from each of the four hydrogen atoms.
+2. **Adjust for charge.** Each negative charge adds one electron, and each positive charge removes one. The carbonate ion, CO₃²⁻, has $4 + 3 \times 6 + 2 = 24$ valence electrons.
+3. **Draw the skeleton.** The least electronegative atom usually sits in the centre, and the others are terminal. Hydrogen is always terminal, since it forms only one bond.
+4. **Share pairs in the bonds.** Place one shared pair in each bond of the skeleton, then give the terminal atoms their octets with lone pairs.
+5. **Use what remains for multiple bonds or central lone pairs.** If the central atom still lacks an octet, move a lone pair into a double or triple bond. The basic requirement is that every bonded atom gets an octet.
+
+NCERT's Table 4.1 gives the Lewis representations of several common molecules and ions. The builder below lets you go through these steps yourself, on the species in its library. It makes you count the electrons first, then shows the formal charges and the octets as you build.
+
+<Simulation name="lewis-builder" title="Lewis builder: count, bond, pair and check the octets" />
+
+<Check n={1} numeric answer={24} tolerance={0} unit="valence electrons" explanation="The carbonate ion has four valence electrons from carbon, six from each of the three oxygen atoms (18 in total), and two more for its two negative charges: 4 + 18 + 2 = 24. The library value from totalValenceElectrons(['C', 'O', 'O', 'O'], −2) is also 24.">
+How many valence electrons are available for bonding in the carbonate ion, CO₃²⁻?
+</Check>
+
+## 4.1.4 Formal charge
+
+A Lewis structure is not a picture of a molecule's real shape, and in a polyatomic ion the net charge belongs to the ion as a whole, not to any one atom. Even so, it is useful to assign a **formal charge** to each atom. It is the difference between the valence electrons of the free atom and the electrons assigned to that atom in the Lewis structure. Counting the assigned electrons gives all of each lone pair and one electron from each shared pair:
+
+$$
+\text{formal charge} = V - N - \tfrac{1}{2}B
+$$
+
+Here $V$ is the number of valence electrons of the free atom, $N$ is the number of non-bonding electrons on the atom, and $B$ is the number of bonding (shared) electrons on it. Each shared pair is split equally between the two atoms, which is why the formal charge is a purely covalent bookkeeping.
+
+Take ozone, O₃, with a central atom joined to one terminal oxygen by a double bond and to the other by a single bond. The double-bonded terminal oxygen has a formal charge of 0, the central oxygen has +1 and the singly bonded terminal oxygen has −1. The three values sum to zero, as they must for a neutral molecule.
+
+Formal charges are not real charges, and they do not show charge separation in the molecule. They help you choose between Lewis structures of the same species, and the lowest-energy structure is generally the one with the smallest formal charges on its atoms.
+
+<Check n={2} options={["−1", "0", "+1", "−2"]} answer={0} explanation="In the usual Lewis structure of CO₃²⁻, the carbon forms one C=O bond and two C–O single bonds with no lone pair. Each singly bonded oxygen has six non-bonding electrons (three lone pairs) and shares two electrons, so its formal charge is 6 − 6 − 2/2 = −1. The library computes this with formalChargesOf.">
+In the usual Lewis structure of CO₃²⁻, with one C=O bond and two C–O single bonds, what is the formal charge on each singly bonded oxygen?
+</Check>
+
+## 4.1.5 Limitations of the octet rule
+
+The octet rule is useful, especially for the organic compounds of carbon and for the second-period elements, but it is not universal. There are three kinds of exceptions, and then a set of shortcomings that have nothing to do with counting electrons.
+
+**The incomplete octet.** Some compounds have fewer than eight electrons around the central atom. This happens mostly with elements that have fewer than four valence electrons. Beryllium chloride, BeCl₂, has only four electrons around beryllium, and boron trichloride, BCl₃, has six around boron.
+
+**Odd-electron molecules.** Some molecules have an odd number of electrons. Nitric oxide, NO, has eleven valence electrons, and nitrogen dioxide, NO₂, has seventeen. In such a molecule the octet cannot be completed for every atom, because one electron is left unpaired.
+
+**The expanded octet.** Elements in the third period and beyond have empty d orbitals as well as s and p orbitals, and these can take part in bonding. Phosphorus pentachloride, PCl₅, has ten electrons around phosphorus, and sulphur hexafluoride, SF₆, has twelve around sulphur. Many coordination compounds also have expanded octets. Sulphur also forms compounds that obey the octet rule, such as sulphur dichloride, SCl₂.
+
+<Scrolly animation="lewis-octet-exceptions">
+<Step>
+Beryllium chloride, BeCl₂, is the first incomplete octet. Each chlorine has a complete octet: three lone pairs and one shared pair. Beryllium, however, has only four electrons around it, the two shared pairs it makes with its chlorine neighbours. It has just two valence electrons to begin with, and two bonds are all it can make from them.
+</Step>
+<Step>
+Boron trichloride, BCl₃, is the second. Boron has three valence electrons, and each of its three bonds adds one shared pair, so six electrons surround it. That is a sextet, two short of an octet. Each chlorine still has eight, so the rule is broken only at the centre, and it is broken in the direction of too few electrons.
+</Step>
+<Step>
+Nitric oxide, NO, has eleven valence electrons: five from nitrogen and six from oxygen. Eleven cannot be divided entirely into shared and lone pairs, so one electron is left over, unpaired. Nitrogen carries it, leaving nitrogen with seven electrons rather than eight. The octet rule therefore cannot hold for both atoms at once.
+</Step>
+<Step>
+Phosphorus pentachloride, PCl₅, is the expanded case. Phosphorus has five valence electrons and forms five shared pairs, so ten electrons surround it. Phosphorus is in the third period, where empty d orbitals can take part in bonding, so the extra electrons have somewhere to go. Each chlorine still has eight. The octet rule is a useful guide that fails here.
+</Step>
+</Scrolly>
+
+<Check n={3} options={["BF₃", "PCl₅", "NO", "CH₄"]} answer={0} explanation="Boron in BF₃ has three bonds, so six electrons: an incomplete octet. PCl₅ has an expanded octet, NO has an odd-electron nitrogen, and the carbon in CH₄ has a complete octet.">
+Which of these species has an incomplete octet on its central atom?
+</Check>
+
+**Other drawbacks.** The octet rule has three more limits.
+
+- It rests on the chemical inertness of the noble gases, yet some of them do form compounds. Xenon and krypton form compounds such as XeF₂, KrF₂ and XeOF₂.
+- It does not explain the shapes of molecules. A Lewis structure says which atoms are bonded, not how they are arranged in space.
+- It does not explain the relative stability of molecules, because it says nothing about the energy of a molecule.
+
+<KeyIdeas>
+- Atoms combine to reach the octet of a noble gas, either by transferring electrons (ionic bonds) or by sharing them (covalent bonds).
+- A Lewis dot structure counts valence electrons, adjusts for charge, sets a skeleton, shares pairs, and then uses lone pairs or multiple bonds so that each bonded atom has an octet.
+- Formal charge is $V - N - \tfrac{1}{2}B$. It helps choose among Lewis structures, but it is bookkeeping and not a real charge.
+- The octet rule fails for incomplete (BeCl₂, BCl₃), odd-electron (NO, NO₂) and expanded (PCl₅, SF₆) cases, and it says nothing about molecular shape or energy.
+</KeyIdeas>
+
