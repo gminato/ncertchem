@@ -50,6 +50,17 @@
   --lone-pair: #5B8DEF;
   --lone-pair-edge: #2F6FEB;
   --dipole: #B4532A;
+  /* Unit 8 organic structures: heteroatoms, electron flow, partial charges, highlight, locants */
+  --atom-o: #D8473F;
+  --atom-n: #3F55B8;
+  --atom-s: #B7791F;
+  --atom-hal: #3E9C5E;
+  --atom-p: #D9822B;
+  --e-arrow: #C026D3;
+  --delta-plus: #B91C1C;
+  --delta-minus: #1D4ED8;
+  --highlight: rgba(250, 204, 21, 0.28);
+  --locant: #6B7280;
 
   /* Vessels: glass walls, sheen and liquid */
   --glass-wall: rgba(31, 32, 35, 0.3);
@@ -173,6 +184,17 @@
   --lone-pair: #8EC3FF;
   --lone-pair-edge: #6CB6FF;
   --dipole: #FF9B7E;
+  /* Unit 8 organic structures: heteroatoms, electron flow, partial charges, highlight, locants */
+  --atom-o: #FF6B5E;
+  --atom-n: #8D9CFF;
+  --atom-s: #E9B949;
+  --atom-hal: #5BD682;
+  --atom-p: #FFB067;
+  --e-arrow: #F0ABFC;
+  --delta-plus: #FCA5A5;
+  --delta-minus: #93C5FD;
+  --highlight: rgba(253, 224, 71, 0.27);
+  --locant: #9CA3AF;
 
   --glass-wall: rgba(240, 246, 252, 0.32);
   --glass-fill: rgba(255, 255, 255, 0.05);
@@ -269,6 +291,17 @@
     --lone-pair: #8EC3FF;
     --lone-pair-edge: #6CB6FF;
     --dipole: #FF9B7E;
+    /* Unit 8 organic structures: heteroatoms, electron flow, partial charges, highlight, locants */
+    --atom-o: #FF6B5E;
+    --atom-n: #8D9CFF;
+    --atom-s: #E9B949;
+    --atom-hal: #5BD682;
+    --atom-p: #FFB067;
+    --e-arrow: #F0ABFC;
+    --delta-plus: #FCA5A5;
+    --delta-minus: #93C5FD;
+    --highlight: rgba(253, 224, 71, 0.27);
+    --locant: #9CA3AF;
 
     --glass-wall: rgba(240, 246, 252, 0.32);
     --glass-fill: rgba(255, 255, 255, 0.05);

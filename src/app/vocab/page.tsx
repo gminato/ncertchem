@@ -100,6 +100,41 @@ import {
   FE_CR2O7_MID_BALANCE,
 } from '@/components/redox'
 import {
+  SkeletalFormula,
+  StructuralFormula,
+  Wedge3D,
+  WEDGE_SIZE,
+  CurvedArrow,
+  ResonanceSet,
+  resonanceBounds,
+  InductiveChain,
+  IntermediateOrbital,
+  INTERMEDIATE_SIZE,
+  BondCleavage,
+  BOND_CLEAVAGE_SIZE,
+  FunctionalGroupBadge,
+  skeletalBounds,
+  skeletalFrame,
+  structuralBounds,
+  condensedBounds,
+  viewBoxOf,
+  TRIMETHYLPENTANE,
+  TRIMETHYLPENTANE_CHAIN_ATOMS,
+  TRIMETHYLPENTANE_CHAIN_BONDS,
+  BUTANOIC_ACID,
+  CHLOROTOLUENE,
+  CYCLOHEXENE,
+  PENTAN2OL,
+  ACETATE_A,
+  ACETATE_B,
+  ACETATE_HYBRID,
+  BENZENE_A,
+  BENZENE_B,
+  BENZENE_HYBRID,
+  METHYL_BROMIDE,
+  CHLORINE,
+} from '@/components/organic'
+import {
   SealedVessel,
   RateBars,
   EquilibriumCurves,
@@ -171,6 +206,21 @@ function signedWork(w: number): string {
 const WORK_ONE_STEP = pathWork(PV_EXPANSION.oneStep)
 const WORK_MANY_STEP = pathWork(PV_EXPANSION.manyStep)
 const WORK_REVERSIBLE = pathWork(PV_EXPANSION.reversible)
+
+/* Unit 8 organic structures: fixed geometry for the demos, computed once. */
+const TMP_BOUNDS = skeletalBounds(TRIMETHYLPENTANE)
+// Locants sit beside their own chain atom. Atom 4 (index 3) takes the free up-right side, clear of both bonds.
+const TMP_LOCANTS = TRIMETHYLPENTANE_CHAIN_ATOMS.map((atom, i) => ({ atom, label: String(i + 1), angle: i === 3 ? -45 : undefined }))
+const PENTANOL_FRAME = skeletalFrame(PENTAN2OL)
+const PENTANOL_O = PENTANOL_FRAME.points[2]
+const PENTANOL_BADGE = { x: PENTANOL_O.x + 120, y: PENTANOL_O.y }
+const PENTANOL_BOUNDS = skeletalBounds(PENTAN2OL)
+const CONDENSED_BOUNDS = condensedBounds(PENTAN2OL)
+const STRUCTURAL_BOUNDS = structuralBounds(PENTAN2OL)
+const RESONANCE_CARBOXYLATE_BOUNDS = resonanceBounds([{ graph: ACETATE_A }, { graph: ACETATE_B }], { graph: ACETATE_HYBRID }, 54, 84)
+const RESONANCE_BENZENE_BOUNDS = resonanceBounds([{ graph: BENZENE_A }, { graph: BENZENE_B }], { graph: BENZENE_HYBRID }, 54, 84)
+const CLEAVAGE_VIEW = `${-BOND_CLEAVAGE_SIZE.width / 2} ${-BOND_CLEAVAGE_SIZE.height / 2} ${BOND_CLEAVAGE_SIZE.width} ${BOND_CLEAVAGE_SIZE.height}`
+const ORBITAL_VIEW = `${-INTERMEDIATE_SIZE.width / 2} ${-INTERMEDIATE_SIZE.height / 2} ${INTERMEDIATE_SIZE.width} ${INTERMEDIATE_SIZE.height}`
 
 export default function VocabPage() {
   // Proportional hydrogen energy levels (converted from Joules to eV), n = 1..4
@@ -2476,6 +2526,467 @@ export default function VocabPage() {
         </div>
       </section>
       {/* Organic laboratory */}
+      <section className={styles.section} id="organic" aria-labelledby="organic-heading">
+        <h2 id="organic-heading" className={styles.sectionTitle}>
+          Organic structures
+        </h2>
+        <p className={styles.sectionSubtitle}>
+          Bond-line drawings with 120° zig-zags and regular rings, the three written forms of one molecule and
+          their morph, wedge and dash for tetrahedral carbon, curved arrows for electron movement, resonance
+          contributors with their hybrid, the inductive pull of a chlorine, carbocation, carbanion and radical
+          orbitals, and bond cleavage both ways.
+        </p>
+
+        <div className={styles.grid}>
+          <article className={styles.card}>
+            <div className={`${styles.cardCanvas} ${styles.cardCanvasTall}`}>
+              <svg viewBox={viewBoxOf(TMP_BOUNDS, 8)} className={styles.svgElement} role="img" aria-label="Bond-line formula of 2,2,4-trimethylpentane with the parent chain highlighted and numbered 1 to 5">
+                <SkeletalFormula
+                  graph={TRIMETHYLPENTANE}
+                  highlightAtoms={TRIMETHYLPENTANE_CHAIN_ATOMS}
+                  highlightBonds={TRIMETHYLPENTANE_CHAIN_BONDS}
+                  locants={TMP_LOCANTS}
+                />
+              </svg>
+            </div>
+            <div className={styles.cardBody}>
+              <div className={styles.cardHeading}>
+                <span>Skeletal formula: 2,2,4-trimethylpentane</span>
+                <span className={styles.cardBadge}>C₈H₁₈</span>
+              </div>
+              <p className={styles.cardDescription}>
+                Carbons are the corners of the zig-zag, hydrogens are implicit. The parent chain is washed in
+                yellow and numbered from the end nearest the first branch.
+              </p>
+            </div>
+          </article>
+
+          <article className={styles.card}>
+            <div className={`${styles.cardCanvas} ${styles.cardCanvasTall}`}>
+              <svg viewBox={viewBoxOf(skeletalBounds(BUTANOIC_ACID), 8)} className={styles.svgElement} role="img" aria-label="Bond-line formula of butanoic acid with a carbonyl oxygen and an OH group">
+                <SkeletalFormula graph={BUTANOIC_ACID} showLonePairs />
+              </svg>
+            </div>
+            <div className={styles.cardBody}>
+              <div className={styles.cardHeading}>
+                <span>Butanoic acid</span>
+                <span className={styles.cardBadge}>CH₃CH₂CH₂COOH</span>
+              </div>
+              <p className={styles.cardDescription}>
+                Oxygen is red. The double bond to oxygen is centred on its axis, and the hydroxyl reads OH with
+                its lone pairs shown.
+              </p>
+            </div>
+          </article>
+
+          <article className={styles.card}>
+            <div className={`${styles.cardCanvas} ${styles.cardCanvasTall}`}>
+              <svg viewBox={viewBoxOf(skeletalBounds(CHLOROTOLUENE), 8)} className={styles.svgElement} role="img" aria-label="Bond-line formula of 4-chlorotoluene: a benzene ring with a methyl group and a chlorine para to each other">
+                <SkeletalFormula graph={CHLOROTOLUENE} showLonePairs />
+              </svg>
+            </div>
+            <div className={styles.cardBody}>
+              <div className={styles.cardHeading}>
+                <span>Substituted benzene</span>
+                <span className={styles.cardBadge}>4-chlorotoluene</span>
+              </div>
+              <p className={styles.cardDescription}>
+                A regular hexagon with its double bonds drawn inside the ring. Substituents leave radially, and the
+                chlorine is green.
+              </p>
+            </div>
+          </article>
+
+          <article className={styles.card}>
+            <div className={`${styles.cardCanvas} ${styles.cardCanvasTall}`}>
+              <svg viewBox={viewBoxOf(skeletalBounds(CYCLOHEXENE), 8)} className={styles.svgElement} role="img" aria-label="Bond-line formula of cyclohexene with its double bond inside the ring">
+                <SkeletalFormula graph={CYCLOHEXENE} />
+              </svg>
+            </div>
+            <div className={styles.cardBody}>
+              <div className={styles.cardHeading}>
+                <span>Cyclohexene</span>
+                <span className={styles.cardBadge}>Ring with one C=C</span>
+              </div>
+              <p className={styles.cardDescription}>
+                Rings are regular polygons with bonds of one length. The double bond is offset inside the ring.
+              </p>
+            </div>
+          </article>
+
+          <article className={styles.card}>
+            <div className={`${styles.cardCanvas} ${styles.cardCanvasTall}`}>
+              <svg viewBox={viewBoxOf(STRUCTURAL_BOUNDS, 4)} className={styles.svgElement} role="img" aria-label="Complete structural formula of pentan-2-ol with every carbon, oxygen and hydrogen drawn on a grid">
+                <StructuralFormula graph={PENTAN2OL} mode="complete" />
+              </svg>
+            </div>
+            <div className={styles.cardBody}>
+              <div className={styles.cardHeading}>
+                <span>Complete structural formula</span>
+                <span className={styles.cardBadge}>Pentan-2-ol</span>
+              </div>
+              <p className={styles.cardDescription}>
+                Every atom and bond on a grid, as in the textbook. Each hydrogen is a bond of its own.
+              </p>
+            </div>
+          </article>
+
+          <article className={styles.card}>
+            <div className={`${styles.cardCanvas} ${styles.cardCanvasTall}`}>
+              <svg viewBox={viewBoxOf(CONDENSED_BOUNDS, 4)} className={styles.svgElement} role="img" aria-label="Condensed structural formula of pentan-2-ol: CH3 CH(OH) CH2 CH2 CH3">
+                <StructuralFormula graph={PENTAN2OL} mode="condensed" />
+              </svg>
+            </div>
+            <div className={styles.cardBody}>
+              <div className={styles.cardHeading}>
+                <span>Condensed structural formula</span>
+                <span className={styles.cardBadge}>CH₃CH(OH)CH₂CH₂CH₃</span>
+              </div>
+              <p className={styles.cardDescription}>
+                The same molecule in one line. The group in brackets stays on its carbon.
+              </p>
+            </div>
+          </article>
+
+          <article className={styles.card}>
+            <div className={`${styles.cardCanvas} ${styles.cardCanvasTall}`}>
+              <svg viewBox={viewBoxOf(PENTANOL_BOUNDS, 8)} className={styles.svgElement} role="img" aria-label="Bond-line formula of pentan-2-ol">
+                <StructuralFormula graph={PENTAN2OL} mode="bond-line" />
+              </svg>
+            </div>
+            <div className={styles.cardBody}>
+              <div className={styles.cardHeading}>
+                <span>Bond-line formula</span>
+                <span className={styles.cardBadge}>Pentan-2-ol</span>
+              </div>
+              <p className={styles.cardDescription}>
+                Carbons and their hydrogens disappear, leaving the zig-zag skeleton and the labelled oxygen.
+              </p>
+            </div>
+          </article>
+
+          <article className={styles.card}>
+            <div className={`${styles.cardCanvas} ${styles.cardCanvasTall}`}>
+              <svg viewBox={viewBoxOf(STRUCTURAL_BOUNDS, 4)} className={styles.svgElement} role="img" aria-label="Pentan-2-ol halfway through the morph: the hydrogens have slid into their carbons and the chain is still straight">
+                <StructuralFormula graph={PENTAN2OL} morph={0.5} />
+              </svg>
+            </div>
+            <div className={styles.cardBody}>
+              <div className={styles.cardHeading}>
+                <span>Morph: complete to bond-line</span>
+                <span className={styles.cardBadge}>Halfway</span>
+              </div>
+              <p className={styles.cardDescription}>
+                First the hydrogens slide into their carbons, then the chain bends into its zig-zag. The bounds stay
+                fixed so the card does not jump.
+              </p>
+            </div>
+          </article>
+
+          <article className={styles.card}>
+            <div className={`${styles.cardCanvas} ${styles.cardCanvasTall}`}>
+              <svg viewBox={`${-WEDGE_SIZE.width / 2} ${-WEDGE_SIZE.height / 2 - 24} ${WEDGE_SIZE.width} ${WEDGE_SIZE.height + 48}`} className={styles.svgElement} role="img" aria-label="Tetrahedral carbon drawn with two bonds in the plane, one wedge towards the viewer and one dash away">
+                <Wedge3D />
+              </svg>
+            </div>
+            <div className={styles.cardBody}>
+              <div className={styles.cardHeading}>
+                <span>Wedge and dash</span>
+                <span className={styles.cardBadge}>Tetrahedral C</span>
+              </div>
+              <p className={styles.cardDescription}>
+                Two bonds lie in the page, one wedge comes towards you and one dash goes away. The three-dimensional
+                view of the same molecule follows.
+              </p>
+            </div>
+          </article>
+
+          <article className={styles.card}>
+            <Stage3DLazy
+              cameraPosition={cameraForMolecule(METHANE_3D)}
+              label="Methane molecule (3D): carbon at the centre of a regular tetrahedron of four hydrogens. Drag to rotate."
+              fallback={<Molecule3DFallback {...METHANE_3D} />}
+            >
+              <Molecule3D {...METHANE_3D} />
+            </Stage3DLazy>
+            <div className={styles.cardBody}>
+              <div className={styles.cardHeading}>
+                <span>Tetrahedral carbon in 3D</span>
+                <span className={styles.cardBadge}>Stage3D</span>
+              </div>
+              <p className={styles.cardDescription}>
+                The wedge and the dash are the two bonds that point out of the page. Drag to see the tetrahedron.
+              </p>
+            </div>
+          </article>
+
+          {/* Curved arrows on real bonds: heterolysis of C-Br, homolysis of Cl-Cl */}
+          <article className={`${styles.card} ${styles.wide}`}>
+            <div className={`${styles.cardCanvas} ${styles.cardCanvasWide}`}>
+              <svg viewBox="-420 -160 840 320" className={styles.svgElement} role="img" aria-label="Left: a full-head curved arrow from the C-Br bond to bromine, heterolysis of CH3Br. Right: two fishhook arrows from the Cl-Cl bond to each chlorine, homolysis of Cl2.">
+                <g transform="translate(-210, 0)">
+                  <SkeletalFormula
+                    graph={METHYL_BROMIDE}
+                    scale={84}
+                    showLonePairs
+                    overlay={
+                      <g>
+                        <text x={-50} y={0} textAnchor="end" dominantBaseline="central" fontSize={22} fontWeight={600} fontFamily="var(--font-sans)" fill="var(--fg)">H₃C</text>
+                        <CurvedArrow from={{ x: 0, y: -6 }} to={{ x: 42, y: -34 }} bend={0.4} kind="pair" />
+                      </g>
+                    }
+                  />
+                  <text x={0} y={112} textAnchor="middle" fontSize={16} fontWeight={600} fontFamily="var(--font-sans)" fill="var(--fg)">CH₃–Br: heterolysis</text>
+                  <text x={0} y={136} textAnchor="middle" fontSize={14} fontWeight={500} fontFamily="var(--font-sans)" fill="var(--fg-muted)">full arrow: the pair goes to Br</text>
+                </g>
+                <g transform="translate(210, 0)">
+                  <SkeletalFormula
+                    graph={CHLORINE}
+                    scale={84}
+                    showLonePairs
+                    overlay={
+                      <g>
+                        <CurvedArrow from={{ x: 0, y: -6 }} to={{ x: -42, y: -36 }} bend={0.4} kind="radical" />
+                        <CurvedArrow from={{ x: 0, y: -6 }} to={{ x: 42, y: -36 }} bend={-0.4} kind="radical" />
+                      </g>
+                    }
+                  />
+                  <text x={0} y={112} textAnchor="middle" fontSize={16} fontWeight={600} fontFamily="var(--font-sans)" fill="var(--fg)">Cl–Cl: homolysis</text>
+                  <text x={0} y={136} textAnchor="middle" fontSize={14} fontWeight={500} fontFamily="var(--font-sans)" fill="var(--fg-muted)">two fishhooks: one electron each</text>
+                </g>
+              </svg>
+            </div>
+            <div className={styles.cardBody}>
+              <div className={styles.cardHeading}>
+                <span>Curved arrows on real bonds</span>
+                <span className={styles.cardBadge}>Pair · one electron</span>
+              </div>
+              <p className={styles.cardDescription}>
+                A full head moves an electron pair from the bond to an atom, as C–Br breaks into CH₃⁺ and Br⁻. Two
+                fishhooks each carry one electron, as the Cl–Cl bond breaks into two chlorine radicals.
+              </p>
+            </div>
+          </article>
+
+          {/* Resonance: acetate, with the electron shift on contributor A only */}
+          <article className={`${styles.card} ${styles.wide}`}>
+            <div className={`${styles.cardCanvas} ${styles.cardCanvasWide}`}>
+              <svg viewBox={viewBoxOf(RESONANCE_CARBOXYLATE_BOUNDS, 10)} className={styles.svgElement} role="img" aria-label="Acetate ion: two resonance forms joined by a double-headed arrow, curved arrows on the first form showing the electron shift, and the resonance hybrid below with each C-O bond solid plus dashed and a partial negative charge next to each oxygen">
+                <ResonanceSet
+                  contributors={[
+                    {
+                      graph: ACETATE_A,
+                      arrows: [
+                        { from: { lonePair: 3 }, to: { bond: [1, 3] }, bend: 0.45 },
+                        { from: { bond: [1, 2], t: 0.5 }, to: { atom: 2 }, bend: 0.45 },
+                      ],
+                    },
+                    { graph: ACETATE_B },
+                  ]}
+                  hybrid={{
+                    graph: ACETATE_HYBRID,
+                    partialBonds: [1, 2],
+                    partialCharges: [
+                      { atom: 2, label: 'δ−' },
+                      { atom: 3, label: 'δ−' },
+                    ],
+                  }}
+                />
+              </svg>
+            </div>
+            <div className={styles.cardBody}>
+              <div className={styles.cardHeading}>
+                <span>Resonance: the acetate ion</span>
+                <span className={styles.cardBadge}>CH₃COO⁻</span>
+              </div>
+              <p className={styles.cardDescription}>
+                The negative charge moves between the two oxygens. The forms are joined by a double-headed arrow. In
+                the hybrid each C–O bond is a solid line plus a dashed one, so each bond is 1½, and δ− sits by each
+                oxygen.
+              </p>
+            </div>
+          </article>
+
+          {/* Resonance: benzene, with the hybrid as a hexagon and an inscribed circle */}
+          <article className={`${styles.card} ${styles.wide}`}>
+            <div className={`${styles.cardCanvas} ${styles.cardCanvasWide}`}>
+              <svg viewBox={viewBoxOf(RESONANCE_BENZENE_BOUNDS, 10)} className={styles.svgElement} role="img" aria-label="Benzene: two Kekule forms joined by a double-headed arrow, and the resonance hybrid as a hexagon with an inscribed circle">
+                <ResonanceSet
+                  contributors={[{ graph: BENZENE_A }, { graph: BENZENE_B }]}
+                  hybrid={{ graph: BENZENE_HYBRID, innerCircles: true }}
+                />
+              </svg>
+            </div>
+            <div className={styles.cardBody}>
+              <div className={styles.cardHeading}>
+                <span>Resonance: benzene</span>
+                <span className={styles.cardBadge}>C₆H₆</span>
+              </div>
+              <p className={styles.cardDescription}>
+                Two Kekulé forms with the same skeleton. The real molecule is their hybrid: a hexagon whose six
+                electrons spread evenly round the inscribed circle.
+              </p>
+            </div>
+          </article>
+
+          {/* Inductive effect: arrows on the bonds, charges fading with distance */}
+          <article className={styles.card}>
+            <div className={`${styles.cardCanvas} ${styles.cardCanvasTall}`}>
+              <svg viewBox="-250 -50 500 150" className={styles.svgElement} role="img" aria-label="Inductive effect in 1-chlorobutane: arrows on the sigma bonds point towards chlorine, and the carbon charges fade with distance: delta plus next to chlorine, then delta delta plus, then delta delta delta plus">
+                <InductiveChain
+                  nodes={[
+                    { label: 'Cl' },
+                    { label: 'CH₂', charge: 'δ+', chargeOpacity: 1 },
+                    { label: 'CH₂', charge: 'δδ+', chargeOpacity: 0.6 },
+                    { label: 'CH₂', charge: 'δδδ+', chargeOpacity: 0.3 },
+                    { label: 'CH₃' },
+                  ]}
+                  spacing={84}
+                />
+              </svg>
+            </div>
+            <div className={styles.cardBody}>
+              <div className={styles.cardHeading}>
+                <span>Inductive effect (−I) in 1-chlorobutane</span>
+                <span className={styles.cardBadge}>CH₃CH₂CH₂CH₂Cl</span>
+              </div>
+              <p className={styles.cardDescription}>
+                Each σ bond carries an arrow towards chlorine. The carbon next to Cl is δ+, and the charge fades with
+                each bond further along the chain.
+              </p>
+            </div>
+          </article>
+
+          <article className={styles.card}>
+            <div className={`${styles.cardCanvas} ${styles.cardCanvasTall}`}>
+              <svg viewBox={ORBITAL_VIEW} className={styles.svgElement} role="img" aria-label="Carbocation: a planar sp2 carbon with an empty p orbital drawn as dashed lobes">
+                <IntermediateOrbital kind="carbocation" />
+              </svg>
+            </div>
+            <div className={styles.cardBody}>
+              <div className={styles.cardHeading}>
+                <span>Carbocation</span>
+                <span className={styles.cardBadge}>sp², empty p</span>
+              </div>
+              <p className={styles.cardDescription}>
+                Planar, with an empty p orbital above and below the plane. It is ready to accept an electron pair.
+              </p>
+            </div>
+          </article>
+
+          <article className={styles.card}>
+            <div className={`${styles.cardCanvas} ${styles.cardCanvasTall}`}>
+              <svg viewBox={ORBITAL_VIEW} className={styles.svgElement} role="img" aria-label="Carbanion: a pyramidal sp3 carbon with a lone pair of two electrons">
+                <IntermediateOrbital kind="carbanion" />
+              </svg>
+            </div>
+            <div className={styles.cardBody}>
+              <div className={styles.cardHeading}>
+                <span>Carbanion</span>
+                <span className={styles.cardBadge}>sp³, lone pair</span>
+              </div>
+              <p className={styles.cardDescription}>
+                Pyramidal, with the lone pair in an sp³ orbital pointing away from the three bonds.
+              </p>
+            </div>
+          </article>
+
+          <article className={styles.card}>
+            <div className={`${styles.cardCanvas} ${styles.cardCanvasTall}`}>
+              <svg viewBox={ORBITAL_VIEW} className={styles.svgElement} role="img" aria-label="Free radical: a planar sp2 carbon with one electron in the p orbital">
+                <IntermediateOrbital kind="radical" />
+              </svg>
+            </div>
+            <div className={styles.cardBody}>
+              <div className={styles.cardHeading}>
+                <span>Free radical</span>
+                <span className={styles.cardBadge}>sp², one electron</span>
+              </div>
+              <p className={styles.cardDescription}>
+                Planar, with a single electron in the p orbital. Radicals pair up with their neighbours.
+              </p>
+            </div>
+          </article>
+
+          <article className={styles.card}>
+            <div className={`${styles.cardCanvas} ${styles.cardCanvasTall}`}>
+              <svg viewBox={ORBITAL_VIEW} className={styles.svgElement} role="img" aria-label="Hyperconjugation in the ethyl cation: a C-H bond of the neighbouring methyl carbon, aligned with the empty p orbital, is highlighted and an arrow pushes it into the p orbital">
+                <IntermediateOrbital kind="hyperconjugation" />
+              </svg>
+            </div>
+            <div className={styles.cardBody}>
+              <div className={styles.cardHeading}>
+                <span>Hyperconjugation</span>
+                <span className={styles.cardBadge}>σ C–H → empty p</span>
+              </div>
+              <p className={styles.cardDescription}>
+                In H₃C–CH₂⁺ a C–H bond of the methyl group lies along the empty p orbital and lends its electron density
+                to it, which stabilises the cation.
+              </p>
+            </div>
+          </article>
+
+          <article className={styles.card}>
+            <div className={`${styles.cardCanvas} ${styles.cardCanvasTall}`}>
+              <svg viewBox={CLEAVAGE_VIEW} className={styles.svgElement} role="img" aria-label="Homolytic cleavage of CH3-Br: the faded bond splits into two radicals, shown with fishhook arrows">
+                <BondCleavage kind="homolytic" left="CH₃" right="Br" progress={1} />
+              </svg>
+            </div>
+            <div className={styles.cardBody}>
+              <div className={styles.cardHeading}>
+                <span>Homolytic cleavage</span>
+                <span className={styles.cardBadge}>Two radicals</span>
+              </div>
+              <p className={styles.cardDescription}>
+                Each atom takes one electron of the bond, so two radicals form. The faint line shows the bond that
+                was broken.
+              </p>
+            </div>
+          </article>
+
+          <article className={styles.card}>
+            <div className={`${styles.cardCanvas} ${styles.cardCanvasTall}`}>
+              <svg viewBox={CLEAVAGE_VIEW} className={styles.svgElement} role="img" aria-label="Heterolytic cleavage of CH3-Br: the pair moves to bromine, giving a CH3 cation and a bromide anion">
+                <BondCleavage kind="heterolytic" left="CH₃" right="Br" progress={1} anionSide="right" />
+              </svg>
+            </div>
+            <div className={styles.cardBody}>
+              <div className={styles.cardHeading}>
+                <span>Heterolytic cleavage</span>
+                <span className={styles.cardBadge}>Cation and anion</span>
+              </div>
+              <p className={styles.cardDescription}>
+                One full arrow moves the bonding pair to the more electronegative atom, leaving CH₃⁺ and Br⁻.
+              </p>
+            </div>
+          </article>
+
+          <article className={styles.card}>
+            <div className={`${styles.cardCanvas} ${styles.cardCanvasTall}`}>
+              <svg viewBox={viewBoxOf(PENTANOL_BOUNDS, 40)} className={styles.svgElement} role="img" aria-label="Pentan-2-ol with a chip marking the alcohol group at the oxygen">
+                <SkeletalFormula
+                  graph={PENTAN2OL}
+                  showLonePairs
+                  overlay={
+                    <FunctionalGroupBadge label="–OH  alcohol" x={PENTANOL_BADGE.x} y={PENTANOL_BADGE.y} anchor={PENTANOL_O} />
+                  }
+                />
+              </svg>
+            </div>
+            <div className={styles.cardBody}>
+              <div className={styles.cardHeading}>
+                <span>Functional group badge</span>
+                <span className={styles.cardBadge}>–OH alcohol</span>
+              </div>
+              <p className={styles.cardDescription}>
+                A chip names the group and points at the atom that carries it, so the learner finds the functional
+                group in the drawing.
+              </p>
+            </div>
+          </article>
+        </div>
+      </section>
+
       <section className={styles.section} id="organic-lab" aria-labelledby="organic-lab-heading">
         <h2 id="organic-lab-heading" className={styles.sectionTitle}>
           Organic laboratory
