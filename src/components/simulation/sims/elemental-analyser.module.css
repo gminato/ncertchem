@@ -1,0 +1,187 @@
+.sim {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  font-family: var(--font-sans);
+  color: var(--fg);
+}
+
+.sampleRow {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--space-3);
+}
+
+@media (min-width: 900px) {
+  .sampleRow {
+    grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
+    align-items: end;
+  }
+}
+
+.presets,
+.tabs,
+.methodRow,
+.runRow,
+.enterRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  align-items: center;
+}
+
+.enter {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  min-width: 0;
+}
+
+.enterLabel {
+  font-size: 0.9rem;
+  color: var(--fg-muted);
+}
+
+.input {
+  flex: 1 1 12rem;
+  min-width: 0;
+  font: inherit;
+  font-family: var(--font-mono, ui-monospace, monospace);
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius-md, 10px);
+  border: 1px solid var(--glass);
+  background: var(--surface);
+  color: var(--fg);
+}
+
+.layout {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  min-width: 0;
+}
+
+/* Method controls stack from the left edge, so the card holds only what it needs. */
+.methodCard {
+  align-items: flex-start;
+}
+
+.methodCard > .cardTitle {
+  align-self: flex-start;
+}
+
+.methodCard > * {
+  max-width: 100%;
+}
+
+.sampleReadout {
+  margin: 0;
+  font-size: 0.95rem;
+}
+
+.sim sub {
+  font-size: 0.72em;
+  line-height: 0;
+  vertical-align: -0.3em;
+}
+
+.card {
+  background: var(--surface-raised);
+  border-radius: var(--radius-md, 10px);
+  padding: var(--space-4);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  min-width: 0;
+}
+
+.cardTitle {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.methodLabel {
+  font-size: 0.9rem;
+  color: var(--fg-muted);
+  min-width: 6.5rem;
+}
+
+.stage {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+.apparatus {
+  width: 100%;
+  max-width: 32rem;
+  height: auto;
+  display: block;
+}
+
+.readout {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1, 4px);
+}
+
+.line {
+  margin: 0;
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+.entry {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1, 4px);
+}
+
+.feedback {
+  margin: 0;
+  min-height: 1.2em;
+  font-size: 0.9rem;
+  color: var(--fg-muted);
+}
+
+.note {
+  margin: 0;
+  font-size: 0.9rem;
+  color: var(--fg-muted);
+}
+
+.error {
+  margin: 0;
+  font-size: 0.9rem;
+  color: var(--danger, #b42318);
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.95rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.table th,
+.table td {
+  text-align: right;
+  padding: var(--space-1, 4px) var(--space-2);
+  border-bottom: 1px solid var(--glass);
+}
+
+.table th:first-child,
+.table td:first-child {
+  text-align: left;
+}
+
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}

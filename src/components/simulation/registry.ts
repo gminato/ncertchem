@@ -38,8 +38,13 @@ import { LeChatelierLab } from './sims/le-chatelier-lab'
 import { PrecipitationLab } from './sims/precipitation-lab'
 import { PhExplorer } from './sims/ph-explorer'
 import { WeakAcidLab } from './sims/weak-acid-lab'
+import { TlcLab } from './sims/tlc-lab'
 import { IsomerExplorer } from './sims/isomer-explorer'
 import { FunctionalGroupSorter } from './sims/functional-group-sorter'
+import { DistillationLab } from './sims/distillation-lab'
+import { ElementDetective } from './sims/element-detective'
+import { ElementalAnalyser } from './sims/elemental-analyser'
+import { AlkaneNamer } from './sims/alkane-namer'
 
 export interface SimulationProps {
   /** True when the Learner has asked the OS for reduced motion. Skip tweens and loops when set. */
@@ -92,6 +97,11 @@ export const simulations: Record<string, ComponentType<SimulationProps>> = {
   'precipitation-lab': PrecipitationLab,
   'ph-explorer': PhExplorer,
   'weak-acid-lab': WeakAcidLab,
+  'tlc-lab': TlcLab,
   'isomer-explorer': IsomerExplorer,
   'functional-group-sorter': FunctionalGroupSorter,
+  'distillation-lab': DistillationLab,
+  'element-detective': ElementDetective,
+  'elemental-analyser': ElementalAnalyser,
+  'alkane-namer': AlkaneNamer,
 }
