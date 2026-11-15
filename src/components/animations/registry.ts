@@ -99,6 +99,7 @@ import { PhLadder } from './unit6/ph/PhLadder'
 import { WeakAcid } from './unit6/weakacid/WeakAcid'
 import { Chromatography } from './unit8/chromatography/Chromatography'
 import { IsomerFamily } from './unit8/isomers/IsomerFamily'
+import { ClassificationTree } from './unit8/classification/ClassificationTree'
 import { PurificationMethods } from './unit8/purification/PurificationMethods'
 import { LassaigneBench } from './unit8/lassaigne/LassaigneBench'
 import { FunctionalNaming } from './unit8/fgnaming/FunctionalNaming'
@@ -213,6 +214,7 @@ export const animations = {
   'weak-acid': WeakAcid,
   chromatography: Chromatography,
   'isomer-family': IsomerFamily,
+  'classification-tree': ClassificationTree,
   'purification-methods': PurificationMethods,
   'lassaigne': LassaigneBench,
   'functional-naming': FunctionalNaming,
