@@ -17,6 +17,7 @@ import { VseprBuilder } from './sims/vsepr-builder'
 import { DipoleLab } from './sims/dipole-lab'
 import { MOBuilder } from './sims/mo-builder'
 import { HybridExplorer } from './sims/hybrid-explorer'
+import { FirstLawLab } from './sims/first-law-lab'
 
 export interface SimulationProps {
   /** True when the Learner has asked the OS for reduced motion. Skip tweens and loops when set. */
@@ -47,4 +48,5 @@ export const simulations: Record<string, ComponentType<SimulationProps>> = {
   'dipole-lab': DipoleLab,
   'mo-builder': MOBuilder,
   'hybrid-explorer': HybridExplorer,
+  'first-law-lab': FirstLawLab,
 }
