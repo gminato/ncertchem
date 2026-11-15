@@ -4,6 +4,7 @@ import {
   balanceHalfReaction,
   balanceRedox,
   balanceByOxidationNumber,
+  toMhchem,
 } from './redox-balance'
 
 describe('redox-balance.ts', () => {
@@ -175,6 +176,45 @@ describe('redox-balance.ts', () => {
       expect(res.equationString).toContain('3SO2')
       expect(res.equationString).toContain('2Cr3+')
       expect(res.equationString).toContain('3SO42-')
+    })
+  })
+
+  describe('Item 6: toMhchem and equationMhchem display formatting', () => {
+    it('formats species for mhchem unambiguously', () => {
+      expect(toMhchem({ formula: 'C2O4', coefficient: 1, charge: -2 })).toBe('C2O4^2-')
+      expect(toMhchem({ formula: 'Cr2O7', coefficient: 1, charge: -2 })).toBe('Cr2O7^2-')
+      expect(toMhchem({ formula: 'Fe', coefficient: 1, charge: 3 })).toBe('Fe^3+')
+      expect(toMhchem({ formula: 'H2O', coefficient: 1, state: 'l' })).toBe('H2O(l)')
+      expect(toMhchem({ formula: 'e', coefficient: 1, charge: -1 })).toBe('e-')
+      expect(toMhchem({ formula: 'e', coefficient: 6, charge: -1 })).toBe('6e-')
+      expect(toMhchem({ formula: 'H', coefficient: 8, charge: 1 })).toBe('8H+')
+      expect(toMhchem({ formula: 'Cr', coefficient: 2, charge: 3 })).toBe('2Cr^3+')
+
+      // String inputs
+      expect(toMhchem('C2O42-')).toBe('C2O4^2-')
+      expect(toMhchem('Cr2O72-')).toBe('Cr2O7^2-')
+      expect(toMhchem('Fe3+')).toBe('Fe^3+')
+      expect(toMhchem('H2O(l)')).toBe('H2O(l)')
+    })
+
+    it('populates equationMhchem on BalancedHalfReactionResult and each BalanceStep', () => {
+      const half = balanceHalfReaction('Cr2O72- -> Cr3+', 'acidic')
+      expect(half.equationMhchem).toBe('Cr2O7^2- + 14H+(aq) + 6e- -> 2Cr^3+ + 7H2O(l)')
+      for (const step of half.steps) {
+        expect(step.equationMhchem).toBeDefined()
+        expect(step.equationMhchem).toContain('->')
+      }
+    })
+
+    it('populates equationMhchem on BalancedRedoxResult', () => {
+      const res = balanceRedox('Cr2O72- + SO32- -> Cr3+ + SO42-', 'acidic')
+      expect(res.equationMhchem).toBe('3SO3^2- + Cr2O7^2- + 8H+(aq) -> 3SO4^2- + 2Cr^3+ + 4H2O(l)')
+      for (const step of res.steps) {
+        expect(step.equationMhchem).toBeDefined()
+      }
+
+      const resOx = balanceByOxidationNumber('Cr2O72- + SO32- -> Cr3+ + SO42-', 'acidic')
+      expect(resOx.equationMhchem).toBe('3SO3^2- + Cr2O7^2- + 8H+(aq) -> 3SO4^2- + 2Cr^3+ + 4H2O(l)')
     })
   })
 })

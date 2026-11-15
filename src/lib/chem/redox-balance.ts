@@ -16,6 +16,7 @@ import {
 } from './oxidation-number'
 import {
   parseReactionString,
+  parseSpeciesToken,
 } from './redox-analysis'
 import type { RedoxReactionSpecies } from './ncert-unit7-tables'
 
@@ -43,6 +44,7 @@ export interface BalanceStep {
   title: string
   description: string
   equation: string
+  equationMhchem: string
   intermediateReactants: readonly RedoxReactionSpecies[]
   intermediateProducts: readonly RedoxReactionSpecies[]
 }
@@ -54,6 +56,7 @@ export interface BalancedHalfReactionResult {
   reactants: readonly RedoxReactionSpecies[]
   products: readonly RedoxReactionSpecies[]
   equationString: string
+  equationMhchem: string
   steps: readonly BalanceStep[]
 }
 
@@ -64,6 +67,7 @@ export interface BalancedRedoxResult {
   reactants: readonly RedoxReactionSpecies[]
   products: readonly RedoxReactionSpecies[]
   equationString: string
+  equationMhchem: string
   steps: readonly BalanceStep[]
   isBalanced: boolean
 }
@@ -104,6 +108,38 @@ export function formatEquation(
 ): string {
   const rStr = reactants.map(formatSpecies).join(' + ')
   const pStr = products.map(formatSpecies).join(' + ')
+  return `${rStr} -> ${pStr}`
+}
+
+/**
+ * Formats a single species or formula into unambiguous mhchem notation for \ce{}.
+ * Charges with magnitude > 1 or single signs are written with ^ notation (e.g. C2O4^2-, Cr2O7^2-, Fe^3+).
+ * Electrons are written as e- or [n]e-.
+ */
+export function toMhchem(species: RedoxReactionSpecies | string): string {
+  const s = typeof species === 'string' ? parseSpeciesToken(species) : species
+
+  const coeff = s.coefficient > 1 ? String(s.coefficient) : ''
+  if (s.formula === 'e') {
+    return `${coeff}e-`
+  }
+  let chargeStr = ''
+  if (s.charge) {
+    const mag = Math.abs(s.charge)
+    const sign = s.charge > 0 ? '+' : '-'
+    chargeStr = mag === 1 ? sign : `^${mag}${sign}`
+  }
+  const stateStr = s.state ? `(${s.state})` : ''
+  return `${coeff}${s.formula}${chargeStr}${stateStr}`
+}
+
+/** Formats lists of reactant and product species into an equation string in mhchem notation. */
+export function formatEquationMhchem(
+  reactants: readonly RedoxReactionSpecies[],
+  products: readonly RedoxReactionSpecies[],
+): string {
+  const rStr = reactants.map(toMhchem).join(' + ')
+  const pStr = products.map(toMhchem).join(' + ')
   return `${rStr} -> ${pStr}`
 }
 
@@ -203,6 +239,7 @@ export function balanceHalfReaction(
     title: 'Skeletal half-reaction',
     description: 'Write the skeletal ionic half-equation.',
     equation: formatEquation([rMain], [pMain]),
+    equationMhchem: formatEquationMhchem([rMain], [pMain]),
     intermediateReactants: [rMain],
     intermediateProducts: [pMain],
   })
@@ -235,6 +272,7 @@ export function balanceHalfReaction(
     title: 'Balance key atoms',
     description: 'Balance atoms other than oxygen and hydrogen.',
     equation: formatEquation(curReactants, curProducts),
+    equationMhchem: formatEquationMhchem(curReactants, curProducts),
     intermediateReactants: [...curReactants],
     intermediateProducts: [...curProducts],
   })
@@ -273,6 +311,7 @@ export function balanceHalfReaction(
     title: 'Balance oxygen',
     description: 'Add H2O molecules to balance oxygen atoms.',
     equation: formatEquation(curReactants, curProducts),
+    equationMhchem: formatEquationMhchem(curReactants, curProducts),
     intermediateReactants: [...curReactants],
     intermediateProducts: [...curProducts],
   })
@@ -349,6 +388,7 @@ export function balanceHalfReaction(
         ? 'Add H+ ions to balance hydrogen atoms.'
         : 'Add equal OH- ions to both sides to convert H+ to H2O and simplify.',
     equation: formatEquation(curReactants, curProducts),
+    equationMhchem: formatEquationMhchem(curReactants, curProducts),
     intermediateReactants: [...curReactants],
     intermediateProducts: [...curProducts],
   })
@@ -384,6 +424,7 @@ export function balanceHalfReaction(
     title: 'Balance charge with electrons',
     description: `Add ${electrons} electrons to the ${halfType === 'reduction' ? 'reactant' : 'product'} side.`,
     equation: formatEquation(curReactants, curProducts),
+    equationMhchem: formatEquationMhchem(curReactants, curProducts),
     intermediateReactants: [...curReactants],
     intermediateProducts: [...curProducts],
   })
@@ -394,6 +435,7 @@ export function balanceHalfReaction(
     reactants: curReactants,
     products: curProducts,
     equationString: formatEquation(curReactants, curProducts),
+    equationMhchem: formatEquationMhchem(curReactants, curProducts),
     steps,
   }
 }
@@ -417,6 +459,7 @@ export function balanceRedox(
     title: 'Skeletal equation in ionic form',
     description: 'Produce unbalanced equation for the reaction in ionic form.',
     equation: formatEquation(sReactants, sProducts),
+    equationMhchem: formatEquationMhchem(sReactants, sProducts),
     intermediateReactants: sReactants,
     intermediateProducts: sProducts,
   })
@@ -482,6 +525,7 @@ export function balanceRedox(
     title: 'Separate into half-reactions',
     description: `Oxidation half: ${formatSpecies(oxR)} -> ${formatSpecies(oxP)}; Reduction half: ${formatSpecies(redR)} -> ${formatSpecies(redP)}.`,
     equation: `Oxidation: ${formatEquation([oxR], [oxP])} | Reduction: ${formatEquation([redR], [redP])}`,
+    equationMhchem: `Oxidation: ${formatEquationMhchem([oxR], [oxP])} | Reduction: ${formatEquationMhchem([redR], [redP])}`,
     intermediateReactants: sReactants,
     intermediateProducts: sProducts,
   })
@@ -492,6 +536,7 @@ export function balanceRedox(
     title: 'Balance key atoms in each half-reaction',
     description: 'Balance atoms other than O and H in each half-reaction individually.',
     equation: `Oxidation: ${oxHalf.steps[1].equation} | Reduction: ${redHalf.steps[1].equation}`,
+    equationMhchem: `Oxidation: ${oxHalf.steps[1].equationMhchem} | Reduction: ${redHalf.steps[1].equationMhchem}`,
     intermediateReactants: sReactants,
     intermediateProducts: sProducts,
   })
@@ -505,6 +550,7 @@ export function balanceRedox(
         ? 'Add H2O to balance O, and H+ to balance H in each half-reaction.'
         : 'Add H2O to balance O, H+ to balance H, then equal OH- to both sides.',
     equation: `Oxidation: ${oxHalf.steps[3].equation} | Reduction: ${redHalf.steps[3].equation}`,
+    equationMhchem: `Oxidation: ${oxHalf.steps[3].equationMhchem} | Reduction: ${redHalf.steps[3].equationMhchem}`,
     intermediateReactants: sReactants,
     intermediateProducts: sProducts,
   })
@@ -515,6 +561,7 @@ export function balanceRedox(
     title: 'Add electrons to balance charges',
     description: `Oxidation loses ${oxHalf.electrons}e-; Reduction gains ${redHalf.electrons}e-.`,
     equation: `Oxidation: ${oxHalf.equationString} | Reduction: ${redHalf.equationString}`,
+    equationMhchem: `Oxidation: ${oxHalf.equationMhchem} | Reduction: ${redHalf.equationMhchem}`,
     intermediateReactants: sReactants,
     intermediateProducts: sProducts,
   })
@@ -581,6 +628,7 @@ export function balanceRedox(
     title: 'Equalise electrons and add half-reactions',
     description: `Multiply oxidation by ${multOx} and reduction by ${multRed}, add equations and cancel common species.`,
     equation: finalEqStr,
+    equationMhchem: formatEquationMhchem(finalReactants, finalProducts),
     intermediateReactants: finalReactants,
     intermediateProducts: finalProducts,
   })
@@ -592,6 +640,7 @@ export function balanceRedox(
     title: 'Verify balance',
     description: 'Verify that the equation contains the same type and number of atoms and the same net charge.',
     equation: finalEqStr,
+    equationMhchem: formatEquationMhchem(finalReactants, finalProducts),
     intermediateReactants: finalReactants,
     intermediateProducts: finalProducts,
   })
@@ -602,6 +651,7 @@ export function balanceRedox(
     reactants: finalReactants,
     products: finalProducts,
     equationString: finalEqStr,
+    equationMhchem: formatEquationMhchem(finalReactants, finalProducts),
     steps,
     isBalanced: verification.balanced,
   }
@@ -629,6 +679,7 @@ export function balanceByOxidationNumber(
     title: 'Skeletal ionic equation',
     description: 'Write the skeletal ionic equation for the reaction.',
     equation: formatEquation(sReactants, sProducts),
+    equationMhchem: formatEquationMhchem(sReactants, sProducts),
     intermediateReactants: sReactants,
     intermediateProducts: sProducts,
   })
@@ -639,6 +690,7 @@ export function balanceByOxidationNumber(
     title: 'Assign oxidation numbers',
     description: 'Assign oxidation numbers to elements to identify the oxidant and reductant.',
     equation: formatEquation(sReactants, sProducts),
+    equationMhchem: formatEquationMhchem(sReactants, sProducts),
     intermediateReactants: sReactants,
     intermediateProducts: sProducts,
   })
@@ -653,6 +705,7 @@ export function balanceByOxidationNumber(
     title: 'Equalise oxidation number changes',
     description: 'Calculate increase and decrease in oxidation number, and make them equal by adjusting coefficients.',
     equation: formatEquation(mainReactants, mainProducts),
+    equationMhchem: formatEquationMhchem(mainReactants, mainProducts),
     intermediateReactants: mainReactants,
     intermediateProducts: mainProducts,
   })
@@ -669,6 +722,7 @@ export function balanceByOxidationNumber(
         ? 'Add H+ ions to balance net charges on both sides.'
         : 'Add OH- ions to balance net charges on both sides.',
     equation: formatEquation(nonH2OReactants, nonH2OProducts),
+    equationMhchem: formatEquationMhchem(nonH2OReactants, nonH2OProducts),
     intermediateReactants: nonH2OReactants,
     intermediateProducts: nonH2OProducts,
   })
@@ -679,6 +733,7 @@ export function balanceByOxidationNumber(
     title: 'Balance hydrogen and oxygen with H2O',
     description: 'Add H2O molecules to achieve atom balance and verify.',
     equation: halfResult.equationString,
+    equationMhchem: halfResult.equationMhchem,
     intermediateReactants: halfResult.reactants,
     intermediateProducts: halfResult.products,
   })
@@ -689,6 +744,7 @@ export function balanceByOxidationNumber(
     reactants: halfResult.reactants,
     products: halfResult.products,
     equationString: halfResult.equationString,
+    equationMhchem: halfResult.equationMhchem,
     steps,
     isBalanced: halfResult.isBalanced,
   }

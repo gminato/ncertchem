@@ -4,6 +4,8 @@ import {
   rationalToString,
   rationalToNumber,
   oxidationNumbers,
+  oxidationNumbersBySite,
+  STRUCTURAL_OXIDATION_EXCEPTIONS,
   stockName,
   explainOxidationNumber,
 } from './oxidation-number'
@@ -214,6 +216,112 @@ describe('oxidation-number.ts', () => {
     it('throws RangeError when more than one element is undetermined', () => {
       expect(() => oxidationNumbers('FeCr2O4')).toThrow(RangeError)
       expect(() => oxidationNumbers('FeCr2O4')).toThrow(/undetermined/)
+    })
+  })
+
+  describe('Item 1: Sum rule check & Interhalogens', () => {
+    it('solves HOF with O = 0, F = -1, H = +1 (sum = 0)', () => {
+      const res = oxidationNumbers('HOF')
+      expect(res.F).toEqual({ num: -1, den: 1 })
+      expect(res.H).toEqual({ num: 1, den: 1 })
+      expect(res.O).toEqual({ num: 0, den: 1 })
+    })
+
+    it('handles interhalogens where more electronegative halogen is -1 and the other is positive', () => {
+      const resICl = oxidationNumbers('ICl')
+      expect(resICl.Cl).toEqual({ num: -1, den: 1 })
+      expect(resICl.I).toEqual({ num: 1, den: 1 })
+
+      const resBrF3 = oxidationNumbers('BrF3')
+      expect(resBrF3.F).toEqual({ num: -1, den: 1 })
+      expect(resBrF3.Br).toEqual({ num: 3, den: 1 })
+
+      const resIF7 = oxidationNumbers('IF7')
+      expect(resIF7.F).toEqual({ num: -1, den: 1 })
+      expect(resIF7.I).toEqual({ num: 7, den: 1 })
+
+      const resClF3 = oxidationNumbers('ClF3')
+      expect(resClF3.F).toEqual({ num: -1, den: 1 })
+      expect(resClF3.Cl).toEqual({ num: 3, den: 1 })
+    })
+  })
+
+  describe('Item 2: NH4NO3 average and by-site splitting', () => {
+    it('returns average oxidation number +1 for N in NH4NO3', () => {
+      const res = oxidationNumbers('NH4NO3')
+      expect(res.N).toEqual({ num: 1, den: 1 })
+      expect(res.H).toEqual({ num: 1, den: 1 })
+      expect(res.O).toEqual({ num: -2, den: 1 })
+    })
+
+    it('splits NH4NO3 by site giving N -3 in NH4+ and N +5 in NO3-', () => {
+      const bySite = oxidationNumbersBySite('NH4NO3')
+      expect(bySite['NH4+'].N).toEqual({ num: -3, den: 1 })
+      expect(bySite['NO3-'].N).toEqual({ num: 5, den: 1 })
+    })
+
+    it('splits other polyatomic salts by site', () => {
+      const alum = oxidationNumbersBySite('KAl(SO4)2')
+      expect(alum['SO4^2-'].S).toEqual({ num: 6, den: 1 })
+
+      const feSO4 = oxidationNumbersBySite('FeSO4')
+      expect(feSO4['Fe^2+'].Fe).toEqual({ num: 2, den: 1 })
+      expect(feSO4['SO4^2-'].S).toEqual({ num: 6, den: 1 })
+
+      const na2CO3 = oxidationNumbersBySite('Na2CO3')
+      expect(na2CO3['CO3^2-'].C).toEqual({ num: 4, den: 1 })
+
+      const kmno4 = oxidationNumbersBySite('KMnO4')
+      expect(kmno4['MnO4^-'].Mn).toEqual({ num: 7, den: 1 })
+    })
+  })
+
+  describe('Item 3: Cyanide complexes', () => {
+    it('treats CN as cyanide group with C +2 and N -3', () => {
+      const k4 = oxidationNumbers('K4[Fe(CN)6]')
+      expect(k4.Fe).toEqual({ num: 2, den: 1 })
+      expect(k4.K).toEqual({ num: 1, den: 1 })
+      expect(k4.C).toEqual({ num: 2, den: 1 })
+      expect(k4.N).toEqual({ num: -3, den: 1 })
+
+      const k4plain = oxidationNumbers('K4Fe(CN)6')
+      expect(k4plain.Fe).toEqual({ num: 2, den: 1 })
+
+      const k3 = oxidationNumbers('K3[Fe(CN)6]')
+      expect(k3.Fe).toEqual({ num: 3, den: 1 })
+
+      const k3plain = oxidationNumbers('K3Fe(CN)6')
+      expect(k3plain.Fe).toEqual({ num: 3, den: 1 })
+
+      const ion4 = oxidationNumbers('[Fe(CN)6]', -4)
+      expect(ion4.Fe).toEqual({ num: 2, den: 1 })
+
+      const ion3 = oxidationNumbers('[Fe(CN)6]', -3)
+      expect(ion3.Fe).toEqual({ num: 3, den: 1 })
+    })
+  })
+
+  describe('Item 4: Structural exceptions table for peroxo species', () => {
+    it('overrides averaging for H2SO5 giving S +6 and carries a note', () => {
+      const res = oxidationNumbers('H2SO5')
+      expect(res.S).toEqual({ num: 6, den: 1 })
+      expect(STRUCTURAL_OXIDATION_EXCEPTIONS.H2SO5).toBeDefined()
+      expect(STRUCTURAL_OXIDATION_EXCEPTIONS.H2SO5.note).toContain('peroxide')
+    })
+
+    it('overrides averaging for H2S2O8 and K2S2O8 giving S +6', () => {
+      const resH = oxidationNumbers('H2S2O8')
+      expect(resH.S).toEqual({ num: 6, den: 1 })
+
+      const resK = oxidationNumbers('K2S2O8')
+      expect(resK.S).toEqual({ num: 6, den: 1 })
+    })
+
+    it('overrides averaging for CrO5 giving Cr +6 and carries a note', () => {
+      const res = oxidationNumbers('CrO5')
+      expect(res.Cr).toEqual({ num: 6, den: 1 })
+      expect(STRUCTURAL_OXIDATION_EXCEPTIONS.CrO5).toBeDefined()
+      expect(STRUCTURAL_OXIDATION_EXCEPTIONS.CrO5.note).toContain('peroxo')
     })
   })
 })

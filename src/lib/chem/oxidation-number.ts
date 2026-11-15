@@ -83,6 +83,113 @@ const TRANSITION_AND_POST_TRANSITION_METALS = new Set([
 const PEROXIDES = new Set(['H2O2', 'Na2O2', 'K2O2', 'BaO2', 'CaO2'])
 const SUPEROXIDES = new Set(['KO2', 'RbO2', 'CsO2'])
 
+/** Entry in the structural exceptions table overriding normal averaging. */
+export interface StructuralOxidationException {
+  formula: string
+  oxidationNumbers: Record<string, Rational>
+  note: string
+}
+
+/**
+ * Structural exceptions where normal averaging rules yield chemically impossible oxidation numbers
+ * (e.g. exceeding maximum group valence). NCERT Section 7.3 special cases.
+ */
+export const STRUCTURAL_OXIDATION_EXCEPTIONS: Record<string, StructuralOxidationException> = {
+  H2SO5: {
+    formula: 'H2SO5',
+    oxidationNumbers: {
+      H: makeRational(1, 1),
+      S: makeRational(6, 1),
+      O: makeRational(-8, 5),
+    },
+    note: "Caro's acid (peroxomonosulphuric acid, H2SO5): S is +6 (group 16 maximum); contains one peroxide linkage (-O-O-) with two O atoms at -1 and three O atoms at -2 (average -8/5).",
+  },
+  H2S2O8: {
+    formula: 'H2S2O8',
+    oxidationNumbers: {
+      H: makeRational(1, 1),
+      S: makeRational(6, 1),
+      O: makeRational(-7, 4),
+    },
+    note: "Marshall's acid (peroxodisulphuric acid, H2S2O8): S is +6 (group 16 maximum); contains one peroxide linkage (-O-O-) with two O atoms at -1 and six O atoms at -2 (average -7/4).",
+  },
+  K2S2O8: {
+    formula: 'K2S2O8',
+    oxidationNumbers: {
+      K: makeRational(1, 1),
+      S: makeRational(6, 1),
+      O: makeRational(-7, 4),
+    },
+    note: "Potassium persulphate (K2S2O8): S is +6 (group 16 maximum); contains one peroxide linkage (-O-O-) with two O atoms at -1 and six O atoms at -2 (average -7/4).",
+  },
+  CrO5: {
+    formula: 'CrO5',
+    oxidationNumbers: {
+      Cr: makeRational(6, 1),
+      O: makeRational(-6, 5),
+    },
+    note: 'Chromium pentoxide (CrO5, butterfly structure): Cr is +6 (maximum transition valence); contains one oxo oxygen (=O, -2) and two peroxo groups (four O atoms at -1, average -6/5).',
+  },
+}
+
+/** Known polyatomic ions for site-specific oxidation number determination. */
+const KNOWN_POLYATOMIC_IONS: readonly { formula: string; charge: number; siteName: string }[] = [
+  { formula: 'Cr2O7', charge: -2, siteName: 'Cr2O7^2-' },
+  { formula: 'CrO4', charge: -2, siteName: 'CrO4^2-' },
+  { formula: 'S2O3', charge: -2, siteName: 'S2O3^2-' },
+  { formula: 'C2O4', charge: -2, siteName: 'C2O4^2-' },
+  { formula: 'MnO4', charge: -1, siteName: 'MnO4^-' },
+  { formula: 'ClO4', charge: -1, siteName: 'ClO4^-' },
+  { formula: 'ClO3', charge: -1, siteName: 'ClO3^-' },
+  { formula: 'ClO2', charge: -1, siteName: 'ClO2^-' },
+  { formula: 'ClO', charge: -1, siteName: 'ClO^-' },
+  { formula: 'PO4', charge: -3, siteName: 'PO4^3-' },
+  { formula: 'SO4', charge: -2, siteName: 'SO4^2-' },
+  { formula: 'SO3', charge: -2, siteName: 'SO3^2-' },
+  { formula: 'CO3', charge: -2, siteName: 'CO3^2-' },
+  { formula: 'NO3', charge: -1, siteName: 'NO3^-' },
+  { formula: 'NO2', charge: -1, siteName: 'NO2^-' },
+  { formula: 'NH4', charge: 1, siteName: 'NH4^+' },
+  { formula: 'CN', charge: -1, siteName: 'CN^-' },
+  { formula: 'OH', charge: -1, siteName: 'OH^-' },
+]
+
+/** One distinct site or constituent ion in a chemical species. */
+export interface SiteOxidation {
+  site: string
+  formula: string
+  charge: number
+  count: number
+  oxidationNumbers: Record<string, Rational>
+}
+
+/** Result of site-by-site oxidation number analysis, supporting both array iteration and record lookup. */
+export type SiteOxidationResult = SiteOxidation[] & Record<string, Record<string, Rational>>
+
+/** Asserts that the algebraic sum of (count * ON) strictly equals the net ionic charge. */
+function assertSumRule(
+  result: Record<string, Rational>,
+  counts: FormulaCounts,
+  netCharge: number,
+  formula: string,
+): void {
+  let totalNum = 0
+  let totalDen = 1
+  for (const [sym, count] of Object.entries(counts)) {
+    const r = result[sym]
+    if (!r) {
+      throw new RangeError(`Element "${sym}" was not assigned an oxidation number in "${formula}"`)
+    }
+    totalNum = totalNum * r.den + count * r.num * totalDen
+    totalDen = totalDen * r.den
+  }
+  if (totalNum !== netCharge * totalDen) {
+    throw new RangeError(
+      `Sum rule violation for "${formula}": sum of oxidation numbers (${totalNum}/${totalDen}) does not equal net charge (${netCharge})`,
+    )
+  }
+}
+
 /** One step in an oxidation number derivation. */
 export interface OxidationStep {
   element: string
@@ -145,6 +252,16 @@ export function oxidationNumbers(formula: string, charge = 0): Record<string, Ra
   }
 
   const { formula: cleanFormula, charge: netCharge } = extractFormulaAndCharge(formula, charge)
+  const cleanBase = cleanFormula.replace(/[·.*].*$/, '') // without hydrate for hydride/peroxide checks
+
+  // Structural exceptions table overrides normal averaging (NCERT Section 7.3 special cases)
+  if (cleanBase in STRUCTURAL_OXIDATION_EXCEPTIONS) {
+    const entry = STRUCTURAL_OXIDATION_EXCEPTIONS[cleanBase]
+    const res: Record<string, Rational> = { ...entry.oxidationNumbers }
+    Object.defineProperty(res, 'note', { value: entry.note, enumerable: false })
+    return res
+  }
+
   const counts: FormulaCounts = parseFormula(cleanFormula)
   const symbols = Object.keys(counts)
 
@@ -164,25 +281,38 @@ export function oxidationNumbers(formula: string, charge = 0): Record<string, Ra
   }
 
   const result: Record<string, Rational> = {}
-  const cleanBase = cleanFormula.replace(/[·.*].*$/, '') // without hydrate for hydride/peroxide checks
+  const assignmentPriority: Record<string, number> = {}
 
-  // Rule 3: Fluorine is always -1
+  // Rule 3: Fluorine is always -1 in all compounds (Priority 10)
   if ('F' in counts) {
     result.F = makeRational(-1, 1)
+    assignmentPriority.F = 10
   }
 
-  // Rule 4: Alkali metals (+1), Alkaline earth metals (+2), Aluminium (+3)
+  // Rule 4: Group 1 alkali metals (+1), Group 2 alkaline earth metals (+2), Aluminium (+3) (Priority 9)
   for (const sym of symbols) {
     if (ALKALI_METALS.has(sym)) {
       result[sym] = makeRational(1, 1)
+      assignmentPriority[sym] = 9
     } else if (ALKALINE_EARTH_METALS.has(sym)) {
       result[sym] = makeRational(2, 1)
+      assignmentPriority[sym] = 9
     } else if (sym === 'Al') {
       result.Al = makeRational(3, 1)
+      assignmentPriority.Al = 9
     }
   }
 
-  // Rule 5: Hydrogen (+1 or -1 in metal hydrides)
+  // Cyanide complexes: treat CN as cyanide group with C +2 and N -3 (Priority 8)
+  const hasCyanide = cleanBase.includes('CN')
+  if (hasCyanide && 'C' in counts && 'N' in counts && !result.C && !result.N) {
+    result.C = makeRational(2, 1)
+    result.N = makeRational(-3, 1)
+    assignmentPriority.C = 8
+    assignmentPriority.N = 8
+  }
+
+  // Rule 5: Hydrogen (+1 or -1 in metal hydrides) (Priority 7)
   if ('H' in counts && !result.H) {
     const hasAlkali = symbols.some((s) => ALKALI_METALS.has(s))
     const hasAlkaline = symbols.some((s) => ALKALINE_EARTH_METALS.has(s))
@@ -192,41 +322,50 @@ export function oxidationNumbers(formula: string, charge = 0): Record<string, Ra
 
     if (isBinaryMetalHydride || isNaBH4 || isLiAlH4) {
       result.H = makeRational(-1, 1)
+      assignmentPriority.H = 7
     } else {
       result.H = makeRational(1, 1)
+      assignmentPriority.H = 7
     }
   }
 
-  // Rule 6: Oxygen (-2, or exceptions for OF2, O2F2, peroxides, superoxides)
+  // Rule 6: Oxygen (-2, or exceptions for OF2, O2F2, peroxides, superoxides) (Priority 6 for exceptions, 5 for normal)
   if ('O' in counts && !result.O) {
     if (cleanBase === 'OF2') {
       result.O = makeRational(2, 1)
+      assignmentPriority.O = 6
     } else if (cleanBase === 'O2F2') {
       result.O = makeRational(1, 1)
+      assignmentPriority.O = 6
     } else if (PEROXIDES.has(cleanBase)) {
       result.O = makeRational(-1, 1)
+      assignmentPriority.O = 6
     } else if (SUPEROXIDES.has(cleanBase)) {
       result.O = makeRational(-1, 2)
+      assignmentPriority.O = 6
     } else {
       result.O = makeRational(-2, 1)
+      assignmentPriority.O = 5
     }
   }
 
-  // Rule 7: Halogens (Cl, Br, I) as halides (-1) when not bonded to O or more electronegative halogens
-  // Special polyiodides like KI3 or I3- are not assigned -1 so the sum rule solves for the average
+  // Rule 7: Halogens (Cl, Br, I) (Priority 4)
+  // In interhalogens, the MORE electronegative halogen is -1 and the other is positive.
+  // Electronegativity order: F > Cl > Br > I
   const hasOxygen = 'O' in counts
   const hasFluorine = 'F' in counts
   const isPolyiodide = cleanBase === 'KI3' || (cleanBase === 'I3' && netCharge === -1)
 
-  for (const hal of ['Cl', 'Br', 'I'] as const) {
-    if (hal in counts && !result[hal] && !hasOxygen && !hasFluorine && !isPolyiodide) {
-      // If there are other elements in the compound besides alkali/alkaline earth metals, assign halide -1
-      // e.g. SiCl4, TiCl4, CCl4, HAuCl4, CuI, FeCl3
-      result[hal] = makeRational(-1, 1)
+  const halogensPresent = (['Cl', 'Br', 'I'] as const).filter((h) => h in counts)
+  if (halogensPresent.length > 0 && !hasOxygen && !hasFluorine && !isPolyiodide) {
+    const mostElectronegative = halogensPresent[0]
+    if (!result[mostElectronegative]) {
+      result[mostElectronegative] = makeRational(-1, 1)
+      assignmentPriority[mostElectronegative] = 4
     }
   }
 
-  // Rule 7b: Binary metal sulphides (e.g. Cu2S, Na2S, ZnS, FeS, MgS, HgS) where S is sulphide (-2)
+  // Rule 7b: Binary metal sulphides (Priority 3)
   if ('S' in counts && !result.S && !hasOxygen && !hasFluorine && symbols.length === 2) {
     const otherSym = symbols.find((s) => s !== 'S')
     if (
@@ -236,28 +375,57 @@ export function oxidationNumbers(formula: string, charge = 0): Record<string, Ra
         ALKALINE_EARTH_METALS.has(otherSym))
     ) {
       result.S = makeRational(-2, 1)
+      assignmentPriority.S = 3
     }
   }
 
-  // Rule 7c: Common oxoanion groups in salts:
-  // In sulphates (SO4 group), S is +6 and O is -2
-  // In nitrates (NO3 group), N is +5 and O is -2
-  // In carbonates (CO3 group), C is +4 and O is -2
-  if (symbols.length > 2) {
+  // Rule 7c: Common oxoanion groups in salts where MULTIPLE elements are undetermined (Priority 2)
+  // In sulphates (SO4), S is +6 and O is -2
+  // In nitrates (NO3), N is +5 and O is -2
+  // In carbonates (CO3), C is +4 and O is -2
+  const undeterminedBeforeOxoanion = symbols.filter((s) => !(s in result))
+  if (undeterminedBeforeOxoanion.length > 1) {
     if (cleanBase.includes('SO4') && !result.S) {
       result.S = makeRational(6, 1)
+      assignmentPriority.S = 2
     } else if (cleanBase.includes('NO3') && !result.N) {
       result.N = makeRational(5, 1)
+      assignmentPriority.N = 2
     } else if (cleanBase.includes('CO3') && !result.C) {
       result.C = makeRational(4, 1)
+      assignmentPriority.C = 2
     }
   }
 
-  // Rule 8: Sum rule to solve for the remaining unknown element
-  const undetermined = symbols.filter((s) => !(s in result))
+  // Sum rule conflict resolution:
+  // If all elements were assigned by fixed rules, check if the sum equals netCharge.
+  // When a lower-priority rule (e.g. O -2 in HOF) conflicts with the sum, that element is solved from the sum instead.
+  let undetermined = symbols.filter((s) => !(s in result))
 
   if (undetermined.length === 0) {
-    return result
+    let commonDen = 1
+    for (const s of symbols) {
+      commonDen *= result[s].den
+    }
+    let currentSumScaled = 0
+    for (const s of symbols) {
+      currentSumScaled += counts[s] * result[s].num * (commonDen / result[s].den)
+    }
+
+    if (currentSumScaled !== netCharge * commonDen) {
+      // Conflict: revoke the assignment of the lowest-priority element and solve via sum rule
+      const lowestElem = symbols.reduce((min, s) => {
+        const pS = assignmentPriority[s] ?? 999
+        const pMin = assignmentPriority[min] ?? 999
+        return pS < pMin ? s : min
+      }, symbols[0])
+      delete result[lowestElem]
+      delete assignmentPriority[lowestElem]
+      undetermined = [lowestElem]
+    } else {
+      assertSumRule(result, counts, netCharge, formula)
+      return result
+    }
   }
 
   if (undetermined.length > 1) {
@@ -269,8 +437,7 @@ export function oxidationNumbers(formula: string, charge = 0): Record<string, Ra
   const target = undetermined[0]
   const targetCount = counts[target]
 
-  // Known sum: S = sum(count[E] * num / den)
-  // Bring to common denominator
+  // Rule 8: Sum rule to solve for the remaining unknown element
   let commonDen = 1
   for (const s of symbols) {
     if (s !== target) {
@@ -286,12 +453,134 @@ export function oxidationNumbers(formula: string, charge = 0): Record<string, Ra
     }
   }
 
-  // targetCount * ox[target] * commonDen + knownSumScaled = netCharge * commonDen
-  // targetCount * ox[target] * commonDen = netCharge * commonDen - knownSumScaled
   const remainingNum = netCharge * commonDen - knownSumScaled
   const remainingDen = targetCount * commonDen
 
   result[target] = makeRational(remainingNum, remainingDen)
+
+  // ALWAYS assert at the end that Σ(count × ON) equals the charge; throw a RangeError otherwise.
+  assertSumRule(result, counts, netCharge, formula)
+  return result
+}
+
+/**
+ * Determines oxidation numbers by site/constituent ion, splitting known polyatomic ions
+ * (e.g. NH4+, NO3-, SO4^2-, CN-, etc.) so that differing oxidation states of the same element
+ * in distinct chemical environments are separately resolved (e.g. NH4NO3 gives N -3 in NH4+ and N +5 in NO3-).
+ *
+ * @param formula Chemical formula, e.g. "NH4NO3", "(NH4)2SO4", "FeSO4", "K4[Fe(CN)6]".
+ * @param charge Net ionic charge (defaults to 0).
+ */
+export function oxidationNumbersBySite(formula: string, charge = 0): SiteOxidationResult {
+  if (typeof formula !== 'string' || formula.trim().length === 0) {
+    throw new RangeError('Formula must be a non-empty string')
+  }
+
+  const { formula: cleanFormula, charge: netCharge } = extractFormulaAndCharge(formula, charge)
+  const cleanBase = cleanFormula.replace(/[·.*].*$/, '')
+  const totalCounts = parseFormula(cleanBase)
+  const remainingCounts = { ...totalCounts }
+
+  const matchedSites: SiteOxidation[] = []
+
+  // Check known polyatomic ions
+  for (const ion of KNOWN_POLYATOMIC_IONS) {
+    if (!cleanBase.includes(ion.formula)) continue
+    const ionCounts = parseFormula(ion.formula)
+
+    let fits = 0
+    const parenRegex = new RegExp('\\(' + ion.formula + '\\)(\\d+)?')
+    const parenMatch = parenRegex.exec(cleanBase)
+    if (parenMatch) {
+      fits = parenMatch[1] ? Number(parenMatch[1]) : 1
+    } else {
+      const possible = Math.min(
+        ...Object.entries(ionCounts).map(([sym, c]) => Math.floor((remainingCounts[sym] ?? 0) / c)),
+      )
+      if (possible > 0) fits = possible
+    }
+
+    if (fits > 0) {
+      let canSubtract = true
+      for (const [sym, c] of Object.entries(ionCounts)) {
+        if ((remainingCounts[sym] ?? 0) < c * fits) canSubtract = false
+      }
+      if (canSubtract) {
+        for (const [sym, c] of Object.entries(ionCounts)) {
+          remainingCounts[sym] -= c * fits
+          if (remainingCounts[sym] === 0) delete remainingCounts[sym]
+        }
+        let ionOx: Record<string, Rational>
+        if (ion.formula === 'CN') {
+          ionOx = { C: makeRational(2, 1), N: makeRational(-3, 1) }
+        } else {
+          ionOx = oxidationNumbers(ion.formula, ion.charge)
+        }
+        matchedSites.push({
+          site: ion.siteName,
+          formula: ion.formula,
+          charge: ion.charge,
+          count: fits,
+          oxidationNumbers: ionOx,
+        })
+      }
+    }
+  }
+
+  // Handle remaining cations / elements
+  let knownCharge = matchedSites.reduce((sum, s) => sum + s.count * s.charge, 0)
+  for (const sym of Object.keys(remainingCounts)) {
+    const c = remainingCounts[sym]
+    let ionCharge = 0
+    let siteName = sym
+    if (ALKALI_METALS.has(sym)) {
+      ionCharge = 1
+      siteName = `${sym}+`
+    } else if (ALKALINE_EARTH_METALS.has(sym)) {
+      ionCharge = 2
+      siteName = `${sym}^2+`
+    } else if (sym === 'Al') {
+      ionCharge = 3
+      siteName = `${sym}^3+`
+    } else {
+      const remainingCharge = netCharge - knownCharge
+      ionCharge = remainingCharge / c
+      const mag = Math.abs(ionCharge)
+      const sign = ionCharge > 0 ? '+' : '-'
+      siteName = mag === 1 ? `${sym}${sign}` : `${sym}^${mag}${sign}`
+    }
+    knownCharge += ionCharge * c
+    matchedSites.push({
+      site: siteName,
+      formula: sym,
+      charge: ionCharge,
+      count: c,
+      oxidationNumbers: { [sym]: makeRational(ionCharge, 1) },
+    })
+  }
+
+  // If no polyatomic ions were found, return the whole formula as single site
+  if (matchedSites.length === 0) {
+    const ox = oxidationNumbers(cleanBase, netCharge)
+    matchedSites.push({
+      site: cleanBase,
+      formula: cleanBase,
+      charge: netCharge,
+      count: 1,
+      oxidationNumbers: ox,
+    })
+  }
+
+  const result = [...matchedSites] as SiteOxidationResult
+  for (const s of matchedSites) {
+    result[s.site] = s.oxidationNumbers
+    result[s.formula] = s.oxidationNumbers
+    const noCaret = s.site.replace(/\^/g, '')
+    result[noCaret] = s.oxidationNumbers
+    const baseKey = s.site.replace(/\^?[+-]?\d*[+-]$/, '')
+    result[baseKey] = s.oxidationNumbers
+  }
+
   return result
 }
 
@@ -334,6 +623,30 @@ export function explainOxidationNumber(
   charge = 0,
   targetElement?: string,
 ): OxidationExplanation {
+  const { formula: cleanFormula, charge: netCharge } = extractFormulaAndCharge(formula, charge)
+  const cleanBase = cleanFormula.replace(/[·.*].*$/, '')
+
+  if (cleanBase in STRUCTURAL_OXIDATION_EXCEPTIONS) {
+    const entry = STRUCTURAL_OXIDATION_EXCEPTIONS[cleanBase]
+    const counts = parseFormula(cleanBase)
+    const symbols = Object.keys(counts)
+    const target = targetElement ?? symbols.find((s) => s !== 'O' && s !== 'H' && !ALKALI_METALS.has(s)) ?? symbols[0]
+    const finalVal = entry.oxidationNumbers[target] ?? makeRational(0, 1)
+    return {
+      formula,
+      charge: netCharge,
+      targetElement: target,
+      finalOxidationNumber: finalVal,
+      steps: [
+        {
+          element: target,
+          ruleApplied: `Structural exception: ${entry.note}`,
+          assignedValue: finalVal,
+        },
+      ],
+    }
+  }
+
   const ox = oxidationNumbers(formula, charge)
   const counts = parseFormula(formula)
   const symbols = Object.keys(counts)

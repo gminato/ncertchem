@@ -53,7 +53,7 @@ const METALS = new Set([
 /**
  * Parses a single chemical species token, e.g. "2Mg(s)", "Cu2+(aq)", "Cr2O7^2-", "H2O(l)".
  */
-function parseSpeciesToken(rawToken: string): RedoxReactionSpecies {
+export function parseSpeciesToken(rawToken: string): RedoxReactionSpecies {
   const token = rawToken.trim()
   if (token.length === 0) {
     throw new RangeError('Species token cannot be empty')

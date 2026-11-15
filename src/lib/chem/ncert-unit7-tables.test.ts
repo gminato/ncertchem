@@ -8,6 +8,8 @@ import {
   NCERT_UNIT7_PROBLEMS,
   NCERT_UNIT7_ERRATA,
 } from './ncert-unit7-tables'
+import { oxidationNumbers, rationalToNumber } from './oxidation-number'
+import { parseFormula } from './formula'
 
 describe('NCERT Unit 7 Tables & Reference Data', () => {
   describe('Table 7.1 Standard Electrode Potentials at 298 K', () => {
@@ -157,6 +159,66 @@ describe('NCERT Unit 7 Tables & Reference Data', () => {
       const hclo = NCERT_UNIT7_ERRATA.find((e) => e.printed.includes('HClO'))
       expect(hclo).toBeDefined()
       expect(hclo?.correct).toContain('HClO4')
+
+      // Item 5: Problem 7.4 erratum must be removed
+      const prob74 = NCERT_UNIT7_ERRATA.find((e) => e.where.includes('Problem 7.4'))
+      expect(prob74).toBeUndefined()
+    })
+  })
+
+  describe('Integrity checks over all species in Unit 7 tables', () => {
+    const MAX_OXIDATION_NUMBER: Record<string, number> = {
+      H: 1, Li: 1, Na: 1, K: 1, Rb: 1, Cs: 1,
+      Be: 2, Mg: 2, Ca: 2, Sr: 2, Ba: 2, Zn: 2, Cd: 2,
+      B: 3, Al: 3, Sc: 3,
+      C: 4, Si: 4, Sn: 4, Pb: 4, Ti: 4,
+      N: 5, P: 5, V: 5,
+      O: 2, S: 6, Cr: 6,
+      F: 0, Cl: 7, Br: 7, I: 7, Mn: 7,
+      Fe: 6, Co: 4, Ni: 4, Cu: 2,
+      Os: 8, Xe: 8,
+    }
+
+    const testSpecies = [
+      ...NCERT_PERIOD_3_HIGHEST_OXIDATION_STATES.rows.map((r) => r.compoundCorrect),
+      ...NCERT_PROBLEM_7_3_STOCK_NOTATION.map((r) => r.formula),
+      'C3O2', 'Br3O8', 'S4O6^2-', 'Fe3O4', 'H2SO5', 'H2S2O8', 'K2S2O8', 'CrO5',
+      'HOF', 'ICl', 'BrF3', 'IF7', 'ClF3', 'NH4NO3', 'K4[Fe(CN)6]', 'K3[Fe(CN)6]',
+    ]
+
+    it('asserts sum rule: Σ(count × ON) equals net charge for all species', () => {
+      for (const formula of testSpecies) {
+        const clean = formula.replace(/\[|\]/g, '').replace(/\^?\d*[+-]$/, '')
+        const counts = parseFormula(clean)
+        const ox = oxidationNumbers(formula)
+        let sum = 0
+        for (const [sym, count] of Object.entries(counts)) {
+          expect(ox[sym]).toBeDefined()
+          sum += count * rationalToNumber(ox[sym])
+        }
+        // Extract expected charge if present, else 0
+        const chargeMatch = /\^?(\d*)([+-])$/.exec(formula)
+        let expectedCharge = 0
+        if (chargeMatch) {
+          const sign = chargeMatch[2] === '-' ? -1 : 1
+          const mag = chargeMatch[1].length > 0 ? Number(chargeMatch[1]) : 1
+          expectedCharge = sign * mag
+        }
+        expect(Math.round(sum)).toBe(expectedCharge)
+      }
+    })
+
+    it('asserts that no result exceeds the element maximum oxidation number', () => {
+      for (const formula of testSpecies) {
+        const ox = oxidationNumbers(formula)
+        for (const [sym, r] of Object.entries(ox)) {
+          const val = rationalToNumber(r)
+          const max = MAX_OXIDATION_NUMBER[sym]
+          if (max !== undefined) {
+            expect(val).toBeLessThanOrEqual(max)
+          }
+        }
+      }
     })
   })
 })

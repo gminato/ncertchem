@@ -1318,14 +1318,6 @@ export const NCERT_UNIT7_ERRATA: readonly NcertErratum[] = [
     note: 'In hypochlorous acid (HClO), chlorine has oxidation state +1. The oxoacid exhibiting the group highest oxidation state (+7) is perchloric acid (HClO4).',
   },
   {
-    where: 'Problem 7.4 solution, text lines 770–780',
-    printed:
-      '"sulphur of Cu2S helps copper both in Cu2S itself and Cu2O to decrease its oxidation number; therefore, sulphur of Cu2S is reductant"',
-    correct:
-      'Cu2S is the reductant (due to sulphide S^2- being oxidised to SO2), while Cu2O acts as an oxidant (its Cu^+ is reduced without any oxidised partner).',
-    note: 'The reactant species as a whole (Cu2S) is the reducing agent; referring to "sulphur of Cu2S" conflates the element with the chemical species.',
-  },
-  {
     where: 'Exercise 7.19(c), text line 2507',
     printed: 'Cl2O7 (g) + H2O2(aq) -> ClO2-(aq) + O2(g) + H+ (in basic medium)',
     correct: 'Cl2O7(g) + 4H2O2(aq) + 2OH-(aq) -> 2ClO2-(aq) + 4O2(g) + 5H2O(l)',
