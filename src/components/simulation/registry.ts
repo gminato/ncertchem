@@ -45,6 +45,7 @@ import { IsomerExplorer } from './sims/isomer-explorer'
 import { FunctionalGroupSorter } from './sims/functional-group-sorter'
 import { DistillationLab } from './sims/distillation-lab'
 import { ElementDetective } from './sims/element-detective'
+import { FunctionalGroupNamer } from './sims/functional-group-namer'
 import { ElementalAnalyser } from './sims/elemental-analyser'
 import { AlkaneNamer } from './sims/alkane-namer'
 import { FormulaTranslator } from './sims/formula-translator'
@@ -107,6 +108,7 @@ export const simulations: Record<string, ComponentType<SimulationProps>> = {
   'functional-group-sorter': FunctionalGroupSorter,
   'distillation-lab': DistillationLab,
   'element-detective': ElementDetective,
+  'functional-group-namer': FunctionalGroupNamer,
   'elemental-analyser': ElementalAnalyser,
   'alkane-namer': AlkaneNamer,
   'formula-translator': FormulaTranslator,

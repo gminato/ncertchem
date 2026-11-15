@@ -104,6 +104,7 @@ import { IsomerFamily } from './unit8/isomers/IsomerFamily'
 import { ClassificationTree } from './unit8/classification/ClassificationTree'
 import { PurificationMethods } from './unit8/purification/PurificationMethods'
 import { LassaigneBench } from './unit8/lassaigne/LassaigneBench'
+import { FunctionalNaming } from './unit8/fgnaming/FunctionalNaming'
 import { CombustionAnalysis } from './unit8/quantitative/CombustionAnalysis'
 import { AlkaneNaming } from './unit8/naming/AlkaneNaming'
 import { RepresentationsMorph } from './unit8/representations/RepresentationsMorph'
@@ -221,6 +222,7 @@ export const animations = {
   'classification-tree': ClassificationTree,
   'purification-methods': PurificationMethods,
   'lassaigne': LassaigneBench,
+  'functional-naming': FunctionalNaming,
   'combustion-analysis': CombustionAnalysis,
   'alkane-naming': AlkaneNaming,
   'structure-morph': RepresentationsMorph,
