@@ -40,6 +40,7 @@ import { PhExplorer } from './sims/ph-explorer'
 import { WeakAcidLab } from './sims/weak-acid-lab'
 import { TlcLab } from './sims/tlc-lab'
 import { IsomerExplorer } from './sims/isomer-explorer'
+import { FunctionalGroupSorter } from './sims/functional-group-sorter'
 import { DistillationLab } from './sims/distillation-lab'
 import { ElementDetective } from './sims/element-detective'
 import { ElementalAnalyser } from './sims/elemental-analyser'
@@ -98,6 +99,7 @@ export const simulations: Record<string, ComponentType<SimulationProps>> = {
   'weak-acid-lab': WeakAcidLab,
   'tlc-lab': TlcLab,
   'isomer-explorer': IsomerExplorer,
+  'functional-group-sorter': FunctionalGroupSorter,
   'distillation-lab': DistillationLab,
   'element-detective': ElementDetective,
   'elemental-analyser': ElementalAnalyser,
