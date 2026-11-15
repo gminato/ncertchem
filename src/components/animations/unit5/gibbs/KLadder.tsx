@@ -10,8 +10,8 @@ export interface KLadderProps {
 }
 
 const VIEW_WIDTH = 580
-const VIEW_HEIGHT = 300
-const AXIS_Y = 110
+const VIEW_HEIGHT = 400
+const AXIS_Y = 150
 const X0 = 50
 const SPAN = 480
 const N_MIN = -10
@@ -96,13 +96,13 @@ export function KLadder({ step, reducedMotion }: KLadderProps) {
       <circle cx={xFor(exponent)} cy={AXIS_Y} r={7} style={{ fill: 'var(--fg)', stroke: 'var(--surface)' }} strokeWidth={1.5} />
 
       {/* Readout for the current Step */}
-      <Label x={VIEW_WIDTH / 2} y={226} fontSize={17} fill="var(--fg)">
+      <Label x={VIEW_WIDTH / 2} y={290} fontSize={17} fill="var(--fg)">
         {current.title}
       </Label>
-      <Label x={VIEW_WIDTH / 2} y={248} fontSize={14} fill="var(--fg-muted)">
+      <Label x={VIEW_WIDTH / 2} y={316} fontSize={15} fill="var(--fg-muted)">
         {current.body}
       </Label>
-      <Label x={VIEW_WIDTH / 2} y={270} fontSize={14} fill="var(--fg)">
+      <Label x={VIEW_WIDTH / 2} y={342} fontSize={15} fill="var(--fg)">
         <tspan className="sym">ΔG°</tspan> = {signed(deltaG)} kJ mol⁻¹ at {K_LADDER_T} K
       </Label>
     </svg>

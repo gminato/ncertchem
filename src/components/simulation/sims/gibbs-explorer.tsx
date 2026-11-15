@@ -83,24 +83,44 @@ function diamondToGraphite(): { deltaGKJ: number; deltaHKJ: number } {
   return { deltaHKJ, deltaGKJ: gibbsEnergyChange(deltaHKJ, 298, deltaSJ) }
 }
 
-/** The log scale bar: from 10⁻¹⁰ to 10¹⁰ on the x axis, with the current K marked. */
+/**
+ * The live K as text: a plain number for 10⁻² ≤ K < 10³ (for example "K ≈ 49.5"), and a mantissa
+ * with a power of ten outside that range.
+ */
+function kText(log10K: number): string {
+  if (log10K >= -2 && log10K < 3) {
+    const k = Math.pow(10, log10K)
+    return `K ≈ ${k < 10 ? k.toPrecision(3) : k.toFixed(1)}`
+  }
+  const { mantissa, exponent } = kParts(log10K)
+  return `K ≈ ${mantissa} × 10${superscript(exponent)}`
+}
+
+/**
+ * The log scale bar, from 10⁻¹⁰ to 10¹⁰. The centre tick is a plain "1"; the live K is written
+ * above the marker, clamped so that it never leaves the drawing.
+ */
 function KBar({ log10K }: { log10K: number }) {
   const clamped = Math.max(-LOG_MAX, Math.min(LOG_MAX, log10K))
   const x = 20 + ((clamped + LOG_MAX) / (2 * LOG_MAX)) * 260
+  const labelX = Math.max(70, Math.min(230, x))
   return (
-    <svg viewBox="0 0 300 60" className={styles.kBar} role="img" aria-label={kVerdict(log10K)} data-testid="k-bar">
-      <line x1={20} y1={26} x2={280} y2={26} strokeWidth={1.5} style={{ stroke: 'var(--fg-subtle)' }} />
-      <line x1={150} y1={18} x2={150} y2={34} strokeWidth={1.5} style={{ stroke: 'var(--fg-muted)' }} />
-      <text x={20} y={50} textAnchor="middle" fontSize={13} fill="var(--fg-muted)" fontFamily="var(--font-sans)">
+    <svg viewBox="0 0 300 74" className={styles.kBar} role="img" aria-label={kVerdict(log10K)} data-testid="k-bar">
+      <text x={labelX} y={14} textAnchor="middle" fontSize={14} fill="var(--fg)" fontFamily="var(--font-sans)" data-testid="k-marker-label">
+        {kText(log10K)}
+      </text>
+      <line x1={20} y1={44} x2={280} y2={44} strokeWidth={1.5} style={{ stroke: 'var(--fg-subtle)' }} />
+      <line x1={150} y1={36} x2={150} y2={52} strokeWidth={1.5} style={{ stroke: 'var(--fg-muted)' }} />
+      <text x={20} y={68} textAnchor="middle" fontSize={13} fill="var(--fg-muted)" fontFamily="var(--font-sans)">
         10⁻¹⁰
       </text>
-      <text x={150} y={50} textAnchor="middle" fontSize={13} fill="var(--fg)" fontFamily="var(--font-sans)">
-        K = 1
+      <text x={150} y={68} textAnchor="middle" fontSize={13} fill="var(--fg-muted)" fontFamily="var(--font-sans)">
+        1
       </text>
-      <text x={280} y={50} textAnchor="middle" fontSize={13} fill="var(--fg-muted)" fontFamily="var(--font-sans)">
+      <text x={280} y={68} textAnchor="middle" fontSize={13} fill="var(--fg-muted)" fontFamily="var(--font-sans)">
         10¹⁰
       </text>
-      <circle cx={x} cy={26} r={7} style={{ fill: 'var(--accent)', stroke: 'var(--surface)' }} strokeWidth={1.5} />
+      <circle cx={x} cy={44} r={7} style={{ fill: 'var(--accent)', stroke: 'var(--surface)' }} strokeWidth={1.5} />
     </svg>
   )
 }
@@ -155,7 +175,7 @@ export function GibbsExplorer(_props: SimulationProps) {
             <Slider label="ΔH" value={dH} min={DH_RANGE.min} max={DH_RANGE.max} step={0.01} unit="kJ mol⁻¹" format={(v) => `${signedText(v, 2)} kJ mol⁻¹`} onChange={(v) => { setDH(v); setPresetId(null) }} />
             <Slider label="ΔS" value={dS} min={DS_RANGE.min} max={DS_RANGE.max} step={0.01} format={(v) => `${signedText(v, 2)} J K⁻¹ mol⁻¹`} onChange={(v) => { setDS(v); setPresetId(null) }} />
             <p className={styles.convert} data-testid="unit-conversion">
-              ΔS = {minus(dS.toFixed(2))} J K⁻¹ mol⁻¹ = {minus((dS / 1000).toFixed(4))} kJ K⁻¹ mol⁻¹
+              <span className="sym">ΔS</span> = {minus(dS.toFixed(2))} J K⁻¹ mol⁻¹ = {minus((dS / 1000).toFixed(4))} kJ K⁻¹ mol⁻¹
             </p>
             <Slider label="T" value={T} min={T_RANGE.min} max={T_RANGE.max} step={0.01} unit="K" format={(v) => `${v.toFixed(2)} K`} onChange={(v) => { setT(v); setPresetId(null) }} />
           </div>

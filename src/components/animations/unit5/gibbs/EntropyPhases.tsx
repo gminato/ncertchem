@@ -10,13 +10,13 @@ export interface EntropyPhasesProps {
 }
 
 const VIEW_WIDTH = 580
-const VIEW_HEIGHT = 300
-const BOX = { x: 140, y: 6, width: 300, height: 196 }
+const VIEW_HEIGHT = 440
+const BOX = { x: 50, y: 16, width: 480, height: 300 }
 const PHASE_NAMES = ['Solid', 'Liquid', 'Gas'] as const
-const PHASE_X = [190, 290, 390] as const
-const PHASE_Y = 230
-const LINE_1 = 264
-const LINE_2 = 286
+const PHASE_X = [170, 290, 410] as const
+const PHASE_Y = 346
+const LINE_1 = 390
+const LINE_2 = 418
 
 const PHASES = phaseSteps()
 
@@ -45,7 +45,7 @@ export function EntropyPhases({ step }: EntropyPhasesProps) {
           key={name}
           x={PHASE_X[i]}
           y={PHASE_Y}
-          fontSize={15}
+          fontSize={16}
           fill={i === index ? 'var(--fg)' : 'var(--fg-subtle)'}
           fontWeight={i === index ? 600 : 400}
         >
@@ -55,18 +55,18 @@ export function EntropyPhases({ step }: EntropyPhasesProps) {
 
       {active.transitionK === null ? (
         <>
-          <Label x={290} y={LINE_1} fontSize={14} fill="var(--fg)">
+          <Label x={290} y={LINE_1} fontSize={16} fill="var(--fg)">
             Solid: particles locked in a lattice, the lowest entropy
           </Label>
         </>
       ) : (
         <>
-          <Label x={290} y={LINE_1} fontSize={14} fill="var(--fg)">
+          <Label x={290} y={LINE_1} fontSize={16} fill="var(--fg)">
             {active.state === 1 ? 'Melting' : 'Boiling'} at {active.transitionK.toFixed(2)} K:{' '}
             <tspan className="sym">ΔS</tspan>
             <Label.Sub>{active.state === 1 ? 'fus' : 'vap'}</Label.Sub> = {signed(active.deltaSSys ?? 0)} J K⁻¹ mol⁻¹
           </Label>
-          <Label x={290} y={LINE_2} fontSize={14} fill="var(--fg-muted)">
+          <Label x={290} y={LINE_2} fontSize={16} fill="var(--fg-muted)">
             <tspan className="sym">ΔS</tspan>
             <Label.Sub>surr</Label.Sub> = {signed(active.deltaSSurr ?? 0)} and{' '}
             <tspan className="sym">ΔS</tspan>

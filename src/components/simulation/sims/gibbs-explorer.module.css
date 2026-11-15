@@ -61,6 +61,15 @@
   gap: var(--space-3);
 }
 
+/* The shared Slider takes a plain string label, so its symbol labels get the .sym style here. */
+.sliders label {
+  font-family: KaTeX_Math, var(--font-serif), serif;
+  font-style: italic;
+  font-weight: normal;
+  letter-spacing: 0;
+  font-size: 1rem;
+}
+
 .convert {
   margin: 0;
   font-size: 0.9rem;

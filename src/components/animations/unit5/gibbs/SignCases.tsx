@@ -11,13 +11,13 @@ export interface SignCasesProps {
 }
 
 const VIEW_WIDTH = 580
-const VIEW_HEIGHT = 330
+const VIEW_HEIGHT = 440
 const T_MIN = 200
 const T_MAX = 1200
-const SCALE = 1.15
+const SCALE = 1.4
 /** Plot is 300 × 226 units before scaling; centred horizontally in the viewBox. */
 const PLOT_X = (VIEW_WIDTH - 300 * SCALE) / 2
-const PLOT_Y = 40
+const PLOT_Y = 50
 
 const CASES = signCaseSteps()
 
@@ -56,10 +56,10 @@ export function SignCases({ step, reducedMotion }: SignCasesProps) {
         />
       </g>
 
-      <Label x={VIEW_WIDTH / 2} y={VIEW_HEIGHT - 26} fontSize={13} fill="var(--fg-muted)">
+      <Label x={VIEW_WIDTH / 2} y={VIEW_HEIGHT - 40} fontSize={14} fill="var(--fg-muted)">
         {current.note}
       </Label>
-      <Label x={VIEW_WIDTH / 2} y={VIEW_HEIGHT - 8} fontSize={14} fill="var(--fg)">
+      <Label x={VIEW_WIDTH / 2} y={VIEW_HEIGHT - 16} fontSize={16} fill="var(--fg)">
         Table 5.4: {current.table}
       </Label>
     </svg>
