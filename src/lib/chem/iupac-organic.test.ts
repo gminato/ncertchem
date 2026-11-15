@@ -207,3 +207,17 @@ describe('iupacName: locants on one-carbon parents and with a principal group', 
     expect(iupacName(parseSmiles(smiles))).toBe(name)
   })
 })
+
+describe('iupacName: retained names', () => {
+  it.each([
+    ['C1=COC=C1', 'furan'],
+    ['C1=CSC=C1', 'thiophene'],
+    ['N1=CC=CC=C1', 'pyridine'],
+    ['C1CCOC1', 'tetrahydrofuran'],
+    ['C1=CC=C2C=CC=CC2=C1', 'naphthalene'],
+    ['C1=CC=C(C=C1)C(=O)O', 'benzoic acid'],
+    ['CC(=O)C1=CC=CC=C1', '1-phenylethan-1-one'],
+  ])('%s is %s', (smiles, name) => {
+    expect(iupacName(parseSmiles(smiles))).toBe(name)
+  })
+})
