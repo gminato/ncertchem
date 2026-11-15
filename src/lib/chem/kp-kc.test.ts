@@ -119,6 +119,10 @@ describe('equation and expression text', () => {
 
   it('leaves solids and liquids out of the LaTeX expression', () => {
     expect(expressionLatex(parseEquation('CaCO3(s) <=> CaO(s) + CO2(g)'), 'K_{c}')).toBe('K_{c} = [\\ce{CO2}]')
+    expect(expressionLatex(parseEquation('CaCO3(s) <=> CaO(s) + CO2(g)'), 'K_{p}')).toBe('K_{p} = p_{\\ce{CO2}}')
+    expect(expressionLatex(parseEquation('N2(g) + 3H2(g) <=> 2NH3(g)'), 'K_{p}')).toBe(
+      'K_{p} = \\frac{(p_{\\ce{NH3}})^{2}}{p_{\\ce{N2}} (p_{\\ce{H2}})^{3}}',
+    )
     expect(expressionLatex(parseEquation('N2(g) + 3H2(g) <=> 2NH3(g)'), 'K_{c}')).toBe(
       'K_{c} = \\frac{[\\ce{NH3}]^{2}}{[\\ce{N2}] [\\ce{H2}]^{3}}'
     )

@@ -160,11 +160,17 @@ export function equationCe(reaction: Reaction): string {
  * a KaTeX display. `symbol` is the label, K_{c} or K_{p}.
  */
 export function expressionLatex(reaction: Reaction, symbol: 'K_{c}' | 'K_{p}'): string {
+  // Kc uses molar concentrations [X] of gases and solutes; Kp uses partial pressures p_X of gases only.
+  const isKp = symbol === 'K_{p}'
   const side = (terms: readonly ReactionTerm[]) => {
-    const kept = terms.filter((t) => t.phase === 'g' || t.phase === 'aq')
+    const kept = terms.filter((t) => (isKp ? t.phase === 'g' : t.phase === 'g' || t.phase === 'aq'))
     if (kept.length === 0) return '1'
     return kept
       .map((t) => {
+        if (isKp) {
+          const p = `p_{\\ce{${t.species}}}`
+          return t.coefficient === 1 ? p : `(${p})^{${t.coefficient}}`
+        }
         const bracket = `[\\ce{${t.species}}]`
         return t.coefficient === 1 ? bracket : `${bracket}^{${t.coefficient}}`
       })
