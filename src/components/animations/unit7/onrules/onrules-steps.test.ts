@@ -23,18 +23,18 @@ describe('onrules-steps', () => {
     expect(steps[0].formula).toBe('K2Cr2O7')
     expect(steps[0].targetElement).toBe('Cr')
     expect(steps[0].isSolved).toBe(false)
-    expect(steps[0].tags).toEqual([{ element: 'Cr', value: '?', tone: 'neutral' }])
+    expect(steps[0].tags).toEqual([{ element: 'Cr', value: '?', tone: 'accent' }])
 
     // Step 1: K assigned +1
     expect(steps[1].tags).toEqual([
-      { element: 'K', value: '+1', tone: 'neutral' },
+      { element: 'K', value: '+1', tone: 'accent' },
       { element: 'Cr', value: '?', tone: 'neutral' },
     ])
 
     // Step 2: O assigned -2
     expect(steps[2].tags).toEqual([
       { element: 'K', value: '+1', tone: 'neutral' },
-      { element: 'O', value: '−2', tone: 'neutral' },
+      { element: 'O', value: '−2', tone: 'accent' },
       { element: 'Cr', value: '?', tone: 'neutral' },
     ])
 
@@ -42,7 +42,7 @@ describe('onrules-steps', () => {
     expect(steps[3].isSolved).toBe(true)
     expect(steps[3].tags).toEqual([
       { element: 'K', value: '+1', tone: 'neutral' },
-      { element: 'Cr', value: '+6', tone: 'ox' },
+      { element: 'Cr', value: '+6', tone: 'accent' },
       { element: 'O', value: '−2', tone: 'neutral' },
     ])
   })
@@ -56,7 +56,7 @@ describe('onrules-steps', () => {
     expect(steps[4].isTrap).toBe(true)
     expect(steps[4].isSolved).toBe(false)
     expect(steps[4].tags).toEqual([
-      { element: 'Ba', value: '+2', tone: 'ox' },
+      { element: 'Ba', value: '+2', tone: 'accent' },
       { element: 'O', value: '?', tone: 'neutral' },
     ])
 
@@ -65,7 +65,7 @@ describe('onrules-steps', () => {
     expect(steps[5].isSolved).toBe(true)
     expect(steps[5].tags).toEqual([
       { element: 'Ba', value: '+2', tone: 'neutral' },
-      { element: 'O', value: '−1', tone: 'red' },
+      { element: 'O', value: '−1', tone: 'accent' },
     ])
     expect(steps[5].explanation).toContain('−1')
     expect(steps[5].explanation).toContain('peroxide')

@@ -14,9 +14,9 @@
 
 .surfaceCardSolved {
   fill: var(--surface-raised);
-  stroke: var(--ox);
+  stroke: var(--accent);
   stroke-width: 2;
-  filter: drop-shadow(0 0 10px rgba(16, 185, 129, 0.25));
+  filter: drop-shadow(0 0 10px rgba(37, 99, 235, 0.25));
 }
 
 .surfaceCardTrap {
@@ -70,7 +70,7 @@
   font-family: var(--font-sans);
   font-size: 14px;
   font-weight: 600;
-  fill: var(--ox);
+  fill: var(--accent);
 }
 
 .textWarning {
@@ -78,6 +78,10 @@
   font-size: 13px;
   font-weight: 600;
   fill: #f59e0b;
+}
+
+.tagGlowAccent {
+  filter: drop-shadow(0 0 8px rgba(37, 99, 235, 0.4));
 }
 
 .tagGlowOx {

@@ -145,7 +145,7 @@
 }
 
 .metaValueHighlight {
-  color: var(--ox);
+  color: var(--accent);
 }
 
 .metaValueStock {
@@ -250,7 +250,7 @@
 }
 
 .stepItemActive {
-  border-left-color: var(--ox);
+  border-left-color: var(--accent);
 }
 
 .stepElementRow {
@@ -269,7 +269,11 @@
   font-family: var(--font-mono, monospace);
   font-weight: 600;
   font-size: 0.875rem;
-  color: var(--ox);
+  color: var(--fg);
+}
+
+.stepValueActive {
+  color: var(--accent);
 }
 
 .stepRule {

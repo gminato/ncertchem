@@ -13,6 +13,21 @@ export interface RedoxOnRulesProps {
 const VIEW_WIDTH = 580
 const VIEW_HEIGHT = 430
 
+function renderSvgEquation(eq: string) {
+  const normalized = eq.replace(/\*/g, '×').replace(/-/g, '−')
+  const parts = normalized.split(/(x)/g)
+  return parts.map((part, i) => {
+    if (part === 'x') {
+      return (
+        <tspan key={i} className="sym">
+          x
+        </tspan>
+      )
+    }
+    return <React.Fragment key={i}>{part}</React.Fragment>
+  })
+}
+
 export function RedoxOnRules({ step }: RedoxOnRulesProps) {
   const stepIndex = Math.min(ON_RULE_STEPS.length - 1, Math.max(0, Math.round(step)))
   const current = ON_RULE_STEPS[stepIndex]
@@ -38,7 +53,7 @@ export function RedoxOnRules({ step }: RedoxOnRulesProps) {
       <defs>
         {/* Soft radial glow behind formula */}
         <radialGradient id="formula-glow" cx="50%" cy="50%" r="50%">
-          <stop offset="0%" stopColor={isSolved ? 'var(--ox)' : isTrap ? '#f59e0b' : 'var(--primary)'} stopOpacity={0.15} />
+          <stop offset="0%" stopColor={isSolved ? 'var(--accent)' : isTrap ? '#f59e0b' : 'var(--primary)'} stopOpacity={0.15} />
           <stop offset="100%" stopColor="transparent" stopOpacity={0} />
         </radialGradient>
       </defs>
@@ -101,7 +116,7 @@ export function RedoxOnRules({ step }: RedoxOnRulesProps) {
           charge={current.charge === 0 ? undefined : current.charge > 0 ? `+${current.charge}` : `−${Math.abs(current.charge)}`}
           tags={current.tags}
           fontSize={34}
-          className={isSolved ? styles.tagGlowOx : undefined}
+          className={isSolved ? styles.tagGlowAccent : undefined}
         />
       </g>
 
@@ -122,7 +137,7 @@ export function RedoxOnRules({ step }: RedoxOnRulesProps) {
           fontFamily="var(--font-sans)"
           fontSize={12}
           fontWeight={600}
-          fill={isTrap ? '#f59e0b' : isSolved ? 'var(--ox)' : 'var(--fg-muted)'}
+          fill={isTrap ? '#f59e0b' : isSolved ? 'var(--accent)' : 'var(--fg-muted)'}
         >
           {current.ruleCitation}
         </text>
@@ -157,7 +172,7 @@ export function RedoxOnRules({ step }: RedoxOnRulesProps) {
             className={styles.textEquation}
             dominantBaseline="middle"
           >
-            {current.equation}
+            {renderSvgEquation(current.equation)}
           </text>
         ) : (
           <text

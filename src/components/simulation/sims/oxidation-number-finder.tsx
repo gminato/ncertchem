@@ -44,6 +44,51 @@ function formatMinus(text: string): string {
   return text.replace(/-/g, '−')
 }
 
+function formatSubscripts(text: string): string {
+  const SUB_MAP: Record<string, string> = {
+    '0': '₀', '1': '₁', '2': '₂', '3': '₃', '4': '₄',
+    '5': '₅', '6': '₆', '7': '₇', '8': '₈', '9': '₉',
+  }
+  return text.replace(/\d/g, (d) => SUB_MAP[d] ?? d)
+}
+
+function renderIonMarkup(siteStr: string): React.ReactNode {
+  let formula = siteStr
+  let charge: string | null = null
+
+  const caretIdx = siteStr.indexOf('^')
+  if (caretIdx !== -1) {
+    formula = siteStr.slice(0, caretIdx)
+    charge = siteStr.slice(caretIdx + 1).replace(/-/g, '−')
+  }
+
+  const parts = formula.split(/(\d+)/g)
+
+  return (
+    <>
+      {parts.map((p, i) =>
+        /^\d+$/.test(p) ? <sub key={i}>{p}</sub> : <React.Fragment key={i}>{p}</React.Fragment>
+      )}
+      {charge && <sup>{charge}</sup>}
+    </>
+  )
+}
+
+function renderEquation(eq: string): React.ReactNode {
+  const normalized = eq.replace(/\*/g, '×').replace(/-/g, '−')
+  const parts = normalized.split(/(x)/g)
+  return parts.map((part, i) => {
+    if (part === 'x') {
+      return (
+        <span key={i} className="sym">
+          x
+        </span>
+      )
+    }
+    return <React.Fragment key={i}>{part}</React.Fragment>
+  })
+}
+
 function formatCharge(charge: number): string | undefined {
   if (charge === 0) return undefined
   if (charge === 1) return '+'
@@ -97,18 +142,19 @@ export function OxidationNumberFinder({ reducedMotion: _reducedMotion }: Simulat
 
       // Convert oxidation numbers to OxidationTag tags
       let tags: TagSpec[] = []
+      const targetEl = explanation?.targetElement
       if (cleanFormula === 'NH4NO3') {
         if (viewMode === 'by-site') {
           tags = [
-            { atomIndex: 0, value: '−3', tone: 'red' },
-            { atomIndex: 1, value: '+1', tone: 'ox' },
-            { atomIndex: 2, value: '+5', tone: 'ox' },
+            { atomIndex: 0, value: '−3', tone: 'neutral' },
+            { atomIndex: 1, value: '+1', tone: 'neutral' },
+            { atomIndex: 2, value: '+5', tone: 'neutral' },
             { atomIndex: 3, value: '−2', tone: 'neutral' },
           ]
         } else {
           tags = [
             { atomIndex: 0, value: '+1', tone: 'neutral' },
-            { atomIndex: 1, value: '+1', tone: 'ox' },
+            { atomIndex: 1, value: '+1', tone: 'neutral' },
             { atomIndex: 2, value: '+1', tone: 'neutral' },
             { atomIndex: 3, value: '−2', tone: 'neutral' },
           ]
@@ -116,8 +162,7 @@ export function OxidationNumberFinder({ reducedMotion: _reducedMotion }: Simulat
       } else {
         tags = Object.entries(oxMap).map(([elem, val]) => {
           const valStr = formatMinus(rationalToString(val))
-          const numVal = val.num / val.den
-          const tone = numVal > 0 ? ('ox' as const) : numVal < 0 ? ('red' as const) : ('neutral' as const)
+          const tone = elem === targetEl ? ('accent' as const) : ('neutral' as const)
           return {
             element: elem,
             value: valStr,
@@ -289,7 +334,7 @@ export function OxidationNumberFinder({ reducedMotion: _reducedMotion }: Simulat
               <div className={styles.metaBox} data-testid="stock-notation-box">
                 <span className={styles.metaTitle}>Stock Notation</span>
                 <span className={`${styles.metaValue} ${styles.metaValueStock}`}>
-                  {parsed.stock}
+                  {formatSubscripts(parsed.stock)}
                 </span>
               </div>
             )}
@@ -323,17 +368,15 @@ export function OxidationNumberFinder({ reducedMotion: _reducedMotion }: Simulat
                   return (
                     <div key={sIdx} className={styles.siteCard} data-testid={`site-card-${sIdx}`}>
                       <div className={styles.siteCardTitle}>
-                        {site.site} {site.count > 1 ? `(${site.count} units)` : ''}
+                        {renderIonMarkup(site.site)} {site.count > 1 ? `(${site.count} units)` : ''}
                       </div>
                       <div className={styles.siteBadges}>
                         {siteOxEntries.map(([elem, rVal]) => {
                           const valStr = formatMinus(rationalToString(rVal))
-                          const numVal = rVal.num / rVal.den
-                          const toneColor = numVal > 0 ? 'var(--ox)' : numVal < 0 ? 'var(--red)' : 'var(--fg)'
                           return (
                             <div key={elem} className={styles.siteBadge}>
                               <strong>{elem}:</strong>
-                              <span style={{ color: toneColor, fontWeight: 600 }}>{valStr}</span>
+                              <span style={{ color: 'var(--fg)', fontWeight: 600 }}>{valStr}</span>
                             </div>
                           )
                         })}
@@ -358,20 +401,18 @@ export function OxidationNumberFinder({ reducedMotion: _reducedMotion }: Simulat
                     <span className={styles.stepElement}>
                       {stepIdx + 1}. Element {st.element}
                     </span>
-                    <span className={styles.stepValue}>
+                    <span
+                      className={`${styles.stepValue} ${st.element === parsed.explanation?.targetElement ? styles.stepValueActive : ''}`}
+                    >
                       {formatMinus(rationalToString(st.assignedValue))}
                     </span>
                   </div>
                   <span className={styles.stepRule}>
-                    {st.element === 'O' && st.assignedValue.den === 2
-                      ? 'Oxygen is −1/2 in superoxides (Rule 3 exception)'
-                      : st.element === 'O' && st.assignedValue.num > 0
-                        ? 'Oxygen has positive oxidation number in fluorine compounds (Rule 3 exception)'
-                        : st.ruleApplied}
+                    {st.ruleApplied}
                   </span>
                   {st.equation && (
                     <div className={styles.stepEquation}>
-                      Equation: {st.equation}
+                      Equation: {renderEquation(st.equation)}
                     </div>
                   )}
                 </div>
