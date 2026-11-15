@@ -11,16 +11,18 @@ export interface OzoneResonanceProps {
   reducedMotion: boolean
 }
 
-// SVG viewBox 580 × 300.
+// SVG viewBox 580 × 490. The single form and the hybrid share one line; the two forms of the
+// resonance pair stack above and below it so that each form can be drawn large.
 const VIEW = { width: 580, height: 490 }
-/** Enlarges the drawing about its centre, which sits at the middle of the tall panel. */
-const S = 1.25
-const FIT = `translate(${290 - 290 * S}, ${245 - 154 * S}) scale(${S})`
 const CX = 290
-const CY = 108
-/** How far apart the two forms sit once they are shown side by side, and their scale then. */
-const SPREAD = 140
-const SIDE_SCALE_LOSS = 0.28
+const MID_Y = 215
+const TOP_Y = 135
+const BOT_Y = 385
+const SINGLE_SCALE = 1.6
+const PAIR_SCALE = 1.4
+const ARROW_Y = 260
+/** Bond-length labels sit this far either side of the centre, beneath the hybrid's two bonds. */
+const HYBRID_LABEL_X = 88
 
 /** Canonical form I: a double bond on the left (O=O⁺–O⁻), with the charges written on the atoms. */
 const FORM_I: { atoms: LewisAtom[]; bonds: LewisBondSpec[] } = {
@@ -118,20 +120,21 @@ export function OzoneResonance({ step, reducedMotion }: OzoneResonanceProps) {
   const target = resonanceTarget(step)
   const live = useTweenedValues({ ...target }, reducedMotion)
 
-  const xI = CX - SPREAD * live.arrow
-  const xII = CX + SPREAD * live.arrow
-  const scale = 1 - SIDE_SCALE_LOSS * live.arrow
+  const yI = MID_Y + (TOP_Y - MID_Y) * live.arrow
+  const yII = MID_Y + (BOT_Y - MID_Y) * live.arrow
+  const scale = SINGLE_SCALE + (PAIR_SCALE - SINGLE_SCALE) * live.arrow
   // The bond labels belong to the single-form view only; they would be too small beside the other form.
   const labelsOn = live.formI * (1 - live.arrow)
   const labelsOnII = live.formII * (1 - live.arrow)
 
   // Number line for the bond lengths, from 148 pm (single) on the left to 121 pm (double) on the right.
-  const LINE = { left: 110, right: 470, y: 236 }
+  const LINE = { left: 110, right: 490, y: 385 }
   const xFor = (pm: number) => LINE.left + ((OZONE_LENGTHS.single - pm) / (OZONE_LENGTHS.single - OZONE_LENGTHS.double)) * (LINE.right - LINE.left)
+  // Labels alternate above and below the line so that the 128 pm and 121 pm labels do not collide.
   const markers = [
-    { pm: OZONE_LENGTHS.single, above: 'order 1', below: `single ${OZONE_LENGTHS.single} pm` },
-    { pm: OZONE_LENGTHS.measured, above: 'average 1.5', below: `ozone ${OZONE_LENGTHS.measured} pm` },
-    { pm: OZONE_LENGTHS.double, above: 'order 2', below: `double ${OZONE_LENGTHS.double} pm` },
+    { pm: OZONE_LENGTHS.single, side: 'above' as const, text: `single ${OZONE_LENGTHS.single} pm · order 1` },
+    { pm: OZONE_LENGTHS.measured, side: 'below' as const, text: `ozone ${OZONE_LENGTHS.measured} pm · average 1.5` },
+    { pm: OZONE_LENGTHS.double, side: 'above' as const, text: `double ${OZONE_LENGTHS.double} pm · order 2` },
   ]
 
   return (
@@ -146,51 +149,55 @@ export function OzoneResonance({ step, reducedMotion }: OzoneResonanceProps) {
       style={{ width: '100%', height: 'auto', display: 'block' }}
     >
       <VocabDefs />
-      <g transform={FIT}>
 
-      <Label x={CX} y={22} fontSize={18} fill="var(--fg)">
+      <Label x={CX} y={28} fontSize={18} fill="var(--fg)">
         Ozone, O<tspan dy="0.3em" fontSize="0.75em">3</tspan>
       </Label>
 
-      <g data-layer="form-I" data-visible={live.formI > 0.5 ? 'true' : 'false'} opacity={live.formI} transform={`translate(${xI}, ${CY}) scale(${scale})`}>
+      <g data-layer="form-I" data-visible={live.formI > 0.5 ? 'true' : 'false'} opacity={live.formI} transform={`translate(${CX}, ${yI}) scale(${scale})`}>
         <LewisDiagram atoms={FORM_I.atoms} bonds={FORM_I.bonds} fontSize={22} dotRadius={2.6} pairHalfGap={2.9} lonePairRadius={11} />
         <g opacity={labelsOn}>
-          <Label x={-55} y={-62} fontSize={15} fill="var(--fg-muted)">
+          <Label x={-55} y={-62} fontSize={15 / scale} fill="var(--fg-muted)">
             O=O {OZONE_LENGTHS.double} pm
           </Label>
-          <Label x={55} y={-62} fontSize={15} fill="var(--fg-muted)">
+          <Label x={55} y={-62} fontSize={15 / scale} fill="var(--fg-muted)">
             O–O {OZONE_LENGTHS.single} pm
           </Label>
         </g>
       </g>
 
-      <g data-layer="form-II" data-visible={live.formII > 0.5 ? 'true' : 'false'} opacity={live.formII} transform={`translate(${xII}, ${CY}) scale(${scale})`}>
+      <g data-layer="form-II" data-visible={live.formII > 0.5 ? 'true' : 'false'} opacity={live.formII} transform={`translate(${CX}, ${yII}) scale(${scale})`}>
         <LewisDiagram atoms={FORM_II.atoms} bonds={FORM_II.bonds} fontSize={22} dotRadius={2.6} pairHalfGap={2.9} lonePairRadius={11} />
         <g opacity={labelsOnII}>
-          <Label x={-55} y={-62} fontSize={15} fill="var(--fg-muted)">
+          <Label x={-55} y={-62} fontSize={15 / scale} fill="var(--fg-muted)">
             O–O {OZONE_LENGTHS.single} pm
           </Label>
-          <Label x={55} y={-62} fontSize={15} fill="var(--fg-muted)">
+          <Label x={55} y={-62} fontSize={15 / scale} fill="var(--fg-muted)">
             O=O {OZONE_LENGTHS.double} pm
           </Label>
         </g>
       </g>
 
       <g data-layer="resonance-arrow" opacity={live.arrow}>
-        <line x1={CX - 36} y1={CY} x2={CX + 36} y2={CY} stroke="var(--fg-muted)" strokeWidth={2} />
-        <path d={`M${CX - 36},${CY} l10,-6 l0,12 Z`} fill="var(--fg-muted)" />
-        <path d={`M${CX + 36},${CY} l-10,-6 l0,12 Z`} fill="var(--fg-muted)" />
+        <line x1={CX} y1={ARROW_Y - 20} x2={CX} y2={ARROW_Y + 20} stroke="var(--fg-muted)" strokeWidth={2} />
+        <path d={`M${CX},${ARROW_Y - 22} l-6,11 l12,0 Z`} fill="var(--fg-muted)" />
+        <path d={`M${CX},${ARROW_Y + 22} l-6,-11 l12,0 Z`} fill="var(--fg-muted)" />
+        <Label x={CX + 74} y={ARROW_Y} fontSize={14} fill="var(--fg-muted)">
+          resonance
+        </Label>
       </g>
 
-      <g data-layer="hybrid" data-visible={live.hybrid > 0.5 ? 'true' : 'false'} opacity={live.hybrid} transform={`translate(${CX}, ${CY})`}>
-        <Hybrid />
-        <Label x={-55} y={62} fontSize={15} fill="var(--fg-muted)">
+      <g data-layer="hybrid" data-visible={live.hybrid > 0.5 ? 'true' : 'false'} opacity={live.hybrid}>
+        <g transform={`translate(${CX}, ${MID_Y}) scale(${SINGLE_SCALE})`}>
+          <Hybrid />
+        </g>
+        <Label x={CX - HYBRID_LABEL_X} y={MID_Y + 10} fontSize={16} fill="var(--fg-muted)">
           {OZONE_LENGTHS.measured} pm
         </Label>
-        <Label x={55} y={62} fontSize={15} fill="var(--fg-muted)">
+        <Label x={CX + HYBRID_LABEL_X} y={MID_Y + 10} fontSize={16} fill="var(--fg-muted)">
           {OZONE_LENGTHS.measured} pm
         </Label>
-        <Label x={0} y={98} fontSize={16} fill="var(--fg)">
+        <Label x={CX} y={MID_Y + 84} fontSize={18} fill="var(--fg)">
           Resonance hybrid
         </Label>
       </g>
@@ -200,18 +207,17 @@ export function OzoneResonance({ step, reducedMotion }: OzoneResonanceProps) {
         {markers.map((m) => (
           <g key={m.pm}>
             <circle cx={xFor(m.pm)} cy={LINE.y} r={5} fill={m.pm === OZONE_LENGTHS.measured ? 'var(--accent)' : 'var(--fg-muted)'} />
-            <Label x={xFor(m.pm)} y={LINE.y - 20} fontSize={15} fill="var(--fg)">
-              {m.above}
-            </Label>
-            <Label x={xFor(m.pm)} y={LINE.y + 22} fontSize={15} fill="var(--fg-muted)">
-              {m.below}
+            <Label x={xFor(m.pm)} y={m.side === 'above' ? LINE.y - 20 : LINE.y + 22} fontSize={15} fill={m.side === 'above' ? 'var(--fg)' : 'var(--fg-muted)'}>
+              {m.text}
             </Label>
           </g>
         ))}
-        <Label x={CX} y={282} fontSize={14} fill="var(--fg-subtle)">
-          Shorter bonds lie further right. The average bond order is (2 + 1) / 2 = 1.5.
+        <Label x={CX} y={432} fontSize={14} fill="var(--fg-subtle)">
+          Shorter bonds lie further right.
         </Label>
-      </g>
+        <Label x={CX} y={452} fontSize={14} fill="var(--fg-subtle)">
+          The average bond order is (2 + 1) / 2 = 1.5.
+        </Label>
       </g>
     </svg>
   )

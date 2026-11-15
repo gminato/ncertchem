@@ -102,9 +102,9 @@ export function makeProjector(basis: Basis): (v: Vec3) => Point {
 /** Screen pixels per unit of model dipole (one unit is one unit of Δχ, or of the lone-pair term). */
 export const ARROW_PX_PER_UNIT = 50
 /** Distance from the centre to each ligand nucleus, in unfitted screen units. */
-export const BOND_PX = 130
+export const BOND_PX = 150
 /** Distance from the centre to the edge of the central atom, in unfitted screen units. */
-export const ATOM_CLEAR = 16
+export const ATOM_CLEAR = 26
 
 export interface Point {
   x: number
@@ -125,6 +125,8 @@ export interface BondArrow {
   nucleus: Point | null
   /** Unit-length screen direction of the bond or lone pair from the centre. */
   direction: Point
+  /** True when the arrow's δ⁻ head lies farther from the centre than its tail. */
+  headOutward: boolean
 }
 
 export interface LabScene {
@@ -135,6 +137,8 @@ export interface LabScene {
   arrows: BondArrow[]
   /** Lone-pair lobes, drawn even when the lone-pair dipole is switched off. */
   lobes: Point[]
+  /** Sum of the bond dipoles alone, from the centre, in screen units (the bond resultant). */
+  bondResultant: Point
   /** Net dipole from the chain: the end of the last arrow. Equal to the origin when the net is zero. */
   net: Point
   /** True when the model's net dipole is zero within rounding. */
@@ -188,6 +192,7 @@ export function sceneFor(molecule: LabMolecule, lonePairOn: boolean): LabScene {
       chainEnd,
       nucleus,
       direction: { x: q.x / len, y: q.y / len },
+      headOutward: !startAtOuter,
     })
   }
 
@@ -212,7 +217,14 @@ export function sceneFor(molecule: LabMolecule, lonePairOn: boolean): LabScene {
   })
 
   const netEnd = { x: chainX, y: chainY }
+  const bondResultant = arrows
+    .filter((a) => a.kind === 'bond')
+    .reduce(
+      (acc, a) => ({ x: acc.x + a.chainEnd.x - a.chainStart.x, y: acc.y + a.chainEnd.y - a.chainStart.y }),
+      { x: 0, y: 0 }
+    )
   return {
+    bondResultant,
     project,
     molecule,
     lonePairOn,
