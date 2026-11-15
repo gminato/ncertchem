@@ -56,16 +56,34 @@
 }
 
 .layout {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr);
+  display: flex;
+  flex-direction: column;
   gap: var(--space-4);
-  align-items: start;
+  min-width: 0;
 }
 
-@media (min-width: 900px) {
-  .layout {
-    grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
-  }
+/* Method controls stack from the left edge, so the card holds only what it needs. */
+.methodCard {
+  align-items: flex-start;
+}
+
+.methodCard > .cardTitle {
+  align-self: flex-start;
+}
+
+.methodCard > * {
+  max-width: 100%;
+}
+
+.sampleReadout {
+  margin: 0;
+  font-size: 0.95rem;
+}
+
+.sim sub {
+  font-size: 0.72em;
+  line-height: 0;
+  vertical-align: -0.3em;
 }
 
 .card {
@@ -98,7 +116,7 @@
 
 .apparatus {
   width: 100%;
-  max-width: 22rem;
+  max-width: 32rem;
   height: auto;
   display: block;
 }

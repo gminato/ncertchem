@@ -113,11 +113,21 @@ export function sampleFromSmiles(id: string, smiles: string): ElementalSample {
   return { id, name, formula: molecularFormula(graph), smiles }
 }
 
+/** Names for the presets the lib cannot name itself (the formula-only presets and pyridine). */
+const PRESET_NAMES: Readonly<Record<string, string>> = {
+  pyridine: 'pyridine',
+  'dimethyl-sulphoxide': 'dimethyl sulphoxide',
+  'triethyl-phosphate': 'triethyl phosphate',
+}
+
 /** The presets, in the order the simulation lists them. */
 export function elementalSamples(): ElementalSample[] {
   return [
-    ...PRESET_SMILES.map((p) => sampleFromSmiles(p.id, p.smiles)),
-    ...PRESET_FORMULAS.map((p) => ({ id: p.id, formula: p.formula })),
+    ...PRESET_SMILES.map((p) => {
+      const s = sampleFromSmiles(p.id, p.smiles)
+      return PRESET_NAMES[p.id] ? { ...s, name: PRESET_NAMES[p.id] } : s
+    }),
+    ...PRESET_FORMULAS.map((p) => ({ id: p.id, name: PRESET_NAMES[p.id], formula: p.formula })),
   ]
 }
 

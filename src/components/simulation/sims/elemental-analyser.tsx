@@ -65,6 +65,15 @@ interface RunData {
 /** The lab measures a value as v × (1 + u × ERROR_FRACTION), with u in [−1, 1], when the error is on. */
 const measurer = (u: number) => (v: number) => v * (1 + u * ERROR_FRACTION)
 
+/** A molecular or empirical formula with real subscripts: the digits are written as <sub>. */
+function Formula({ f }: { f: string }) {
+  return (
+    <>
+      {f.split(/(\d+)/).map((part, i) => (/^\d+$/.test(part) ? <sub key={i}>{part}</sub> : <Fragment key={i}>{part}</Fragment>))}
+    </>
+  )
+}
+
 /** Tab label for each analysis. Symbols are KaTeX-italic in the UI, percentages upright. */
 function pctText(symbol: string): string {
   return `% ${symbol}`
@@ -316,12 +325,21 @@ export function ElementalAnalyser({ reducedMotion }: SimulationProps) {
         </tbody>
       </table>
       <p className={styles.line}>
-        Empirical formula: <strong data-testid="empirical-label">{emp.label}</strong>. The empirical formula mass is {emp.empiricalMass.toFixed(2)} g mol⁻¹. With <Sym>M</Sym> = {comp.molarMass.toFixed(2)} g mol⁻¹, <Sym>n</Sym> = <Sym>M</Sym> ÷ {emp.empiricalMass.toFixed(2)} = {emp.n}, so the molecular formula is {emp.molecular}.
+        Empirical formula: <strong data-testid="empirical-label">
+          <Formula f={emp.label} />
+        </strong>
+        . The empirical formula mass is {emp.empiricalMass.toFixed(2)} g mol⁻¹. With <Sym>M</Sym> = {comp.molarMass.toFixed(2)} g mol⁻¹, <Sym>n</Sym> = <Sym>M</Sym> ÷ {emp.empiricalMass.toFixed(2)} = {emp.n}, so the molecular formula is <Formula f={emp.molecular} />.
       </p>
       <p className={styles.note} data-testid="empirical-check">
-        {emp.matches
-          ? `Your numbers give the same empirical formula as the true composition (${emp.truthLabel}).`
-          : `Your numbers give ${emp.label}, not ${emp.truthLabel}. A percentage a little out gives a different whole-number ratio. Recheck the readings.`}
+        {emp.matches ? (
+          <>
+            Your numbers give the same empirical formula as the true composition (<Formula f={emp.truthLabel} />).
+          </>
+        ) : (
+          <>
+            Your numbers give <Formula f={emp.label} />, not <Formula f={emp.truthLabel} />. A percentage a little out gives a different whole-number ratio. Recheck the readings.
+          </>
+        )}
       </p>
     </div>
   ) : allEntered ? (
@@ -495,12 +513,12 @@ export function ElementalAnalyser({ reducedMotion }: SimulationProps) {
         <div className={styles.presets} role="group" aria-label="Sample">
           {samples.map((s) => (
             <Button key={s.id} variant={sampleId === s.id ? 'primary' : 'secondary'} aria-pressed={sampleId === s.id} onClick={() => chooseSample(s.id)}>
-              {s.name ?? s.formula}
+              {s.name ?? <Formula f={s.formula} />}
             </Button>
           ))}
           {customSample && (
             <Button variant={sampleId === 'custom' ? 'primary' : 'secondary'} aria-pressed={sampleId === 'custom'} onClick={() => chooseSample('custom')}>
-              {customSample.name ?? customSample.formula}
+              {customSample.name ?? <Formula f={customSample.formula} />}
             </Button>
           )}
           <Button variant="secondary" onClick={randomise}>
@@ -534,8 +552,14 @@ export function ElementalAnalyser({ reducedMotion }: SimulationProps) {
         </div>
       </div>
 
+      <p className={styles.sampleReadout} data-testid="sample-readout">
+        <strong>{sample.name ?? 'Sample'}</strong>
+        {sample.name ? ', ' : ''}
+        <Formula f={sample.formula} />, <Sym>M</Sym> = {comp.molarMass.toFixed(2)} g mol⁻¹
+      </p>
+
       <div className={styles.layout}>
-        <div className={styles.card}>
+        <div className={`${styles.card} ${styles.methodCard}`}>
           <h4 className={styles.cardTitle}>Method</h4>
           <Slider label="Sample mass" value={mass} min={MASS_RANGE.min} max={MASS_RANGE.max} step={0.001} unit="g" format={(v) => `${v.toFixed(3)} g`} onChange={setMass} />
           {hasN && (

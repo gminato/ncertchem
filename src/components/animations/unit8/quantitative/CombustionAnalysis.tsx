@@ -2,7 +2,9 @@
 
 import { Fragment } from 'react'
 import { useSweptNumber } from '@/components/animations/unit5/gibbs/useTweenedNumber'
-import { CariusTube, CombustionTrain, DumasApparatus, KjeldahlSetup } from '@/components/organic/lab'
+import { CombustionTrain, DumasApparatus } from '@/components/organic/lab'
+import { CariusDrawing } from './CariusDrawing'
+import { KjeldahlDrawing } from './KjeldahlDrawing'
 import { analysisReadouts, analysisStepTargets, EXAMPLE_READINGS } from './quantitative-steps'
 
 export interface CombustionAnalysisProps {
@@ -16,14 +18,15 @@ const TITLE_Y = 26
 
 /**
  * Where each Step's apparatus sits: its scale, its top edge, the first readout line and the x of
- * the readouts. The lab apparatus are 360 units wide natively, so a scale of 1.15 to 1.2 fills most
- * of the panel. The Carius tube is tall and narrow, so its readouts sit in a column beside it.
+ * the readouts. Each drawing is about 300 to 360 units wide natively, so a scale of 1.15 to 1.3
+ * fills most of the panel. The Carius tube is tall and narrow, so its readouts sit in a column
+ * beside it.
  */
 const LAYOUT = [
   { scale: 1.2, top: 36, firstLine: 352, drawX: null, textX: 290, anchor: 'middle' },
   { scale: 1.15, top: 34, firstLine: 396, drawX: null, textX: 290, anchor: 'middle' },
   { scale: 1.15, top: 34, firstLine: 404, drawX: null, textX: 290, anchor: 'middle' },
-  { scale: 1.3, top: 40, firstLine: 200, drawX: 40, textX: 300, anchor: 'start' },
+  { scale: 1.25, top: 36, firstLine: 200, drawX: 30, textX: 320, anchor: 'start' },
 ] as const
 
 /** Symbols in readouts are KaTeX-italic (class "sym"); numbers and units stay upright. */
@@ -79,28 +82,21 @@ export function CombustionAnalysis({ step, reducedMotion }: CombustionAnalysisPr
       />
     )
   } else if (index === 2) {
-    drawing = (
-      <KjeldahlSetup
-        stage="titrate"
-        titrantMl={target.titrantMl * v}
-        endPoint={v > 0.98}
-        title="Kjeldahl back-titration of the excess acid"
-      />
-    )
+    drawing = <KjeldahlDrawing titrantMl={target.titrantMl * v} endPoint={v > 0.98} title="Kjeldahl back-titration of the excess acid" />
   } else {
     drawing = (
-      <CariusTube
-        stage="settle"
+      <CariusDrawing
         progress={target.progress * v}
         precipitateColor="var(--agcl-white)"
-        precipitateLabel="AgCl"
-        title="Carius tube: silver chloride settling out"
+        caption="The silver salt settles out"
+        title="Carius tube in a furnace: silver chloride settling out"
       />
     )
   }
 
   const layout = LAYOUT[index]
-  const xOffset = layout.drawX ?? (VIEW_WIDTH - 360 * layout.scale) / 2
+  const drawWidth = index === 3 ? 300 : 360
+  const xOffset = layout.drawX ?? (VIEW_WIDTH - drawWidth * layout.scale) / 2
 
   return (
     <svg
