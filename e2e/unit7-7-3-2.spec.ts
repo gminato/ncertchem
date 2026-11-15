@@ -24,14 +24,14 @@ async function gotoStep(page: Page, animation: string, index: number) {
       window.scrollBy(0, top - 0.4 * window.innerHeight)
     })
   await expect(
-    page.locator(`[data-animation="${animation}"] [data-scrolly-step]`).nth(index)
+    page.locator(`[data-animation="${animation}"] [data-scrolly-step]`).nth(index),
   ).toHaveAttribute('data-active', 'true')
 }
 
 /** Screenshots the panel element of one Scrolly Step. */
 async function shotStep(page: Page, animation: string, index: number, name: string, scheme: string) {
   await gotoStep(page, animation, index)
-  await page.waitForTimeout(600)
+  await page.waitForTimeout(900)
   await page
     .locator(`[data-animation="${animation}"] [data-testid="scrolly-visual"]`)
     .screenshot({ path: path.join(SCREEN_DIR, `u7-${name}-step${index}-${scheme}.png`) })
@@ -75,31 +75,55 @@ for (const scheme of ['light', 'dark'] as const) {
       const sim = page.locator('[data-simulation="redox-balancer"]')
       await sim.scrollIntoViewIfNeeded()
       await expect(sim.getByTestId('sim-step-title')).toBeVisible()
-      await page.waitForTimeout(400)
+      await page.waitForTimeout(500)
 
-      // State 1: Default state (Half-reaction method, Permanganate + Oxalate, Step 1)
+      // State 1: Default state (half-reaction method, permanganate + oxalate, step 1)
       await sim.screenshot({ path: path.join(SCREEN_DIR, `u7-7-3-2-sim-default-${scheme}.png`) })
 
-      // State 2: Advance to Step 5 (Charges balanced with electrons)
+      // State 2: Step 5 (electrons added to both halves)
       await sim.getByTestId('step-dot-4').click()
       await expect(sim.getByTestId('sim-step-title')).toContainText('Step 5 of 7')
-      await page.waitForTimeout(400)
+      await page.waitForTimeout(900)
       await sim.screenshot({ path: path.join(SCREEN_DIR, `u7-7-3-2-sim-step5-${scheme}.png`) })
 
-      // State 3: Switch to Try It mode on a basic medium preset
+      // State 3: Oxidation-number method on the same skeleton, step 3
+      await sim.getByRole('radio', { name: 'Oxidation number' }).click()
+      await sim.getByTestId('step-dot-2').click()
+      await expect(sim.getByTestId('sim-step-title')).toContainText('Step 3 of 5')
+      await page.waitForTimeout(900)
+      await sim.screenshot({ path: path.join(SCREEN_DIR, `u7-7-3-2-sim-on-step3-${scheme}.png`) })
+
+      // State 4: Try It on a basic medium preset, answering at step 4 (electrons)
+      await sim.getByRole('radio', { name: 'Half-reaction' }).click()
       await sim.getByTestId('preset-select').selectOption('chromium-hypochlorite')
-      await sim.getByRole('radio', { name: 'Try It Yourself' }).click()
-      await sim.getByTestId('step-dot-4').click()
+      await sim.getByRole('radio', { name: 'Try it' }).click()
+      for (let i = 0; i < 3; i++) {
+        await sim.getByTestId('next-step-btn').click()
+      }
+      await expect(sim.getByTestId('sim-step-title')).toContainText('Step 4 of 7')
       await expect(sim.getByTestId('challenge-card')).toBeVisible()
-      await page.waitForTimeout(400)
+      await page.waitForTimeout(500)
       await sim.screenshot({ path: path.join(SCREEN_DIR, `u7-7-3-2-sim-tryit-${scheme}.png`) })
 
-      // Test Try-It interaction
-      await sim.getByTestId('check-answer-btn').click()
-      await sim.getByTestId('reveal-answer-btn').click()
-      await expect(sim.getByTestId('feedback-success')).toBeVisible()
+      // A wrong answer gives specific feedback; a second wrong answer reveals the answer
+      await sim.getByTestId('try-input-ox').fill('1')
+      await sim.getByTestId('try-input-red').fill('1')
+      await sim.getByTestId('try-input-ox').press('Enter')
+      await expect(sim.getByTestId('feedback-wrong')).toBeVisible()
+      await sim.getByTestId('try-input-ox').fill('2')
+      await sim.getByTestId('try-input-ox').press('Enter')
+      await expect(sim.getByTestId('feedback-revealed')).toBeVisible()
+      await sim.getByTestId('continue-btn').click()
+      await expect(sim.getByTestId('sim-step-title')).toContainText('Step 5 of 7')
+      await page.waitForTimeout(900)
+      await sim.screenshot({ path: path.join(SCREEN_DIR, `u7-7-3-2-sim-after-try-${scheme}.png`) })
 
-      // Assert zero console errors
+      // The equation display never shows raw text
+      // Only the visible KaTeX output counts (the hidden MathML annotation holds the source).
+      const visible = await sim.getByTestId('sim-equation').locator('.katex-html').allInnerTexts()
+      expect(visible.length).toBeGreaterThan(0)
+      for (const text of visible) expect(text).not.toMatch(/->|\^|\|/)
+
       expect(errors).toEqual([])
     })
   })

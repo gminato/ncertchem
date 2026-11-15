@@ -1,8 +1,15 @@
 'use client'
 
-import React from 'react'
-import { HalfEquationCard } from '@/components/redox/HalfEquationCard'
-import { getHalfStep, HALF_STEP_COUNT } from './balance-half-steps'
+import { isBalanced } from '@/lib/chem/redox-balance'
+import {
+  getHalfStep,
+  HALF_BASIC_ROUTE,
+  HALF_SKELETON,
+  HALF_STEP_COUNT,
+  type HalfReactionStepData,
+} from './balance-half-steps'
+import { EquationView, HalfCard, TallyStrip, type TallyChip } from './BalanceEquation'
+import { rolesFromSkeleton } from './balance-equation'
 import styles from './balance-half.module.css'
 
 export interface RedoxBalanceHalfProps {
@@ -10,121 +17,171 @@ export interface RedoxBalanceHalfProps {
   reducedMotion: boolean
 }
 
-/** Formats chemical equation strings into readable JSX with proper super/subscripts. */
-export function renderFormattedFormula(eq: string): React.ReactNode {
-  // Replace minus signs and arrow
-  const arrowParts = eq.split('->')
-  if (arrowParts.length !== 2) {
-    return <span className={styles.equationText}>{eq}</span>
-  }
+const STEP_TITLES = [
+  'Skeletal ionic equation',
+  'Separate into half-reactions',
+  'Balance key atoms',
+  'Balance O and H in basic medium',
+  'Add electrons to balance charge',
+  'Equalise electrons and add',
+  'Verify the balance',
+] as const
 
-  const formatSide = (sideStr: string) => {
-    const terms = sideStr.trim().split(' + ')
-    return terms.map((term, i) => {
-      // Parse coefficient, formula, charge
-      // e.g. "2Cr(OH)3", "3ClO-", "4OH-(aq)", "2CrO4^2-", "5H2O(l)", "6e-"
-      const cleanTerm = term
-        .replace(/\^2-/g, '²⁻')
-        .replace(/\^3\+/g, '³⁺')
-        .replace(/\^2\+/g, '²⁺')
-        .replace(/2-/g, '²⁻')
-        .replace(/-/g, '⁻')
-        .replace(/\+/g, '⁺')
-        .replace(/3\+/g, '³⁺')
-        .replace(/2\+/g, '²⁺')
-        .replace(/3\(/g, '₃(')
-        .replace(/4\(/g, '₄(')
-        .replace(/Cr\(OH\)3/g, 'Cr(OH)₃')
-        .replace(/CrO4/g, 'CrO₄')
-        .replace(/H2O/g, 'H₂O')
-        .replace(/\(l\)/g, '(l)')
-        .replace(/\(aq\)/g, '(aq)')
+const ROLES = rolesFromSkeleton(HALF_SKELETON)
 
-      return (
-        <React.Fragment key={i}>
-          {i > 0 && ' + '}
-          <span>{cleanTerm}</span>
-        </React.Fragment>
-      )
-    })
-  }
-
-  return (
-    <span className={styles.equationText}>
-      {formatSide(arrowParts[0])}
-      {' → '}
-      {formatSide(arrowParts[1])}
-    </span>
-  )
+function halfChips(half: HalfReactionStepData): TallyChip[] {
+  return half.tally.map((t) => ({ item: t.item, left: t.left, right: t.right, balanced: t.balanced }))
 }
 
+/** Atom and charge tally of a complete equation string, computed by the lib. */
+function equationChips(equation: string): TallyChip[] {
+  const v = isBalanced(equation)
+  return [
+    ...Object.entries(v.atomBalance).map(([item, b]) => ({
+      item,
+      left: b.reactant,
+      right: b.product,
+      balanced: b.balanced,
+    })),
+    {
+      item: 'Charge',
+      left: v.chargeBalance.reactant,
+      right: v.chargeBalance.product,
+      balanced: v.chargeBalance.balanced,
+    },
+  ]
+}
+
+/** One Scrolly Step of the basic-medium ion-electron method for Cr(OH)3 + ClO-. */
 export function RedoxBalanceHalf({ step, reducedMotion }: RedoxBalanceHalfProps) {
   const index = Math.min(HALF_STEP_COUNT - 1, Math.max(0, Math.round(step)))
   const data = getHalfStep(index)
-
-  const oxNode = renderFormattedFormula(data.oxHalf.equationMhchem)
-  const redNode = renderFormattedFormula(data.redHalf.equationMhchem)
-  const overallNode = data.overallEquationMhchem
-    ? renderFormattedFormula(data.overallEquationMhchem)
-    : undefined
+  const prev = index > 0 ? getHalfStep(index - 1) : undefined
+  const motion = !reducedMotion
+  const overall = data.overallEquationMhchem
+  const hasMultipliers = data.oxHalf.multiplier !== undefined
 
   return (
-    <div
-      className={styles.container}
-      data-animation="redox-balance-half"
-      data-step={index}
-    >
-      {/* Step Header */}
-      <div className={styles.header}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-          <span className={styles.stepPill}>STEP {data.stepNumber} OF 7</span>
-          <span className={styles.title} data-testid="half-step-title">{data.title}</span>
-        </div>
-      </div>
-
-      {/* Flagship HalfEquationCard from the Redox library */}
-      <HalfEquationCard
-        className={styles.cardOverride}
-        title="Ion-Electron Method (Basic Medium)"
-        oxHalf={{
-          title: data.oxHalf.title,
-          equation: oxNode,
-          electrons: data.oxHalf.electrons,
-          multiplier: data.oxHalf.multiplier,
-          tally: data.oxHalf.tally.map((t) => ({
-            item: t.item,
-            left: t.left,
-            right: t.right,
-          })),
-        }}
-        redHalf={{
-          title: data.redHalf.title,
-          equation: redNode,
-          electrons: data.redHalf.electrons,
-          multiplier: data.redHalf.multiplier,
-          tally: data.redHalf.tally.map((t) => ({
-            item: t.item,
-            left: t.left,
-            right: t.right,
-          })),
-        }}
-        overallEquation={overallNode}
-      />
-
-      {/* Step Takeaway */}
-      <div className={styles.takeawayCard}>
-        <span className={styles.takeawayLabel}>STEP {data.stepNumber} PRINCIPLE</span>
-        <span className={styles.takeawayText}>{data.instruction}</span>
-        <span className={styles.takeawayHint}>
-          {index === 0 && 'Begin with the correct ionic identities of all species in aqueous basic medium.'}
-          {index === 1 && 'Cr(OH)₃ is oxidised (+3 to +6) and ClO⁻ is reduced (+1 to −1).'}
-          {index === 2 && 'Chromium and chlorine are already equal in number on both sides (1:1).'}
-          {index === 3 && 'In base, each H⁺ is converted to H₂O by adding equal OH⁻ to both sides.'}
-          {index === 4 && 'Electrons balance electric charge: 3 e⁻ lost by Cr, 2 e⁻ gained by Cl.'}
-          {index === 5 && 'LCM(3, 2) = 6 electrons. Add equations and cancel spectator OH⁻ and H₂O.'}
-          {index === 6 && 'Verification confirms equal atom counts and identical net charge (−4 = −4).'}
+    <div className={styles.container} data-animation="redox-balance-half" data-step={index}>
+      <header className={styles.header}>
+        <span className={styles.stepPill}>
+          Step {data.stepNumber} of {HALF_STEP_COUNT}
         </span>
-      </div>
+        <span className={styles.title} data-testid="half-step-title">
+          {STEP_TITLES[index]}
+        </span>
+      </header>
+
+      {index === 0 && (
+        <div className={styles.heroBox}>
+          <EquationView equation={HALF_SKELETON} roles={ROLES} size="hero" animKey="skeleton" reducedMotion={!motion} />
+        </div>
+      )}
+
+      {index === 3 && (
+        <div className={styles.route} data-testid="basic-route">
+          <div className={styles.routeHead}>
+            NCERT route in basic medium: balance as if acidic, add OH⁻ to both sides, then cancel water
+          </div>
+          {HALF_BASIC_ROUTE.map((group) => {
+            const last = group.stages[group.stages.length - 1]
+            return (
+              <section key={group.key} className={styles.routeGroup} aria-label={group.title}>
+                <div className={styles.routeTitle}>{group.title}</div>
+                {group.stages.map((s, i) => (
+                  <div key={s.equationMhchem} className={styles.routeStage}>
+                    <span className={styles.routeLabel}>
+                      <span className={styles.routeNo}>{i + 1}</span>
+                      {s.label}
+                    </span>
+                    <EquationView
+                      equation={s.equationMhchem}
+                      roles={ROLES}
+                      size="card"
+                      animKey={`route-${group.key}-${i}`}
+                      reducedMotion={!motion}
+                    />
+                  </div>
+                ))}
+                <TallyStrip items={equationChips(last.equationMhchem)} label={`${group.title}: final tally`} />
+              </section>
+            )
+          })}
+        </div>
+      )}
+
+      {index >= 1 && index !== 3 && index <= 4 && (
+        <div className={styles.halves}>
+          <HalfCard
+            tone="ox"
+            title="Oxidation half"
+            subtitle="Cr(III) → Cr(VI)"
+            equation={data.oxHalf.equationMhchem}
+            previous={prev?.oxHalf.equationMhchem}
+            electrons={data.oxHalf.electrons || undefined}
+            tally={halfChips(data.oxHalf)}
+            animKey={`ox-${index}`}
+            reducedMotion={!motion}
+          />
+          <HalfCard
+            tone="red"
+            title="Reduction half"
+            subtitle="Cl(I) → Cl(−I)"
+            equation={data.redHalf.equationMhchem}
+            previous={prev?.redHalf.equationMhchem}
+            electrons={data.redHalf.electrons || undefined}
+            tally={halfChips(data.redHalf)}
+            animKey={`red-${index}`}
+            reducedMotion={!motion}
+          />
+        </div>
+      )}
+
+      {index === 0 && (
+        <p className={styles.note}>The two halves are split out in step 2.</p>
+      )}
+
+      {overall && index >= 5 && (
+        <>
+          <div className={styles.heroBox}>
+            <EquationView
+              equation={overall}
+              previous={index === 5 ? undefined : prev?.overallEquationMhchem}
+              roles={ROLES}
+              size="hero"
+              animKey={`overall-${index}`}
+              reducedMotion={!motion}
+            />
+          </div>
+          <div className={styles.halves}>
+            <HalfCard
+              tone="ox"
+              title="Oxidation half"
+              subtitle="Cr(III) → Cr(VI)"
+              equation={data.oxHalf.equationMhchem}
+              previous={prev?.oxHalf.equationMhchem}
+              electrons={data.oxHalf.electrons || undefined}
+              multiplier={hasMultipliers ? data.oxHalf.multiplier : undefined}
+              tally={halfChips(data.oxHalf)}
+              animKey={`ox-${index}`}
+              reducedMotion={!motion}
+            />
+            <HalfCard
+              tone="red"
+              title="Reduction half"
+              subtitle="Cl(I) → Cl(−I)"
+              equation={data.redHalf.equationMhchem}
+              previous={prev?.redHalf.equationMhchem}
+              electrons={data.redHalf.electrons || undefined}
+              multiplier={hasMultipliers ? data.redHalf.multiplier : undefined}
+              tally={halfChips(data.redHalf)}
+              animKey={`red-${index}`}
+              reducedMotion={!motion}
+            />
+          </div>
+          <TallyStrip items={equationChips(overall)} label="Overall equation tally" />
+        </>
+      )}
     </div>
   )
 }

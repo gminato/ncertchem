@@ -1,14 +1,140 @@
 .container {
   width: 100%;
+  min-height: 460px;
+  container-type: inline-size;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: center;
+  gap: 12px;
+  font-family: var(--font-sans);
+  color: var(--fg);
 }
 
-.svg {
-  width: 100%;
-  height: auto;
-  display: block;
-  user-select: none;
+.header {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px 10px;
+}
+
+.stepPill {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: var(--accent-soft);
+  color: var(--accent);
+  white-space: nowrap;
+}
+
+.title {
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.heroBox {
+  padding: 18px 12px;
+  border-radius: 14px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+}
+
+.note {
+  margin: 0;
+  font-size: 14px;
+  color: var(--fg-muted);
+  text-align: center;
+}
+
+.changes {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.change {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+  padding: 12px 14px;
+  border-radius: 14px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  min-width: 0;
+}
+
+.changeOx {
+  border-top: 3px solid var(--ox);
+}
+
+.changeRed {
+  border-top: 3px solid var(--red);
+}
+
+.changeTag {
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--fg-muted);
+}
+
+.changeOx .changeTag {
+  color: var(--ox);
+}
+
+.changeRed .changeTag {
+  color: var(--red);
+}
+
+.changeSpecies {
+  font-size: 19px;
+  color: var(--fg);
+}
+
+.changeNums {
+  font-size: 22px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  color: var(--fg);
+}
+
+.arrowUp {
+  color: var(--ox);
+}
+
+.arrowDown {
+  color: var(--red);
+}
+
+.changeNote {
+  font-size: 14px;
+  color: var(--fg-muted);
+}
+
+.changeNote strong {
+  color: var(--fg);
+}
+
+.lcm {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.5;
+  text-align: center;
+  color: var(--fg-muted);
+}
+
+.lcm strong {
+  color: var(--fg);
+}
+
+@container (min-width: 640px) {
+  .changes {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+  }
+  .lcm {
+    grid-column: 1 / -1;
+  }
 }

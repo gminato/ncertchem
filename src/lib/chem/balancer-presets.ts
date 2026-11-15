@@ -6,16 +6,17 @@
  * via balanceRedox and balanceByOxidationNumber from redox-balance.ts.
  */
 
-import { parseFormula } from './formula'
 import {
   balanceRedox,
   balanceByOxidationNumber,
-  balanceHalfReaction,
+  isBalanced,
   type BalancedRedoxResult,
-  type BalancedHalfReactionResult,
+  type BalanceVerification,
 } from './redox-balance'
-import { parseReactionString } from './redox-analysis'
-import type { RedoxReactionSpecies } from './ncert-unit7-tables'
+import { analyseRedox, parseSpeciesToken } from './redox-analysis'
+import { parseFormula } from './formula'
+import { oxidationNumbers } from './oxidation-number'
+import { rationalToNumber } from './oxidation-number'
 
 export interface BalancerPreset {
   id: string
@@ -31,34 +32,6 @@ export interface TallyItem {
   left: number
   right: number
   balanced: boolean
-}
-
-export interface SimHalfReactionData {
-  title: string
-  equationString: string
-  equationMhchem: string
-  electrons: number
-  multiplier?: number
-  tally: readonly TallyItem[]
-}
-
-export interface SimStepState {
-  stepNumber: number
-  title: string
-  description: string
-  equationMhchem: string
-  // For half-reaction method
-  oxHalf?: SimHalfReactionData
-  redHalf?: SimHalfReactionData
-  overallEquationMhchem?: string
-  // For try-it challenge
-  challenge?: {
-    prompt: string
-    targetAnswer: number
-    hint: string
-    explanation: string
-    unit?: string
-  }
 }
 
 export const BALANCER_PRESETS: readonly BalancerPreset[] = [
@@ -144,217 +117,568 @@ export const BALANCER_PRESETS: readonly BalancerPreset[] = [
   },
 ] as const
 
-/**
- * Computes atom counts and net ionic charges for any reaction string,
- * safely handling electrons (e-) which are not elements.
- */
-export function computeReactionTally(
-  equationOrSpecies: string | { reactants: readonly RedoxReactionSpecies[]; products: readonly RedoxReactionSpecies[] },
-): TallyItem[] {
-  const { reactants, products } =
-    typeof equationOrSpecies === 'string'
-      ? parseReactionString(equationOrSpecies)
-      : equationOrSpecies
-
-  const atomsL: Record<string, number> = {}
-  let chargeL = 0
-  for (const r of reactants) {
-    if (r.formula === 'e') {
-      chargeL -= r.coefficient
-      continue
-    }
-    const c = parseFormula(r.formula)
-    for (const [sym, count] of Object.entries(c)) {
-      atomsL[sym] = (atomsL[sym] ?? 0) + count * r.coefficient
-    }
-    chargeL += (r.charge ?? 0) * r.coefficient
-  }
-
-  const atomsR: Record<string, number> = {}
-  let chargeR = 0
-  for (const p of products) {
-    if (p.formula === 'e') {
-      chargeR -= p.coefficient
-      continue
-    }
-    const c = parseFormula(p.formula)
-    for (const [sym, count] of Object.entries(c)) {
-      atomsR[sym] = (atomsR[sym] ?? 0) + count * p.coefficient
-    }
-    chargeR += (p.charge ?? 0) * p.coefficient
-  }
-
-  const allAtoms = Array.from(new Set([...Object.keys(atomsL), ...Object.keys(atomsR)]))
-  const items: TallyItem[] = allAtoms.map((sym) => {
-    const l = atomsL[sym] ?? 0
-    const r = atomsR[sym] ?? 0
-    return {
-      item: sym,
-      left: l,
-      right: r,
-      balanced: l === r,
-    }
-  })
-
+/** Atom and charge tally items for display. */
+export function toTallyItems(verification: BalanceVerification): TallyItem[] {
+  const items: TallyItem[] = Object.entries(verification.atomBalance).map(([item, b]) => ({
+    item,
+    left: b.reactant,
+    right: b.product,
+    balanced: b.balanced,
+  }))
   items.push({
     item: 'Charge',
-    left: chargeL,
-    right: chargeR,
-    balanced: chargeL === chargeR,
+    left: verification.chargeBalance.reactant,
+    right: verification.chargeBalance.product,
+    balanced: verification.chargeBalance.balanced,
   })
-
   return items
 }
 
-/** Resolves the fully computed balanced redox result for a given preset and method. */
+const resultCache = new Map<string, BalancedRedoxResult>()
+
+/** The fully computed balanced result for a preset and method (cached). */
 export function getPresetBalanceResult(
   preset: BalancerPreset,
-  method: 'half-reaction' | 'oxidation-number',
+  method: BalancerMethod,
 ): BalancedRedoxResult {
-  return method === 'half-reaction'
-    ? balanceRedox(preset.skeleton, preset.medium)
-    : balanceByOxidationNumber(preset.skeleton, preset.medium)
+  const key = `${preset.id}|${method}`
+  const cached = resultCache.get(key)
+  if (cached) return cached
+  const result =
+    method === 'half-reaction'
+      ? balanceRedox(preset.skeleton, preset.medium)
+      : balanceByOxidationNumber(preset.skeleton, preset.medium)
+  resultCache.set(key, result)
+  return result
+}
+
+export type BalancerMethod = 'half-reaction' | 'oxidation-number'
+
+/** Short labels for the step rail, one per lib step. */
+export const RAIL_LABELS: Record<BalancerMethod, readonly string[]> = {
+  'half-reaction': ['Skeleton', 'Halves', 'Key atoms', 'O and H', 'Electrons', 'Multiply', 'Verify'],
+  'oxidation-number': ['Skeleton', 'Oxidation numbers', 'Equalise', 'Charge', 'H and O'],
+}
+
+export interface BalancerHalf {
+  title: string
+  /** Half-reaction equation with its electron term, mhchem. */
+  equation: string
+  /** Electrons per half-reaction at this step (after multiplying, the total). */
+  electrons: number
+  multiplier?: number
+  tally: TallyItem[]
+}
+
+export interface OxidationCard {
+  /** Species as written in the skeleton, e.g. "C2O4^2-". */
+  species: string
+  element: string
+  from: number
+  to: number
+  /** Electrons lost or gained by one formula unit. */
+  electrons: number
+  multiplier: number
+}
+
+export interface BalancerChallengeField {
+  id: string
+  label: string
+  target: number
+  hint: string
+}
+
+export interface BalancerChallenge {
+  prompt: string
+  fields: BalancerChallengeField[]
+  explanation: string
+}
+
+export interface BalancerStepView {
+  stepIndex: number
+  totalSteps: number
+  title: string
+  description: string
+  /** Lib equation for this step (composite half-reaction strings are split by the view). */
+  equation: string
+  previousEquation?: string
+  /** Normalised species formulas being oxidised (ox) and reduced (red). */
+  roles: { ox: string[]; red: string[] }
+  /** Atom and charge tally of the whole equation (overall or oxidation-number steps). */
+  tally: TallyItem[]
+  halves?: { ox: BalancerHalf; red: BalancerHalf }
+  onCards?: { ox: OxidationCard; red: OxidationCard; lcm: number }
+  challenge?: BalancerChallenge
+}
+
+function gcd(a: number, b: number): number {
+  return b === 0 ? Math.abs(a) : gcd(b, a % b)
+}
+
+function lcm(a: number, b: number): number {
+  return (Math.abs(a) * Math.abs(b)) / gcd(a, b)
 }
 
 /**
- * Returns detailed step data and interactive challenges for the simulation.
+ * Makes a lib step description readable: arrows, electron counts and any bare
+ * formula in the text (such as "H2O", "OH-" or "CrO4^2-") are displayed as
+ * subscripts, superscript charges and e⁻, not as raw source text.
  */
-export function getSimStepDetails(
+export function prettyDescription(text: string): string {
+  const withElectrons = text.replace(/(\d*)e-(?![A-Za-z])/g, '$1e⁻').replace(/->/g, '→')
+  return withElectrons.replace(/[A-Z][A-Za-z0-9()]*(?:\^[0-9]*[+-]|[+-])?/g, (token) => {
+    if (!/[0-9+\-⁻⁺]/.test(token)) return token
+    return prettyFormula(canonicalSpecies(token))
+  })
+}
+
+/** Converts a formula string to display text: subscripts and superscript charges. */
+export function prettyFormula(raw: string): string {
+  const SUB: Record<string, string> = {
+    '0': '₀', '1': '₁', '2': '₂', '3': '₃', '4': '₄', '5': '₅', '6': '₆', '7': '₇', '8': '₈', '9': '₉',
+  }
+  const SUP: Record<string, string> = {
+    '0': '⁰', '1': '¹', '2': '²', '3': '³', '4': '⁴', '5': '⁵', '6': '⁶', '7': '⁷', '8': '⁸', '9': '⁹',
+    '+': '⁺', '-': '⁻',
+  }
+  let base = raw
+  let charge = ''
+  const caret = raw.indexOf('^')
+  if (caret >= 0) {
+    base = raw.slice(0, caret)
+    charge = raw.slice(caret + 1)
+  } else {
+    const trailing = /([+-]+)$/.exec(raw)
+    if (trailing) {
+      base = raw.slice(0, trailing.index)
+      charge = trailing[1]
+    }
+  }
+  const subBase = base.replace(/\d/g, (d) => SUB[d])
+  const supCharge = charge
+    .split('')
+    .map((c) => SUP[c] ?? c)
+    .join('')
+  return `${subBase}${supCharge}`
+}
+
+/** Formula of a token with coefficient, state and charge removed. */
+function normalizeTokenFormula(token: string): string {
+  return token
+    .replace(/^\d+/, '')
+    .replace(/\((aq|l|s|g)\)/g, '')
+    .replace(/\^.*$/, '')
+    .replace(/[+-]+$/, '')
+}
+
+function formatOxState(n: number): string {
+  return n > 0 ? `+${n}` : n < 0 ? `−${Math.abs(n)}` : '0'
+}
+
+/**
+ * The view model the simulation renders for one step: the lib equation, the
+ * colour roles, the half-reaction or oxidation-number cards and, in Try-It
+ * mode, a challenge whose targets come from the lib's own balanced steps.
+ */
+export function getBalancerStep(
   preset: BalancerPreset,
-  method: 'half-reaction' | 'oxidation-number',
+  method: BalancerMethod,
   stepIndex: number,
-): SimStepState {
+): BalancerStepView {
   const result = getPresetBalanceResult(preset, method)
-  const clampedIndex = Math.max(0, Math.min(result.steps.length - 1, stepIndex))
-  const step = result.steps[clampedIndex]
+  const steps = result.steps
+  const index = Math.max(0, Math.min(steps.length - 1, stepIndex))
+  const step = steps[index]
+  const prev = index > 0 ? steps[index - 1] : undefined
+  const roles = skeletonRoles(preset.skeleton)
+
+  const base: BalancerStepView = {
+    stepIndex: index,
+    totalSteps: steps.length,
+    title: step.title,
+    description: prettyDescription(step.description),
+    equation: step.equationMhchem,
+    previousEquation: prev?.equationMhchem,
+    roles,
+    tally: step.equationMhchem.includes(' | ') ? [] : toTallyItems(isBalanced(step.equationMhchem)),
+  }
 
   if (method === 'oxidation-number') {
-    // 5 Steps
-    let challenge: SimStepState['challenge'] | undefined
-    if (clampedIndex === 2) {
-      // Step 3: equalise ON changes
-      challenge = {
-        prompt: 'What is the least common multiple of electrons transferred to equalise changes?',
-        targetAnswer: 10,
-        hint: 'Find the lowest common multiple of the increase and decrease per formula unit.',
-        explanation: 'Equalising oxidation number changes ensures that all electrons released are accepted.',
-      }
-    } else if (clampedIndex === 3) {
-      // Step 4: charge balance
-      const tally = computeReactionTally({
-        reactants: step.intermediateReactants,
-        products: step.intermediateProducts,
-      })
-      const chargeTally = tally.find((t) => t.item === 'Charge')
-      const diff = chargeTally ? Math.abs(chargeTally.left - chargeTally.right) : 0
-      challenge = {
-        prompt: `How many ${preset.medium === 'acidic' ? 'H⁺' : 'OH⁻'} ions are needed to balance net ionic charge?`,
-        targetAnswer: diff,
-        hint: `Compare the total charge on the left (${chargeTally?.left}) with the right (${chargeTally?.right}).`,
-        explanation: `In ${preset.medium} medium, ${diff} ${preset.medium === 'acidic' ? 'H⁺' : 'OH⁻'} ions equalize the ionic charge.`,
-      }
-    }
-
-    return {
-      stepNumber: step.stepNumber,
-      title: step.title,
-      description: step.description,
-      equationMhchem: step.equationMhchem,
-      challenge,
-    }
+    return withOxidationNumber(preset, base, index, steps)
   }
-
-  // Half-reaction method (7 Steps)
-  // Compute individual half-reactions
-  const { reactants: sReactants, products: sProducts } = parseReactionString(preset.skeleton)
-  const halfA = balanceHalfReaction({ reactants: [sReactants[0]], products: [sProducts[0]] }, preset.medium)
-  const halfB = balanceHalfReaction(
-    { reactants: [sReactants[1] ?? sReactants[0]], products: [sProducts[1] ?? sProducts[0]] },
-    preset.medium,
-  )
-  const oxHalf = halfA.halfType === 'oxidation' ? halfA : halfB
-  const redHalf = halfA.halfType === 'reduction' ? halfA : halfB
-
-  // Multipliers
-  const gcd = (a: number, b: number): number => (b === 0 ? a : gcd(b, a % b))
-  const lcm = (oxHalf.electrons * redHalf.electrons) / gcd(oxHalf.electrons, redHalf.electrons)
-  const multOx = lcm / oxHalf.electrons
-  const multRed = lcm / redHalf.electrons
-
-  // Map step index (0 to 6) to half-reaction stages
-  let oxStageIndex = 0
-  let redStageIndex = 0
-  let showMultiplier = false
-  let showOverall = false
-
-  if (clampedIndex === 0 || clampedIndex === 1) {
-    oxStageIndex = 0 // skeletal
-    redStageIndex = 0
-  } else if (clampedIndex === 2) {
-    oxStageIndex = 1 // key atoms
-    redStageIndex = 1
-  } else if (clampedIndex === 3) {
-    oxStageIndex = 3 // O & H
-    redStageIndex = 3
-  } else if (clampedIndex === 4) {
-    oxStageIndex = 4 // electrons added
-    redStageIndex = 4
-  } else if (clampedIndex >= 5) {
-    oxStageIndex = 4
-    redStageIndex = 4
-    showMultiplier = true
-    showOverall = true
-  }
-
-  const oxStepObj = oxHalf.steps[oxStageIndex] ?? oxHalf.steps[oxHalf.steps.length - 1]
-  const redStepObj = redHalf.steps[redStageIndex] ?? redHalf.steps[redHalf.steps.length - 1]
-
-  const oxEq = oxStepObj.equation
-  const redEq = redStepObj.equation
-
-  const oxTally = computeReactionTally(oxEq)
-  const redTally = computeReactionTally(redEq)
-
-  let challenge: SimStepState['challenge'] | undefined
-  if (clampedIndex === 4) {
-    challenge = {
-      prompt: 'How many electrons are transferred in the oxidation half-reaction?',
-      targetAnswer: oxHalf.electrons,
-      hint: 'Count the difference in net ionic charge between the reactant and product sides of the oxidation half.',
-      explanation: `${oxHalf.electrons} electrons balance the charge in the oxidation half.`,
-      unit: 'e⁻',
-    }
-  } else if (clampedIndex === 5) {
-    challenge = {
-      prompt: 'What multiplier is required for the oxidation half to equalise total electrons?',
-      targetAnswer: multOx,
-      hint: `The oxidation half has ${oxHalf.electrons} e⁻ and reduction has ${redHalf.electrons} e⁻. Find the multiplier to reach the LCM (${lcm} e⁻).`,
-      explanation: `Multiplying by ${multOx} equalises the electron count to ${lcm} e⁻.`,
-    }
-  }
-
-  return {
-    stepNumber: step.stepNumber,
-    title: step.title,
-    description: step.description,
-    equationMhchem: step.equationMhchem,
-    oxHalf: {
-      title: oxHalf.steps[oxStageIndex]?.title ?? 'Oxidation half',
-      equationString: oxEq,
-      equationMhchem: oxStepObj.equationMhchem,
-      electrons: clampedIndex >= 4 ? oxHalf.electrons : 0,
-      multiplier: showMultiplier ? multOx : undefined,
-      tally: oxTally,
-    },
-    redHalf: {
-      title: redHalf.steps[redStageIndex]?.title ?? 'Reduction half',
-      equationString: redEq,
-      equationMhchem: redStepObj.equationMhchem,
-      electrons: clampedIndex >= 4 ? redHalf.electrons : 0,
-      multiplier: showMultiplier ? multRed : undefined,
-      tally: redTally,
-    },
-    overallEquationMhchem: showOverall ? result.equationMhchem : undefined,
-    challenge,
-  }
+  return withHalves(preset, base, index, steps)
 }
+
+/**
+ * Canonical caret form of a skeleton token, e.g. "C2O42-" -> "C2O4^2-", so that
+ * the formula and charge can be shown and matched consistently.
+ */
+export function canonicalSpecies(token: string): string {
+  const sp = parseSpeciesToken(token)
+  const charge = sp.charge ?? 0
+  if (charge === 0) return sp.formula
+  const mag = Math.abs(charge) === 1 ? '' : String(Math.abs(charge))
+  return `${sp.formula}^${mag}${charge > 0 ? '+' : '-'}`
+}
+
+/** Oxidation number of one element in a single species token, or undefined if absent. */
+function speciesOxidationNumber(token: string, element: string): number | undefined {
+  const sp = parseSpeciesToken(token)
+  const states = oxidationNumbers(sp.formula, sp.charge ?? 0)
+  const value = states[element]
+  return value === undefined ? undefined : rationalToNumber(value)
+}
+
+/**
+ * Normalised formulas of the reactant species being oxidised (ox) and reduced
+ * (red) in a skeleton, taken from the lib's redox analysis. A species that is
+ * both (disproportionation) gets no role.
+ */
+export function skeletonRoles(skeleton: string): { ox: string[]; red: string[] } {
+  const analysis = analyseRedox(skeleton)
+  const reductants = new Set(analysis.reductants.map((r) => parseSpeciesToken(r).formula))
+  const oxidants = new Set(analysis.oxidants.map((r) => parseSpeciesToken(r).formula))
+  const disproportionation = analysis.type === 'disproportionation'
+  const tokens = skeleton.split(' -> ')[0].split(' + ').map((t) => t.trim())
+  const ox: string[] = []
+  const red: string[] = []
+  for (const token of tokens) {
+    const formula = parseSpeciesToken(token).formula
+    const f = normalizeTokenFormula(canonicalSpecies(token))
+    const both = reductants.has(formula) && oxidants.has(formula)
+    // A species holding a reduced element is the oxidant. The lib also lists
+    // such a species as a reductant when its oxygen is oxidised, so the reduced
+    // element decides. Disproportionation has no single oxidant or reductant.
+    if (both && disproportionation) continue
+    if (oxidants.has(formula)) red.push(f)
+    else if (reductants.has(formula)) ox.push(f)
+  }
+  return { ox, red }
+}
+
+/** Splits a composite "Oxidation: ... | Reduction: ..." lib string into its two halves. */
+function splitHalves(equation: string): { ox: string; red: string } | undefined {
+  const parts = equation.split(' | ')
+  if (parts.length !== 2) return undefined
+  const ox = parts.find((p) => p.startsWith('Oxidation: '))
+  const red = parts.find((p) => p.startsWith('Reduction: '))
+  if (!ox || !red) return undefined
+  return { ox: ox.slice('Oxidation: '.length), red: red.slice('Reduction: '.length) }
+}
+
+function electronsIn(equation: string): number {
+  let total = 0
+  for (const term of equation.split(/ \+ | -> /)) {
+    const m = /^(\d*)e-$/.exec(term.trim())
+    if (m) total += m[1] ? Number(m[1]) : 1
+  }
+  return total
+}
+
+function withHalves(
+  preset: BalancerPreset,
+  base: BalancerStepView,
+  index: number,
+  steps: readonly { equationMhchem: string }[],
+): BalancerStepView {
+  // Step 1 (skeleton) has no halves yet.
+  if (index === 0) return base
+
+  const halfSplit = splitHalves(steps[Math.min(index, 4)].equationMhchem)
+  const step4 = splitHalves(steps[4].equationMhchem)
+  if (!step4) return base
+
+  const eOx = electronsIn(step4.ox)
+  const eRed = electronsIn(step4.red)
+  const common = lcm(eOx, eRed)
+  const multOx = common / eOx
+  const multRed = common / eRed
+
+  const toHalf = (title: string, eq: string, electrons: number, multiplier?: number): BalancerHalf => ({
+    title,
+    equation: eq,
+    electrons,
+    multiplier,
+    tally: toTallyItems(isBalanced(eq)),
+  })
+
+  let halves: { ox: BalancerHalf; red: BalancerHalf }
+  if (index <= 4 && halfSplit) {
+    halves = {
+      ox: toHalf('Oxidation half', halfSplit.ox, electronsIn(halfSplit.ox)),
+      red: toHalf('Reduction half', halfSplit.red, electronsIn(halfSplit.red)),
+    }
+  } else {
+    halves = {
+      ox: toHalf('Oxidation half', scaleBy(step4.ox, multOx), eOx * multOx, multOx),
+      red: toHalf('Reduction half', scaleBy(step4.red, multRed), eRed * multRed, multRed),
+    }
+  }
+
+  const view: BalancerStepView = { ...base, halves, tally: index <= 4 ? [] : base.tally }
+  view.challenge = halfChallenge(preset, index, step4, { eOx, eRed, multOx, multRed, common })
+  return view
+}
+
+/** Multiplies each term of one half-reaction equation by an integer. */
+function scaleBy(eq: string, k: number): string {
+  if (k === 1) return eq
+  const [left, right] = eq.split(' -> ')
+  const scale = (side: string) =>
+    side
+      .split(' + ')
+      .map((t) => {
+        const lead = /^\d+/.exec(t)
+        const c = (lead ? Number(lead[0]) : 1) * k
+        const body = t.replace(/^\d+/, '')
+        return `${c === 1 ? '' : c}${body}`
+      })
+      .join(' + ')
+  return `${scale(left)} -> ${scale(right)}`
+}
+
+function halfChallenge(
+  preset: BalancerPreset,
+  index: number,
+  step4: { ox: string; red: string },
+  m: { eOx: number; eRed: number; multOx: number; multRed: number; common: number },
+): BalancerChallenge | undefined {
+  if (index === 3) {
+    const oxToken = canonicalSpecies(firstTermRaw(step4.ox))
+    const redToken = canonicalSpecies(firstTermRaw(step4.red))
+    const oxF = normalizeTokenFormula(oxToken)
+    const redF = normalizeTokenFormula(redToken)
+    return {
+      prompt: 'How many electrons does each half-reaction exchange?',
+      fields: [
+        {
+          id: 'ox',
+          label: `e⁻ lost in the oxidation half (${prettyFormula(oxToken)})`,
+          target: m.eOx,
+          hint: electronHint(preset.skeleton, step4.ox, oxF, 'oxidised', m.eOx, oxToken),
+        },
+        {
+          id: 'red',
+          label: `e⁻ gained in the reduction half (${prettyFormula(redToken)})`,
+          target: m.eRed,
+          hint: electronHint(preset.skeleton, step4.red, redF, 'reduced', m.eRed, redToken),
+        },
+      ],
+      explanation: `The oxidation half gives up ${m.eOx} e⁻ and the reduction half takes up ${m.eRed} e⁻.`,
+    }
+  }
+  if (index === 4) {
+    return {
+      prompt: 'Which multipliers make the electrons match?',
+      fields: [
+        {
+          id: 'ox',
+          label: 'Multiplier for the oxidation half',
+          target: m.multOx,
+          hint: `The electron counts are ${m.eOx} and ${m.eRed}. Their lowest common multiple is ${m.common}, so the oxidation half needs ${m.common} ÷ ${m.eOx}.`,
+        },
+        {
+          id: 'red',
+          label: 'Multiplier for the reduction half',
+          target: m.multRed,
+          hint: `The reduction half has ${m.eRed} e⁻, so it needs ${m.common} ÷ ${m.eRed} = ${m.multRed} to reach ${m.common} e⁻.`,
+        },
+      ],
+      explanation: `Multiplying the oxidation half by ${m.multOx} and the reduction half by ${m.multRed} gives ${m.common} e⁻ on each side.`,
+    }
+  }
+  return undefined
+}
+
+/** The first reactant of a half-reaction, without its coefficient, e.g. "I-" or "Cr(OH)3". */
+function firstTermRaw(eq: string): string {
+  const first = eq.split(' -> ')[0].split(' + ')[0].trim()
+  return first.replace(/^\d+/, '')
+}
+
+/** Specific feedback for an electron count: the change per atom, the atoms, and the coefficient in the half-reaction. */
+function electronHint(
+  skeleton: string,
+  halfEq: string,
+  species: string,
+  role: 'oxidised' | 'reduced',
+  target: number,
+  speciesToken: string,
+): string {
+  const counts = parseFormula(species)
+  const shown = prettyFormula(speciesToken)
+  const coefficient = reactantCount(halfEq, species)
+  const change = analyseRedox(skeleton).changes.find(
+    (c) =>
+      (counts[c.element] ?? 0) > 0 &&
+      (role === 'oxidised' ? c.changePerAtom.num > 0 : c.changePerAtom.num < 0) &&
+      speciesOxidationNumber(speciesToken, c.element) === rationalToNumber(c.from),
+  )
+  if (!change) return `Count the electrons from the change in oxidation number of the redox-active element in ${shown}.`
+  const per = Math.abs(rationalToNumber(change.changePerAtom))
+  const atoms = counts[change.element] ?? 1
+  const n = per * atoms * coefficient
+  if (n !== target) return `Count the electrons from the change in oxidation number of ${change.element} in ${shown}.`
+  const verb = role === 'oxidised' ? 'loses' : 'gains'
+  const perUnit = per * atoms
+  const change1 = `${change.element} goes from ${formatOxState(rationalToNumber(change.from))} to ${formatOxState(
+    rationalToNumber(change.to),
+  )}`
+  const unit = `each ${shown} ${verb} ${perUnit} e⁻${atoms > 1 ? ` (${per} per ${change.element} × ${atoms} atoms)` : ''}`
+  const count = coefficient > 1 ? `; the half-reaction has ${coefficient} × ${shown}, so ${n} e⁻ in all` : ''
+  return `${change1}, so ${unit}${count}.`
+}
+
+function withOxidationNumber(
+  preset: BalancerPreset,
+  base: BalancerStepView,
+  index: number,
+  steps: readonly { equationMhchem: string }[],
+): BalancerStepView {
+  if (index === 0) return base
+  const analysis = analyseRedox(preset.skeleton)
+  const roles = base.roles
+
+  const oxSpecies = tokenWithRole(preset.skeleton, roles.ox)
+  const redSpecies = tokenWithRole(preset.skeleton, roles.red)
+  if (!oxSpecies || !redSpecies) return base
+  // Disproportionation (one species both oxidised and reduced) has no two-species ledger.
+  if (normalizeTokenFormula(oxSpecies) === normalizeTokenFormula(redSpecies)) return base
+
+  const reductantChange = analysis.changes.find(
+    (c) => c.changePerAtom.num > 0 && speciesOxidationNumber(oxSpecies, c.element) === rationalToNumber(c.from),
+  )
+  const oxidantChange = analysis.changes.find(
+    (c) => c.changePerAtom.num < 0 && speciesOxidationNumber(redSpecies, c.element) === rationalToNumber(c.from),
+  )
+  if (!reductantChange || !oxidantChange) return base
+
+  const oxElectrons = Math.abs(rationalToNumber(reductantChange.changePerAtom)) *
+    (parseFormula(normalizeTokenFormula(oxSpecies))[reductantChange.element] ?? 1)
+  const redElectrons = Math.abs(rationalToNumber(oxidantChange.changePerAtom)) *
+    (parseFormula(normalizeTokenFormula(redSpecies))[oxidantChange.element] ?? 1)
+  const common = lcm(oxElectrons, redElectrons)
+
+  const onCards = {
+    ox: {
+      species: oxSpecies,
+      element: reductantChange.element,
+      from: rationalToNumber(reductantChange.from),
+      to: rationalToNumber(reductantChange.to),
+      electrons: oxElectrons,
+      multiplier: common / oxElectrons,
+    },
+    red: {
+      species: redSpecies,
+      element: oxidantChange.element,
+      from: rationalToNumber(oxidantChange.from),
+      to: rationalToNumber(oxidantChange.to),
+      electrons: redElectrons,
+      multiplier: common / redElectrons,
+    },
+    lcm: common,
+  }
+
+  const view: BalancerStepView = { ...base, onCards }
+  if (index === 1) {
+    const target = steps[2]
+    const oxCoef = reactantCount(target.equationMhchem, normalizeTokenFormula(oxSpecies))
+    const redCoef = reactantCount(target.equationMhchem, normalizeTokenFormula(redSpecies))
+    view.challenge = {
+      prompt: 'Electrons lost must equal electrons gained. What multiplier does each species need?',
+      fields: [
+        {
+          id: 'ox',
+          label: `Multiplier for ${prettyFormula(oxSpecies)}`,
+          target: oxCoef,
+          hint: `${reductantChange.element} goes from ${formatOxState(rationalToNumber(reductantChange.from))} to ${formatOxState(
+            rationalToNumber(reductantChange.to),
+          )}, so each ${prettyFormula(oxSpecies)} loses ${oxElectrons} e⁻. The lowest common multiple is ${common}, so the multiplier is ${common} ÷ ${oxElectrons} = ${oxCoef}.`,
+        },
+        {
+          id: 'red',
+          label: `Multiplier for ${prettyFormula(redSpecies)}`,
+          target: redCoef,
+          hint: `${oxidantChange.element} goes from ${formatOxState(rationalToNumber(oxidantChange.from))} to ${formatOxState(
+            rationalToNumber(oxidantChange.to),
+          )}, so each ${prettyFormula(redSpecies)} gains ${redElectrons} e⁻. The multiplier is ${common} ÷ ${redElectrons} = ${redCoef}.`,
+        },
+      ],
+      explanation: `Each oxidant unit gains ${redElectrons} e⁻ and each reductant unit loses ${oxElectrons} e⁻, so both sides need ${common} e⁻.`,
+    }
+  } else if (index === 2) {
+    const formula = preset.medium === 'acidic' ? 'H' : 'OH'
+    const sp = preset.medium === 'acidic' ? 'H⁺' : 'OH⁻'
+    const unit = preset.medium === 'acidic' ? 1 : -1
+    const added = countIn(steps[3].equationMhchem, formula) - countIn(steps[2].equationMhchem, formula)
+    {
+      const v = isBalanced(steps[2].equationMhchem)
+      const diff = Math.abs(v.chargeBalance.reactant - v.chargeBalance.product)
+      view.challenge = {
+        prompt: `How many ${sp} must be added to balance the net ionic charge?`,
+        fields: [
+          {
+            id: 'count',
+            label: `${sp} to add`,
+            target: added,
+            hint: `The net charge is ${formatOxState(v.chargeBalance.reactant)} on the left and ${formatOxState(
+              v.chargeBalance.product,
+            )} on the right, a difference of ${diff}. Each ${sp} carries ${unit > 0 ? '+1' : '−1'}, so add ${added}.`,
+          },
+        ],
+        explanation: `${added} ${sp} make both sides carry the same net charge.`,
+      }
+    }
+  } else if (index === 3) {
+    const added = countIn(steps[4].equationMhchem, 'H2O') - countIn(steps[3].equationMhchem, 'H2O')
+    const v = isBalanced(steps[3].equationMhchem)
+    const h = v.atomBalance.H
+    const missing = Math.abs((h?.reactant ?? 0) - (h?.product ?? 0))
+    view.challenge = {
+      prompt: 'How many H₂O must be added to balance hydrogen?',
+      fields: [
+        {
+          id: 'count',
+          label: 'H₂O to add',
+          target: added,
+          hint: `Hydrogen is ${h?.reactant ?? 0} on the left and ${h?.product ?? 0} on the right, so ${missing} H atoms are missing. Each H₂O brings 2, so add ${added}.`,
+        },
+      ],
+      explanation: `${added} H₂O supply the ${missing} missing hydrogen atoms.`,
+    }
+  }
+  return view
+}
+
+/** Coefficient of a formula on the reactant side only (for multipliers). */
+function reactantCount(equation: string, formula: string): number {
+  const left = equation.split(' -> ')[0]
+  let total = 0
+  for (const term of left.split(' + ')) {
+    const t = term.trim()
+    const lead = /^\d+/.exec(t)
+    if (normalizeTokenFormula(t) === formula) total += lead ? Number(lead[0]) : 1
+  }
+  return total
+}
+
+/** Counts a formula's coefficient in an equation string, across both sides. */
+function countIn(equation: string, formula: string): number {
+  let total = 0
+  for (const term of equation.split(' -> ').join(' + ').split(' + ')) {
+    const t = term.trim()
+    const lead = /^\d+/.exec(t)
+    const coef = lead ? Number(lead[0]) : 1
+    if (normalizeTokenFormula(t) === formula) total += coef
+  }
+  return total
+}
+
+/** Returns the skeleton token (with written charge) whose formula is one of the roles. */
+function tokenWithRole(skeleton: string, roleFormulas: readonly string[]): string {
+  const left = skeleton.split(' -> ')[0]
+  const tokens = left.split(' + ').map((t) => t.trim())
+  const found = tokens.find((t) => roleFormulas.includes(normalizeTokenFormula(canonicalSpecies(t))))
+  return found ? canonicalSpecies(found) : ''
+}
+

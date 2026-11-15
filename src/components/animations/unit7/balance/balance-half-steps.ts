@@ -260,6 +260,42 @@ export const HALF_STEPS: readonly HalfStepData[] = [
   },
 ] as const
 
+export const HALF_BASIC_ROUTE: readonly {
+  key: 'ox' | 'red'
+  title: string
+  stages: readonly HalfRouteStage[]
+}[] = [
+  {
+    key: 'ox',
+    title: 'Oxidation: Cr(OH)₃ → CrO₄²⁻',
+    stages: [
+      { label: 'Balance as if acidic', equationMhchem: 'Cr(OH)3 + H2O(l) -> CrO4^2- + 5H+(aq) + 3e-' },
+      { label: 'Add 5 OH⁻ to both sides', equationMhchem: 'Cr(OH)3 + H2O(l) + 5OH-(aq) -> CrO4^2- + 5H+(aq) + 5OH-(aq) + 3e-' },
+      { label: 'H⁺ + OH⁻ make H₂O; cancel one H₂O', equationMhchem: 'Cr(OH)3 + 5OH-(aq) -> CrO4^2- + 4H2O(l) + 3e-' },
+    ],
+  },
+  {
+    key: 'red',
+    title: 'Reduction: ClO⁻ → Cl⁻',
+    stages: [
+      { label: 'Balance as if acidic', equationMhchem: 'ClO- + 2H+(aq) + 2e- -> Cl- + H2O(l)' },
+      { label: 'Add 2 OH⁻ to both sides', equationMhchem: 'ClO- + 2H+(aq) + 2e- + 2OH-(aq) -> Cl- + H2O(l) + 2OH-(aq)' },
+      { label: 'H⁺ + OH⁻ make H₂O; cancel one H₂O', equationMhchem: 'ClO- + H2O(l) + 2e- -> Cl- + 2OH-(aq)' },
+    ],
+  },
+] as const
+
+/**
+ * NCERT's basic-medium route, one line per stage, for each half-reaction:
+ * balance as if acidic (H2O for O, H+ for H, e- for charge); add as many OH-
+ * as there are H+ to BOTH sides; combine H+ and OH- into H2O and cancel the
+ * spare water. The last stage equals HALF_STEPS[4].
+ */
+export interface HalfRouteStage {
+  label: string
+  equationMhchem: string
+}
+
 export const HALF_STEP_COUNT = HALF_STEPS.length
 
 export function getHalfStep(index: number): HalfStepData {

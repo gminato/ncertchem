@@ -6,7 +6,16 @@ import {
   ON_SKELETON,
   ON_MEDIUM,
 } from './balance-on-steps'
-import { isBalanced } from '@/lib/chem/redox-balance'
+import { balanceByOxidationNumber, isBalanced } from '@/lib/chem/redox-balance'
+import { parseEquation } from './balance-equation'
+
+/** Sorted term list of each side, so the comparison ignores term order. */
+function termSignature(eq: string): string[] {
+  return parseEquation(eq).flatMap((row) => [
+    ...row.reactants.map((t) => `L:${t.coefficient}${t.formula}`),
+    ...row.products.map((t) => `R:${t.coefficient}${t.formula}`),
+  ]).sort()
+}
 
 describe('balance-on-steps.ts', () => {
   it('defines exactly 5 steps following NCERT Section 7.3.2(a)', () => {
@@ -76,5 +85,13 @@ describe('balance-on-steps.ts', () => {
       '2MnO4- + 5C2O42- + 16H+ -> 2Mn2+ + 10CO2 + 8H2O'
     )
     expect(verify.balanced).toBe(true)
+  })
+
+  it('every hard-coded Step equation matches the lib step with the same species and coefficients', () => {
+    const lib = balanceByOxidationNumber(ON_SKELETON, ON_MEDIUM).steps
+    expect(lib).toHaveLength(ON_STEP_COUNT)
+    ON_STEPS.forEach((step, i) => {
+      expect(termSignature(step.equationMhchem)).toEqual(termSignature(lib[i].equationMhchem))
+    })
   })
 })
