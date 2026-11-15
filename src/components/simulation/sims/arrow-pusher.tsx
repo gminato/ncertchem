@@ -6,11 +6,12 @@ import {
   CurvedArrow,
   SkeletalFormula,
   bondAnchor,
-  lonePairAnchor,
+  lonePairAngles,
+  lonePairCount,
+  lonePairPoint,
   skeletalBounds,
   skeletalFrame,
-  subscriptDigits,
-  type Point,
+    type Point,
 } from '@/components/organic'
 import { SimulationControls } from '@/components/simulation/Simulation'
 import type { SimulationProps } from '@/components/simulation/registry'
@@ -18,6 +19,7 @@ import {
   atomLabel,
   buildStep,
   bondLabel,
+  displaySpecies,
   judgeArrow,
   partOf,
   stepOutcome,
@@ -29,7 +31,8 @@ import {
 } from '@/lib/chem/arrow-push'
 import { intermediateStability, rankIntermediates, type IntermediateKind } from '@/lib/chem/electronic-effects'
 import type { MolGraph } from '@/lib/chem/molecule-graph'
-import { parseSmiles, toCondensed } from '@/lib/chem/molecule-parse'
+import { parseSmiles } from '@/lib/chem/molecule-parse'
+import { speciesLabel } from '@/lib/chem/species-labels'
 import { ARROW_PUSHER_STEPS } from './arrow-pusher-steps'
 import styles from './arrow-pusher.module.css'
 
@@ -53,19 +56,9 @@ const RANK_KINDS: { value: IntermediateKind; label: string }[] = [
   { value: 'carbanion', label: 'Carbanions' },
 ]
 
-/** A species as text for the learner: subscripts, and the charge or radical as a superscript or dot. */
+/** A species as text for the learner: its labelled name, or its condensed formula. */
 function speciesText(g: MolGraph): string {
-  if (g.atoms.length === 1) {
-    const h = g.atoms[0].hCount ?? 0
-    const hText = h > 0 ? `H${subscriptDigits(h)}` : ''
-    return `${g.atoms[0].element}${hText}${atomLabel(g, 0).slice(g.atoms[0].element.length)}`
-  }
-  const radical = g.atoms.some((a) => (a.radical ?? 0) > 0)
-  const base = toCondensed(g)
-    .replace(/\d+/g, (d) => subscriptDigits(Number(d)))
-    .replace(/\+/g, '⁺')
-    .replace(/-/g, '⁻')
-  return `${base}${radical ? '•' : ''}`
+  return displaySpecies(g)
 }
 
 /** Atom positions on the stage (pixels), from the same frame that SkeletalFormula draws. */
@@ -81,19 +74,27 @@ function stageAtoms(step: PushStep): Point[] {
   return atoms
 }
 
-/** Where an arrow starts on the stage: the middle of a bond, or a point off a lone pair. */
-function sourcePoint(step: PushStep, atoms: Point[], src: ArrowSource): Point {
+/**
+ * Where an arrow starts on the stage: the middle of a bond, or the lone pair of an atom. The lone
+ * pair is the one SkeletalFormula draws on the side facing the acceptor, so the arrow leaves the dots.
+ */
+function sourcePoint(step: PushStep, atoms: Point[], src: ArrowSource, target: number): Point {
   if (src.kind === 'bond') {
     const b = step.graph.bonds[src.bond]
     return bondAnchor(atoms[b.a], atoms[b.b])
   }
-  const p = atoms[src.atom]
   const part = partOf(step, src.atom)
-  const origin = { x: CENTRE.x + step.parts[part].offset.x, y: CENTRE.y + step.parts[part].offset.y }
-  const dx = p.x - origin.x
-  const dy = p.y - origin.y
-  const angle = Math.hypot(dx, dy) < 1 ? Math.atan2(CENTRE.y - p.y, CENTRE.x - p.x) : Math.atan2(dy, dx)
-  return lonePairAnchor(p, angle, 28)
+  const sub = subgraph(step, part)
+  const k = src.atom - step.partStart[part]
+  const frame = skeletalFrame(sub, SCALE)
+  const atom = sub.atoms[k]
+  const bondOrderSum = sub.bonds.reduce((t, b) => t + (b.a === k || b.b === k ? b.order : 0), 0)
+  const count = lonePairCount(atom.element, atom.charge ?? 0, bondOrderSum, atom.hCount ?? 0, atom.radical ?? 0)
+  const angles = lonePairAngles(frame.points, frame.adj, k, count)
+  const p = atoms[src.atom]
+  const toTarget = Math.atan2(atoms[target].y - p.y, atoms[target].x - p.x)
+  const facing = angles.reduce((best, a) => (Math.cos(a - toTarget) > Math.cos(best - toTarget) ? a : best), angles[0] ?? toTarget)
+  return lonePairPoint(p, facing, 0.64 * SCALE + 6)
 }
 
 /**
@@ -103,7 +104,7 @@ function sourcePoint(step: PushStep, atoms: Point[], src: ArrowSource): Point {
  */
 function endPoint(step: PushStep, atoms: Point[], spec: ArrowSpec): Point {
   const to = atoms[spec.target]
-  const from = sourcePoint(step, atoms, spec.source)
+  const from = sourcePoint(step, atoms, spec.source, spec.target)
   const dx = to.x - from.x
   const dy = to.y - from.y
   const len = Math.hypot(dx, dy) || 1
@@ -142,7 +143,7 @@ function ArrowLayer({
   const arrowFor = (spec: ArrowSpec, key: string, opacity: number) => (
     <g key={key} opacity={opacity} data-arrow={key}>
       <CurvedArrow
-        from={sourcePoint(step, atoms, spec.source)}
+        from={sourcePoint(step, atoms, spec.source, spec.target)}
         to={endPoint(step, atoms, spec)}
         bend={spec.source.kind === 'bond' ? 0.55 : 0.35}
         kind={spec.head}
@@ -159,7 +160,7 @@ function ArrowLayer({
       {draft.source && draft.target !== null && (
         <g opacity={0.6} data-arrow="draft">
           <CurvedArrow
-            from={sourcePoint(step, atoms, draft.source)}
+            from={sourcePoint(step, atoms, draft.source, draft.target)}
             to={endPoint(step, atoms, { source: draft.source, target: draft.target, head: draft.head })}
             kind={draft.head}
             gap={4}
@@ -256,11 +257,22 @@ function ArrowStage({
   )
 }
 
+/** Plain words for why a species sits where it does: its alkyl groups and α-hydrogens. */
+function reasonText(kind: IntermediateKind, alkylGroups: number, alphaH: number): string {
+  const alkyl = `${alkylGroups} alkyl ${alkylGroups === 1 ? 'group' : 'groups'} (+I)`
+  if (kind === 'carbanion') {
+    return `${alkyl}, which push more charge onto the negative carbon`
+  }
+  const hydrogens = `${alphaH} α-hydrogen${alphaH === 1 ? '' : 's'} (hyperconjugation)`
+  return `${alkyl} and ${hydrogens}`
+}
+
 /** The intermediate-stability ranking game: sort the species, most stable first, then check. */
 function RankingGame() {
   const [kind, setKind] = useState<IntermediateKind>('carbocation')
   const [picks, setPicks] = useState<number[]>([])
-  const [message, setMessage] = useState<string>('Pick the four species in order, most stable first.')
+  const [headline, setHeadline] = useState('Pick the four species in order, most stable first.')
+  const [lines, setLines] = useState<string[]>([])
   const items = useMemo(
     () =>
       RANK_SETS[kind].map((s) => {
@@ -273,7 +285,8 @@ function RankingGame() {
   const choose = (k: IntermediateKind) => {
     setKind(k)
     setPicks([])
-    setMessage('Pick the four species in order, most stable first.')
+    setLines([])
+    setHeadline('Pick the four species in order, most stable first.')
   }
 
   const toggle = (i: number) => {
@@ -285,19 +298,18 @@ function RankingGame() {
 
   const check = () => {
     if (picks.length < items.length) {
-      setMessage(`Pick all ${items.length} species first. ${items.length - picks.length} to go.`)
+      setLines([])
+      setHeadline(`Pick all ${items.length} species first. ${items.length - picks.length} to go.`)
       return
     }
     const correct = rankIntermediates(items)
     const same = correct.every((c, k) => c === picks[k])
-    const lines = correct.map((c, k) => {
-      const st = intermediateStability(kind, items[c].graph, items[c].centre)
-      return `${k + 1}. ${speciesText(items[c].graph)}: ${st.reasons.join('; ')}.`
-    })
-    setMessage(
-      same
-        ? `Correct. ${lines.join(' ')}`
-        : `Not quite. The lib ranks them in this order. ${lines.join(' ')}`,
+    setHeadline(same ? 'Correct. Most stable first:' : 'Not quite. The order, most stable first:')
+    setLines(
+      correct.map((c) => {
+        const st = intermediateStability(kind, items[c].graph, items[c].centre)
+        return `${speciesText(items[c].graph)}: ${reasonText(kind, st.alkylGroups, st.alphaH)}.`
+      }),
     )
   }
 
@@ -308,21 +320,19 @@ function RankingGame() {
       <ul className={styles.rankGrid} aria-label={`${RANK_KINDS.find((k) => k.value === kind)?.label} to rank`}>
         {items.map((item, i) => {
           const order = picks.indexOf(i)
+          const label = speciesText(item.graph)
           return (
             <li key={RANK_SETS[kind][i]}>
               <button
                 type="button"
                 className={styles.card}
                 aria-pressed={order >= 0}
-                aria-label={`${speciesText(item.graph)}`}
+                aria-label={label}
                 data-picked={order >= 0 ? 'true' : 'false'}
                 onClick={() => toggle(i)}
               >
-                <svg viewBox="-70 -60 140 120" role="img" aria-hidden="true" className={styles.cardDrawing}>
-                  <SkeletalFormula graph={item.graph} scale={34} />
-                </svg>
                 <span className={styles.name}>
-                  {speciesText(item.graph)}
+                  <span className={styles.cardLabel}>{label}</span>
                   {order >= 0 ? <span className={styles.badge}>{order + 1}</span> : null}
                 </span>
               </button>
@@ -338,9 +348,16 @@ function RankingGame() {
           Clear
         </Button>
       </div>
-      <p className={styles.readout} aria-live="polite" data-testid="rank-readout">
-        {message}
-      </p>
+      <div className={styles.readout} aria-live="polite" data-testid="rank-readout">
+        <p>{headline}</p>
+        {lines.length > 0 && (
+          <ol className={styles.rankLines}>
+            {lines.map((line) => (
+              <li key={line}>{line}</li>
+            ))}
+          </ol>
+        )}
+      </div>
     </div>
   )
 }
@@ -430,7 +447,7 @@ export function ArrowPusher(_props: SimulationProps) {
     setPlaced(next)
     resetDraft()
     if (next.length === step.required.length) {
-      setFeedback('All the arrows are drawn. The result below comes from the lib.')
+      setFeedback('All the arrows are drawn. The result follows from the arrows.')
     } else {
       setFeedback(`Arrow ${next.length} placed. ${step.required.length - next.length} to go.`)
     }

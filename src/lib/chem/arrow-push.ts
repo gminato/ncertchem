@@ -13,6 +13,7 @@
 import { cleavage, classifyReagent, PAULING_ELECTRONEGATIVITY } from './electronic-effects'
 import type { MolGraph } from './molecule-graph'
 import { molecularFormula, parseSmiles, toCondensed } from './molecule-parse'
+import { speciesLabel } from './species-labels'
 
 /** A full head moves an electron pair; a half head (fish hook) moves one electron. */
 export type ArrowHead = 'pair' | 'radical'
@@ -350,14 +351,29 @@ export function applyAttack(g: MolGraph, donor: number, acceptor: number): MolGr
   return { atoms, bonds: [...g.bonds.map((b) => ({ ...b })), { a: donor, b: acceptor, order: 1 }] }
 }
 
-/** The species of a graph as a formula with its charge, from the lib (no names for ions). */
+/** Digits as subscripts and the ion signs as superscripts, for a formula or a condensed string. */
+export function subscriptText(text: string): string {
+  return text
+    .replace(/\d+/g, (d) => d.split('').map((c) => '₀₁₂₃₄₅₆₇₈₉'[Number(c)]).join(''))
+    .replace(/\+/g, '⁺')
+    .replace(/-/g, '⁻')
+}
+
+/** A species for a learner: its labelled name if the unit has one, else its condensed formula. */
+export function displaySpecies(g: MolGraph): string {
+  const known = speciesLabel(g)
+  if (known) return known
+  if (g.atoms.length === 1) return atomLabel(g, 0)
+  const radical = g.atoms.some((a) => (a.radical ?? 0) > 0)
+  return `${subscriptText(toCondensed(g))}${radical ? '•' : ''}`
+}
+
+/** A species for the outcome: a labelled ion or radical by its name, otherwise its name and formula. */
 function speciesLine(g: MolGraph): string {
-  if (g.atoms.length === 1) {
-    return atomLabel(g, 0)
+  if (g.atoms.length === 1 || speciesLabel(g)) {
+    return displaySpecies(g)
   }
-  const formula = molecularFormula(g).replace(/-/g, '−').replace(/\+/g, '⁺')
-  const text = toCondensed(g).replace(/\+/g, '⁺').replace(/-/g, '⁻')
-  return `${text} (${formula})`
+  return `${displaySpecies(g)} (${subscriptText(molecularFormula(g))})`
 }
 
 /**
@@ -371,7 +387,7 @@ export function stepOutcome(step: PushStep): StepOutcome {
     const el = classifyReagent(subgraph(step, 1))
     return {
       lines: [
-        `Nucleophile: ${nu}. Electrophile: ${el}.`,
+        `Donor: ${nu}. Acceptor: ${el}.`,
         `Product: ${speciesLine(product)}`,
       ],
       product,

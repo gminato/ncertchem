@@ -1,18 +1,24 @@
 import { cleavage, intermediateStability, rankIntermediates, type IntermediateItem } from '@/lib/chem/electronic-effects'
-import { molecularFormula, parseSmiles, toCondensed } from '@/lib/chem/molecule-parse'
+import { displaySpecies } from '@/lib/chem/arrow-push'
+import { speciesLabel } from '@/lib/chem/species-labels'
+import { parseSmiles } from '@/lib/chem/molecule-parse'
 import type { MolGraph } from '@/lib/chem/molecule-graph'
-import { subscriptDigits } from '@/components/organic/condensed'
 
-/** A bond that breaks: heterolytic (ions) or homolytic (radicals), drawn by BondCleavage. */
+/** The intact molecule: a neutral bond with its shared pair, before anything breaks. */
+export interface MoleculePose {
+  view: 'molecule'
+  title: string
+}
+
+/** A bond that breaks: heterolytic (ions) or homolytic (radicals), with charges only after fission. */
 export interface BondPose {
   view: 'bond'
   mode: 'heterolytic' | 'homolytic'
   /** 0 = the bond is intact, 1 = it has broken. */
   progress: number
-  /** Heterolysis only: the fragment that takes the pair. */
-  anionSide: 'left' | 'right'
   left: string
   right: string
+  caption: string
   title: string
 }
 
@@ -29,40 +35,34 @@ export interface LadderPose {
   title: string
 }
 
-export type FissionPose = BondPose | OrbitalPose | LadderPose
+export type FissionPose = MoleculePose | BondPose | OrbitalPose | LadderPose
 
-/** Subscript digits in a condensed formula, e.g. 'CH3CHCH3' → 'CH₃CHCH₃'. */
-export function subFormula(text: string): string {
-  return text.replace(/\d+/g, (d) => subscriptDigits(Number(d)))
+/** The worked example: 2-bromopropane, drawn intact. */
+export const INTACT_SMILES = 'CC(C)Br'
+
+/** The two fragments from the lib's cleavage of 2-bromopropane, labelled for the learner. */
+function fragmentLabels(mode: 'heterolytic' | 'homolytic'): { left: string; right: string } {
+  const [left, right] = cleavage(parseSmiles(INTACT_SMILES), 2, mode)
+  return { left: displaySpecies(left), right: displaySpecies(right) }
 }
 
-/** The isopropyl group of the worked example, from the lib's homolysis of 2-bromopropane. */
-function isopropylLabel(): string {
-  const [fragment] = cleavage(parseSmiles('CC(C)Br'), 2, 'homolytic')
-  return subFormula(toCondensed(fragment))
-}
-
-export const ISOPROPYL = isopropylLabel()
+export const CATION_FRAGMENTS = fragmentLabels('heterolytic')
+export const RADICAL_FRAGMENTS = fragmentLabels('homolytic')
 
 /** The six Steps of the Scrolly. */
 export function fissionPoses(): FissionPose[] {
   return [
     {
-      view: 'bond',
-      mode: 'heterolytic',
-      progress: 0,
-      anionSide: 'right',
-      left: ISOPROPYL,
-      right: 'Br',
+      view: 'molecule',
       title: 'One covalent C–Br bond: a shared pair of electrons',
     },
     {
       view: 'bond',
       mode: 'heterolytic',
       progress: 1,
-      anionSide: 'right',
-      left: ISOPROPYL,
-      right: 'Br',
+      left: CATION_FRAGMENTS.left,
+      right: CATION_FRAGMENTS.right,
+      caption: 'Heterolysis: the pair goes to Br',
       title: 'Heterolysis: the pair goes to bromine',
     },
     {
@@ -79,9 +79,9 @@ export function fissionPoses(): FissionPose[] {
       view: 'bond',
       mode: 'homolytic',
       progress: 1,
-      anionSide: 'right',
-      left: ISOPROPYL,
-      right: 'Br',
+      left: RADICAL_FRAGMENTS.left,
+      right: RADICAL_FRAGMENTS.right,
+      caption: 'Homolysis: each fragment keeps one electron',
       title: 'Homolysis: each fragment keeps one electron',
     },
     {
@@ -96,7 +96,7 @@ export interface LadderRow {
   id: string
   /** Degree from the number of carbons on the centre (lib: alkylGroups). */
   degree: string
-  /** Condensed formula of the ion or radical, from the lib. */
+  /** The labelled species, e.g. (CH₃)₃C⁺ or CH₃•. */
   label: string
   smiles: string
   alkylGroups: number
@@ -130,7 +130,7 @@ export function ladderRows(kind: 'carbocation' | 'radical'): LadderRow[] {
     return {
       id: smiles[i],
       degree: degreeName(st.alkylGroups),
-      label: `${subFormula(toCondensed(item.graph).replace(/[⁺⁻•]/g, ''))}${kind === 'carbocation' ? '⁺' : '•'}`,
+      label: speciesLabel(item.graph) ?? displaySpecies(item.graph),
       smiles: smiles[i],
       alkylGroups: st.alkylGroups,
       alphaH: st.alphaH,
@@ -140,7 +140,3 @@ export function ladderRows(kind: 'carbocation' | 'radical'): LadderRow[] {
   })
 }
 
-/** Formula of a species for a caption, from the lib, with the charge written as a superscript. */
-export function speciesFormula(g: MolGraph): string {
-  return molecularFormula(g).replace(/-/g, '−')
-}

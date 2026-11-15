@@ -121,13 +121,13 @@ describe('judgeArrow', () => {
 describe('stepOutcome (lib bookkeeping)', () => {
   it('heterolysis of 2-bromopropane leaves a secondary cation and a bromide', () => {
     const out = stepOutcome(byId('het-c-br'))
-    expect(out.lines[0]).toBe('CH3CH⁺CH3 (C3H7⁺)')
+    expect(out.lines[0]).toBe('(CH₃)₂CH⁺')
     expect(out.lines[1]).toBe('Br⁻')
   })
 
   it('homolysis of 1-bromopropane leaves a propyl radical and a bromine atom', () => {
     const out = stepOutcome(byId('hom-c-br'))
-    expect(out.lines[0]).toMatch(/C3H7\)$/)
+    expect(out.lines[0]).toBe('CH₃CH₂CH₂•')
     expect(out.lines[1]).toMatch(/Br•/)
   })
 
@@ -142,8 +142,8 @@ describe('stepOutcome (lib bookkeeping)', () => {
     const out = stepOutcome(byId('att-nh3-secondary'))
     expect(molecularFormula(out.product as NonNullable<typeof out.product>)).toBe('C3H10N+')
     expect(out.product?.atoms.reduce((t, a) => t + (a.charge ?? 0), 0)).toBe(1)
-    expect(out.lines[0]).toMatch(/nucleophile/)
-    expect(out.lines[0]).toMatch(/electrophile/)
+    expect(out.lines[0]).toMatch(/Donor: nucleophile/)
+    expect(out.lines[0]).toMatch(/Acceptor: electrophile/)
   })
 })
 

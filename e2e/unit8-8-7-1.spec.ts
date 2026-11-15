@@ -83,6 +83,7 @@ for (const scheme of ['light', 'dark'] as const) {
       // Changed state 2: the correct full-headed arrow completes the step and shows the products.
       await sim.getByRole('radio', { name: 'Full head: a pair' }).click()
       await sim.getByRole('button', { name: 'Place arrow', exact: true }).click()
+      await expect(sim.getByTestId('arrow-outcome')).toContainText('(CH₃)₂CH⁺')
       await expect(sim.getByTestId('arrow-outcome')).toContainText('Br⁻')
       await sim.screenshot({ path: path.join(SCREEN_DIR, `u8-8-7-1-arrow-heterolysis-${scheme}.png`) })
 
@@ -101,8 +102,8 @@ for (const scheme of ['light', 'dark'] as const) {
       // Ranking game: order the carbocations and check the lib's order.
       const rank = sim.getByTestId('rank-game')
       await rank.scrollIntoViewIfNeeded()
-      await rank.getByRole('button', { name: 'CH₃C⁺(CH₃)CH₃', exact: true }).click()
-      await rank.getByRole('button', { name: 'CH₃CH⁺CH₃', exact: true }).click()
+      await rank.getByRole('button', { name: '(CH₃)₃C⁺', exact: true }).click()
+      await rank.getByRole('button', { name: '(CH₃)₂CH⁺', exact: true }).click()
       await rank.getByRole('button', { name: 'CH₃CH₂⁺', exact: true }).click()
       await rank.getByRole('button', { name: 'CH₃⁺', exact: true }).click()
       await rank.getByRole('button', { name: 'Check the order', exact: true }).click()
