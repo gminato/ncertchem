@@ -12,14 +12,14 @@ export interface TagSpec {
   element?: string
   atomIndex?: number
   value: string
-  tone?: 'ox' | 'red' | 'neutral'
+  tone?: 'ox' | 'red' | 'neutral' | 'accent'
 }
 
 export interface OxidationTagProps extends Omit<React.SVGAttributes<SVGGElement>, 'children'> {
   formula: string
   charge?: string
   tags: readonly TagSpec[]
-  tone?: 'ox' | 'red' | 'neutral'
+  tone?: 'ox' | 'red' | 'neutral' | 'accent'
   x?: number
   y?: number
   fontSize?: number
@@ -158,14 +158,18 @@ export const OxidationTag = forwardRef<SVGGElement, OxidationTagProps>(function 
             ? 'var(--ox)'
             : badgeTone === 'red'
               ? 'var(--red)'
-              : 'var(--border)'
+              : badgeTone === 'accent'
+                ? 'var(--accent)'
+                : 'var(--border)'
 
         const textColor =
           badgeTone === 'ox'
             ? 'var(--ox)'
             : badgeTone === 'red'
               ? 'var(--red)'
-              : 'var(--fg-muted)'
+              : badgeTone === 'accent'
+                ? 'var(--accent)'
+                : 'var(--fg-muted)'
 
         const badgeX = formulaOffsetX + placed.x
         const elemX = formulaOffsetX + targetX

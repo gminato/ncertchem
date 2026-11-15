@@ -611,6 +611,52 @@ export function stockName(formula: string, charge = 0): string {
   return formula.replace(regex, `$1(${roman})`)
 }
 
+function selectDefaultTargetElement(symbols: string[], formula: string): string {
+  const score = (s: string): number => {
+    if (ALKALI_METALS.has(s) || ALKALINE_EARTH_METALS.has(s) || s === 'Al' || s === 'F') {
+      return 1 // strictly fixed by Rule 2 or Rule 5
+    }
+    if (s === 'H') {
+      const hasMetal = symbols.some((other) => ALKALI_METALS.has(other) || ALKALINE_EARTH_METALS.has(other))
+      return hasMetal ? 5 : 3
+    }
+    if (s === 'O') {
+      const isException =
+        SUPEROXIDES.has(formula) ||
+        PEROXIDES.has(formula) ||
+        symbols.includes('F') ||
+        symbols.some((other) => ALKALI_METALS.has(other) || ALKALINE_EARTH_METALS.has(other))
+      return isException ? 6 : 4
+    }
+    if (s === 'Cl' || s === 'Br' || s === 'I') {
+      const withOorF = symbols.includes('O') || symbols.includes('F')
+      return withOorF ? 9 : 2
+    }
+    return 10 // variable valence transition metals & p-block central atoms
+  }
+
+  let best = symbols[0]
+  let bestScore = score(symbols[0])
+  for (let i = 1; i < symbols.length; i++) {
+    const s = symbols[i]
+    const sc = score(s)
+    if (sc > bestScore) {
+      best = s
+      bestScore = sc
+    }
+  }
+  return best
+}
+
+function nonTargetRulePriority(element: string): number {
+  if (ALKALI_METALS.has(element) || ALKALINE_EARTH_METALS.has(element) || element === 'Al') return 1 // Rule 2
+  if (element === 'F') return 2 // Rule 5
+  if (element === 'H') return 3 // Rule 4
+  if (element === 'O') return 4 // Rule 3
+  if (element === 'Cl' || element === 'Br' || element === 'I') return 5 // Rule 5
+  return 6
+}
+
 /**
  * Generates an ordered list of reasoning steps used to derive an element's oxidation number.
  *
@@ -630,7 +676,7 @@ export function explainOxidationNumber(
     const entry = STRUCTURAL_OXIDATION_EXCEPTIONS[cleanBase]
     const counts = parseFormula(cleanBase)
     const symbols = Object.keys(counts)
-    const target = targetElement ?? symbols.find((s) => s !== 'O' && s !== 'H' && !ALKALI_METALS.has(s)) ?? symbols[0]
+    const target = targetElement ?? selectDefaultTargetElement(symbols, cleanBase)
     const finalVal = entry.oxidationNumbers[target] ?? makeRational(0, 1)
     return {
       formula,
@@ -651,17 +697,19 @@ export function explainOxidationNumber(
   const counts = parseFormula(formula)
   const symbols = Object.keys(counts)
 
-  const target = targetElement ?? symbols.find((s) => s !== 'O' && s !== 'H' && !ALKALI_METALS.has(s)) ?? symbols[0]
+  const target = targetElement ?? selectDefaultTargetElement(symbols, formula)
   if (!counts[target]) {
     throw new RangeError(`Element "${target}" does not exist in formula "${formula}"`)
   }
 
   const steps: OxidationStep[] = []
 
-  for (const s of symbols) {
-    if (s === target) {
-      continue
-    }
+  // Order non-target elements by rule priority so fixed-value rules come first
+  const nonTargetSymbols = symbols
+    .filter((s) => s !== target)
+    .sort((a, b) => nonTargetRulePriority(a) - nonTargetRulePriority(b))
+
+  for (const s of nonTargetSymbols) {
     const val = ox[s]
     let rule = `NCERT rule assignment for ${s}`
     if (ALKALI_METALS.has(s)) {
@@ -671,15 +719,15 @@ export function explainOxidationNumber(
     } else if (s === 'Al') {
       rule = 'Aluminium is always +3 in its compounds (Rule 2)'
     } else if (s === 'F') {
-      rule = 'Fluorine is always -1 in all its compounds (Rule 5)'
+      rule = 'Fluorine is always −1 in all its compounds (Rule 5)'
     } else if (s === 'H') {
       rule = val.num < 0 ? 'Hydrogen is −1 in metal hydrides (Rule 4 exception)' : 'Hydrogen is +1 in compounds with non-metals (Rule 4)'
     } else if (s === 'O') {
       if (val.num === -1 && val.den === 1) rule = 'Oxygen is −1 in peroxides (Rule 3 exception)'
       else if (val.num === -1 && val.den === 2) rule = 'Oxygen is −1/2 in superoxides (Rule 3 exception)'
-      else if (val.num > 0) rule = `Oxygen is positive (${rationalToString(val)}) when bonded to fluorine (Rule 3 exception)`
+      else if (val.num > 0) rule = `Oxygen is positive (${rationalToString(val).replace(/-/g, '−')}) when bonded to fluorine (Rule 3 exception)`
       else if (val.num === -2 && val.den === 1) rule = 'Oxygen is −2 in most compounds (Rule 3)'
-      else rule = `Oxygen is ${rationalToString(val)} here, fixed by the sum rule (Rule 6)`
+      else rule = `Oxygen is ${rationalToString(val).replace(/-/g, '−')} here, fixed by the sum rule (Rule 6)`
     } else if (s === 'Cl' || s === 'Br' || s === 'I') {
       rule = `Halogen ${s} has oxidation number −1 as halide (Rule 5)`
     }
@@ -690,7 +738,7 @@ export function explainOxidationNumber(
     })
   }
 
-  // Sum rule step
+  // Target step (sum rule / exception check)
   const finalVal = ox[target]
   const terms = symbols
     .map((s) => {
@@ -699,14 +747,29 @@ export function explainOxidationNumber(
       if (s === target) {
         return `${countPrefix}x`
       }
-      return `${countPrefix}(${rationalToString(ox[s])})`
+      return `${countPrefix}(${rationalToString(ox[s]).replace(/-/g, '−')})`
     })
     .join(' + ')
 
+  const chargeStr = charge === 0 ? '0' : charge > 0 ? `+${charge}` : `−${Math.abs(charge)}`
+
+  let targetRule = 'Sum rule: algebraic sum of oxidation numbers equals net charge (Rule 6)'
+  if (target === 'O') {
+    if (finalVal.num === -1 && finalVal.den === 2) {
+      targetRule = 'Oxygen is −1/2 in superoxides (Rule 3 exception); checked by the sum rule (Rule 6)'
+    } else if (finalVal.num === -1 && finalVal.den === 1) {
+      targetRule = 'Oxygen is −1 in peroxides (Rule 3 exception); checked by the sum rule (Rule 6)'
+    } else if (finalVal.num > 0 && symbols.includes('F')) {
+      targetRule = `Oxygen is positive (${rationalToString(finalVal).replace(/-/g, '−')}) when bonded to fluorine (Rule 3 exception); checked by the sum rule (Rule 6)`
+    }
+  } else if (target === 'H' && finalVal.num < 0) {
+    targetRule = 'Hydrogen is −1 in metal hydrides (Rule 4 exception); checked by the sum rule (Rule 6)'
+  }
+
   steps.push({
     element: target,
-    ruleApplied: 'Sum rule: algebraic sum of oxidation numbers equals net charge (Rule 6)',
-    equation: `${terms} = ${charge}`,
+    ruleApplied: targetRule,
+    equation: `${terms} = ${chargeStr}`,
     assignedValue: finalVal,
   })
 

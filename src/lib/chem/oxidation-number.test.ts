@@ -327,12 +327,28 @@ describe('oxidation-number.ts', () => {
 })
 
 describe('explainOxidationNumber: oxygen exceptions are named correctly', () => {
-  const ruleFor = (f: string, el: string) => JSON.stringify(explainOxidationNumber(f, 0, el))
+  const ruleFor = (f: string, el?: string) => JSON.stringify(explainOxidationNumber(f, 0, el))
   it('names superoxide, peroxide and fluoride cases', () => {
-    // The oxygen rule appears as a step when another element is the one being solved for.
+    // When el is explicitly specified
     expect(ruleFor('KO2', 'K')).toContain('superoxides')
     expect(ruleFor('KO2', 'K')).not.toContain('in peroxides')
     expect(ruleFor('H2O2', 'H')).toContain('in peroxides')
     expect(ruleFor('OF2', 'F')).toContain('fluorine')
+  })
+
+  it('orders KO2 derivation with fixed Rule 2 alkali metal first and O as target checked by sum rule', () => {
+    const exp = explainOxidationNumber('KO2', 0)
+    expect(exp.targetElement).toBe('O')
+    expect(exp.steps).toHaveLength(2)
+    // Step 1: K fixed by Rule 2
+    expect(exp.steps[0].element).toBe('K')
+    expect(exp.steps[0].ruleApplied).toContain('Rule 2')
+    expect(exp.steps[0].assignedValue).toEqual({ num: 1, den: 1 })
+    // Step 2: O superoxide exception verified by sum rule check
+    expect(exp.steps[1].element).toBe('O')
+    expect(exp.steps[1].ruleApplied).toContain('superoxides')
+    expect(exp.steps[1].ruleApplied).toContain('Rule 6')
+    expect(exp.steps[1].equation).toBe('(+1) + 2 × x = 0')
+    expect(exp.steps[1].assignedValue).toEqual({ num: -1, den: 2 })
   })
 })
