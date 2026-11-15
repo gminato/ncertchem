@@ -1,0 +1,89 @@
+.container {
+  width: 100%;
+  height: auto;
+  display: block;
+  user-select: none;
+}
+
+.surfaceCard {
+  fill: var(--surface-raised);
+  stroke: var(--border);
+  stroke-width: 1.5;
+  transition: stroke 0.3s ease, fill 0.3s ease;
+}
+
+.surfaceCardSolved {
+  fill: var(--surface-raised);
+  stroke: var(--ox);
+  stroke-width: 2;
+  filter: drop-shadow(0 0 10px rgba(16, 185, 129, 0.25));
+}
+
+.surfaceCardTrap {
+  fill: var(--surface-raised);
+  stroke: #f59e0b;
+  stroke-width: 2;
+  filter: drop-shadow(0 0 10px rgba(245, 158, 11, 0.25));
+}
+
+.headerPill {
+  fill: var(--surface-raised);
+  stroke: var(--border);
+  stroke-width: 1.2;
+}
+
+.ruleBanner {
+  fill: var(--surface);
+  stroke: var(--border);
+  stroke-width: 1;
+}
+
+.textTitle {
+  font-family: var(--font-sans);
+  font-size: 15px;
+  font-weight: 600;
+  fill: var(--fg);
+}
+
+.textSubtitle {
+  font-family: var(--font-sans);
+  font-size: 13px;
+  font-weight: 500;
+  fill: var(--fg-muted);
+}
+
+.textEquation {
+  font-family: var(--font-mono, monospace);
+  font-size: 16px;
+  font-weight: 600;
+  fill: var(--fg);
+}
+
+.textLedger {
+  font-family: var(--font-sans);
+  font-size: 13px;
+  font-weight: 400;
+  fill: var(--fg-muted);
+}
+
+.textSuccess {
+  font-family: var(--font-sans);
+  font-size: 14px;
+  font-weight: 600;
+  fill: var(--ox);
+}
+
+.textWarning {
+  font-family: var(--font-sans);
+  font-size: 13px;
+  font-weight: 600;
+  fill: #f59e0b;
+}
+
+.tagGlowOx {
+  filter: drop-shadow(0 0 8px rgba(16, 185, 129, 0.4));
+}
+
+.tagGlowRed {
+  filter: drop-shadow(0 0 8px rgba(59, 130, 246, 0.4));
+}
