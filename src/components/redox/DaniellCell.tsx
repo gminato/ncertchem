@@ -131,23 +131,24 @@ export const DaniellCell = forwardRef<SVGGElement, DaniellCellProps>(function Da
       {/* 1. Zn Anode Compartment (Left)                                  */}
       {/* ============================================================== */}
       <g transform={`translate(${znBeakerX}, 0)`}>
-        {/* Solution (clear ZnSO4) */}
+        {/* Solution (colourless ZnSO4: a faint neutral tint so the liquid and the bridge's dip read clearly) */}
         <g clipPath={`url(#${znClipId})`}>
           <rect
             x={bLeft - 5}
             y={liquidY}
             width={bw + 10}
             height={bBottom - liquidY + 5}
-            fill="var(--glass-fill)"
-            opacity={0.6}
+            fill="var(--fg-subtle)"
+            opacity={0.16}
           />
           <line
             x1={bLeft}
             y1={liquidY}
             x2={bRight}
             y2={liquidY}
-            stroke="var(--glass-wall)"
+            stroke="var(--fg-muted)"
             strokeWidth={1.5}
+            opacity={0.7}
           />
         </g>
 
