@@ -43,6 +43,7 @@ import { IsomerExplorer } from './sims/isomer-explorer'
 import { DistillationLab } from './sims/distillation-lab'
 import { ElementDetective } from './sims/element-detective'
 import { ElementalAnalyser } from './sims/elemental-analyser'
+import { AlkaneNamer } from './sims/alkane-namer'
 
 export interface SimulationProps {
   /** True when the Learner has asked the OS for reduced motion. Skip tweens and loops when set. */
@@ -100,4 +101,5 @@ export const simulations: Record<string, ComponentType<SimulationProps>> = {
   'distillation-lab': DistillationLab,
   'element-detective': ElementDetective,
   'elemental-analyser': ElementalAnalyser,
+  'alkane-namer': AlkaneNamer,
 }
