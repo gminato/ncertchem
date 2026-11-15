@@ -61,6 +61,9 @@ import { H2PotentialCurve } from './unit4/vbt/H2PotentialCurve'
 import { OverlapSteps } from './unit4/vbt/OverlapSteps'
 import { EthynePi } from './unit4/vbt/EthynePi'
 import { HybridGeometry } from './unit4/vbt/HybridGeometry'
+import { EntropyPhases } from './unit5/gibbs/EntropyPhases'
+import { SignCases } from './unit5/gibbs/SignCases'
+import { KLadder } from './unit5/gibbs/KLadder'
 
 /**
  * Animations available to a Scrolly Animation, keyed by the `animation` prop.
@@ -132,6 +135,9 @@ export const animations = {
   'vbt-overlap': OverlapSteps,
   'vbt-ethyne-pi': EthynePi,
   'vbt-hybrid-geometry': HybridGeometry,
+  'gibbs-entropy-phases': EntropyPhases,
+  'gibbs-sign-cases': SignCases,
+  'gibbs-k-ladder': KLadder,
 } as const
 
 export type AnimationName = keyof typeof animations
