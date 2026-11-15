@@ -24,8 +24,10 @@ export interface PVSeries {
 export interface PVDiagramProps extends Omit<React.SVGAttributes<SVGGElement>, 'children'> {
   /** The paths to draw, for example one-step, many-step and reversible. */
   series: readonly PVSeries[]
-  /** Draws the isotherm p = nRT / V as a faint dashed curve across the plot. nRT in L atm. */
+  /** Draws the isotherm p = nRT / V as a faint dashed curve across the plot. nRT in L × `pressureUnit`. */
   nRT?: number
+  /** Unit shown on the pressure axis. The series and nRT must use the same unit. Default 'atm'. */
+  pressureUnit?: 'atm' | 'bar'
   /** Id of the series whose work area is shaded. Expansion uses `--work`, compression `--heat`. */
   shade?: string
   /** 0 to 1: draws the paths in. Undefined means fully drawn. */
@@ -82,6 +84,7 @@ export const PVDiagram = forwardRef<SVGGElement, PVDiagramProps>(function PVDiag
   {
     series,
     nRT,
+    pressureUnit = 'atm',
     shade,
     progress,
     vMax = 12,
@@ -135,7 +138,7 @@ export const PVDiagram = forwardRef<SVGGElement, PVDiagramProps>(function PVDiag
         <tspan className="sym">V</tspan> / L
       </Label>
       <Label x={PLOT.left - 8} y={PLOT.top - 12} textAnchor="end" fontSize={TICK + 1} fill="var(--fg)">
-        <tspan className="sym">p</tspan> / atm
+        <tspan className="sym">p</tspan> / {pressureUnit}
       </Label>
 
       {/* Isotherm: the locus of the reversible path at this temperature */}
