@@ -87,6 +87,8 @@ import { Heterogeneous } from './unit6/heterogeneous/Heterogeneous'
 import { QAndK } from './unit6/qk/QAndK'
 import { IceMethod } from './unit6/qk/IceMethod'
 import { GibbsCurve } from './unit6/qk/GibbsCurve'
+import { AcidBaseConcepts } from './unit6/acidbase/AcidBaseConcepts'
+import { IonicElectrolytes } from './unit6/acidbase/IonicElectrolytes'
 
 /**
  * Animations available to a Scrolly Animation, keyed by the `animation` prop.
@@ -184,6 +186,8 @@ export const animations = {
   'q-and-k': QAndK,
   'ice-method': IceMethod,
   'qk-gibbs': GibbsCurve,
+  'acid-base-concepts': AcidBaseConcepts,
+  'ionic-electrolytes': IonicElectrolytes,
 } as const
 
 export type AnimationName = keyof typeof animations

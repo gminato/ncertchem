@@ -1,0 +1,80 @@
+.stage {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  font-family: var(--font-sans);
+  color: var(--fg);
+}
+
+.svg {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.header {
+  font-size: 18px;
+  fill: var(--fg-muted);
+  font-family: var(--font-sans);
+}
+
+.label {
+  font-size: 24px;
+  font-weight: 600;
+  fill: var(--fg);
+  font-family: var(--font-sans);
+}
+
+.note {
+  font-size: 16px;
+  fill: var(--fg-muted);
+  font-family: var(--font-sans);
+}
+
+.equilibrium {
+  font-size: 34px;
+  fill: var(--fg-muted);
+}
+
+.proton {
+  fill: var(--acid);
+  stroke: var(--surface);
+  stroke-width: 2;
+}
+
+.protonLabel {
+  font-size: 18px;
+  font-weight: 700;
+  fill: var(--acid);
+  font-family: var(--font-sans);
+}
+
+.arrow {
+  fill: none;
+  stroke: var(--fg-muted);
+  stroke-width: 2.5;
+  stroke-linecap: round;
+}
+
+.bond {
+  stroke: var(--fg);
+  stroke-width: 5;
+  stroke-linecap: round;
+}
+
+.caption {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-1, 4px);
+  font-size: 1.1rem;
+  min-height: 2.5rem;
+  text-align: center;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .stage * {
+    transition: none !important;
+  }
+}
