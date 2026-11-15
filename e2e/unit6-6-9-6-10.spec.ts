@@ -101,6 +101,7 @@ for (const scheme of ['light', 'dark'] as const) {
       await sim.getByRole('button', { name: 'Check card' }).click()
       await expect(sim.getByTestId('feedback')).toContainText('Not every role is right')
       await expect(sim.getByTestId('score')).toHaveText('Right so far: 1 of 2')
+      await expect(sim.getByText('✗ answer: NH₄⁺')).toBeVisible()
       await sim.screenshot({ path: path.join(SCREEN_DIR, `u6-6-10-sorter-wrong-${scheme}.png`) })
 
       expect(errors, errors.join('\n')).toEqual([])

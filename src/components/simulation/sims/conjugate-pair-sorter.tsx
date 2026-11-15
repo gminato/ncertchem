@@ -55,15 +55,12 @@ const SUPERSCRIPT: Record<string, string> = {
  * Co(NH3)6 becomes Co(NH₃)₆. Used where a formula appears as text rather than KaTeX.
  */
 function speciesText(s: PairSpecies): string {
-  const id = s.id.replace(/\^/g, '')
-  const charge = id.match(/(\d*[+-])$/)
-  const body = charge ? id.slice(0, id.length - charge[1].length) : id
+  // The charge comes from the species' own field, never from parsing the formula: "NH4+" is NH₄⁺, not NH⁴⁺.
+  const body = s.ce.replace(/\^.*$/, '').replace(/[+-]+$/, '')
   const sub = body.replace(/\d/g, (d) => SUBSCRIPT[d])
-  if (!charge) return sub
-  const sign = charge[1].slice(-1)
-  const magnitude = charge[1].slice(0, -1)
-  const mag = magnitude ? magnitude.replace(/\d/g, (d) => SUPERSCRIPT[d]) : ''
-  return `${sub}${mag}${SUPERSCRIPT[sign]}`
+  if (s.charge === 0) return sub
+  const mag = Math.abs(s.charge) > 1 ? String(Math.abs(s.charge)).replace(/\d/g, (d) => SUPERSCRIPT[d]) : ''
+  return `${sub}${mag}${SUPERSCRIPT[s.charge > 0 ? '+' : '-']}`
 }
 
 /**
