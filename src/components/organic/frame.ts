@@ -121,9 +121,25 @@ export function lonePairCount(element: string, charge: number, bondOrderSum: num
 /** Directions (radians) of an atom's lone pairs, spread around its free side. */
 export function lonePairAngles(points: readonly Point[], adj: readonly number[][], a: number, count: number): number[] {
   if (count <= 0) return []
-  const base = freeAngle(points, adj, a)
-  const step = 1.2
-  return Array.from({ length: count }, (_, i) => base + (i - (count - 1) / 2) * step)
+  const p = points[a]
+  const bonds = adj[a].map((b) => Math.atan2(points[b].y - p.y, points[b].x - p.x)).sort((x, y) => x - y)
+  const TAU = 2 * Math.PI
+  // No bonds: spread the pairs evenly, starting at the top.
+  if (bonds.length === 0) return Array.from({ length: count }, (_, i) => -Math.PI / 2 + (i * TAU) / count)
+  // One bond: bond and pairs share the circle evenly, like a Lewis structure
+  // (C=O oxygen: pairs at ±120° from the bond; O⁻ or a halogen: at 90°, 180° and 270°).
+  if (bonds.length === 1) return Array.from({ length: count }, (_, i) => bonds[0] + ((i + 1) * TAU) / (count + 1))
+  // Several bonds: the pairs share the largest gap between bonds evenly.
+  let start = bonds[bonds.length - 1]
+  let gap = bonds[0] + TAU - start
+  for (let i = 0; i + 1 < bonds.length; i++) {
+    const g = bonds[i + 1] - bonds[i]
+    if (g > gap) {
+      gap = g
+      start = bonds[i]
+    }
+  }
+  return Array.from({ length: count }, (_, i) => start + ((i + 1) * gap) / (count + 1))
 }
 
 /** The point on a lone pair of atom `a`, a radius out along angle `th`. */

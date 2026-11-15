@@ -213,11 +213,11 @@ export const SkeletalFormula = forwardRef<SVGGElement, SkeletalFormulaProps>(fun
               key={`ic-${ri}`}
               cx={ringCentres[ri].x}
               cy={ringCentres[ri].y}
-              r={apothem * scale * 0.92}
+              // A solid circle well inside the ring, as textbooks draw the benzene hybrid.
+              r={apothem * scale * 0.62}
               fill="none"
               stroke="var(--fg)"
               strokeWidth={bondStroke}
-              strokeDasharray={`${0.12 * scale} ${0.08 * scale}`}
             />
           )
         })}
