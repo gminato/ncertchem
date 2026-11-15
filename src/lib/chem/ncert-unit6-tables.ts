@@ -306,9 +306,9 @@ export const NCERT_UNIT6_PROBLEMS: readonly NcertProblem[] = [
   {
     number: '6.3',
     pdfPage: 11,
-    summary: 'PCl3 = 1.59 M, Cl2 = 1.59 M and PCl5 = 1.41 M at 500 K; find Kc for the reaction as stated (PCl3 + Cl2 ⇌ PCl5).',
-    printedAnswer: 'Kc = 1.79 (solution writes the reaction as PCl5 ⇌ PCl3 + Cl2)',
-    computedAnswer: 'Kc = 0.56 for PCl3 + Cl2 ⇌ PCl5 (1.79 is the constant for PCl5 ⇌ PCl3 + Cl2)',
+    summary: 'PCl3 = 1.59 M, Cl2 = 1.59 M and PCl5 = 1.41 M at 500 K; find Kc for PCl5 ⇌ PCl3 + Cl2 (lead-verified from the PDF image: pdftotext scrambles this equation).',
+    printedAnswer: 'Kc = 1.79',
+    computedAnswer: 'Kc = 1.79',
   },
   {
     number: '6.4',
@@ -513,12 +513,6 @@ export const NCERT_UNIT6_ERRATA: readonly NcertErratum[] = [
     printed: 'Ka(HOCl) = 2.5 × 10⁻⁵ in the Problem',
     correct: 'Ka(HOCl) = 3.0 × 10⁻⁸ in Table 6.6; with it, [H⁺] = 4.9 × 10⁻⁵ M, pH = 4.31, 0.061 % dissociation',
     note: 'The Problem is self-consistent with its own Ka but disagrees with the table printed two pages earlier. The printed pH 2.85 is the answer for 2.5 × 10⁻⁵ only.',
-  },
-  {
-    where: 'Problem 6.3, PDF pp. 11–12',
-    printed: 'The Problem asks for Kc of PCl3 + Cl2 ⇌ PCl5; the solution writes PCl5 ⇌ PCl3 + Cl2 and gives Kc = 1.79',
-    correct: 'For PCl3 + Cl2 ⇌ PCl5, Kc = [PCl5]/([PCl3][Cl2]) = 1.41/(1.59 × 1.59) = 0.56',
-    note: '1.79 is the constant for the reverse reaction. Both values are consistent with each other; the direction written in the Problem and the answer disagree.',
   },
   {
     where: 'Problem 6.5, PDF p. 12',
