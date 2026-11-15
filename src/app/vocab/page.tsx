@@ -217,10 +217,17 @@ const PENTANOL_BADGE = { x: PENTANOL_O.x + 120, y: PENTANOL_O.y }
 const PENTANOL_BOUNDS = skeletalBounds(PENTAN2OL)
 const CONDENSED_BOUNDS = condensedBounds(PENTAN2OL)
 const STRUCTURAL_BOUNDS = structuralBounds(PENTAN2OL)
-const RESONANCE_CARBOXYLATE_BOUNDS = resonanceBounds([{ graph: ACETATE_A }, { graph: ACETATE_B }], { graph: ACETATE_HYBRID }, 54, 84)
-const RESONANCE_BENZENE_BOUNDS = resonanceBounds([{ graph: BENZENE_A }, { graph: BENZENE_B }], { graph: BENZENE_HYBRID }, 54, 84)
+/* Bond length in px for the resonance sets: each contributor is about 200 px wide. */
+const RESONANCE_SCALE = 72
+const RESONANCE_CARBOXYLATE_BOUNDS = resonanceBounds([{ graph: ACETATE_A }, { graph: ACETATE_B }], { graph: ACETATE_HYBRID }, RESONANCE_SCALE, 84)
+const RESONANCE_BENZENE_BOUNDS = resonanceBounds([{ graph: BENZENE_A }, { graph: BENZENE_B }], { graph: BENZENE_HYBRID }, RESONANCE_SCALE, 84)
 const CLEAVAGE_VIEW = `${-BOND_CLEAVAGE_SIZE.width / 2} ${-BOND_CLEAVAGE_SIZE.height / 2} ${BOND_CLEAVAGE_SIZE.width} ${BOND_CLEAVAGE_SIZE.height}`
 const ORBITAL_VIEW = `${-INTERMEDIATE_SIZE.width / 2} ${-INTERMEDIATE_SIZE.height / 2} ${INTERMEDIATE_SIZE.width} ${INTERMEDIATE_SIZE.height}`
+
+/* Morph strip: the same molecule at five morph progress values, side by side. */
+const MORPH_FRAMES = [0, 0.25, 0.5, 0.75, 1] as const
+const MORPH_SPACING = STRUCTURAL_BOUNDS.width + 28
+const MORPH_VIEW = `${STRUCTURAL_BOUNDS.x - 8} ${STRUCTURAL_BOUNDS.y - 8} ${(MORPH_FRAMES.length - 1) * MORPH_SPACING + STRUCTURAL_BOUNDS.width + 16} ${STRUCTURAL_BOUNDS.height + 52}`
 
 export default function VocabPage() {
   // Proportional hydrogen energy levels (converted from Joules to eV), n = 1..4
@@ -2683,6 +2690,31 @@ export default function VocabPage() {
             </div>
           </article>
 
+          <article className={`${styles.card} ${styles.wide}`}>
+            <div className={`${styles.cardCanvas} ${styles.cardCanvasWide}`}>
+              <svg viewBox={MORPH_VIEW} className={styles.svgElement} role="img" aria-label="Pentan-2-ol at five morph progress values, 0, 0.25, 0.5, 0.75 and 1: hydrogens fold into their carbons first, carbon letters ghost, then the chain bends into its zig-zag">
+                {MORPH_FRAMES.map((t, i) => (
+                  <g key={t}>
+                    <StructuralFormula graph={PENTAN2OL} morph={t} x={i * MORPH_SPACING} />
+                    <text x={i * MORPH_SPACING + STRUCTURAL_BOUNDS.x + STRUCTURAL_BOUNDS.width / 2} y={STRUCTURAL_BOUNDS.y + STRUCTURAL_BOUNDS.height + 26} textAnchor="middle" fontSize={15} fontWeight={500} fontFamily="var(--font-sans)" fill="var(--fg-muted)">
+                      t = {t}
+                    </text>
+                  </g>
+                ))}
+              </svg>
+            </div>
+            <div className={styles.cardBody}>
+              <div className={styles.cardHeading}>
+                <span>Morph in five frames</span>
+                <span className={styles.cardBadge}>t = 0 → 1</span>
+              </div>
+              <p className={styles.cardDescription}>
+                Read left to right. Hydrogens fold into their carbons, the carbon letters ghost but the chain stays
+                visible at halfway, and then the chain bends into its zig-zag.
+              </p>
+            </div>
+          </article>
+
           <article className={styles.card}>
             <div className={`${styles.cardCanvas} ${styles.cardCanvasTall}`}>
               <svg viewBox={`${-WEDGE_SIZE.width / 2} ${-WEDGE_SIZE.height / 2 - 24} ${WEDGE_SIZE.width} ${WEDGE_SIZE.height + 48}`} className={styles.svgElement} role="img" aria-label="Tetrahedral carbon drawn with two bonds in the plane, one wedge towards the viewer and one dash away">
@@ -2773,6 +2805,7 @@ export default function VocabPage() {
             <div className={`${styles.cardCanvas} ${styles.cardCanvasWide}`}>
               <svg viewBox={viewBoxOf(RESONANCE_CARBOXYLATE_BOUNDS, 10)} className={styles.svgElement} role="img" aria-label="Acetate ion: two resonance forms joined by a double-headed arrow, curved arrows on the first form showing the electron shift, and the resonance hybrid below with each C-O bond solid plus dashed and a partial negative charge next to each oxygen">
                 <ResonanceSet
+                  scale={RESONANCE_SCALE}
                   contributors={[
                     {
                       graph: ACETATE_A,
@@ -2812,6 +2845,7 @@ export default function VocabPage() {
             <div className={`${styles.cardCanvas} ${styles.cardCanvasWide}`}>
               <svg viewBox={viewBoxOf(RESONANCE_BENZENE_BOUNDS, 10)} className={styles.svgElement} role="img" aria-label="Benzene: two Kekule forms joined by a double-headed arrow, and the resonance hybrid as a hexagon with an inscribed circle">
                 <ResonanceSet
+                  scale={RESONANCE_SCALE}
                   contributors={[{ graph: BENZENE_A }, { graph: BENZENE_B }]}
                   hybrid={{ graph: BENZENE_HYBRID, innerCircles: true }}
                 />

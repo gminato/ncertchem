@@ -13,6 +13,7 @@ const CARD_NAMES = [
   'card-6-condensed',
   'card-7-bond-line',
   'card-8-morph',
+  'card-8b-morph-strip',
   'card-9-wedge',
   'card-10-3d',
   'card-11-curved-arrows',
