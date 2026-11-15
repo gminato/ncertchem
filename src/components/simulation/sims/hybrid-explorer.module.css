@@ -1,0 +1,116 @@
+.sim {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  font-family: var(--font-sans);
+  color: var(--fg);
+}
+
+.panels {
+  display: grid;
+  grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr);
+  gap: var(--space-4);
+  align-items: stretch;
+}
+
+.panel {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.ladder {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.card {
+  background: var(--surface-raised);
+  border-radius: var(--radius-md, 10px);
+  padding: var(--space-4);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  min-height: 100%;
+  box-sizing: border-box;
+}
+
+.cardTitle {
+  margin: 0;
+  font-weight: 600;
+  font-size: 1rem;
+}
+
+.cardBody {
+  margin: 0;
+  font-size: 0.95rem;
+  line-height: 1.5;
+  color: var(--fg-muted);
+}
+
+.lobeRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+  align-items: center;
+}
+
+.lobeSvg {
+  width: 100%;
+  max-width: 260px;
+  height: auto;
+  display: block;
+}
+
+.readout {
+  margin: 0;
+  font-size: 1rem;
+  line-height: 1.5;
+  min-height: 3em;
+}
+
+.note {
+  margin: 0;
+  font-size: 0.875rem;
+  color: var(--fg-subtle);
+}
+
+.controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+  align-items: center;
+}
+
+.selectLabel {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-size: 0.9rem;
+  color: var(--fg-muted);
+}
+
+.select {
+  font: inherit;
+  font-size: 0.95rem;
+  color: var(--fg);
+  background: var(--surface-raised);
+  border: 1px solid var(--fg-subtle);
+  border-radius: 8px;
+  padding: 6px 10px;
+  min-height: 40px;
+}
+
+.select:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+@media (max-width: 760px) {
+  .panels {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
