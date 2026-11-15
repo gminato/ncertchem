@@ -1,0 +1,227 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  width: 100%;
+  max-width: 840px;
+  margin: 0 auto;
+  padding: 1.5rem;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+}
+
+.topBar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 0.75rem;
+}
+
+.deckStats {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--fg);
+}
+
+.scoreBadge {
+  background: var(--surface-raised);
+  border: 1px solid var(--border);
+  padding: 0.25rem 0.65rem;
+  border-radius: 999px;
+  font-size: 0.85rem;
+  color: var(--primary, #3b82f6);
+}
+
+.navControls {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.cardStage {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.25rem;
+  padding: 1.25rem 0;
+}
+
+.equationCard {
+  width: 100%;
+  text-align: center;
+  padding: 1.5rem 1rem;
+  background: var(--surface-raised);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+}
+
+.equationText {
+  font-size: 1.5rem;
+  font-weight: 700;
+  font-family: var(--font-sans);
+  color: var(--fg);
+  letter-spacing: 0.02em;
+}
+
+.promptText {
+  font-size: 1rem;
+  color: var(--fg-muted);
+  text-align: center;
+}
+
+.categoryGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.75rem;
+  width: 100%;
+}
+
+@media (max-width: 640px) {
+  .categoryGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.catBtn {
+  padding: 0.75rem 0.5rem;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--fg);
+  border-radius: 8px;
+  font-size: 0.92rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  text-align: center;
+}
+
+.catBtn:hover:not(:disabled) {
+  background: var(--surface-raised);
+  border-color: var(--fg-muted);
+}
+
+.catBtn:focus-visible {
+  outline: 2px solid var(--primary, #3b82f6);
+  outline-offset: 2px;
+}
+
+.catBtnSelected {
+  border-color: var(--primary, #3b82f6);
+  background: var(--surface-raised);
+}
+
+.catBtnCorrect {
+  background: rgba(34, 197, 94, 0.15);
+  border-color: #22c55e;
+  color: #16a34a;
+}
+
+.catBtnWrong {
+  background: rgba(239, 68, 68, 0.15);
+  border-color: #ef4444;
+  color: #dc2626;
+}
+
+.feedbackSection {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding-top: 0.5rem;
+  border-top: 1px solid var(--border);
+  animation: fadeIn 0.25s ease-in;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.verdictBanner {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1rem;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  font-weight: 600;
+}
+
+.verdictBannerCorrect {
+  background: rgba(34, 197, 94, 0.12);
+  border: 1px solid #22c55e;
+  color: #15803d;
+}
+
+.verdictBannerWrong {
+  background: rgba(239, 68, 68, 0.12);
+  border: 1px solid #ef4444;
+  color: #b91c1c;
+}
+
+.analysisDetails {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  font-size: 0.92rem;
+  color: var(--fg);
+}
+
+.agentRoles {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-top: 0.25rem;
+}
+
+.roleTag {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.3rem 0.65rem;
+  border-radius: 6px;
+  font-size: 0.88rem;
+  font-weight: 600;
+}
+
+.roleOxidant {
+  background: rgba(67, 56, 202, 0.12);
+  border: 1px solid var(--red);
+  color: var(--red);
+}
+
+.roleReductant {
+  background: rgba(217, 119, 6, 0.12);
+  border: 1px solid var(--ox);
+  color: var(--ox);
+}
+
+.ladderContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 1rem 0;
+  background: var(--surface-raised);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+}
+
+.liveRegion {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
