@@ -16,23 +16,29 @@ export interface LassaigneBenchProps {
 }
 
 const VIEW_WIDTH = 580
-const VIEW_HEIGHT = 420
-/** The fusion drawing is 340 × 300 in its own units; this scale makes it fill the panel height. */
-const FUSION_SCALE = 1.4
+const VIEW_HEIGHT = 500
+/**
+ * The fusion drawing is 340 × 300 in its own units, and its content runs from y 40 to y 296. At 1.6
+ * it fills about 80 % of the 500-unit panel height and its 14-unit labels render at 22 px.
+ */
+const FUSION_SCALE = 1.6
 const FUSION_X = (VIEW_WIDTH - 340 * FUSION_SCALE) / 2
+/** The extract dish: a 340 × 300 drawing, scaled and centred so the funnel and dish fill the panel. */
+const EXTRACT_SCALE = 2
+const EXTRACT_X = VIEW_WIDTH / 2 - 130 * EXTRACT_SCALE
+const EXTRACT_Y = VIEW_HEIGHT / 2 - 146 * EXTRACT_SCALE
 /** Before and during the fusion the apparatus sits left, and its equations sit in a column on the right. */
 const FUSION_LEFT_X = 20
 const NOTE_X = 300
 
-/** The rack drawing is scaled up from its native 464-unit width so its labels stay large. */
-const RACK_SCALE = 1.25
-const RACK_NATIVE_WIDTH = VIEW_WIDTH / RACK_SCALE
+/** The rack is drawn 480 units wide and scaled to the panel, so the outer labels stay inside it. */
+const RACK_NATIVE_WIDTH = 480
+const RACK_SCALE = VIEW_WIDTH / RACK_NATIVE_WIDTH
 
 /** Text column beside the tube while the sodium is still in the tube (Steps 0 and 1). */
 const NOTES: Partial<Record<LassaigneStage, { heading: string; lines: string[] }>> = {
   sample: { heading: 'Before the fusion', lines: ['Covalent bonds hold N, S', 'and X to the carbon.', 'The sodium is waiting.'] },
   fuse: { heading: 'During the fusion', lines: ['Na + C + N → NaCN', '2Na + S → Na₂S', 'Na + X → NaX'] },
-  extract: { heading: 'The extract holds', lines: ['CN⁻ when N was present', 'S²⁻ when S was present', 'X⁻ when a halogen was present'] },
 }
 
 const STAGE_CAPTION: Partial<Record<string, string>> = {
@@ -67,7 +73,7 @@ export function LassaigneBench({ step, reducedMotion }: LassaigneBenchProps) {
       )}
 
       {target.stage === 'extract' && (
-        <g transform={`translate(${FUSION_LEFT_X}, 0) scale(${FUSION_SCALE})`}>
+        <g transform={`translate(${EXTRACT_X}, ${EXTRACT_Y}) scale(${EXTRACT_SCALE})`}>
           <ExtractDish />
         </g>
       )}
@@ -87,11 +93,11 @@ export function LassaigneBench({ step, reducedMotion }: LassaigneBenchProps) {
 
       {isRack && (
         <g>
-          <text x={VIEW_WIDTH / 2} y={64} textAnchor="middle" fontSize={18} fontFamily="var(--font-sans)" fill="var(--fg)">
+          <text x={VIEW_WIDTH / 2} y={84} textAnchor="middle" fontSize={18} fontFamily="var(--font-sans)" fill="var(--fg)">
             {STAGE_CAPTION[target.stage]}
           </text>
-          <g transform={`translate(${(VIEW_WIDTH - RACK_NATIVE_WIDTH * RACK_SCALE) / 2}, 100) scale(${RACK_SCALE})`}>
-            <TestTubeRack tubes={rackTubes} columns={4} spacing={112} width={RACK_NATIVE_WIDTH} progress={progress} />
+          <g transform={`translate(${(VIEW_WIDTH - RACK_NATIVE_WIDTH * RACK_SCALE) / 2}, 120) scale(${RACK_SCALE})`}>
+            <TestTubeRack tubes={rackTubes} columns={4} spacing={120} width={RACK_NATIVE_WIDTH} progress={progress} />
           </g>
         </g>
       )}

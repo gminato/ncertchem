@@ -249,8 +249,12 @@ export function ElementDetective({ reducedMotion }: SimulationProps) {
   }
 
   const runsSoFar = Object.keys(bench.results).length
-  const summary = bench.checked
-    ? `Answer checked: ${score.correct} of ${score.total} elements right. The compound is ${truthFormula}.`
+  const summary: ReactNode = bench.checked
+    ? (
+        <>
+          Answer checked: {score.correct} of {score.total} elements right. The compound is <strong>{subscripted(truthFormula)}</strong>.
+        </>
+      )
     : bench.fused
       ? `Sodium fusion done. ${runsSoFar} test${runsSoFar === 1 ? '' : 's'} run. Tick the elements you think are present, then check.`
       : 'No sodium fusion yet. The carbon, hydrogen and phosphorus tests do not need it.'
@@ -296,7 +300,9 @@ export function ElementDetective({ reducedMotion }: SimulationProps) {
         <div>
           <p className={styles.kicker}>Unknown {round + 1}</p>
           <p className={styles.caption}>
-            Score so far: {tally.points} of {tally.possible} element calls, over {tally.rounds} {tally.rounds === 1 ? 'unknown' : 'unknowns'}.
+            {tally.rounds === 0
+              ? 'No answers checked yet.'
+              : `${tally.points} of ${tally.possible} correct calls on ${tally.rounds} ${tally.rounds === 1 ? 'unknown' : 'unknowns'}.`}
           </p>
         </div>
         <Button variant="secondary" onClick={nextUnknown}>
@@ -411,7 +417,7 @@ export function ElementDetective({ reducedMotion }: SimulationProps) {
               const right = present === bench.answer.has(el)
               return (
                 <li key={el} className={right ? styles.right : styles.wrong}>
-                  <strong>{el}</strong> {present ? 'present' : 'absent'} ({right ? 'right' : 'wrong'}).{' '}
+                  <strong>{el}</strong> — {present ? 'present' : 'absent'}. You said {bench.answer.has(el) ? 'present' : 'absent'}. {right ? '✓' : '✗'}{' '}
                   <span className={styles.reason}>
                     {present ? EVIDENCE[el] : 'No test for this element came out positive.'}
                     {present && !evidence.has(el) ? ' You did not run the test that shows it.' : ''}
