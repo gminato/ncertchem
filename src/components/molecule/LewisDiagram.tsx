@@ -66,7 +66,7 @@ const CHARGE_RADIUS = 6.5
 const CHARGE_OFFSET = 3
 const BADGE_OFFSET = 22
 /** Gap between a bond line and the glyph it ends at, as a fraction of the font size. */
-const BOND_GAP_EM = 0.6
+const BOND_GAP_EM = 0.25
 /** Gap between the outermost electron dot or charge and a bracket. */
 const BRACKET_GAP = 6
 const BRACKET_ARM = 6
@@ -324,7 +324,13 @@ export const LewisDiagram = forwardRef<SVGGElement, LewisDiagramProps>(function 
           y={atom.y}
           fontSize={fontSize}
           fill="var(--fg)"
-          sup={atom.ionCharge}
+          sup={
+            atom.ionCharge === undefined ? undefined : (
+              <tspan fill="var(--fg)" fontWeight={600}>
+                {atom.ionCharge}
+              </tspan>
+            )
+          }
           data-testid="lewis-atom"
         >
           {atom.element}
