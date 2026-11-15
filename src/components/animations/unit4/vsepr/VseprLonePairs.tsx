@@ -3,7 +3,7 @@
 import { useMemo } from 'react'
 import { ProjectedPose } from './ProjectedPose'
 import { usePoseTween } from './usePoseTween'
-import { LONE_PAIR_STEPS, lonePairStep, lonePairTarget } from './vsepr-steps'
+import { LONE_PAIR_PX, LONE_PAIR_STEPS, lonePairStep, lonePairTarget } from './vsepr-steps'
 
 export interface VseprLonePairsProps {
   step: number
@@ -23,6 +23,7 @@ export function VseprLonePairs({ step, reducedMotion }: VseprLonePairsProps) {
   return (
     <ProjectedPose
       pose={pose}
+      px={LONE_PAIR_PX}
       centre={current.centre}
       ligand="H"
       arcLabel={current.arcLabel}

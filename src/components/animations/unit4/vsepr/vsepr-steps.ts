@@ -1,6 +1,7 @@
 /**
- * The arrangement each Step of the two VSEPR Scrolly Animations shows. Every Step is a fixed
- * target (no randomness), so the pictures are the same on every visit and in every screenshot.
+ * The arrangement each Step of the two VSEPR Scrolly Animations shows, and the oblique view it is
+ * drawn from. Every Step is a fixed target (no randomness), so the pictures are the same on every
+ * visit and in every screenshot.
  */
 
 import { vseprClass, vseprPositions, type Vec3 } from '@/lib/chem/vsepr'
@@ -8,12 +9,14 @@ import {
   axNotation,
   bondAngleDeg,
   domainsFor,
+  poseFromDomains,
   subscriptFormula,
   type Domain,
   type V3,
   type VseprConfig,
 } from '@/lib/chem/vsepr-morph'
 import type { PoseTarget } from './usePoseTween'
+import { fitScale, viewHints } from './vsepr-layout'
 
 const norm = (v: readonly number[]): V3 => {
   const l = Math.hypot(v[0], v[1], v[2])
@@ -21,10 +24,17 @@ const norm = (v: readonly number[]): V3 => {
 }
 
 const toV3 = (v: Vec3): V3 => [v[0], v[1], v[2]]
+const dot = (a: readonly number[], b: readonly number[]) => a[0] * b[0] + a[1] * b[1] + a[2] * b[2]
 
 /** Formats an angle for a label: 120 becomes "120°", 109.5 becomes "109.5°". */
 export function formatAngle(deg: number): string {
   return `${Number(deg.toFixed(1))}°`
+}
+
+/** The target for a set of domains seen from camera position `view`. */
+function targetFor(domains: Domain[], view: V3): PoseTarget {
+  const hints = viewHints(view)
+  return { domains, right: hints.right, up: hints.up }
 }
 
 // ---------------------------------------------------------------------------
@@ -47,9 +57,8 @@ const BUNCHED: V3[] = [
   norm([-0.1, -0.05, 1]),
 ]
 
-function idealTarget(bondPairs: number, right: V3, up: V3): PoseTarget {
-  const bonds = vseprPositions(bondPairs, 0).bonds.map(toV3)
-  return { domains: bonds.map((dir) => ({ dir, kind: 'bond' as const })), right, up }
+function idealDomains(bondPairs: number): Domain[] {
+  return vseprPositions(bondPairs, 0).bonds.map((d) => ({ dir: toV3(d), kind: 'bond' as const }))
 }
 
 function shapeCaption(bondPairs: number): string {
@@ -58,42 +67,80 @@ function shapeCaption(bondPairs: number): string {
 }
 
 /**
- * Five Steps: four pairs bunched, then the five base arrangements of Table 4.6. Each view is
- * chosen so the arrangement reads clearly in 2D.
+ * The oblique view for a set of domains: the camera direction that keeps the drawn parts furthest
+ * apart. It scores each view by its smallest projected separation (every domain tip from the
+ * centre, and every pair of tips from each other), so no bond foreshortens onto the atom or onto
+ * another bond. Deterministic: the grid is fixed and the first best view wins ties.
+ */
+/** Views this close to a coordinate axis are not used (cos 20°): on an axis, the shapes read flat. */
+const AXIS_LIMIT = Math.cos((20 * Math.PI) / 180)
+
+export function bestView(domains: readonly Domain[]): V3 {
+  let best: V3 = [1, 0.5, 0.8]
+  let bestScore = -Infinity
+  for (let i = 1; i < 48; i++) {
+    const theta = (i / 48) * Math.PI
+    if (theta < 0.25 || theta > Math.PI - 0.25) continue
+    for (let j = 0; j < 36; j++) {
+      const phi = (j / 36) * 2 * Math.PI
+      const view: V3 = [Math.sin(theta) * Math.cos(phi), Math.cos(theta), Math.sin(theta) * Math.sin(phi)]
+      // Looking down a coordinate axis stacks the pairs into an X or a cross, so such views are skipped.
+      if (Math.max(Math.abs(view[0]), Math.abs(view[1]), Math.abs(view[2])) > AXIS_LIMIT) continue
+      const { right, up } = viewHints(view)
+      const pts = domains.map((d) => [dot(d.dir, right), dot(d.dir, up)] as const)
+      let score = Infinity
+      for (const [x, y] of pts) score = Math.min(score, Math.hypot(x, y))
+      for (let a = 0; a < pts.length; a++) {
+        for (let b = a + 1; b < pts.length; b++) {
+          score = Math.min(score, Math.hypot(pts[a][0] - pts[b][0], pts[a][1] - pts[b][1]))
+        }
+      }
+      if (score > bestScore + 1e-9) {
+        bestScore = score
+        best = view
+      }
+    }
+  }
+  return best
+}
+
+/**
+ * Six Steps: four pairs bunched, then the tetrahedral, linear, trigonal planar, trigonal
+ * bipyramidal and octahedral arrangements of Table 4.6.
  */
 export const REPULSION_STEPS: RepulsionStep[] = [
   {
-    target: { domains: BUNCHED.map((dir): Domain => ({ dir, kind: 'bond' })), right: [1, 0, 0], up: [0, 1, 0] },
+    target: targetFor(BUNCHED.map((dir): Domain => ({ dir, kind: 'bond' })), bestView(BUNCHED.map((dir): Domain => ({ dir, kind: 'bond' })))),
     centre: 'C',
     caption: 'Four pairs, bunched together',
     arcLabel: null,
   },
   {
-    target: idealTarget(4, [1, 0, 0], [0, 1, 0]),
+    target: targetFor(idealDomains(4), bestView(idealDomains(4))),
     centre: 'C',
     caption: shapeCaption(4),
     arcLabel: formatAngle(109.5),
   },
   {
-    target: idealTarget(2, [0, 0, 1], [0, 1, 0]),
+    target: targetFor(idealDomains(2), bestView(idealDomains(2))),
     centre: 'Be',
     caption: shapeCaption(2),
     arcLabel: null,
   },
   {
-    target: idealTarget(3, [1, 0, 0], [0, 1, 0]),
+    target: targetFor(idealDomains(3), bestView(idealDomains(3))),
     centre: 'B',
     caption: shapeCaption(3),
     arcLabel: formatAngle(120),
   },
   {
-    target: idealTarget(5, [0.966, 0.259, 0], [0, 0, 1]),
+    target: targetFor(idealDomains(5), bestView(idealDomains(5))),
     centre: 'P',
     caption: shapeCaption(5),
     arcLabel: null,
   },
   {
-    target: idealTarget(6, [1, 0.4, 0.25], [-0.35, 1, 0.3]),
+    target: targetFor(idealDomains(6), bestView(idealDomains(6))),
     centre: 'S',
     caption: shapeCaption(6),
     arcLabel: null,
@@ -105,6 +152,11 @@ export function repulsionStep(step: number): RepulsionStep {
   return REPULSION_STEPS[index]
 }
 
+/** One bond length in px, the same for every repulsion Step. */
+export const REPULSION_PX = fitScale(
+  REPULSION_STEPS.map((s) => poseFromDomains(s.target.domains, s.target.right, s.target.up))
+)
+
 // ---------------------------------------------------------------------------
 // Scrolly 2: lone pairs take positions and squeeze the bond angle
 // ---------------------------------------------------------------------------
@@ -113,25 +165,23 @@ export interface LonePairStep {
   config: VseprConfig
   centre: string
   molecule: string
+  ligand: string
+  /** Camera position: an oblique view that keeps every domain apart. */
+  view: V3
 }
 
 export const LONE_PAIR_STEPS: LonePairStep[] = [
-  { config: { bondPairs: 4, lonePairs: 0, squeeze: 0 }, centre: 'C', molecule: 'CH₄' },
-  { config: { bondPairs: 3, lonePairs: 1, squeeze: 0 }, centre: 'N', molecule: 'NH₃' },
-  { config: { bondPairs: 3, lonePairs: 1, squeeze: 1 }, centre: 'N', molecule: 'NH₃' },
-  { config: { bondPairs: 2, lonePairs: 2, squeeze: 1 }, centre: 'O', molecule: 'H₂O' },
+  { config: { bondPairs: 4, lonePairs: 0, squeeze: 0 }, centre: 'C', molecule: 'CH₄', ligand: 'H', view: bestView(domainsFor({ bondPairs: 4, lonePairs: 0, squeeze: 0 })) },
+  { config: { bondPairs: 3, lonePairs: 1, squeeze: 0 }, centre: 'N', molecule: 'NH₃', ligand: 'H', view: bestView(domainsFor({ bondPairs: 3, lonePairs: 1, squeeze: 0 })) },
+  { config: { bondPairs: 3, lonePairs: 1, squeeze: 1 }, centre: 'N', molecule: 'NH₃', ligand: 'H', view: bestView(domainsFor({ bondPairs: 3, lonePairs: 1, squeeze: 1 })) },
+  { config: { bondPairs: 2, lonePairs: 2, squeeze: 1 }, centre: 'O', molecule: 'H₂O', ligand: 'H', view: bestView(domainsFor({ bondPairs: 2, lonePairs: 2, squeeze: 1 })) },
 ]
 
-/**
- * The view for a lone-pair Step. The first two bonds lie in the picture plane, so the bond angle
- * between them is seen at its true size.
- */
+/** The target for a lone-pair Step. The view is the one the Step names. */
 export function lonePairTarget(step: number): PoseTarget {
   const index = Math.min(LONE_PAIR_STEPS.length - 1, Math.max(0, Math.round(step)))
-  const { config } = LONE_PAIR_STEPS[index]
-  const domains = domainsFor(config)
-  const bonds = domains.filter((d) => d.kind === 'bond')
-  return { domains, right: bonds[0].dir, up: bonds[1].dir }
+  const item = LONE_PAIR_STEPS[index]
+  return targetFor(domainsFor(item.config), item.view)
 }
 
 export function lonePairStep(step: number): LonePairStep & { caption: string; arcLabel: string } {
@@ -145,3 +195,11 @@ export function lonePairStep(step: number): LonePairStep & { caption: string; ar
     caption: `${subscriptFormula(item.molecule)} · ${notation} · ${angle}`,
   }
 }
+
+/** One bond length in px, the same for every lone-pair Step. */
+export const LONE_PAIR_PX = fitScale(
+  LONE_PAIR_STEPS.map((s) => {
+    const t = targetFor(domainsFor(s.config), s.view)
+    return poseFromDomains(t.domains, t.right, t.up)
+  })
+)

@@ -1,10 +1,9 @@
 'use client'
 
-import { useEffect, useMemo, useRef, useState, type ReactNode } from 'react'
-import { useFrame, useThree } from '@react-three/fiber'
-import { Vector3 } from 'three'
+import { useMemo, useState, type ReactNode } from 'react'
 import { Button, Toggle } from '@/components/controls'
 import { usePoseTween } from '@/components/animations/unit4/vsepr/usePoseTween'
+import { bestView } from '@/components/animations/unit4/vsepr/vsepr-steps'
 import {
   Molecule3D,
   Molecule3DFallback,
@@ -33,30 +32,14 @@ import styles from './vsepr-builder.module.css'
 /** The central atom's id, and the element drawn for it. It is neutral: the model is generic. */
 const CENTRE = 'C'
 const CENTRE_ELEMENT = 'X'
-const LIGAND_ELEMENT = 'F'
+/** The ligand drawn for each NCERT example: hydrogen for the three hydrides, chlorine for PCl5, fluorine otherwise. */
+const LIGAND_FOR_SPECIES: Record<string, string> = { CH4: 'H', NH3: 'H', H2O: 'H', PCl5: 'Cl' }
+const DEFAULT_LIGAND = 'F'
 
-/** Camera for each class, so the shape reads clearly. The default suits the classes not listed. */
-const DEFAULT_CAMERA: V3 = [4.4, 2.4, 5.2]
-/** Pulls the camera in so the molecule fills the stage. 1 is the preset distance. */
-const ZOOM = 0.8
-const CAMERA: Record<string, V3> = {
-  '2,0': [5.2, 1.4, 2.6],
-  '3,0': [1.6, 2.8, 5.2],
-  '4,0': [4.4, 2.4, 5.2],
-  '5,0': [3.8, 1.6, 5.6],
-  '6,0': [4.4, 2.6, 5.0],
-  '2,1': [1.6, 2.8, 5.2],
-  '3,1': [4.4, 2.4, 5.2],
-  '2,2': [4.2, 1.2, 3.4],
-  '4,1': [3.2, 2.0, 5.0],
-  '3,2': [2.4, 3.6, 4.4],
-  '5,1': [3.4, 2.6, 4.8],
-  '4,2': [1.6, 2.8, 5.2],
-}
+/** Distance of the camera from the centre. Each class's camera is the fitted view at this distance. */
+const CAMERA_DISTANCE = 4
 
 const INITIAL: VseprConfig = { bondPairs: 4, lonePairs: 0, squeeze: 0 }
-/** The Stage's starting camera. CameraFrame moves it to each class's camera after that. */
-const START_CAMERA: V3 = DEFAULT_CAMERA.map((v) => v * ZOOM) as V3
 const HINT_RIGHT: V3 = [1, 0, 0]
 const HINT_UP: V3 = [0, 1, 0]
 
@@ -78,36 +61,24 @@ function arcApplies(config: VseprConfig): boolean {
   return config.bondPairs >= 2 && domains <= 4 && !(config.bondPairs === 2 && config.lonePairs === 0)
 }
 
-/** Moves the camera smoothly to `position` when it changes, and aims it at the centre. */
-function CameraFrame({ position }: { position: V3 }) {
-  const camera = useThree((state) => state.camera)
-  const invalidate = useThree((state) => state.invalidate)
-  const goal = useRef(new Vector3(...position))
-  const moving = useRef(false)
+/**
+ * The camera for a class: the oblique view that keeps every domain apart (the same view the
+ * Scrolly uses), so no bond foreshortens onto the atom.
+ */
+function cameraFor(config: VseprConfig): V3 {
+  const view = bestView(domainsFor(config))
+  return [view[0] * CAMERA_DISTANCE, view[1] * CAMERA_DISTANCE, view[2] * CAMERA_DISTANCE]
+}
 
-  useEffect(() => {
-    goal.current.set(position[0], position[1], position[2])
-    moving.current = true
-    invalidate()
-  }, [position, invalidate])
-
-  useFrame(() => {
-    if (!moving.current) return
-    camera.position.lerp(goal.current, 0.14)
-    camera.lookAt(0, 0, 0)
-    if (camera.position.distanceTo(goal.current) < 0.002) {
-      camera.position.copy(goal.current)
-      camera.lookAt(0, 0, 0)
-      moving.current = false
-    } else {
-      invalidate()
-    }
-  })
-  return null
+/** The ligand element for a class: the NCERT example's, if it has one. */
+function ligandFor(config: VseprConfig): string {
+  const example = examplesFor(config).find((name) => name in LIGAND_FOR_SPECIES)
+  return example ? LIGAND_FOR_SPECIES[example] : DEFAULT_LIGAND
 }
 
 /** The 3D model for a pose, derived from its slots: the central atom, bonds, lone-pair lobes and arc. */
 function sceneFromPose(pose: Pose, config: VseprConfig) {
+  const ligand = ligandFor(config)
   const atoms: Molecule3DAtom[] = [{ id: CENTRE, element: CENTRE_ELEMENT, position: [0, 0, 0] }]
   const bonds: Molecule3DBond[] = []
   const lonePairs: LonePair3D[] = []
@@ -116,7 +87,7 @@ function sceneFromPose(pose: Pose, config: VseprConfig) {
     if (slot.kind === 'bond' && slot.scale > 0.001) {
       const id = `L${index}`
       const position: V3 = [slot.dir[0] * slot.scale, slot.dir[1] * slot.scale, slot.dir[2] * slot.scale]
-      atoms.push({ id, element: LIGAND_ELEMENT, position })
+      atoms.push({ id, element: ligand, position })
       bonds.push({ a: CENTRE, b: id, order: 1 })
     } else if (slot.kind === 'lone') {
       lonePairs.push({ atom: CENTRE, direction: slot.dir })
@@ -215,13 +186,9 @@ export function VseprBuilder({ reducedMotion }: SimulationProps) {
   )
   const pose = usePoseTween(target, reducedMotion)
   const scene = useMemo(() => sceneFromPose(pose, config), [pose, config])
-  const camera = useMemo<V3>(
-    () => (CAMERA[`${config.bondPairs},${config.lonePairs}`] ?? DEFAULT_CAMERA).map((v) => v * ZOOM) as V3,
-    [config.bondPairs, config.lonePairs]
-  )
+  const camera = useMemo<V3>(() => cameraFor(config), [config])
 
   const notation = axNotation(config.bondPairs, config.lonePairs)
-  const exampleText = examples.length > 0 ? examples.map(formulaText).join(', ') : ''
   const idealText = cls.idealAngles.map(formatAngle).join(' and ')
   const shapeText = `${notation}: ${cls.electronGeometry.toLowerCase()} electron-pair geometry, ${cls.molecularShape.toLowerCase()} shape, ideal angle ${idealText}${examples.length ? `, for example ${examples[0]}` : ''}.`
   const squeezeText = config.squeeze > 0 && squeezeOk ? ` With the squeeze on, the bond angle is ${formatAngle(angleNow)}.` : ''
@@ -231,10 +198,10 @@ export function VseprBuilder({ reducedMotion }: SimulationProps) {
       <div className={styles.wrap}>
         <Stage3DLazy
           label={`3D model of ${notation}, showing bonding pairs and lone pairs around a central atom`}
-          cameraPosition={START_CAMERA}
+          cameraPosition={camera}
+          cameraTo={camera}
           fallback={<Molecule3DFallback atoms={scene.atoms} bonds={scene.bonds} lonePairs={scene.lonePairs} angleArcs={scene.angleArcs} />}
         >
-          <CameraFrame position={camera} />
           <Molecule3D atoms={scene.atoms} bonds={scene.bonds} lonePairs={scene.lonePairs} angleArcs={scene.angleArcs} />
         </Stage3DLazy>
 

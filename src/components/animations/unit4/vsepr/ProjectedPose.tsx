@@ -1,38 +1,13 @@
 'use client'
 
 import { Atom, Label, VocabDefs } from '@/components/vocab'
-import { forwardOf, settledBonds, type Pose, type V3 } from '@/lib/chem/vsepr-morph'
+import { settledBonds, type Pose, type V3 } from '@/lib/chem/vsepr-morph'
+import { PANEL_H, PANEL_W, layoutPose, projector, type Disc, type Lobe } from './vsepr-layout'
 
-/** SVG units per bond length. The bond is the unit of the drawing. */
-const PX = 118
-const VIEW_W = 560
-const VIEW_H = 350
-const CX = VIEW_W / 2
-const CY = 160
-/** Lone-pair lobes sit this far out along their direction, in bond lengths. */
-const LOBE_CENTRE = 0.62
-const LOBE_RADIUS = 0.24
-const LIGAND_R = 13
-const CENTRE_R = 20
+/** Radius of the angle arc, in bond lengths. */
 const ARC_R = 0.42
 
-interface Projected {
-  x: number
-  y: number
-  depth: number
-}
-
 const dot = (a: readonly number[], b: readonly number[]) => a[0] * b[0] + a[1] * b[1] + a[2] * b[2]
-
-function project(p: V3, pose: Pose): Projected {
-  const { right, up } = pose.basis
-  const forward = forwardOf(pose.basis)
-  return {
-    x: CX + dot(p, right) * PX,
-    y: CY - dot(p, up) * PX,
-    depth: dot(p, forward),
-  }
-}
 
 /** Points on the arc from u to v (unit vectors) at radius ARC_R, sampled for the drawing. */
 function arcPoints(u: V3, v: V3, segments = 28): V3[] {
@@ -44,17 +19,38 @@ function arcPoints(u: V3, v: V3, segments = 28): V3[] {
     const t = i / segments
     const a = sin > 1e-9 ? Math.sin((1 - t) * theta) / sin : 1 - t
     const b = sin > 1e-9 ? Math.sin(t * theta) / sin : t
-    out.push([
-      (u[0] * a + v[0] * b) * ARC_R,
-      (u[1] * a + v[1] * b) * ARC_R,
-      (u[2] * a + v[2] * b) * ARC_R,
-    ])
+    out.push([(u[0] * a + v[0] * b) * ARC_R, (u[1] * a + v[1] * b) * ARC_R, (u[2] * a + v[2] * b) * ARC_R])
   }
   return out
 }
 
+/** SVG path for a lone-pair teardrop: narrow at the atom, rounder towards its tip. */
+export function lobePath(lobe: Lobe): string {
+  const { x0, y0, x1, y1, halfWidth: w } = lobe
+  const dx = x1 - x0
+  const dy = y1 - y0
+  const len = Math.hypot(dx, dy) || 1
+  const ax = dx / len
+  const ay = dy / len
+  // Unit normal to the lobe axis.
+  const nx = -ay
+  const ny = ax
+  const bulge = 0.55 * len
+  const f = (v: number) => v.toFixed(2)
+  // Out along one side to the tip, back along the other.
+  const p1 = [x0 + nx * w * 0.35, y0 + ny * w * 0.35]
+  const c1 = [x0 + ax * bulge + nx * w * 1.5, y0 + ay * bulge + ny * w * 1.5]
+  const c2 = [x1 - ax * 0.05 * len + nx * w, y1 - ay * 0.05 * len + ny * w]
+  const c3 = [x1 - ax * 0.05 * len - nx * w, y1 - ay * 0.05 * len - ny * w]
+  const c4 = [x0 + ax * bulge - nx * w * 1.5, y0 + ay * bulge - ny * w * 1.5]
+  const p2 = [x0 - nx * w * 0.35, y0 - ny * w * 0.35]
+  return `M${f(p1[0])},${f(p1[1])} C${f(c1[0])},${f(c1[1])} ${f(c2[0])},${f(c2[1])} ${f(x1)},${f(y1)} C${f(c3[0])},${f(c3[1])} ${f(c4[0])},${f(c4[1])} ${f(p2[0])},${f(p2[1])} Z`
+}
+
 export interface ProjectedPoseProps {
   pose: Pose
+  /** Pixels per bond length, from the fitted scale of the whole Scrolly, so Steps keep one size. */
+  px: number
   /** Element of the central atom, e.g. "C", "N" or "O". */
   centre: string
   /** Element of the bonded atoms. */
@@ -71,67 +67,56 @@ export interface ProjectedPoseProps {
 }
 
 /**
- * A pose drawn in 2D: bonds as sticks, lone pairs as soft lobes, atoms shaded and sorted by depth,
- * with an optional angle arc. Deterministic for a given pose, so the screenshots are stable.
+ * A pose drawn in 2D from an oblique view: bonds as sticks, lone pairs as translucent teardrops
+ * from the centre, atoms sorted by depth. Back atoms and bonds are smaller and paler. Deterministic
+ * for a given pose, so the screenshots are stable.
  */
-export function ProjectedPose({ pose, centre, ligand, arcLabel, label, caption, testId, step, defsPrefix }: ProjectedPoseProps) {
-  const origin = project([0, 0, 0], pose)
-  const bonds = pose.slots
-    .map((slot, index) => ({ slot, index }))
-    .filter(({ slot }) => slot.kind === 'bond' && slot.scale > 0.001)
-  const lobes = pose.slots.filter((slot) => slot.kind === 'lone')
-
-  type Item =
-    | { kind: 'atom'; key: string; p: Projected; r: number; element: string }
-    | { kind: 'lobe'; key: string; p: Projected; r: number }
-  const items: Item[] = [
-    { kind: 'atom', key: 'centre', p: origin, r: CENTRE_R, element: centre },
-    ...bonds.map(({ slot, index }) => ({
-      kind: 'atom' as const,
-      key: `ligand-${index}`,
-      p: project(
-        [slot.dir[0] * slot.scale, slot.dir[1] * slot.scale, slot.dir[2] * slot.scale],
-        pose
-      ),
-      r: LIGAND_R,
-      element: ligand,
-    })),
-    ...lobes.map((slot, index) => ({
-      kind: 'lobe' as const,
-      key: `lobe-${index}`,
-      p: project(
-        [slot.dir[0] * LOBE_CENTRE, slot.dir[1] * LOBE_CENTRE, slot.dir[2] * LOBE_CENTRE],
-        pose
-      ),
-      r: LOBE_RADIUS * PX,
-    })),
-  ]
-  items.sort((a, b) => b.p.depth - a.p.depth)
+export function ProjectedPose({ pose, px, centre, ligand, arcLabel, label, caption, testId, step, defsPrefix }: ProjectedPoseProps) {
+  const layout = layoutPose(pose, px)
+  const project = projector(pose, px)
 
   const arc = arcLabel ? settledBonds(pose).slice(0, 2) : []
   const arcPath =
     arc.length === 2
       ? arcPoints(arc[0].dir, arc[1].dir)
           .map((q, k) => {
-            const p = project(q, pose)
+            const p = project(q)
             return `${k === 0 ? 'M' : 'L'}${p.x.toFixed(2)},${p.y.toFixed(2)}`
           })
           .join(' ')
       : null
+  // The label sits outside the arc along the bisector as it appears on the panel. A bisector that
+  // points at the viewer has no panel direction, so it falls back to straight up.
   const arcLabelAt = (() => {
     if (arc.length !== 2) return null
-    const u = arc[0].dir
-    const v = arc[1].dir
-    const bis: V3 = [u[0] + v[0], u[1] + v[1], u[2] + v[2]]
-    const l = Math.hypot(...bis)
-    if (l < 1e-9) return null
-    const q: V3 = [(bis[0] / l) * (ARC_R + 0.36), (bis[1] / l) * (ARC_R + 0.36), (bis[2] / l) * (ARC_R + 0.36)]
-    return project(q, pose)
+    const mid = project([(arc[0].dir[0] + arc[1].dir[0]) / 2, (arc[0].dir[1] + arc[1].dir[1]) / 2, (arc[0].dir[2] + arc[1].dir[2]) / 2])
+    let dx = mid.x - layout.centre.x
+    let dy = mid.y - layout.centre.y
+    const l = Math.hypot(dx, dy)
+    if (l < 1e-6) {
+      dx = 0
+      dy = -1
+    } else {
+      dx /= l
+      dy /= l
+    }
+    const reach = ARC_R * px + 22
+    return { x: layout.centre.x + dx * reach, y: layout.centre.y + dy * reach }
   })()
+
+  // Atoms, back to front. Farther discs are drawn first; the centre is always the last one drawn at its depth.
+  const atoms: { key: string; d: Disc; element: string }[] = [
+    { key: 'centre', d: layout.centre, element: centre },
+    ...layout.ligands.map((d, i) => ({ key: `ligand-${i}`, d, element: ligand })),
+  ]
+  atoms.sort((a, b) => b.d.farness - a.d.farness)
+
+  // Bond sticks from the centre to each ligand. Back bonds are thinner.
+  const bondEnds = layout.ligands.map((d, i) => ({ d, width: 5 - 2.4 * layout.bondFarness[i] }))
 
   return (
     <svg
-      viewBox={`0 0 ${VIEW_W} ${VIEW_H}`}
+      viewBox={`0 0 ${PANEL_W} ${PANEL_H}`}
       role="img"
       aria-label={label}
       data-testid={testId}
@@ -140,44 +125,38 @@ export function ProjectedPose({ pose, centre, ligand, arcLabel, label, caption, 
     >
       <VocabDefs idPrefix={defsPrefix} />
 
-      {bonds.map(({ slot, index }) => {
-        const end = project(
-          [slot.dir[0] * slot.scale, slot.dir[1] * slot.scale, slot.dir[2] * slot.scale],
-          pose
-        )
-        return (
-          <line
-            key={`stick-${index}`}
-            x1={origin.x}
-            y1={origin.y}
-            x2={end.x}
-            y2={end.y}
-            strokeWidth={5}
-            strokeLinecap="round"
-            style={{ stroke: 'var(--bond)' }}
-          />
-        )
-      })}
+      {bondEnds.map(({ d, width }, i) => (
+        <line
+          key={`stick-${i}`}
+          x1={layout.centre.x}
+          y1={layout.centre.y}
+          x2={d.x}
+          y2={d.y}
+          strokeWidth={width}
+          strokeLinecap="round"
+          opacity={d.shade}
+          style={{ stroke: 'var(--bond)' }}
+        />
+      ))}
+
+      {layout.lobes.map((lobe, i) => (
+        <path
+          key={`lobe-${i}`}
+          d={lobePath(lobe)}
+          opacity={lobe.shade}
+          style={{ fill: 'var(--lone-pair)', fillOpacity: 0.28, stroke: 'var(--lone-pair)', strokeOpacity: 0.5, strokeWidth: 1 }}
+        />
+      ))}
 
       {arcPath && (
         <path d={arcPath} fill="none" strokeWidth={1.4} style={{ stroke: 'var(--fg-muted)' }} data-testid="vsepr-arc" />
       )}
 
-      {items.map((item) => {
-        if (item.kind === 'lobe') {
-          return (
-            <circle
-              key={item.key}
-              cx={item.p.x}
-              cy={item.p.y}
-              r={item.r}
-              strokeWidth={1}
-              style={{ fill: 'var(--lone-pair)', fillOpacity: 0.26, stroke: 'var(--lone-pair)', strokeOpacity: 0.55 }}
-            />
-          )
-        }
-        return <Atom key={item.key} element={item.element} x={item.p.x} y={item.p.y} r={item.r} defsPrefix={defsPrefix} />
-      })}
+      {atoms.map(({ key, d, element }) => (
+        <g key={key} opacity={d.shade}>
+          <Atom element={element} x={d.x} y={d.y} r={d.r} defsPrefix={defsPrefix} />
+        </g>
+      ))}
 
       {arcLabel && arcLabelAt && (
         <Label x={arcLabelAt.x} y={arcLabelAt.y} fontSize={16} halo fill="var(--fg)">
@@ -185,7 +164,7 @@ export function ProjectedPose({ pose, centre, ligand, arcLabel, label, caption, 
         </Label>
       )}
 
-      <Label x={CX} y={VIEW_H - 22} fontSize={16} fill="var(--fg-muted)">
+      <Label x={PANEL_W / 2} y={PANEL_H - 22} fontSize={16} fill="var(--fg-muted)">
         {caption}
       </Label>
     </svg>

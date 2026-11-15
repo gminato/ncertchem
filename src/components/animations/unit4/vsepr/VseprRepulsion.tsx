@@ -2,7 +2,7 @@
 
 import { ProjectedPose } from './ProjectedPose'
 import { usePoseTween } from './usePoseTween'
-import { repulsionStep } from './vsepr-steps'
+import { REPULSION_PX, repulsionStep } from './vsepr-steps'
 
 export interface VseprRepulsionProps {
   step: number
@@ -21,6 +21,7 @@ export function VseprRepulsion({ step, reducedMotion }: VseprRepulsionProps) {
   return (
     <ProjectedPose
       pose={pose}
+      px={REPULSION_PX}
       centre={current.centre}
       ligand="F"
       arcLabel={current.arcLabel}

@@ -1,7 +1,8 @@
 'use client'
 
-import React, { useEffect, useMemo, useState } from 'react'
+import React, { useEffect, useMemo, useState, type RefObject } from 'react'
 import { Html, Line } from '@react-three/drei'
+import { useStagePortal } from '../stage3d/Stage3D'
 import { Quaternion, Vector3 } from 'three'
 import { ATOM_COLOR_ELEMENTS } from '../vocab/atom'
 import { Atom } from '../vocab/Atom'
@@ -62,6 +63,10 @@ export function radius3D(element: string): number {
 
 const STICK_RADIUS = 0.05
 const LONE_PAIR_GAP = 0.42
+/** Lone-pair lobe: centre this far from the atom, with half-length LONE_LOBE_LENGTH * 0.36 (scene units). */
+const LONE_LOBE_OFFSET = 0.56
+const LONE_LOBE_LENGTH = 1.4
+const LONE_LOBE_WIDTH = 0.6
 const DASHES = 6
 /** Camera used by the 3D stage by default (see Stage3D). The 2D fallback matches it. */
 export const MOLECULE_CAMERA: Vec3 = [4.4, 2.4, 5.2]
@@ -200,16 +205,17 @@ function Stick({ from, to, dashed, colour }: StickProps) {
 function LonePairLobe({ atom, direction, colour }: { atom: Vec3; direction: Vec3; colour: string }) {
   const dir = norm3(direction)
   const quaternion = quaternionAlong(dir)
-  const centre = add3(atom, scale3(dir, LONE_PAIR_GAP))
+  // An elongated teardrop that starts at the atom and reaches out past the bonds' ends.
+  const centre = add3(atom, scale3(dir, LONE_LOBE_OFFSET))
   return (
-    <mesh position={centre} quaternion={quaternion} scale={[0.62, 1, 0.62]} renderOrder={1}>
+    <mesh position={centre} quaternion={quaternion} scale={[LONE_LOBE_WIDTH, LONE_LOBE_LENGTH, LONE_LOBE_WIDTH]} renderOrder={1}>
       <sphereGeometry args={[0.36, 36, 24]} />
-      <meshStandardMaterial color={colour} transparent opacity={0.26} depthWrite={false} roughness={0.6} />
+      <meshStandardMaterial color={colour} transparent opacity={0.3} depthWrite={false} roughness={0.6} />
     </mesh>
   )
 }
 
-function Dipole({ from, to, label, colour }: Dipole3D & { colour: string }) {
+function Dipole({ from, to, label, colour, portal }: Dipole3D & { colour: string; portal?: RefObject<HTMLElement> }) {
   const dir = norm3(sub3(to, from))
   const length = len3(sub3(to, from))
   const headLength = Math.min(0.22, length * 0.36)
@@ -239,7 +245,7 @@ function Dipole({ from, to, label, colour }: Dipole3D & { colour: string }) {
         </mesh>
       ))}
       {label && (
-        <Html position={add3(to, scale3(dir, 0.22))} center pointerEvents="none">
+        <Html position={add3(to, scale3(dir, 0.22))} center pointerEvents="none" portal={portal}>
           <span style={labelStyle(colour)}>{label}</span>
         </Html>
       )}
@@ -274,6 +280,8 @@ export interface Molecule3DProps extends Molecule3DData {
  */
 export function Molecule3D({ atoms, bonds, lonePairs = [], angleArcs = [], dipoles = [], positions, showSymbols = false }: Molecule3DProps) {
   const colours = useTokenColours()
+  // Labels attach to the stage's own element, not to the canvas (see StagePortalContext).
+  const portal = useStagePortal() ?? undefined
   const at = useMemo(() => atomPositionMap(atoms, positions), [atoms, positions])
   const pos = (id: string): Vec3 => at.get(id) ?? [0, 0, 0]
   const elementOf = new Map(atoms.map((a) => [a.id, a.element]))
@@ -301,7 +309,7 @@ export function Molecule3D({ atoms, bonds, lonePairs = [], angleArcs = [], dipol
             <meshStandardMaterial color={colours[elementColourKey(atom.element)]} roughness={0.34} metalness={0} />
           </mesh>
           {showSymbols && (
-            <Html position={[0, radius3D(atom.element) + 0.16, 0]} center pointerEvents="none">
+            <Html position={[0, radius3D(atom.element) + 0.16, 0]} center pointerEvents="none" portal={portal}>
               <span style={labelStyle(colours.fg)}>{atom.element}</span>
             </Html>
           )}
@@ -313,11 +321,11 @@ export function Molecule3D({ atoms, bonds, lonePairs = [], angleArcs = [], dipol
       ))}
 
       {angleArcs.map((arc, i) => (
-        <AngleArcOverlay key={`arc-${i}`} arc={arc} at={pos} colour={colours.fgMuted} outset={arcLabelOutset(elementOf, arc)} />
+        <AngleArcOverlay key={`arc-${i}`} arc={arc} at={pos} colour={colours.fgMuted} outset={arcLabelOutset(elementOf, arc)} portal={portal} />
       ))}
 
       {dipoles.map((d, i) => (
-        <Dipole key={`dp-${i}`} {...d} colour={colours.dipole} />
+        <Dipole key={`dp-${i}`} {...d} colour={colours.dipole} portal={portal} />
       ))}
     </group>
   )
@@ -338,7 +346,19 @@ export function arcLabelOutset(elementOf: Map<string, string>, arc: AngleArc3D):
   return Math.max(ra, rb) + ARC_LABEL_GAP
 }
 
-function AngleArcOverlay({ arc, at, colour, outset }: { arc: AngleArc3D; at: (id: string) => Vec3; colour: string; outset: number }) {
+function AngleArcOverlay({
+  arc,
+  at,
+  colour,
+  outset,
+  portal,
+}: {
+  arc: AngleArc3D
+  at: (id: string) => Vec3
+  colour: string
+  outset: number
+  portal?: RefObject<HTMLElement>
+}) {
   const centre = at(arc.centre)
   const a = at(arc.a)
   const b = at(arc.b)
@@ -348,8 +368,8 @@ function AngleArcOverlay({ arc, at, colour, outset }: { arc: AngleArc3D; at: (id
   return (
     <group>
       <Line points={pts} color={colour} lineWidth={1.2} />
-      <Html position={labelAt} center pointerEvents="none">
-        <span style={labelStyle(colour)}>{arc.label}</span>
+      <Html position={labelAt} center pointerEvents="none" portal={portal}>
+        <span style={{ ...labelStyle('var(--fg)'), background: 'var(--surface)', borderRadius: 4, padding: '0 3px' }}>{arc.label}</span>
       </Html>
     </group>
   )
