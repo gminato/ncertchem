@@ -35,6 +35,7 @@ import { SealedContainerLab } from './sims/sealed-container-lab'
 import { ApproachToEquilibrium } from './sims/approach-to-equilibrium'
 import { LeChatelierLab } from './sims/le-chatelier-lab'
 import { PhExplorer } from './sims/ph-explorer'
+import { WeakAcidLab } from './sims/weak-acid-lab'
 
 export interface SimulationProps {
   /** True when the Learner has asked the OS for reduced motion. Skip tweens and loops when set. */
@@ -84,4 +85,5 @@ export const simulations: Record<string, ComponentType<SimulationProps>> = {
   'approach-to-equilibrium': ApproachToEquilibrium,
   'le-chatelier-lab': LeChatelierLab,
   'ph-explorer': PhExplorer,
+  'weak-acid-lab': WeakAcidLab,
 }
