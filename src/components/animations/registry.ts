@@ -64,6 +64,11 @@ import { HybridGeometry } from './unit4/vbt/HybridGeometry'
 import { PistonWork } from './unit5/work/PistonWork'
 import { PathsOnPV } from './unit5/work/PathsOnPV'
 import { EnthalpyBars } from './unit5/work/EnthalpyBars'
+import { NaClBornHaber } from './unit5/NaClBornHaber'
+import { NaClDissolution } from './unit5/NaClDissolution'
+import { EntropyPhases } from './unit5/gibbs/EntropyPhases'
+import { SignCases } from './unit5/gibbs/SignCases'
+import { KLadder } from './unit5/gibbs/KLadder'
 
 /**
  * Animations available to a Scrolly Animation, keyed by the `animation` prop.
@@ -138,6 +143,11 @@ export const animations = {
   'work-piston': PistonWork,
   'work-paths': PathsOnPV,
   'work-enthalpy': EnthalpyBars,
+  'unit5-nacl-born-haber': NaClBornHaber,
+  'unit5-nacl-dissolution': NaClDissolution,
+  'gibbs-entropy-phases': EntropyPhases,
+  'gibbs-sign-cases': SignCases,
+  'gibbs-k-ladder': KLadder,
 } as const
 
 export type AnimationName = keyof typeof animations

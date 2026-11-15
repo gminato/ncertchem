@@ -1,0 +1,33 @@
+/*
+ * Shared layout for the NaCl enthalpy scrollies. The diagram is drawn in SVG units and scales with
+ * the panel, so labels keep their size relative to the 570 px column.
+ */
+
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  width: 100%;
+}
+
+.svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  overflow: visible;
+}
+
+.readout {
+  margin: 0;
+  min-height: 3.2em;
+  font-size: 0.9375rem;
+  line-height: 1.5;
+  color: var(--fg);
+}
+
+.note {
+  margin: 0;
+  font-size: 0.8125rem;
+  line-height: 1.5;
+  color: var(--fg-muted);
+}
