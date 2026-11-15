@@ -119,6 +119,36 @@ import {
   PH_MARKERS,
   AGCL_IONS,
 } from '@/components/equilibrium/fixture'
+import {
+  DistillationRig,
+  DISTILLATION_RIG_SIZE,
+  SublimationSetup,
+  SUBLIMATION_SETUP_SIZE,
+  Crystallisation,
+  CRYSTALLISATION_SIZE,
+  SeparatingFunnel,
+  SEPARATING_FUNNEL_SIZE,
+  ChromatographyPlate,
+  CHROMATOGRAPHY_PLATE_SIZE,
+  ChromatographyColumn,
+  CHROMATOGRAPHY_COLUMN_SIZE,
+  TestTubeRack,
+  FusionTube,
+  FUSION_TUBE_SIZE,
+  CombustionTrain,
+  COMBUSTION_TRAIN_SIZE,
+  DumasApparatus,
+  DUMAS_APPARATUS_SIZE,
+  KjeldahlSetup,
+  KJELDAHL_SETUP_SIZE,
+  CariusTube,
+  CARIUS_TUBE_SIZE,
+  TLC_SPOTS,
+  PAPER_SPOTS,
+  FUNNEL_LAYERS,
+  COLUMN_BANDS,
+  LASSAIGNE_TUBES,
+} from '@/components/organic/lab'
 import styles from './vocab.module.css'
 
 export const metadata: Metadata = {
@@ -2439,6 +2469,359 @@ export default function VocabPage() {
               <p className={styles.cardDescription}>
                 Below Ksp, the solid dissolves. At Ksp the solution is saturated and both arrows balance. Above Ksp,
                 ions leave the solution and the solid grows.
+              </p>
+            </div>
+          </article>
+        </div>
+      </section>
+      {/* Organic laboratory */}
+      <section className={styles.section} id="organic-lab" aria-labelledby="organic-lab-heading">
+        <h2 id="organic-lab-heading" className={styles.sectionTitle}>
+          Organic laboratory
+        </h2>
+        <p className={styles.sectionSubtitle}>
+          Purification and analysis apparatus: distillation, sublimation, recrystallisation, extraction,
+          chromatography, Lassaigne&apos;s tests, and the estimation of carbon, hydrogen, nitrogen and halogens.
+          Liquid levels, temperatures and progress are all props, so each drawing can be animated.
+        </p>
+
+        <div className={styles.grid}>
+          {/* Card 1: simple distillation */}
+          <article className={styles.card}>
+            <div className={styles.cardCanvas} style={{ height: 420 }}>
+              <svg viewBox={`0 0 ${DISTILLATION_RIG_SIZE.width} ${DISTILLATION_RIG_SIZE.height}`} className={styles.svgElement} role="img" aria-label="Simple distillation with a round-bottom flask, condenser and receiver">
+                <DistillationRig mode="simple" flaskLevel={0.6} receiverLevel={0.3} temperature={78} progress={0.6} />
+              </svg>
+            </div>
+            <div className={styles.cardBody}>
+              <div className={styles.cardHeading}>
+                <span>Simple distillation</span>
+                <span className={styles.cardBadge}>Boiling points 25 K apart</span>
+              </div>
+              <p className={styles.cardDescription}>
+                The mixture boils in the flask and the vapour is condensed in the Liebig condenser. The thermometer bulb
+                sits at the side-arm, so it reads the temperature of the vapour leaving the flask.
+              </p>
+            </div>
+          </article>
+
+          {/* Card 2: fractional distillation */}
+          <article className={styles.card}>
+            <div className={styles.cardCanvas} style={{ height: 420 }}>
+              <svg viewBox={`0 0 ${DISTILLATION_RIG_SIZE.width} ${DISTILLATION_RIG_SIZE.height}`} className={styles.svgElement} role="img" aria-label="Fractional distillation with a packed column and a vapour front climbing it">
+                <DistillationRig mode="fractional" flaskLevel={0.6} receiverLevel={0.2} temperature={66} progress={0.7} />
+              </svg>
+            </div>
+            <div className={styles.cardBody}>
+              <div className={styles.cardHeading}>
+                <span>Fractional distillation</span>
+                <span className={styles.cardBadge}>Packed column</span>
+              </div>
+              <p className={styles.cardDescription}>
+                Each climb up the packing condenses and re-evaporates the vapour. The more volatile component reaches the
+                top first, so liquids that boil a few kelvin apart still separate.
+              </p>
+            </div>
+          </article>
+
+          {/* Card 3: reduced pressure */}
+          <article className={styles.card}>
+            <div className={styles.cardCanvas} style={{ height: 420 }}>
+              <svg viewBox={`0 0 ${DISTILLATION_RIG_SIZE.width} ${DISTILLATION_RIG_SIZE.height}`} className={styles.svgElement} role="img" aria-label="Distillation under reduced pressure with a vacuum line and a pressure gauge">
+                <DistillationRig mode="reduced-pressure" flaskLevel={0.6} receiverLevel={0.3} temperature={92} progress={0.6} pressureLabel="12 mmHg" />
+              </svg>
+            </div>
+            <div className={styles.cardBody}>
+              <div className={styles.cardHeading}>
+                <span>Vacuum distillation</span>
+                <span className={styles.cardBadge}>Lower pressure, lower boiling point</span>
+              </div>
+              <p className={styles.cardDescription}>
+                Lowering the pressure lowers the boiling point, so heat-sensitive liquids distil without decomposing. The
+                vacuum is drawn from the receiver end, and the gauge reads the pressure.
+              </p>
+            </div>
+          </article>
+
+          {/* Card 4: steam distillation */}
+          <article className={styles.card}>
+            <div className={styles.cardCanvas} style={{ height: 420 }}>
+              <svg viewBox={`0 0 ${DISTILLATION_RIG_SIZE.width} ${DISTILLATION_RIG_SIZE.height}`} className={styles.svgElement} role="img" aria-label="Steam distillation with a steam generator feeding the mixture flask">
+                <DistillationRig mode="steam" flaskLevel={0.6} flaskColor="var(--precipitate)" receiverLevel={0.3} temperature={98} progress={0.5} />
+              </svg>
+            </div>
+            <div className={styles.cardBody}>
+              <div className={styles.cardHeading}>
+                <span>Steam distillation</span>
+                <span className={styles.cardBadge}>Below 100 °C</span>
+              </div>
+              <p className={styles.cardDescription}>
+                A volatile oil that does not mix with water boils together with it below 100 °C, because the two vapour
+                pressures add up to one atmosphere. Steam carries the oil over without scorching it.
+              </p>
+            </div>
+          </article>
+
+          {/* Card 5: sublimation */}
+          <article className={styles.card}>
+            <div className={styles.cardCanvas} style={{ height: 340 }}>
+              <svg viewBox={`0 0 ${SUBLIMATION_SETUP_SIZE.width} ${SUBLIMATION_SETUP_SIZE.height}`} className={styles.svgElement} role="img" aria-label="Sublimation: solid heated in a dish under an inverted funnel, with crystals forming on the funnel">
+                <SublimationSetup progress={0.8} />
+              </svg>
+            </div>
+            <div className={styles.cardBody}>
+              <div className={styles.cardHeading}>
+                <span>Sublimation</span>
+                <span className={styles.cardBadge}>Solid to vapour to solid</span>
+              </div>
+              <p className={styles.cardDescription}>
+                The solid passes straight into vapour and condenses as pure crystals on the cool funnel. Non-volatile
+                impurities stay behind in the dish.
+              </p>
+            </div>
+          </article>
+
+          {/* Cards 6 and 7: recrystallisation, two stages */}
+          <article className={styles.card}>
+            <div className={styles.cardCanvas} style={{ height: 340 }}>
+              <svg viewBox={`0 0 ${CRYSTALLISATION_SIZE.width} ${CRYSTALLISATION_SIZE.height}`} className={styles.svgElement} role="img" aria-label="Hot saturated solution cooling in a beaker, with crystals growing on the floor">
+                <Crystallisation stage="cooling" progress={0.9} temperature={60} />
+              </svg>
+            </div>
+            <div className={styles.cardBody}>
+              <div className={styles.cardHeading}>
+                <span>Recrystallisation: cooling</span>
+                <span className={styles.cardBadge}>Hot to cold</span>
+              </div>
+              <p className={styles.cardDescription}>
+                A hot saturated solution holds more solute than it can keep at room temperature. As it cools, the excess
+                comes out as crystals, and the soluble impurities stay in the solution.
+              </p>
+            </div>
+          </article>
+
+          <article className={styles.card}>
+            <div className={styles.cardCanvas} style={{ height: 340 }}>
+              <svg viewBox={`0 0 ${CRYSTALLISATION_SIZE.width} ${CRYSTALLISATION_SIZE.height}`} className={styles.svgElement} role="img" aria-label="Filtration of crystals through filter paper in a funnel, with filtrate collecting in a conical flask">
+                <Crystallisation stage="filtration" progress={0.7} />
+              </svg>
+            </div>
+            <div className={styles.cardBody}>
+              <div className={styles.cardHeading}>
+                <span>Recrystallisation: filtration</span>
+                <span className={styles.cardBadge}>Crystals on paper</span>
+              </div>
+              <p className={styles.cardDescription}>
+                The crystals are separated on filter paper. The filtrate keeps the soluble impurities, and the crystals
+                left on the paper are the purified product.
+              </p>
+            </div>
+          </article>
+
+          {/* Cards 8 and 9: separating funnel before and after shaking */}
+          <article className={styles.card}>
+            <div className={styles.cardCanvas} style={{ height: 360 }}>
+              <svg viewBox={`0 0 ${SEPARATING_FUNNEL_SIZE.width} ${SEPARATING_FUNNEL_SIZE.height}`} className={styles.svgElement} role="img" aria-label="Separating funnel before shaking: the solute stays in the aqueous layer and the ether layer floats on top">
+                <SeparatingFunnel layers={FUNNEL_LAYERS} partition={3} extraction={2} shake={0} />
+              </svg>
+            </div>
+            <div className={styles.cardBody}>
+              <div className={styles.cardHeading}>
+                <span>Separating funnel: before shaking</span>
+                <span className={styles.cardBadge}>Less dense on top</span>
+              </div>
+              <p className={styles.cardDescription}>
+                The ether layer floats on top because it is less dense, whichever layer was added first. All the solute
+                is still in the aqueous layer.
+              </p>
+            </div>
+          </article>
+
+          <article className={styles.card}>
+            <div className={styles.cardCanvas} style={{ height: 360 }}>
+              <svg viewBox={`0 0 ${SEPARATING_FUNNEL_SIZE.width} ${SEPARATING_FUNNEL_SIZE.height}`} className={styles.svgElement} role="img" aria-label="Separating funnel after shaking and two extractions: the solute has partitioned into the ether layer">
+                <SeparatingFunnel layers={FUNNEL_LAYERS} partition={3} extraction={2} shake={1} drain={0} />
+              </svg>
+            </div>
+            <div className={styles.cardBody}>
+              <div className={styles.cardHeading}>
+                <span>Separating funnel: after shaking</span>
+                <span className={styles.cardBadge}>K = 3, two extractions</span>
+              </div>
+              <p className={styles.cardDescription}>
+                Shaking and venting share the solute between the layers by its partition ratio K. Each extraction with fresh
+                solvent takes more of it into the top layer. Then the stopcock drains the lower layer.
+              </p>
+            </div>
+          </article>
+
+          {/* Card 10: TLC with the Rf overlay */}
+          <article className={styles.card}>
+            <div className={styles.cardCanvas} style={{ height: 340 }}>
+              <svg viewBox={`0 0 ${CHROMATOGRAPHY_PLATE_SIZE.width} ${CHROMATOGRAPHY_PLATE_SIZE.height}`} className={styles.svgElement} role="img" aria-label="Thin-layer chromatogram with three spots at Rf 0.22, 0.50 and 0.78, and a measuring overlay for spot B">
+                <ChromatographyPlate kind="tlc" spots={TLC_SPOTS} progress={1} measure measureSpot={1} />
+              </svg>
+            </div>
+            <div className={styles.cardBody}>
+              <div className={styles.cardHeading}>
+                <span>Thin-layer chromatography</span>
+                <span className={styles.cardBadge}>Rf = 0.50 for spot B</span>
+              </div>
+              <p className={styles.cardDescription}>
+                Each spot moves Rf times as far as the solvent front. Measure the spot and the front from the origin, and
+                the ratio gives Rf, which is the same for any length of run.
+              </p>
+            </div>
+          </article>
+
+          {/* Card 11: paper chromatography */}
+          <article className={styles.card}>
+            <div className={styles.cardCanvas} style={{ height: 340 }}>
+              <svg viewBox={`0 0 ${CHROMATOGRAPHY_PLATE_SIZE.width} ${CHROMATOGRAPHY_PLATE_SIZE.height}`} className={styles.svgElement} role="img" aria-label="Paper chromatography strip with two spots moving up from the origin">
+                <ChromatographyPlate kind="paper" spots={PAPER_SPOTS} progress={0.85} />
+              </svg>
+            </div>
+            <div className={styles.cardBody}>
+              <div className={styles.cardHeading}>
+                <span>Paper chromatography</span>
+                <span className={styles.cardBadge}>Strip in a solvent jar</span>
+              </div>
+              <p className={styles.cardDescription}>
+                The water held in the paper is the stationary phase. The solvent rises up the strip and carries each
+                component at its own rate.
+              </p>
+            </div>
+          </article>
+
+          {/* Card 12: column chromatography */}
+          <article className={styles.card}>
+            <div className={styles.cardCanvas} style={{ height: 380 }}>
+              <svg viewBox={`0 0 ${CHROMATOGRAPHY_COLUMN_SIZE.width} ${CHROMATOGRAPHY_COLUMN_SIZE.height}`} className={styles.svgElement} role="img" aria-label="Column chromatography: three bands moving down the adsorbent, with fractions collected below">
+                <ChromatographyColumn bands={COLUMN_BANDS} progress={0.8} />
+              </svg>
+            </div>
+            <div className={styles.cardBody}>
+              <div className={styles.cardHeading}>
+                <span>Column chromatography</span>
+                <span className={styles.cardBadge}>Fractions F1 to F3</span>
+              </div>
+              <p className={styles.cardDescription}>
+                Weakly adsorbed components move down the column faster. Each fraction is collected in its own tube as its
+                band reaches the bottom.
+              </p>
+            </div>
+          </article>
+
+          {/* Card 13: Lassaigne's test tubes */}
+          <article className={styles.card}>
+            <div className={styles.cardCanvas} style={{ height: 280 }}>
+              <svg viewBox="0 0 340 210" className={styles.svgElement} role="img" aria-label="Eight test tubes of Lassaigne's tests: Prussian blue, blood red, violet, black PbS, white AgCl, pale yellow AgBr, yellow AgI and yellow phosphomolybdate">
+                <TestTubeRack tubes={LASSAIGNE_TUBES} progress={1} spacing={42} />
+              </svg>
+            </div>
+            <div className={styles.cardBody}>
+              <div className={styles.cardHeading}>
+                <span>Lassaigne&apos;s tests</span>
+                <span className={styles.cardBadge}>One colour per element</span>
+              </div>
+              <p className={styles.cardDescription}>
+                Prussian blue shows N, and blood red shows thiocyanate from N and S. Violet with nitroprusside and black PbS
+                show S. White, pale yellow and yellow silver halides show Cl, Br and I. Yellow phosphomolybdate shows P.
+              </p>
+            </div>
+          </article>
+
+          {/* Card 14: sodium fusion */}
+          <article className={styles.card}>
+            <div className={styles.cardCanvas} style={{ height: 320 }}>
+              <svg viewBox={`0 0 ${FUSION_TUBE_SIZE.width} ${FUSION_TUBE_SIZE.height}`} className={styles.svgElement} role="img" aria-label="Sodium fusion: the ignition tube is plunged into water in a china dish">
+                <FusionTube stage="plunge" progress={0.5} />
+              </svg>
+            </div>
+            <div className={styles.cardBody}>
+              <div className={styles.cardHeading}>
+                <span>Sodium fusion</span>
+                <span className={styles.cardBadge}>Na + compound, heat, plunge</span>
+              </div>
+              <p className={styles.cardDescription}>
+                Sodium converts N, S and the halogens into ionic NaCN, Na₂S and NaX. The hot tube is plunged into water,
+                and the extract is then tested for each element.
+              </p>
+            </div>
+          </article>
+
+          {/* Card 15: combustion train */}
+          <article className={styles.card}>
+            <div className={styles.cardCanvas} style={{ height: 300 }}>
+              <svg viewBox={`0 0 ${COMBUSTION_TRAIN_SIZE.width} ${COMBUSTION_TRAIN_SIZE.height}`} className={styles.svgElement} role="img" aria-label="Liebig combustion train: oxygen through a hot CuO tube, a calcium chloride U-tube and potash bulbs with their mass gains">
+                <CombustionTrain progress={0.7} h2oGain="+0.36 g" co2Gain="+1.32 g" />
+              </svg>
+            </div>
+            <div className={styles.cardBody}>
+              <div className={styles.cardHeading}>
+                <span>Carbon and hydrogen: Liebig</span>
+                <span className={styles.cardBadge}>CaCl₂ for H₂O, KOH for CO₂</span>
+              </div>
+              <p className={styles.cardDescription}>
+                Carbon burns to CO₂ and hydrogen to H₂O. The U-tube and the potash bulbs gain mass in exactly those
+                products, so the two gains give the percentages of hydrogen and carbon.
+              </p>
+            </div>
+          </article>
+
+          {/* Card 16: Dumas */}
+          <article className={styles.card}>
+            <div className={styles.cardCanvas} style={{ height: 340 }}>
+              <svg viewBox={`0 0 ${DUMAS_APPARATUS_SIZE.width} ${DUMAS_APPARATUS_SIZE.height}`} className={styles.svgElement} role="img" aria-label="Dumas apparatus: CO2 sweeps the sample over hot CuO, and nitrogen collects in a nitrometer over KOH">
+                <DumasApparatus volume={0.55} volumeLabel="18.2 mL" progress={0.6} />
+              </svg>
+            </div>
+            <div className={styles.cardBody}>
+              <div className={styles.cardHeading}>
+                <span>Nitrogen: Dumas</span>
+                <span className={styles.cardBadge}>N₂ over KOH</span>
+              </div>
+              <p className={styles.cardDescription}>
+                The sample burns over hot CuO in a stream of CO₂, so all its nitrogen leaves as N₂. KOH in the nitrometer
+                absorbs the CO₂, and the volume of gas gives the percentage of nitrogen.
+              </p>
+            </div>
+          </article>
+
+          {/* Card 17: Kjeldahl */}
+          <article className={styles.card}>
+            <div className={styles.cardCanvas} style={{ height: 340 }}>
+              <svg viewBox={`0 0 ${KJELDAHL_SETUP_SIZE.width} ${KJELDAHL_SETUP_SIZE.height}`} className={styles.svgElement} role="img" aria-label="Kjeldahl setup at the titration stage: standard acid in the receiver turns at the end point as the burette delivers NaOH">
+                <KjeldahlSetup stage="titrate" titrantMl={18.4} endPoint />
+              </svg>
+            </div>
+            <div className={styles.cardBody}>
+              <div className={styles.cardHeading}>
+                <span>Nitrogen: Kjeldahl</span>
+                <span className={styles.cardBadge}>Back-titration</span>
+              </div>
+              <p className={styles.cardDescription}>
+                Digestion turns the nitrogen into ammonium sulphate. Distillation with alkali drives NH₃ into a known excess
+                of standard acid, and the acid left over is titrated with NaOH.
+              </p>
+            </div>
+          </article>
+
+          {/* Card 18: Carius */}
+          <article className={styles.card}>
+            <div className={styles.cardCanvas} style={{ height: 340 }}>
+              <svg viewBox={`0 0 ${CARIUS_TUBE_SIZE.width} ${CARIUS_TUBE_SIZE.height}`} className={styles.svgElement} role="img" aria-label="Carius tube: a sealed tube heated in a furnace, with a silver halide precipitate settled at the bottom">
+                <CariusTube stage="settle" progress={1} precipitateColor="var(--agcl-white)" precipitateLabel="AgCl" />
+              </svg>
+            </div>
+            <div className={styles.cardBody}>
+              <div className={styles.cardHeading}>
+                <span>Halogens: Carius</span>
+                <span className={styles.cardBadge}>AgX, filtered and weighed</span>
+              </div>
+              <p className={styles.cardDescription}>
+                Fuming nitric acid oxidises the sample in a sealed tube, and the halogen is precipitated as the silver halide.
+                The solid is filtered, washed and weighed to give the percentage of halogen.
               </p>
             </div>
           </article>
