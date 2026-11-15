@@ -1,0 +1,80 @@
+---
+class: 11
+unit: 6
+section: "6.5"
+order: 5
+title: "Heterogeneous Equilibria"
+slug: "6-5-heterogeneous-equilibria"
+summary: "A pure solid or liquid has a fixed concentration, so it is left out of K; in a closed vessel of calcium carbonate, the CO₂ pressure depends on temperature alone while any solid is left."
+ncert: "Class 11, Part I — Unit 6, Section 6.5"
+---
+
+<Hook>
+Boil hard water in a kettle for a few years and a white, gritty crust builds up on the element. Most of it is calcium carbonate, left behind when dissolved calcium hydrogencarbonate breaks down on heating. Now seal a lump of limestone in a steel vessel and heat it to 1100 K. It gives off carbon dioxide until the pressure stops rising. Does a bigger lump push the pressure higher?
+</Hook>
+
+## 6.5 Heterogeneous equilibria
+
+An equilibrium that spans more than one phase is **heterogeneous**. Water in a closed flask, with liquid water at the bottom and its vapour above, is the simplest case:
+
+$$
+\ce{H2O(l) <=> H2O(g)}
+$$
+
+A saturated solution with undissolved salt is another. The solid and its dissolved ions meet at one equilibrium, $\ce{AgCl(s) <=> Ag^+(aq) + Cl^-(aq)}$, with a gas phase absent and a solid phase present.
+
+### Why a solid or a liquid drops out
+
+The molar concentration of a pure solid or a pure liquid is fixed by its density. It does not change with how much of the substance is present, so a pile of solid and a spoonful of it have the same concentration. Only gases and dissolved species have concentrations that follow the amount present in the container. The constant concentration of a pure solid or liquid is therefore built into $K$, and the expression is written without it. For the same reason, a pure solid or liquid is left out of $K_p$.
+
+The solid still has to be there. A heterogeneous equilibrium exists only while some of each pure solid or liquid remains, however small the amount. The solid's amount does not appear in the expression, but its presence does matter, as the next section shows.
+
+### Calcium carbonate in a closed vessel
+
+When limestone is heated, it decomposes:
+
+$$
+\ce{CaCO3(s) <=> CaO(s) + CO2(g)}
+$$
+
+On the stoichiometric equation, $K_c = [\ce{CaO}][\ce{CO2}]/[\ce{CaCO3}]$. Both solids have constant concentrations, so they are absorbed into the constant, and the modified constant is $K'_c = [\ce{CO2}]$. The partial-pressure form is $K_p = p_{\ce{CO2}}$. At a fixed temperature, the CO₂ pressure in equilibrium with the two solids is one fixed value, whatever the amounts of the solids. NCERT's experiment gives $2.00$ bar at 1100 K, so $K_p = 2.00$ at that temperature.
+
+The next Scrolly puts the same solid into two vessels, one with a little and one with a lot.
+
+<Scrolly animation="heterogeneous" layout="wide">
+<Step>
+Two sealed vessels of $10.0\ \text{L}$ are held at $1100\ \text{K}$. Vessel A holds $0.50\ \text{mol}$ of $\ce{CaCO3(s)}$ and vessel B holds $2.00\ \text{mol}$. Both start with no carbon dioxide and no pressure. The solid is the only thing in each vessel, lying in a bed at the bottom. As the solid decomposes, the gas it releases will collect above that bed and push the gauge up.
+</Step>
+<Step>
+As the limestone decomposes, $\ce{CO2}$ gathers above the solid. At a pressure of $1.00\ \text{bar}$ each vessel holds $0.109\ \text{mol}$ of gas, from $pV = nRT$. Both vessels pass through this state. The solid is still there in each one, and it has lost the same $0.109\ \text{mol}$, whatever the amount it started with.
+</Step>
+<Step>
+At equilibrium the pressure reaches $2.00\ \text{bar}$ in both vessels. The gas amount is $0.219\ \text{mol}$ in each, from $n = K_pV/RT$. Vessel A is left with $0.281\ \text{mol}$ of solid and vessel B with $1.781\ \text{mol}$. The pressure is the same because the gas is set by $K_p$ and the temperature, not by the solid.
+</Step>
+<Step>
+Now put only $0.10\ \text{mol}$ of solid into vessel A. Reaching $K_p$ would need $0.219\ \text{mol}$ of gas, and there is not that much solid, so all of it decomposes. The gas then settles at $0.914\ \text{bar}$, below $2.00$ bar, and the vessel has no solid left to restore the balance. Vessel B, with its $2.00\ \text{mol}$, still shows $2.00$ bar.
+</Step>
+<Step>
+The same rule covers other heterogeneous equilibria. Leave out the solid or the liquid, write the rest with its concentrations or pressures, and the constant is fixed by the temperature while the solid or liquid remains. Each of the three cards shows what drops out and why.
+</Step>
+</Scrolly>
+
+<Check n={1} numeric answer={0.219} tolerance={0.001} unit="mol" explanation="At equilibrium the CO₂ pressure is Kp = 2.00 bar. From pV = nRT, n = Kp·V/(RT) = 2.00 × 10.0 / (0.0831 × 1100) = 20.0 / 91.41 = 0.219 mol.">
+A vessel of $10.0\ \text{L}$ at $1100\ \text{K}$ holds solid $\ce{CaCO3}$ in equilibrium with $\ce{CaO}$ and $\ce{CO2}$, where $K_p = 2.00$ bar. How many moles of $\ce{CO2}$ does the vessel hold?
+</Check>
+
+<Simulation name="heterogeneous-converter" title="CaCO₃ and the converter: solids and liquids left out of K" />
+
+The converter opens on $\ce{CaCO3(s) <=> CaO(s) + CO2(g)}$ at 1100 K. The chips show that the two solids are left out, and the working converts $K_c = [\ce{CO2}] = 0.0219\ \text{mol L}^{-1}$ into $K_p = 2.00$ bar. Change the temperature to see the constant move, and try $\ce{Ni(s) + 4CO(g) <=> Ni(CO)4(g)}$ or $\ce{H2O(l) <=> H2O(g)}$ to see other solids and liquids left out.
+
+<Check n={2} options={["It stays at 2.00 bar, whatever the amount of solid", "It doubles, because there is twice as much solid", "It falls to 0.914 bar, because all the solid decomposes first", "It rises without limit until the solid is used up"]} answer={2} explanation="0.10 mol of CaCO₃ can give at most 0.10 mol of CO₂, and 0.10 mol in 10.0 L at 1100 K is 0.10 × 0.0831 × 1100 / 10.0 = 0.914 bar. That is below Kp = 2.00 bar, so the solid runs out before the pressure reaches its equilibrium value.">
+A vessel of $10.0\ \text{L}$ at $1100\ \text{K}$ starts with $0.10\ \text{mol}$ of $\ce{CaCO3(s)}$ and nothing else. What happens to the $\ce{CO2}$ pressure as it comes to equilibrium?
+</Check>
+
+<KeyIdeas>
+- A heterogeneous equilibrium involves more than one phase. Pure solids and pure liquids are left out of K, because their concentrations are fixed.
+- For $\ce{CaCO3(s) <=> CaO(s) + CO2(g)}$, the constant is $K'_c = [\ce{CO2}]$ and $K_p = p_{\ce{CO2}}$, which is 2.00 bar at 1100 K.
+- While any solid is left, the CO₂ pressure is set by the temperature alone, whatever the amount of solid.
+- When the solid runs out first, the pressure stays below $K_p$. A solid or liquid must be present for the equilibrium to exist.
+- In $\ce{Ni(s) + 4CO(g) <=> Ni(CO)4(g)}$, $K_c = [\ce{Ni(CO)4}]/[\ce{CO}]^4$, and in $\ce{H2O(l) <=> H2O(g)}$, $K_p = p_{\ce{H2O}}$.
+</KeyIdeas>
