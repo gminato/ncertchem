@@ -23,6 +23,24 @@ describe('ELEMENTS (NCERT Class 11 Unit 1 atomic masses)', () => {
   it('is keyed by symbol with name and atomic number', () => {
     expect(ELEMENTS.Cl).toEqual({ symbol: 'Cl', name: 'Chlorine', atomicNumber: 17, atomicMass: 35.5 })
   })
+
+  it('Item 7: uses standard atomic weights with two decimals for added elements', () => {
+    expect(ELEMENTS.Li.atomicMass).toBe(6.94)
+    expect(ELEMENTS.Be.atomicMass).toBe(9.01)
+    expect(ELEMENTS.Sc.atomicMass).toBe(44.96)
+    expect(ELEMENTS.Ti.atomicMass).toBe(47.87)
+    expect(ELEMENTS.V.atomicMass).toBe(50.94)
+    expect(ELEMENTS.Cr.atomicMass).toBe(52.00)
+    expect(ELEMENTS.Mn.atomicMass).toBe(54.94)
+    expect(ELEMENTS.Co.atomicMass).toBe(58.93)
+    expect(ELEMENTS.Ni.atomicMass).toBe(58.69)
+    expect(ELEMENTS.Rb.atomicMass).toBe(85.47)
+    expect(ELEMENTS.I.atomicMass).toBe(126.90)
+    expect(ELEMENTS.Cs.atomicMass).toBe(132.91)
+    expect(ELEMENTS.Au.atomicMass).toBe(196.97)
+    expect(ELEMENTS.Tl.atomicMass).toBe(204.38)
+    expect(ELEMENTS.Pb.atomicMass).toBe(207.20)
+  })
 })
 
 describe('parseFormula', () => {
