@@ -240,7 +240,9 @@ function buildSystems(): Record<LabSystemId, LabSystem> {
       deltaHkJ: null,
       temperatureRange: null,
       initial: { 'Fe3+': 0.2, 'SCN-': 0.2, 'FeSCN2+': 0 },
-      kfBase: 1,
+      // Dilute ions react slowly with kf = 1 (timescale ~13 lab units, longer than an epoch), so the
+      // curve would not reach equilibrium before the last sample is pinned. kf = 20 settles in ~1 unit.
+      kfBase: 20,
       kSource: 'Illustrative value, not from NCERT: K ≈ 1.4 × 10² M⁻¹ at 298 K. Only the direction and the colour matter here.',
     },
   }

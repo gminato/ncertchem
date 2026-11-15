@@ -287,3 +287,21 @@ describe('timelines', () => {
     expect([...times].sort((a, b) => a - b)).toEqual(times)
   })
 })
+
+describe('every epoch converges before its last sample is pinned', () => {
+  // The last sample is pinned to the exact equilibrium. If the kinetics have not converged by then,
+  // the curve visibly jumps (the Fe–SCN complex once leapt from 0.13 to 0.166 M).
+  for (const id of ['haber', 'n2o4', 'fe-scn'] as const) {
+    for (const catalysed of [false, true]) {
+      it(`${id}${catalysed ? ' (catalysed)' : ''}: second-to-last sample within 1 % of the end`, () => {
+        const epoch = approachEpoch(id, catalysed)
+        const n = epoch.samples.length
+        const end = epoch.samples[n - 1].concentrations
+        const before = epoch.samples[n - 2].concentrations
+        for (const sp of Object.keys(end)) {
+          expect(Math.abs(before[sp] - end[sp])).toBeLessThanOrEqual(0.01 * Math.max(...Object.values(end)))
+        }
+      })
+    }
+  }
+})
