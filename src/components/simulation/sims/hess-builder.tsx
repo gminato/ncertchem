@@ -25,8 +25,8 @@ import styles from './hess-builder.module.css'
 
 /** Longest route the builder accepts. Four or fewer steps keep the diagram's labels apart. */
 const MAX_STEPS = 6
-/** Diagram size in its own units (the EnthalpyDiagram's drawing size). */
-const DIAGRAM = { width: 384, height: 262 } as const
+/** Diagram size in its own units. The column is about 490 px wide, so the 12 unit step labels render at about 16 px. */
+const DIAGRAM = { width: 392, height: 300 } as const
 
 const PUZZLE_OPTIONS = HESS_PUZZLES.map((p, i) => ({ value: String(i), label: `Puzzle ${i + 1}` }))
 
@@ -100,13 +100,18 @@ export function HessBuilder(_props: SimulationProps) {
   }
 
   // Levels: the start at 0, then one level per step with the running ΔH.
+  // When the target lies within 5% of the diagram's span from the start, its label would sit on the
+  // start label, so the two are merged into one "start · target" label.
+  const span = Math.max(1, ...totals.map((H) => Math.abs(H)))
+  const coincide = matched && Math.abs(finalDeltaH) < 0.05 * span
   const levels: EnthalpyLevel[] = [
-    { id: 'start', label: 'start', H: 0 },
-    ...totals.map((H, i) => ({
-      id: `after-${i + 1}`,
-      label: i === totals.length - 1 && matched ? 'target' : `after step ${i + 1}`,
-      H,
-    })),
+    { id: 'start', label: coincide ? 'start · target' : 'start', H: 0 },
+    ...totals.map((H, i) => {
+      const last = i === totals.length - 1
+      let label = `after step ${i + 1}`
+      if (last && matched) label = coincide ? '' : 'target'
+      return { id: `after-${i + 1}`, label, H }
+    }),
   ]
   const steps: EnthalpyStep[] = route.map((term, i) => ({
     id: `step-${i + 1}`,
@@ -221,12 +226,14 @@ export function HessBuilder(_props: SimulationProps) {
             aria-label={`Enthalpy levels for the route so far: ${route.length} step${route.length === 1 ? '' : 's'}, running ΔH ${signedText(finalDeltaH, 1)} kJ mol⁻¹`}
             className={styles.diagram}
           >
-            <EnthalpyDiagram
-              columns={Math.max(3, route.length)}
-              levels={levels}
-              steps={steps}
-              title="Route built level by level"
-            />
+            <g transform="translate(16 16)">
+              <EnthalpyDiagram
+                columns={Math.max(3, route.length)}
+                levels={levels}
+                steps={steps}
+                title="Route built level by level"
+              />
+            </g>
           </svg>
         ) : (
           <svg viewBox={`0 0 ${DIAGRAM.width} ${DIAGRAM.height}`} role="img" aria-label="Empty route" className={styles.diagram}>

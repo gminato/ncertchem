@@ -12,8 +12,8 @@ export interface HessRoutesProps {
   reducedMotion: boolean
 }
 
-/** The diagram is drawn at 1.25 times its own size and centred in the 600-unit panel. */
-const DIAGRAM = { x: 75, y: 12, scale: 1.25 } as const
+/** The diagram is drawn at 1.5 times its own size and centred in the 600-unit panel. */
+const DIAGRAM = { x: 30, y: 6, scale: 1.5 } as const
 
 const LEVELS: EnthalpyLevel[] = [
   { id: 'C', label: 'C(s) + O₂(g)', H: 0, span: [0, 2] },
@@ -70,7 +70,7 @@ export function HessRoutes({ step }: HessRoutesProps) {
   const { text, node } = caption(index)
   return (
     <svg
-      viewBox="0 0 600 410"
+      viewBox="0 0 600 490"
       role="img"
       aria-label={`Enthalpy diagram of carbon burning to CO₂ by two routes, Step ${index + 1} of 4. ${text}`}
       style={{ width: '100%', height: 'auto', display: 'block' }}
@@ -86,10 +86,10 @@ export function HessRoutes({ step }: HessRoutesProps) {
           title="Enthalpy levels: C(s) + O₂(g), CO(g) + ½O₂(g) and CO₂(g), with the direct and two-step routes"
         />
       </g>
-      <Label x={300} y={382} textAnchor="middle" fontSize={16} fill="var(--fg)" data-testid="hess-caption">
+      <Label x={300} y={432} textAnchor="middle" fontSize={18} fill="var(--fg)" data-testid="hess-caption">
         {node}
       </Label>
-      <Label x={300} y={404} textAnchor="middle" fontSize={14} fill="var(--fg-subtle)">
+      <Label x={300} y={468} textAnchor="middle" fontSize={17} fill="var(--fg-subtle)">
         {`Step ${index + 1} of 4`}
       </Label>
     </svg>

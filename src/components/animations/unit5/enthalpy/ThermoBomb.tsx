@@ -11,33 +11,40 @@ export interface ThermoBombProps {
   reducedMotion: boolean
 }
 
-/** The bomb sits in the left part of the panel, scaled up so it fills the drawing. */
-const BOMB = { x: 200, y: 205, scale: 1.5 } as const
+/** Drawing size. The text sizes below are chosen so they render at 14 px or more in a ~570 px panel. */
+const VIEW = { width: 600, height: 460 } as const
 
-/** The reading card on the right: its left edge, top edge and width. */
-const CARD = { x: 390, y: 60, width: 198, height: 206 } as const
+/** The bomb: centred in the left part of the panel and scaled so it fills most of the height. */
+const BOMB = { x: 196, y: 230, scale: 1.7 } as const
+
+/** The reading card on the right. */
+const CARD = { x: 398, y: 118, width: 194, height: 228 } as const
 const TEXT_X = CARD.x + 16
+/** Font sizes in SVG units. Body text is 16 units (about 14.5 px); headline values are 20 units. */
+const TITLE_FONT = 18
+const BODY_FONT = 16
+const VALUE_FONT = 20
 
 /** What the card says at each Step. Symbols are italic (className="sym"); units and numbers are upright. */
 const CARD_TEXT = [
   {
-    title: 'Sealed steel bomb',
+    title: 'Sealed bomb',
     body: <><tspan className="sym">V</tspan> fixed, so <tspan className="sym">w</tspan> = 0</>,
-    line: 'Sample and O₂ inside',
+    line: 'Sample + O₂ inside',
   },
   {
     title: 'Ignition',
-    body: 'A spark starts the burn',
-    line: 'Heat goes into the bath',
+    body: 'Spark lights it',
+    line: 'Heat enters bath',
   },
   {
     title: 'Water bath warms',
-    body: 'The thermometer reads',
+    body: 'Thermometer reads',
     big: <><tspan className="sym">ΔT</tspan> = {signedText(BOMB_EXAMPLE.deltaTK, 2)} K</>,
   },
   {
     title: 'Heat balance',
-    body: `The bath gains +${BOMB_EXAMPLE.qCalorimeterKJ.toFixed(2)} kJ`,
+    body: `Bath gains ${BOMB_EXAMPLE.qCalorimeterKJ.toFixed(2)} kJ`,
     big: <><tspan className="sym">q</tspan> = {signedText(BOMB_EXAMPLE.qReactionKJ, 2)} kJ</>,
   },
   {
@@ -61,7 +68,7 @@ export function ThermoBomb({ step, reducedMotion }: ThermoBombProps) {
 
   return (
     <svg
-      viewBox="0 0 600 400"
+      viewBox={`0 0 ${VIEW.width} ${VIEW.height}`}
       role="img"
       aria-label={`Bomb calorimeter, Step ${index + 1} of 5: ${text.title}. ${typeof text.body === 'string' ? text.body : ''}`}
       style={{ width: '100%', height: 'auto', display: 'block' }}
@@ -82,23 +89,23 @@ export function ThermoBomb({ step, reducedMotion }: ThermoBombProps) {
         style={{ fill: 'var(--surface-raised)', stroke: 'var(--glass-wall)' }}
         strokeWidth={1.4}
       />
-      <Label x={TEXT_X} y={CARD.y + 34} textAnchor="start" fontSize={16} fill="var(--fg)">
+      <Label x={TEXT_X} y={CARD.y + 42} textAnchor="start" fontSize={TITLE_FONT} fill="var(--fg)">
         {text.title}
       </Label>
-      <Label x={TEXT_X} y={CARD.y + 70} textAnchor="start" fontSize={14} fill="var(--fg-muted)">
+      <Label x={TEXT_X} y={CARD.y + 84} textAnchor="start" fontSize={BODY_FONT} fill="var(--fg-muted)">
         {text.body}
       </Label>
       {'line' in text && (
-        <Label x={TEXT_X} y={CARD.y + 98} textAnchor="start" fontSize={14} fill="var(--fg-muted)">
+        <Label x={TEXT_X} y={CARD.y + 116} textAnchor="start" fontSize={BODY_FONT} fill="var(--fg-muted)">
           {text.line}
         </Label>
       )}
       {'big' in text && (
-        <Label x={TEXT_X} y={CARD.y + 150} textAnchor="start" fontSize={22} fill="var(--fg)" data-testid="bomb-readout">
+        <Label x={TEXT_X} y={CARD.y + 178} textAnchor="start" fontSize={VALUE_FONT} fill="var(--fg)" data-testid="bomb-readout">
           {text.big}
         </Label>
       )}
-      <Label x={TEXT_X} y={CARD.y + 182} textAnchor="start" fontSize={14} fill="var(--fg-subtle)">
+      <Label x={TEXT_X} y={CARD.y + 210} textAnchor="start" fontSize={BODY_FONT} fill="var(--fg-subtle)">
         {`Step ${index + 1} of 5`}
       </Label>
     </svg>
