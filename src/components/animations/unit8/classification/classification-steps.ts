@@ -24,10 +24,10 @@ export interface TreeColumn {
 }
 
 export const TREE_COLUMNS: readonly TreeColumn[] = [
-  { key: 'acyclic', label: 'I. Acyclic', x: 100, leaves: ['CCCCCC', 'CC(C)CCC', 'CC(=O)O'] },
-  { key: 'alicyclic', label: 'II(a). Alicyclic', x: 235, leaves: ['C1CC1', 'C1CCCCC1', 'C1=CCCCC1'] },
-  { key: 'aromatic', label: 'II(b). Aromatic', x: 370, leaves: ['C1=CC=CC=C1', 'C1=CC=C2C=CC=CC2=C1', 'O=C1C=CC=CC=C1'] },
-  { key: 'heterocyclic', label: 'II(c). Heterocyclic', x: 505, leaves: ['C1=COC=C1', 'C1=CC=NC=C1', 'C1CCOC1'] },
+  { key: 'acyclic', label: 'Acyclic', x: 100, leaves: ['CCCCCC', 'CC(C)CCC', 'CC(=O)O'] },
+  { key: 'alicyclic', label: 'Alicyclic', x: 235, leaves: ['C1CC1', 'C1CCCCC1', 'C1=CCCCC1'] },
+  { key: 'aromatic', label: 'Aromatic', x: 370, leaves: ['C1=CC=CC=C1', 'C1=CC=C2C=CC=CC2=C1', 'O=C1C=CC=CC=C1'] },
+  { key: 'heterocyclic', label: 'Heterocyclic', x: 505, leaves: ['C1=COC=C1', 'C1=CC=NC=C1', 'C1CCOC1'] },
 ]
 
 /** One drawn molecule in a tree column, with the lib's class and subclass for it. */
