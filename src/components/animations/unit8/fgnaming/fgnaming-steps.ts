@@ -40,11 +40,16 @@ export interface DrawnMolecule {
   innerCircles: boolean
 }
 
-/** A row of the ortho, meta and para Step: the relation word, the locants and the molecule. */
+/**
+ * A row of the ortho, meta and para Step: the relation word, the locants, the lib's name, the
+ * number of ring vertices from the chlorine to the methyl group (1, 2 or 3), and the row's centre.
+ */
 export interface RingRow {
   relation: 'ortho' | 'meta' | 'para'
   locants: string
-  molecule: DrawnMolecule
+  name: string
+  methylOffset: 1 | 2 | 3
+  cy: number
 }
 
 /** The layout of a Step: the priority ladder, one centred molecule, or rows of rings. */
@@ -197,11 +202,13 @@ export function functionalNamingSteps(): FgStep[] {
   const META: (RingGroupId | null)[] = [null, 'Cl', null, 'CH3', null, null]
   const PARA: (RingGroupId | null)[] = [null, null, 'Cl', null, null, 'CH3']
   const ALPHA: (RingGroupId | null)[] = ['Cl', null, 'CH3', null, null, null]
-  const ringRow = (relation: RingRow['relation'], locants: string, subs: (RingGroupId | null)[], y: number): RingRow => ({
-    relation,
-    locants,
-    molecule: ringDrawing(subs, { x: 218, y, scale: 44 }),
-  })
+  const ringRow = (relation: RingRow['relation'], locants: string, subs: (RingGroupId | null)[], cy: number): RingRow => {
+    const cl = subs.indexOf('Cl')
+    const me = subs.indexOf('CH3')
+    const methylOffset = (((me - cl) % 6) + 6) % 6
+    if (methylOffset < 1 || methylOffset > 3) throw new RangeError('ortho, meta and para rows use offsets 1 to 3')
+    return { relation, locants, name: nameFor(ringSmiles(subs)), methylOffset: methylOffset as 1 | 2 | 3, cy }
+  }
 
   return [
     {
@@ -261,7 +268,7 @@ export function functionalNamingSteps(): FgStep[] {
       lines: [],
       big: null,
       molecules: [],
-      rows: [ringRow('ortho', '1,2', ORTHO, 118), ringRow('meta', '1,3', META, 252), ringRow('para', '1,4', PARA, 386)],
+      rows: [ringRow('ortho', '1,2', ORTHO, 116), ringRow('meta', '1,3', META, 262), ringRow('para', '1,4', PARA, 398)],
       present: [],
     },
     {

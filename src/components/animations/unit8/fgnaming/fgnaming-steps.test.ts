@@ -26,7 +26,7 @@ describe('functional-naming Steps', () => {
   it('names the three ring rows as ortho, meta and para pairs', () => {
     const rows = steps[4].rows
     expect(rows.map((r) => r.relation)).toEqual(['ortho', 'meta', 'para'])
-    expect(rows.map((r) => r.molecule.name)).toEqual(['1-chloro-2-methylbenzene', '1-chloro-3-methylbenzene', '1-chloro-4-methylbenzene'])
+    expect(rows.map((r) => r.name)).toEqual(['1-chloro-2-methylbenzene', '1-chloro-3-methylbenzene', '1-chloro-4-methylbenzene'])
   })
 
   it('puts the locants on the substituted ring carbons of the alphabetical Step', () => {
