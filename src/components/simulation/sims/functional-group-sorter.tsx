@@ -2,7 +2,7 @@
 
 import { useMemo, useState } from 'react'
 import { Button } from '@/components/controls'
-import { FunctionalGroupBadge, SkeletalFormula, skeletalFrame, subscriptDigits } from '@/components/organic'
+import { FunctionalGroupBadge, SkeletalFormula, skeletalBounds, skeletalFrame, subscriptDigits } from '@/components/organic'
 import { SimulationControls } from '@/components/simulation/Simulation'
 import type { SimulationProps } from '@/components/simulation/registry'
 import { GROUP_TABLE, type GroupId, type RingClass } from '@/lib/chem/classification'
@@ -13,7 +13,19 @@ const VIEW_WIDTH = 340
 const VIEW_HEIGHT = 250
 const CX = VIEW_WIDTH / 2
 const CY = 140
-const SCALE = 34
+/** Bonds are at least this long on the panel, so labels stay readable. */
+const MIN_SCALE = 40
+/** A molecule fills this share of the panel height, unless its width limits it first. */
+const HEIGHT_SHARE = 0.6
+const WIDTH_SHARE = 0.8
+
+/** Pixels per bond for a molecule so it fills ~60% of the panel height (and 80% of its width). */
+function fitScale(graph: SorterCard['graph']): number {
+  const unit = skeletalBounds(graph, 1)
+  const byHeight = unit.height > 0 ? (HEIGHT_SHARE * VIEW_HEIGHT) / unit.height : Infinity
+  const byWidth = unit.width > 0 ? (WIDTH_SHARE * VIEW_WIDTH) / unit.width : Infinity
+  return Math.max(MIN_SCALE, Math.min(byHeight, byWidth))
+}
 
 const CLASSES: { key: RingClass; label: string }[] = [
   { key: 'acyclic', label: 'Acyclic' },
@@ -60,7 +72,8 @@ export function FunctionalGroupSorter(_props: SimulationProps) {
   const card = DECK[index]
   const done = index >= DECK.length
 
-  const frame = useMemo(() => (done ? null : skeletalFrame(card.graph, SCALE)), [card, done])
+  const scale = useMemo(() => (done ? MIN_SCALE : fitScale(card.graph)), [card, done])
+  const frame = useMemo(() => (done ? null : skeletalFrame(card.graph, scale)), [card, done, scale])
 
   const correctFirstTry = Object.values(scored).filter(Boolean).length
   const answered = Object.keys(scored).length
@@ -115,9 +128,11 @@ export function FunctionalGroupSorter(_props: SimulationProps) {
         <span className={styles.count} data-testid="sorter-count">
           Card {index + 1} of {DECK.length}
         </span>
-        <span className={styles.score} data-testid="sorter-tally">
-          First-check score: {correctFirstTry} of {answered}
-        </span>
+        {answered > 0 ? (
+          <span className={styles.score} data-testid="sorter-tally">
+            First-check score: {correctFirstTry} of {answered}
+          </span>
+        ) : null}
       </div>
 
       <svg
@@ -129,7 +144,7 @@ export function FunctionalGroupSorter(_props: SimulationProps) {
       >
         <SkeletalFormula
           graph={card.graph}
-          scale={SCALE}
+          scale={scale}
           x={CX}
           y={CY}
           highlightAtoms={checked ? card.groupAtoms : []}

@@ -63,7 +63,8 @@ for (const scheme of ['light', 'dark'] as const) {
       for (let i = 0; i < 4; i++) await shotStep(page, i, scheme)
       await gotoStep(page, 3)
       await expect(page.getByTestId('tree').first()).toHaveAttribute('data-active', 'heterocyclic')
-      await expect(page.getByTestId('tree-leaf')).toHaveCount(12)
+      await expect(page.getByTestId('tree-leaf')).toHaveCount(3)
+      await expect(page.getByTestId('tree').first()).toContainText('3 compounds')
 
       // Ladder and boiling points.
       await shotStep(page, 4, scheme)
