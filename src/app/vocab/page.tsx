@@ -59,6 +59,27 @@ const HYDROGEN_LINES = [
   { nm: 434, intensity: 0.7 },
   { nm: 410, intensity: 0.6 },
 ]
+import {
+  SystemBoundary,
+  PistonCylinder,
+  PVDiagram,
+  PV_SIZE,
+  Calorimeter,
+  CALORIMETER_SIZE,
+  EnthalpyDiagram,
+  ENTHALPY_SIZE,
+  GibbsPlot,
+  GIBBS_SIZE,
+  EntropyBox,
+  pathWork,
+} from '@/components/thermo'
+import {
+  PV_EXPANSION,
+  HESS_CARBON,
+  GIBBS_CASES,
+  PISTON_DEMO,
+  NRT_300,
+} from '@/components/thermo/fixture'
 import styles from './vocab.module.css'
 
 export const metadata: Metadata = {
@@ -71,6 +92,15 @@ export const metadata: Metadata = {
 function formatEvMagnitude(ev: number): string {
   return Math.abs(ev).toPrecision(3)
 }
+
+/** Work in L atm, signed with a true minus sign, to one decimal place. */
+function signedWork(w: number): string {
+  return `−${Math.abs(w).toFixed(1)}`
+}
+
+const WORK_ONE_STEP = pathWork(PV_EXPANSION.oneStep)
+const WORK_MANY_STEP = pathWork(PV_EXPANSION.manyStep)
+const WORK_REVERSIBLE = pathWork(PV_EXPANSION.reversible)
 
 export default function VocabPage() {
   // Proportional hydrogen energy levels (converted from Joules to eV), n = 1..4
@@ -1453,6 +1483,347 @@ export default function VocabPage() {
               <p className={styles.cardDescription}>
                 Energy falls as the hydrogen atoms approach, to a minimum at the bond length. Pushing
                 them closer than that costs energy quickly.
+              </p>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      {/* Energy and thermodynamics */}
+      <section className={styles.section} id="thermo" aria-labelledby="thermo-heading">
+        <h2 id="thermo-heading" className={styles.sectionTitle}>
+          Energy and thermodynamics
+        </h2>
+        <p className={styles.sectionSubtitle}>
+          Systems and their boundaries, the work a gas does, heat measured in calorimeters, enthalpy
+          diagrams and the Gibbs energy that decides whether a change happens. Heat is always warm
+          and work is always cool.
+        </p>
+
+        <div className={styles.grid}>
+          {/* Card: system types */}
+          <article className={`${styles.card} ${styles.wide}`}>
+            <div className={`${styles.cardCanvas} ${styles.cardCanvasTall}`}>
+              <svg
+                viewBox="-280 -96 560 200"
+                className={styles.svgElement}
+                role="img"
+                aria-label="Three systems in their surroundings: an open system exchanges matter and energy through gaps in its walls, a closed system exchanges only energy through a solid wall, and an isolated system, behind a double insulated wall, exchanges neither"
+              >
+                <SystemBoundary kind="open" matter="both" heat="in" particles={10} animated x={-180} y={-8} width={110} height={80} margin={34} />
+                <SystemBoundary kind="closed" heat="out" work="in" particles={10} animated x={0} y={-8} width={110} height={80} margin={34} />
+                <SystemBoundary kind="isolated" particles={10} x={180} y={-8} width={110} height={80} margin={34} />
+                <Label x={-180} y={88} fontSize={13} fill="var(--fg)">Open: matter and energy</Label>
+                <Label x={0} y={88} fontSize={13} fill="var(--fg)">Closed: energy only</Label>
+                <Label x={180} y={88} fontSize={13} fill="var(--fg)">Isolated: neither</Label>
+              </svg>
+            </div>
+            <div className={styles.cardBody}>
+              <div className={styles.cardHeading}>
+                <span>System and surroundings</span>
+                <span className={styles.cardBadge}>Open · Closed · Isolated</span>
+              </div>
+              <p className={styles.cardDescription}>
+                An open system trades matter and energy through gaps in its walls. A closed system
+                trades only energy: warm waves are heat, and the piston bar is work. An isolated
+                system, like a thermos, trades neither.
+              </p>
+            </div>
+          </article>
+
+          {/* Card: piston at two volumes, with weights */}
+          <article className={`${styles.card} ${styles.wideHalf}`}>
+            <div className={`${styles.cardCanvas} ${styles.cardCanvasTall}`}>
+              <svg
+                viewBox="-190 -200 380 236"
+                className={styles.svgElement}
+                role="img"
+                aria-label="Two gas cylinders at 300 kelvin with frictionless pistons: the left has a small volume under four weights, the right a large volume under one weight"
+              >
+                <VocabDefs />
+                <PistonCylinder
+                  x={-92}
+                  y={0}
+                  volume={PISTON_DEMO.compressed.volume}
+                  externalPressure={PISTON_DEMO.compressed.externalPressure}
+                  particles={14}
+                  seed={5}
+                />
+                <PistonCylinder
+                  x={92}
+                  y={0}
+                  volume={PISTON_DEMO.expanded.volume}
+                  externalPressure={PISTON_DEMO.expanded.externalPressure}
+                  particles={14}
+                  seed={5}
+                />
+                <Label x={-92} y={22} fontSize={13} fill="var(--fg)">
+                  small V, <tspan className="sym">p</tspan>
+                  <Label.Sub>ext</Label.Sub> = 4 atm
+                </Label>
+                <Label x={92} y={22} fontSize={13} fill="var(--fg)">
+                  large V, <tspan className="sym">p</tspan>
+                  <Label.Sub>ext</Label.Sub> = 1 atm
+                </Label>
+              </svg>
+            </div>
+            <div className={styles.cardBody}>
+              <div className={styles.cardHeading}>
+                <span>Piston at two volumes</span>
+                <span className={styles.cardBadge}>
+                  <span className="sym">pV</span> = <span className="sym">nRT</span>
+                </span>
+              </div>
+              <p className={styles.cardDescription}>
+                At a fixed temperature, a heavier load pushes the gas into a smaller volume. The same
+                particles fill less space, so they strike the piston more often.
+              </p>
+            </div>
+          </article>
+
+          {/* Card: PV diagram, one-step vs many-step vs reversible */}
+          <article className={`${styles.card} ${styles.wide}`}>
+            <div className={`${styles.cardCanvas} ${styles.cardCanvasTall}`}>
+              <svg
+                viewBox={`0 0 ${PV_SIZE.width} ${PV_SIZE.height}`}
+                className={styles.svgElement}
+                role="img"
+                aria-label="p–V diagram of one mole of gas at 300 kelvin expanding from 2 to 10 litres: a single step does the least work, four steps do more, and the reversible isotherm does the most, shaded as the work area"
+              >
+                <VocabDefs />
+                <PVDiagram
+                  nRT={NRT_300}
+                  shade="reversible"
+                  series={[
+                    {
+                      id: 'reversible',
+                      points: PV_EXPANSION.reversible,
+                      tone: 'fg',
+                      label: (
+                        <>
+                          reversible, <tspan className="sym">w</tspan> = {signedWork(WORK_REVERSIBLE)} L atm
+                        </>
+                      ),
+                    },
+                    {
+                      id: 'many',
+                      points: PV_EXPANSION.manyStep,
+                      tone: 'accent',
+                      label: (
+                        <>
+                          four steps, <tspan className="sym">w</tspan> = {signedWork(WORK_MANY_STEP)} L atm
+                        </>
+                      ),
+                    },
+                    {
+                      id: 'one',
+                      points: PV_EXPANSION.oneStep,
+                      tone: 'heat',
+                      label: (
+                        <>
+                          one step, <tspan className="sym">w</tspan> = {signedWork(WORK_ONE_STEP)} L atm
+                        </>
+                      ),
+                    },
+                  ]}
+                />
+              </svg>
+            </div>
+            <div className={styles.cardBody}>
+              <div className={styles.cardHeading}>
+                <span>Work on a p–V diagram</span>
+                <span className={styles.cardBadge}>2 L → 10 L, 300 K</span>
+              </div>
+              <p className={styles.cardDescription}>
+                Work is the area under the path. A single large step against the final pressure does
+                the least work. Many small steps do more, and the reversible isotherm, shaded here,
+                does the most.
+              </p>
+            </div>
+          </article>
+
+          {/* Card: bomb calorimeter (constant volume) */}
+          <article className={styles.card}>
+            <div className={`${styles.cardCanvas} ${styles.cardCanvasTall}`}>
+              <svg
+                viewBox={`${-CALORIMETER_SIZE.width / 2} -128 ${CALORIMETER_SIZE.width} 262`}
+                className={styles.svgElement}
+                role="img"
+                aria-label="Bomb calorimeter: a steel bomb in a water bath with ignition wires and a stirrer. The reaction glows and the thermometer reads a rise of 2.4 kelvin"
+              >
+                <VocabDefs />
+                <Calorimeter variant="bomb" tempRise={2.4} scaleMax={10} glow />
+                <Label x={0} y={122} fontSize={13} fill="var(--fg)">
+                  <tspan className="sym">ΔT</tspan> = +2.4 K
+                </Label>
+              </svg>
+            </div>
+            <div className={styles.cardBody}>
+              <div className={styles.cardHeading}>
+                <span>Bomb calorimeter</span>
+                <span className={styles.cardBadge}>Constant V</span>
+              </div>
+              <p className={styles.cardDescription}>
+                The reaction happens inside a rigid steel bomb in a water bath. The heat it releases
+                warms the water, and the thermometer reads the rise. The volume is fixed, so the
+                heat measured is <span className="sym">q</span>
+                <sub>v</sub>.
+              </p>
+            </div>
+          </article>
+
+          {/* Card: coffee-cup calorimeter (constant pressure) */}
+          <article className={styles.card}>
+            <div className={`${styles.cardCanvas} ${styles.cardCanvasTall}`}>
+              <svg
+                viewBox={`${-CALORIMETER_SIZE.width / 2} -128 ${CALORIMETER_SIZE.width} 262`}
+                className={styles.svgElement}
+                role="img"
+                aria-label="Coffee-cup calorimeter: nested insulated cups with a lid, a thermometer and a stirrer. The thermometer reads a rise of 1.2 kelvin"
+              >
+                <VocabDefs />
+                <Calorimeter variant="coffee-cup" tempRise={1.2} scaleMax={10} />
+                <Label x={0} y={122} fontSize={13} fill="var(--fg)">
+                  <tspan className="sym">ΔT</tspan> = +1.2 K
+                </Label>
+              </svg>
+            </div>
+            <div className={styles.cardBody}>
+              <div className={styles.cardHeading}>
+                <span>Coffee-cup calorimeter</span>
+                <span className={styles.cardBadge}>Constant p</span>
+              </div>
+              <p className={styles.cardDescription}>
+                Nested cups open to the air keep the pressure constant. The heat measured this way is
+                the enthalpy change, <span className="sym">ΔH</span>.
+              </p>
+            </div>
+          </article>
+
+          {/* Card: Hess cycle */}
+          <article className={`${styles.card} ${styles.wide}`}>
+            <div className={`${styles.cardCanvas} ${styles.cardCanvasTall}`}>
+              <svg
+                viewBox={`0 0 ${ENTHALPY_SIZE.width} ${ENTHALPY_SIZE.height}`}
+                className={styles.svgElement}
+                role="img"
+                aria-label="Hess cycle for carbon: burning directly to carbon dioxide releases 393.5 kilojoules per mole. Burning through carbon monoxide releases 110.5, then 283.0, which add to the same total"
+              >
+                <VocabDefs />
+                <EnthalpyDiagram
+                  columns={3}
+                  levels={[
+                    { id: 'C', label: 'C(s) + O₂(g)', H: 0, span: [0, 2] },
+                    { id: 'CO', label: 'CO(g) + ½ O₂(g)', H: HESS_CARBON.carbonMonoxide, span: [1, 3] },
+                    { id: 'CO2', label: 'CO₂(g)', H: HESS_CARBON.direct, span: [0, 3] },
+                  ]}
+                  steps={[
+                    { id: 'direct', from: 'C', to: 'CO2', column: 0, dH: HESS_CARBON.direct, name: 'ΔH₁', route: 'direct' },
+                    { id: 'to-co', from: 'C', to: 'CO', column: 1, dH: HESS_CARBON.carbonMonoxide, name: 'ΔH₂', route: 'two-step' },
+                    { id: 'to-co2', from: 'CO', to: 'CO2', column: 2, dH: HESS_CARBON.monoxideToDioxide, name: 'ΔH₃', route: 'two-step' },
+                  ]}
+                />
+              </svg>
+            </div>
+            <div className={styles.cardBody}>
+              <div className={styles.cardHeading}>
+                <span>Hess cycle: carbon to CO₂</span>
+                <span className={styles.cardBadge}>
+                  <span className="sym">ΔH</span>₁ = <span className="sym">ΔH</span>₂ + <span className="sym">ΔH</span>₃
+                </span>
+              </div>
+              <p className={styles.cardDescription}>
+                Enthalpy is a state function, so the direct route and the route through carbon monoxide
+                reach the same total. The two steps of the second route add up to the single direct step.
+              </p>
+            </div>
+          </article>
+
+          {/* Cards: the four Gibbs cases, in one row */}
+          <div className={`${styles.wide} ${styles.quadGrid}`}>
+          {(
+            [
+              {
+                key: 'always',
+                title: 'Always spontaneous',
+                badge: 'All T',
+                text: 'ΔH < 0 and ΔS > 0. Both terms favour the change, so ΔG is negative at every temperature.',
+                data: GIBBS_CASES.always,
+              },
+              {
+                key: 'never',
+                title: 'Never spontaneous',
+                badge: 'No T',
+                text: 'ΔH > 0 and ΔS < 0. Both terms oppose the change, so ΔG stays positive at every temperature.',
+                data: GIBBS_CASES.never,
+              },
+              {
+                key: 'lowT',
+                title: 'Spontaneous below Tc',
+                badge: 'Low T',
+                text: 'ΔH < 0 and ΔS < 0. The enthalpy term wins at low temperature. Above the crossover, the TΔS term takes over.',
+                data: GIBBS_CASES.lowT,
+              },
+              {
+                key: 'highT',
+                title: 'Spontaneous above Tc',
+                badge: 'High T',
+                text: 'ΔH > 0 and ΔS > 0. The entropy term wins at high temperature. Below the crossover, the enthalpy cost is too large.',
+                data: GIBBS_CASES.highT,
+              },
+            ] as const
+          ).map((g) => (
+            <article key={g.key} className={styles.card}>
+              <div className={styles.cardCanvas}>
+                <svg
+                  viewBox={`0 0 ${GIBBS_SIZE.width} ${GIBBS_SIZE.height}`}
+                  className={styles.svgElement}
+                  role="img"
+                  aria-label={`ΔG against temperature for ${g.data.label}: ${g.title.toLowerCase()}. The line crosses zero at the crossover temperature, where the shading changes sides`}
+                >
+                  <VocabDefs />
+                  <GibbsPlot dH={g.data.dH} dS={g.data.dS} tMin={200} tMax={1200} temperature={298} />
+                </svg>
+              </div>
+              <div className={styles.cardBody}>
+                <div className={styles.cardHeading}>
+                  <span>{g.title}</span>
+                  <span className={styles.cardBadge}>{g.badge}</span>
+                </div>
+                <p className={styles.cardDescription}>{g.text}</p>
+              </div>
+            </article>
+          ))}
+          </div>
+
+          {/* Card: entropy, solid to liquid to gas */}
+          <article className={`${styles.card} ${styles.wide}`}>
+            <div className={`${styles.cardCanvas} ${styles.cardCanvasTall}`}>
+              <svg
+                viewBox="-345 -96 690 210"
+                className={styles.svgElement}
+                role="img"
+                aria-label="Three boxes of the same particles: in the solid they sit on an ordered lattice, in the liquid they are packed but disordered, and in the gas they are scattered across the whole box"
+              >
+                <VocabDefs />
+                <EntropyBox x={-330} y={-80} state={0} />
+                <EntropyBox x={-100} y={-80} state={1} />
+                <EntropyBox x={130} y={-80} state={2} />
+                <Label x={-230} y={98} fontSize={13} fill="var(--fg)">Solid</Label>
+                <Label x={0} y={98} fontSize={13} fill="var(--fg)">Liquid</Label>
+                <Label x={230} y={98} fontSize={13} fill="var(--fg)">Gas</Label>
+              </svg>
+            </div>
+            <div className={styles.cardBody}>
+              <div className={styles.cardHeading}>
+                <span>Entropy: order to disorder</span>
+                <span className={styles.cardBadge}>
+                  <span className="sym">S</span> rises
+                </span>
+              </div>
+              <p className={styles.cardDescription}>
+                The same particles, in three states. Going from solid to liquid to gas, each particle
+                gains more arrangements, so the entropy <span className="sym">S</span> increases.
               </p>
             </div>
           </article>

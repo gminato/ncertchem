@@ -69,6 +69,10 @@
   --caution: #8A5A00;
   --caution-soft: rgba(201, 139, 0, 0.12);
 
+  /* Thermodynamics: heat flow (warm) and work (cool) */
+  --heat: #C2410C;
+  --work: #0F766E;
+
   /* Spacing Scale */
   --space-1: 4px;
   --space-2: 8px;
@@ -154,6 +158,9 @@
   --success-soft: rgba(86, 211, 100, 0.14);
   --caution: #E3B341;
   --caution-soft: rgba(227, 179, 65, 0.14);
+
+  --heat: #FFA15C;
+  --work: #6FD6C0;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -217,6 +224,9 @@
     --success-soft: rgba(86, 211, 100, 0.14);
     --caution: #E3B341;
     --caution-soft: rgba(227, 179, 65, 0.14);
+
+    --heat: #FFA15C;
+    --work: #6FD6C0;
   }
 }
 

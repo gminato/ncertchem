@@ -1,0 +1,24 @@
+/*
+ * Motion for the thermodynamics visuals. Each animated group moves by one
+ * repeat of its pattern (a particle spacing or a wave period), so the loop is
+ * seamless. Reduced-motion users get the static drawing.
+ */
+
+.flow {
+  animation: thermoFlow 1.4s linear infinite;
+}
+
+@keyframes thermoFlow {
+  from {
+    transform: translate(calc(var(--flow-dx, 0px) * -1), calc(var(--flow-dy, 0px) * -1));
+  }
+  to {
+    transform: translate(0px, 0px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .flow {
+    animation: none;
+  }
+}
