@@ -41,7 +41,11 @@ function DataTable() {
   const headY = 118
   const rowTop = 156
   const rowH = 48
-  const cell = (value: number) => (value / 0.01).toFixed(2)
+  // Show each value as NCERT prints it: two decimals, or three where the table has three (0.345).
+  const cell = (value: number) => {
+    const v = Number((value / 0.01).toFixed(3))
+    return Number(v.toFixed(2)) === v ? v.toFixed(2) : v.toFixed(3)
+  }
   return (
     <g>
       <Label x={290} y={30} fontSize={17} fontWeight={600} fill="var(--fg)">
