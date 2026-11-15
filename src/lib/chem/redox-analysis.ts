@@ -231,9 +231,21 @@ export function analyseRedox(
       productStates[elem] = pList[0]
     }
 
-    // Check pairwise changes across all reactant and product states for this element
-    for (const rVal of rList) {
-      for (const pVal of pList) {
+    // Pair the states that actually change. A state found on BOTH sides (e.g. the −2 oxygen of
+    // Cr2O7^2- that ends up in H2O) is treated as unchanged, so it never yields a phantom change.
+    // If that leaves one side empty, the changing states pair with every state on the other side
+    // (peroxide O −1 → −2 when sulphate O is already −2 on both sides).
+    const same = (a: Rational, b: Rational) => a.num * b.den === b.num * a.den
+    const uniq = (list: Rational[]) => list.filter((v, i) => list.findIndex((w) => same(v, w)) === i)
+    const rU = uniq(rList)
+    const pU = uniq(pList)
+    const rChanging = rU.filter((v) => !pU.some((w) => same(v, w)))
+    const pChanging = pU.filter((v) => !rU.some((w) => same(v, w)))
+    const rPair = rChanging.length > 0 ? rChanging : pChanging.length > 0 ? rU : []
+    const pPair = pChanging.length > 0 ? pChanging : rChanging.length > 0 ? pU : []
+
+    for (const rVal of rPair) {
+      for (const pVal of pPair) {
         const diffNum = pVal.num * rVal.den - rVal.num * pVal.den
         const diffDen = pVal.den * rVal.den
         if (diffNum !== 0) {
@@ -267,15 +279,10 @@ export function analyseRedox(
       let isOxidant = false
       let isReductant = false
       for (const [elem, val] of Object.entries(states)) {
-        const pList = productElemStates[elem] ?? []
-        for (const pVal of pList) {
-          const diff = rationalToNumber(pVal) - rationalToNumber(val)
-          if (diff < -1e-6) {
-            isOxidant = true
-          }
-          if (diff > 1e-6) {
-            isReductant = true
-          }
+        for (const c of changes) {
+          if (c.element !== elem || c.from.num * val.den !== val.num * c.from.den) continue
+          if (c.changePerAtom.num < 0) isOxidant = true
+          if (c.changePerAtom.num > 0) isReductant = true
         }
       }
       if (isOxidant) {

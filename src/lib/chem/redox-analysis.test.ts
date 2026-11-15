@@ -128,4 +128,30 @@ describe('redox-analysis.ts', () => {
       }
     })
   })
+
+  describe('an element present in several species', () => {
+    const changeStrings = (r: string) =>
+      analyseRedox(r).changes.map((c) => `${c.element} ${c.from.num}/${c.from.den}->${c.to.num}/${c.to.den}`)
+
+    it('does not invent a change for a state that is unchanged on both sides (dichromate O stays −2)', () => {
+      const a = analyseRedox('Cr2O7^2- + H2O2 + H+ -> Cr^3+ + O2 + H2O')
+      expect(changeStrings('Cr2O7^2- + H2O2 + H+ -> Cr^3+ + O2 + H2O').filter((s) => s.startsWith('O'))).toEqual(['O -1/1->0/1'])
+      expect(a.oxidants).toContain('Cr2O7')
+      expect(a.reductants).toContain('H2O2')
+      expect(a.reductants).not.toContain('Cr2O7')
+      expect(a.oxidants).not.toContain('H2O2')
+    })
+
+    it('still finds a change whose product state already exists elsewhere (peroxide O −1 → −2 beside sulphate)', () => {
+      const a = analyseRedox('H2O2 + KI + H2SO4 -> I2 + K2SO4 + H2O')
+      expect(changeStrings('H2O2 + KI + H2SO4 -> I2 + K2SO4 + H2O').filter((s) => s.startsWith('O'))).toEqual(['O -1/1->-2/1'])
+      expect(a.oxidants).toContain('H2O2')
+      expect(a.reductants).toContain('KI')
+      expect(a.oxidants).not.toContain('H2SO4')
+    })
+
+    it('keeps both arrows of a disproportionation', () => {
+      expect(changeStrings('H2O2 -> H2O + O2').sort()).toEqual(['O -1/1->-2/1', 'O -1/1->0/1'])
+    })
+  })
 })
