@@ -193,3 +193,15 @@ describe('interpolatePositions (tweened poses)', () => {
     expect(interpolatePositions(from, to, 2)).toEqual([[2, 0, 0]])
   })
 })
+
+describe('Lewis bookkeeping with an unpaired electron (NO)', () => {
+  it('counts the unpaired electron as non-bonding', async () => {
+    const { formalCharge, octetCount } = await import('./lewis-geometry')
+    // N in NO: 5 valence, one lone pair, one unpaired electron, a double bond.
+    expect(formalCharge(5, 1, [2], 1)).toBe(0)
+    expect(octetCount(1, [2], 1)).toBe(7)
+    // Defaults are unchanged for closed-shell atoms.
+    expect(formalCharge(6, 2, [2])).toBe(0)
+    expect(octetCount(2, [2])).toBe(8)
+  })
+})

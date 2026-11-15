@@ -199,7 +199,7 @@ export const LewisDiagram = forwardRef<SVGGElement, LewisDiagramProps>(function 
     ? atoms.flatMap((atom) => {
         const layout = layoutById.get(atom.id)
         if (!layout) return []
-        const count = 2 * (atom.lonePairs ?? 0) + bonds.reduce((sum, bond) => {
+        const count = 2 * (atom.lonePairs ?? 0) + (atom.unpaired ?? 0) + bonds.reduce((sum, bond) => {
           if (bond.a !== atom.id && bond.b !== atom.id) return sum
           return sum + 2 * (bond.order ?? 1)
         }, 0)

@@ -7,17 +7,23 @@ import { directionDeg, freeDirections } from './geometry'
 
 /**
  * Formal charge = valence electrons - non-bonding electrons - bonding electrons / 2.
- * With `lonePairs` lone pairs and bonds of the given orders, that is V - 2·LP - Σorder.
+ * With `lonePairs` lone pairs, `unpaired` single electrons and bonds of the given orders,
+ * that is V - 2·LP - unpaired - Σorder (an unpaired electron is non-bonding, as in NO).
  */
-export function formalCharge(valenceElectrons: number, lonePairs: number, bondOrders: readonly number[]): number {
+export function formalCharge(
+  valenceElectrons: number,
+  lonePairs: number,
+  bondOrders: readonly number[],
+  unpaired = 0
+): number {
   const bonds = bondOrders.reduce((sum, order) => sum + order, 0)
-  return valenceElectrons - 2 * lonePairs - bonds
+  return valenceElectrons - 2 * lonePairs - unpaired - bonds
 }
 
-/** Electrons an atom counts around itself: its lone-pair electrons plus two per bond. */
-export function octetCount(lonePairs: number, bondOrders: readonly number[]): number {
+/** Electrons an atom counts around itself: lone-pair electrons, unpaired electrons and two per bond. */
+export function octetCount(lonePairs: number, bondOrders: readonly number[], unpaired = 0): number {
   const bonds = bondOrders.reduce((sum, order) => sum + order, 0)
-  return 2 * lonePairs + 2 * bonds
+  return 2 * lonePairs + unpaired + 2 * bonds
 }
 
 /** Valence electrons of the main-group elements used on the site. */
