@@ -139,7 +139,8 @@ describe('redox-titration.ts', () => {
         titrationType: 'dichromate-fe' as RedoxTitrationType,
       }
 
-      it('before equivalence: green / unoxidised diphenylamine', () => {
+      it('before equivalence: nearly colourless at the start, then green as Cr3+ forms', () => {
+        expect(titrationState(0, params).indicatorColor).toBe('nearly colourless')
         const state = titrationState(15.0, params)
         expect(state.isBeforeEquivalence).toBe(true)
         expect(state.indicatorColor).toBe('green')
@@ -164,10 +165,12 @@ describe('redox-titration.ts', () => {
         titrationType: 'iodometric-cu-thiosulphate' as RedoxTitrationType,
       }
 
-      it('before equivalence: blue starch-iodine complex', () => {
+      it('before equivalence: iodine brown first, starch blue once starch is added near the end', () => {
+        expect(titrationState(0, params).indicatorColor).toBe('iodine brown')
         const state = titrationState(10.0, params)
         expect(state.isBeforeEquivalence).toBe(true)
-        expect(state.indicatorColor).toBe('starch blue')
+        expect(state.indicatorColor).toBe('iodine brown')
+        expect(titrationState(18.0, params).indicatorColor).toBe('starch blue')
       })
 
       it('at/past equivalence: colourless as starch blue disappears', () => {

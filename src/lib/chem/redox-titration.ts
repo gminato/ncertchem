@@ -147,11 +147,22 @@ export function equivalenceVolume(
 /**
  * Helper to determine indicator color based on titration type and stage.
  */
+const SUPERSCRIPT_DIGITS: Record<string, string> = { '0': '⁰', '1': '¹', '2': '²', '3': '³', '4': '⁴', '5': '⁵', '6': '⁶', '7': '⁷', '8': '⁸', '9': '⁹', '-': '⁻' }
+
+/** An amount in mol written for students: "2.50 × 10⁻⁴ mol", never "2.500e-4". */
+function formatMoles(mol: number): string {
+  if (mol === 0) return '0 mol'
+  const [mantissa, exponent] = mol.toExponential(2).split('e')
+  const sup = String(Number(exponent)).split('').map((c) => SUPERSCRIPT_DIGITS[c] ?? c).join('')
+  return Number(exponent) === 0 ? `${mantissa} mol` : `${mantissa} × 10${sup} mol`
+}
+
 function getIndicatorColor(
   type: RedoxTitrationType,
   isBefore: boolean,
   isAt: boolean,
   _isPast: boolean,
+  progress: number,
 ): string {
   switch (type) {
     case 'permanganate-fe':
@@ -160,12 +171,17 @@ function getIndicatorColor(
       return isBefore ? 'colourless' : 'first lasting pink'
 
     case 'dichromate-fe':
-      // Diphenylamine: green (due to Cr3+) before end point, intense diphenylamine blue at/after
-      return isBefore ? 'green' : 'diphenylamine blue'
+      // Diphenylamine: nearly colourless at the start (a trace of Fe2+ green), turning green as
+      // Cr3+ forms during the titration; intense diphenylamine blue at/after the end point.
+      if (!isBefore) return 'diphenylamine blue'
+      return progress < 0.05 ? 'nearly colourless' : 'green'
 
     case 'iodometric-cu-thiosulphate':
-      // Starch: deep blue while I2 is present, disappears (colourless) at end point
-      return isBefore ? 'starch blue' : 'colourless'
+      // Iodine (as I3-) is brown at first and fades to pale yellow as thiosulphate removes it.
+      // Starch is added near the end (pale yellow) and gives blue-black, which disappears at the
+      // end point. This model assumes starch is added at 75% of the equivalence volume.
+      if (!isBefore) return 'colourless'
+      return progress < 0.75 ? 'iodine brown' : 'starch blue'
   }
 }
 
@@ -246,15 +262,16 @@ export function titrationState(
     isBeforeEquivalence,
     isAtEquivalence,
     isPastEquivalence,
+    addedMl / eqVol,
   )
 
   let description: string
   if (isBeforeEquivalence) {
-    description = `Titration in progress (${(progressFraction * 100).toFixed(1)}% of equivalence). Remaining analyte: ${remainingAnalyteMoles.toExponential(3)} mol. Indicator: ${indicatorColor}.`
+    description = `Titration in progress (${(progressFraction * 100).toFixed(1)}% of equivalence). Remaining analyte: ${formatMoles(remainingAnalyteMoles)}. Indicator: ${indicatorColor}.`
   } else if (isAtEquivalence) {
     description = `Stoichiometric equivalence point reached (${eqVol.toFixed(2)} mL). All analyte consumed. Indicator: ${indicatorColor}.`
   } else {
-    description = `Past equivalence point (${(progressFraction * 100).toFixed(1)}%). Excess titrant: ${excessTitrantMoles.toExponential(3)} mol. Indicator: ${indicatorColor}.`
+    description = `Past equivalence point (${(progressFraction * 100).toFixed(1)}%). Excess titrant: ${formatMoles(excessTitrantMoles)}. Indicator: ${indicatorColor}.`
   }
 
   return {
