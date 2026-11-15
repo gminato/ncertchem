@@ -1,0 +1,208 @@
+.sim {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  font-family: var(--font-sans);
+  color: var(--fg);
+  position: relative;
+}
+
+.topRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+.layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--space-4);
+  align-items: start;
+}
+
+@media (min-width: 900px) {
+  .layout {
+    grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+  }
+}
+
+.stage {
+  background: var(--surface-raised);
+  border-radius: var(--radius-md, 10px);
+  padding: var(--space-4);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-2);
+  min-width: 0;
+}
+
+.rig {
+  width: 100%;
+  max-width: 360px;
+  height: auto;
+  display: block;
+}
+
+.thermo {
+  margin: 0;
+  font-size: 0.95rem;
+  font-variant-numeric: tabular-nums;
+  color: var(--fg-muted);
+}
+
+.side {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  min-width: 0;
+}
+
+.plotCard {
+  background: var(--surface-raised);
+  border-radius: var(--radius-md, 10px);
+  padding: var(--space-4);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  min-width: 0;
+}
+
+.plot {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.axis {
+  stroke: var(--fg-subtle);
+  stroke-width: 1.2;
+}
+
+.tick {
+  fill: var(--fg-muted);
+  font-size: 12px;
+  font-family: var(--font-sans);
+}
+
+.axisLabel {
+  fill: var(--fg-muted);
+  font-size: 13px;
+  font-family: var(--font-sans);
+}
+
+.simpleCurve {
+  fill: none;
+  stroke: var(--fg-subtle);
+  stroke-width: 2;
+  stroke-dasharray: 5 4;
+}
+
+.columnCurve {
+  fill: none;
+  stroke: var(--accent);
+  stroke-width: 2.6;
+  stroke-linejoin: round;
+}
+
+.marker {
+  stroke: var(--fg-muted);
+  stroke-width: 1;
+  stroke-dasharray: 2 3;
+}
+
+.dot {
+  fill: var(--accent);
+  stroke: var(--surface);
+  stroke-width: 1.5;
+}
+
+.legend {
+  margin: 0;
+  font-size: 0.85rem;
+  color: var(--fg-muted);
+}
+
+.swatchColumn,
+.swatchSimple {
+  display: inline-block;
+  width: 18px;
+  height: 0;
+  vertical-align: middle;
+  margin: 0 4px;
+}
+
+.swatchColumn {
+  border-top: 2.6px solid var(--accent);
+}
+
+.swatchSimple {
+  border-top: 2px dashed var(--fg-subtle);
+}
+
+.waterBar {
+  fill: var(--liquid);
+  opacity: 0.35;
+}
+
+.tolBar {
+  fill: var(--accent);
+}
+
+.barLabel {
+  fill: var(--fg);
+  font-size: 13px;
+  font-family: var(--font-sans);
+}
+
+.readout {
+  background: var(--surface-raised);
+  border-radius: var(--radius-md, 10px);
+  padding: var(--space-4);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.row {
+  display: grid;
+  grid-template-columns: minmax(0, 6.5rem) minmax(0, 1fr);
+  gap: var(--space-3);
+  align-items: baseline;
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+.rowLabel {
+  color: var(--fg-muted);
+}
+
+.rowValue {
+  font-variant-numeric: tabular-nums;
+}
+
+.controls {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.controls label {
+  font-size: 0.95rem;
+}
+
+.buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
