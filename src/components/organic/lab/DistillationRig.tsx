@@ -147,12 +147,13 @@ export const DistillationRig = forwardRef<SVGGElement, DistillationRigProps>(fun
       {/* Liebig condenser: a jacket with coolant and an inner tube */}
       <rect x={CONDENSER.x0} y={CONDENSER.y0} width={CONDENSER.x1 - CONDENSER.x0} height={CONDENSER.y1 - CONDENSER.y0} rx={10} fill="var(--glass-fill)" stroke="var(--coolant)" strokeWidth={1.6} />
       <GlassTube d={`M180,${CONDENSER.tubeY} H${dripX}`} width={10} />
-      <path d={`M194,${CONDENSER.y1} V204`} stroke="var(--coolant)" strokeWidth={3} strokeLinecap="round" />
-      <path d={`M288,${CONDENSER.y0} V118`} stroke="var(--coolant)" strokeWidth={3} strokeLinecap="round" />
-      <Caption x={194} y={218} size={14} fill="var(--coolant)">
+      {/* Counter-current cooling: water enters at the receiver end (lower) and leaves at the flask end (upper). */}
+      <path d={`M288,${CONDENSER.y1} V204`} stroke="var(--coolant)" strokeWidth={3} strokeLinecap="round" />
+      <path d={`M194,${CONDENSER.y0} V118`} stroke="var(--coolant)" strokeWidth={3} strokeLinecap="round" />
+      <Caption x={282} y={218} anchor="end" size={14} fill="var(--coolant)">
         water in
       </Caption>
-      <Caption x={288} y={108} size={14} fill="var(--coolant)">
+      <Caption x={186} y={106} anchor="start" size={14} fill="var(--coolant)">
         water out
       </Caption>
 

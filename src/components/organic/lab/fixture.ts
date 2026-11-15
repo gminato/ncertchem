@@ -5,7 +5,7 @@
 import type { ChromatogramSpot } from './ChromatographyPlate'
 import type { ColumnBand } from './ChromatographyColumn'
 import type { FunnelLayer } from './SeparatingFunnel'
-import type { TestTubeProps } from './TestTube'
+import type { RackTube } from './TestTubeRack'
 
 /** TLC of three components: a dye-like spot, a mid spot and a fast spot. */
 export const TLC_SPOTS: readonly ChromatogramSpot[] = [
@@ -32,7 +32,7 @@ export const PAPER_SPOTS: readonly ChromatogramSpot[] = [
  */
 export const FUNNEL_LAYERS: readonly [FunnelLayer, FunnelLayer] = [
   { id: 'aqueous', density: 1.0, color: 'var(--liquid)', label: 'aqueous' },
-  { id: 'ether', density: 0.71, color: 'var(--spot-4)', label: 'ether' },
+  { id: 'ether', density: 0.71, color: 'var(--precipitate)', label: 'ether' },
 ]
 
 /** Three components of a column separation: the fastest band arrives first. */
@@ -42,14 +42,17 @@ export const COLUMN_BANDS: readonly ColumnBand[] = [
   { id: 'C', color: 'var(--spot-1)', arrival: 0.92 },
 ]
 
-/** The eight tubes of Lassaigne's tests, each with the colour or solid that identifies one element. */
-export const LASSAIGNE_TUBES: readonly (TestTubeProps & { id: string })[] = [
-  { id: 'n-prussian', label: 'N', liquid: 'var(--liquid)', precipitate: { color: 'var(--prussian-blue)', amount: 0.55 } },
-  { id: 'scn-blood', label: 'N, S', liquid: 'var(--blood-red)', liquidLevel: 0.7 },
-  { id: 's-violet', label: 'S', liquid: 'var(--nitroprusside-violet)', liquidLevel: 0.7 },
-  { id: 's-pbs', label: 'S', liquid: 'var(--liquid)', precipitate: { color: 'var(--pbs-black)', amount: 0.6 } },
-  { id: 'cl-agcl', label: 'Cl', liquid: 'var(--liquid)', precipitate: { color: 'var(--agcl-white)', amount: 0.6, outline: true } },
-  { id: 'br-agbr', label: 'Br', liquid: 'var(--liquid)', precipitate: { color: 'var(--agbr-pale-yellow)', amount: 0.6, outline: true } },
-  { id: 'i-agi', label: 'I', liquid: 'var(--liquid)', precipitate: { color: 'var(--agi-yellow)', amount: 0.6 } },
-  { id: 'p-phospho', label: 'P', liquid: 'var(--phosphomolybdate-yellow)', liquidLevel: 0.7 },
+/**
+ * The eight tubes of Lassaigne's tests. Each label gives the element and the test that shows it,
+ * so the two sulphur tests and the two nitrogen tests can be told apart.
+ */
+export const LASSAIGNE_TUBES: readonly RackTube[] = [
+  { id: 'n-prussian', label: 'N', sub: 'Prussian blue', liquid: 'var(--liquid)', precipitate: { color: 'var(--prussian-blue)', amount: 0.55 } },
+  { id: 'ns-blood', label: 'N + S', sub: 'blood red', liquid: 'var(--blood-red)', liquidLevel: 0.7 },
+  { id: 's-violet', label: 'S', sub: 'nitroprusside', liquid: 'var(--nitroprusside-violet)', liquidLevel: 0.7 },
+  { id: 's-pbs', label: 'S', sub: 'PbS', liquid: 'var(--liquid)', precipitate: { color: 'var(--pbs-black)', amount: 0.6 } },
+  { id: 'cl-agcl', label: 'Cl', sub: 'AgCl', liquid: 'var(--liquid)', precipitate: { color: 'var(--agcl-white)', amount: 0.6, outline: true } },
+  { id: 'br-agbr', label: 'Br', sub: 'AgBr', liquid: 'var(--liquid)', precipitate: { color: 'var(--agbr-pale-yellow)', amount: 0.6, outline: true } },
+  { id: 'i-agi', label: 'I', sub: 'AgI', liquid: 'var(--liquid)', precipitate: { color: 'var(--agi-yellow)', amount: 0.6 } },
+  { id: 'p-phospho', label: 'P', sub: 'phosphate', liquid: 'var(--phosphomolybdate-yellow)', liquidLevel: 0.7 },
 ]

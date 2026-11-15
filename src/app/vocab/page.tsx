@@ -133,6 +133,7 @@ import {
   ChromatographyColumn,
   CHROMATOGRAPHY_COLUMN_SIZE,
   TestTubeRack,
+  TEST_TUBE_RACK_ROW_HEIGHT,
   FusionTube,
   FUSION_TUBE_SIZE,
   CombustionTrain,
@@ -2714,9 +2715,9 @@ export default function VocabPage() {
 
           {/* Card 13: Lassaigne's test tubes */}
           <article className={styles.card}>
-            <div className={styles.cardCanvas} style={{ height: 280 }}>
-              <svg viewBox="0 0 340 210" className={styles.svgElement} role="img" aria-label="Eight test tubes of Lassaigne's tests: Prussian blue, blood red, violet, black PbS, white AgCl, pale yellow AgBr, yellow AgI and yellow phosphomolybdate">
-                <TestTubeRack tubes={LASSAIGNE_TUBES} progress={1} spacing={42} />
+            <div className={styles.cardCanvas} style={{ height: 480 }}>
+              <svg viewBox={`0 0 360 ${2 * TEST_TUBE_RACK_ROW_HEIGHT}`} className={styles.svgElement} role="img" aria-label="Eight test tubes of Lassaigne's tests: Prussian blue for N, blood red for N and S, violet with nitroprusside and black PbS for S, white AgCl, pale yellow AgBr and yellow AgI for the halogens, and yellow phosphomolybdate for P">
+                <TestTubeRack tubes={LASSAIGNE_TUBES} progress={1} columns={4} spacing={88} width={360} />
               </svg>
             </div>
             <div className={styles.cardBody}>

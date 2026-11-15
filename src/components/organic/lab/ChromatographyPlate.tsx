@@ -41,6 +41,9 @@ const SOLVENT_PX = 220
 const BASELINE = 258
 const TLC = { x0: 70, x1: 190, top: 24, bottom: 284 }
 const PAPER = { x0: 104, x1: 156, top: 24, bottom: 274 }
+/** Closed jar for paper chromatography. The lid holds the strip; the solvent pool sits under the origin. */
+const JAR = { x0: 84, x1: 176, top: 22, bottom: 300, lidX0: 76, lidX1: 184, lidY: 12, lidH: 12 }
+const SOLVENT_Y = 268
 const IODINE = '#9A6A3A'
 
 /**
@@ -71,6 +74,8 @@ export const ChromatographyPlate = forwardRef<SVGGElement, ChromatographyPlatePr
   const s = clamp01(spread)
   const area = kind === 'tlc' ? TLC : PAPER
   const cx0 = (area.x0 + area.x1) / 2
+  // Labels sit left of the support; for paper they sit left of the jar.
+  const labelX = kind === 'tlc' ? area.x0 - 10 : JAR.lidX0 - 6
   const colStep = kind === 'tlc' ? (area.x1 - area.x0) / (spots.length + 1) : 0
 
   const spotX = (i: number) => (kind === 'tlc' ? area.x0 + (i + 1) * colStep : cx0 + (i - (spots.length - 1) / 2) * 16)
@@ -103,8 +108,13 @@ export const ChromatographyPlate = forwardRef<SVGGElement, ChromatographyPlatePr
         </g>
       ) : (
         <g>
-          <rect x={area.x0} y={area.top} width={area.x1 - area.x0} height={area.bottom - area.top} rx={4} fill="var(--surface)" stroke="var(--glass)" strokeWidth={1.6} />
-          <rect x={area.x0 - 14} y={area.bottom} width={area.x1 - area.x0 + 28} height={22} rx={4} fill="var(--liquid)" stroke="var(--liquid-edge)" strokeWidth={1.4} />
+          {/* Closed jar: glass body, solvent pool, the strip hanging from the lid, then the glass outline and lid */}
+          <rect x={JAR.x0} y={JAR.top} width={JAR.x1 - JAR.x0} height={JAR.bottom - JAR.top} rx={8} fill="var(--glass-fill)" />
+          <rect x={JAR.x0 + 2} y={SOLVENT_Y} width={JAR.x1 - JAR.x0 - 4} height={JAR.bottom - SOLVENT_Y - 2} fill="var(--liquid)" opacity={0.85} />
+          <line x1={JAR.x0 + 2} x2={JAR.x1 - 2} y1={SOLVENT_Y} y2={SOLVENT_Y} stroke="var(--liquid-edge)" strokeWidth={1.2} />
+          <rect x={area.x0} y={area.top} width={area.x1 - area.x0} height={area.bottom - area.top} rx={3} fill="var(--surface)" stroke="var(--glass)" strokeWidth={1.4} />
+          <rect x={JAR.x0} y={JAR.top} width={JAR.x1 - JAR.x0} height={JAR.bottom - JAR.top} rx={8} fill="none" stroke="var(--glass)" strokeWidth={2} />
+          <rect x={JAR.lidX0} y={JAR.lidY} width={JAR.lidX1 - JAR.lidX0} height={JAR.lidH} rx={4} fill="var(--surface-raised)" stroke="var(--glass)" strokeWidth={1.6} />
         </g>
       )}
 
@@ -114,13 +124,13 @@ export const ChromatographyPlate = forwardRef<SVGGElement, ChromatographyPlatePr
 
       {/* Origin and solvent front */}
       <line x1={area.x0} x2={area.x1} y1={BASELINE} y2={BASELINE} stroke="var(--fg-muted)" strokeWidth={1.2} strokeDasharray="4 3" />
-      <Caption x={area.x0 - 10} y={BASELINE} anchor="end">
+      <Caption x={labelX} y={BASELINE} anchor="end">
         origin
       </Caption>
       {p > 0 && (
         <g>
           <line x1={area.x0} x2={area.x1} y1={front} y2={front} stroke="var(--accent)" strokeWidth={1.6} strokeDasharray="6 3" />
-          <Caption x={area.x0 - 10} y={front} anchor="end" fill="var(--accent)">
+          <Caption x={labelX} y={front} anchor="end" fill="var(--accent)">
             front
           </Caption>
         </g>
