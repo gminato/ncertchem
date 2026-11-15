@@ -39,6 +39,8 @@ import { PrecipitationLab } from './sims/precipitation-lab'
 import { PhExplorer } from './sims/ph-explorer'
 import { WeakAcidLab } from './sims/weak-acid-lab'
 import { TlcLab } from './sims/tlc-lab'
+import { IsomerExplorer } from './sims/isomer-explorer'
+import { DistillationLab } from './sims/distillation-lab'
 
 export interface SimulationProps {
   /** True when the Learner has asked the OS for reduced motion. Skip tweens and loops when set. */
@@ -92,4 +94,6 @@ export const simulations: Record<string, ComponentType<SimulationProps>> = {
   'ph-explorer': PhExplorer,
   'weak-acid-lab': WeakAcidLab,
   'tlc-lab': TlcLab,
+  'isomer-explorer': IsomerExplorer,
+  'distillation-lab': DistillationLab,
 }

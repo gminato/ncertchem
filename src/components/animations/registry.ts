@@ -98,6 +98,8 @@ import { SolubilityProduct } from './unit6/solubility/SolubilityProduct'
 import { PhLadder } from './unit6/ph/PhLadder'
 import { WeakAcid } from './unit6/weakacid/WeakAcid'
 import { Chromatography } from './unit8/chromatography/Chromatography'
+import { IsomerFamily } from './unit8/isomers/IsomerFamily'
+import { PurificationMethods } from './unit8/purification/PurificationMethods'
 
 /**
  * Animations available to a Scrolly Animation, keyed by the `animation` prop.
@@ -206,6 +208,8 @@ export const animations = {
   'ph-scale': PhLadder,
   'weak-acid': WeakAcid,
   chromatography: Chromatography,
+  'isomer-family': IsomerFamily,
+  'purification-methods': PurificationMethods,
 } as const
 
 export type AnimationName = keyof typeof animations

@@ -181,3 +181,29 @@ describe('iupacName rejects what it does not implement', () => {
     expect(() => name('CN')).not.toThrow()
   })
 })
+
+describe('iupacName: no locant on a two-carbon chain', () => {
+  it.each([
+    ['ClC=C', 'chloroethene'],
+    ['COC=C', 'methoxyethene'],
+    ['BrC#C', 'bromoethyne'],
+    ['ClC(Cl)=C', '1,1-dichloroethene'],
+    ['C=C', 'ethene'],
+    ['C=CC', 'propene'],
+    ['OCC=C', 'prop-2-en-1-ol'],
+  ])('%s is %s', (smiles, name) => {
+    expect(iupacName(parseSmiles(smiles))).toBe(name)
+  })
+})
+
+describe('iupacName: locants on one-carbon parents and with a principal group', () => {
+  it.each([
+    ['ClC(Cl)(Cl)Cl', 'tetrachloromethane'],
+    ['ClC(Cl)Cl', 'trichloromethane'],
+    ['ClCCl', 'dichloromethane'],
+    ['ClCC(=O)O', '2-chloroethanoic acid'], ['BrC(Cl)', 'bromochloromethane'], ['ClCC1=CC=CC=C1', 'chlorophenylmethane'], ['NC(=O)N', 'urea'],
+    ['CC1CCCCC1O', '2-methylcyclohexanol'], ['ClCCN', '2-chloroethanamine'],
+  ])('%s is %s', (smiles, name) => {
+    expect(iupacName(parseSmiles(smiles))).toBe(name)
+  })
+})

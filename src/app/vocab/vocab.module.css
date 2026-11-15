@@ -186,3 +186,8 @@
   border-bottom: 1px solid var(--border);
   position: relative;
 }
+
+/* Full-width Unit 8 cards: a tall canvas so a wide drawing is fitted, not shrunk to a strip. */
+.cardCanvasWide {
+  height: 360px;
+}
