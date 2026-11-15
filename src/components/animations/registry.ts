@@ -76,6 +76,7 @@ import { ThermoBomb } from './unit5/enthalpy/ThermoBomb'
 import { HessRoutes } from './unit5/enthalpy/HessRoutes'
 import { RedoxOnRules } from './unit7/onrules/RedoxOnRules'
 import { RedoxTitration } from './unit7/titration/RedoxTitration'
+import { RedoxDaniell } from './unit7/daniell/RedoxDaniell'
 
 /**
  * Animations available to a Scrolly Animation, keyed by the `animation` prop.
@@ -162,6 +163,7 @@ export const animations = {
   'thermo-hess': HessRoutes,
   'redox-on-rules': RedoxOnRules,
   'redox-titration': RedoxTitration,
+  'redox-daniell': RedoxDaniell,
 } as const
 
 export type AnimationName = keyof typeof animations

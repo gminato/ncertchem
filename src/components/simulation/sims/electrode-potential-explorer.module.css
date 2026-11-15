@@ -1,0 +1,208 @@
+.sim {
+  width: 100%;
+  container-type: inline-size;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  font-family: var(--font-sans);
+  color: var(--fg);
+}
+
+.presets {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+/* Ladder row: the ladder keeps its full scale; the picker sits beside it when there is room. */
+.topRow {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--space-4);
+  align-items: start;
+}
+
+@container (min-width: 960px) {
+  .topRow {
+    grid-template-columns: minmax(0, 1fr) 260px;
+  }
+}
+
+.ladderCard {
+  background: var(--surface-raised);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md, 10px);
+  padding: var(--space-3);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  min-width: 0;
+}
+
+.ladderCardTitle {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--fg);
+  margin: 0;
+}
+
+.ladderSvg {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* Invisible click target over each rung; lights up on hover. */
+.rungHit {
+  fill: transparent;
+  cursor: pointer;
+}
+
+.rungHit:hover {
+  fill: var(--accent);
+  fill-opacity: 0.1;
+}
+
+.ladderCaption {
+  font-size: 0.9rem;
+  color: var(--fg-muted);
+  line-height: 1.45;
+  margin: 0;
+}
+
+.pickPanel {
+  background: var(--surface-raised);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md, 10px);
+  padding: var(--space-4);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  min-width: 0;
+}
+
+.pickTitle {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--fg);
+  margin: 0;
+}
+
+.pickHint {
+  font-size: 0.9rem;
+  color: var(--fg-muted);
+  line-height: 1.5;
+  margin: 0;
+}
+
+/* Lower row: schematic and readout side by side when there is room. */
+.lower {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--space-4);
+  align-items: start;
+}
+
+@container (min-width: 900px) {
+  .lower {
+    grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
+  }
+}
+
+.schematicCard {
+  background: var(--surface-raised);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md, 10px);
+  padding: var(--space-3);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  min-width: 0;
+}
+
+.schematicSvg {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.card {
+  background: var(--surface-raised);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md, 10px);
+  padding: var(--space-4);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  min-width: 0;
+}
+
+.row {
+  display: grid;
+  grid-template-columns: minmax(0, 8.5rem) minmax(0, 1fr);
+  gap: var(--space-2);
+  align-items: baseline;
+  font-size: 0.92rem;
+  line-height: 1.5;
+}
+
+.rowLabel {
+  color: var(--fg-muted);
+  font-weight: 500;
+}
+
+.rowValue {
+  font-variant-numeric: tabular-nums;
+  word-break: break-word;
+}
+
+.badgeOx {
+  color: var(--ox);
+  font-weight: 600;
+}
+
+.badgeRed {
+  color: var(--red);
+  font-weight: 600;
+}
+
+.selectGroup {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.selectLabel {
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--fg-muted);
+}
+
+.select {
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius-sm, 4px);
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--fg);
+  font-family: var(--font-sans);
+  font-size: 0.9rem;
+  cursor: pointer;
+  width: 100%;
+  min-width: 0;
+}
+
+.select:focus {
+  outline: 2px solid var(--accent);
+  outline-offset: 1px;
+}
+
+.live {
+  font-size: 0.9rem;
+  color: var(--fg-muted);
+  line-height: 1.5;
+  margin: 0;
+  background: var(--surface-raised);
+  border-left: 3px solid var(--accent);
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius-sm, 4px);
+}
