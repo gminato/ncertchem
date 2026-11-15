@@ -38,6 +38,8 @@ import { LeChatelierLab } from './sims/le-chatelier-lab'
 import { PrecipitationLab } from './sims/precipitation-lab'
 import { PhExplorer } from './sims/ph-explorer'
 import { WeakAcidLab } from './sims/weak-acid-lab'
+import { HybridisationSpotter } from './sims/hybridisation-spotter'
+import { CatenationChains } from './sims/carbon-catenation'
 
 export interface SimulationProps {
   /** True when the Learner has asked the OS for reduced motion. Skip tweens and loops when set. */
@@ -90,4 +92,6 @@ export const simulations: Record<string, ComponentType<SimulationProps>> = {
   'precipitation-lab': PrecipitationLab,
   'ph-explorer': PhExplorer,
   'weak-acid-lab': WeakAcidLab,
+  'hybridisation-spotter': HybridisationSpotter,
+  'carbon-catenation': CatenationChains,
 }
