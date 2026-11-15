@@ -101,7 +101,8 @@ export const IntermediateOrbital = forwardRef<SVGGElement, IntermediateOrbitalPr
         <Bond from={at(C, PLANAR[0], CLEAR)} to={cMe} />
         <Label x={C.x} y={C.y}>C</Label>
         <ChargeMark x={chargeAt.x} y={chargeAt.y} sign="+" />
-        <Label x={cMe.x} y={cMe.y + 22} size={16}>H₃C</Label>
+        {/* One of the methyl hydrogens is drawn explicitly (the aligned C–H), so the label carries the other two. */}
+        <Label x={cMe.x} y={cMe.y + 22} size={16}>H₂C</Label>
         {/* The highlighted C-H, aligned with the p axis */}
         <line x1={cMe.x} y1={cMe.y} x2={hUp.x} y2={hUp.y} stroke="var(--e-arrow)" strokeWidth={7} strokeLinecap="round" opacity={0.3} />
         <Bond from={cMe} to={hUp} />
