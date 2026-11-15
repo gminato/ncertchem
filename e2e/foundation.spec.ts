@@ -90,8 +90,8 @@ test.describe('Unit navigation', () => {
   })
 
   test('a Unit with no Sections yet shows a calm empty state', async ({ page }) => {
-    await page.goto('/class-11/unit-8')
-    await expect(page.getByRole('heading', { level: 1 })).toHaveText('Organic Chemistry – Some Basic Principles and Techniques')
+    await page.goto('/class-11/unit-9')
+    await expect(page.getByRole('heading', { level: 1 })).toHaveText('Hydrocarbons')
     await expect(page.getByText('The Sections of this Unit are being written.')).toBeVisible()
   })
 
@@ -131,6 +131,28 @@ test.describe('Unit navigation', () => {
       '7-3-2-balancing-of-redox-reactions',
       '7-3-3-redox-reactions-as-the-basis-for-titrations',
       '7-4-redox-reactions-and-electrode-processes',
+    ])
+  })
+
+  test('Unit 8 lists its thirteen Sections in order', async ({ page }) => {
+    await page.goto('/class-11/unit-8')
+    const links = page.locator('a[href^="/class-11/unit-8/"]')
+    await expect(links).toHaveCount(13)
+    const hrefs = await links.evaluateAll((els) => els.map((e) => e.getAttribute('href')))
+    expect(hrefs.map((h) => h?.split('/').pop())).toEqual([
+      '8-1-general-introduction',
+      '8-2-tetravalence-of-carbon-shapes-of-organic-compounds',
+      '8-3-structural-representations',
+      '8-4-classification-of-organic-compounds',
+      '8-5-nomenclature-alkanes',
+      '8-5-3-functional-naming',
+      '8-6-isomerism',
+      '8-7-1-reaction-mechanisms',
+      '8-7-4-electron-displacement-effects',
+      '8-8-purification-methods',
+      '8-8-5-chromatography',
+      '8-9-qualitative-analysis',
+      '8-10-quantitative-analysis',
     ])
   })
 
