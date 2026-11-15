@@ -128,7 +128,8 @@ export const IntermediateOrbital = forwardRef<SVGGElement, IntermediateOrbitalPr
           </g>
         ))}
         <Label x={C.x} y={C.y} size={22}>C</Label>
-        <ChargeMark x={28} y={-40} sign="−" />
+        {/* The charge goes in the free lower-left gap, between the up-left bond and the down bond. */}
+        <ChargeMark x={at(C, deg(150), 40).x} y={at(C, deg(150), 40).y} sign="−" />
         {caption2}
       </g>
     )
