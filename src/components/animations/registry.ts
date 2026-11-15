@@ -99,6 +99,12 @@ import { PhLadder } from './unit6/ph/PhLadder'
 import { WeakAcid } from './unit6/weakacid/WeakAcid'
 import { CarbonShapes } from './unit8/shapes/CarbonShapes'
 import { VitalForce } from './unit8/intro/VitalForce'
+import { Chromatography } from './unit8/chromatography/Chromatography'
+import { IsomerFamily } from './unit8/isomers/IsomerFamily'
+import { PurificationMethods } from './unit8/purification/PurificationMethods'
+import { LassaigneBench } from './unit8/lassaigne/LassaigneBench'
+import { CombustionAnalysis } from './unit8/quantitative/CombustionAnalysis'
+import { AlkaneNaming } from './unit8/naming/AlkaneNaming'
 
 /**
  * Animations available to a Scrolly Animation, keyed by the `animation` prop.
@@ -208,6 +214,12 @@ export const animations = {
   'weak-acid': WeakAcid,
   'vital-force': VitalForce,
   'carbon-shapes': CarbonShapes,
+  chromatography: Chromatography,
+  'isomer-family': IsomerFamily,
+  'purification-methods': PurificationMethods,
+  'lassaigne': LassaigneBench,
+  'combustion-analysis': CombustionAnalysis,
+  'alkane-naming': AlkaneNaming,
 } as const
 
 export type AnimationName = keyof typeof animations

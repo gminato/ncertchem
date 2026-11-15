@@ -12,7 +12,7 @@ describe('vital-force Scrolly steps', () => {
 
   it('takes formulas and names from the library', () => {
     expect(introStep(0).molecules[0].formula).toBe('CH4N2O')
-    expect(introStep(0).molecules[0].iupac).toBe('aminomethanamide')
+    expect(introStep(0).molecules[0].iupac).toBe('urea')
     expect(introStep(1).molecules[0].iupac).toBe('ethanoic acid')
     expect(introStep(1).molecules[0].formula).toBe('C2H4O2')
     expect(introStep(2).molecules[0].formula).toBe('CH4')

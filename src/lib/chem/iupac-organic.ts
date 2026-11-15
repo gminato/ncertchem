@@ -17,7 +17,7 @@
  */
 
 import type { MolGraph } from './molecule-graph'
-import { neighbours, parseSmiles, toCondensed } from './molecule-parse'
+import { canonicalKey, neighbours, parseSmiles, toCondensed } from './molecule-parse'
 
 /** One step of the naming, for an animation: the parent, the numbering, each substituent, the name. */
 export interface NameStep {
@@ -234,7 +234,8 @@ function formatPrefixes(prefixes: Prefix[], omitLocants: boolean): string {
     return { key: alphaKey(name), text }
   })
   entries.sort((a, b) => (a.key < b.key ? -1 : a.key > b.key ? 1 : 0))
-  return entries.map((e) => e.text).join('-')
+  // Without locants the prefixes run together: bromochloromethane, chlorophenylmethane.
+  return entries.map((e) => e.text).join(omitLocants ? '' : '-')
 }
 
 /** Principal-group sites and the heteroatoms they consume, read from the carbonyl and OH/NH2 groups. */
@@ -673,7 +674,9 @@ function analyse(g: MolGraph): Analysis {
   if (stem === undefined) {
     throw new RangeError(`Chains of ${len} carbons are not named`)
   }
-  const omitEneLocant = !cyclic && len <= 3 && nDouble + nTriple === 1 && prefixes.length === 0 && principal === undefined
+  // A single multiple bond needs no locant when it can only be at 1: always on a two-carbon chain
+  // (chloroethene, ethenol, bromoethyne), and on propene/propyne when nothing else is attached.
+  const omitEneLocant = !cyclic && nDouble + nTriple === 1 && (len === 2 || (len <= 3 && prefixes.length === 0 && principal === undefined))
   const ring1Double = cyclic && nDouble === 1 && nTriple === 0 && principal === undefined
   let mid = prefix + stem
   if (nDouble + nTriple > 0) {
@@ -691,15 +694,15 @@ function analyse(g: MolGraph): Analysis {
   if (principal === undefined) {
     name = formatPrefixes(prefixes, omitParentLocants(prefixes, len, cyclic, pathBonds.some((b) => b.order > 1))) + mid + 'e'
   } else if (principal === 'ester') {
-    name = `${esterAlkyl} ${formatPrefixes(prefixes, omitParentLocants(prefixes, len, cyclic, pathBonds.some((b) => b.order > 1)))}${mid}oate`
+    name = `${esterAlkyl} ${formatPrefixes(prefixes, omitParentLocants(prefixes, len, cyclic, pathBonds.some((b) => b.order > 1), true))}${mid}oate`
   } else if (principal === 'acylHalide') {
     const halogen = g.atoms[neighbours(g, principalSites[0].carbon).find((x) => ['F', 'Cl', 'Br', 'I'].includes(g.atoms[x.atom].element))?.atom ?? 0].element
-    name = `${formatPrefixes(prefixes, omitParentLocants(prefixes, len, cyclic, pathBonds.some((b) => b.order > 1)))}${mid}oyl ${HALIDE[halogen]}`
+    name = `${formatPrefixes(prefixes, omitParentLocants(prefixes, len, cyclic, pathBonds.some((b) => b.order > 1), true))}${mid}oyl ${HALIDE[halogen]}`
   } else if (TERMINAL.has(principal)) {
     const s = principalSites.length
     const word = multWord(s) + SUFFIX[principal]
     const join = /^[aeiou]/.test(word) ? '' : 'e'
-    name = `${formatPrefixes(prefixes, omitParentLocants(prefixes, len, cyclic, pathBonds.some((b) => b.order > 1)))}${mid}${join}${word}`
+    name = `${formatPrefixes(prefixes, omitParentLocants(prefixes, len, cyclic, pathBonds.some((b) => b.order > 1), true))}${mid}${join}${word}`
   } else {
     const s = principalSites.length
     const locs = principalSites.map((x) => loc.get(x.carbon) as number).sort((x, y) => x - y)
@@ -707,7 +710,7 @@ function analyse(g: MolGraph): Analysis {
     const needsLocants = !(cyclic && nDouble === 0 && nTriple === 0 && s === 1) && !(len <= 2 && s === 1)
     const locText = needsLocants ? `-${locs.join(',')}-` : ''
     const join = /^[aeiou]/.test(word) && locText === '' ? '' : /^[aeiou]/.test(word) ? '' : 'e'
-    name = `${formatPrefixes(prefixes, omitParentLocants(prefixes, len, cyclic, pathBonds.some((b) => b.order > 1)))}${mid}${join}${locText}${word}`
+    name = `${formatPrefixes(prefixes, omitParentLocants(prefixes, len, cyclic, pathBonds.some((b) => b.order > 1), true))}${mid}${join}${locText}${word}`
     if (principal === 'ketone' && locText === '' && !cyclic) {
       name = name.replace(/an(e)?one$/, 'anone')
     }
@@ -717,8 +720,12 @@ function analyse(g: MolGraph): Analysis {
 }
 
 /** Whether to drop the locants of prefixes (one substituent on a short chain or on a ring). */
-function omitParentLocants(prefixes: Prefix[], len: number, cyclic: boolean, hasMultipleBond: boolean): boolean {
+function omitParentLocants(prefixes: Prefix[], len: number, cyclic: boolean, hasMultipleBond: boolean, hasPrincipal = false): boolean {
+  // A one-carbon parent has only one position: tetrachloromethane, not 1,1,1,1-tetrachloromethane.
+  if (len === 1 && !cyclic) return true
   if (prefixes.length !== 1) return false
+  // With a principal group the substituent's position matters (2-chloroethan-1-amine, 2-methylcyclohexan-1-ol).
+  if (hasPrincipal) return false
   return (cyclic && !hasMultipleBond) || len <= 2
 }
 
@@ -768,7 +775,47 @@ function compareSignatures(a: number[][], b: number[][]): number {
  * @throws {RangeError} If the molecule is outside the supported scope
  */
 export function iupacName(g: MolGraph): string {
+  if (isUrea(g)) return 'urea'
+  const retained = retainedNames().get(canonicalKey(g))
+  if (retained) return retained
   return analyse(g).name
+}
+
+/**
+ * Parent compounds IUPAC keeps by their retained names (as NCERT uses them), which the
+ * chain/ring rules here cannot build: aromatic heterocycles, fused rings and a few benzene
+ * derivatives. Both Kekulé forms are listed where they differ, since the key follows the bonds.
+ */
+const RETAINED: Array<[string, string[]]> = [
+  ['furan', ['C1=COC=C1']],
+  ['thiophene', ['C1=CSC=C1']],
+  ['pyrrole', ['C1=CNC=C1']],
+  ['pyridine', ['C1=CC=NC=C1', 'C1=CN=CC=C1']],
+  ['tetrahydrofuran', ['C1CCOC1']],
+  ['naphthalene', ['C1=CC=C2C=CC=CC2=C1', 'C1=CC2=CC=CC=C2C=C1']],
+  ['benzoic acid', ['OC(=O)C1=CC=CC=C1', 'OC(=O)C1C=CC=CC=1']],
+  ['1-phenylethan-1-one', ['CC(=O)C1=CC=CC=C1', 'CC(=O)C1C=CC=CC=1']],
+  ['benzaldehyde', ['O=CC1=CC=CC=C1', 'O=CC1C=CC=CC=1']],
+  ['phenol', ['OC1=CC=CC=C1', 'OC1C=CC=CC=1']],
+  ['aniline', ['NC1=CC=CC=C1', 'NC1C=CC=CC=1']],
+]
+let retainedCache: Map<string, string> | null = null
+function retainedNames(): Map<string, string> {
+  if (retainedCache) return retainedCache
+  const m = new Map<string, string>()
+  for (const [name, list] of RETAINED) for (const smi of list) m.set(canonicalKey(parseSmiles(smi)), name)
+  retainedCache = m
+  return m
+}
+
+/** Urea, H₂N–CO–NH₂, keeps its retained name (it has no carbon chain to name). */
+function isUrea(g: MolGraph): boolean {
+  const count = (el: string) => g.atoms.filter((a) => a.element === el).length
+  if (g.atoms.length !== 4 || count('C') !== 1 || count('N') !== 2 || count('O') !== 1) return false
+  const c = g.atoms.findIndex((a) => a.element === 'C')
+  const nbs = neighbours(g, c)
+  return nbs.length === 3 && nbs.some((x) => x.order === 2 && g.atoms[x.atom].element === 'O') &&
+    nbs.filter((x) => x.order === 1 && g.atoms[x.atom].element === 'N').length === 2
 }
 
 /**

@@ -1,0 +1,31 @@
+.enter {
+  animation: isomerEnter 480ms ease-out both;
+}
+
+@keyframes isomerEnter {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .enter {
+    animation: none;
+  }
+}
+
+.panel,
+.geometry {
+  width: 100%;
+}
+
+.caption {
+  margin: var(--space-3) 0 0;
+  text-align: center;
+  font-family: var(--font-sans);
+  font-size: 0.95rem;
+  color: var(--fg-muted);
+}
