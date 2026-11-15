@@ -70,9 +70,10 @@ const VIEW_DIRECTION: Vec3 = [0.55, 0.42, 1]
 
 /**
  * A camera position that frames the molecule's bounding sphere so that it fills
- * about `fill` of the stage height. Deterministic for given data.
+ * about `fill` of the stage height. `view` sets the direction the camera looks from
+ * (it need not be unit length); the default is a front-and-above view. Deterministic.
  */
-export function cameraForMolecule(data: Molecule3DData, fill = 0.75): Vec3 {
+export function cameraForMolecule(data: Molecule3DData, fill = 0.8, view?: Vec3): Vec3 {
   const pts = data.atoms.map((a) => a.position)
   const centre: Vec3 = [0, 0, 0]
   const radius = Math.max(
@@ -81,10 +82,7 @@ export function cameraForMolecule(data: Molecule3DData, fill = 0.75): Vec3 {
   )
   const halfFov = (STAGE_FOV_DEG * Math.PI) / 360
   const distance = radius / (fill * Math.tan(halfFov))
-  const len = Math.hypot(...VIEW_DIRECTION)
-  return [
-    (VIEW_DIRECTION[0] / len) * distance,
-    (VIEW_DIRECTION[1] / len) * distance,
-    (VIEW_DIRECTION[2] / len) * distance,
-  ]
+  const dir = view ?? VIEW_DIRECTION
+  const len = Math.hypot(...dir) || 1
+  return [(dir[0] / len) * distance, (dir[1] / len) * distance, (dir[2] / len) * distance]
 }
