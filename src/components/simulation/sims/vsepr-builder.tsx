@@ -31,7 +31,23 @@ import styles from './vsepr-builder.module.css'
 
 /** The central atom's id, and the element drawn for it. It is neutral: the model is generic. */
 const CENTRE = 'C'
-const CENTRE_ELEMENT = 'X'
+/** The central element for each NCERT example, so the atom takes its element colour (as in the Scrolly). */
+const CENTRAL_FOR_SPECIES: Record<string, string> = {
+  CH4: 'C',
+  CO2: 'C',
+  NH3: 'N',
+  H2O: 'O',
+  PCl5: 'P',
+  SF6: 'S',
+  SF4: 'S',
+  SO2: 'S',
+  BF3: 'B',
+  BeCl2: 'Be',
+  XeF4: 'Xe',
+  ClF3: 'Cl',
+}
+/** Used for a class with no NCERT example: a neutral colour. */
+const DEFAULT_CENTRAL_ELEMENT = 'X'
 /** The ligand drawn for each NCERT example: hydrogen for the three hydrides, chlorine for PCl5, fluorine otherwise. */
 const LIGAND_FOR_SPECIES: Record<string, string> = { CH4: 'H', NH3: 'H', H2O: 'H', PCl5: 'Cl' }
 const DEFAULT_LIGAND = 'F'
@@ -76,10 +92,16 @@ function ligandFor(config: VseprConfig): string {
   return example ? LIGAND_FOR_SPECIES[example] : DEFAULT_LIGAND
 }
 
+/** The central element for a class: the NCERT example's, if it has one. */
+function centralFor(config: VseprConfig): string {
+  const example = examplesFor(config).find((name) => name in CENTRAL_FOR_SPECIES)
+  return example ? CENTRAL_FOR_SPECIES[example] : DEFAULT_CENTRAL_ELEMENT
+}
+
 /** The 3D model for a pose, derived from its slots: the central atom, bonds, lone-pair lobes and arc. */
 function sceneFromPose(pose: Pose, config: VseprConfig) {
   const ligand = ligandFor(config)
-  const atoms: Molecule3DAtom[] = [{ id: CENTRE, element: CENTRE_ELEMENT, position: [0, 0, 0] }]
+  const atoms: Molecule3DAtom[] = [{ id: CENTRE, element: centralFor(config), position: [0, 0, 0] }]
   const bonds: Molecule3DBond[] = []
   const lonePairs: LonePair3D[] = []
 

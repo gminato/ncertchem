@@ -61,6 +61,18 @@ function idealDomains(bondPairs: number): Domain[] {
   return vseprPositions(bondPairs, 0).bonds.map((d) => ({ dir: toV3(d), kind: 'bond' as const }))
 }
 
+/** Indices of the first two bonding pairs, which the angle arc joins. */
+export function arcPairOf(domains: readonly Domain[]): [number, number] {
+  const bonds = domains.map((d, i) => (d.kind === 'bond' ? i : -1)).filter((i) => i >= 0)
+  return [bonds[0], bonds[1]]
+}
+
+/** The view for a lone-pair class, opened up for its angle arc. */
+function viewFor(config: VseprConfig): V3 {
+  const domains = domainsFor(config)
+  return bestView(domains, arcPairOf(domains))
+}
+
 function shapeCaption(bondPairs: number): string {
   const cls = vseprClass(bondPairs, 0)
   return `${axNotation(bondPairs, 0)} · ${cls.electronGeometry.toLowerCase()} · ${cls.idealAngles.map(formatAngle).join(' and ')}`
@@ -75,7 +87,7 @@ function shapeCaption(bondPairs: number): string {
 /** Views this close to a coordinate axis are not used (cos 20°): on an axis, the shapes read flat. */
 const AXIS_LIMIT = Math.cos((20 * Math.PI) / 180)
 
-export function bestView(domains: readonly Domain[]): V3 {
+export function bestView(domains: readonly Domain[], arc?: readonly [number, number]): V3 {
   let best: V3 = [1, 0.5, 0.8]
   let bestScore = -Infinity
   for (let i = 1; i < 48; i++) {
@@ -94,6 +106,12 @@ export function bestView(domains: readonly Domain[]): V3 {
         for (let b = a + 1; b < pts.length; b++) {
           score = Math.min(score, Math.hypot(pts[a][0] - pts[b][0], pts[a][1] - pts[b][1]))
         }
+      }
+      // The angle arc's two bonds are the ones the label refers to, so their own separation counts
+      // on top of the overall minimum: the view opens the arc up rather than only avoiding overlaps.
+      if (arc) {
+        const [p, q] = arc
+        score += Math.hypot(pts[p][0] - pts[q][0], pts[p][1] - pts[q][1])
       }
       if (score > bestScore + 1e-9) {
         bestScore = score
@@ -116,7 +134,7 @@ export const REPULSION_STEPS: RepulsionStep[] = [
     arcLabel: null,
   },
   {
-    target: targetFor(idealDomains(4), bestView(idealDomains(4))),
+    target: targetFor(idealDomains(4), bestView(idealDomains(4), [0, 1])),
     centre: 'C',
     caption: shapeCaption(4),
     arcLabel: formatAngle(109.5),
@@ -128,7 +146,7 @@ export const REPULSION_STEPS: RepulsionStep[] = [
     arcLabel: null,
   },
   {
-    target: targetFor(idealDomains(3), bestView(idealDomains(3))),
+    target: targetFor(idealDomains(3), bestView(idealDomains(3), [0, 1])),
     centre: 'B',
     caption: shapeCaption(3),
     arcLabel: formatAngle(120),
@@ -171,10 +189,10 @@ export interface LonePairStep {
 }
 
 export const LONE_PAIR_STEPS: LonePairStep[] = [
-  { config: { bondPairs: 4, lonePairs: 0, squeeze: 0 }, centre: 'C', molecule: 'CH₄', ligand: 'H', view: bestView(domainsFor({ bondPairs: 4, lonePairs: 0, squeeze: 0 })) },
-  { config: { bondPairs: 3, lonePairs: 1, squeeze: 0 }, centre: 'N', molecule: 'NH₃', ligand: 'H', view: bestView(domainsFor({ bondPairs: 3, lonePairs: 1, squeeze: 0 })) },
-  { config: { bondPairs: 3, lonePairs: 1, squeeze: 1 }, centre: 'N', molecule: 'NH₃', ligand: 'H', view: bestView(domainsFor({ bondPairs: 3, lonePairs: 1, squeeze: 1 })) },
-  { config: { bondPairs: 2, lonePairs: 2, squeeze: 1 }, centre: 'O', molecule: 'H₂O', ligand: 'H', view: bestView(domainsFor({ bondPairs: 2, lonePairs: 2, squeeze: 1 })) },
+  { config: { bondPairs: 4, lonePairs: 0, squeeze: 0 }, centre: 'C', molecule: 'CH₄', ligand: 'H', view: viewFor({ bondPairs: 4, lonePairs: 0, squeeze: 0 }) },
+  { config: { bondPairs: 3, lonePairs: 1, squeeze: 0 }, centre: 'N', molecule: 'NH₃', ligand: 'H', view: viewFor({ bondPairs: 3, lonePairs: 1, squeeze: 0 }) },
+  { config: { bondPairs: 3, lonePairs: 1, squeeze: 1 }, centre: 'N', molecule: 'NH₃', ligand: 'H', view: viewFor({ bondPairs: 3, lonePairs: 1, squeeze: 1 }) },
+  { config: { bondPairs: 2, lonePairs: 2, squeeze: 1 }, centre: 'O', molecule: 'H₂O', ligand: 'H', view: viewFor({ bondPairs: 2, lonePairs: 2, squeeze: 1 }) },
 ]
 
 /** The target for a lone-pair Step. The view is the one the Step names. */

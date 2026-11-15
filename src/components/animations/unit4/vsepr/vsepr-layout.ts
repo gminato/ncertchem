@@ -5,17 +5,17 @@
  * tested in Node for every Step.
  */
 
-import { forwardOf, type Pose, type V3 } from '@/lib/chem/vsepr-morph'
+import { forwardOf, settledBonds, type Pose, type V3 } from '@/lib/chem/vsepr-morph'
 
 /** SVG width and height of a Scrolly panel, in units. */
 export const PANEL_W = 560
-export const PANEL_H = 350
-/** Where the centre of the arrangement sits on the panel. */
+export const PANEL_H = 400
+/** The arrangement is centred in the area above the caption, which takes the bottom 60 units. */
 const CX = PANEL_W / 2
-const CY = 150
+const CY = 180
 export { CX, CY }
-/** The caption sits below this line; the molecule must fit above it. */
-const DRAW_BOTTOM = 290
+/** The tallest drawing the panel allows, in units: the area above the caption, less a margin. */
+const DRAW_SPAN = 320
 
 /** Atom disc radius at the front, in px at a bond length of one unit (the scale is set by fitScale). */
 export const CENTRE_RADIUS = 0.2
@@ -177,6 +177,38 @@ export function overlaps(layout: Layout): string[] {
 }
 
 /**
+ * Where the angle label goes on the panel: beyond the arc, along the arc's bisector as it appears
+ * on the panel. A bisector pointing at the viewer has no panel direction, so the label goes up.
+ * Null when the pose has no two bonds to join.
+ */
+export function arcLabelPosition(pose: Pose, px: number): { x: number; y: number } | null {
+  const arc = settledBonds(pose).slice(0, 2)
+  if (arc.length !== 2) return null
+  const project = projector(pose, px)
+  const centre = project([0, 0, 0])
+  const mid = project([
+    (arc[0].dir[0] + arc[1].dir[0]) / 2,
+    (arc[0].dir[1] + arc[1].dir[1]) / 2,
+    (arc[0].dir[2] + arc[1].dir[2]) / 2,
+  ])
+  let dx = mid.x - centre.x
+  let dy = mid.y - centre.y
+  const l = Math.hypot(dx, dy)
+  if (l < 1e-6) {
+    dx = 0
+    dy = -1
+  } else {
+    dx /= l
+    dy /= l
+  }
+  const reach = ARC_R * px + 22
+  return { x: centre.x + dx * reach, y: centre.y + dy * reach }
+}
+
+/** Radius of the angle arc, in bond lengths. */
+export const ARC_R = 0.42
+
+/**
  * The bond length in px that fits every pose on the panel: the widest arrangement takes at most
  * `widthFraction` of the panel width, and the tallest fits the drawing area. One scale for all
  * Steps, so the morph between them keeps a constant size.
@@ -199,7 +231,7 @@ export function fitScale(poses: Pose[], widthFraction = 0.65): number {
     const spanX = Math.max(...xs) - Math.min(...xs)
     const spanY = Math.max(...ys) - Math.min(...ys)
     if (spanX > 1e-9) scaleX = Math.min(scaleX, (widthFraction * PANEL_W) / spanX)
-    if (spanY > 1e-9) scaleY = Math.min(scaleY, ((DRAW_BOTTOM - 30) / spanY))
+    if (spanY > 1e-9) scaleY = Math.min(scaleY, DRAW_SPAN / spanY)
   }
   return Math.min(scaleX, scaleY)
 }

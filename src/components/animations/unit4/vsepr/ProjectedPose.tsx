@@ -2,10 +2,7 @@
 
 import { Atom, Label, VocabDefs } from '@/components/vocab'
 import { settledBonds, type Pose, type V3 } from '@/lib/chem/vsepr-morph'
-import { PANEL_H, PANEL_W, layoutPose, projector, type Disc, type Lobe } from './vsepr-layout'
-
-/** Radius of the angle arc, in bond lengths. */
-const ARC_R = 0.42
+import { ARC_R, PANEL_H, PANEL_W, arcLabelPosition, layoutPose, projector, type Disc, type Lobe } from './vsepr-layout'
 
 const dot = (a: readonly number[], b: readonly number[]) => a[0] * b[0] + a[1] * b[1] + a[2] * b[2]
 
@@ -85,24 +82,7 @@ export function ProjectedPose({ pose, px, centre, ligand, arcLabel, label, capti
           })
           .join(' ')
       : null
-  // The label sits outside the arc along the bisector as it appears on the panel. A bisector that
-  // points at the viewer has no panel direction, so it falls back to straight up.
-  const arcLabelAt = (() => {
-    if (arc.length !== 2) return null
-    const mid = project([(arc[0].dir[0] + arc[1].dir[0]) / 2, (arc[0].dir[1] + arc[1].dir[1]) / 2, (arc[0].dir[2] + arc[1].dir[2]) / 2])
-    let dx = mid.x - layout.centre.x
-    let dy = mid.y - layout.centre.y
-    const l = Math.hypot(dx, dy)
-    if (l < 1e-6) {
-      dx = 0
-      dy = -1
-    } else {
-      dx /= l
-      dy /= l
-    }
-    const reach = ARC_R * px + 22
-    return { x: layout.centre.x + dx * reach, y: layout.centre.y + dy * reach }
-  })()
+  const arcLabelAt = arcLabel ? arcLabelPosition(pose, px) : null
 
   // Atoms, back to front. Farther discs are drawn first; the centre is always the last one drawn at its depth.
   const atoms: { key: string; d: Disc; element: string }[] = [
