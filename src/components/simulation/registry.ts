@@ -49,6 +49,7 @@ import { FunctionalGroupNamer } from './sims/functional-group-namer'
 import { ElementalAnalyser } from './sims/elemental-analyser'
 import { AlkaneNamer } from './sims/alkane-namer'
 import { FormulaTranslator } from './sims/formula-translator'
+import { ArrowPusher } from './sims/arrow-pusher'
 
 export interface SimulationProps {
   /** True when the Learner has asked the OS for reduced motion. Skip tweens and loops when set. */
@@ -112,4 +113,5 @@ export const simulations: Record<string, ComponentType<SimulationProps>> = {
   'elemental-analyser': ElementalAnalyser,
   'alkane-namer': AlkaneNamer,
   'formula-translator': FormulaTranslator,
+  'arrow-pusher': ArrowPusher,
 }

@@ -108,6 +108,7 @@ import { FunctionalNaming } from './unit8/fgnaming/FunctionalNaming'
 import { CombustionAnalysis } from './unit8/quantitative/CombustionAnalysis'
 import { AlkaneNaming } from './unit8/naming/AlkaneNaming'
 import { RepresentationsMorph } from './unit8/representations/RepresentationsMorph'
+import { BondFission } from './unit8/fission/BondFission'
 
 /**
  * Animations available to a Scrolly Animation, keyed by the `animation` prop.
@@ -226,6 +227,7 @@ export const animations = {
   'combustion-analysis': CombustionAnalysis,
   'alkane-naming': AlkaneNaming,
   'structure-morph': RepresentationsMorph,
+  'bond-fission': BondFission,
 } as const
 
 export type AnimationName = keyof typeof animations
