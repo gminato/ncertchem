@@ -22,6 +22,7 @@ import { BondEnergyLedger } from './sims/bond-energy-ledger'
 import { GibbsExplorer } from './sims/gibbs-explorer'
 import { FirstLawLab } from './sims/first-law-lab'
 import { HessBuilder } from './sims/hess-builder'
+import { RedoxTitrationLab } from './sims/redox-titration-lab'
 
 export interface SimulationProps {
   /** True when the Learner has asked the OS for reduced motion. Skip tweens and loops when set. */
@@ -57,4 +58,5 @@ export const simulations: Record<string, ComponentType<SimulationProps>> = {
   'gibbs-explorer': GibbsExplorer,
   'first-law-lab': FirstLawLab,
   'hess-builder': HessBuilder,
+  'redox-titration-lab': RedoxTitrationLab,
 }
