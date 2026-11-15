@@ -2,7 +2,7 @@ import React, { forwardRef, type ReactNode } from 'react'
 import { atomColor } from '../vocab/atom'
 import { Label } from '../vocab/Label'
 import { polygonPath } from './geometry'
-import { layoutLewis, symbolClearance, type LewisAtomSpec, type LewisBondSpec } from './lewis-geometry'
+import { layoutLewis, type LewisAtomSpec, type LewisBondSpec } from './lewis-geometry'
 
 export interface LewisAtom extends LewisAtomSpec {
   /** Lone pairs, drawn as two dots each. */
@@ -49,19 +49,26 @@ export interface LewisDiagramProps extends Omit<React.SVGAttributes<SVGGElement>
   fontSize?: number
   /** Radius of each electron dot, in SVG units. */
   dotRadius?: number
-  /** Half the gap between the two dots of a lone pair. Tight pairs read as one unit. */
+  /**
+   * Half the centre-to-centre gap of a lone pair's two dots. Defaults to 1.1 × dotRadius,
+   * so the two dots of a pair read as one unit.
+   */
   pairHalfGap?: number
-  /** Distance from the symbol to the lone-pair dots. */
+  /** Distance from the edge of the symbol to the lone-pair dots. */
   lonePairRadius?: number
 }
 
 const BOND_STROKE = 1.5
 const BOND_SPACING = 4
 const DEFAULT_DOT_RADIUS = 1.9
-const DEFAULT_PAIR_HALF_GAP = 2.2
 const DEFAULT_LONE_PAIR_RADIUS = 9
 const CHARGE_RADIUS = 6.5
-const BRACKET_PAD = 24
+const CHARGE_OFFSET = 3
+const BADGE_OFFSET = 22
+/** Gap between a bond line and the glyph it ends at, as a fraction of the font size. */
+const BOND_GAP_EM = 0.6
+/** Gap between the outermost electron dot or charge and a bracket. */
+const BRACKET_GAP = 6
 const BRACKET_ARM = 6
 
 function unitVector(dx: number, dy: number): { x: number; y: number; len: number } {
@@ -72,6 +79,11 @@ function unitVector(dx: number, dy: number): { x: number; y: number; len: number
 function polar(cx: number, cy: number, deg: number, r: number): { x: number; y: number } {
   const rad = (deg * Math.PI) / 180
   return { x: cx + r * Math.cos(rad), y: cy + r * Math.sin(rad) }
+}
+
+/** Half the drawn width or height of a symbol, estimated from the font size. */
+function glyphHalf(element: string, fontSize: number): number {
+  return fontSize * (element.length > 1 ? 0.62 : 0.42)
 }
 
 /**
@@ -92,7 +104,7 @@ export const LewisDiagram = forwardRef<SVGGElement, LewisDiagramProps>(function 
     y = 0,
     fontSize = 16,
     dotRadius = DEFAULT_DOT_RADIUS,
-    pairHalfGap = DEFAULT_PAIR_HALF_GAP,
+    pairHalfGap,
     lonePairRadius = DEFAULT_LONE_PAIR_RADIUS,
     className,
     style,
@@ -100,9 +112,22 @@ export const LewisDiagram = forwardRef<SVGGElement, LewisDiagramProps>(function 
   },
   ref
 ) {
+  const halfGap = pairHalfGap ?? 1.1 * dotRadius
   const layouts = layoutLewis(atoms, bonds)
   const layoutById = new Map(layouts.map((l) => [l.id, l]))
   const atomById = new Map(atoms.map((a) => [a.id, a]))
+
+  // Radii around each atom, all measured from its centre. Bonds stop at the bond gap,
+  // lone pairs and unpaired dots sit on the ring, formal charges and badges sit outside it.
+  const ringOf = (atom: LewisAtom) => glyphHalf(atom.element, fontSize) + lonePairRadius
+  const bondStopOf = (atom: LewisAtom) => glyphHalf(atom.element, fontSize) + BOND_GAP_EM * fontSize
+  const chargeRingOf = (atom: LewisAtom) => ringOf(atom) + CHARGE_RADIUS + CHARGE_OFFSET
+  /** The furthest any drawn mark of an atom reaches from its centre, used to pad brackets. */
+  const reachOf = (atom: LewisAtom) => {
+    const dotReach = ringOf(atom) + dotRadius
+    if (!atom.formalCharge) return dotReach
+    return Math.max(dotReach, chargeRingOf(atom) + CHARGE_RADIUS)
+  }
 
   const dotFill = (origin: string | null | undefined): string => {
     if (!colourByOrigin || !origin) return 'var(--fg)'
@@ -118,8 +143,8 @@ export const LewisDiagram = forwardRef<SVGGElement, LewisDiagramProps>(function 
     const order = bond.order ?? 1
     const normal = { x: -dir.y, y: dir.x }
     const offsets = order === 1 ? [0] : order === 2 ? [-BOND_SPACING / 2, BOND_SPACING / 2] : [-BOND_SPACING, 0, BOND_SPACING]
-    const startGap = symbolClearance(a.element)
-    const endGap = symbolClearance(b.element)
+    const startGap = bondStopOf(a)
+    const endGap = bondStopOf(b)
     return offsets.map((off, k) => ({
       key: `bond-${bi}-${k}`,
       x1: a.x + dir.x * startGap + normal.x * off,
@@ -130,31 +155,35 @@ export const LewisDiagram = forwardRef<SVGGElement, LewisDiagramProps>(function 
   })
 
   const dots: React.ReactNode[] = []
+  const unpairedAt = new Map<string, { x: number; y: number }[]>()
   for (const atom of atoms) {
     const layout = layoutById.get(atom.id)
     if (!layout) continue
-    const ring = symbolClearance(atom.element) + lonePairRadius
+    const ring = ringOf(atom)
     layout.lonePairAngles.forEach((angle, i) => {
       const centre = polar(atom.x, atom.y, angle, ring)
       const perp = { x: -Math.sin((angle * Math.PI) / 180), y: Math.cos((angle * Math.PI) / 180) }
       const origin = atom.pairOrigins?.[i] ?? null
-      const first = { x: centre.x - perp.x * pairHalfGap, y: centre.y - perp.y * pairHalfGap }
-      const second = { x: centre.x + perp.x * pairHalfGap, y: centre.y + perp.y * pairHalfGap }
+      const first = { x: centre.x - perp.x * halfGap, y: centre.y - perp.y * halfGap }
+      const second = { x: centre.x + perp.x * halfGap, y: centre.y + perp.y * halfGap }
       dots.push(
         <circle key={`lp-${atom.id}-${i}-a`} cx={first.x} cy={first.y} r={dotRadius} style={{ fill: 'var(--fg)' }} />,
         <circle key={`lp-${atom.id}-${i}-b`} cx={second.x} cy={second.y} r={dotRadius} style={{ fill: dotFill(origin) }} />
       )
     })
+    const spots: { x: number; y: number }[] = []
     layout.unpairedAngles.forEach((angle, i) => {
       const p = polar(atom.x, atom.y, angle, ring)
+      spots.push(p)
       dots.push(<circle key={`up-${atom.id}-${i}`} cx={p.x} cy={p.y} r={dotRadius} style={{ fill: dotFill(atom.id) }} />)
     })
+    unpairedAt.set(atom.id, spots)
   }
 
   const charges = atoms.flatMap((atom) => {
     const layout = layoutById.get(atom.id)
     if (!layout || layout.chargeAngle === undefined || !atom.formalCharge) return []
-    const p = polar(atom.x, atom.y, layout.chargeAngle, symbolClearance(atom.element) + 15)
+    const p = polar(atom.x, atom.y, layout.chargeAngle, chargeRingOf(atom))
     const sign = atom.formalCharge > 0 ? '+' : '−'
     return [
       <g key={`fc-${atom.id}`} data-testid="formal-charge">
@@ -170,11 +199,11 @@ export const LewisDiagram = forwardRef<SVGGElement, LewisDiagramProps>(function 
     ? atoms.flatMap((atom) => {
         const layout = layoutById.get(atom.id)
         if (!layout) return []
-        const count = 2 * (atom.lonePairs ?? 0) + bonds.reduce((sum, bond) => {
+        const count = 2 * (atom.lonePairs ?? 0) + (atom.unpaired ?? 0) + bonds.reduce((sum, bond) => {
           if (bond.a !== atom.id && bond.b !== atom.id) return sum
           return sum + 2 * (bond.order ?? 1)
         }, 0)
-        const p = polar(atom.x, atom.y, layout.badgeAngle, symbolClearance(atom.element) + 26)
+        const p = polar(atom.x, atom.y, layout.badgeAngle, ringOf(atom) + BADGE_OFFSET)
         return [
           <g key={`octet-${atom.id}`} data-testid="octet-badge">
             <rect
@@ -197,10 +226,12 @@ export const LewisDiagram = forwardRef<SVGGElement, LewisDiagramProps>(function 
   const bracketShapes = brackets.map((bracket, i) => {
     const members = bracket.atoms.map((id) => atomById.get(id)).filter((a): a is LewisAtom => Boolean(a))
     if (members.length === 0) return null
-    const x0 = Math.min(...members.map((a) => a.x)) - BRACKET_PAD
-    const x1 = Math.max(...members.map((a) => a.x)) + BRACKET_PAD
-    const y0 = Math.min(...members.map((a) => a.y)) - BRACKET_PAD
-    const y1 = Math.max(...members.map((a) => a.y)) + BRACKET_PAD
+    // Pad each bracket by the reach of its furthest mark, so no dot or charge touches it.
+    const pad = Math.max(...members.map(reachOf)) + BRACKET_GAP
+    const x0 = Math.min(...members.map((a) => a.x)) - pad
+    const x1 = Math.max(...members.map((a) => a.x)) + pad
+    const y0 = Math.min(...members.map((a) => a.y)) - pad
+    const y1 = Math.max(...members.map((a) => a.y)) + pad
     const stroke = { stroke: 'var(--fg)' }
     return (
       <g key={`bracket-${i}`} data-testid="lewis-bracket">
@@ -230,46 +261,49 @@ export const LewisDiagram = forwardRef<SVGGElement, LewisDiagramProps>(function 
     const a = atomById.get(transfer.from)
     const b = atomById.get(transfer.to)
     if (a && b) {
-      const dir = unitVector(b.x - a.x, b.y - a.y)
-      const normal = { x: dir.y, y: -dir.x }
-      const bend = 22
-      const cx = (a.x + b.x) / 2 + normal.x * bend
-      const cy = (a.y + b.y) / 2 + normal.y * bend
-      const startGap = symbolClearance(a.element) + 8
-      const endGap = symbolClearance(b.element) + 4
-      const sx = a.x + dir.x * startGap + normal.x * 4
-      const sy = a.y + dir.y * startGap + normal.y * 4
-      const ex = b.x - dir.x * endGap + normal.x * 4
-      const ey = b.y - dir.y * endGap + normal.y * 4
+      // The electron that moves is the donor's own unpaired dot, so the donor never shows two.
+      const donorDot = unpairedAt.get(a.id)?.[0] ?? polar(a.x, a.y, -90, ringOf(a))
+      const drawDonorDot = !unpairedAt.get(a.id)?.length
+      // The arriving dot sits just outside the acceptor, on the side facing the donor.
+      const toDonor = unitVector(a.x - b.x, a.y - b.y)
+      const arrival = {
+        x: b.x + toDonor.x * (ringOf(b) + 2 * dotRadius + 7),
+        y: b.y + toDonor.y * (ringOf(b) + 2 * dotRadius + 7),
+      }
+      const mid = { x: (donorDot.x + arrival.x) / 2, y: (donorDot.y + arrival.y) / 2 }
+      const chord = unitVector(arrival.x - donorDot.x, arrival.y - donorDot.y)
+      const bend = 0.22 * chord.len
+      const cx = mid.x + chord.y * bend
+      const cy = mid.y - chord.x * bend
+      const toCtrl = unitVector(cx - donorDot.x, cy - donorDot.y)
+      const sx = donorDot.x + toCtrl.x * (dotRadius + 2)
+      const sy = donorDot.y + toCtrl.y * (dotRadius + 2)
+      const toCtrlEnd = unitVector(cx - arrival.x, cy - arrival.y)
+      const ex = arrival.x + toCtrlEnd.x * (dotRadius + 4)
+      const ey = arrival.y + toCtrlEnd.y * (dotRadius + 4)
       // Arrowhead along the tangent at the end of the quadratic curve.
       const tx = ex - cx
       const ty = ey - cy
       const tl = Math.hypot(tx, ty) || 1
       const ux = tx / tl
       const uy = ty / tl
-      const head = 5
+      const head = 6
       const hx = ex - ux * head
       const hy = ey - uy * head
-      const wing1 = { x: hx - uy * 3.2, y: hy + ux * 3.2 }
-      const wing2 = { x: hx + uy * 3.2, y: hy - ux * 3.2 }
+      const wing1 = { x: hx - uy * 3.6, y: hy + ux * 3.6 }
+      const wing2 = { x: hx + uy * 3.6, y: hy - ux * 3.6 }
       transferShape = (
         <g data-testid="lewis-transfer">
+          {drawDonorDot && <circle cx={donorDot.x} cy={donorDot.y} r={dotRadius} style={{ fill: dotFill(transfer.from) }} />}
           <path
             d={`M${sx},${sy} Q${cx},${cy} ${hx},${hy}`}
             fill="none"
-            strokeWidth={1.3}
+            strokeWidth={1.8}
             strokeLinecap="round"
             style={{ stroke: 'var(--accent)' }}
           />
-          <path
-            d={polygonPath([
-              { x: ex, y: ey },
-              wing1,
-              wing2,
-            ])}
-            style={{ fill: 'var(--accent)' }}
-          />
-          <circle cx={sx} cy={sy} r={dotRadius} style={{ fill: dotFill(transfer.from) }} />
+          <path d={polygonPath([{ x: ex, y: ey }, wing1, wing2])} style={{ fill: 'var(--accent)' }} />
+          <circle cx={arrival.x} cy={arrival.y} r={dotRadius} style={{ fill: dotFill(transfer.from) }} />
         </g>
       )
     }

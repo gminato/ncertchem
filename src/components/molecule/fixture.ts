@@ -8,7 +8,7 @@ import { vseprPositions, type Vec3 as LibVec3 } from '../../lib/chem/vsepr'
 import { LEWIS_STRUCTURES, formalChargesOf } from '../../lib/chem/lewis'
 import { summariseSpecies, type MOOccupancy } from '../../lib/chem/molecular-orbitals'
 import { NCERT_TEXT_ENTHALPIES } from '../../lib/chem/ncert-unit4-tables'
-import type { Molecule3DData } from './molecule-data'
+import { atomPositionMap, type Molecule3DData } from './molecule-data'
 import type { LewisAtom, LewisBracket, LewisTransfer } from './LewisDiagram'
 import type { LewisBondSpec } from './lewis-geometry'
 import type { Vec3 } from './geometry'
@@ -86,6 +86,26 @@ export const SF4_3D: Molecule3DData = (() => {
     lonePairs: lonePairs.map((lp) => ({ atom: 'S', direction: toScene(lp) })),
     angleArcs: [{ a: 'Fc', centre: 'S', b: 'Fd', label: '120°' }],
   }
+})()
+
+/**
+ * Camera direction for the SF4 see-saw: down the axis that bisects the equatorial F–S–F angle,
+ * from the lone-pair side and slightly above, so the lone pair faces the viewer and the two
+ * axial fluorines sit top and bottom.
+ */
+export const SF4_VIEW: Vec3 = (() => {
+  const p = atomPositionMap(SF4_3D.atoms)
+  const fc = p.get('Fc')!
+  const fd = p.get('Fd')!
+  const sx = fc[0] + fd[0]
+  const sz = fc[2] + fd[2]
+  const len = Math.hypot(sx, sz) || 1
+  // Turn the view 40° about the vertical axis so the lone pair sits to one side of the centre
+  // rather than straight at the viewer, where it would hide behind the sulphur.
+  const vx = -sx / len
+  const vz = -sz / len
+  const a = (40 * Math.PI) / 180
+  return [vx * Math.cos(a) + vz * Math.sin(a), 0.45, -vx * Math.sin(a) + vz * Math.cos(a)]
 })()
 
 /** Lewis structure of CO₃²⁻ from the NCERT library, drawn at a larger scale with formal charges. */
