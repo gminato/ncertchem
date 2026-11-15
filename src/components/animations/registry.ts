@@ -78,6 +78,8 @@ import { RedoxOnRules } from './unit7/onrules/RedoxOnRules'
 import { RedoxTitration } from './unit7/titration/RedoxTitration'
 import { RedoxDaniell } from './unit7/daniell/RedoxDaniell'
 import { RedoxTypes } from './unit7/types/RedoxTypes'
+import { RedoxClassical } from './unit7/classical/RedoxClassical'
+import { RedoxElectronTransfer } from './unit7/transfer/RedoxElectronTransfer'
 
 /**
  * Animations available to a Scrolly Animation, keyed by the `animation` prop.
@@ -166,6 +168,8 @@ export const animations = {
   'redox-titration': RedoxTitration,
   'redox-daniell': RedoxDaniell,
   'redox-types': RedoxTypes,
+  'redox-classical': RedoxClassical,
+  'redox-electron-transfer': RedoxElectronTransfer,
 } as const
 
 export type AnimationName = keyof typeof animations

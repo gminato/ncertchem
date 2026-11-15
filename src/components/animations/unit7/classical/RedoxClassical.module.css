@@ -1,0 +1,219 @@
+/* Classical redox Scrolly. The SVG viewBox is 580 units wide, so 1 unit is about 1 px on a 1440 px screen. */
+/* Inset 8 units, like the card in the other Scrollies, so the drawing sits inside a visible frame. */
+.stage {
+  box-sizing: border-box;
+  margin: 8px;
+  width: 564px;
+  height: 414px;
+  padding: 18px 22px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  background: var(--surface);
+  border: 1.2px solid var(--border);
+  border-radius: 14px;
+  color: var(--fg);
+  font-family: var(--font-sans);
+  overflow: hidden;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  min-width: 0;
+}
+
+.badge {
+  flex: none;
+  padding: 4px 12px;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: var(--surface-raised);
+  color: var(--fg-muted);
+  font-size: 13px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.title {
+  margin: 0;
+  font-size: 19px;
+  font-weight: 700;
+  line-height: 1.25;
+}
+
+.rules {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.rule {
+  border: 1.6px solid;
+  border-radius: 10px;
+  padding: 8px 12px;
+  background: var(--surface-raised);
+}
+
+.ruleOx {
+  border-color: var(--ox);
+}
+
+.ruleRed {
+  border-color: var(--red);
+}
+
+.kicker {
+  display: block;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+}
+
+.ruleOx .kicker {
+  color: var(--ox);
+}
+
+.ruleRed .kicker {
+  color: var(--red);
+}
+
+.ruleText {
+  display: block;
+  margin-top: 2px;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--fg);
+}
+
+.card {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  border: 1.2px solid var(--border);
+  border-radius: 12px;
+  background: var(--surface-raised);
+  padding: 18px 12px 16px;
+  min-height: 0;
+}
+
+/* Font size 19px makes KaTeX (1.21em) render at about 23px, which keeps the longest worked reaction inside the card. */
+.equation {
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 6px;
+  font-size: 19px;
+}
+
+.item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 0;
+}
+
+.formula {
+  display: inline-block;
+  padding: 0 2px 3px;
+  line-height: 1.2;
+  white-space: nowrap;
+}
+
+.formulaOx {
+  border-bottom: 3px solid var(--ox);
+}
+
+.formulaRed {
+  border-bottom: 3px solid var(--red);
+}
+
+.operator {
+  align-self: center;
+  padding-top: 0;
+}
+
+.label {
+  margin-top: 8px;
+  font-size: 15px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.labelOx {
+  color: var(--ox);
+}
+
+.labelRed {
+  color: var(--red);
+}
+
+.ladder {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+}
+
+.rung {
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 6px 8px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--fg-muted);
+  text-align: center;
+  line-height: 1.25;
+}
+
+.rungActive {
+  border-color: var(--fg);
+  color: var(--fg);
+  background: var(--surface);
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 15px;
+}
+
+.table th {
+  text-align: left;
+  font-size: 12px;
+  letter-spacing: 0.06em;
+  padding: 6px 10px;
+  color: var(--fg-subtle);
+  border-bottom: 1px solid var(--border);
+}
+
+.table th.thOx {
+  color: var(--ox);
+}
+
+.table th.thRed {
+  color: var(--red);
+}
+
+.table td {
+  padding: 8px 10px;
+  border-bottom: 1px dashed var(--border);
+  font-weight: 600;
+}
+
+.table td.tdOx {
+  color: var(--ox);
+}
+
+.table td.tdRed {
+  color: var(--red);
+}
+
+.takeaway {
+  margin: 0;
+  font-size: 15px;
+  line-height: 1.4;
+  color: var(--fg-muted);
+}
