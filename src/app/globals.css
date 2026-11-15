@@ -1,5 +1,17 @@
 @import '../styles/tokens.css';
 
+/* next/font's Inter "latin" subset leaves out U+2070–208E (⁰ ⁴–⁹ ⁺ ⁻ ₀–₉ ₊ ₋), so formulas such as
+   H₂O and 10⁻¹⁴ fell back to a system font that does not match ¹ ² ³. This 5 KB variable Inter
+   subset (SIL OFL, from Google Fonts) fills exactly that range in the same family. */
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+  src: url('/fonts/inter-scripts.woff2') format('woff2');
+  unicode-range: U+2070-2071, U+2074-208E;
+}
+
 /* Minimal reset */
 *,
 *::before,

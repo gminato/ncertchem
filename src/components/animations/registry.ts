@@ -87,10 +87,15 @@ import { Heterogeneous } from './unit6/heterogeneous/Heterogeneous'
 import { QAndK } from './unit6/qk/QAndK'
 import { IceMethod } from './unit6/qk/IceMethod'
 import { GibbsCurve } from './unit6/qk/GibbsCurve'
+import { AcidBaseConcepts } from './unit6/acidbase/AcidBaseConcepts'
+import { IonicElectrolytes } from './unit6/acidbase/IonicElectrolytes'
 import { PhysicalEquilibria } from './unit6/physical/PhysicalEquilibria'
 import { DynamicEquilibrium } from './unit6/dynamic/DynamicEquilibrium'
 import { MassAction } from './unit6/massaction/MassAction'
 import { BufferAction } from './unit6/buffer/BufferAction'
+import { LeChatelierStress } from './unit6/lechatelier/LeChatelierStress'
+import { PhLadder } from './unit6/ph/PhLadder'
+import { WeakAcid } from './unit6/weakacid/WeakAcid'
 
 /**
  * Animations available to a Scrolly Animation, keyed by the `animation` prop.
@@ -188,10 +193,15 @@ export const animations = {
   'q-and-k': QAndK,
   'ice-method': IceMethod,
   'qk-gibbs': GibbsCurve,
+  'acid-base-concepts': AcidBaseConcepts,
+  'ionic-electrolytes': IonicElectrolytes,
   'physical-equilibria': PhysicalEquilibria,
   'unit6-dynamic-equilibrium': DynamicEquilibrium,
   'unit6-mass-action': MassAction,
   'buffer-action': BufferAction,
+  'le-chatelier': LeChatelierStress,
+  'ph-scale': PhLadder,
+  'weak-acid': WeakAcid,
 } as const
 
 export type AnimationName = keyof typeof animations
