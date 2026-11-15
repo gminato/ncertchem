@@ -1,0 +1,155 @@
+---
+class: 11
+unit: 7
+section: "7.3.2"
+order: 5
+title: "Balancing of Redox Reactions"
+slug: "7-3-2-balancing-of-redox-reactions"
+summary: "Master the two systematic ways to balance redox equations: tracking oxidation-number changes and separating into ion-electron half-reactions in acidic or basic solution."
+ncert: "Class 11, Part II — Unit 7, Section 7.3.2"
+---
+
+<Hook>
+Dissolve a single dark crystal of potassium permanganate in warm water, and you get an intense, royal purple solution. Squeeze in fresh lemon juice containing a pinch of oxalic acid: within seconds, the rich purple colour bleaches completely, leaving water as crystal clear as before. Where did the deep purple permanganate ions go, and why does one permanganate ion need exactly two-and-a-half oxalate ions—or two to five—to bleach completely? Balancing a redox reaction is not trial-and-error guessing: it is an exact ledger of every transferred electron and ionic charge in water.
+</Hook>
+
+## Two systematic approaches
+
+Balancing an ordinary chemical equation relies on the law of conservation of mass: atoms cannot be created or destroyed, so the number of atoms of each element must be identical on both sides. In a redox reaction, however, a second fundamental conservation law is equally critical: **conservation of electric charge**. Every electron surrendered by a reducing agent must be accepted by an oxidising agent.
+
+In aqueous solution, balancing becomes trickier because solvent molecules ($\ce{H2O}$) and solvent-derived ions ($\ce{H+}$ in acidic solution, or $\ce{OH-}$ in basic solution) actively participate in the reaction. Trying to balance such reactions by simple trial-and-error inspection usually leads to frustration.
+
+Two systematic methods solve this problem:
+
+1. **The Oxidation Number Method**: based on tracking the increase and decrease in oxidation numbers of the participating elements.
+2. **The Half-Reaction (Ion-Electron) Method**: based on splitting the overall redox process into two separate half-equations—one for oxidation and one for reduction—balancing each individually, and recombining them.
+
+Both methods yield identical balanced equations; the choice of method rests on individual preference and context.
+
+> [!NOTE]
+> Remember that oxidation number is an electron book-keeping convention: the shared bonding electron pair is assigned entirely to the more electronegative partner. Except for simple monatomic ions such as $\ce{Fe^3+}$ or $\ce{Cl-}$, oxidation numbers are formal book-keeping assignments, not actual physical electrostatic charges.
+
+---
+
+## (a) Oxidation number method
+
+The oxidation number method follows five systematic steps:
+
+1. **Step 1: Write the skeletal equation.** Write the correct formulas for all reactants and products in ionic form.
+2. **Step 2: Assign oxidation numbers.** Determine the oxidation state of every element to identify which species is oxidised (increase in oxidation number) and which is reduced (decrease in oxidation number).
+3. **Step 3: Equalise oxidation number changes.** Calculate the change per atom, then multiply by the number of such atoms in each formula unit. Find the lowest common multiple (LCM) and introduce integer coefficients so that the total increase equals the total decrease. Balance the key redox atoms on both sides.
+4. **Step 4: Balance net ionic charge.** Add $\ce{H+}$ ions in acidic medium (or $\ce{OH-}$ ions in basic medium) to the side needing charge adjustment so that the net ionic charge is equal on both sides.
+5. **Step 5: Balance hydrogen and oxygen.** Add $\ce{H2O}$ molecules to balance hydrogen atoms. Finally, count oxygen atoms on both sides: if they match automatically, the equation is verified.
+
+Consider the oxidation of oxalate ions ($\ce{C2O4^2-}$) by permanganate ions ($\ce{MnO4-}$) in dilute sulphuric acid. Watch how each step unfolds in the scrolly animation below.
+
+<Scrolly animation="redox-balance-on">
+<Step>
+Start by writing the correct skeletal equation in ionic form with reactants on the left and products on the right. In this reaction, purple permanganate ($\ce{MnO4-}$) oxidises colourless oxalate ($\ce{C2O4^2-}$) in acidic solution to produce manganese(II) ions ($\ce{Mn^2+}$) and carbon dioxide gas ($\ce{CO2}$). Getting the chemical formulas and charges right at the start is vital: any error in a subscript or charge corrupts every subsequent step of the balancing derivation.
+</Step>
+<Step>
+Next, assign oxidation numbers to every atom using standard rules. Oxygen is $-2$ throughout. In permanganate, $\text{Mn}$ has oxidation number $+7$, which drops to $+2$ in $\ce{Mn^2+}$, a decrease of $5$ units representing reduction. In oxalate, each carbon atom is at $+3$, rising to $+4$ in carbon dioxide, an increase of $1$ unit representing oxidation. Permanganate is therefore the oxidising agent, while oxalate is the reducing agent.
+</Step>
+<Step>
+Now equalise the total increase and total decrease in oxidation number. Manganese decreases by $5$ per formula unit. Each oxalate ion contains two carbon atoms, so the increase is $2 \times (+1) = +2$ per oxalate ion. The lowest common multiple of $5$ and $2$ is $10$. Multiply $\ce{MnO4-}$ by $2$ and $\ce{C2O4^2-}$ by $5$. Balance the carbon and manganese atoms, giving $2\ce{MnO4-} + 5\ce{C2O4^2-} \to 2\ce{Mn^2+} + 10\ce{CO2}$.
+</Step>
+<Step>
+The reaction occurs in acidic aqueous solution, so use hydrogen ions ($\ce{H+}$) to balance electric charges. The reactant side currently carries a net charge of $2(-1) + 5(-2) = -12$. The product side carries $2(+2) + 10(0) = +4$. The charge difference is $+4 - (-12) = +16$. Add $16\ce{H+}$ ions to the reactant side. Both sides now possess an identical net electric charge of $+4$, preserving charge conservation.
+</Step>
+<Step>
+Finally, balance hydrogen atoms by adding water molecules. The left side contains $16$ hydrogen atoms from $16\ce{H+}$, so add $8\ce{H2O}$ molecules to the product side. Now verify the oxygen atoms as an independent check: the reactants contain $2(4) + 5(4) = 28$ oxygen atoms, and the products contain $10(2) + 8(1) = 28$ oxygen atoms. The oxygen counts match perfectly, confirming that the redox equation is fully and correctly balanced.
+</Step>
+</Scrolly>
+
+The final balanced ionic equation is:
+
+$$
+2\ce{MnO4-} + 5\ce{C2O4^2-} + 16\ce{H+} \to 2\ce{Mn^2+} + 10\ce{CO2} + 8\ce{H2O}
+$$
+
+<Check n={1} numeric answer={6} tolerance={0} unit="electrons" explanation="Each Cr atom in Cr2O7²⁻ has an oxidation state of +6 and is reduced to Cr³⁺ (+3), a decrease of 3 per atom. Because Cr2O7²⁻ contains two Cr atoms, the total decrease in oxidation number is 2 × 3 = 6, corresponding to 6 electrons gained per formula unit.">
+In balancing the oxidation of $\ce{Fe^2+}$ by acidified potassium dichromate ($\ce{Cr2O7^2-}$), chromium is reduced from $+6$ to $+3$. How many total electrons are gained per dichromate ion ($\ce{Cr2O7^2-}$)?
+</Check>
+
+---
+
+## (b) Half-reaction (ion-electron) method
+
+The half-reaction method splits the overall redox change into two separate half-equations: an **oxidation half-reaction** and a **reduction half-reaction**. Each half-reaction is balanced for mass and electric charge independently, and then they are combined.
+
+The method proceeds in seven logical steps:
+
+1. **Step 1: Write the skeletal equation** in ionic form.
+2. **Step 2: Separate the equation into two half-reactions** by identifying which element is oxidised and which is reduced.
+3. **Step 3: Balance key atoms** other than oxygen and hydrogen in each half-reaction.
+4. **Step 4: Balance oxygen and hydrogen atoms**:
+   - In acidic medium: add $\ce{H2O}$ to balance oxygen atoms, then add $\ce{H+}$ to balance hydrogen atoms.
+   - In basic medium: first balance as in acidic medium with $\ce{H2O}$ and $\ce{H+}$, then for each $\ce{H+}$ add an equal number of $\ce{OH-}$ ions to **both sides** of the half-equation. Combine adjacent $\ce{H+}$ and $\ce{OH-}$ into $\ce{H2O}$ and cancel common water molecules.
+5. **Step 5: Balance electric charges with electrons ($\ce{e-}$)**. Add electrons to the more positive side of each half-reaction. Oxidation releases electrons (electrons on product side); reduction consumes electrons (electrons on reactant side).
+6. **Step 6: Equalise electrons and combine.** Multiply each half-reaction by a suitable integer so that the number of electrons released equals the number of electrons accepted. Add the two half-reactions together and cancel common electrons, water molecules, and ions appearing on both sides.
+7. **Step 7: Final verification.** Check that atom counts for all elements and net electric charges are identical on both sides.
+
+Let us trace this method on a reaction in **basic medium**: the oxidation of green chromium(III) hydroxide ($\ce{Cr(OH)3}$) by hypochlorite ions ($\ce{ClO-}$) to form bright yellow chromate ions ($\ce{CrO4^2-}$) and chloride ions ($\ce{Cl-}$).
+
+<Scrolly animation="redox-balance-half">
+<Step>
+Begin by writing the unbalanced skeletal equation in ionic form. Here, green insoluble chromium(III) hydroxide ($\ce{Cr(OH)3}$) is oxidised by hypochlorite bleach ($\ce{ClO-}$) in alkaline aqueous solution, yielding bright yellow chromate ions ($\ce{CrO4^2-}$) and chloride ions ($\ce{Cl-}$). Write down the chemical formulas and charges cleanly. Because the reaction occurs in basic solution, hydroxide ions ($\ce{OH-}$) and water molecules will participate as the reaction proceeds.
+</Step>
+<Step>
+Separate the skeletal equation into two independent half-reactions by inspecting the elements undergoing redox change. Chromium changes its oxidation number from $+3$ in $\ce{Cr(OH)3}$ to $+6$ in $\ce{CrO4^2-}$, so $\ce{Cr(OH)3 -> CrO4^2-}$ forms the oxidation half-reaction. Chlorine changes from $+1$ in $\ce{ClO-}$ to $-1$ in $\ce{Cl-}$, so $\ce{ClO- -> Cl-}$ forms the reduction half-reaction. Splitting the process lets you balance mass and charge in each half separately.
+</Step>
+<Step>
+Balance atoms other than oxygen and hydrogen in each half-reaction first. In the oxidation half, there is one chromium atom on the reactant side and one on the product side, so chromium is already balanced ($1:1$). In the reduction half, there is one chlorine atom on the reactant side and one on the product side, so chlorine is also balanced ($1:1$). No integer multipliers are needed for key atoms in either half.
+</Step>
+<Step>
+Now balance oxygen and hydrogen for basic medium. First add $\ce{H2O}$ to balance oxygen, then $\ce{H+}$ to balance hydrogen. Because the solution is basic, add an equal number of $\ce{OH-}$ ions to both sides to convert each $\ce{H+}$ into $\ce{H2O}$, then cancel redundant water molecules. The oxidation half becomes $\ce{Cr(OH)3 + 5OH- -> CrO4^2- + 4H2O}$, while the reduction half simplifies cleanly to $\ce{ClO- + H2O -> Cl- + 2OH-}$.
+</Step>
+<Step>
+Next, balance electric charges by adding electrons to each half-reaction. In the oxidation half, reactants carry $-5$ while products carry $-2$, so add $3\ce{e-}$ to the product side: $\ce{Cr(OH)3 + 5OH- -> CrO4^2- + 4H2O + 3e-}$. In the reduction half, reactants carry $-1$ while products carry $-3$, so add $2\ce{e-}$ to the reactant side: $\ce{ClO- + H2O + 2e- -> Cl- + 2OH-}$. Each half is now balanced in both atoms and charge.
+</Step>
+<Step>
+Equalise the number of electrons lost and gained before combining the two half-reactions. The oxidation half produces $3\ce{e-}$, while the reduction half consumes $2\ce{e-}$. Their lowest common multiple is $6$. Multiply the oxidation half by $2$ and the reduction half by $3$. When added together, the $6\ce{e-}$ cancel out completely. Cancelling $6\ce{OH-}$ from both sides and $3\ce{H2O}$ from both sides yields the combined net ionic equation.
+</Step>
+<Step>
+Conclude with a rigorous verification check. Count atoms on both sides: $2$ chromium atoms, $3$ chlorine atoms, $10$ hydrogen atoms, and $13$ oxygen atoms. Next check the total electric charge: the reactant side has $3(-1) + 4(-1) = -7$, and the product side has $2(-2) + 3(-1) = -7$. The atom counts and ionic charges match exactly, demonstrating that the equation satisfies both the law of conservation of mass and conservation of charge.
+</Step>
+</Scrolly>
+
+The overall balanced ionic equation in alkaline solution is:
+
+$$
+2\ce{Cr(OH)3} + 3\ce{ClO-} + 4\ce{OH-} \to 2\ce{CrO4^2-} + 3\ce{Cl-} + 5\ce{H2O}
+$$
+
+<Check n={2} options={["Add 4 OH⁻ to both sides of the equation to convert H⁺ into water molecules", "Leave the 4 H⁺ unchanged because the reaction has reached equilibrium", "Add 4 OH⁻ to the reactant side only to remove the positive charge", "Replace 4 H⁺ with 2 H₂ gas on the product side"]} answer={0} explanation="In basic medium, free H⁺ cannot persist in significant amounts. For every H⁺ introduced to balance hydrogen, add an equal number of OH⁻ to BOTH sides so the equation remains balanced. The H⁺ and OH⁻ combine to form H₂O, and spectator water molecules are cancelled.">
+In balancing a half-reaction in basic medium, you have balanced oxygen with water and are left with $4\ce{H+}$ on the reactant side. What is the correct next step in basic solution?
+</Check>
+
+<Check n={3} numeric answer={2} tolerance={0} unit="OH⁻ ions" explanation="In basic medium, the balanced ionic equation is 2MnO₄⁻ + 3SO₃²⁻ + H₂O → 2MnO₂ + 3SO₄²⁻ + 2OH⁻. Two OH⁻ ions appear on the product side, balancing both the charge (−8 on each side) and hydrogen atoms (2 on each side).">
+When balancing the skeletal equation $\ce{MnO4- + SO3^2- -> MnO2 + SO4^2-}$ in basic medium, what is the stoichiometric coefficient of the hydroxide ion ($\ce{OH-}$) in the final balanced equation?
+</Check>
+
+---
+
+## Comparing both methods
+
+Both the oxidation-number method and the half-reaction method rest on the same physical reality: electrons are neither created nor destroyed during chemical change.
+
+- The **oxidation-number method** is usually faster for simple molecular reactions or when working in gas-phase and non-aqueous systems where ionic species are absent.
+- The **half-reaction method** is far more physical and illuminating for solution chemistry and electrochemistry. It shows explicitly which electrons travel through an external wire in a galvanic cell, and prevents errors when balancing reactions in strongly basic solutions.
+
+Experiment with the interactive tool below. You can switch between acidic and basic reactions, alternate between the two methods, and test your skills in **Try It Yourself** mode before revealing each step.
+
+<Simulation name="redox-balancer" title="Redox Equation Balancer" />
+
+<Check n={4} options={["Electric charge is conserved; unequal charges mean electrons were created or destroyed", "A difference in charge changes the molar mass of the participating substances", "Solutions cannot conduct electricity unless all ions have neutral charges", "Unequal charges violate the law of definite proportions"]} answer={0} explanation="Electrons carry fundamental unit electric charges. The law of conservation of electric charge requires that the total charge of the reactants must equal the total charge of the products; otherwise, electrons would have been created or destroyed from nothing.">
+Why must net electric charges balance in a chemical equation, even if all atom counts on both sides are already equal?
+</Check>
+
+<KeyIdeas>
+- Balancing redox reactions requires satisfying both the **law of conservation of mass** (equal atoms of each element) and the **law of conservation of electric charge** (electrons released equal electrons accepted).
+- In the **oxidation number method**, coefficients are chosen so that the total increase in oxidation number equals the total decrease. Net ionic charge is balanced with $\ce{H+}$ (acidic) or $\ce{OH-}$ (basic), and hydrogen/oxygen are balanced with $\ce{H2O}$.
+- In the **half-reaction method**, the equation is split into oxidation and reduction halves. Key atoms, oxygen ($\ce{H2O}$), hydrogen ($\ce{H+}$ or $\ce{OH-}$), and charges ($\ce{e-}$) are balanced in each half before scaling by the LCM of electrons and combining.
+- In **basic medium**, balance oxygen and hydrogen as if in acidic solution, then add an equal number of $\ce{OH-}$ ions to **both sides** for every $\ce{H+}$, combine into water, and cancel common water molecules.
+- An equation is never truly balanced until both the atom tally for every element and the net electric charge match on both sides.
+</KeyIdeas>

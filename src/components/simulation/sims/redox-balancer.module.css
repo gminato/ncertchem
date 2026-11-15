@@ -1,0 +1,336 @@
+.root {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: var(--space-4);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  font-family: var(--font-sans);
+  color: var(--fg);
+  box-shadow: var(--shadow-sm);
+  max-width: 840px;
+  margin: 0 auto;
+}
+
+.controlsBar {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  padding-bottom: var(--space-3);
+  border-bottom: 1px solid var(--border);
+}
+
+.controlsRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+  align-items: center;
+  justify-content: space-between;
+}
+
+.selectGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  flex: 1 1 260px;
+}
+
+.controlLabel {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--fg-muted);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.presetSelect {
+  background: var(--surface-raised);
+  color: var(--fg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 8px 12px;
+  font-size: 14px;
+  font-weight: 500;
+  outline: none;
+  cursor: pointer;
+  transition: border-color 0.15s ease;
+}
+
+.presetSelect:focus {
+  border-color: var(--focus-ring, var(--sol-cu));
+}
+
+.mediumBadge {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 8px;
+  border-radius: var(--radius-full);
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.mediumAcidic {
+  background: rgba(217, 119, 6, 0.15);
+  color: var(--ox);
+  border: 1px solid currentColor;
+}
+
+.mediumBasic {
+  background: rgba(67, 56, 202, 0.15);
+  color: var(--red);
+  border: 1px solid currentColor;
+}
+
+.navBar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+  flex-wrap: wrap;
+  background: var(--surface-raised);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: var(--space-2) var(--space-3);
+}
+
+.stepPills {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.stepDot {
+  min-width: 28px;
+  height: 28px;
+  padding: 0 6px;
+  border-radius: var(--radius-full);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: 700;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  color: var(--fg-muted);
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.stepDot:hover {
+  border-color: var(--fg);
+  color: var(--fg);
+}
+
+.stepDotActive {
+  background: var(--fg);
+  color: var(--surface);
+  border-color: var(--fg);
+}
+
+.stepDotCompleted {
+  border-color: var(--success);
+  color: var(--success);
+}
+
+.stepBanner {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.stepTitle {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--fg);
+}
+
+.stepDesc {
+  font-size: 13px;
+  color: var(--fg-muted);
+  line-height: 1.4;
+}
+
+.morphEquationCard {
+  background: var(--surface-raised);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: var(--space-3) var(--space-4);
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  text-align: center;
+}
+
+.morphEquationLabel {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--fg-muted);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.morphEquationText {
+  font-size: 16px;
+  font-weight: 600;
+  font-family: var(--font-mono, monospace);
+  color: var(--fg);
+  word-break: break-word;
+}
+
+.stageArea {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.cardOverride {
+  background: var(--surface);
+  border: 1px solid var(--border);
+}
+
+/* ON Method View */
+.onMethodGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: var(--space-3);
+}
+
+.onCard {
+  background: var(--surface-raised);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: var(--space-3);
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.onCardHeader {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.onCardBody {
+  font-size: 14px;
+  color: var(--fg);
+}
+
+/* Verification Table */
+.tallyTable {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+
+.tallyTable th {
+  text-align: left;
+  padding: 6px 10px;
+  border-bottom: 1px solid var(--border);
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--fg-muted);
+  text-transform: uppercase;
+}
+
+.tallyTable td {
+  padding: 6px 10px;
+  border-bottom: 1px solid var(--border);
+}
+
+.matchBadge {
+  display: inline-block;
+  padding: 2px 6px;
+  border-radius: var(--radius-sm);
+  background: var(--success-soft);
+  color: var(--success);
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.mismatchBadge {
+  display: inline-block;
+  padding: 2px 6px;
+  border-radius: var(--radius-sm);
+  background: var(--caution-soft);
+  color: var(--caution);
+  font-size: 11px;
+  font-weight: 700;
+}
+
+/* Try It Challenge Card */
+.challengeCard {
+  background: var(--surface-raised);
+  border: 2px solid var(--sol-cu);
+  border-radius: var(--radius-md);
+  padding: var(--space-4);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.challengeHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.challengeTitle {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--sol-cu);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.challengePrompt {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--fg);
+}
+
+.challengeRow {
+  display: flex;
+  align-items: flex-end;
+  gap: var(--space-3);
+  flex-wrap: wrap;
+}
+
+.feedbackBox {
+  padding: var(--space-3);
+  border-radius: var(--radius-sm);
+  font-size: 13px;
+  line-height: 1.4;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.feedbackSuccess {
+  background: var(--success-soft);
+  border: 1px solid var(--success);
+  color: var(--success);
+}
+
+.feedbackWrong {
+  background: var(--caution-soft);
+  border: 1px solid var(--caution);
+  color: var(--caution);
+}
+
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
