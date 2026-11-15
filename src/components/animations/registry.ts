@@ -69,6 +69,9 @@ import { NaClDissolution } from './unit5/NaClDissolution'
 import { EntropyPhases } from './unit5/gibbs/EntropyPhases'
 import { SignCases } from './unit5/gibbs/SignCases'
 import { KLadder } from './unit5/gibbs/KLadder'
+import { SystemTypes } from './unit5/terms/SystemTypes'
+import { JouleAdiabatic } from './unit5/terms/JouleAdiabatic'
+import { StateFunction } from './unit5/terms/StateFunction'
 
 /**
  * Animations available to a Scrolly Animation, keyed by the `animation` prop.
@@ -148,6 +151,9 @@ export const animations = {
   'gibbs-entropy-phases': EntropyPhases,
   'gibbs-sign-cases': SignCases,
   'gibbs-k-ladder': KLadder,
+  'thermo-system-types': SystemTypes,
+  'thermo-joule': JouleAdiabatic,
+  'thermo-state-function': StateFunction,
 } as const
 
 export type AnimationName = keyof typeof animations

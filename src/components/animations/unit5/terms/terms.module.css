@@ -1,0 +1,29 @@
+/*
+ * Shared styles for the Unit 5 Section 5.1 animations. Each Step's drawing fades in when it is
+ * keyed in; under reduced motion it appears at once.
+ */
+
+.svg {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.enter {
+  animation: termsEnter 0.5s var(--ease-out) both;
+}
+
+@keyframes termsEnter {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .enter {
+    animation: none;
+  }
+}

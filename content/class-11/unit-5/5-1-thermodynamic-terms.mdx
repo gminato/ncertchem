@@ -1,0 +1,152 @@
+---
+class: 11
+unit: 5
+section: "5.1"
+order: 1
+title: "Thermodynamic Terms"
+summary: "A system is whatever you choose to watch, its boundary decides what can cross it, and internal energy changes by exactly q + w however the change is carried out."
+slug: "5-1-thermodynamic-terms"
+ncert: "Class 11, Part I — Unit 5, Section 5.1"
+---
+
+<Hook>
+Churn a steel tumbler of water with a spoon and it warms. Put an electric immersion rod in a second tumbler and it warms too. Suppose both rise by the same amount. Does the water keep any record of which tool you used?
+</Hook>
+
+Chemical reactions release and absorb energy, and to describe those changes precisely we need a small vocabulary. We need a way to draw a line around the part of the world we are studying, a way to say what is on each side of that line, and a quantity that records how much energy the studied part holds.
+
+## 5.1.1 The system and the surroundings
+
+The **system** is the part of the universe that we choose to observe. Everything else is the **surroundings**, and the two together make up the universe. Only the surroundings close to the system can interact with it, so in practice the far reaches of the universe can be ignored.
+
+A beaker of reacting solutions is a system, and the room in which the beaker sits is its surroundings. The line between them is the **boundary**. It can be a real wall, such as the glass of the beaker, or an imaginary surface drawn in space. Its job is to tell us what may cross it, because that is what lets us keep track of every movement of matter and energy.
+
+## 5.1.2 Types of system
+
+Systems are classified by what their boundary allows through. The Steps below show the three kinds, with the flows that each one permits.
+
+<Scrolly animation="thermo-system-types">
+<Step>
+Start with the picture. The inner region is the **system**, the outer region is the **surroundings**, and the wall between them is the **boundary**. Here the wall is solid and nothing crosses it yet. Every part of the drawing belongs either to the system or to the surroundings, and no part of the universe is left out of the account.
+</Step>
+<Step>
+An **open system** has a boundary with gaps, so matter can pass through them and particles can leave or enter. Energy can cross too, shown here by the warm wavy arrow of heat, $q$. A beaker of reacting solutions left uncovered on the bench is open: vapour escapes from it, and warm air from the room flows in.
+</Step>
+<Step>
+A **closed system** has a solid wall. Matter cannot cross, so the amount of substance stays fixed, but energy can. In this drawing heat leaves through the wall, so $q$ is negative, and a piston pushes on the gas from outside, so work is done on the system. A sealed metal vessel behaves this way: its heat escapes into the room, but no molecules do.
+</Step>
+<Step>
+An **isolated system** exchanges neither matter nor energy with its surroundings. A thermos flask with its cap closed is a good approximation. Its double walls block heat, and the cap stops anything escaping. Nothing crosses the boundary, so whatever happens inside, the energy of the system stays the same.
+</Step>
+</Scrolly>
+
+The names describe the boundary, not the substance. The same reacting mixture is open in a beaker and closed in a sealed tube. When you meet a system, ask one question first: what is allowed to cross its wall?
+
+<Check n={1} options={["Open", "Closed", "Isolated"]} answer={2} explanation="A thermos flask with its cap closed blocks heat and stops matter escaping, so nothing crosses its boundary. That makes it an isolated system, the case described in the last Step.">
+A thermos flask, with its cap closed, is best described as which kind of system?
+</Check>
+
+## 5.1.3 The state of the system
+
+To calculate anything about a system, we must describe it before and after a change. In mechanics you would need the position and velocity of every particle. Thermodynamics uses a far simpler description: the average, measurable properties of the whole sample, such as its pressure, volume, temperature and amount.
+
+Properties such as $p$, $V$ and $T$ are called **state variables**, or **state functions**. Their values depend only on the present state of the system, not on how it got there. A flask of water taken from 20 °C to 45 °C has changed by $+25\ \text{°C}$, however it was heated. Its temperature is a state function.
+
+You do not have to fix every property. For a fixed amount of an ideal gas, specifying any two of $p$, $V$ and $T$ fixes the third through $pV = nRT$. The number of independent variables depends on the nature of the system. The surroundings can never be fully specified, and fortunately we never need to.
+
+The Scrolly below makes this idea visual with a mountain analogy. Altitude depends only on where you stand, while the walk you take between two camps depends on the route.
+
+<Scrolly animation="thermo-state-function">
+<Step>
+Picture two camps on a mountain, $A$ and $B$, at different heights. The gauge on the left shows each camp's altitude, and here the altitude plays the part of the internal energy, $U$. The gap between the camps is a change in altitude, $\Delta U$. It is fixed by the two camps alone, so only the start and the finish matter.
+</Step>
+<Step>
+The first walker takes the direct route, a steep climb. Along this route the work is done and no heat flows, so $q = 0$ and $w = +1000\ \text{J}$. The height gained is $\Delta U = +1000\ \text{J}$. The walk, with its effort, belongs to this route, not to the camps.
+</Step>
+<Step>
+The second walker takes a winding route with terraces. This time heat helps, $q = +600\ \text{J}$, and less work is needed, $w = +400\ \text{J}$. The effort is split differently, so $q$ and $w$ differ from the first route. Yet this walker also ends on camp $B$, gaining the same $1000\ \text{J}$ of height.
+</Step>
+<Step>
+Both walks end at the same height, so $\Delta U$ is the same. Altitude is a state function. Heat and work are **path functions**, like the distance walked: change the route and they change. The analogy has one limit: a walker's effort is not stored at a camp, but $U$ is. What it captures is the key point: $\Delta U$ is set by the two states, while $q$ and $w$ depend on the route.
+</Step>
+</Scrolly>
+
+<Check n={2} options={["q, the heat absorbed", "w, the work done", "ΔU, the change in internal energy", "The heat absorbed along one particular route"]} answer={2} explanation="Internal energy is a state function, so its change depends only on the start and the finish. Heat and work are path functions: they change with the route, even when their sum does not.">
+Which of these is a state function?
+</Check>
+
+## 5.1.4 The internal energy as a state function
+
+The total energy of a system, in all its chemical, electrical, mechanical and other forms, is called the **internal energy**, $U$. It changes in three situations: when heat crosses the boundary, when work is done on or by the system, and when matter enters or leaves. We take the first two cases in turn, and then the general case that combines them.
+
+### (a) Work
+
+Start with a system whose walls allow no heat through. A thermos of water is a good approximation, and its wall is called **adiabatic**. A change carried out with no heat crossing the wall is an **adiabatic process**, and the only way to change $U$ is to do work.
+
+<Scrolly animation="thermo-joule">
+<Step>
+Two insulated thermoses hold water, each in the same starting state $A$, with the same temperature and internal energy $U_\text{A}$. The walls are adiabatic, so no heat can pass through them. The thermometers show the starting temperature, and no work is being done yet.
+</Step>
+<Step>
+On the left, a paddle wheel churns the water. Work is done on the water, $w = +750\ \text{J}$, and the water warms to state $B$. Because the wall is adiabatic, $q = 0$, and the change in internal energy is $\Delta U = w_\text{ad} = +750\ \text{J}$. The energy of the water rises by exactly the work put in.
+</Step>
+<Step>
+Now the right-hand thermos. Instead of a paddle, an electric immersion rod supplies $750\ \text{J}$ of electrical work, starting from the same state $A$. The thermometer rises to the same reading as on the left. The route is different, electricity rather than churning, but the change of state is the same, so $\Delta U = +750\ \text{J}$ again.
+</Step>
+<Step>
+Both experiments now end in state $B$, and the two starting states agree, so the two changes in $U$ must agree too: $U_\text{B} - U_\text{A}$ is the same whichever route was used. Joule's experiments, carried out between 1840 and 1850, showed this: a given amount of work produced the same change of state, however it was done. That makes $U$ a state function.
+</Step>
+<Step>
+Now let the gas do the work. The left vessel holds an insulated gas behind a piston, and the gas expands, pushing the piston out. The system does $750\ \text{J}$ of work on its surroundings, so $w_\text{ad} = -750\ \text{J}$. The gas loses that much energy, $\Delta U = -750\ \text{J}$, and its temperature falls back towards state $A$. The sign follows the IUPAC convention, in which work done on the system is positive.
+</Step>
+</Scrolly>
+
+For an adiabatic change, the relationship is
+
+$$
+\Delta U = U_\text{B} - U_\text{A} = w_\text{ad}
+$$
+
+Positive work done on the system raises $U$, and negative work done by the system lowers it.
+
+### (b) Heat
+
+Now let the walls conduct heat. Suppose the water sits in a copper container at $T_\text{A}$, and the container is placed in a large heat reservoir at $T_\text{B}$. Heat is the energy that passes between the system and its surroundings because of a temperature difference. If no work is done, and the volume is held constant, the change in internal energy equals the heat:
+
+$$
+\Delta U = q
+$$
+
+By IUPAC convention, $q$ is positive when heat flows into the system and raises its internal energy, and negative when heat flows out and lowers it.
+
+<Check n={3} numeric answer={16.0} tolerance={0.2} unit="K" explanation="For one mole of a monatomic ideal gas, C_V = (3/2) R = 1.5 × 8.314 = 12.47 J K⁻¹. At constant volume with no work, ΔU = q = 200 J, so ΔT = 200 / 12.47 = 16.0 K.">
+One mole of a monatomic ideal gas at 300 K is heated at constant volume, and it absorbs 200 J of heat. Take its heat capacity at constant volume as 12.47 J K⁻¹. By how many kelvin does its temperature rise?
+</Check>
+
+### (c) The general case
+
+Most real changes involve both heat and work. The general statement is
+
+$$
+\Delta U = q + w \qquad (5.1)
+$$
+
+Here $q$ and $w$ can each take different values, depending on the route. Their sum does not: $q + w$ depends only on the initial and final states, and is independent of how the change is carried out. For an isolated system, $q = 0$ and $w = 0$, so $\Delta U = 0$.
+
+This equation is the mathematical form of the **first law of thermodynamics**: the energy of an isolated system is constant. It is the law of conservation of energy, in the form that energy can be neither created nor destroyed. Note that only changes in $U$ can be measured. The absolute value of the internal energy of a state is not something we can determine.
+
+The lab below puts one mole of gas in a cylinder with a piston. You can heat it at constant volume, let the piston move against a pressure you choose, insulate the walls, or isolate the gas altogether. The ledger adds up $q$ and $w$ and checks their sum against the change in temperature. Switch to two paths to see two different routes from state $A$ to state $B$ with the same $\Delta U$.
+
+<Simulation name="first-law-lab" title="First law lab: heat, work and the energy ledger" />
+
+<Check n={4} numeric answer={160} tolerance={0.5} unit="J" explanation="Use ΔU = q + w with the IUPAC signs. Heat absorbed is positive, q = +250 J. Work done by the gas is negative, so w = −90 J. Then ΔU = 250 + (−90) = +160 J.">
+A gas absorbs 250 J of heat from its surroundings, and in the same change it does 90 J of work on its surroundings. What is ΔU of the gas, in joules?
+</Check>
+
+<KeyIdeas>
+- The system is the part you study, the surroundings are everything that can interact with it, and the boundary decides what may cross.
+- Open, closed and isolated systems differ only in what crosses the boundary: matter and energy, energy alone, or neither.
+- State functions such as $p$, $V$, $T$ and $U$ depend only on the present state. Heat and work are path functions, and they depend on the route.
+- The first law is $\Delta U = q + w$. Heat into the system and work done on it are both positive.
+- For an adiabatic change $\Delta U = w_\text{ad}$, at constant volume with no work $\Delta U = q$, and an isolated system keeps its energy.
+</KeyIdeas>
