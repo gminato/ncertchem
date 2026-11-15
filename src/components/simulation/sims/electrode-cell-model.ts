@@ -12,6 +12,7 @@ export interface CoupleDef {
   id: string
   name: string
   coupleStr: string
+  coupleDisplay: string
   e0: number
   electrons: number
   metalName: string
@@ -30,6 +31,7 @@ export const EXPLORER_COUPLES: readonly CoupleDef[] = [
     id: 'f2',
     name: 'Fluorine (F₂ / F⁻)',
     coupleStr: 'F2/F-',
+    coupleDisplay: 'F₂ / F⁻',
     e0: lookupPotential('F2/F-'),
     electrons: 2,
     metalName: 'Pt(s), F₂(g)',
@@ -46,6 +48,7 @@ export const EXPLORER_COUPLES: readonly CoupleDef[] = [
     id: 'cl2',
     name: 'Chlorine (Cl₂ / Cl⁻)',
     coupleStr: 'Cl2/Cl-',
+    coupleDisplay: 'Cl₂ / Cl⁻',
     e0: lookupPotential('Cl2/Cl-'),
     electrons: 2,
     metalName: 'Pt(s), Cl₂(g)',
@@ -62,6 +65,7 @@ export const EXPLORER_COUPLES: readonly CoupleDef[] = [
     id: 'ag',
     name: 'Silver (Ag⁺ / Ag)',
     coupleStr: 'Ag+/Ag',
+    coupleDisplay: 'Ag⁺ / Ag',
     e0: lookupPotential('Ag+/Ag'),
     electrons: 1,
     metalName: 'Ag(s)',
@@ -78,6 +82,7 @@ export const EXPLORER_COUPLES: readonly CoupleDef[] = [
     id: 'cu',
     name: 'Copper (Cu²⁺ / Cu)',
     coupleStr: 'Cu2+/Cu',
+    coupleDisplay: 'Cu²⁺ / Cu',
     e0: lookupPotential('Cu2+/Cu'),
     electrons: 2,
     metalName: 'Cu(s)',
@@ -94,6 +99,7 @@ export const EXPLORER_COUPLES: readonly CoupleDef[] = [
     id: 'she',
     name: 'Hydrogen SHE (2H⁺ / H₂)',
     coupleStr: '2H+/H2',
+    coupleDisplay: '2H⁺ / H₂',
     e0: lookupPotential('2H+/H2'),
     electrons: 2,
     metalName: 'Pt(s), H₂(g)',
@@ -110,6 +116,7 @@ export const EXPLORER_COUPLES: readonly CoupleDef[] = [
     id: 'pb',
     name: 'Lead (Pb²⁺ / Pb)',
     coupleStr: 'Pb2+/Pb',
+    coupleDisplay: 'Pb²⁺ / Pb',
     e0: lookupPotential('Pb2+/Pb'),
     electrons: 2,
     metalName: 'Pb(s)',
@@ -126,6 +133,7 @@ export const EXPLORER_COUPLES: readonly CoupleDef[] = [
     id: 'sn',
     name: 'Tin (Sn²⁺ / Sn)',
     coupleStr: 'Sn2+/Sn',
+    coupleDisplay: 'Sn²⁺ / Sn',
     e0: lookupPotential('Sn2+/Sn'),
     electrons: 2,
     metalName: 'Sn(s)',
@@ -142,6 +150,7 @@ export const EXPLORER_COUPLES: readonly CoupleDef[] = [
     id: 'ni',
     name: 'Nickel (Ni²⁺ / Ni)',
     coupleStr: 'Ni2+/Ni',
+    coupleDisplay: 'Ni²⁺ / Ni',
     e0: lookupPotential('Ni2+/Ni'),
     electrons: 2,
     metalName: 'Ni(s)',
@@ -158,6 +167,7 @@ export const EXPLORER_COUPLES: readonly CoupleDef[] = [
     id: 'fe',
     name: 'Iron (Fe²⁺ / Fe)',
     coupleStr: 'Fe2+/Fe',
+    coupleDisplay: 'Fe²⁺ / Fe',
     e0: lookupPotential('Fe2+/Fe'),
     electrons: 2,
     metalName: 'Fe(s)',
@@ -174,6 +184,7 @@ export const EXPLORER_COUPLES: readonly CoupleDef[] = [
     id: 'cr',
     name: 'Chromium (Cr³⁺ / Cr)',
     coupleStr: 'Cr3+/Cr',
+    coupleDisplay: 'Cr³⁺ / Cr',
     e0: lookupPotential('Cr3+/Cr'),
     electrons: 3,
     metalName: 'Cr(s)',
@@ -190,6 +201,7 @@ export const EXPLORER_COUPLES: readonly CoupleDef[] = [
     id: 'zn',
     name: 'Zinc (Zn²⁺ / Zn)',
     coupleStr: 'Zn2+/Zn',
+    coupleDisplay: 'Zn²⁺ / Zn',
     e0: lookupPotential('Zn2+/Zn'),
     electrons: 2,
     metalName: 'Zn(s)',
@@ -206,6 +218,7 @@ export const EXPLORER_COUPLES: readonly CoupleDef[] = [
     id: 'al',
     name: 'Aluminium (Al³⁺ / Al)',
     coupleStr: 'Al3+/Al',
+    coupleDisplay: 'Al³⁺ / Al',
     e0: lookupPotential('Al3+/Al'),
     electrons: 3,
     metalName: 'Al(s)',
@@ -222,6 +235,7 @@ export const EXPLORER_COUPLES: readonly CoupleDef[] = [
     id: 'mg',
     name: 'Magnesium (Mg²⁺ / Mg)',
     coupleStr: 'Mg2+/Mg',
+    coupleDisplay: 'Mg²⁺ / Mg',
     e0: lookupPotential('Mg2+/Mg'),
     electrons: 2,
     metalName: 'Mg(s)',
@@ -238,6 +252,7 @@ export const EXPLORER_COUPLES: readonly CoupleDef[] = [
     id: 'li',
     name: 'Lithium (Li⁺ / Li)',
     coupleStr: 'Li+/Li',
+    coupleDisplay: 'Li⁺ / Li',
     e0: lookupPotential('Li+/Li'),
     electrons: 1,
     metalName: 'Li(s)',
@@ -252,33 +267,21 @@ export const EXPLORER_COUPLES: readonly CoupleDef[] = [
   },
 ]
 
-export const LADDER_COUPLES: readonly RedoxCouple[] = EXPLORER_COUPLES.map((c) => ({
-  id: c.id,
-  label: `${c.coupleStr} (${c.e0 >= 0 ? '+' : ''}${c.e0.toFixed(2)} V)`,
-  e0: c.e0,
-}))
-
 /**
- * Returns a well-spaced subset of Table 7.1 redox couples (6–8 rungs)
- * that always includes the active cathode and anode, preventing label collisions
- * on the PotentialLadder while anchoring the scale at top (F₂) and bottom (Li⁺).
+ * Rungs shown on the ladder: ten well-spaced couples from Table 7.1 (labels on a 760-unit
+ * ladder need about 0.4 V between rungs) plus the two couples currently chosen, so a
+ * selection made from the menus always appears on the ladder. Ordered from the strongest
+ * oxidising agent (top) to the strongest reducing agent (bottom).
  */
+const BASE_LADDER_IDS = ['f2', 'cl2', 'ag', 'cu', 'she', 'fe', 'zn', 'al', 'mg', 'li'] as const
+
 export function getLadderCouples(cathodeId: string, anodeId: string): RedoxCouple[] {
-  const activeIds = new Set([cathodeId, anodeId])
-  const baseIds = ['f2', 'ag', 'cu', 'she', 'zn', 'al', 'li']
-
-  const combined = new Set<string>()
-  for (const id of baseIds) combined.add(id)
-  combined.add(cathodeId)
-  combined.add(anodeId)
-
-  return Array.from(combined)
-    .map((id) => EXPLORER_COUPLES.find((c) => c.id === id))
-    .filter((c): c is CoupleDef => c !== undefined)
+  const ids = new Set<string>([...BASE_LADDER_IDS, cathodeId, anodeId])
+  return EXPLORER_COUPLES.filter((c) => ids.has(c.id))
     .sort((a, b) => b.e0 - a.e0)
     .map((c) => ({
       id: c.id,
-      label: `${c.coupleStr} (${c.e0 >= 0 ? '+' : ''}${c.e0.toFixed(2)} V)`,
+      label: c.coupleDisplay,
       e0: c.e0,
     }))
 }

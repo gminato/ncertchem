@@ -337,13 +337,13 @@ export function RedoxDaniell({ step, reducedMotion }: RedoxDaniellProps) {
             </g>
           </g>
 
-          {/* Warning badge explaining why no current flows */}
-          <g transform="translate(0, -10)">
-            <rect x={-140} y={-22} width={280} height={44} rx={6} fill="var(--surface-raised)" stroke="var(--caution)" strokeWidth={1.4} />
-            <text x={0} y={-6} textAnchor="middle" dominantBaseline="central" fontSize={14} fontWeight={600} fill="var(--caution)">
+          {/* Warning badge explaining why no current flows - placed cleanly under beakers clear of all strokes */}
+          <g transform="translate(0, 246)">
+            <rect x={-160} y={-22} width={320} height={44} rx={6} fill="var(--surface-raised)" stroke="var(--caution)" strokeWidth={1.4} />
+            <text x={0} y={-6} textAnchor="middle" dominantBaseline="central" fontSize={14.5} fontWeight={600} fill="var(--caution)">
               No salt bridge: circuit open
             </text>
-            <text x={0} y={12} textAnchor="middle" dominantBaseline="central" fontSize={13} fill="var(--fg-muted)">
+            <text x={0} y={12} textAnchor="middle" dominantBaseline="central" fontSize={13.5} fill="var(--fg-muted)">
               Instant charge buildup halts electron transfer
             </text>
           </g>

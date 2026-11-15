@@ -81,6 +81,14 @@ for (const scheme of ['light', 'dark'] as const) {
         path: path.join(SCREEN_DIR, `u7-7-4-sim-silver-zinc-${scheme}.png`),
       })
 
+      // Changed state 1b: pick Ag then Zn by clicking ladder rungs (first click = couple 1, second = couple 2)
+      await sim.locator('[data-couple-id="ag"]').click()
+      await sim.locator('[data-couple-id="zn"]').click()
+      await page.waitForTimeout(600)
+      await expect(sim.getByTestId('cell-emf-readout')).toContainText('+1.56 V')
+      await expect(sim.getByTestId('couple1-select')).toHaveValue('ag')
+      await expect(sim.getByTestId('couple2-select')).toHaveValue('zn')
+
       // Changed state 2: Magnesium–Hydrogen cell (Mg | H₂)
       await sim.getByRole('button', { name: 'Magnesium–Hydrogen (Mg | H₂)' }).click()
       await page.waitForTimeout(600)

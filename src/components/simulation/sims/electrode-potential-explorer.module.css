@@ -1,5 +1,6 @@
 .sim {
   width: 100%;
+  container-type: inline-size;
   display: flex;
   flex-direction: column;
   gap: var(--space-4);
@@ -13,16 +14,17 @@
   gap: var(--space-2);
 }
 
-.layout {
+/* Ladder row: the ladder keeps its full scale; the picker sits beside it when there is room. */
+.topRow {
   display: grid;
   grid-template-columns: minmax(0, 1fr);
   gap: var(--space-4);
   align-items: start;
 }
 
-@media (min-width: 960px) {
-  .layout {
-    grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr);
+@container (min-width: 960px) {
+  .topRow {
+    grid-template-columns: minmax(0, 1fr) 260px;
   }
 }
 
@@ -50,18 +52,61 @@
   display: block;
 }
 
+/* Invisible click target over each rung; lights up on hover. */
+.rungHit {
+  fill: transparent;
+  cursor: pointer;
+}
+
+.rungHit:hover {
+  fill: var(--accent);
+  fill-opacity: 0.1;
+}
+
 .ladderCaption {
-  font-size: 0.85rem;
+  font-size: 0.9rem;
   color: var(--fg-muted);
   line-height: 1.45;
   margin: 0;
 }
 
-.detailCol {
+.pickPanel {
+  background: var(--surface-raised);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md, 10px);
+  padding: var(--space-4);
   display: flex;
   flex-direction: column;
-  gap: var(--space-4);
+  gap: var(--space-3);
   min-width: 0;
+}
+
+.pickTitle {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--fg);
+  margin: 0;
+}
+
+.pickHint {
+  font-size: 0.9rem;
+  color: var(--fg-muted);
+  line-height: 1.5;
+  margin: 0;
+}
+
+/* Lower row: schematic and readout side by side when there is room. */
+.lower {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--space-4);
+  align-items: start;
+}
+
+@container (min-width: 900px) {
+  .lower {
+    grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
+  }
 }
 
 .schematicCard {
@@ -72,6 +117,7 @@
   display: flex;
   flex-direction: column;
   gap: var(--space-2);
+  min-width: 0;
 }
 
 .schematicSvg {
@@ -88,6 +134,7 @@
   display: flex;
   flex-direction: column;
   gap: var(--space-3);
+  min-width: 0;
 }
 
 .row {
@@ -119,14 +166,6 @@
   font-weight: 600;
 }
 
-.controlRow {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: var(--space-3);
-  padding: var(--space-2) 0;
-}
-
 .selectGroup {
   display: flex;
   flex-direction: column;
@@ -148,7 +187,8 @@
   font-family: var(--font-sans);
   font-size: 0.9rem;
   cursor: pointer;
-  min-width: 200px;
+  width: 100%;
+  min-width: 0;
 }
 
 .select:focus {
