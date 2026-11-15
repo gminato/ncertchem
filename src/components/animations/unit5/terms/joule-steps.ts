@@ -11,21 +11,26 @@ export const JOULE_WORK_J = 750
 export const JOULE_LEVEL_A = 0.3
 export const JOULE_LEVEL_B = 0.56
 
-/** Paddle angle, radians. Three and a half turns at Step 1, then the paddle runs backwards. */
+/** Paddle angle, radians. Three and a half turns, reached at Step 1 and held after that. */
 const SPIN_FORWARD = 3 * Math.PI
-const SPIN_REVERSED = Math.PI
+
+/** Piston position of the insulated gas: small volume before Step 4, large volume at Step 4. */
+const PISTON_BEFORE = 0.35
+const PISTON_AFTER = 0.8
 
 /**
- * The state of the two thermos experiments at one Step. The left thermos is churned by a paddle
- * wheel (mechanical work). The right thermos is heated by an immersion rod (electrical work). The
- * same work, 750 J, is put into each, and the same thermometer reading results.
+ * The state of the Joule Scrolly at one Step. The left vessel is churned by a paddle wheel
+ * (mechanical work on the water). The right vessel is heated by an immersion rod (electrical work).
+ * Each takes in the same work, 750 J, and reaches the same thermometer reading. At Step 4 the left
+ * side becomes an insulated gas in a piston, which expands and does 750 J of work on its
+ * surroundings, so its energy falls by the same amount.
  */
 export type JouleSnapshot = {
-  /** Left thermometer level, 0 (state A) to 1. */
+  /** Left thermometer level (state A at JOULE_LEVEL_A, state B at JOULE_LEVEL_B). */
   leftLevel: number
   /** Paddle angle, radians. Only the rotation matters, so it grows monotonically going forwards. */
   spin: number
-  /** Work arrow on the paddle shaft: +1 work done on the water, −1 work done by it, 0 none. */
+  /** Work arrow on the left: +1 work done on the system, −1 work done by it, 0 none. */
   leftArrow: number
   /** Right thermometer level. */
   rightLevel: number
@@ -33,6 +38,8 @@ export type JouleSnapshot = {
   rodDepth: number
   /** Work arrow on the rod: +1 when electrical work is supplied, 0 otherwise. */
   rightArrow: number
+  /** Gas piston position on the left at Step 4, 0 (fully in) to 1 (fully out). */
+  pistonPos: number
 }
 
 /** Target state for each Step. */
@@ -46,6 +53,7 @@ export function jouleSnapshotForStep(step: number): JouleSnapshot {
         rightLevel: JOULE_LEVEL_A,
         rodDepth: 0,
         rightArrow: 0,
+        pistonPos: PISTON_BEFORE,
       }
     case 1:
       return {
@@ -55,6 +63,7 @@ export function jouleSnapshotForStep(step: number): JouleSnapshot {
         rightLevel: JOULE_LEVEL_A,
         rodDepth: 0,
         rightArrow: 0,
+        pistonPos: PISTON_BEFORE,
       }
     case 2:
       return {
@@ -64,6 +73,7 @@ export function jouleSnapshotForStep(step: number): JouleSnapshot {
         rightLevel: JOULE_LEVEL_B,
         rodDepth: 1,
         rightArrow: 1,
+        pistonPos: PISTON_BEFORE,
       }
     case 3:
       return {
@@ -73,15 +83,19 @@ export function jouleSnapshotForStep(step: number): JouleSnapshot {
         rightLevel: JOULE_LEVEL_B,
         rodDepth: 1,
         rightArrow: 0,
+        pistonPos: PISTON_BEFORE,
       }
     default:
+      // The insulated gas expands: the piston moves out, the work is done by the gas (w < 0), and
+      // the gas cools back to state A.
       return {
         leftLevel: JOULE_LEVEL_A,
-        spin: SPIN_REVERSED,
+        spin: SPIN_FORWARD,
         leftArrow: -1,
         rightLevel: JOULE_LEVEL_B,
         rodDepth: 1,
         rightArrow: 0,
+        pistonPos: PISTON_AFTER,
       }
   }
 }
@@ -95,8 +109,8 @@ export interface JouleLedger {
 }
 
 /**
- * The ledger for each thermos. With the walls adiabatic, q = 0 and ΔU = w_ad (Section 5.1.4(a)).
- * The paddle is reversed at Step 4, so its work is negative and ΔU falls by the same amount.
+ * The ledger for each side. With the walls adiabatic, q = 0 and ΔU = w_ad (Section 5.1.4(a)). At
+ * Step 4 the gas does 750 J of work on its surroundings, so w_ad = −750 J and ΔU = −750 J.
  */
 export function jouleLedgerForStep(step: number): JouleLedger {
   const s = clampIndex(step, JOULE_STEP_COUNT)

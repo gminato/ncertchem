@@ -66,7 +66,7 @@ for (const scheme of ['light', 'dark'] as const) {
       await page.waitForTimeout(700)
       await expect(page.getByTestId('thermo-system-types')).toHaveAttribute('data-kind', 'isolated')
 
-      // The Joule Scrolly's last Step reverses the paddle, so the sign of the work flips.
+      // The Joule Scrolly's last Step is an expanding gas: the work done by the system is negative.
       await gotoStep(page, 'thermo-joule', 4)
       await page.waitForTimeout(1200)
       await expect(page.getByTestId('thermo-joule')).toHaveAttribute('data-step', '4')

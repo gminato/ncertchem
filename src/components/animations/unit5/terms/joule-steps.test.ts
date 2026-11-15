@@ -20,11 +20,16 @@ describe('Joule Scrolly targets (Section 5.1.4(a))', () => {
     expect(at3.leftDeltaUJ).toBe(JOULE_WORK_J)
   })
 
-  it('reversing the paddle makes w_ad and ΔU negative, and the thermometer falls back to A', () => {
+  it('an insulated gas that expands does negative work: w_ad = ΔU = −750 J, and it cools to state A', () => {
     const at4 = jouleLedgerForStep(4)
     expect(at4.leftWJ).toBe(-JOULE_WORK_J)
     expect(at4.leftDeltaUJ).toBe(-JOULE_WORK_J)
     expect(jouleSnapshotForStep(4).leftLevel).toBe(jouleSnapshotForStep(0).leftLevel)
+  })
+
+  it('the piston moves out at Step 4 and the arrow points away from the gas', () => {
+    expect(jouleSnapshotForStep(4).pistonPos).toBeGreaterThan(jouleSnapshotForStep(3).pistonPos)
+    expect(jouleSnapshotForStep(4).leftArrow).toBe(-1)
   })
 
   it('no work is recorded before the experiment starts', () => {

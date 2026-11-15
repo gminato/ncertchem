@@ -15,23 +15,23 @@ export interface Pt {
  * the gauge is its internal energy, so the gap between them is ΔU. The drawing's vertical scale is
  * 200 units per 1000 J, so the gap is exactly the value from the lib.
  */
-export const CAMP_A: Pt = { x: 150, y: 250 }
-export const CAMP_B: Pt = { x: 440, y: 50 }
+export const CAMP_A: Pt = { x: 120, y: 250 }
+export const CAMP_B: Pt = { x: 470, y: 50 }
 const PX_PER_J = (CAMP_A.y - CAMP_B.y) / deltaU(STATE_FUNCTION_DEMO_PATHS[0].q, STATE_FUNCTION_DEMO_PATHS[0].w)
 
 /** Route 1, the direct climb, from the adiabatic (q = 0) path of the lib. */
-export const ROUTE_1: Pt[] = [CAMP_A, { x: 230, y: 200 }, { x: 300, y: 140 }, { x: 370, y: 90 }, CAMP_B]
+export const ROUTE_1: Pt[] = [CAMP_A, { x: 216, y: 200 }, { x: 300, y: 140 }, { x: 384, y: 90 }, CAMP_B]
 
 /** Route 2, a winding path, from the heat-and-work path of the lib. Both end on camp B. */
 export const ROUTE_2: Pt[] = [
   CAMP_A,
-  { x: 190, y: 228 },
-  { x: 222, y: 240 },
-  { x: 270, y: 178 },
+  { x: 168, y: 228 },
+  { x: 206, y: 240 },
+  { x: 264, y: 178 },
   { x: 300, y: 190 },
-  { x: 340, y: 128 },
-  { x: 380, y: 140 },
-  { x: 404, y: 96 },
+  { x: 348, y: 128 },
+  { x: 396, y: 140 },
+  { x: 425, y: 96 },
   CAMP_B,
 ]
 

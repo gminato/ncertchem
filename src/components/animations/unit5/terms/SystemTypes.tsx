@@ -15,7 +15,7 @@ export interface SystemTypesProps {
 // of the width, and every label is 14 units or larger.
 const VIEW_WIDTH = 560
 const VIEW_HEIGHT = 340
-const BOUNDARY = { x: 280, y: 160, width: 220, height: 120, margin: 70 }
+const BOUNDARY = { x: 280, y: 165, width: 280, height: 160, margin: 56 }
 const WALL = {
   left: BOUNDARY.x - BOUNDARY.width / 2,
   right: BOUNDARY.x + BOUNDARY.width / 2,
