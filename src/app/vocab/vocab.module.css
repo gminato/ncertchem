@@ -145,6 +145,13 @@
   margin-top: var(--space-2);
 }
 
+/* A row of cards that shares one full-width grid row, for the four Gibbs cases. */
+.quadGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+  gap: var(--space-5);
+}
+
 /* Cards that span the whole grid row (or two columns on wide screens). */
 .wide {
   grid-column: 1 / -1;
