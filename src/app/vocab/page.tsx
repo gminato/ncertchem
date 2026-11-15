@@ -99,6 +99,26 @@ import {
   ZN_CU_HIGHLIGHT,
   FE_CR2O7_MID_BALANCE,
 } from '@/components/redox'
+import {
+  SealedVessel,
+  RateBars,
+  EquilibriumCurves,
+  IceTable,
+  QKGauge,
+  LeChatelierScale,
+  PHScale,
+  IonisationBeaker,
+  BufferMeter,
+  SolubilityBeaker,
+} from '@/components/equilibrium'
+import {
+  WATER_VAPOUR_SPECIES,
+  N2O4_SPECIES,
+  H2_I2_PANELS,
+  ICE_H2_I2,
+  PH_MARKERS,
+  AGCL_IONS,
+} from '@/components/equilibrium/fixture'
 import styles from './vocab.module.css'
 
 export const metadata: Metadata = {
@@ -2151,6 +2171,274 @@ export default function VocabPage() {
               <p className={styles.cardDescription}>
                 Mass and charge tallies for each half-reaction. An unbalanced electron count chip immediately
                 flags the multiplier needed (× 6 on iron) before the two half-equations can be added.
+              </p>
+            </div>
+          </article>
+        </div>
+      </section>
+      {/* Equilibrium */}
+      <section className={styles.section} id="equilibrium" aria-labelledby="equilibrium-heading">
+        <h2 id="equilibrium-heading" className={styles.sectionTitle}>
+          Equilibrium
+        </h2>
+        <p className={styles.sectionSubtitle}>
+          Sealed vessels, forward and reverse rates, concentration curves from both sides, the ICE bookkeeping,
+          the Q and K gauge, Le Chatelier&apos;s balance, the pH scale, ionisation, buffers and solubility.
+          Forward reactions are teal and reverse reactions are rose.
+        </p>
+
+        <div className={styles.grid}>
+          {/* Card 1: water in a sealed flask */}
+          <article className={`${styles.card} ${styles.wideHalf}`}>
+            <div className={`${styles.cardCanvas} ${styles.cardCanvasTall}`}>
+              <svg viewBox="0 0 360 286" className={styles.svgElement} role="img" aria-label="Water in a sealed flask: vapour above the liquid, with evaporation and condensation arrows at the surface">
+                <SealedVessel
+                  species={WATER_VAPOUR_SPECIES}
+                  counts={[22, 26]}
+                  liquid
+                  exchange="evaporation"
+                  gauge={{ fraction: 0.4, label: <tspan className="sym">p</tspan> }}
+                  seed={4}
+                  title="Water in a sealed flask"
+                />
+              </svg>
+            </div>
+            <div className={styles.cardBody}>
+              <div className={styles.cardHeading}>
+                <span>Liquid and vapour in a sealed flask</span>
+                <span className={styles.cardBadge}>H₂O(l) ⇌ H₂O(g)</span>
+              </div>
+              <p className={styles.cardDescription}>
+                Molecules leave the liquid and return to it at the surface. The forward and reverse arrows are equal
+                once the vapour pressure is reached, and the dial stops moving.
+              </p>
+            </div>
+          </article>
+
+          {/* Card 2: N2O4 and NO2 */}
+          <article className={`${styles.card} ${styles.wideHalf}`}>
+            <div className={`${styles.cardCanvas} ${styles.cardCanvasTall}`}>
+              <svg viewBox="0 0 360 286" className={styles.svgElement} role="img" aria-label="Brown NO2 and colourless N2O4 in a sealed flask at equilibrium">
+                <SealedVessel
+                  species={N2O4_SPECIES}
+                  counts={[16, 12]}
+                  gauge={{ fraction: 0.6, label: <tspan className="sym">p</tspan> }}
+                  seed={9}
+                  title="N2O4 and NO2 in a sealed flask"
+                />
+              </svg>
+            </div>
+            <div className={styles.cardBody}>
+              <div className={styles.cardHeading}>
+                <span>Gas-phase equilibrium</span>
+                <span className={styles.cardBadge}>N₂O₄ ⇌ 2NO₂</span>
+              </div>
+              <p className={styles.cardDescription}>
+                Both gases stay in the flask. The brown colour of NO₂ shows how far the reaction has gone, and the
+                pressure gauge reads the total.
+              </p>
+            </div>
+          </article>
+
+          {/* Card 3: forward and reverse rates */}
+          <article className={`${styles.card} ${styles.wide}`}>
+            <div className={`${styles.cardCanvas} ${styles.cardCanvasTall}`}>
+              <svg viewBox="0 0 1080 172" className={styles.svgElement} role="img" aria-label="Forward and reverse rate bars at progress 0, 0.5 and 1. The bars become equal at equilibrium">
+                <RateBars progress={0} x={0} y={0} />
+                <RateBars progress={0.5} x={360} y={0} />
+                <RateBars progress={1} x={720} y={0} />
+                <Label x={180} y={160} fontSize={14} fill="var(--fg-muted)">Start: forward only</Label>
+                <Label x={540} y={160} fontSize={14} fill="var(--fg-muted)">Midway: rates converging</Label>
+                <Label x={900} y={160} fontSize={14} fill="var(--fg-muted)">Equilibrium: rates equal</Label>
+              </svg>
+            </div>
+            <div className={styles.cardBody}>
+              <div className={styles.cardHeading}>
+                <span>Forward and reverse rates</span>
+                <span className={styles.cardBadge}>Forward = reverse at equilibrium</span>
+              </div>
+              <p className={styles.cardDescription}>
+                Both bars share one fixed scale. The forward rate starts high and the reverse rate starts at zero.
+                They meet at the same value, and the net change in composition stops.
+              </p>
+            </div>
+          </article>
+
+          {/* Card 4: concentration curves from both sides */}
+          <article className={`${styles.card} ${styles.wide}`}>
+            <div className={`${styles.cardCanvas} ${styles.cardCanvasRedoxHero}`}>
+              <svg viewBox="0 0 640 300" className={styles.svgElement} role="img" aria-label="H2, I2 and HI concentrations against time, approached from reactants and from products, converging to the same equilibrium">
+                <EquilibriumCurves panels={H2_I2_PANELS} timeMax={10} concMax={2} progress={1} />
+              </svg>
+            </div>
+            <div className={styles.cardBody}>
+              <div className={styles.cardHeading}>
+                <span>Approaching equilibrium from both sides</span>
+                <span className={styles.cardBadge}>H₂ + I₂ ⇌ 2HI</span>
+              </div>
+              <p className={styles.cardDescription}>
+                Starting from reactants, H₂ and I₂ fall while HI rises. Starting from HI, the curves run the other way.
+                Both approaches flatten onto the same levels, shaded as equilibrium reached.
+              </p>
+            </div>
+          </article>
+
+          {/* Card 5: ICE table mid-reveal */}
+          <article className={`${styles.card} ${styles.wideHalf}`}>
+            <div className={`${styles.cardCanvas} ${styles.cardCanvasTall}`}>
+              <IceTable
+                species={ICE_H2_I2.species}
+                initial={ICE_H2_I2.initial}
+                change={ICE_H2_I2.change}
+                equilibrium={ICE_H2_I2.equilibrium}
+                rowNotes={ICE_H2_I2.rowNotes}
+                revealStep={2}
+                caption="H₂ + I₂ ⇌ 2HI, mol L⁻¹"
+              />
+            </div>
+            <div className={styles.cardBody}>
+              <div className={styles.cardHeading}>
+                <span>ICE table, mid-reveal</span>
+                <span className={styles.cardBadge}>Initial and change shown</span>
+              </div>
+              <p className={styles.cardDescription}>
+                Rows appear in order: initial, change, then equilibrium. The row being filled in is highlighted, so
+                the Learner follows the bookkeeping one step at a time.
+              </p>
+            </div>
+          </article>
+
+          {/* Card 6 and 7: Q and K */}
+          <article className={`${styles.card} ${styles.wideHalf}`}>
+            <div className={`${styles.cardCanvas} ${styles.cardCanvasTall}`}>
+              <svg viewBox="0 0 560 180" className={styles.svgElement} role="img" aria-label="Q below K on a log scale: the reaction proceeds forward">
+                <QKGauge K={50} Q={0.02} />
+              </svg>
+            </div>
+            <div className={styles.cardBody}>
+              <div className={styles.cardHeading}>
+                <span>Reaction quotient below K</span>
+                <span className={styles.cardBadge}>Q &lt; K</span>
+              </div>
+              <p className={styles.cardDescription}>
+                Q sits left of K on a log scale, so the reaction runs forward until Q climbs to K. K = 50 lies in the
+                middle zone, where both reactants and products are significant.
+              </p>
+            </div>
+          </article>
+
+          <article className={`${styles.card} ${styles.wideHalf}`}>
+            <div className={`${styles.cardCanvas} ${styles.cardCanvasTall}`}>
+              <svg viewBox="0 0 560 180" className={styles.svgElement} role="img" aria-label="Q above K on a log scale: the reaction proceeds in reverse">
+                <QKGauge K={50} Q={5000} />
+              </svg>
+            </div>
+            <div className={styles.cardBody}>
+              <div className={styles.cardHeading}>
+                <span>Reaction quotient above K</span>
+                <span className={styles.cardBadge}>Q &gt; K</span>
+              </div>
+              <p className={styles.cardDescription}>
+                With Q to the right of K, the reverse reaction takes over. The arrow always points from Q towards K.
+              </p>
+            </div>
+          </article>
+
+          {/* Card 8: Le Chatelier balance */}
+          <article className={`${styles.card} ${styles.wide}`}>
+            <div className={`${styles.cardCanvas} ${styles.cardCanvasTall}`}>
+              <svg viewBox="0 0 740 262" className={styles.svgElement} role="img" aria-label="Balance for N2 + 3H2 and 2NH3: balanced at equilibrium on the left, tilted towards the reactants when nitrogen is added on the right">
+                <LeChatelierScale reactantLabel="N₂ + 3H₂" productLabel="2NH₃" stress="none" x={0} y={0} />
+                <LeChatelierScale reactantLabel="N₂ + 3H₂" productLabel="2NH₃" stress="add-reactant" progress={0} x={380} y={0} />
+              </svg>
+            </div>
+            <div className={styles.cardBody}>
+              <div className={styles.cardHeading}>
+                <span>Le Chatelier: adding a reactant</span>
+                <span className={styles.cardBadge}>Stress, then shift</span>
+              </div>
+              <p className={styles.cardDescription}>
+                Adding nitrogen loads the reactant pan, and the balance tips. The equilibrium shifts towards products,
+                which partly levels the beam again.
+              </p>
+            </div>
+          </article>
+
+          {/* Card 9: pH scale */}
+          <article className={`${styles.card} ${styles.wide}`}>
+            <div className={`${styles.cardCanvas} ${styles.cardCanvasTall}`}>
+              <svg viewBox="0 0 640 214" className={styles.svgElement} role="img" aria-label="pH scale from 0 to 14 with a pointer at pH 6 and common substances marked">
+                <PHScale pH={6} markers={PH_MARKERS} />
+              </svg>
+            </div>
+            <div className={styles.cardBody}>
+              <div className={styles.cardHeading}>
+                <span>The pH scale and the indicator gradient</span>
+                <span className={styles.cardBadge}>pH = −log[H⁺]</span>
+              </div>
+              <p className={styles.cardDescription}>
+                The pointer reads pH on the universal-indicator gradient, and the second axis reads [H⁺] on a log scale.
+                Common substances sit where they are typically found.
+              </p>
+            </div>
+          </article>
+
+          {/* Card 10: ionisation */}
+          <article className={`${styles.card} ${styles.wideHalf}`}>
+            <div className={`${styles.cardCanvas} ${styles.cardCanvasTall}`}>
+              <svg viewBox="0 0 500 252" className={styles.svgElement} role="img" aria-label="Weak acid beaker with 1.3 percent ionised, and strong acid beaker fully ionised">
+                <IonisationBeaker fractionIonised={0.013} x={0} y={0} title="Weak acid, α about 0.013" />
+                <IonisationBeaker fractionIonised={1} x={260} y={0} title="Strong acid, α = 1" />
+              </svg>
+            </div>
+            <div className={styles.cardBody}>
+              <div className={styles.cardHeading}>
+                <span>Weak and strong acids</span>
+                <span className={styles.cardBadge}>α ≈ 0.013 · α = 1</span>
+              </div>
+              <p className={styles.cardDescription}>
+                Hollow circles are undissociated HA. Filled pairs are H₃O⁺ and A⁻. A weak acid keeps most molecules
+                intact, and a strong acid ionises them all.
+              </p>
+            </div>
+          </article>
+
+          {/* Card 11: buffer meter */}
+          <article className={`${styles.card} ${styles.wideHalf}`}>
+            <div className={`${styles.cardCanvas} ${styles.cardCanvasTall}`}>
+              <svg viewBox="0 0 420 236" className={styles.svgElement} role="img" aria-label="Water and buffer meters after the same strong acid addition: water drops to pH 3.0, the buffer stays near 4.6">
+                <BufferMeter added={1} pHWater={3} pHBuffer={4.6} />
+              </svg>
+            </div>
+            <div className={styles.cardBody}>
+              <div className={styles.cardHeading}>
+                <span>Buffer against water</span>
+                <span className={styles.cardBadge}>Same drops, two liquids</span>
+              </div>
+              <p className={styles.cardDescription}>
+                The same amount of strong acid is added to water and to a buffer. The water needle swings far, and the
+                buffer needle barely moves.
+              </p>
+            </div>
+          </article>
+
+          {/* Card 12: solubility */}
+          <article className={`${styles.card} ${styles.wide}`}>
+            <div className={`${styles.cardCanvas} ${styles.cardCanvasTall}`}>
+              <svg viewBox="0 0 740 262" className={styles.svgElement} role="img" aria-label="Saturated silver chloride solution in three states: Q below Ksp, Q equal to Ksp, and Q above Ksp">
+                <SolubilityBeaker ionCounts={AGCL_IONS(4, 4)} qVsKsp="below" solidAmount={0.25} x={0} y={0} />
+                <SolubilityBeaker ionCounts={AGCL_IONS(6, 6)} qVsKsp="equal" solidAmount={0.5} x={250} y={0} />
+                <SolubilityBeaker ionCounts={AGCL_IONS(9, 9)} qVsKsp="above" solidAmount={0.8} x={500} y={0} />
+              </svg>
+            </div>
+            <div className={styles.cardBody}>
+              <div className={styles.cardHeading}>
+                <span>Solubility product: Q against Ksp</span>
+                <span className={styles.cardBadge}>AgCl(s) ⇌ Ag⁺(aq) + Cl⁻(aq)</span>
+              </div>
+              <p className={styles.cardDescription}>
+                Below Ksp, the solid dissolves. At Ksp the solution is saturated and both arrows balance. Above Ksp,
+                ions leave the solution and the solid grows.
               </p>
             </div>
           </article>

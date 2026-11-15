@@ -76,6 +76,23 @@
   /* Redox: oxidation (amber) and reduction (indigo) */
   --ox: #D97706;
   --red: #4338CA;
+  /* Equilibrium: forward (teal) and reverse (rose) reactions, pH scale ends, gas and solid phases */
+  --fwd: #0E8A6B;
+  --rev: #B42A7A;
+  --acid: #E4532B;
+  --base: #5B4BD9;
+  --no2: #8B4A1E;
+  --i2: #7A3FB0;
+  --precipitate: #E6DFCC;
+  /* Universal-indicator gradient: pH 0 (red) to pH 14 (violet), 8 stops, interpolated in CSS */
+  --ph-0: #C81E2A;
+  --ph-2: #EE4B2B;
+  --ph-4: #F59E0B;
+  --ph-6: #E9D23A;
+  --ph-8: #5CB85C;
+  --ph-10: #1FA88A;
+  --ph-12: #2F6FCB;
+  --ph-14: #5B3FB8;
 
   /* Redox solution and metal tints */
   --sol-cu: #1E88E5;
@@ -178,6 +195,23 @@
   /* Redox: oxidation (amber) and reduction (indigo) */
   --ox: #FBBF24;
   --red: #818CF8;
+  /* Equilibrium: forward (teal) and reverse (rose) reactions, pH scale ends, gas and solid phases */
+  --fwd: #3DD6A8;
+  --rev: #FF7AC0;
+  --acid: #FF7A55;
+  --base: #A5A0FF;
+  --no2: #C98A55;
+  --i2: #C08BFF;
+  --precipitate: #D9D2BE;
+  /* Universal-indicator gradient: pH 0 (red) to pH 14 (violet), 8 stops, interpolated in CSS */
+  --ph-0: #FF5A5F;
+  --ph-2: #FF8A4C;
+  --ph-4: #FFC040;
+  --ph-6: #F7E45C;
+  --ph-8: #74D680;
+  --ph-10: #2EC9A6;
+  --ph-12: #5AA2FF;
+  --ph-14: #9B7BFF;
 
   /* Redox solution and metal tints */
   --sol-cu: #38BDF8;
@@ -257,6 +291,23 @@
     /* Redox: oxidation (amber) and reduction (indigo) */
     --ox: #FBBF24;
     --red: #818CF8;
+    /* Equilibrium: forward (teal) and reverse (rose) reactions, pH scale ends, gas and solid phases */
+    --fwd: #3DD6A8;
+    --rev: #FF7AC0;
+    --acid: #FF7A55;
+    --base: #A5A0FF;
+    --no2: #C98A55;
+    --i2: #C08BFF;
+    --precipitate: #D9D2BE;
+    /* Universal-indicator gradient: pH 0 (red) to pH 14 (violet), 8 stops, interpolated in CSS */
+    --ph-0: #FF5A5F;
+    --ph-2: #FF8A4C;
+    --ph-4: #FFC040;
+    --ph-6: #F7E45C;
+    --ph-8: #74D680;
+    --ph-10: #2EC9A6;
+    --ph-12: #5AA2FF;
+    --ph-14: #9B7BFF;
 
     /* Redox solution and metal tints */
     --sol-cu: #38BDF8;
