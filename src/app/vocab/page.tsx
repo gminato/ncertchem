@@ -24,6 +24,31 @@ import {
 import { Stage3DLazy, OrbitalLobes3D } from '@/components/stage3d'
 import { energyLevel } from '@/lib/chem/bohr'
 import { PeriodicDemo } from '@/components/periodic'
+import {
+  LewisDiagram,
+  MODiagram,
+  MO_DIAGRAM_SIZE,
+  OverlapDiagram,
+  OVERLAP_SIZE,
+  HybridOrbitals,
+  HYBRID_SIZE,
+  DipoleArrow,
+  PotentialEnergyCurve,
+  PE_CURVE_SIZE,
+  Molecule3D,
+  Molecule3DFallback,
+} from '@/components/molecule'
+import {
+  WATER_3D,
+  METHANE_3D,
+  SF4_3D,
+  CO3_LEWIS,
+  NACL_BEFORE,
+  NACL_AFTER,
+  NACL_TRANSFER,
+  O2_ELECTRONS,
+  N2_ELECTRONS,
+} from '@/components/molecule/fixture'
 
 /** Balmer lines in the visible range, with their relative brightness. */
 const HYDROGEN_LINES = [
@@ -1085,6 +1110,340 @@ export default function VocabPage() {
             <PeriodicDemo />
           </div>
         </article>
+      </section>
+
+      {/* Bonds and molecules */}
+      <section className={styles.section} id="bonding" aria-labelledby="bonding-heading">
+        <h2 id="bonding-heading" className={styles.sectionTitle}>
+          Bonds and molecules
+        </h2>
+        <p className={styles.sectionSubtitle}>
+          Shapes and bonds in 3D, electron-dot structures, molecular orbitals and how atomic
+          orbitals overlap to form bonds. Lone pairs, bond angles and orbital phases use the same
+          colours everywhere on the site.
+        </p>
+
+        <div className={styles.grid}>
+          {/* Card: H2O in 3D */}
+          <article className={styles.card}>
+            <Stage3DLazy
+              label="Water molecule (3D): oxygen with two hydrogens at 104.5 degrees and two lone pairs. Drag to rotate."
+              fallback={<Molecule3DFallback {...WATER_3D} showSymbols />}
+            >
+              <Molecule3D {...WATER_3D} showSymbols />
+            </Stage3DLazy>
+            <div className={styles.cardBody}>
+              <div className={styles.cardHeading}>
+                <span>Water</span>
+                <span className={styles.cardBadge}>104.5°</span>
+              </div>
+              <p className={styles.cardDescription}>
+                Two lone pairs on oxygen push the hydrogens together, so water is bent rather than
+                linear.
+              </p>
+            </div>
+          </article>
+
+          {/* Card: CH4 in 3D */}
+          <article className={styles.card}>
+            <Stage3DLazy
+              label="Methane molecule (3D): carbon at the centre of a regular tetrahedron of four hydrogens. Drag to rotate."
+              fallback={<Molecule3DFallback {...METHANE_3D} />}
+            >
+              <Molecule3D {...METHANE_3D} />
+            </Stage3DLazy>
+            <div className={styles.cardBody}>
+              <div className={styles.cardHeading}>
+                <span>Methane</span>
+                <span className={styles.cardBadge}>109.5°</span>
+              </div>
+              <p className={styles.cardDescription}>
+                Four equal bonding pairs point to the corners of a tetrahedron, so every H–C–H angle
+                is 109.5°.
+              </p>
+            </div>
+          </article>
+
+          {/* Card: SF4 in 3D */}
+          <article className={styles.card}>
+            <Stage3DLazy
+              label="Sulphur tetrafluoride (3D): a see-saw with the lone pair in an equatorial position. Drag to rotate."
+              fallback={<Molecule3DFallback {...SF4_3D} />}
+            >
+              <Molecule3D {...SF4_3D} />
+            </Stage3DLazy>
+            <div className={styles.cardBody}>
+              <div className={styles.cardHeading}>
+                <span>Sulphur tetrafluoride</span>
+                <span className={styles.cardBadge}>See-saw</span>
+              </div>
+              <p className={styles.cardDescription}>
+                The lone pair takes an equatorial spot, where it is furthest from the bonding pairs.
+                The two axial fluorines bend away from it.
+              </p>
+            </div>
+          </article>
+
+          {/* Card: CO3 2- Lewis structure with formal charges */}
+          <article className={`${styles.card} ${styles.wideHalf}`}>
+            <div className={styles.cardCanvas}>
+              <svg
+                viewBox="-112 -104 224 184"
+                className={styles.svgElement}
+                role="img"
+                aria-label="Lewis structure of the carbonate ion: carbon bonded to one oxygen by a double bond and to two oxygens by single bonds, with formal charges, octet counts and brackets carrying a 2 minus charge"
+              >
+                <VocabDefs />
+                <LewisDiagram
+                  atoms={CO3_LEWIS.atoms}
+                  bonds={CO3_LEWIS.bonds}
+                  brackets={CO3_LEWIS.brackets}
+                  octetBadges
+                />
+              </svg>
+            </div>
+            <div className={styles.cardBody}>
+              <div className={styles.cardHeading}>
+                <span>Carbonate ion</span>
+                <span className={styles.cardBadge}>Lewis · CO₃²⁻</span>
+              </div>
+              <p className={styles.cardDescription}>
+                Each atom has eight electrons around it. The circled signs are formal charges, and
+                the two single-bonded oxygens each carry one of the two negative charges.
+              </p>
+            </div>
+          </article>
+
+          {/* Card: Ionic transfer, Na and Cl (full width) */}
+          <article className={`${styles.card} ${styles.wideHalf}`}>
+            <div className={styles.cardCanvas}>
+              <svg
+                viewBox="0 0 520 150"
+                className={styles.svgElement}
+                role="img"
+                aria-label="Electron transfer: a sodium atom with one electron and a chlorine atom with seven give the electron to chlorine, giving a sodium ion and a chloride ion in brackets with an octet"
+              >
+                <VocabDefs />
+                <g>
+                  <LewisDiagram
+                    x={112}
+                    y={78}
+                    atoms={NACL_BEFORE.atoms}
+                    bonds={[]}
+                    transfer={NACL_TRANSFER}
+                    colourByOrigin
+                  />
+                </g>
+                <Label x={262} y={78} fontSize={22} fill="var(--fg-muted)">
+                  →
+                </Label>
+                <LewisDiagram
+                  x={410}
+                  y={78}
+                  atoms={NACL_AFTER.atoms}
+                  bonds={[]}
+                  brackets={NACL_AFTER.brackets}
+                  colourByOrigin
+                />
+              </svg>
+            </div>
+            <div className={styles.cardBody}>
+              <div className={styles.cardHeading}>
+                <span>Electron transfer</span>
+                <span className={styles.cardBadge}>Na · Cl</span>
+              </div>
+              <p className={styles.cardDescription}>
+                Sodium gives its outer electron to chlorine. The electron keeps its colour, so the
+                chloride ion shows where it came from, and the pair becomes an ion pair.
+              </p>
+            </div>
+          </article>
+
+          {/* Card: O2 molecular orbitals (unmixed) */}
+          <article className={styles.card}>
+            <div className={`${styles.cardCanvas} ${styles.cardCanvasTall}`}>
+              <svg
+                viewBox={`0 0 ${MO_DIAGRAM_SIZE.width} ${MO_DIAGRAM_SIZE.height}`}
+                className={styles.svgElement}
+                role="img"
+                aria-label="Molecular orbital diagram of oxygen: sigma 2p lies below pi 2p; the two pi star orbitals each hold one electron, so O2 is paramagnetic with bond order 2"
+              >
+                <VocabDefs />
+                <MODiagram
+                  order="unmixed"
+                  electrons={O2_ELECTRONS}
+                  highlight={['p*2p']}
+                  elementA="O"
+                  elementB="O"
+                  bondOrder="2"
+                  magnetism="paramagnetic"
+                />
+              </svg>
+            </div>
+            <div className={styles.cardBody}>
+              <div className={styles.cardHeading}>
+                <span>Oxygen MO</span>
+                <span className={styles.cardBadge}>Unmixed</span>
+              </div>
+              <p className={styles.cardDescription}>
+                In O₂ the σ2p orbital sits below the π2p pair. The two electrons in the π*2p orbitals
+                stay unpaired, which is why oxygen is attracted to a magnet.
+              </p>
+            </div>
+          </article>
+
+          {/* Card: N2 molecular orbitals (mixed) */}
+          <article className={styles.card}>
+            <div className={`${styles.cardCanvas} ${styles.cardCanvasTall}`}>
+              <svg
+                viewBox={`0 0 ${MO_DIAGRAM_SIZE.width} ${MO_DIAGRAM_SIZE.height}`}
+                className={styles.svgElement}
+                role="img"
+                aria-label="Molecular orbital diagram of nitrogen: pi 2p lies below sigma 2p; all electrons are paired, so N2 is diamagnetic with bond order 3"
+              >
+                <VocabDefs />
+                <MODiagram
+                  order="mixed"
+                  electrons={N2_ELECTRONS}
+                  highlight={['p2p', 's2p']}
+                  elementA="N"
+                  elementB="N"
+                  bondOrder="3"
+                  magnetism="diamagnetic"
+                />
+              </svg>
+            </div>
+            <div className={styles.cardBody}>
+              <div className={styles.cardHeading}>
+                <span>Nitrogen MO</span>
+                <span className={styles.cardBadge}>Mixed</span>
+              </div>
+              <p className={styles.cardDescription}>
+                s–p mixing lifts σ2p above the π2p pair. Every electron is paired, so N₂
+                has bond order 3 and is diamagnetic.
+              </p>
+            </div>
+          </article>
+
+          {/* Overlap cards */}
+          {(
+            [
+              { kind: 'ss', phase: 'positive', title: 's–s overlap', badge: 'σ', text: 'Two spherical s orbitals overlap along the line joining their nuclei, and the overlap is positive.' },
+              { kind: 'sp', phase: 'positive', title: 's–p overlap', badge: 'σ', text: 'An s orbital meets the lobe of a p orbital that faces it. Like signs overlap positively.' },
+              { kind: 'pp-sigma', phase: 'positive', title: 'p–p head-on', badge: 'σ', text: 'Two p lobes pointing at each other form a σ bond along the axis.' },
+              { kind: 'pp-sigma', phase: 'negative', title: 'p–p head-on, out of phase', badge: 'σ*', text: 'Opposite signs face each other, so the overlap is negative. This is the antibonding case.' },
+              { kind: 'pp-pi', phase: 'positive', title: 'p–p side-on', badge: 'π', text: 'Parallel p orbitals overlap sideways, above and below the axis, to form a π bond.' },
+              { kind: 'sp', phase: 'zero', title: 's–p side-on', badge: '0', text: 'An s orbital approaching from the side meets equal positive and negative lobes, so the net overlap is zero.' },
+            ] as const
+          ).map((o) => (
+            <article key={`${o.kind}-${o.phase}`} className={styles.card}>
+              <div className={styles.cardCanvas}>
+                <svg
+                  viewBox={`0 0 ${OVERLAP_SIZE.width} ${OVERLAP_SIZE.height}`}
+                  className={styles.svgElement}
+                  role="img"
+                  aria-label={`${o.title}: overlap of two orbitals, ${o.phase} overlap`}
+                >
+                  <VocabDefs />
+                  <OverlapDiagram kind={o.kind} phase={o.phase} separation={0.42} />
+                </svg>
+              </div>
+              <div className={styles.cardBody}>
+                <div className={styles.cardHeading}>
+                  <span>{o.title}</span>
+                  <span className={styles.cardBadge}>{o.badge}</span>
+                </div>
+                <p className={styles.cardDescription}>{o.text}</p>
+              </div>
+            </article>
+          ))}
+
+          {/* Hybrid orbitals */}
+          {(
+            [
+              { kind: 'sp', title: 'sp hybrids', badge: 'Linear', text: 'One s and one p mix into two sp hybrids that point in opposite directions, 180° apart.' },
+              { kind: 'sp2', title: 'sp² hybrids', badge: 'Trigonal', text: 'One s and two p orbitals give three sp² hybrids, in one plane 120° apart.' },
+              { kind: 'sp3', title: 'sp³ hybrids', badge: 'Tetrahedral', text: 'One s and three p orbitals give four sp³ hybrids that point to the corners of a tetrahedron.' },
+            ] as const
+          ).map((h) => (
+            <article key={h.kind} className={styles.card}>
+              <div className={styles.cardCanvas}>
+                <svg
+                  viewBox={`0 0 ${HYBRID_SIZE.width} ${HYBRID_SIZE.height}`}
+                  className={styles.svgElement}
+                  role="img"
+                  aria-label={`${h.title}: an s orbital and p orbitals mix to make hybrid lobes`}
+                >
+                  <VocabDefs />
+                  <HybridOrbitals kind={h.kind} />
+                </svg>
+              </div>
+              <div className={styles.cardBody}>
+                <div className={styles.cardHeading}>
+                  <span>{h.title}</span>
+                  <span className={styles.cardBadge}>{h.badge}</span>
+                </div>
+                <p className={styles.cardDescription}>{h.text}</p>
+              </div>
+            </article>
+          ))}
+
+          {/* Card: dipole arrow */}
+          <article className={styles.card}>
+            <div className={styles.cardCanvas}>
+              <svg
+                viewBox="-100 -40 200 80"
+                className={styles.svgElement}
+                role="img"
+                aria-label="Bond dipole of hydrogen chloride: an arrow from the hydrogen end, marked delta plus with a crossed tail, to the chlorine end, marked delta minus"
+              >
+                <VocabDefs />
+                <DipoleArrow from={{ x: -58, y: 0 }} to={{ x: 58, y: 0 }} />
+                <Label x={-58} y={26} fontSize={13} fill="var(--fg)">
+                  H
+                </Label>
+                <Label x={58} y={26} fontSize={13} fill="var(--fg)">
+                  Cl
+                </Label>
+              </svg>
+            </div>
+            <div className={styles.cardBody}>
+              <div className={styles.cardHeading}>
+                <span>Bond dipole</span>
+                <span className={styles.cardBadge}>δ+ → δ−</span>
+              </div>
+              <p className={styles.cardDescription}>
+                The arrow points from the δ+ end to the δ− end. Its crossed tail marks the positive
+                end, so the arrow reads as a direction of electron pull.
+              </p>
+            </div>
+          </article>
+
+          {/* Card: potential energy curve (H2) */}
+          <article className={styles.card}>
+            <div className={styles.cardCanvas}>
+              <svg
+                viewBox={`0 0 ${PE_CURVE_SIZE.width} ${PE_CURVE_SIZE.height}`}
+                className={styles.svgElement}
+                role="img"
+                aria-label="Potential energy curve for two hydrogen atoms: energy falls as the atoms approach, reaches a minimum at 74 picometres and rises steeply when they come closer"
+              >
+                <VocabDefs />
+                <PotentialEnergyCurve />
+              </svg>
+            </div>
+            <div className={styles.cardBody}>
+              <div className={styles.cardHeading}>
+                <span>Forming H₂</span>
+                <span className={styles.cardBadge}>Energy minimum</span>
+              </div>
+              <p className={styles.cardDescription}>
+                Energy falls as the hydrogen atoms approach, to a minimum at the bond length. Pushing
+                them closer than that costs energy quickly.
+              </p>
+            </div>
+          </article>
+        </div>
       </section>
     </div>
   )

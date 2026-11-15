@@ -14,6 +14,11 @@ export const ATOM_RADIUS: Readonly<Record<string, number>> = {
   S: 15,
   Fe: 15,
   Cu: 15,
+  F: 12,
+  B: 13,
+  Be: 12,
+  P: 15,
+  Xe: 17,
 }
 
 /** Radius used for any element without an explicit entry. */
@@ -30,6 +35,11 @@ export const ATOM_COLOR_ELEMENTS: readonly string[] = [
   'S',
   'Fe',
   'Cu',
+  'F',
+  'B',
+  'Be',
+  'P',
+  'Xe',
 ]
 
 /** The CSS variable that paints an element, e.g. `var(--el-O)`. */

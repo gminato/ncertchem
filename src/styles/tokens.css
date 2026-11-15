@@ -42,6 +42,14 @@
   --el-other: #A29D94;
   --atom-rim: rgba(31, 32, 35, 0.28);
   --bond: #6B6862;
+  --el-F: #9BC45A;
+  --el-B: #C9867A;
+  --el-Be: #5E9EA0;
+  --el-P: #D9822B;
+  --el-Xe: #4F9AB8;
+  --lone-pair: #5B8DEF;
+  --lone-pair-edge: #2F6FEB;
+  --dipole: #B4532A;
 
   /* Vessels: glass walls, sheen and liquid */
   --glass-wall: rgba(31, 32, 35, 0.3);
@@ -123,6 +131,14 @@
   --el-other: #A8B0BA;
   --atom-rim: rgba(255, 255, 255, 0.3);
   --bond: #8B949E;
+  --el-F: #B5E07A;
+  --el-B: #E8A39A;
+  --el-Be: #8FD0CB;
+  --el-P: #FFB067;
+  --el-Xe: #8FD3F0;
+  --lone-pair: #8EC3FF;
+  --lone-pair-edge: #6CB6FF;
+  --dipole: #FF9B7E;
 
   --glass-wall: rgba(240, 246, 252, 0.32);
   --glass-fill: rgba(255, 255, 255, 0.05);
@@ -178,6 +194,14 @@
     --el-other: #A8B0BA;
     --atom-rim: rgba(255, 255, 255, 0.3);
     --bond: #8B949E;
+    --el-F: #B5E07A;
+    --el-B: #E8A39A;
+    --el-Be: #8FD0CB;
+    --el-P: #FFB067;
+    --el-Xe: #8FD3F0;
+    --lone-pair: #8EC3FF;
+    --lone-pair-edge: #6CB6FF;
+    --dipole: #FF9B7E;
 
     --glass-wall: rgba(240, 246, 252, 0.32);
     --glass-fill: rgba(255, 255, 255, 0.05);
