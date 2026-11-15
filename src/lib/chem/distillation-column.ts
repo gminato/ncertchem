@@ -19,6 +19,27 @@ export function vapourPressureMmHg(liquid: Antoine, tC: number): number {
 const X_EPS = 1e-6
 
 /**
+ * Dew point in °C at 760 mmHg of an ideal vapour with mole fraction y of liquid A (Raoult's law):
+ * 1 / P = y / P_A + (1 - y) / P_B equals 1 / 760 at the dew point. This is the temperature a
+ * thermometer at the column head reads when the vapour reaching it has composition y.
+ *
+ * @throws {RangeError} If y is outside 0 to 1
+ */
+export function dewPointC(liquidA: Antoine, liquidB: Antoine, y: number): number {
+  if (!(y >= 0 && y <= 1)) throw new RangeError('Mole fraction must be between 0 and 1')
+  // Total pressure of the vapour at t, as a function of t: increasing, so bisect on its sign.
+  const excess = (t: number) => 1 / (y / vapourPressureMmHg(liquidA, t) + (1 - y) / vapourPressureMmHg(liquidB, t)) - 760
+  let lo = 0
+  let hi = 300
+  for (let k = 0; k < 200; k++) {
+    const mid = (lo + hi) / 2
+    if (excess(mid) < 0) lo = mid
+    else hi = mid
+  }
+  return (lo + hi) / 2
+}
+
+/**
  * Relative volatility α = (y_A / y_B) / (x_A / x_B) of an ideal mixture at the mole fraction x_A
  * of liquid A, evaluated at the boiling point of the mixture (where α = P_A / P_B).
  *
@@ -63,8 +84,10 @@ export interface BatchPoint {
   topX: number
   /** Mole fraction of A in everything collected so far (the running distillate). */
   distillateX: number
-  /** Boiling point of the still liquid at 760 mmHg, in °C. */
+  /** Boiling point of the still liquid at 760 mmHg, in °C: what the flask thermometer reads. */
   boilingPointC: number
+  /** Dew point of the vapour leaving the column top, in °C: what the head thermometer reads. */
+  headC: number
 }
 
 /**
@@ -109,6 +132,7 @@ export function batchDistillation(
     topX: instant(x),
     distillateX: instant(x),
     boilingPointC: fractionalDistillation(liquidA, liquidB, x).boilingPointC,
+    headC: dewPointC(liquidA, liquidB, instant(x)),
   })
 
   while (charge > endRemaining + 1e-12) {
@@ -118,12 +142,14 @@ export function batchDistillation(
     distilledA += y * dD
     charge *= shrink
     x = Math.min(1 - X_EPS, Math.max(X_EPS, x - (y - x) * dropFraction))
+    const top = instant(x)
     points.push({
       collected: 1 - charge,
       stillX: x,
-      topX: instant(x),
+      topX: top,
       distillateX: distilledA / distilled,
       boilingPointC: fractionalDistillation(liquidA, liquidB, x).boilingPointC,
+      headC: dewPointC(liquidA, liquidB, top),
     })
   }
   return points

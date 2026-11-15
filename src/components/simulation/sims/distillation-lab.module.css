@@ -206,3 +206,9 @@
   clip: rect(0 0 0 0);
   white-space: nowrap;
 }
+
+.grid {
+  stroke: var(--fg-subtle);
+  stroke-width: 0.6;
+  opacity: 0.5;
+}

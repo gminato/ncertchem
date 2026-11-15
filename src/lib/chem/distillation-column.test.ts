@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest'
 import { BENZENE_ANTOINE, TOLUENE_ANTOINE, fractionalDistillation } from './purification'
 import {
   batchDistillation,
+  dewPointC,
   fenskeTopComposition,
   plateCount,
   relativeVolatility,
@@ -83,5 +84,29 @@ describe('batchDistillation', () => {
     const points = batchDistillation(BENZENE_ANTOINE, TOLUENE_ANTOINE, 0.5, 4)
     expect(points[points.length - 1].stillX).toBeLessThan(0.5)
     expect(points[points.length - 1].boilingPointC).toBeGreaterThan(points[0].boilingPointC)
+  })
+})
+
+describe('head temperature (dew point of the column-top vapour)', () => {
+  it('equals the boiling point of the still for ideal Raoult mixtures (dew point of y = bubble point of x)', () => {
+    const y = fractionalDistillation(BENZENE_ANTOINE, TOLUENE_ANTOINE, 0.5).vapourFractionA
+    expect(dewPointC(BENZENE_ANTOINE, TOLUENE_ANTOINE, y)).toBeCloseTo(
+      fractionalDistillation(BENZENE_ANTOINE, TOLUENE_ANTOINE, 0.5).boilingPointC,
+      2,
+    )
+  })
+
+  it('a 12-plate column holds the head near the benzene boiling point while benzene distils', () => {
+    const points = batchDistillation(BENZENE_ANTOINE, TOLUENE_ANTOINE, 0.5, 12)
+    const early = points.find((p) => p.collected >= 0.2)!
+    expect(early.headC).toBeGreaterThan(80.1)
+    expect(early.headC).toBeLessThan(80.3)
+  })
+
+  it('the head temperature jumps towards toluene once benzene has run out of the still', () => {
+    const points = batchDistillation(BENZENE_ANTOINE, TOLUENE_ANTOINE, 0.5, 12)
+    const late = points.find((p) => p.collected >= 0.6)!
+    expect(late.headC).toBeGreaterThan(105)
+    expect(points[points.length - 1].headC).toBeGreaterThan(105)
   })
 })

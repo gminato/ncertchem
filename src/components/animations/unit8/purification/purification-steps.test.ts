@@ -15,10 +15,10 @@ describe('purificationTargets', () => {
     }
   })
 
-  it('takes the fractional boiling point from the lib: between the two pure boiling points', () => {
+  it('shows the head temperature while benzene distils: about the benzene boiling point, not the flask', () => {
     const t = targets[3].temperatureC
     expect(t).toBeGreaterThan(80.1)
-    expect(t).toBeLessThan(110.6)
+    expect(t).toBeLessThan(80.3)
   })
 
   it('takes the steam boiling point below 100 °C', () => {

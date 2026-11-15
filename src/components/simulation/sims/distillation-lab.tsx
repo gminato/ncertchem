@@ -26,16 +26,20 @@ const COLUMN = { min: 5, max: 60, step: 5 }
 const FEED = { min: 0.1, max: 0.9, step: 0.05 }
 
 const PLOT = { x0: 74, x1: 500, y0: 28, y1: 250 }
+const PLOT_T = { y0: 14, y1: 146, tMin: 75, tMax: 115 }
 const px = (collected: number) => PLOT.x0 + (collected / MAX_COLLECT) * (PLOT.x1 - PLOT.x0)
 const py = (xB: number) => PLOT.y1 - xB * (PLOT.y1 - PLOT.y0)
+const pyT = (t: number) => PLOT_T.y1 - ((t - PLOT_T.tMin) / (PLOT_T.tMax - PLOT_T.tMin)) * (PLOT_T.y1 - PLOT_T.y0)
+/** A temperature to 0.1 °C. */
+const tenth = (t: number) => Math.round(t * 10) / 10
 
 /** The first sample at or after a collected fraction (the last one if none). */
 function pointAt(points: readonly BatchPoint[], collected: number): BatchPoint {
   return points.find((p) => p.collected >= collected) ?? points[points.length - 1]
 }
 
-function polyline(points: readonly BatchPoint[]): string {
-  return points.map((p) => `${px(p.collected).toFixed(1)},${py(p.distillateX).toFixed(1)}`).join(' ')
+function polyline(points: readonly BatchPoint[], y: (p: BatchPoint) => number): string {
+  return points.map((p) => `${px(p.collected).toFixed(1)},${y(p).toFixed(1)}`).join(' ')
 }
 
 /** A value as a percentage with the U+2212 minus where needed. */
@@ -114,12 +118,14 @@ export function DistillationLab({ reducedMotion }: SimulationProps) {
 
   const isSteam = mixture === 'toluene-water'
   const progress = collected / MAX_COLLECT
-  const thermometer = Math.round((isSteam ? steam.tC : here.boilingPointC) * 10) / 10
+  // The head thermometer reads the vapour leaving the column top; the flask has its own temperature.
+  const thermometer = tenth(isSteam ? steam.tC : here.headC)
+  const stillC = tenth(here.boilingPointC)
   const heatLabel = isRunning ? 'Pause' : finished ? 'Heat again' : collected > 0 ? 'Resume' : 'Heat'
 
   const summary = isSteam
     ? `Toluene and water boil together at ${steam.tC.toFixed(1)} °C, below 100 °C. Toluene is ${percent(steam.yTol)} of the vapour by mole.`
-    : `Still ${percent(here.stillX)} benzene by mole at ${here.boilingPointC.toFixed(1)} °C. Distillate ${percent(here.distillateX)} benzene after ${percent(collected / MAX_COLLECT)} of the charge is collected, with ${plates} plate${plates === 1 ? '' : 's'}.`
+    : `Head ${thermometer.toFixed(1)} °C, still ${stillC.toFixed(1)} °C. Still ${percent(here.stillX)} benzene by mole. Distillate ${percent(here.distillateX)} benzene after ${percent(collected / MAX_COLLECT)} of the charge is collected, with ${plates} plate${plates === 1 ? '' : 's'}.`
 
   return (
     <div className={styles.sim} data-testid="distillation-lab" ref={rootRef}>
@@ -152,7 +158,17 @@ export function DistillationLab({ reducedMotion }: SimulationProps) {
             />
           </svg>
           <p className={styles.thermo} data-testid="thermometer">
-            Thermometer <span className="sym">T</span> = {thermometer.toFixed(1)} °C
+            {isSteam ? (
+              <>
+                Thermometer <span className="sym">T</span> = {thermometer.toFixed(1)} °C
+              </>
+            ) : (
+              <>
+                Head thermometer <span className="sym">T</span> = {thermometer.toFixed(1)} °C
+                <br />
+                Still <span className="sym">T</span> = {stillC.toFixed(1)} °C
+              </>
+            )}
           </p>
         </div>
 
@@ -165,8 +181,13 @@ export function DistillationLab({ reducedMotion }: SimulationProps) {
 
           <div className={styles.readout} aria-live="polite" data-testid="distillation-readout">
             <Row label="Still">
-              {isSteam ? 'Toluene and water together' : `${percent(here.stillX)} benzene by mole`}
+              {isSteam ? 'Toluene and water together' : `${percent(here.stillX)} benzene by mole, boiling at ${stillC.toFixed(1)} °C`}
             </Row>
+            {!isSteam && (
+              <Row label="Head">
+                {collected === 0 ? 'Vapour not yet at the head' : `${thermometer.toFixed(1)} °C, the dew point of the vapour leaving the column`}
+              </Row>
+            )}
             <Row label="Distillate">
               {isSteam
                 ? `${percent(collected / MAX_COLLECT)} of the charge collected`
@@ -274,10 +295,37 @@ function ColumnPlot({
         <text x={18} y={(PLOT.y0 + PLOT.y1) / 2} textAnchor="middle" transform={`rotate(-90 18 ${(PLOT.y0 + PLOT.y1) / 2})`} className={styles.axisLabel}>
           Benzene in distillate
         </text>
-        <polyline points={polyline(simple)} className={styles.simpleCurve} />
-        <polyline points={polyline(column)} className={styles.columnCurve} />
+        <polyline points={polyline(simple, (p) => py(p.distillateX))} className={styles.simpleCurve} />
+        <polyline points={polyline(column, (p) => py(p.distillateX))} className={styles.columnCurve} />
         <line x1={px(collected)} y1={PLOT.y0} x2={px(collected)} y2={PLOT.y1} className={styles.marker} />
         <circle cx={px(collected)} cy={py(here.distillateX)} r={5} className={styles.dot} />
+      </svg>
+      <svg viewBox="0 0 530 170" role="img" aria-label={`Head temperature against the fraction of the charge collected, with ${plates} plates and with simple distillation`} className={styles.plot} data-testid="head-plot">
+        <line x1={PLOT.x0} y1={PLOT_T.y1} x2={PLOT.x1} y2={PLOT_T.y1} className={styles.axis} />
+        <line x1={PLOT.x0} y1={PLOT_T.y0} x2={PLOT.x0} y2={PLOT_T.y1} className={styles.axis} />
+        {[80, 90, 100, 110].map((t) => (
+          <g key={t}>
+            <line x1={PLOT.x0} y1={pyT(t)} x2={PLOT.x1} y2={pyT(t)} className={styles.grid} />
+            <text x={PLOT.x0 - 6} y={pyT(t) + 4} textAnchor="end" className={styles.tick}>
+              {t}
+            </text>
+          </g>
+        ))}
+        <text x={18} y={(PLOT_T.y0 + PLOT_T.y1) / 2} textAnchor="middle" transform={`rotate(-90 18 ${(PLOT_T.y0 + PLOT_T.y1) / 2})`} className={styles.axisLabel}>
+          Head °C
+        </text>
+        {[0, 0.3, 0.6, 0.9].map((c) => (
+          <text key={c} x={px(c)} y={PLOT_T.y1 + 16} textAnchor="middle" className={styles.tick}>
+            {c.toFixed(1)}
+          </text>
+        ))}
+        <text x={(PLOT.x0 + PLOT.x1) / 2} y={PLOT_T.y1 + 34} textAnchor="middle" className={styles.axisLabel}>
+          Fraction of charge collected
+        </text>
+        <polyline points={polyline(simple, (p) => pyT(p.headC))} className={styles.simpleCurve} />
+        <polyline points={polyline(column, (p) => pyT(p.headC))} className={styles.columnCurve} />
+        <line x1={px(collected)} y1={PLOT_T.y0} x2={px(collected)} y2={PLOT_T.y1} className={styles.marker} />
+        <circle cx={px(collected)} cy={pyT(here.headC)} r={5} className={styles.dot} />
       </svg>
       <p className={styles.legend}>
         <span className={styles.swatchColumn} /> with the column <span className={styles.swatchSimple} /> simple distillation

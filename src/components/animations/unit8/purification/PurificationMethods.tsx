@@ -11,7 +11,7 @@ export interface PurificationMethodsProps {
 }
 
 const VIEW_WIDTH = 580
-const VIEW_HEIGHT = 480
+const VIEW_HEIGHT = 540
 const TARGETS = purificationTargets()
 
 /** The apparatus of each Step, scaled so that its drawing fills most of the panel. */
@@ -28,12 +28,12 @@ interface Frame {
  * are placed by hand to fill the panel. The other apparatus are centred.
  */
 const FRAME: Record<PurificationStage, Frame> = {
-  sublimation: { size: SUBLIMATION_SETUP_SIZE, scale: 1.4 },
-  cooling: { size: CRYSTALLISATION_SIZE, scale: 1.6, x: 50, y: -74 },
-  filtration: { size: CRYSTALLISATION_SIZE, scale: 1.6, x: -7, y: -56 },
-  fractional: { size: DISTILLATION_RIG_SIZE, scale: 1.15 },
-  steam: { size: DISTILLATION_RIG_SIZE, scale: 1.15 },
-  funnel: { size: SEPARATING_FUNNEL_SIZE, scale: 1.35 },
+  sublimation: { size: SUBLIMATION_SETUP_SIZE, scale: 1.6 },
+  cooling: { size: CRYSTALLISATION_SIZE, scale: 2.2, x: -100, y: -171 },
+  filtration: { size: CRYSTALLISATION_SIZE, scale: 1.9, x: -58, y: -94 },
+  fractional: { size: DISTILLATION_RIG_SIZE, scale: 1.25 },
+  steam: { size: DISTILLATION_RIG_SIZE, scale: 1.25 },
+  funnel: { size: SEPARATING_FUNNEL_SIZE, scale: 1.5 },
 }
 
 /**
@@ -48,7 +48,7 @@ export function PurificationMethods({ step, reducedMotion }: PurificationMethods
   const temperature = Math.round(useTweenedNumber(target.temperatureC, reducedMotion, 1.2) * 10) / 10
   const frame = FRAME[target.stage]
   const x = frame.x ?? (VIEW_WIDTH - frame.size.width * frame.scale) / 2
-  const y = frame.y ?? (VIEW_HEIGHT - 50 - frame.size.height * frame.scale) / 2
+  const y = frame.y ?? (VIEW_HEIGHT - 40 - frame.size.height * frame.scale) / 2
 
   return (
     <svg
@@ -71,7 +71,7 @@ export function PurificationMethods({ step, reducedMotion }: PurificationMethods
         )}
         {target.stage === 'funnel' && <SeparatingFunnel layers={FUNNEL_LAYERS} partition={5} extraction={2} shake={1} drain={0} particles={18} />}
       </g>
-      <Label x={VIEW_WIDTH / 2} y={VIEW_HEIGHT - 16} fontSize={16} fill="var(--fg)" textAnchor="middle">
+      <Label x={VIEW_WIDTH / 2} y={VIEW_HEIGHT - 14} fontSize={16} fill="var(--fg)" textAnchor="middle">
         {target.caption}
       </Label>
     </svg>
