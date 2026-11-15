@@ -90,11 +90,17 @@ test.describe('Unit navigation', () => {
   })
 
   test('a Unit with no Sections yet shows a calm empty state', async ({ page }) => {
-    await page.goto('/class-11/unit-4')
-    await expect(page.getByRole('heading', { level: 1 })).toHaveText(
-      'Chemical Bonding and Molecular Structure'
-    )
+    await page.goto('/class-11/unit-5')
+    await expect(page.getByRole('heading', { level: 1 })).toHaveText('Thermodynamics')
     await expect(page.getByText('The Sections of this Unit are being written.')).toBeVisible()
+  })
+
+  test('Unit 4 lists its eight Sections in order', async ({ page }) => {
+    await page.goto('/class-11/unit-4')
+    const links = page.locator('a[href^="/class-11/unit-4/"]')
+    await expect(links).toHaveCount(8)
+    await expect(links.first()).toHaveAttribute('href', /4-1-kossel-lewis-approach$/)
+    await expect(links.last()).toHaveAttribute('href', /4-9-hydrogen-bonding$/)
   })
 
   test('Unit 3 lists its six Sections in order', async ({ page }) => {
