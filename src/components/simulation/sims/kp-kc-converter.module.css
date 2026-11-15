@@ -1,0 +1,218 @@
+.sim {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  font-family: var(--font-sans);
+  color: var(--fg);
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: var(--space-4);
+}
+
+.lineLabel {
+  display: block;
+  font-size: 0.8rem;
+  color: var(--fg-muted);
+  margin-bottom: 2px;
+}
+
+.panel {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  padding: var(--space-4);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  min-width: 0;
+}
+
+.kicker {
+  margin: 0;
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: var(--fg-muted);
+}
+
+.equation {
+  font-size: 1.15rem;
+  overflow-x: auto;
+}
+
+.note {
+  margin: 0;
+  font-size: 0.9rem;
+  color: var(--fg-muted);
+}
+
+.chips {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.chipRow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.chipLabel {
+  font-size: 0.8rem;
+  color: var(--fg-muted);
+  margin-right: var(--space-1);
+}
+
+.chipIn,
+.chipOut {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 10px;
+  border-radius: 999px;
+  font-size: 0.95rem;
+}
+
+.chipIn {
+  background: var(--accent-soft);
+  border: 1px solid var(--border);
+}
+
+.chipOut {
+  border: 1px dashed var(--fg-subtle);
+  color: var(--fg-muted);
+}
+
+.expressions {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.expr {
+  overflow-x: auto;
+}
+
+.ledger {
+  display: flex;
+  align-items: flex-end;
+  gap: var(--space-5);
+  height: 120px;
+  padding-top: var(--space-2);
+}
+
+.ledgerCol {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  width: 96px;
+  height: 100%;
+}
+
+.ledgerBar {
+  width: 100%;
+  min-height: 8px;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding-top: 4px;
+  border-radius: var(--radius-sm, 6px) var(--radius-sm, 6px) 0 0;
+  background: var(--fwd);
+  color: var(--accent-fg, #fff);
+  font-weight: 600;
+  transition: height 0.4s ease;
+}
+
+.ledgerCol:last-child .ledgerBar {
+  background: var(--rev);
+}
+
+.ledgerLabel {
+  font-size: 0.8rem;
+  color: var(--fg-muted);
+  margin-top: 4px;
+}
+
+.working {
+  margin: 0;
+  padding-left: 1.4rem;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  overflow-x: auto;
+}
+
+.result {
+  margin-top: var(--space-2);
+  padding: var(--space-3) var(--space-4);
+  border-radius: var(--radius-md);
+  background: var(--accent-soft);
+  font-size: 1.15rem;
+}
+
+.live {
+  margin: 0;
+  font-size: 0.92rem;
+  color: var(--fg-muted);
+}
+
+.controlGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+  gap: var(--space-3) var(--space-4);
+  align-items: end;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+
+.fieldLabel {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--fg-muted);
+}
+
+.select,
+.input {
+  font: inherit;
+  font-size: 0.95rem;
+  color: var(--fg);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm, 6px);
+  padding: 6px 10px;
+  min-width: 0;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.select:focus-visible,
+.input:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.input[aria-invalid='true'] {
+  border-color: var(--rev);
+}
+
+.hint {
+  font-size: 0.78rem;
+  color: var(--fg-subtle);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ledgerBar {
+    transition: none;
+  }
+}

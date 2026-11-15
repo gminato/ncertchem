@@ -1,0 +1,96 @@
+---
+class: 11
+unit: 6
+section: "6.4"
+order: 4
+title: "Homogeneous Equilibria"
+slug: "6-4-homogeneous-equilibria"
+summary: "When every reactant and product sits in one phase, K can be written in concentrations or in partial pressures; for gases, Kp = Kc(RT)^Δn, with Δn counted over gases only."
+ncert: "Class 11, Part I — Unit 6, Section 6.4"
+---
+
+<Hook>
+A bicycle pump gauge reads in bar, a soda bottle label speaks of volumes of CO₂, and a chemist sealing a gas in a flask may write the same equilibrium in molar concentrations. If the reaction and the gas are the same, can the two numbers really disagree? And if they do, which one is the true equilibrium constant?
+</Hook>
+
+## 6.4 Homogeneous equilibria
+
+A reaction is **homogeneous** when every reactant and every product is in one phase. The gas-phase synthesis of ammonia is the standard case:
+
+$$
+\ce{N2(g) + 3H2(g) <=> 2NH3(g)}
+$$
+
+Every term of this equilibrium is a gas, so every term enters the equilibrium constant. The same is true in solution. In a clear aqueous mixture of iron(III) and thiocyanate ions, $\ce{Fe^3+(aq) + SCN^-(aq) <=> FeSCN^2+(aq)}$ has all of its species dissolved in one phase, and each of them appears in $K$.
+
+## 6.4.1 Equilibrium constant in gaseous systems
+
+So far $K$ has been written in molar concentrations, $K_c$. For gases it is often more convenient to use partial pressures. The bridge between the two is the ideal gas equation, $pV = nRT$, which can be rearranged with the concentration $[\text{gas}] = n/V$:
+
+$$
+p = \frac{n}{V}\,RT = [\text{gas}]\,RT
+$$
+
+Here $p$ is in bar, $[\text{gas}]$ is in mol L⁻¹, and $R = 0.0831\ \text{bar L mol}^{-1}\,\text{K}^{-1}$. At a fixed temperature the partial pressure of a gas is proportional to its concentration. The Scrolly below takes one gas, then three equilibria with different numbers of gas moles.
+
+<Scrolly animation="kp-kc">
+<Step>
+Take a gas at a concentration of $0.100\ \text{mol L}^{-1}$ in a box held at $400\ \text{K}$. Its molecules strike the walls and give a pressure. Multiply the concentration by $RT$, with $RT = 33.24\ \text{L bar mol}^{-1}$, and the pressure comes out directly: $p = 0.100 \times 33.24 = 3.32\ \text{bar}$.
+</Step>
+<Step>
+Start with $\ce{H2(g) + I2(g) <=> 2HI(g)}$. At equilibrium the concentrations are $[\ce{H2}] = [\ce{I2}] = 0.100\ \text{mol L}^{-1}$ and $[\ce{HI}] = 0.800\ \text{mol L}^{-1}$, so $K_c = 64.0$. Two gas moles go in and two come out, so $\Delta n = 0$. The factor $(RT)^0$ is 1, and $K_p = K_c = 64.0$ with no unit.
+</Step>
+<Step>
+Now $\ce{N2(g) + 3H2(g) <=> 2NH3(g)}$. Four gas moles go in and two come out, so $\Delta n = 2 - 4 = -2$. With $[\ce{N2}] = 0.200$, $[\ce{H2}] = 0.300$ and $[\ce{NH3}] = 0.100\ \text{mol L}^{-1}$, the constant is $K_c = 1.85\ \text{L}^2\,\text{mol}^{-2}$. Then $K_p = 1.85 \times (33.24)^{-2} = 1.68 \times 10^{-3}\ \text{bar}^{-2}$.
+</Step>
+<Step>
+Next, $\ce{2NOCl(g) <=> 2NO(g) + Cl2(g)}$. Two gas moles go in and three come out, so $\Delta n = 3 - 2 = +1$. The concentrations $[\ce{NOCl}] = 0.400$, $[\ce{NO}] = 0.200$ and $[\ce{Cl2}] = 0.100\ \text{mol L}^{-1}$ give $K_c = 0.0250\ \text{mol L}^{-1}$. Here $K_p = 0.0250 \times 33.24 = 0.831\ \text{bar}$.
+</Step>
+<Step>
+Put the three together. A positive $\Delta n$ multiplies $K_c$ by $RT$, and a negative one divides by it. The unit of $K_p$ is bar raised to $\Delta n$: bar for the chlorine case, bar⁻² for ammonia, and no unit when $\Delta n = 0$. Only gases are counted, so a solid or a liquid in the same equation would not change $\Delta n$.
+</Step>
+</Scrolly>
+
+<Check n={1} numeric answer={0.831} tolerance={0.002} unit="bar" explanation="At 400 K, RT = 0.0831 × 400 = 33.24 L bar mol⁻¹. For 2NOCl ⇌ 2NO + Cl₂, Δn = 3 − 2 = +1, so Kp = Kc × 33.24 = 0.0250 × 33.24 = 0.831 bar.">
+For $\ce{2NOCl(g) <=> 2NO(g) + Cl2(g)}$ at $400\ \text{K}$, $K_c = 0.0250\ \text{mol L}^{-1}$. What is $K_p$, in bar?
+</Check>
+
+### Why the factor is (RT)^Δn
+
+The relation between the two constants comes from writing every partial pressure as $p = [\text{gas}]RT$. For a general reaction $a\ce{A} + b\ce{B} <=> c\ce{C} + d\ce{D}$, all four species are gases, and
+
+$$
+K_p = \frac{p_\text{C}^{\,c}\,p_\text{D}^{\,d}}{p_\text{A}^{\,a}\,p_\text{B}^{\,b}} = \frac{[\text{C}]^c[\text{D}]^d}{[\text{A}]^a[\text{B}]^b}\,(RT)^{(c+d)-(a+b)}
+$$
+
+The bracket on the right is $K_c$, so the two constants are linked by
+
+$$
+K_p = K_c\,(RT)^{\Delta n}
+$$
+
+where $\Delta n = (\text{moles of gaseous products}) - (\text{moles of gaseous reactants})$ in the balanced equation. The factor $RT$ appears with the power $\Delta n$, so it cancels exactly when the gas moles are equal on the two sides.
+
+### Units follow Δn
+
+Kp is written with pressures in bar, because the standard state for a pure gas is 1 bar. A pressure of 4 bar in the standard state is $4\ \text{bar}/1\ \text{bar} = 4$, which is a number with no unit. So the unit of $K_p$ is bar raised to $\Delta n$, and $K_c$ has units of mol L⁻¹ raised to $\Delta n$. For $\Delta n = 0$ both constants are unit-less, and for $\Delta n = +1$ or $-2$ they carry bar or mol L⁻¹ with the matching power.
+
+<Check n={2} options={["Kp = Kc for every reaction", "Kp = Kc (RT)^Δn, with Δn counted over gases", "Kp = Kc / RT, for every reaction", "Kp = Kc (RT)^Δn, with Δn counted over all species"]} answer={1} explanation="The factor (RT)^Δn comes from p = [gas]RT for each gas. Δn counts gaseous moles only, so solids and aqueous species are left out of it. The factor is one only when Δn is zero.">
+Which statement about the two constants of a gaseous equilibrium is correct?
+</Check>
+
+<Simulation name="kp-kc-converter" title="Kc ↔ Kp converter: Δn, each working line, and the species left out" />
+
+Type an equation, or pick one from the list, and set the constant you have and the temperature. The converter counts Δn over gases, shows each line of the working, and marks any solid or liquid as left out of the expression. Try $\ce{N2 + 3H2}$ at 500 K first, then change the temperature to see how the factor $(RT)^{\Delta n}$ moves.
+
+<Check n={3} numeric answer={1.16} tolerance={0.02} unit="× 10⁻³ bar⁻²" explanation="RT = 0.0831 × 500 = 41.55 L bar mol⁻¹. Kp = Kc (RT)⁻² = 2.00 / 41.55² = 1.16 × 10⁻³ bar⁻². The minus sign on the power comes from Δn = −2.">
+For $\ce{N2(g) + 3H2(g) <=> 2NH3(g)}$ at $500\ \text{K}$, $K_c = 2.00\ \text{L}^2\,\text{mol}^{-2}$. What is $K_p$, in units of $10^{-3}\ \text{bar}^{-2}$?
+</Check>
+
+<KeyIdeas>
+- In a homogeneous equilibrium every species is in one phase, and every species enters the constant.
+- For gases, $p = [\text{gas}]\,RT$ with $R = 0.0831\ \text{bar L mol}^{-1}\,\text{K}^{-1}$, so $K_p = K_c\,(RT)^{\Delta n}$.
+- $\Delta n$ counts gaseous moles only: products minus reactants. Zero means $K_p = K_c$.
+- Kc is in mol L⁻¹ raised to $\Delta n$, and Kp is in bar raised to $\Delta n$. A pure gas in its standard state is 1 bar.
+- Both constants change only with temperature, never with the amount of gas or the pressure.
+</KeyIdeas>

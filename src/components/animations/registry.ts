@@ -82,6 +82,8 @@ import { RedoxClassical } from './unit7/classical/RedoxClassical'
 import { RedoxElectronTransfer } from './unit7/transfer/RedoxElectronTransfer'
 import { RedoxBalanceON } from './unit7/balance/RedoxBalanceON'
 import { RedoxBalanceHalf } from './unit7/balance/RedoxBalanceHalf'
+import { KpKc } from './unit6/kpkc/KpKc'
+import { Heterogeneous } from './unit6/heterogeneous/Heterogeneous'
 
 /**
  * Animations available to a Scrolly Animation, keyed by the `animation` prop.
@@ -174,6 +176,8 @@ export const animations = {
   'redox-electron-transfer': RedoxElectronTransfer,
   'redox-balance-on': RedoxBalanceON,
   'redox-balance-half': RedoxBalanceHalf,
+  'kp-kc': KpKc,
+  heterogeneous: Heterogeneous,
 } as const
 
 export type AnimationName = keyof typeof animations
