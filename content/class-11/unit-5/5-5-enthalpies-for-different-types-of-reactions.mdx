@@ -1,0 +1,146 @@
+---
+class: 11
+unit: 5
+section: "5.5"
+order: 5
+title: "Enthalpies for Different Types of Reactions"
+slug: "5-5-enthalpies-for-different-types-of-reactions"
+summary: "Combustion, atomisation, bond breaking, lattice formation and dissolution each have their own enthalpy, and Hess's law links them into one ledger."
+ncert: "Class 11, Part I — Unit 5, Section 5.5"
+---
+
+<Hook>
+Salt dissolves in a glass of water and the glass barely warms or cools. Yet the crystal had to be torn into ions, which costs a lot of energy, and water wraps each ion, which gives a lot back. Why do the two almost cancel?
+</Hook>
+
+Enthalpy changes get names according to the kind of reaction. Each name points at one piece of the energy story, so when you meet a new reaction you can ask which piece it is. This section takes five of them in turn: combustion, atomisation, bond breaking, lattice formation and dissolution.
+
+## (a) Enthalpy of combustion and calorific value
+
+Combustion reactions release heat. The **standard enthalpy of combustion**, written $\Delta_cH^\circ$, is the enthalpy change when one mole of a substance burns completely in oxygen, with the reactants and the products in their standard states at the stated temperature.
+
+Butane, the gas in a domestic cylinder, is a good example. Its combustion equation, with liquid water as a product, is
+
+$$
+\ce{C4H10(g) + 13/2 O2(g) -> 4CO2(g) + 5H2O(l)}
+$$
+
+Using the standard enthalpies of formation in Table 5.2, the enthalpy change is $\Delta_cH^\circ = -2877.0\ \text{kJ mol}^{-1}$. NCERT quotes $-2658$ kJ mol⁻¹ for the same burning, but that figure matches the equation with water *as vapour*, which gives about $-2657$ kJ mol⁻¹. Keep the physical state of water in mind whenever you compare two combustion values.
+
+The **calorific value** of a fuel is the heat it gives per gram. Dividing the molar enthalpy of combustion by the molar mass of butane, $58.12\ \text{g mol}^{-1}$, gives about $49.5\ \text{kJ g}^{-1}$ with liquid water. That single number is what lets you compare LPG with wood or coal on a common scale.
+
+## (b) Enthalpy of atomisation
+
+Breaking a molecule into its separate gaseous atoms costs energy. The change is the **enthalpy of atomisation**, $\Delta_aH^\circ$. For dihydrogen,
+
+$$
+\ce{H2(g) -> 2H(g)}, \qquad \Delta_aH^\circ = +435.8\ \text{kJ mol}^{-1}
+$$
+
+Here the atomisation enthalpy is the same as the bond dissociation enthalpy, because H₂ has only one bond. Methane is different. Breaking it to carbon and four hydrogen atoms, $\ce{CH4(g) -> C(g) + 4H(g)}$, takes about $1665$ kJ mol⁻¹ in NCERT's text. Table 5.2 gives $1663.4$ kJ mol⁻¹ from the formation enthalpies of $\ce{CH4}$, $\ce{C}$ and $\ce{H}$, which agrees to within a few kJ mol⁻¹.
+
+Atomising a solid element is the same idea with a different name. Turning solid sodium into gaseous atoms, $\ce{Na(s) -> Na(g)}$, is a sublimation, and it takes in $+108.4$ kJ mol⁻¹.
+
+## (c) Bond enthalpy
+
+A **bond dissociation enthalpy** is the energy to break one mole of a particular bond in a gaseous molecule. In a diatomic molecule it is the whole atomisation enthalpy. In a polyatomic molecule it depends on which bond you break. Breaking the four C–H bonds of methane one at a time takes a different amount each time, because each break changes the fragment that is left. That is why chemists use the **mean bond enthalpy**: the average of those successive energies over many compounds.
+
+Table 5.3 lists mean bond enthalpies. For example, the mean C–H bond is $414$ kJ mol⁻¹, the mean H–H bond is $435.8$ kJ mol⁻¹, and the O=O double bond is $498$ kJ mol⁻¹. The values vary a little from compound to compound, but not by much.
+
+For a reaction in the gas phase, the enthalpy change can be estimated from these bonds:
+
+$$
+\Delta_rH^\circ \approx \sum \text{(bond enthalpies of reactants)} - \sum \text{(bond enthalpies of products)}
+$$
+
+Take nitrogen and hydrogen forming ammonia, $\ce{N2(g) + 3H2(g) -> 2NH3(g)}$. The bonds broken are one $\ce{N#N}$ triple bond ($946$) and three H–H bonds ($3 \times 435.8$), a total of $2253.4$ kJ mol⁻¹. The bonds formed are six N–H bonds ($6 \times 389$), a total of $2334$ kJ mol⁻¹. The estimate is $\Delta_rH^\circ \approx -80.6$ kJ mol⁻¹. Table 5.2 gives $-92.22$ kJ mol⁻¹ from the formation enthalpies, so the estimate is close but not exact. Use the bond estimate when formation data are missing, and remember that it applies to gases only.
+
+The simulation below uses the same bond values. Watch each bond break and form, and compare the bond estimate with the Table 5.2 value for four reactions.
+
+<Simulation name="bond-energy-ledger" title="Bond energy ledger: estimate ΔᵣH from bonds" />
+
+<Check n={1} numeric answer={-80.6} tolerance={0.5} unit="kJ mol⁻¹" explanation="Bonds broken: N≡N 946 plus 3 × 435.8 = 2253.4. Bonds formed: 6 × 389 = 2334. The estimate is 2253.4 − 2334 = −80.6 kJ mol⁻¹. Table 5.2 gives −92.22 kJ mol⁻¹, so the bond estimate is about 12 kJ mol⁻¹ away.">
+Use the mean bond enthalpies in Table 5.3 to estimate $\Delta_rH^\circ$ for $\ce{N2(g) + 3H2(g) -> 2NH3(g)}$, in kJ mol⁻¹.
+</Check>
+
+## (d) Lattice enthalpy and the Born–Haber cycle
+
+The **lattice enthalpy** of an ionic solid is the energy needed to separate one mole of it into gaseous ions. For sodium chloride, $\ce{NaCl(s) -> Na+(g) + Cl-(g)}$, the value is $+788$ kJ mol⁻¹. You cannot measure this directly, so chemists build a cycle. Start from the elements, sodium metal and half a mole of chlorine gas, and go to solid NaCl by two routes. One route is the direct formation of the solid. The other goes through the gaseous ions. Hess's law says the two routes have the same total.
+
+<Scrolly animation="unit5-nacl-born-haber">
+<Step>
+Begin at the elements, $\ce{Na(s)}$ and $\tfrac{1}{2}\ce{Cl2(g)}$, taken as zero on the enthalpy scale. This is the standard state of each element, so its enthalpy of formation is zero by convention. Every later level is measured from here, which means the final level tells you directly the enthalpy of formation of the salt. Keep this zero in mind as you read the rest of the diagram.
+</Step>
+<Step>
+Sublimation comes first. Solid sodium turns into gaseous atoms, $\ce{Na(s) -> Na(g)}$, and takes in $+108.4$ kJ mol⁻¹. The arrow points up because the step absorbs heat. Each atom has to be pulled free of the metal's lattice of shared electrons before it can exist as a separate gas particle, and that pulling is what costs the energy.
+</Step>
+<Step>
+Half a mole of chlorine molecules is split into atoms. The energy needed is half the bond dissociation enthalpy of $\ce{Cl2}$, about $+121$ kJ mol⁻¹, because one mole of chlorine atoms needs one bond broken for every two atoms. The arrow points up again, and the gas now holds sodium and chlorine atoms side by side, ready for the electron transfer that follows.
+</Step>
+<Step>
+Ionisation removes an electron from sodium, $\ce{Na(g) -> Na+(g) + e-}$, and costs $+496$ kJ mol⁻¹. This is the largest uphill step in the cycle, and the level it reaches is the highest on the diagram. The energy is paid for now and recovered later, when the sodium ion finds a partner in the crystal.
+</Step>
+<Step>
+Chlorine gains that electron, $\ce{Cl(g) + e- -> Cl-(g)}$. The electron gain enthalpy is $-348.6$ kJ mol⁻¹, so this arrow points down and recovers part of the cost. Chlorine releases energy on this step because its outer shell is nearly full and the extra electron fits into it. The level reached is the gaseous ion pair, still far above the solid.
+</Step>
+<Step>
+Lattice formation brings the gaseous ions together into solid NaCl, $\ce{Na+(g) + Cl-(g) -> NaCl(s)}$. Its step is $-788$ kJ mol⁻¹ in the formation direction, so the arrow points down. The last level is $-411.2$ kJ mol⁻¹, the enthalpy of formation of NaCl(s). Separating the solid is the reverse step, which takes in $+788$ kJ mol⁻¹, and that is the lattice enthalpy you will meet in the next paragraph.
+</Step>
+</Scrolly>
+
+Put the steps together and you get the lattice enthalpy from measured quantities. The five cycle steps are $+108.4$, $+121$, $+496$, $-348.6$ and a lattice term $x$, and they must sum to the formation enthalpy $-411.2$. Solving gives $x = -788$ kJ mol⁻¹ in the formation direction, which is $+788$ kJ mol⁻¹ for separating the solid. The positive sign is what makes the solid stable against falling apart into ions.
+
+<Check n={2} numeric answer={788} tolerance={1} unit="kJ mol⁻¹" explanation="Lattice formation in the formation direction is ΔfH − (108.4 + 121 + 496 − 348.6) = −411.2 − 376.8 = −788.0 kJ mol⁻¹. Separating the solid is the reverse step, so its enthalpy is +788 kJ mol⁻¹.">
+Using the Born–Haber steps for NaCl, what is the lattice enthalpy, in kJ mol⁻¹, for $\ce{NaCl(s) -> Na+(g) + Cl-(g)}$? Give the positive value.
+</Check>
+
+## (e) Enthalpy of solution
+
+The **enthalpy of solution**, $\Delta_{\text{sol}}H^\circ$, is the change when one mole of a solute dissolves in a stated amount of solvent. For an ionic compound it has two parts. Breaking the crystal into gaseous ions takes in the lattice enthalpy. Surrounding each ion with water releases the **enthalpy of hydration**. The two add up:
+
+$$
+\Delta_{\text{sol}}H^\circ = \Delta_{\text{lattice}}H^\circ + \Delta_{\text{hyd}}H^\circ
+$$
+
+<Scrolly animation="unit5-nacl-dissolution">
+<Step>
+The crystal, $\ce{NaCl(s)}$, is the reference at zero. Its separated ions in the gas phase lie far above it, because the ionic lattice holds them together so strongly that a great deal of energy is needed to prise them apart. Read the diagram from the bottom: the solid sits lowest, and every route to free ions must climb.
+</Step>
+<Step>
+The lattice step takes the crystal apart into gaseous ions, $\ce{NaCl(s) -> Na+(g) + Cl-(g)}$. It takes in $+788$ kJ mol⁻¹, so the arrow points up. This is the cost of leaving the lattice, and it is the largest uphill step in the dissolution picture. Water has not yet entered the story; this is only the price of freeing the ions.
+</Step>
+<Step>
+Water surrounds the free ions, $\ce{Na+(g) + Cl-(g) -> Na+(aq) + Cl-(aq)}$. The hydration enthalpy is $-784$ kJ mol⁻¹, so the arrow points down and gives most of the heat back. Each ion attracts the oxygen end of several water molecules, and that attraction is released as heat, which is why the hydration term is so large and negative.
+</Step>
+<Step>
+Add the two steps. The net enthalpy of solution is $+788 + (-784) = +4$ kJ mol⁻¹. The dissolved level sits almost on the crystal's level, so the solution is almost thermally neutral. For most salts the net value is positive, so their solubility rises with temperature, but for sodium chloride the balance is almost exact.
+</Step>
+</Scrolly>
+
+For sodium chloride the two large numbers nearly cancel, leaving $\Delta_{\text{sol}}H^\circ = +4$ kJ mol⁻¹. That is why a glass of salt water stays at room temperature. Salts whose lattice is much harder to break, or whose ions are poorly hydrated, dissolve with a much bigger heat change, and some barely dissolve at all.
+
+<Check n={3} options={["It is the energy needed to hydrate the ions, so it is always negative", "It is the sum of the lattice enthalpy and the hydration enthalpy, so for NaCl it is nearly zero", "It is the lattice enthalpy alone, so it is always positive", "It is the enthalpy of formation of the solid, which is −411.2 kJ mol⁻¹ for every salt"]} answer={1} explanation="Enthalpy of solution is ΔlatticeH + ΔhydH. For NaCl, +788 + (−784) = +4 kJ mol⁻¹. The other options either leave out one term or mix in the formation enthalpy, which is a different quantity.">
+Which statement about the enthalpy of solution is correct?
+</Check>
+
+## (f) Enthalpy of dilution
+
+Once a substance has dissolved, adding more solvent changes the enthalpy again. The change is the **enthalpy of dilution**. NCERT's example uses hydrogen chloride, and the enthalpy of solution depends on how much water there is. Dissolving one mole of $\ce{HCl(g)}$ in 25 mol of water gives $-72.03$ kJ mol⁻¹, and in 40 mol of water gives $-72.79$ kJ mol⁻¹. Diluting the first solution to the second is the difference of the two:
+
+$$
+\Delta H_{\text{dil}} = (-72.79) - (-72.03) = -0.76\ \text{kJ mol}^{-1}
+$$
+
+The dilution releases a little heat into the solution, so its enthalpy is negative. As more water is added, the enthalpy of solution settles towards the value at infinite dilution, $-74.85$ kJ mol⁻¹, and each further change becomes smaller.
+
+<Check n={4} numeric answer={-0.76} tolerance={0.02} unit="kJ mol⁻¹" explanation="ΔH(HCl·40 aq) − ΔH(HCl·25 aq) = −72.79 − (−72.03) = −0.76 kJ mol⁻¹. The negative sign means the dilution gives out heat.">
+What is the enthalpy of dilution, in kJ mol⁻¹, when a solution of HCl with 25 mol of water is diluted to one with 40 mol of water? The enthalpies of solution are −72.03 and −72.79 kJ mol⁻¹.
+</Check>
+
+<KeyIdeas>
+- The name of an enthalpy change tells you the kind of reaction: combustion, atomisation, bond breaking, lattice formation or dissolution.
+- A mean bond enthalpy is an average over many compounds. Summing bonds broken minus bonds formed gives an estimate of $\Delta_rH^\circ$ for gas-phase reactions only.
+- The Born–Haber cycle sums to the enthalpy of formation, so the lattice term is set by Hess's law: $\Delta_fH^\circ = \sum(\text{steps})$, with the lattice step taking the value $-788$ kJ mol⁻¹ in the formation direction.
+- The enthalpy of solution is the lattice enthalpy plus the hydration enthalpy. For NaCl, $+788 - 784 = +4$ kJ mol⁻¹, so dissolving table salt barely changes the temperature.
+- Dilution is a difference of two enthalpies of solution. For HCl, going from 25 to 40 mol of water gives $-0.76$ kJ mol⁻¹.
+</KeyIdeas>
