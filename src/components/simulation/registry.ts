@@ -13,6 +13,7 @@ import { TrendsExplorer } from './sims/trends-explorer'
 import { MendeleevPredict } from './sims/mendeleev-predict'
 import { OxideLab } from './sims/oxide-lab'
 import { MOBuilder } from './sims/mo-builder'
+import { HybridExplorer } from './sims/hybrid-explorer'
 
 export interface SimulationProps {
   /** True when the Learner has asked the OS for reduced motion. Skip tweens and loops when set. */
@@ -39,4 +40,5 @@ export const simulations: Record<string, ComponentType<SimulationProps>> = {
   'mendeleev-predict': MendeleevPredict,
   'oxide-lab': OxideLab,
   'mo-builder': MOBuilder,
+  'hybrid-explorer': HybridExplorer,
 }

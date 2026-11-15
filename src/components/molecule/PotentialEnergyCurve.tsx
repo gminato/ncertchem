@@ -6,9 +6,9 @@ import { H2_MORSE, morseCurve, morseEnergy, type MorseParams } from './morse'
 export const PE_CURVE_SIZE = { width: 360, height: 262 } as const
 
 const PLOT = { left: 72, right: 344, top: 52, bottom: 216 }
-const R_MIN = 40
+const R_MIN = 30
 const R_MAX = 240
-const E_MAX = 120
+const E_MAX = 200
 const E_MIN = -560
 const TICK_SIZE = 13
 

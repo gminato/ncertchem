@@ -49,6 +49,10 @@ import { MOEnergyOrders } from './unit4/mo/MOEnergyOrders'
 import { MOO2Filling } from './unit4/mo/MOO2Filling'
 import { HBondContacts } from './unit4/hbond/HBondContacts'
 import { HBondBoiling } from './unit4/hbond/HBondBoiling'
+import { H2PotentialCurve } from './unit4/vbt/H2PotentialCurve'
+import { OverlapSteps } from './unit4/vbt/OverlapSteps'
+import { EthynePi } from './unit4/vbt/EthynePi'
+import { HybridGeometry } from './unit4/vbt/HybridGeometry'
 
 /**
  * Animations available to a Scrolly Animation, keyed by the `animation` prop.
@@ -108,6 +112,10 @@ export const animations = {
   'mo-o2-filling': MOO2Filling,
   'hbond-contacts': HBondContacts,
   'hbond-boiling': HBondBoiling,
+  'vbt-h2-curve': H2PotentialCurve,
+  'vbt-overlap': OverlapSteps,
+  'vbt-ethyne-pi': EthynePi,
+  'vbt-hybrid-geometry': HybridGeometry,
 } as const
 
 export type AnimationName = keyof typeof animations
