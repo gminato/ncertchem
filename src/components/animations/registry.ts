@@ -93,6 +93,7 @@ import { PhysicalEquilibria } from './unit6/physical/PhysicalEquilibria'
 import { DynamicEquilibrium } from './unit6/dynamic/DynamicEquilibrium'
 import { MassAction } from './unit6/massaction/MassAction'
 import { LeChatelierStress } from './unit6/lechatelier/LeChatelierStress'
+import { PhLadder } from './unit6/ph/PhLadder'
 
 /**
  * Animations available to a Scrolly Animation, keyed by the `animation` prop.
@@ -196,6 +197,7 @@ export const animations = {
   'unit6-dynamic-equilibrium': DynamicEquilibrium,
   'unit6-mass-action': MassAction,
   'le-chatelier': LeChatelierStress,
+  'ph-scale': PhLadder,
 } as const
 
 export type AnimationName = keyof typeof animations
