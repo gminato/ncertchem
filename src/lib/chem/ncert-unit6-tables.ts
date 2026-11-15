@@ -580,4 +580,16 @@ export const NCERT_UNIT6_ERRATA: readonly NcertErratum[] = [
     correct: '1.41 × 10⁻³ / 0.08 = 1.77 %',
     note: 'Rounding of the printed [H⁺] before dividing.',
   },
+  {
+    where: 'Section 6.8.4, cobalt colour equilibrium, PDF p. 21 (book p. 188)',
+    printed: '[Co(H₂O)₆]³⁺(aq) + 4Cl⁻(aq) ⇌ [CoCl₄]²⁻(aq) + 6H₂O(l), and "turns pink due to [Co(H₂O)₆]³⁺"',
+    correct: '[Co(H₂O)₆]²⁺(aq) + 4Cl⁻(aq) ⇌ [CoCl₄]²⁻(aq) + 6H₂O(l)',
+    note: 'Cobalt is +2 on both sides; with 3+ the charges do not balance (−1 left, −2 right). Lead-verified from the page image. The same paragraph spells "freezing" as "freesing".',
+  },
+  {
+    where: 'Kp table (the first "Table 6.5"), N₂O₄ ⇌ 2NO₂ at 298 K, PDF p. 11',
+    printed: 'Kp = 0.98',
+    correct: 'Kp ≈ 0.15 (bar) at 298 K',
+    note: 'From standard Gibbs energies of formation (NO₂ 51.31, N₂O₄ 97.89 kJ mol⁻¹): ΔG° = +4.73 kJ mol⁻¹, K = e^(−ΔG°/RT) ≈ 0.148. A van \'t Hoff fit from the table\'s own 400 K value (47.9) with ΔH° ≈ +57 kJ mol⁻¹ also gives ≈ 0.15. The 400 K and 500 K entries are consistent with standard data.',
+  },
 ]
