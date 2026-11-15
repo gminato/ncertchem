@@ -3,8 +3,13 @@
 import React, { useState, useMemo } from 'react'
 import type { SimulationProps } from '@/components/simulation/registry'
 import { Button } from '@/components/controls'
-import { ONLadder, type ONSpecies, type ONTransition } from '@/components/redox/ONLadder'
 import { formatTrueMinus } from '@/components/redox/geometry'
+import { LaneLadder } from '@/components/animations/unit7/types/LaneLadder'
+import {
+  buildLadderModel,
+  formatOn,
+  toUnicodeFormula,
+} from '@/components/animations/unit7/types/ladder-model'
 import {
   analyseRedox,
   type RedoxAnalysisResult,
@@ -136,103 +141,11 @@ const CATEGORIES: readonly CategoryOption[] = [
   { type: 'not-redox', label: 'Not Redox' },
 ]
 
-/** Builds ONLadder species and transitions dynamically from analyseRedox output. */
-function buildLadderData(analysis: RedoxAnalysisResult): {
-  species: ONSpecies[]
-  transitions: ONTransition[]
-  range: [number, number]
-} {
-  const species: ONSpecies[] = []
-  const transitions: ONTransition[] = []
-  const allValues: number[] = []
-
-  if (analysis.type === 'disproportionation') {
-    const elem = analysis.oxidisedElements[0]
-    const rState = analysis.reactantStates[elem]
-    const fromVal = rState ? rationalToNumber(rState) : 0
-    allValues.push(fromVal)
-
-    const fromId = `${elem}_react`
-    species.push({
-      id: fromId,
-      label: `${elem} in reactant`,
-      on: fromVal,
-      column: 0,
-    })
-
-    const changes = analysis.changes.filter((c) => c.element === elem)
-    changes.forEach((ch, idx) => {
-      const toVal = rationalToNumber(ch.to)
-      allValues.push(toVal)
-      const toId = `${elem}_prod_${idx}`
-      const isOx = toVal > fromVal
-      species.push({
-        id: toId,
-        label: `${elem} (${toVal > 0 ? `+${toVal}` : toVal})`,
-        on: toVal,
-        column: 1,
-      })
-      transitions.push({
-        id: `trans_${idx}`,
-        fromId,
-        toId,
-        label: isOx ? `Oxidation (${fromVal} → +${toVal})` : `Reduction (${fromVal} → ${toVal})`,
-        tone: isOx ? 'ox' : 'red',
-      })
-    })
-  } else if (analysis.isRedox) {
-    analysis.changes.forEach((ch, idx) => {
-      const fromVal = rationalToNumber(ch.from)
-      const toVal = rationalToNumber(ch.to)
-      allValues.push(fromVal, toVal)
-
-      const fromId = `${ch.element}_r_${idx}`
-      const toId = `${ch.element}_p_${idx}`
-      const isOx = toVal > fromVal
-
-      species.push({
-        id: fromId,
-        label: `${ch.element}(react)`,
-        on: fromVal,
-        column: 0,
-      })
-      species.push({
-        id: toId,
-        label: `${ch.element}(prod)`,
-        on: toVal,
-        column: 1,
-      })
-      transitions.push({
-        id: `tr_${idx}`,
-        fromId,
-        toId,
-        label: isOx ? `Oxidation (+${toVal - fromVal})` : `Reduction (${toVal - fromVal})`,
-        tone: isOx ? 'ox' : 'red',
-      })
-    })
-  } else {
-    // Not-redox: elements maintain constant state
-    Object.entries(analysis.reactantStates).forEach(([elem, state], idx) => {
-      if (idx > 2) return // keep ladder clean
-      const val = rationalToNumber(state)
-      allValues.push(val)
-      species.push({
-        id: `${elem}_static`,
-        label: `${elem}: ${val > 0 ? `+${val}` : val}`,
-        on: val,
-        column: 0,
-      })
-    })
-  }
-
-  const minVal = allValues.length > 0 ? Math.min(...allValues) : -2
-  const maxVal = allValues.length > 0 ? Math.max(...allValues) : 2
-  const range: [number, number] = [
-    Math.min(-2, Math.floor(minVal) - 1),
-    Math.max(2, Math.ceil(maxVal) + 1),
-  ]
-
-  return { species, transitions, range }
+/** Plain-text summary of unchanged states, e.g. "Ca +2, C +4, O −2". */
+function unchangedStatesText(analysis: RedoxAnalysisResult): string {
+  return Object.entries(analysis.reactantStates)
+    .map(([element, state]) => `${toUnicodeFormula(element)} ${formatOn(rationalToNumber(state))}`)
+    .join(', ')
 }
 
 export function RedoxClassifier({}: SimulationProps) {
@@ -250,9 +163,9 @@ export function RedoxClassifier({}: SimulationProps) {
     return analyseRedox(currentCard.equation)
   }, [currentCard.equation])
 
-  const ladderData = useMemo(() => {
-    return buildLadderData(analysis)
-  }, [analysis])
+  const ladderModel = useMemo(() => {
+    return analysis.isRedox ? buildLadderModel(currentCard.equation) : null
+  }, [analysis, currentCard.equation])
 
   const totalScore = Object.values(scores).filter(Boolean).length
 
@@ -411,37 +324,33 @@ export function RedoxClassifier({}: SimulationProps) {
                   {analysis.oxidants.length > 0 && (
                     <span className={`${styles.roleTag} ${styles.roleOxidant}`}>
                       <span>Oxidant (reduced):</span>
-                      <strong>{analysis.oxidants.join(', ')}</strong>
+                      <strong>{analysis.oxidants.map(toUnicodeFormula).join(', ')}</strong>
                     </span>
                   )}
                   {analysis.reductants.length > 0 && (
                     <span className={`${styles.roleTag} ${styles.roleReductant}`}>
                       <span>Reductant (oxidised):</span>
-                      <strong>{analysis.reductants.join(', ')}</strong>
+                      <strong>{analysis.reductants.map(toUnicodeFormula).join(', ')}</strong>
                     </span>
                   )}
                 </div>
               )}
             </div>
 
-            {/* Oxidation Number Ladder */}
-            {analysis.isRedox && ladderData.species.length > 0 && (
+            {/* Oxidation number ladder: one lane per element that changes */}
+            {analysis.isRedox && ladderModel && (
               <div className={styles.ladderContainer} data-testid="ladder-display">
-                <svg
-                  viewBox="0 0 380 340"
-                  style={{ width: '100%', maxWidth: '420px', height: 'auto' }}
-                  role="img"
-                  aria-label="Oxidation number ladder showing electron loss and gain"
-                >
-                  <ONLadder
-                    range={ladderData.range}
-                    species={ladderData.species}
-                    transitions={ladderData.transitions}
-                    progress={1}
-                    title="Oxidation state changes"
-                  />
-                </svg>
+                <LaneLadder
+                  model={ladderModel}
+                  height={330}
+                  ariaLabel={`Oxidation number changes for ${currentCard.displayEquation}`}
+                />
               </div>
+            )}
+            {!analysis.isRedox && (
+              <p className={styles.unchangedNote} data-testid="unchanged-note">
+                No element changes its oxidation number: {unchangedStatesText(analysis)}.
+              </p>
             )}
           </div>
         )}
