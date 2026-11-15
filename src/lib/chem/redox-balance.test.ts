@@ -218,3 +218,10 @@ describe('redox-balance.ts', () => {
     })
   })
 })
+
+describe('isBalanced with electrons in half-equations', () => {
+  it('counts electrons as charge only', () => {
+    const r = balanceHalfReaction('Cr2O7^2- -> Cr3+', 'acidic')
+    expect(isBalanced({ reactants: r.reactants, products: r.products }).balanced).toBe(true)
+  })
+})
