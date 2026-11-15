@@ -30,10 +30,14 @@ import { MetalDisplacementLab } from './sims/metal-displacement-lab'
 import { RedoxBalancer } from './sims/redox-balancer'
 import { KpKcConverter, HeterogeneousConverter } from './sims/kp-kc-converter'
 import { IceSolver } from './sims/ice-solver'
+import { ConjugatePairSorter } from './sims/conjugate-pair-sorter'
 import { SealedContainerLab } from './sims/sealed-container-lab'
 import { ApproachToEquilibrium } from './sims/approach-to-equilibrium'
+import { BufferDesigner } from './sims/buffer-designer'
 import { LeChatelierLab } from './sims/le-chatelier-lab'
 import { PrecipitationLab } from './sims/precipitation-lab'
+import { PhExplorer } from './sims/ph-explorer'
+import { WeakAcidLab } from './sims/weak-acid-lab'
 
 export interface SimulationProps {
   /** True when the Learner has asked the OS for reduced motion. Skip tweens and loops when set. */
@@ -78,8 +82,12 @@ export const simulations: Record<string, ComponentType<SimulationProps>> = {
   'kp-kc-converter': KpKcConverter,
   'heterogeneous-converter': HeterogeneousConverter,
   'ice-solver': IceSolver,
+  'conjugate-pair-sorter': ConjugatePairSorter,
   'sealed-container-lab': SealedContainerLab,
   'approach-to-equilibrium': ApproachToEquilibrium,
+  'buffer-designer': BufferDesigner,
   'le-chatelier-lab': LeChatelierLab,
   'precipitation-lab': PrecipitationLab,
+  'ph-explorer': PhExplorer,
+  'weak-acid-lab': WeakAcidLab,
 }

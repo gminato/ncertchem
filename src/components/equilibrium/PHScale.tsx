@@ -118,7 +118,7 @@ export const PHScale = forwardRef<SVGGElement, PHScaleProps>(function PHScale(
 
       {/* Readouts */}
       <text x={320} y={196} textAnchor="middle" dominantBaseline="central" fontSize={15} fontFamily="var(--font-sans)" fill="var(--fg)" style={{ fontVariantNumeric: 'tabular-nums', userSelect: 'none' }}>
-        <tspan fontWeight={700}>pH {p.toFixed(1)}</tspan>
+        <tspan fontWeight={700}>pH {p.toFixed(2)}</tspan>
         <tspan fill="var(--fg-muted)">{'   ·   '}</tspan>
         <tspan>
           <tspan className="sym">[H</tspan>⁺<tspan className="sym">]</tspan> = {formatSci(hPlus)}

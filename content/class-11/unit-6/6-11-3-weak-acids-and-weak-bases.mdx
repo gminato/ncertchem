@@ -1,0 +1,120 @@
+---
+class: 11
+unit: 6
+section: "6.11.3"
+order: 12
+title: "Weak Acids and Weak Bases"
+slug: "6-11-3-weak-acids-and-weak-bases"
+summary: "A weak acid only partly ionises, so its strength is a constant Ka and its pH needs a quadratic. The same ideas run backwards for bases, pair up through Ka times Kb equals Kw, and explain why some acids give up more than one proton."
+ncert: "Class 11, Part I — Unit 6, Section 6.11.3"
+---
+
+<Hook>
+Two bottles of 0.1 M acid sit on a lab shelf. One is hydrochloric acid, and the other is the acetic acid that gives vinegar its sourness. Dip pH paper into each and the colours differ sharply: the hydrochloric acid reads about 1, while the acetic acid reads about 3. Both bottles hold the same number of moles of acid per litre. Why does the same molarity give such different acidity?
+</Hook>
+
+Strong acids and strong bases split completely in water, so the concentration of the acid is the concentration of hydronium ions. Weak acids and bases do not. Most of their molecules stay whole, and only a small fraction ionises. The constant that governs that fraction tells you how strong the acid or base is, and it is the same for every concentration at a given temperature.
+
+This Section builds the weak acid idea step by step, then reads the same ideas backwards for bases, pairs them through $K_a K_b = K_w$, handles acids with more than one proton, and ends with what the bond in an acid tells you about its strength.
+
+## 6.11.3 Ionisation constants of weak acids
+
+Take a weak acid HA of starting concentration $c$. Let $\alpha$ be the fraction of it that ionises, the degree of ionisation. The ICE table in the scrolly below tracks the same change, with the amount $c\alpha$ mol L⁻¹ of acid that ionises. The constant for the equilibrium is
+
+$$
+K_a = \frac{[\ce{H3O+}][\ce{A-}]}{[\ce{HA}]} = \frac{c\alpha \cdot c\alpha}{c(1-\alpha)} = \frac{c\alpha^{2}}{1-\alpha}
+$$
+
+Two features matter. $K_a$ is dimensionless when concentrations are measured against the standard state of 1 mol L⁻¹, and a larger $K_a$ means a stronger acid. Table 6.6 gives $K_a$ at 298 K for several acids. Every acid in that table has a $K_a$ far below 1, which is why each one leaves most of its molecules whole.
+
+Chemists also quote $\mathrm{p}K_a = -\log_{10} K_a$, on the same logarithmic scale as pH. A smaller $\mathrm{p}K_a$ means a stronger acid.
+
+The method for the pH of a weak acid is the same every time. Identify the species that can give or take protons. Write every reaction they can undergo, and keep the one with the largest constant as the principal reaction. Tabulate the initial, change and equilibrium concentrations, using $\alpha$ for the change. Substitute into the constant and solve for $\alpha$. Then find $[\ce{H3O+}] = c\alpha$ and take the pH. The worked example uses benzoic acid, $\ce{C6H5COOH}$, with $K_a = 6.5 \times 10^{-5}$ from Table 6.6, at three concentrations.
+
+<Scrolly animation="weak-acid">
+<Step>
+Start with 0.200 mol L⁻¹ of benzoic acid in water. The first row of the table records the starting amounts: 0.200 for HA, and zero for the hydronium ion and the anion. Water also makes a trace of $\ce{H3O+}$, about $10^{-7}$ mol L⁻¹, but that is far too small to matter at this concentration, so the table leaves it out. The beaker holds whole molecules only, because nothing has ionised yet.
+</Step>
+<Step>
+Now let $\alpha$ be the ionised fraction. The equation becomes $6.5 \times 10^{-5} = 0.200\,\alpha^{2}/(1-\alpha)$, a quadratic in $\alpha$. Solve it and keep the positive root, which is $\alpha = 0.0179$. So 1.79 % of the acid has ionised, and $[\ce{H3O+}] = 0.200 \times 0.0179 = 3.57 \times 10^{-3}$ mol L⁻¹. The beaker draws at most one ionised pair, as that small fraction implies.
+</Step>
+<Step>
+Dilute the same acid ten times, to 0.0200 mol L⁻¹. The constant has not changed, because $K_a$ depends only on temperature. Yet α has risen to 5.54 %, because fewer molecules remain, so a larger share must ionise to keep the same ratio. The shortcut for this case would give 5.70 %, which is above the 5 % limit. The shortcut is no longer safe, so the quadratic must be solved.
+</Step>
+<Step>
+Dilute once more, to 0.00200 mol L⁻¹. Now α is 16.5 %, and about one molecule in six has ionised. In this range $\alpha$ is close to $\sqrt{K_a/c}$, so every tenfold dilution multiplies α by about three. Each beaker holds the same number of molecules, so a larger share of them is drawn as ions.
+</Step>
+<Step>
+Take the pH at the most dilute concentration. $[\ce{H3O+}] = 3.30 \times 10^{-4}$ mol L⁻¹, so $\mathrm{pH} = -\log_{10}(3.30 \times 10^{-4}) = 3.48$. The shortcut would have given 3.44, an error of 0.04 pH units. At this dilution the shortcut is too rough, so the exact answer stays in the table. Every number in that table now comes from the quadratic, so the pH is only as good as the $K_a$ it started from.
+</Step>
+</Scrolly>
+
+The shortcut is worth knowing, because it saves a quadratic. When $\alpha$ is small, $c(1-\alpha) \approx c$, so $K_a \approx c\alpha^{2}$ and $[\ce{H3O+}] \approx \sqrt{K_a c}$. This is accepted while $\alpha$ stays under about 5 %. Above that, the error grows, and the quadratic must be solved.
+
+<Check n={1} numeric answer={1.79} tolerance={0.02} unit="%" explanation="The quadratic 6.5 × 10⁻⁵ = 0.200 α²/(1 − α) has the positive root α = 0.0179, so 1.79 % of the benzoic acid ionises. The shortcut, √(Ka/c), would give 1.80 % here, which is within the 5 % limit.">
+A 0.200 mol L⁻¹ solution of benzoic acid, with $K_a = 6.5 \times 10^{-5}$, is ionised to what percentage?
+</Check>
+
+## 6.11.4 Ionisation of weak bases
+
+A weak base B takes a proton from water and leaves behind hydroxide. Its ionisation constant follows the same pattern as the acid case, with $[\ce{OH-}]$ in place of the hydronium ion:
+
+$$
+K_b = \frac{[\ce{BH+}][\ce{OH-}]}{[\ce{B}]} = \frac{c\alpha^{2}}{1-\alpha}
+$$
+
+The degree of ionisation, the shortcut and the quadratic all carry over. The pH needs one more step. Find $[\ce{OH-}]$, then take $\mathrm{pOH} = -\log_{10}[\ce{OH-}]$, and finish with $\mathrm{pH} = 14 - \mathrm{pOH}$ at 298 K. The constant $\mathrm{p}K_b = -\log_{10} K_b$ is defined the same way as $\mathrm{p}K_a$.
+
+Take dimethylamine, $\ce{(CH3)2NH}$, with $K_b = 5.4 \times 10^{-4}$ from Table 6.7, at 0.0200 mol L⁻¹. The quadratic gives $\alpha = 0.151$, so 15.1 % of the base has taken a proton. Then $[\ce{OH-}] = 3.03 \times 10^{-3}$ mol L⁻¹, $\mathrm{pOH} = 2.52$, and the pH is 11.48. Here the shortcut would give 16.4 % ionisation, far above the 5 % limit, so the quadratic is the only safe route.
+
+<Simulation name="weak-acid-lab" title="Weak acid and base lab: α, pH and the polyprotic species" />
+
+## 6.11.5 Ka and Kb of a conjugate pair
+
+An acid and its conjugate base are linked. HA gives up a proton to become A⁻, and A⁻ takes a proton back to become HA. Their two equilibria, added together, give the autoionisation of water, so their constants multiply to the ionic product of water:
+
+$$
+K_a \times K_b = \frac{[\ce{H3O+}][\ce{A-}]}{[\ce{HA}]} \times \frac{[\ce{HA}][\ce{OH-}]}{[\ce{A-}]} = [\ce{H3O+}][\ce{OH-}] = K_w
+$$
+
+At 298 K, $K_w = 1.0 \times 10^{-14}$. So once you know $K_a$ of an acid, the $K_b$ of its conjugate base is $K_w / K_a$, and the reverse is also true.
+
+Take hydrocyanic acid, HCN, with $K_a = 4.9 \times 10^{-10}$ from Table 6.6. Its conjugate base, the cyanide ion, has $K_b = 1.0 \times 10^{-14} / 4.9 \times 10^{-10} = 2.04 \times 10^{-5}$. The pair shows a rule that holds across every conjugate pair: a stronger acid has a weaker conjugate base. Hypochlorous acid, HOCl, has $K_a = 3.0 \times 10^{-8}$, which is stronger than HCN, and its conjugate base has $K_b = 3.3 \times 10^{-7}$, which is weaker than cyanide's $2.04 \times 10^{-5}$.
+
+<Check n={2} numeric answer={4.69} tolerance={0.02} explanation="pKb = −log₁₀(2.04 × 10⁻⁵) = 4.69. The Kb of the cyanide ion is Kw divided by Ka of HCN, which is 1.0 × 10⁻¹⁴ / 4.9 × 10⁻¹⁰ = 2.04 × 10⁻⁵.">
+For HCN, with $K_a = 4.9 \times 10^{-10}$, what is $\mathrm{p}K_b$ of the cyanide ion at 298 K?
+</Check>
+
+## 6.11.6 Polyprotic acids
+
+Some acids give up more than one proton. Oxalic acid, $\ce{H2C2O4}$, is diprotic, and phosphoric acid, $\ce{H3PO4}$, is triprotic. Each step has its own constant. The first step is $\ce{H2A} \rightleftharpoons \ce{H+} + \ce{HA-}$ with $K_{a1}$, and the second is $\ce{HA-} \rightleftharpoons \ce{H+} + \ce{A^{2-}}$ with $K_{a2}$. The shorthand $\ce{H+}$ here stands for a proton, which in water is carried by $\ce{H3O+}$.
+
+Table 6.8 lists these constants. In every acid the order is the same: $K_{a1} > K_{a2} > K_{a3}$. Oxalic acid has $K_{a1} = 5.9 \times 10^{-2}$ and $K_{a2} = 6.4 \times 10^{-5}$, and phosphoric acid has $K_{a1} = 7.5 \times 10^{-3}$, $K_{a2} = 6.2 \times 10^{-8}$ and $K_{a3} = 4.2 \times 10^{-13}$. The reason is electrostatic. Removing a proton from a negative ion is harder than removing one from a neutral molecule, because the remaining negative charge holds the proton more tightly.
+
+The first step does most of the work. The hydronium ions in a solution of oxalic acid come mainly from the first ionisation, and the second step adds only a little more. A solution of 0.100 mol L⁻¹ oxalic acid has pH 1.28 when the full charge balance is solved, a little above $\mathrm{p}K_{a1} = 1.23$. At that concentration more than half of the acid has already lost its first proton, which pushes the pH above the first pKa.
+
+Which form is present depends on pH. At pH 1 the solution holds 63 % of the neutral $\ce{H2A}$ and 37 % of $\ce{HA-}$. At pH 4.2 the two anions, $\ce{HA-}$ and $\ce{A^{2-}}$, are about equal, near 50 % each, which sits close to the second pKa of 4.19. At pH 7 almost all of it is $\ce{A^{2-}}$.
+
+<Check n={3} options={["H₂C₂O₄, the neutral acid", "HC₂O₄⁻, the hydrogen oxalate ion", "C₂O₄²⁻, the oxalate ion"]} answer={2} explanation="At pH 7 the fraction of the oxalate ion is about 99.8 %, far above the other forms. As the pH rises past each pKa, the next proton leaves.">
+In a solution of oxalic acid buffered at pH 7, which form makes up almost all of the dissolved acid?
+</Check>
+
+## 6.11.7 What sets the strength of an acid
+
+Why is hydrogen fluoride a weak acid while hydrogen iodide is a strong one? The answer depends on the strength and polarity of the H–A bond, where A is the atom bonded to hydrogen. A weaker H–A bond is easier to break, so the acid ionises more readily. A more polar bond, with a larger electronegativity difference between H and A, also helps, because the H carries more positive charge and separates more easily.
+
+Within a group, bond strength decides the order. Mean bond enthalpies at 298 K from Table 5.3(a) are 569 kJ mol⁻¹ for H–F, 431 for H–Cl, 368 for H–Br and 297 for H–I. The bond gets weaker as the atom A gets larger, so the acid strength rises: $\ce{HF} < \ce{HCl} < \ce{HBr} < \ce{HI}$. Fluorine is the most electronegative halogen, so H–F is the most polar bond of the four, yet it is the weakest acid. In a group, the bond strength matters more than its polarity.
+
+Across a period the order is set by polarity instead. Along the second period, the electronegativity rises from 2.5 for carbon to 3.0 for nitrogen, 3.5 for oxygen and 4.0 for fluorine, on the NCERT scale of Table 3.8. The hydrides follow the same trend: $\ce{CH4} < \ce{NH3} < \ce{H2O} < \ce{HF}$ in order of increasing acid strength.
+
+<Check n={4} options={["HF, because its H–F bond is the most polar", "HI, because its H–I bond is the weakest of the four", "They are equally strong, since both are hydrogen halides"]} answer={1} explanation="Within a group the bond strength dominates. The H–I bond, at 297 kJ mol⁻¹, is much weaker than H–F at 569 kJ mol⁻¹, so HI ionises more readily and is the stronger acid, even though its bond is less polar.">
+Which is the stronger acid in water, HF or HI, and why?
+</Check>
+
+<KeyIdeas>
+- A weak acid ionises only partly, with degree of ionisation α, and $K_a = c\alpha^{2}/(1-\alpha)$ fixes the amount. Diluting the acid raises α while $K_a$ stays put.
+- The shortcut $[\ce{H3O+}] \approx \sqrt{K_a c}$ is accepted while α is under 5 %. Above that, solve the quadratic for α.
+- For a conjugate pair, $K_a K_b = K_w = 1.0 \times 10^{-14}$ at 298 K. A stronger acid always has a weaker conjugate base.
+- In a polyprotic acid, $K_{a1} > K_{a2} > K_{a3}$, because each proton is harder to remove from a more negative ion.
+- Across a period, a more electronegative atom makes a more polar H–A bond and a stronger acid. Down a group, a weaker H–A bond makes the stronger acid, and bond strength matters more than polarity.
+</KeyIdeas>

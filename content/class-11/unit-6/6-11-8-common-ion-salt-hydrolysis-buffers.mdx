@@ -1,0 +1,123 @@
+---
+class: 11
+unit: 6
+section: "6.11.8"
+order: 13
+title: "Common Ion Effect, Salt Hydrolysis and Buffer Solutions"
+slug: "6-11-8-common-ion-salt-hydrolysis-buffers"
+summary: "Adding an ion that is already in an acid's equilibrium pushes the acid back, salts of weak acids or bases change the pH through hydrolysis, and a buffer's pH follows the ratio of salt to acid through the Henderson–Hasselbalch equation."
+ncert: "Class 11, Part I — Unit 6, Section 6.11.8"
+---
+
+<Hook>
+Squeeze a little lemon into a glass of plain water and it turns sour at once. Now picture the same squeeze falling into the blood in your arm after a spicy meal. The blood barely notices. Water has almost nothing in it to resist the change, so what does blood have that the glass lacks?
+</Hook>
+
+## 6.11.8 Common ion effect in the ionisation of acids and bases
+
+Acetic acid is a weak acid, so its ionisation is an equilibrium with most of the acid left undissociated:
+
+$$
+\ce{CH3COOH + H2O <=> H3O+ + CH3COO-}, \qquad K_a = \frac{[\text{H}_3\text{O}^+][\text{CH}_3\text{COO}^-]}{[\text{CH}_3\text{COOH}]} = 1.74 \times 10^{-5}
+$$
+
+The value of $K_a$ at 298 K comes from NCERT Table 6.6. Here $\text{H}_3\text{O}^+$ is the hydronium ion, the proton as it exists in water; you will often see $\text{H}^+$ written for it, which is shorthand for the same species.
+
+Now add sodium acetate. It dissolves completely and supplies $\text{CH}_3\text{COO}^-$, an ion that is already one of the products of the acid's equilibrium. Le Chatelier's principle says the system shifts to partly oppose the added product, so the equilibrium moves back towards undissociated acetic acid and fewer hydronium ions form. This shift caused by an ion already present is the common ion effect, and it is a consequence of Le Chatelier's principle (Section 6.8).
+
+Work an example of your own. Take 0.20 M acetic acid and 0.10 M sodium acetate. Let $x$ be the hydronium concentration that the acid contributes. The acid then has $0.20 - x$ M left, and the acetate has $0.10 + x$ M, so
+
+$$
+\frac{x\,(0.10 + x)}{0.20 - x} = 1.74 \times 10^{-5}
+$$
+
+Because $K_a$ is small, $x$ is much smaller than the concentrations around it, and the two sums reduce to $0.10$ and $0.20$. That gives $x \approx \dfrac{1.74 \times 10^{-5} \times 0.20}{0.10} = 3.48 \times 10^{-5}$ M. The exact quadratic gives $3.478 \times 10^{-5}$ M, so the approximation holds, and the pH is $4.46$.
+
+For contrast, 0.20 M acetic acid alone has $[\text{H}_3\text{O}^+] = 1.86 \times 10^{-3}$ M, a pH of $2.73$, and about $0.93\ \%$ of the acid ionised. With the acetate present the ionised fraction falls to about $0.017\ \%$. The common ion does not change $K_a$. It changes the hydronium concentration that the same $K_a$ allows.
+
+<Check n={1} numeric answer={4.46} tolerance={0.02} unit="pH" explanation="The buffer ratio is 0.10 M salt to 0.20 M acid, so pH = pKa + log(0.10 / 0.20) = 4.76 − 0.30 = 4.46. The exact quadratic gives 4.4586.">
+A solution is 0.20 M in acetic acid and 0.10 M in sodium acetate, at 298 K. What is its pH, to two decimal places?
+</Check>
+
+## 6.11.9 Hydrolysis of salts and the pH of their solutions
+
+A salt dissolves into its ions, and some of those ions react with water. This reaction is hydrolysis, and it changes the pH. The ions of a strong base (Na⁺, K⁺, Ca²⁺) and the ions of a strong acid (Cl⁻, NO₃⁻, ClO₄⁻) are only hydrated. They do not react, so a salt made from a strong acid and a strong base gives a neutral solution. Neutral here means $[\text{H}_3\text{O}^+] = [\text{OH}^-]$, and at 298 K that is pH 7, because $K_w = 1.0 \times 10^{-14}$ at that temperature.
+
+The other salts hydrolyse, and there are three cases to work through.
+
+- **Weak acid and strong base**, for example sodium acetate. The acetate ion takes a proton from water and leaves OH⁻ behind, so the solution is alkaline. Its pH is $\mathrm{pH} = 7 + \tfrac{1}{2}\left(\mathrm{p}K_a + \log c\right)$.
+- **Strong acid and weak base**, for example ammonium chloride. The ammonium ion gives a proton to water and leaves H₃O⁺ behind, so the solution is acidic. Its pH is $\mathrm{pH} = 7 - \tfrac{1}{2}\left(\mathrm{p}K_b + \log c\right)$.
+- **Weak acid and weak base**, for example ammonium formate. Both ions hydrolyse, and the pH is $\mathrm{pH} = 7 + \tfrac{1}{2}\left(\mathrm{p}K_a - \mathrm{p}K_b\right)$. It does not depend on the concentration, and it is above 7 only when $\mathrm{p}K_a$ is larger than $\mathrm{p}K_b$.
+
+The sodium acetate case shows where the formula comes from. Acetate has a hydrolysis constant $K_h = K_w / K_a$, which is $5.75 \times 10^{-10}$ with $K_a = 1.74 \times 10^{-5}$. For a 0.10 M solution the hydroxide concentration is $\sqrt{K_h\, c} = 7.58 \times 10^{-6}$ M, so pOH is $5.12$ and the pH is $8.88$. This uses the usual approximation that hydrolysis is small, so $[\text{OH}^-]$ is much smaller than $c$.
+
+For ammonium chloride, the same route gives $K_h = K_w / K_b = 5.65 \times 10^{-10}$ with $K_b = 1.77 \times 10^{-5}$. At 0.10 M the hydronium concentration is $7.52 \times 10^{-6}$ M, and the pH is $5.12$.
+
+<Check n={2} options={["Alkaline, with pH above 7", "Acidic, with pH below 7", "Neutral, with pH exactly 7"]} answer={1} explanation="The ammonium ion hydrolyses to NH₃ and H₃O⁺. With Kb = 1.77 × 10⁻⁵, the 0.10 M solution has pH 5.12 by the strong acid, weak base formula, so it is acidic.">
+A 0.10 M solution of ammonium chloride, NH₄Cl, is which of these?
+</Check>
+
+## 6.12 Buffer solutions
+
+Blood and urine each have a pH that is held in a narrow range, and any drift from that range signals that something is wrong in the body. Many medicines and cosmetic products must also be kept at a fixed pH. A buffer solution is the tool that makes this possible. It resists a change in pH on dilution, and it resists the addition of small amounts of acid or alkali.
+
+A buffer is usually a weak acid together with its salt, or a weak base together with its salt. A mixture of acetic acid and sodium acetate sits near pH 4.76, and a mixture of ammonia and ammonium chloride sits near pH 9.25. Notice the word "resists". A buffer limits the change in pH; it does not hold the pH perfectly still, and it can only absorb a limited amount of added acid or base.
+
+Blood is the buffer that matters most to the body. Its pH stays just above 7 even after a meal, because several buffer systems work together to take up the acids and bases that the body produces. This Section gives the idea, and the scrolly below shows it at work.
+
+<Scrolly animation="buffer-action">
+<Step>
+Begin with a buffer of 10 mmol of acetic acid and 10 mmol of sodium acetate in 100 mL, so the two forms are equal and the pH starts at $\mathrm{p}K_a$, 4.76. Add 0.5 mmol of strong acid. In the water beside it, the 0.5 mmol of H₃O⁺ has nothing to absorb it, and the pH falls from 7.00 to 2.30. In the buffer, each H₃O⁺ turns one acetate ion into acetic acid, and the pH falls only to 4.72.
+</Step>
+<Step>
+Now add 2.0 mmol of strong acid, four times as much. The water falls to a pH of 1.70. The buffer holds at 4.58, because the acetate to acetic acid ratio has fallen from 1 to 0.67, and a logarithm moves the pH by only 0.18 units for a change of that size.
+</Step>
+<Step>
+Nine millimoles is nearly the whole stock of acetate. The ratio is now 1 to 19, and the buffer's pH falls to 3.48, while the water falls to 1.05. Once the acetate is used up, the buffer has no more protection, and the pH follows the excess acid. Every buffer has a capacity set by the moles of its acid and salt.
+</Step>
+<Step>
+Now the base. Add 2.0 mmol of NaOH. The acetic acid is the component that takes up OH⁻, so the acid falls to 8 mmol and the acetate rises to 12 mmol, and the buffer's pH rises only to 4.94. The water, with the same hydroxide, jumps to 12.30. Watch the particles: filled dots are acetate, rings are acetic acid, and the coloured dots are the H₃O⁺ or OH⁻ that is added.
+</Step>
+</Scrolly>
+
+## 6.12.1 Designing a buffer solution
+
+If you know the $\mathrm{p}K_a$ of a weak acid, you can design a buffer of a chosen pH. Start from the acid's equilibrium. For a weak acid HA dissolved in water,
+
+$$
+\ce{HA + H2O <=> H3O+ + A-}, \qquad K_a = \frac{[\text{H}_3\text{O}^+][\text{A}^-]}{[\text{HA}]}
+$$
+
+Rearrange this for the hydronium concentration, $[\text{H}_3\text{O}^+] = K_a\,[\text{HA}]/[\text{A}^-]$, and take the negative logarithm of both sides. The result is the Henderson–Hasselbalch equation:
+
+$$
+\mathrm{pH} = \mathrm{p}K_a + \log\frac{[\text{salt}]}{[\text{acid}]}
+$$
+
+The acid itself ionises so little that its concentration is almost the amount that was dissolved. Most of the conjugate base $[\text{A}^-]$ comes from the salt, so the salt concentration can stand in for it. Two consequences follow. When the salt and acid are equal, the logarithm is zero and the pH equals $\mathrm{p}K_a$. And because dilution changes the salt and the acid by the same factor, the ratio is unchanged, so the pH of an ideal buffer does not move on dilution.
+
+For acetic acid, $\mathrm{p}K_a = 4.76$, so a buffer of pH 5.00 needs $\log([\text{salt}]/[\text{acid}]) = 0.24$, which is a salt to acid ratio of $1.74$. Choose the acid whose $\mathrm{p}K_a$ is nearest the pH you need, then set the ratio.
+
+A basic buffer works the same way with the conjugate acid. For a weak base B, $K_b = [\text{BH}^+][\text{OH}^-]/[\text{B}]$, so $\mathrm{p}OH = \mathrm{p}K_b + \log([\text{BH}^+]/[\text{B}])$. Using $\mathrm{p}H + \mathrm{p}OH = 14$ at 298 K, and $\mathrm{p}K_a + \mathrm{p}K_b = \mathrm{p}K_w$ for the conjugate pair, this becomes
+
+$$
+\mathrm{pH} = \mathrm{p}K_a(\text{BH}^+) + \log\frac{[\text{B}]}{[\text{BH}^+]}
+$$
+
+For ammonia and the ammonium ion, $\mathrm{p}K_b = 4.75$, so the $\mathrm{p}K_a$ of NH₄⁺ is $9.25$. A solution that is 0.20 M in ammonia and 0.10 M in ammonium ion therefore has a pH of $9.55$.
+
+The simulation below does this design in two tabs. The buffer tab sets the pair, the ratio and the concentration, then adds strong acid or base in steps and compares 100 mL of water with the same addition. The salt tab gives the pH of each salt type from the formulas above.
+
+<Simulation name="buffer-designer" title="Buffer designer and salt hydrolysis" />
+
+<Check n={3} numeric answer={1.74} tolerance={0.02} explanation="pH = pKa + log([salt]/[acid]) gives log ratio = 5.00 − 4.76 = 0.24, so the ratio is 10^0.24 = 1.74. Check it: at ratio 1.74, pH = 4.76 + 0.24 = 5.00.">
+You want an acetic acid buffer at pH 5.00, with pKa = 4.76. What ratio of [sodium acetate] to [acetic acid] should you use?
+</Check>
+
+<KeyIdeas>
+- The common ion effect follows from Le Chatelier's principle: adding an ion already in the equilibrium pushes the weak acid back towards its undissociated form. For 0.20 M acetic acid with 0.10 M acetate, the pH rises from 2.73 to 4.46.
+- Salts of strong acids and strong bases give pH 7 at 298 K. A salt of a weak acid with a strong base is alkaline, a salt of a strong acid with a weak base is acidic, and a weak acid with a weak base gives pH = 7 + ½(pKa − pKb).
+- The Henderson–Hasselbalch equation, pH = pKa + log([salt]/[acid]), gives pH = pKa when the salt and acid are equal. Dilution does not change the ratio, so it does not move the pH of an ideal buffer.
+- A buffer resists change only up to its capacity, set by the moles of its acid and salt. Beyond that, the excess strong acid or base sets the pH.
+- For a basic buffer, use the pKa of the conjugate acid: pKa(NH₄⁺) = 9.25 at 298 K, and pH = pKa(NH₄⁺) + log([NH₃]/[NH₄⁺]).
+</KeyIdeas>
