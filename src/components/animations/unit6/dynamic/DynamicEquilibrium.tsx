@@ -1,11 +1,11 @@
 'use client'
 
-import { RateBars, SealedVessel, type VesselSpecies } from '@/components/equilibrium'
-import { curvePath, type TimePoint } from '@/components/equilibrium/geometry'
+import { SealedVessel, type VesselSpecies } from '@/components/equilibrium'
+import { curvePath, ratesEqual, type TimePoint } from '@/components/equilibrium/geometry'
 import { Label } from '@/components/vocab'
 import { useTweenedNumber } from '../../unit5/gibbs/useTweenedNumber'
 import { approachPresets } from '@/lib/chem/approach-to-equilibrium'
-import { deuteriumShare, dynamicModel, isotopologueFractions, PLOT_CONC } from './dynamic-steps'
+import { deuteriumShare, dynamicModel, isotopologueFractions, PLOT_CONC, type RatePair } from './dynamic-steps'
 
 export interface DynamicEquilibriumProps {
   step: number
@@ -13,19 +13,27 @@ export interface DynamicEquilibriumProps {
 }
 
 const VIEW = { width: 580, height: 500 }
-const VESSEL_X = 110
-const BARS_Y = 300
-const CURVE_Y = 296
 const CAPTION_Y = 486
 
+/**
+ * The SealedVessel draws its flask in a 200 × 202 box at (36, 30) of its native 360 × 286 frame.
+ * These transforms scale that flask to fill the left of the panel (Steps 1 to 3) or to sit small
+ * above the curves (Step 4).
+ */
+const FLASK_FULL = 'translate(-44, -8) scale(1.6)'
+const FLASK_SMALL = 'translate(-17, -14) scale(0.85)'
+
 const SPECIES: VesselSpecies[] = [
-  { id: 'H2', color: 'var(--el-N)', phase: 'gas', label: 'H₂' },
-  { id: 'I2', color: 'var(--i2)', phase: 'gas', label: 'I₂' },
-  { id: 'HI', color: 'var(--el-S)', phase: 'gas', label: 'HI' },
+  { id: 'H2', color: 'var(--el-N)', phase: 'gas' },
+  { id: 'I2', color: 'var(--i2)', phase: 'gas' },
+  { id: 'HI', color: 'var(--el-S)', phase: 'gas' },
 ]
 
 const model = dynamicModel()
 const TIME_MAX = approachPresets().find((p) => p.id === 'h2-i2')!.tEnd
+
+/** One rate bar of the vertical gauge is drawn on this fixed scale, so bars compare across Steps. */
+const RATE_SCALE = model.pictures[0].rates.forward * 1.08
 
 /** The curves at every 20th sample: 0.02 s apart, enough to draw a smooth line. */
 const CURVES: Array<{ id: string; label: string; color: string; dash?: string; points: TimePoint[] }> = [
@@ -47,24 +55,119 @@ const CAPTIONS = [
   'The curves are flat, but both reactions still run in the flask.',
 ] as const
 
-/** Fixed-scale rate config for RateBars: each picture is an exact state, so the bars show exact rates. */
-function barConfig(rates: { forward: number; reverse: number }) {
-  return {
-    forwardStart: rates.forward,
-    reverseStart: rates.reverse,
-    equilibrium: model.pictures[0].rates.forward,
-  }
-}
-
 function fmt(value: number, digits: number): string {
   return value.toFixed(digits).replace('-', '−')
 }
 
+/** Two full-height bars for the forward and reverse rates, on the fixed RATE_SCALE. */
+function VerticalRates({ forward, reverse }: RatePair) {
+  const top = 104
+  const base = 400
+  const height = base - top
+  const columns = [
+    { x: 378, value: forward, name: 'forward', color: 'var(--fwd)' },
+    { x: 470, value: reverse, name: 'reverse', color: 'var(--rev)' },
+  ]
+  return (
+    <g>
+      <Label x={440} y={30} fontSize={15} fill="var(--fg-muted)">
+        rates, mmol L⁻¹ s⁻¹
+      </Label>
+      {ratesEqual(forward, reverse) && (
+        <g>
+          <rect x={378} y={48} width={156} height={26} rx={13} fill="var(--surface)" stroke="var(--fg)" strokeWidth={1.4} />
+          <Label x={456} y={61} fontSize={14} fontWeight={600} fill="var(--fg)">
+            equal rates
+          </Label>
+        </g>
+      )}
+      {columns.map((c) => {
+        const h = Math.min(1, Math.max(0, c.value / RATE_SCALE)) * height
+        const cx = c.x + 32
+        return (
+          <g key={c.name}>
+            <rect x={c.x} y={top} width={64} height={height} rx={8} fill="var(--surface-raised)" />
+            <rect x={c.x} y={base - h} width={64} height={Math.max(h, 0)} rx={8} fill={c.color} />
+            <Label x={cx} y={base - h - 14} fontSize={16} fontWeight={600} fill="var(--fg)">
+              {fmt(c.value, 2)}
+            </Label>
+            <Label x={cx} y={base + 22} fontSize={16} fontWeight={600} fill={c.color}>
+              {c.name}
+            </Label>
+          </g>
+        )
+      })}
+    </g>
+  )
+}
+
+/** Two horizontal bars for Step 4, where the rates are equal and the bars are the same length. */
+function HorizontalRates({ forward, reverse }: RatePair) {
+  const x0 = 250
+  const w = 300
+  const rows = [
+    { name: 'forward', value: forward, color: 'var(--fwd)', y: 46 },
+    { name: 'reverse', value: reverse, color: 'var(--rev)', y: 102 },
+  ]
+  return (
+    <g>
+      <Label x={x0} y={18} textAnchor="start" fontSize={15} fill="var(--fg-muted)">
+        rates, mmol L⁻¹ s⁻¹
+      </Label>
+      {rows.map((r) => {
+        const len = Math.min(1, Math.max(0, r.value / RATE_SCALE)) * w
+        return (
+          <g key={r.name}>
+            <Label x={x0} y={r.y} textAnchor="start" fontSize={16} fontWeight={600} fill={r.color}>
+              {r.name}
+            </Label>
+            <Label x={x0 + w} y={r.y} textAnchor="end" fontSize={16} fontWeight={600} fill="var(--fg)">
+              {fmt(r.value, 2)}
+            </Label>
+            <rect x={x0} y={r.y + 10} width={w} height={22} rx={6} fill="var(--surface-raised)" />
+            <rect x={x0} y={r.y + 10} width={Math.max(0, len)} height={22} rx={6} fill={r.color} />
+          </g>
+        )
+      })}
+      {ratesEqual(forward, reverse) && (
+        <g>
+          <rect x={x0 + w / 2 - 66} y={150} width={132} height={26} rx={13} fill="var(--surface)" stroke="var(--fg)" strokeWidth={1.4} />
+          <Label x={x0 + w / 2} y={163} fontSize={14} fontWeight={600} fill="var(--fg)">
+            equal rates
+          </Label>
+        </g>
+      )}
+    </g>
+  )
+}
+
+const LEGEND_LABELS = ['H₂', 'I₂', 'HI'] as const
+
+/** Species legend under the flask, with a coloured dot for each species. */
+function VesselLegend() {
+  return (
+    <g>
+      {SPECIES.map((s, i) => {
+        const x = 40 + i * 96
+        return (
+          <g key={s.id} transform={`translate(${x}, 392)`}>
+            <circle cx={0} cy={0} r={7} fill={s.color} />
+            <Label x={14} y={0} textAnchor="start" fontSize={16} fontWeight={600} fill="var(--fg)">
+              {LEGEND_LABELS[i]}
+            </Label>
+          </g>
+        )
+      })}
+    </g>
+  )
+}
+
+/** Curves of [H₂], [I₂] and [HI] against time, across the full width of the panel (Step 4). */
 function CurvePlot() {
-  const left = 58
-  const right = 496
-  const top = 40
-  const bottom = 134
+  const left = 84
+  const right = 556
+  const top = 236
+  const bottom = 420
   const cMax = PLOT_CONC
   const xOf = (t: number) => left + (t / TIME_MAX) * (right - left)
   const yOf = (c: number) => bottom - (c / cMax) * (bottom - top)
@@ -73,11 +176,11 @@ function CurvePlot() {
     <g>
       {/* Legend, along the top */}
       {CURVES.map((series, i) => {
-        const x = left + i * 92
+        const x = left + i * 100
         return (
-          <g key={`legend-${series.id}`} transform={`translate(${x}, 12)`}>
-            <line x1={0} x2={22} y1={0} y2={0} stroke={series.color} strokeWidth={3} strokeDasharray={series.dash} />
-            <Label x={28} y={0} fontSize={15} fill="var(--fg)" fontWeight={600}>
+          <g key={`legend-${series.id}`} transform={`translate(${x}, 214)`}>
+            <line x1={0} x2={24} y1={0} y2={0} stroke={series.color} strokeWidth={3} strokeDasharray={series.dash} />
+            <Label x={32} y={0} textAnchor="start" fontSize={16} fill="var(--fg)" fontWeight={600}>
               <tspan className="sym">{series.label}</tspan>
             </Label>
           </g>
@@ -86,7 +189,7 @@ function CurvePlot() {
 
       {/* Equilibrium band */}
       <rect x={xOf(settle)} y={top} width={Math.max(0, right - xOf(settle))} height={bottom - top} fill="var(--fwd)" opacity={0.1} />
-      <Label x={right - 8} y={top + 14} textAnchor="end" fontSize={13} fontWeight={600} fill="var(--fwd)">
+      <Label x={right - 8} y={top + 14} textAnchor="end" fontSize={14} fontWeight={600} fill="var(--fwd)">
         equilibrium reached
       </Label>
 
@@ -94,20 +197,26 @@ function CurvePlot() {
       <line x1={left} x2={left} y1={top} y2={bottom} stroke="var(--fg-muted)" strokeWidth={1.4} />
       <line x1={left} x2={right} y1={bottom} y2={bottom} stroke="var(--fg-muted)" strokeWidth={1.4} />
       {[0, 0.5, 1].map((f) => (
-        <Label key={`yt-${f}`} x={left - 8} y={yOf(f * cMax)} textAnchor="end" fontSize={13} fill="var(--fg-muted)">
-          {fmt(f * cMax, 2)}
-        </Label>
+        <g key={`yt-${f}`}>
+          <line x1={left - 4} x2={left} y1={yOf(f * cMax)} y2={yOf(f * cMax)} stroke="var(--fg-muted)" strokeWidth={1} />
+          <Label x={left - 8} y={yOf(f * cMax)} textAnchor="end" fontSize={14} fill="var(--fg-muted)">
+            {fmt(f * cMax, 2)}
+          </Label>
+        </g>
       ))}
-      {[0, 1, 2, 3, 4].map((t) => (
+      {[0, 1, 2, 3, 4].filter((t) => t <= TIME_MAX).map((t) => (
         <g key={`xt-${t}`}>
           <line x1={xOf(t)} x2={xOf(t)} y1={bottom} y2={bottom + 4} stroke="var(--fg-muted)" strokeWidth={1} />
-          <Label x={xOf(t)} y={bottom + 18} textAnchor="middle" fontSize={13} fill="var(--fg-muted)">
+          <Label x={xOf(t)} y={bottom + 18} textAnchor="middle" fontSize={14} fill="var(--fg-muted)">
             {t}
           </Label>
         </g>
       ))}
-      <Label x={(left + right) / 2} y={bottom + 36} textAnchor="middle" fontSize={14} fill="var(--fg-muted)">
-        time, s (concentration, mol L⁻¹)
+      <Label x={(left + right) / 2} y={bottom + 38} textAnchor="middle" fontSize={15} fill="var(--fg-muted)">
+        time / s
+      </Label>
+      <Label x={26} y={(top + bottom) / 2} textAnchor="middle" fontSize={15} fill="var(--fg-muted)" transform={`rotate(-90 26 ${(top + bottom) / 2})`}>
+        concentration / mol L⁻¹
       </Label>
 
       {/* Curves */}
@@ -166,7 +275,7 @@ function IsotopeColumns({ share }: { share: number }) {
 }
 
 /**
- * Section 6.2 Scrolly. Steps 1 to 4 follow H₂ + I₂ ⇌ 2HI from reactants: the vessel and rate bars,
+ * Section 6.2 Scrolly. Steps 1 to 4 follow H₂ + I₂ ⇌ 2HI from reactants: the flask and rate bars,
  * then the curves. Step 5 shows the deuterium tracer in ammonia.
  */
 export function DynamicEquilibrium({ step, reducedMotion }: DynamicEquilibriumProps) {
@@ -205,31 +314,19 @@ export function DynamicEquilibrium({ step, reducedMotion }: DynamicEquilibriumPr
       data-testid="dynamic-equilibrium"
       data-step={index}
     >
-      <g transform={`translate(${VESSEL_X}, 0)`}>
-        <SealedVessel
-          species={SPECIES}
-          counts={counts}
-          seed={7}
-          title="Sealed flask with H₂, I₂ and HI particles"
-        />
+      <g transform={showCurves ? FLASK_SMALL : FLASK_FULL}>
+        <SealedVessel species={SPECIES} counts={counts} seed={7} title="Sealed flask with H₂, I₂ and HI particles" />
       </g>
 
       {showCurves ? (
-        <g transform={`translate(0, ${CURVE_Y})`}>
+        <g>
+          <HorizontalRates forward={picture.rates.forward} reverse={picture.rates.reverse} />
           <CurvePlot />
         </g>
       ) : (
-        <g transform={`translate(${VESSEL_X}, ${BARS_Y})`}>
-          <RateBars
-            progress={0}
-            config={barConfig(picture.rates)}
-            forwardLabel="Forward rate"
-            reverseLabel="Reverse rate"
-            title={`Forward rate ${fmt(picture.rates.forward, 2)} and reverse rate ${fmt(picture.rates.reverse, 2)} mmol per litre per second`}
-          />
-          <Label x={0} y={150} fontSize={13} fill="var(--fg-muted)">
-            rates in mmol L⁻¹ s⁻¹
-          </Label>
+        <g>
+          <VesselLegend />
+          <VerticalRates forward={picture.rates.forward} reverse={picture.rates.reverse} />
         </g>
       )}
 

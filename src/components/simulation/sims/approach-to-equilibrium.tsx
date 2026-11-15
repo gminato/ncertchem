@@ -137,13 +137,8 @@ export function ApproachToEquilibrium({ reducedMotion }: SimulationProps) {
   const rawQ = reactionQuotient(preset.reaction, now)
   const q = Number.isNaN(rawQ) ? 0 : rawQ
   const rates = ratesOf(preset, kf, kr, now)
-  const maxRate = Math.max(
-    ...run.samples.map((sample) => {
-      const r = ratesOf(preset, kf, kr, sample.concentrations)
-      return Math.max(r.forward, r.reverse)
-    }),
-    1e-12
-  )
+  // The bars share one scale: the larger of the two current rates fills the track, so both stay visible.
+  const currentMax = Math.max(rates.forward, rates.reverse, 1e-12)
 
   const gaugeQ = Math.min(Math.max(q, 1e-12), 1e12)
   const rateUnit = 'mmol L⁻¹ s⁻¹'
@@ -173,7 +168,7 @@ export function ApproachToEquilibrium({ reducedMotion }: SimulationProps) {
         <svg className={styles.bars} viewBox="0 0 360 140" role="img" aria-label="Forward and reverse rates at the current time" data-testid="approach-rates">
           <RateBars
             progress={0}
-            config={{ forwardStart: rates.forward * 1000, reverseStart: rates.reverse * 1000, equilibrium: maxRate * 1000 }}
+            config={{ forwardStart: rates.forward * 1000, reverseStart: rates.reverse * 1000, equilibrium: currentMax * 1000 }}
             forwardLabel="Forward rate"
             reverseLabel="Reverse rate"
           />

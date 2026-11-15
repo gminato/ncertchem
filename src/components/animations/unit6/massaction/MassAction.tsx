@@ -1,5 +1,8 @@
 'use client'
 
+import { useMemo } from 'react'
+import katex from 'katex'
+import 'katex/contrib/mhchem'
 import { formatSci } from '@/components/equilibrium/geometry'
 import { Label } from '@/components/vocab'
 import { experiments, meanKc, range, relatedConstants, type Experiment } from './massaction-steps'
@@ -26,33 +29,34 @@ function displayValue(value: number): string {
 /** Table 6.2 as a grid: the start and equilibrium of each experiment, in 10⁻² mol L⁻¹. */
 function DataTable() {
   const cols = [
-    { x: 40, head: 'Exp.' },
-    { x: 104, head: 'Start' },
-    { x: 186, head: '[H₂]' },
-    { x: 258, head: '[I₂]' },
-    { x: 330, head: '[HI]' },
-    { x: 418, head: '[H₂]' },
-    { x: 490, head: '[I₂]' },
-    { x: 556, head: '[HI]' },
+    { x: 44, head: 'Exp.' },
+    { x: 112, head: 'Start' },
+    { x: 194, head: '[H₂]' },
+    { x: 266, head: '[I₂]' },
+    { x: 338, head: '[HI]' },
+    { x: 420, head: '[H₂]' },
+    { x: 484, head: '[I₂]' },
+    { x: 540, head: '[HI]' },
   ]
-  const rowTop = 118
-  const rowH = 46
+  const headY = 118
+  const rowTop = 156
+  const rowH = 48
   const cell = (value: number) => (value / 0.01).toFixed(2)
   return (
     <g>
-      <Label x={290} y={24} fontSize={16} fontWeight={600} fill="var(--fg)">
+      <Label x={290} y={30} fontSize={17} fontWeight={600} fill="var(--fg)">
         Six experiments at 731 K, in 10⁻² mol L⁻¹
       </Label>
-      <Label x={258} y={60} fontSize={14} fill="var(--fg-muted)">
+      <Label x={266} y={70} fontSize={15} fontWeight={600} fill="var(--fg-muted)">
         starting amounts
       </Label>
-      <Label x={490} y={60} fontSize={14} fill="var(--fg-muted)">
-        equilibrium amounts
+      <Label x={480} y={70} fontSize={15} fontWeight={600} fill="var(--fg-muted)">
+        at equilibrium
       </Label>
-      <line x1={190} x2={326} y1={70} y2={70} stroke="var(--border)" strokeWidth={1.2} />
-      <line x1={410} x2={570} y1={70} y2={70} stroke="var(--border)" strokeWidth={1.2} />
+      <line x1={176} x2={356} y1={86} y2={86} stroke="var(--border)" strokeWidth={1.2} />
+      <line x1={402} x2={558} y1={86} y2={86} stroke="var(--border)" strokeWidth={1.2} />
       {cols.map((c) => (
-        <Label key={`h-${c.x}`} x={c.x} y={96} fontSize={14} fontWeight={600} fill="var(--fg)" textAnchor="middle">
+        <Label key={`h-${c.x}`} x={c.x} y={headY} fontSize={15} fontWeight={600} fill="var(--fg)" textAnchor="middle">
           {c.head}
         </Label>
       ))}
@@ -61,22 +65,22 @@ function DataTable() {
         return (
           <g key={row.experiment}>
             {i % 2 === 0 && <rect x={24} y={y - rowH / 2} width={532} height={rowH} rx={8} fill="var(--surface-raised)" />}
-            <Label x={40} y={y} fontSize={15} fill="var(--fg)" fontWeight={600}>
+            <Label x={44} y={y} fontSize={16} fill="var(--fg)" fontWeight={600}>
               {row.experiment}
             </Label>
-            <Label x={104} y={y} fontSize={14} fill="var(--fg-muted)">
-              {row.start}
+            <Label x={112} y={y} fontSize={15} fill="var(--fg-muted)">
+              {row.start === 'HI' ? 'HI' : 'H₂ + I₂'}
             </Label>
-            <Label x={186} y={y} fontSize={15} fill="var(--fg)">{cell(row.initial.H2)}</Label>
-            <Label x={258} y={y} fontSize={15} fill="var(--fg)">{cell(row.initial.I2)}</Label>
-            <Label x={330} y={y} fontSize={15} fill="var(--fg)">{cell(row.initial.HI)}</Label>
-            <Label x={418} y={y} fontSize={15} fill="var(--fg)">{cell(row.equilibrium.H2)}</Label>
-            <Label x={490} y={y} fontSize={15} fill="var(--fg)">{cell(row.equilibrium.I2)}</Label>
-            <Label x={556} y={y} fontSize={15} fill="var(--fg)">{cell(row.equilibrium.HI)}</Label>
+            <Label x={194} y={y} fontSize={16} fill="var(--fg)">{cell(row.initial.H2)}</Label>
+            <Label x={266} y={y} fontSize={16} fill="var(--fg)">{cell(row.initial.I2)}</Label>
+            <Label x={338} y={y} fontSize={16} fill="var(--fg)">{cell(row.initial.HI)}</Label>
+            <Label x={420} y={y} fontSize={16} fill="var(--fg)">{cell(row.equilibrium.H2)}</Label>
+            <Label x={484} y={y} fontSize={16} fill="var(--fg)">{cell(row.equilibrium.I2)}</Label>
+            <Label x={540} y={y} fontSize={16} fill="var(--fg)">{cell(row.equilibrium.HI)}</Label>
           </g>
         )
       })}
-      <Label x={290} y={430} fontSize={14} fill="var(--fg-muted)">
+      <Label x={290} y={442} fontSize={15} fill="var(--fg-muted)">
         Experiments 1 to 4 start from H₂ and I₂. Experiments 5 and 6 start from HI alone.
       </Label>
       <Label x={290} y={CAPTION_Y} fontSize={15} fill="var(--fg-muted)">
@@ -120,18 +124,19 @@ function DotPlot({ values, yMax, ticks, yLabel, digits, meanLine, band }: {
       {ticks.map((t) => (
         <g key={`t-${t}`}>
           <line x1={PLOT.left - 4} x2={PLOT.left} y1={yOf(t)} y2={yOf(t)} stroke="var(--fg-muted)" strokeWidth={1} />
-          <Label x={PLOT.left - 10} y={yOf(t)} textAnchor="end" fontSize={13} fill="var(--fg-muted)">
+          <Label x={PLOT.left - 10} y={yOf(t)} textAnchor="end" fontSize={14} fill="var(--fg-muted)">
             {t}
           </Label>
         </g>
       ))}
-      <Label x={28} y={(PLOT.top + PLOT.bottom) / 2} fontSize={14} fill="var(--fg-muted)" transform={`rotate(-90 28 ${(PLOT.top + PLOT.bottom) / 2})`}>
+      <Label x={28} y={(PLOT.top + PLOT.bottom) / 2} fontSize={15} fill="var(--fg-muted)" transform={`rotate(-90 28 ${(PLOT.top + PLOT.bottom) / 2})`}>
         {yLabel}
       </Label>
       {meanLine !== undefined && (
         <g>
           <line x1={PLOT.left} x2={PLOT.right} y1={yOf(meanLine)} y2={yOf(meanLine)} stroke="var(--fwd)" strokeWidth={2} strokeDasharray="7 5" />
-          <Label x={PLOT.right - 6} y={yOf(meanLine) - 16} textAnchor="end" fontSize={15} fontWeight={600} fill="var(--fwd)">
+          {/* Top left of the plot, clear of every data label: the points lie below it. */}
+          <Label x={PLOT.left + 10} y={PLOT.top + 12} textAnchor="start" fontSize={16} fontWeight={600} fill="var(--fwd)">
             {`mean ${meanLine.toFixed(1)}`}
           </Label>
         </g>
@@ -144,7 +149,7 @@ function DotPlot({ values, yMax, ticks, yLabel, digits, meanLine, band }: {
         return (
           <g key={`dot-${row.experiment}`}>
             <circle cx={cx} cy={cy} r={10} fill={fromProducts ? 'var(--surface)' : 'var(--accent)'} stroke="var(--accent)" strokeWidth={2.4} />
-            <Label x={cx} y={cy - 22} fontSize={14} fontWeight={600} fill="var(--fg)">
+            <Label x={cx} y={cy - 22} fontSize={15} fontWeight={600} fill="var(--fg)">
               {v.toFixed(digits)}
             </Label>
             <Label x={cx} y={PLOT.bottom + 22} fontSize={15} fill="var(--fg)">
@@ -153,65 +158,64 @@ function DotPlot({ values, yMax, ticks, yLabel, digits, meanLine, band }: {
           </g>
         )
       })}
-      <Label x={(PLOT.left + PLOT.right) / 2} y={PLOT.bottom + 46} fontSize={14} fill="var(--fg-muted)">
+      <Label x={(PLOT.left + PLOT.right) / 2} y={PLOT.bottom + 46} fontSize={15} fill="var(--fg-muted)">
         experiment (filled: from H₂ and I₂; open: from HI)
       </Label>
     </g>
   )
 }
 
+/** A KaTeX block rendered inside the SVG. The foreignObject keeps the viewBox scale. */
+function Tex({ math, size }: { math: string; size: number }) {
+  // Inline mode with \displaystyle: full-size fractions, and no display margins to push the stack out of its box.
+  const html = useMemo(() => katex.renderToString(`\\displaystyle ${math}`, { throwOnError: false, displayMode: false }), [math])
+  return (
+    <div
+      style={{ fontSize: size, color: 'var(--fg)', textAlign: 'center', lineHeight: 1.25 }}
+      dangerouslySetInnerHTML={{ __html: html }}
+    />
+  )
+}
+
 function LawStep() {
   const values = ROWS.map((r) => r.kc)
-  const x0 = 170
-  const x1 = 470
+  const x0 = 60
+  const x1 = 520
   const lo = 40
   const hi = 50
   const xOf = (v: number) => x0 + ((v - lo) / (hi - lo)) * (x1 - x0)
   return (
     <g>
-      <Label x={290} y={34} fontSize={18} fontWeight={600} fill="var(--fg)">
+      <Label x={290} y={32} fontSize={18} fontWeight={600} fill="var(--fg)">
         Law of chemical equilibrium
       </Label>
-      <Label x={180} y={172} fontSize={24} fill="var(--fg)">
-        <tspan className="sym">K</tspan>
-        <tspan dy="0.32em" fontSize="0.7em">c</tspan>
-        <tspan dy="-0.32em"> =</tspan>
+      <foreignObject x={20} y={52} width={540} height={236}>
+        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'space-evenly', height: 236 }}>
+          <Tex math={String.raw`a\,\mathrm{A} + b\,\mathrm{B} \rightleftharpoons c\,\mathrm{C} + d\,\mathrm{D}`} size={20} />
+          <Tex math={String.raw`K_c = \dfrac{[\mathrm{C}]^{c}\,[\mathrm{D}]^{d}}{[\mathrm{A}]^{a}\,[\mathrm{B}]^{b}}`} size={24} />
+          <Tex math={String.raw`\ce{H2 + I2 <=> 2HI} \qquad K_c = \dfrac{[\ce{HI}]^{2}}{[\ce{H2}]\,[\ce{I2}]}`} size={20} />
+        </div>
+      </foreignObject>
+      <Label x={290} y={310} fontSize={15} fill="var(--fg-muted)">
+        each exponent is the stoichiometric coefficient of that species
       </Label>
-      <Label x={330} y={142} fontSize={22} fill="var(--fg)">
-        [HI]<tspan dy="-0.45em" fontSize="0.7em">2</tspan>
+      <Label x={290} y={346} fontSize={16} fontWeight={600} fill="var(--fg)">
+        The six Kc values from Table 6.2
       </Label>
-      <line x1={250} x2={420} y1={160} y2={160} stroke="var(--fg)" strokeWidth={2} />
-      <Label x={335} y={196} fontSize={22} fill="var(--fg)">
-        [H₂][I₂]
-      </Label>
-      <Label x={290} y={262} fontSize={18} fill="var(--fg)">
-        For a A + b B ⇌ c C + d D:
-      </Label>
-      <Label x={290} y={298} fontSize={20} fill="var(--fg)">
-        {'Kc = [C]'}
-        <tspan dy="-0.45em" fontSize="0.7em">c</tspan>
-        {'[D]'}
-        <tspan dy="-0.45em" fontSize="0.7em">d</tspan>
-        {' / ([A]'}
-        <tspan dy="-0.45em" fontSize="0.7em">a</tspan>
-        {'[B]'}
-        <tspan dy="-0.45em" fontSize="0.7em">b</tspan>
-        {')'}
-      </Label>
-      <Label x={290} y={336} fontSize={15} fill="var(--fg-muted)">
-        each power is the stoichiometric coefficient of that species
-      </Label>
-      <line x1={x0} x2={x1} y1={400} y2={400} stroke="var(--fg-muted)" strokeWidth={1.4} />
+      <line x1={x0} x2={x1} y1={430} y2={430} stroke="var(--fg-muted)" strokeWidth={1.4} />
       {[40, 45, 50].map((t) => (
-        <Label key={`s-${t}`} x={xOf(t)} y={418} fontSize={13} fill="var(--fg-muted)">
-          {t}
-        </Label>
+        <g key={`s-${t}`}>
+          <line x1={xOf(t)} x2={xOf(t)} y1={430} y2={435} stroke="var(--fg-muted)" strokeWidth={1} />
+          <Label x={xOf(t)} y={450} fontSize={14} fill="var(--fg-muted)">
+            {t}
+          </Label>
+        </g>
       ))}
-      <line x1={xOf(K)} x2={xOf(K)} y1={356} y2={400} stroke="var(--fwd)" strokeWidth={2} strokeDasharray="6 4" />
+      <line x1={xOf(K)} x2={xOf(K)} y1={366} y2={430} stroke="var(--fwd)" strokeWidth={2} strokeDasharray="6 4" />
       {values.map((v, i) => (
-        <circle key={`k-${i}`} cx={xOf(v)} cy={380} r={8} fill="var(--accent)" stroke="var(--surface)" strokeWidth={1.5} />
+        <circle key={`k-${i}`} cx={xOf(v)} cy={402} r={9} fill="var(--accent)" stroke="var(--surface)" strokeWidth={1.5} />
       ))}
-      <Label x={290} y={448} fontSize={15} fill="var(--fg-muted)">
+      <Label x={290} y={468} fontSize={15} fill="var(--fg-muted)">
         {`Kc of the six experiments lies between ${CONSTANT.min.toFixed(1)} and ${CONSTANT.max.toFixed(1)}`}
       </Label>
       <Label x={290} y={CAPTION_Y} fontSize={15} fill="var(--fg-muted)">
