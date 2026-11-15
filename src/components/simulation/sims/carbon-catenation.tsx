@@ -37,7 +37,7 @@ export function CatenationChains(_props: SimulationProps) {
   const cols = Math.min(3, count)
   const rows = Math.ceil(count / cols)
   const cellW = STAGE.width / cols
-  const gridTop = CHAIN_BAND + 26
+  const gridTop = CHAIN_BAND + 44
   const cellH = (STAGE.height - gridTop) / rows
   const chainScale = fit(chain, STAGE.width - 120, CHAIN_BAND - 10, 60)
 
@@ -51,7 +51,7 @@ export function CatenationChains(_props: SimulationProps) {
         <Label x={STAGE.width / 2} y={CHAIN_BAND + 14} fontSize={18} fill="var(--fg)" data-testid="chain-name">
           {`${chainName}: ${n} carbon${n === 1 ? '' : 's'} in a row`}
         </Label>
-        <line x1={40} x2={STAGE.width - 40} y1={CHAIN_BAND + 26} y2={CHAIN_BAND + 26} strokeWidth={1} style={{ stroke: 'var(--border)' }} />
+        <line x1={40} x2={STAGE.width - 40} y1={CHAIN_BAND + 34} y2={CHAIN_BAND + 34} strokeWidth={1} style={{ stroke: 'var(--border)' }} />
         {isomers.map((iso, k) => {
           const col = k % cols
           const row = Math.floor(k / cols)
@@ -78,7 +78,7 @@ export function CatenationChains(_props: SimulationProps) {
         <Slider label="Carbon atoms in the chain, n" value={n} min={1} max={7} step={1} onChange={(v) => setN(Math.round(v))} format={(v) => `${Math.round(v)}`} />
       </SimulationControls>
       <p className={styles.note}>
-        Every isomer here is an open chain in which each carbon forms four bonds. Branching, not length alone, creates the extra isomers. The count is taken from the isomer library.
+        Every isomer here is an open chain in which each carbon forms four bonds. Branching, not length alone, creates the extra isomers. The count comes from listing every possible skeleton.
       </p>
     </div>
   )

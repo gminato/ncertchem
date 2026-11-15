@@ -71,55 +71,58 @@ function BondLengthBars({ lit }: { lit: 1 | 2 | 3 | null }) {
 }
 
 /**
- * Step 4: the π bond of ethene, drawn side on. The two carbons sit on the C=C axis, and each has a
- * p orbital, a dumbbell standing above and below the axis. Turning the right CH₂ about that axis
- * turns its p orbital end-on, so its lobes move onto the axis and the sideways overlap, which is
- * the π bond, fades. The projection of each lobe is scaled by cos θ, so the tween is physical.
+ * Step 4: the π bond of ethene, drawn side on. The two sp² carbons are joined by the σ line, and
+ * each carries a p orbital standing vertically: two lobes, one above and one below the plane. The
+ * lobes of the two orbitals are parallel at 0°, so the overlap regions above and below the C–C
+ * axis are shaded: that is the π bond. Turning the right CH₂ about the C–C axis foreshortens its
+ * p orbital by cos θ, so its lobes come in towards the axis and the shaded overlap fades to
+ * nothing at 90°.
  */
-const PI_C1 = { x: 262, y: 200 }
-const PI_C2 = { x: 318, y: 200 }
-const PI_LOBE_R = 34
-const PI_LOBE_OFFSET = 46
+const PI_C1 = { x: 272, y: 200 }
+const PI_C2 = { x: 308, y: 200 }
+const PI_LOBE_R = 30
+const PI_LOBE_OFFSET = 44
 
 function PiOverlap({ turn, label }: { turn: number; label: string }) {
+  const turned = turn >= 45
   const c = Math.cos((turn * Math.PI) / 180)
-  const overlap = Math.max(0, c)
-  const endOn = 1 - Math.abs(c)
+  const overlap = Math.max(0, Math.min(1, c))
   const dy = PI_LOBE_OFFSET * c
-  const topMid = { x: (PI_C1.x + PI_C2.x) / 2, y: (PI_C1.y - PI_LOBE_OFFSET + PI_C2.y - dy) / 2 }
-  const botMid = { x: (PI_C1.x + PI_C2.x) / 2, y: (PI_C1.y + PI_LOBE_OFFSET + PI_C2.y + dy) / 2 }
+  const mid = (PI_C1.x + PI_C2.x) / 2
+  const topLens = { x: mid, y: (PI_C1.y - PI_LOBE_OFFSET + PI_C2.y - dy) / 2 }
+  const botLens = { x: mid, y: (PI_C1.y + PI_LOBE_OFFSET + PI_C2.y + dy) / 2 }
+  const lobeStyle = (token: string) => ({ fill: `var(${token})`, fillOpacity: 0.85, stroke: `var(${token})` })
   return (
     <svg viewBox="0 0 580 440" role="img" aria-label={label} style={{ width: '100%', height: 'auto', display: 'block' }}>
       <VocabDefs />
       <g transform="translate(290 200) scale(1.7) translate(-290 -200)">
-      <line x1={180} x2={400} y1={PI_C1.y} y2={PI_C1.y} strokeWidth={1.4} strokeDasharray="5 5" style={{ stroke: 'var(--fg-subtle)' }} />
-      <Label x={408} y={PI_C1.y} textAnchor="start" fontSize={9.5} fill="var(--fg-muted)">
-        C=C axis
-      </Label>
-      {/* The fixed CH₂ (left): its p orbital stands along the vertical */}
-      <circle cx={PI_C1.x} cy={PI_C1.y - PI_LOBE_OFFSET} r={PI_LOBE_R} style={{ fill: 'var(--orbital-pos)', fillOpacity: 0.85, stroke: 'var(--orbital-pos)' }} />
-      <circle cx={PI_C1.x} cy={PI_C1.y + PI_LOBE_OFFSET} r={PI_LOBE_R} style={{ fill: 'var(--orbital-neg)', fillOpacity: 0.85, stroke: 'var(--orbital-neg)' }} />
-      {/* The turning CH₂ (right): its lobes move onto the axis as cos θ */}
-      <g data-testid="pi-turning" data-turn={Math.round(turn)}>
-        <circle cx={PI_C2.x} cy={PI_C2.y - dy} r={PI_LOBE_R} style={{ fill: 'var(--orbital-pos)', fillOpacity: 0.85, stroke: 'var(--orbital-pos)' }} />
-        <circle cx={PI_C2.x} cy={PI_C2.y + dy} r={PI_LOBE_R} style={{ fill: 'var(--orbital-neg)', fillOpacity: 0.85, stroke: 'var(--orbital-neg)' }} />
-      </g>
-      {/* The overlap lenses: they exist only while the lobes face each other */}
-      <ellipse cx={topMid.x} cy={topMid.y} rx={9} ry={20} style={{ fill: 'var(--orbital-pos)' }} opacity={overlap} data-testid="pi-lens" />
-      <ellipse cx={botMid.x} cy={botMid.y} rx={9} ry={20} style={{ fill: 'var(--orbital-neg)' }} opacity={overlap} />
-      {/* End-on view of the turned orbital: a ring with a dot on its axis */}
-      <g opacity={endOn} data-testid="pi-end-on">
-        <circle cx={PI_C2.x} cy={PI_C2.y} r={PI_LOBE_R * 0.5} strokeWidth={2} style={{ fill: 'none', stroke: 'var(--fg)' }} />
+        {/* The σ bond joining the two carbons */}
+        <line x1={PI_C1.x} y1={PI_C1.y} x2={PI_C2.x} y2={PI_C2.y} strokeWidth={5} strokeLinecap="round" style={{ stroke: 'var(--fg)' }} />
+        {/* The fixed CH₂ (left): its p orbital stands vertically */}
+        <circle cx={PI_C1.x} cy={PI_C1.y - PI_LOBE_OFFSET} r={PI_LOBE_R} style={lobeStyle('--orbital-pos')} />
+        <circle cx={PI_C1.x} cy={PI_C1.y + PI_LOBE_OFFSET} r={PI_LOBE_R} style={lobeStyle('--orbital-neg')} />
+        {/* The turning CH₂ (right): its p orbital foreshortens by cos θ */}
+        <g data-testid="pi-turning" data-turn={Math.round(turn)}>
+          <circle cx={PI_C2.x} cy={PI_C2.y - dy} r={PI_LOBE_R} style={lobeStyle('--orbital-pos')} />
+          <circle cx={PI_C2.x} cy={PI_C2.y + dy} r={PI_LOBE_R} style={lobeStyle('--orbital-neg')} />
+        </g>
+        {/* The π overlap: shaded wherever the parallel lobes face each other */}
+        <ellipse cx={topLens.x} cy={topLens.y} rx={12} ry={26} style={{ fill: 'var(--orbital-pos)' }} opacity={overlap} data-testid="pi-lens" />
+        <ellipse cx={botLens.x} cy={botLens.y} rx={12} ry={26} style={{ fill: 'var(--orbital-neg)' }} opacity={overlap} />
+        <circle cx={PI_C1.x} cy={PI_C1.y} r={3.5} style={{ fill: 'var(--fg)' }} />
         <circle cx={PI_C2.x} cy={PI_C2.y} r={3.5} style={{ fill: 'var(--fg)' }} />
       </g>
-      <circle cx={PI_C1.x} cy={PI_C1.y} r={3.5} style={{ fill: 'var(--fg)' }} />
-      <circle cx={PI_C2.x} cy={PI_C2.y} r={3.5} style={{ fill: 'var(--fg)' }} />
-      </g>
+      <Label x={420} y={PI_C1.y - 58} textAnchor="start" fontSize={16} fill="var(--fg-muted)" opacity={overlap}>
+        π overlap above
+      </Label>
+      <Label x={420} y={PI_C1.y + 58} textAnchor="start" fontSize={16} fill="var(--fg-muted)" opacity={overlap}>
+        π overlap below
+      </Label>
       <Label x={290} y={392} fontSize={18} fill="var(--fg)" data-testid="pi-caption">
-        {turn < 45 ? 'Parallel p orbitals overlap sideways: the π bond' : 'Turned by 90°: the p orbitals miss, and the π bond is lost'}
+        {turned ? 'Turned by 90°: the p orbitals miss, and the π bond is lost' : 'Parallel p orbitals overlap sideways: the π bond'}
       </Label>
       <Label x={290} y={420} fontSize={16} fill="var(--fg-muted)">
-        {turn < 45 ? 'The C=C bond is a σ bond plus this π bond.' : 'The π bond must break before the CH₂ groups can rotate.'}
+        {turned ? 'The π bond must break before the CH₂ groups can rotate.' : 'The C=C bond is a σ bond plus this π bond.'}
       </Label>
     </svg>
   )

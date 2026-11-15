@@ -16,7 +16,7 @@ import {
   type CarbonHybrid,
 } from '@/lib/chem/carbon-shapes'
 import { iupacName } from '@/lib/chem/iupac-organic'
-import { molecularFormula, parseSmiles } from '@/lib/chem/molecule-parse'
+import { bondOrderSum, molecularFormula, neighbours, parseSmiles } from '@/lib/chem/molecule-parse'
 import type { MolGraph } from '@/lib/chem/molecule-graph'
 import styles from './hybridisation-spotter.module.css'
 
@@ -32,6 +32,40 @@ const HYBRID_TEXT: Record<CarbonHybrid, string> = { sp3: 'sp³', sp2: 'sp²', sp
 /** Stage size in SVG units; the drawing is fitted inside it. */
 const STAGE = { width: 580, height: 340 }
 const BADGE_R = 19
+/** Valence electrons that set a lone-pair count: N has 5, O has 6. */
+const VALENCE: Record<string, number> = { N: 5, O: 6 }
+
+/**
+ * Lone pairs of a terminal N or O that is multiply bonded, drawn in the molecule's frame. A linear
+ * sp nitrogen (one triple bond) has its pair on the bond axis, beyond the atom. A terminal sp² atom
+ * with a double bond has two pairs, 120° from its bond, so they sit at ±60° from the outward axis.
+ */
+function terminalLonePairs(g: MolGraph, i: number, points: { x: number; y: number }[], scale: number) {
+  const atom = g.atoms[i]
+  const valence = VALENCE[atom.element]
+  const near = neighbours(g, i)
+  if (valence === undefined || near.length !== 1 || near[0].order < 2) return []
+  const pairs = Math.floor((valence - bondOrderSum(g, i) - (atom.hCount ?? 0)) / 2)
+  const p = points[i]
+  const q = points[near[0].atom]
+  const len = Math.hypot(p.x - q.x, p.y - q.y) || 1
+  const ux = (p.x - q.x) / len
+  const uy = (p.y - q.y) / len
+  const angles = pairs === 1 ? [0] : pairs === 2 ? [60, -60] : []
+  return angles.map((deg) => {
+    const r = (deg * Math.PI) / 180
+    const dx = ux * Math.cos(r) - uy * Math.sin(r)
+    const dy = ux * Math.sin(r) + uy * Math.cos(r)
+    const cx = p.x + dx * 0.5 * scale
+    const cy = p.y + dy * 0.5 * scale
+    const px = -dy * 0.09 * scale
+    const py = dx * 0.09 * scale
+    return [
+      { x: cx + px, y: cy + py },
+      { x: cx - px, y: cy - py },
+    ]
+  })
+}
 
 /** The bond-line scale that fits a molecule inside the stage with room for its badges. */
 function fitScale(g: MolGraph): number {
@@ -102,9 +136,17 @@ export function HybridisationSpotter(_props: SimulationProps) {
           scale={scale}
           x={STAGE.width / 2}
           y={STAGE.height / 2}
-          showLonePairs
           overlay={
             <g>
+              {graph.atoms.flatMap((_, i) =>
+                terminalLonePairs(graph, i, frame.points, scale).map((pair, k) => (
+                  <g key={`lp-${i}-${k}`} data-testid="lone-pair">
+                    {pair.map((d, j) => (
+                      <circle key={j} cx={d.x} cy={d.y} r={3} style={{ fill: 'var(--fg)' }} />
+                    ))}
+                  </g>
+                ))
+              )}
               {carbons.map((i, k) => {
                 const p = frame.points[i]
                 const cx = p.x

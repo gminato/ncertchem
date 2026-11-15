@@ -1,6 +1,6 @@
 'use client'
 
-import { SkeletalFormula, Wedge3D } from '@/components/organic'
+import { SkeletalFormula, stereoPath } from '@/components/organic'
 import { Label, VocabDefs } from '@/components/vocab'
 import { useReveal } from '@/components/animations/unit4/vbt/useStepTween'
 import { subscriptDigits } from '@/lib/chem/carbon-shapes'
@@ -14,6 +14,57 @@ export interface VitalForceProps {
 /** Pixels per bond length for the single large molecule and for the three small ones. */
 const LARGE = 74
 const SMALL = 42
+
+/** Lengths and angles of the methane drawing: 120 px bonds, two in the plane at 110° and two out of it. */
+const TET_C = { x: 290, y: 190 }
+const TET_LEN = 120
+const TET_HALF = 6.5
+const TET_DEG = (deg: number) => (deg * Math.PI) / 180
+
+/**
+ * Methane in the bond-line convention of NCERT's Figure 8.1: two C–H bonds in the plane of the
+ * page, forming a V at about 110°, and a wedge and a dash splayed apart below them. The wedge
+ * comes towards the reader and the dash goes away.
+ */
+function Tetrahedral() {
+  const up = TET_DEG(55)
+  const down = TET_DEG(35)
+  const at = (sx: number, sy: number, len: number) => ({ x: TET_C.x + sx * len, y: TET_C.y + sy * len })
+  const inPlaneL = at(-Math.sin(up), -Math.cos(up), TET_LEN)
+  const inPlaneR = at(Math.sin(up), -Math.cos(up), TET_LEN)
+  const wedgeEnd = at(-Math.sin(down), Math.cos(down), TET_LEN)
+  const dashEnd = at(Math.sin(down), Math.cos(down), TET_LEN)
+  const start = { x: TET_C.x, y: TET_C.y }
+  /** Moves a point `by` units back along the bond towards C, so strokes stop short of the C label. */
+  const shorten = (to: { x: number; y: number }, by: number) => {
+    const d = Math.hypot(to.x - start.x, to.y - start.y)
+    return { x: to.x - ((to.x - start.x) * by) / d, y: to.y - ((to.y - start.y) * by) / d }
+  }
+  const from = (to: { x: number; y: number }) => {
+    const d = Math.hypot(to.x - start.x, to.y - start.y)
+    return { x: start.x + ((to.x - start.x) * 13) / d, y: start.y + ((to.y - start.y) * 13) / d }
+  }
+  const label = (p: { x: number; y: number }, text: string) => (
+    <Label x={p.x + (p.x - TET_C.x) * 0.16} y={p.y + (p.y - TET_C.y) * 0.16} fontSize={22} fill="var(--fg)" fontWeight={600}>
+      {text}
+    </Label>
+  )
+  return (
+    <g data-testid="methane-tetrahedral">
+      <line x1={from(inPlaneL).x} y1={from(inPlaneL).y} x2={shorten(inPlaneL, 18).x} y2={shorten(inPlaneL, 18).y} strokeWidth={2.6} strokeLinecap="round" style={{ stroke: 'var(--fg)' }} />
+      <line x1={from(inPlaneR).x} y1={from(inPlaneR).y} x2={shorten(inPlaneR, 18).x} y2={shorten(inPlaneR, 18).y} strokeWidth={2.6} strokeLinecap="round" style={{ stroke: 'var(--fg)' }} />
+      <path d={stereoPath(from(wedgeEnd), shorten(wedgeEnd, 18), 'wedge', TET_HALF)} fill="var(--fg)" stroke="var(--fg)" strokeWidth={0.8} strokeLinejoin="round" />
+      <path d={stereoPath(from(dashEnd), shorten(dashEnd, 18), 'dash', TET_HALF)} fill="none" stroke="var(--fg)" strokeWidth={2} strokeLinejoin="round" />
+      {label(inPlaneL, 'H')}
+      {label(inPlaneR, 'H')}
+      {label(wedgeEnd, 'H')}
+      {label(dashEnd, 'H')}
+      <Label x={TET_C.x} y={TET_C.y} fontSize={24} fill="var(--fg)" fontWeight={600}>
+        C
+      </Label>
+    </g>
+  )
+}
 
 /** The name line under a molecule: the common name when NCERT Table 8.1 gives one, then the IUPAC name. */
 function nameLine(m: IntroMolecule): string {
@@ -75,13 +126,11 @@ export function VitalForce({ step, reducedMotion }: VitalForceProps) {
         {index === 1 && <Specimen m={ms[0]} x={290} y={230} scale={LARGE * 1.15} nameSize={17} />}
         {index === 2 && (
           <>
-            <g transform="translate(290 226) scale(1.1)">
-              <Wedge3D captions={false} />
-            </g>
-            <Label x={290} y={394} fontSize={18} fill="var(--fg)">
+            <Tetrahedral />
+            <Label x={290} y={356} fontSize={18} fill="var(--fg)">
               {subscriptDigits(ms[0].formula)}
             </Label>
-            <Label x={290} y={420} fontSize={17} fill="var(--fg-muted)">
+            <Label x={290} y={384} fontSize={17} fill="var(--fg-muted)">
               {nameLine(ms[0])}
             </Label>
           </>
