@@ -7,7 +7,7 @@ import {
   type Point,
 } from './geometry'
 
-export const ELECTRON_TRANSFER_SIZE = { width: 340, height: 180 } as const
+export const ELECTRON_TRANSFER_SIZE = { width: 340, height: 190 } as const
 
 export interface TransferSpecies {
   symbol: string
@@ -41,7 +41,7 @@ export const ElectronTransfer = forwardRef<SVGGElement, ElectronTransferProps>(f
     showFlightArc = true,
     x = 0,
     y = 0,
-    particleDistance = 180,
+    particleDistance = 165,
     className,
     ...rest
   },
@@ -53,10 +53,11 @@ export const ElectronTransfer = forwardRef<SVGGElement, ElectronTransferProps>(f
   const halfD = particleDistance / 2
   const donorCenter: Point = { x: -halfD, y: 0 }
   const acceptorCenter: Point = { x: halfD, y: 0 }
-  const arcHeight = 55
+  const arcHeight = 60
 
-  const donorRadius = donor.radius ?? 26
-  const acceptorRadius = acceptor.radius ?? 28
+  // Enlarged atoms for projected classroom visuals (labels ≥ 16 units)
+  const donorRadius = donor.radius ?? 34
+  const acceptorRadius = acceptor.radius ?? 36
 
   // Donor loses electrons -> turns --ox (amber) and shows positive charge
   const donorStroke = p > 0.1 ? 'var(--ox)' : 'var(--border)'
@@ -94,8 +95,8 @@ export const ElectronTransfer = forwardRef<SVGGElement, ElectronTransferProps>(f
           viewBox="0 0 10 10"
           refX="6"
           refY="5"
-          markerWidth="5"
-          markerHeight="5"
+          markerWidth="6"
+          markerHeight="6"
           orient="auto-start-reverse"
         >
           <path d="M 0 1.5 L 8 5 L 0 8.5 Z" fill="var(--electron)" />
@@ -108,19 +109,19 @@ export const ElectronTransfer = forwardRef<SVGGElement, ElectronTransferProps>(f
           d={arcD}
           fill="none"
           stroke="var(--border)"
-          strokeWidth={1.5}
+          strokeWidth={1.8}
           strokeDasharray="4 4"
         />
       )}
 
       {/* Direction indicator on the arc peak */}
       <line
-        x1={-10}
-        y1={-arcHeight + 14}
-        x2={10}
-        y2={-arcHeight + 14}
+        x1={-12}
+        y1={-arcHeight + 15}
+        x2={12}
+        y2={-arcHeight + 15}
         stroke="var(--electron)"
-        strokeWidth={1.6}
+        strokeWidth={2}
         markerEnd={`url(#${markerId})`}
       />
       <text
@@ -128,10 +129,10 @@ export const ElectronTransfer = forwardRef<SVGGElement, ElectronTransferProps>(f
         y={-arcHeight}
         textAnchor="middle"
         dominantBaseline="central"
-        fontSize={13}
+        fontSize={16}
         fill="var(--electron)"
         fontFamily="var(--font-sans)"
-        fontWeight={600}
+        fontWeight={700}
         style={{ userSelect: 'none' }}
       >
         {electrons > 1 ? `${electrons} ` : ''}
@@ -141,22 +142,38 @@ export const ElectronTransfer = forwardRef<SVGGElement, ElectronTransferProps>(f
         </tspan>
       </text>
 
-      {/* Traveling Electrons */}
+      {/* Traveling Electrons (high visibility for classroom projection) */}
       {p > 0 &&
         p < 1 &&
         electronPoints.map((pt, i) => (
           <g key={i} transform={`translate(${pt.x}, ${pt.y})`}>
-            {/* Soft glow halo */}
+            {/* Outer soft glow halo */}
+            <circle
+              cx={0}
+              cy={0}
+              r={18}
+              fill="var(--electron)"
+              opacity={0.25}
+              style={{ pointerEvents: 'none' }}
+            />
+            {/* Inner bright glow */}
             <circle
               cx={0}
               cy={0}
               r={11}
               fill="var(--electron)"
-              opacity={0.22}
+              opacity={0.45}
               style={{ pointerEvents: 'none' }}
             />
-            {/* Core electron */}
-            <circle cx={0} cy={0} r={4.5} fill="var(--electron)" />
+            {/* Core electron circle with crisp contrast border */}
+            <circle
+              cx={0}
+              cy={0}
+              r={6.5}
+              fill="var(--electron)"
+              stroke="#ffffff"
+              strokeWidth={1.2}
+            />
           </g>
         ))}
 
@@ -166,11 +183,11 @@ export const ElectronTransfer = forwardRef<SVGGElement, ElectronTransferProps>(f
           <circle
             cx={0}
             cy={0}
-            r={donorRadius + 5}
+            r={donorRadius + 6}
             fill="none"
             stroke="var(--ox)"
-            strokeWidth={1}
-            opacity={0.3 * p}
+            strokeWidth={1.5}
+            opacity={0.35 * p}
           />
         )}
         <circle
@@ -179,15 +196,16 @@ export const ElectronTransfer = forwardRef<SVGGElement, ElectronTransferProps>(f
           r={donorRadius}
           fill="var(--surface)"
           stroke={donorStroke}
-          strokeWidth={2.4}
+          strokeWidth={2.8}
         />
+        {/* Main atom label (≥ 16 units) */}
         <text
           x={0}
           y={1}
           textAnchor="middle"
           dominantBaseline="central"
-          fontSize={18}
-          fontWeight={600}
+          fontSize={24}
+          fontWeight={700}
           fontFamily="var(--font-sans)"
           fill="var(--fg)"
           style={{ userSelect: 'none' }}
@@ -195,16 +213,16 @@ export const ElectronTransfer = forwardRef<SVGGElement, ElectronTransferProps>(f
           {donor.symbol}
         </text>
 
-        {/* Charge badge */}
+        {/* Charge badge (labels ≥ 16 units) */}
         {donorCharge && (
-          <g transform={`translate(${donorRadius * 0.75}, ${-donorRadius * 0.75})`}>
-            <circle cx={0} cy={0} r={9.5} fill="var(--surface-raised)" stroke="var(--ox)" strokeWidth={1.5} />
+          <g transform={`translate(${donorRadius * 0.72}, ${-donorRadius * 0.72})`}>
+            <circle cx={0} cy={0} r={13} fill="var(--surface-raised)" stroke="var(--ox)" strokeWidth={1.6} />
             <text
               x={0}
               y={0.5}
               textAnchor="middle"
               dominantBaseline="central"
-              fontSize={13}
+              fontSize={16}
               fontWeight={700}
               fontFamily="var(--font-sans)"
               fill="var(--ox)"
@@ -222,11 +240,11 @@ export const ElectronTransfer = forwardRef<SVGGElement, ElectronTransferProps>(f
           <circle
             cx={0}
             cy={0}
-            r={acceptorRadius + 5}
+            r={acceptorRadius + 6}
             fill="none"
             stroke="var(--red)"
-            strokeWidth={1}
-            opacity={0.35}
+            strokeWidth={1.5}
+            opacity={0.4}
           />
         )}
         <circle
@@ -235,15 +253,16 @@ export const ElectronTransfer = forwardRef<SVGGElement, ElectronTransferProps>(f
           r={acceptorRadius}
           fill="var(--surface)"
           stroke={acceptorStroke}
-          strokeWidth={2.4}
+          strokeWidth={2.8}
         />
+        {/* Main atom label (≥ 16 units) */}
         <text
           x={0}
           y={1}
           textAnchor="middle"
           dominantBaseline="central"
-          fontSize={18}
-          fontWeight={600}
+          fontSize={24}
+          fontWeight={700}
           fontFamily="var(--font-sans)"
           fill="var(--fg)"
           style={{ userSelect: 'none' }}
@@ -251,16 +270,16 @@ export const ElectronTransfer = forwardRef<SVGGElement, ElectronTransferProps>(f
           {acceptor.symbol}
         </text>
 
-        {/* Charge badge */}
+        {/* Charge badge (labels ≥ 16 units) */}
         {acceptorCharge && (
-          <g transform={`translate(${acceptorRadius * 0.75}, ${-acceptorRadius * 0.75})`}>
-            <circle cx={0} cy={0} r={9.5} fill="var(--surface-raised)" stroke="var(--red)" strokeWidth={1.5} />
+          <g transform={`translate(${acceptorRadius * 0.72}, ${-acceptorRadius * 0.72})`}>
+            <circle cx={0} cy={0} r={13} fill="var(--surface-raised)" stroke="var(--red)" strokeWidth={1.6} />
             <text
               x={0}
               y={0.5}
               textAnchor="middle"
               dominantBaseline="central"
-              fontSize={13}
+              fontSize={16}
               fontWeight={700}
               fontFamily="var(--font-sans)"
               fill="var(--red)"
@@ -272,18 +291,18 @@ export const ElectronTransfer = forwardRef<SVGGElement, ElectronTransferProps>(f
         )}
       </g>
 
-      {/* Half-reaction captions under each particle */}
+      {/* Half-reaction captions under each particle (labels ≥ 16 units) */}
       {donorCaption && (
-        <g transform={`translate(${donorCenter.x}, ${donorRadius + 22})`}>
+        <g transform={`translate(${donorCenter.x}, ${donorRadius + 28})`}>
           <text
             x={0}
             y={0}
             textAnchor="middle"
             dominantBaseline="central"
-            fontSize={13}
+            fontSize={16}
             fontFamily="var(--font-sans)"
             fill="var(--ox)"
-            fontWeight={500}
+            fontWeight={600}
           >
             {donorCaption}
           </text>
@@ -291,16 +310,16 @@ export const ElectronTransfer = forwardRef<SVGGElement, ElectronTransferProps>(f
       )}
 
       {acceptorCaption && (
-        <g transform={`translate(${acceptorCenter.x}, ${acceptorRadius + 22})`}>
+        <g transform={`translate(${acceptorCenter.x}, ${acceptorRadius + 28})`}>
           <text
             x={0}
             y={0}
             textAnchor="middle"
             dominantBaseline="central"
-            fontSize={13}
+            fontSize={16}
             fontFamily="var(--font-sans)"
             fill="var(--red)"
-            fontWeight={500}
+            fontWeight={600}
           >
             {acceptorCaption}
           </text>

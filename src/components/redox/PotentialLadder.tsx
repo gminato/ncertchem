@@ -1,13 +1,11 @@
 import React, { forwardRef, useId, useMemo } from 'react'
 import {
-  clamp01,
   potentialLadderY,
-  formatTrueMinus,
   spontaneousBracketGeometry,
   resolveBadgePositions,
 } from './geometry'
 
-export const POTENTIAL_LADDER_SIZE = { width: 480, height: 440 } as const
+export const POTENTIAL_LADDER_SIZE = { width: 760, height: 460 } as const
 
 export interface RedoxCouple {
   id: string
@@ -44,10 +42,10 @@ export const PotentialLadder = forwardRef<SVGGElement, PotentialLadderProps>(fun
   const redArrowId = `pl-red-arr-${idPrefix}`
   const oxArrowId = `pl-ox-arr-${idPrefix}`
 
-  const top = 54
-  const bottom = 384
-  const axisX = 60
-  const rungRightX = 310
+  const top = 56
+  const bottom = 404
+  const axisX = 90
+  const rungRightX = 520
 
   // Compute scale extent
   const { eMin, eMax } = useMemo(() => {
@@ -67,16 +65,16 @@ export const PotentialLadder = forwardRef<SVGGElement, PotentialLadderProps>(fun
     return couples.filter((c) => c.e0 >= eMin - 0.05 && c.e0 <= eMax + 0.05)
   }, [couples, eMin, eMax])
 
-  // Position layout for couple labels with collision avoidance
+  // Position layout for couple labels with generous collision avoidance (minGap = 22)
   const laidOutCouples = useMemo(() => {
     const rawItems = visibleCouples.map((c) => ({
       id: c.id,
       targetX: potentialLadderY(c.e0, { top, bottom, eMin, eMax }),
-      width: 24,
+      width: 22,
       couple: c,
     }))
 
-    const resolved = resolveBadgePositions(rawItems, 6)
+    const resolved = resolveBadgePositions(rawItems, 22)
     const map = new Map<string | number, number>()
     for (const r of resolved) {
       map.set(r.id, r.x)
@@ -121,7 +119,7 @@ export const PotentialLadder = forwardRef<SVGGElement, PotentialLadderProps>(fun
     const anY = potentialLadderY(anode.e0, { top, bottom, eMin, eMax })
     const eCell = +(cathode.e0 - anode.e0).toFixed(2)
 
-    const bracket = spontaneousBracketGeometry(catY, anY, rungRightX + 16, 16)
+    const bracket = spontaneousBracketGeometry(catY, anY, rungRightX + 16, 20)
 
     return {
       cathode,
@@ -166,14 +164,14 @@ export const PotentialLadder = forwardRef<SVGGElement, PotentialLadderProps>(fun
         </marker>
       </defs>
 
-      {/* Axis title */}
+      {/* Axis title (≥ 14 units) */}
       <text
-        x={axisX - 8}
-        y={top - 20}
+        x={axisX - 10}
+        y={top - 24}
         textAnchor="end"
         dominantBaseline="central"
-        fontSize={13}
-        fontWeight={600}
+        fontSize={15}
+        fontWeight={700}
         fontFamily="var(--font-sans)"
         fill="var(--fg-muted)"
         style={{ userSelect: 'none' }}
@@ -188,10 +186,10 @@ export const PotentialLadder = forwardRef<SVGGElement, PotentialLadderProps>(fun
         x2={axisX}
         y2={bottom + 8}
         stroke="var(--border)"
-        strokeWidth={1.6}
+        strokeWidth={1.8}
       />
 
-      {/* Axis ticks and labels */}
+      {/* Axis ticks and labels (≥ 14 units) */}
       {ticks.map((val) => {
         const ty = potentialLadderY(val, { top, bottom, eMin, eMax })
         const isZero = Math.abs(val) < 0.01
@@ -200,20 +198,20 @@ export const PotentialLadder = forwardRef<SVGGElement, PotentialLadderProps>(fun
         return (
           <g key={val}>
             <line
-              x1={axisX - 5}
+              x1={axisX - 6}
               y1={ty}
-              x2={axisX + (isZero ? 10 : 5)}
+              x2={axisX + (isZero ? 12 : 6)}
               y2={ty}
-              stroke={isZero ? 'var(--fg-muted)' : 'var(--border)'}
-              strokeWidth={isZero ? 1.4 : 1}
-              opacity={isZero ? 0.7 : 0.4}
+              stroke={isZero ? 'var(--fg)' : 'var(--border)'}
+              strokeWidth={isZero ? 1.6 : 1}
+              opacity={isZero ? 0.8 : 0.5}
             />
             <text
-              x={axisX - 10}
+              x={axisX - 12}
               y={ty}
               textAnchor="end"
               dominantBaseline="central"
-              fontSize={13}
+              fontSize={14}
               fontFamily="var(--font-sans)"
               fontWeight={isZero ? 700 : 500}
               fill={isZero ? 'var(--fg)' : 'var(--fg-muted)'}
@@ -225,7 +223,7 @@ export const PotentialLadder = forwardRef<SVGGElement, PotentialLadderProps>(fun
         )
       })}
 
-      {/* Couple Rungs and Labels */}
+      {/* Couple Rungs and Labels (≥ 14 units, no collisions) */}
       {laidOutCouples.map((c) => {
         const isCathode = highlightInfo?.cathode.id === c.id
         const isAnode = highlightInfo?.anode.id === c.id
@@ -245,32 +243,32 @@ export const PotentialLadder = forwardRef<SVGGElement, PotentialLadderProps>(fun
             <line
               x1={axisX}
               y1={c.naturalY}
-              x2={axisX + (isHighlighted ? 10 : 6)}
+              x2={axisX + (isHighlighted ? 12 : 6)}
               y2={c.naturalY}
               stroke={rungColor}
-              strokeWidth={isHighlighted ? 2.2 : 1.2}
+              strokeWidth={isHighlighted ? 2.4 : 1.2}
               opacity={isHighlighted ? 1 : 0.7}
             />
 
             {/* Subtle dotted leader line between equation and potential value */}
             <line
-              x1={axisX + 185}
+              x1={axisX + 250}
               y1={c.resolvedY}
-              x2={rungRightX - 60}
+              x2={rungRightX - 65}
               y2={c.resolvedY}
               stroke="var(--border)"
               strokeWidth={1}
               strokeDasharray="2 3"
-              opacity={0.4}
+              opacity={0.45}
             />
 
-            {/* Couple label box */}
-            <g transform={`translate(${axisX + 14}, ${c.resolvedY})`}>
+            {/* Couple equation text (≥ 14 units) */}
+            <g transform={`translate(${axisX + 16}, ${c.resolvedY})`}>
               <text
                 x={0}
                 y={0}
                 dominantBaseline="central"
-                fontSize={13}
+                fontSize={14.5}
                 fontFamily="var(--font-sans)"
                 fontWeight={isHighlighted ? 700 : 500}
                 fill={isHighlighted ? (isCathode ? 'var(--red)' : 'var(--ox)') : 'var(--fg)'}
@@ -280,14 +278,14 @@ export const PotentialLadder = forwardRef<SVGGElement, PotentialLadderProps>(fun
               </text>
             </g>
 
-            {/* Potential value badge near rung end */}
-            <g transform={`translate(${rungRightX - 4}, ${c.resolvedY})`}>
+            {/* Potential value badge near rung end (≥ 14 units) */}
+            <g transform={`translate(${rungRightX - 6}, ${c.resolvedY})`}>
               <text
                 x={0}
                 y={0}
                 textAnchor="end"
                 dominantBaseline="central"
-                fontSize={13}
+                fontSize={14}
                 fontFamily="var(--font-sans)"
                 fontWeight={isHighlighted ? 700 : 500}
                 fill={isHighlighted ? 'var(--fg)' : 'var(--fg-muted)'}
@@ -324,7 +322,7 @@ export const PotentialLadder = forwardRef<SVGGElement, PotentialLadderProps>(fun
         )
       })}
 
-      {/* Spontaneous Cell Voltage Bracket */}
+      {/* Spontaneous Cell Voltage Bracket & Callout (main label ≥ 16 units) */}
       {highlightInfo && (
         <g>
           {/* Bracket line */}
@@ -332,29 +330,29 @@ export const PotentialLadder = forwardRef<SVGGElement, PotentialLadderProps>(fun
             d={highlightInfo.bracket.bracketPath}
             fill="none"
             stroke="var(--accent)"
-            strokeWidth={1.8}
+            strokeWidth={2}
             strokeLinejoin="round"
           />
 
-          {/* E°cell Callout Pill */}
-          <g transform={`translate(${highlightInfo.bracket.labelX + 24}, ${highlightInfo.bracket.labelY})`}>
+          {/* E°cell Callout Pill (≥ 16 units) */}
+          <g transform={`translate(${highlightInfo.bracket.labelX + 28}, ${highlightInfo.bracket.labelY})`}>
             <rect
-              x={-54}
-              y={-14}
-              width={108}
-              height={28}
-              rx={5}
+              x={-62}
+              y={-16}
+              width={124}
+              height={32}
+              rx={6}
               fill="var(--surface-raised)"
               stroke="var(--accent)"
-              strokeWidth={1.4}
+              strokeWidth={1.5}
             />
             <text
               x={0}
               y={0.5}
               textAnchor="middle"
               dominantBaseline="central"
-              fontSize={13}
-              fontWeight={600}
+              fontSize={16}
+              fontWeight={700}
               fontFamily="var(--font-sans)"
               fill="var(--fg)"
               style={{ userSelect: 'none' }}
@@ -367,12 +365,13 @@ export const PotentialLadder = forwardRef<SVGGElement, PotentialLadderProps>(fun
         </g>
       )}
 
-      {/* Qualitative Tendency Indicators */}
-      <g transform={`translate(${axisX + 10}, ${top - 24})`}>
+      {/* Qualitative Tendency Indicators (≥ 14 units) */}
+      <g transform={`translate(${axisX + 16}, ${top - 28})`}>
         <text
           x={0}
           y={0}
-          fontSize={13}
+          fontSize={14}
+          fontWeight={500}
           fontFamily="var(--font-sans)"
           fill="var(--fg-muted)"
           style={{ userSelect: 'none' }}
@@ -380,11 +379,12 @@ export const PotentialLadder = forwardRef<SVGGElement, PotentialLadderProps>(fun
           ↑ Stronger oxidising agent
         </text>
       </g>
-      <g transform={`translate(${axisX + 10}, ${bottom + 24})`}>
+      <g transform={`translate(${axisX + 16}, ${bottom + 28})`}>
         <text
           x={0}
           y={0}
-          fontSize={13}
+          fontSize={14}
+          fontWeight={500}
           fontFamily="var(--font-sans)"
           fill="var(--fg-muted)"
           style={{ userSelect: 'none' }}

@@ -7,6 +7,7 @@ import {
   onLadderY,
   potentialLadderY,
   curvedArrowPath,
+  transitionLabelPosition,
   spontaneousBracketGeometry,
   electronArcPoint,
   electronArcPath,
@@ -121,6 +122,34 @@ describe('Redox geometry helpers', () => {
       expect(bracket.bracketPath).toContain('L 150 240')
       expect(bracket.labelY).toBe(170)
       expect(bracket.labelX).toBe(180)
+    })
+
+    it('positions transition labels beside arrows without intersecting the arrow stroke', () => {
+      const from = { x: 140, y: 190 }
+      const toOx = { x: 300, y: 130 }
+      const toRed = { x: 300, y: 250 }
+
+      const pillWidth = 96
+      const pillHeight = 24
+      const gap = 16
+      const oxPos = transitionLabelPosition(from, toOx, true, pillWidth, pillHeight, gap)
+      const redPos = transitionLabelPosition(from, toRed, false, pillWidth, pillHeight, gap)
+
+      // Oxidation label is placed above the arrow
+      expect(oxPos.x).toBeCloseTo(140 + 160 * 0.42)
+      // The bottom of the oxidation pill must be strictly above the arrow across the pill's x span
+      const slopeOx = (toOx.y - from.y) / (toOx.x - from.x)
+      const oxRightX = oxPos.x + pillWidth / 2
+      const arrowYAtOxRight = from.y + slopeOx * (oxRightX - from.x)
+      expect(oxPos.y + pillHeight / 2).toBeLessThanOrEqual(arrowYAtOxRight - gap + 0.001)
+
+      // Reduction label is placed below the arrow
+      expect(redPos.x).toBeCloseTo(140 + 160 * 0.42)
+      // The top of the reduction pill must be strictly below the arrow across the pill's x span
+      const slopeRed = (toRed.y - from.y) / (toRed.x - from.x)
+      const redRightX = redPos.x + pillWidth / 2
+      const arrowYAtRedRight = from.y + slopeRed * (redRightX - from.x)
+      expect(redPos.y - pillHeight / 2).toBeGreaterThanOrEqual(arrowYAtRedRight + gap - 0.001)
     })
   })
 

@@ -5,6 +5,7 @@ import {
   formatSignedNumber,
   formatTrueMinus,
   curvedArrowPath,
+  transitionLabelPosition,
   type Point,
 } from './geometry'
 
@@ -122,12 +123,12 @@ export const ONLadder = forwardRef<SVGGElement, ONLadderProps>(function ONLadder
 
       {/* Axis title */}
       <text
-        x={axisX - 8}
+        x={axisX - 10}
         y={top - 18}
         textAnchor="end"
         dominantBaseline="central"
-        fontSize={13}
-        fontWeight={600}
+        fontSize={15}
+        fontWeight={700}
         fontFamily="var(--font-sans)"
         fill="var(--fg-muted)"
         style={{ userSelect: 'none' }}
@@ -142,10 +143,10 @@ export const ONLadder = forwardRef<SVGGElement, ONLadderProps>(function ONLadder
         x2={axisX}
         y2={bottom + 8}
         stroke="var(--border)"
-        strokeWidth={1.6}
+        strokeWidth={1.8}
       />
 
-      {/* Axis ticks and labels */}
+      {/* Axis ticks and labels (enlarged to ≥ 14 units) */}
       {ticks.map((val) => {
         const ty = onLadderY(val, { top, bottom, onMin, onMax })
         const isZero = val === 0
@@ -153,23 +154,23 @@ export const ONLadder = forwardRef<SVGGElement, ONLadderProps>(function ONLadder
           <g key={val}>
             {/* Horizontal guideline */}
             <line
-              x1={axisX - 5}
+              x1={axisX - 6}
               y1={ty}
               x2={axisX + (isZero ? 260 : 6)}
               y2={ty}
               stroke="var(--border)"
-              strokeWidth={isZero ? 1.4 : 1}
+              strokeWidth={isZero ? 1.6 : 1}
               strokeDasharray={isZero ? '3 3' : undefined}
-              opacity={isZero ? 0.7 : 0.4}
+              opacity={isZero ? 0.8 : 0.45}
             />
 
-            {/* Tick label (minimum 13px) */}
+            {/* Tick label (≥ 14 units) */}
             <text
-              x={axisX - 10}
+              x={axisX - 12}
               y={ty}
               textAnchor="end"
               dominantBaseline="central"
-              fontSize={13}
+              fontSize={14}
               fontFamily="var(--font-sans)"
               fontWeight={isZero ? 700 : 500}
               fill={isZero ? 'var(--fg)' : 'var(--fg-muted)'}
@@ -204,9 +205,20 @@ export const ONLadder = forwardRef<SVGGElement, ONLadderProps>(function ONLadder
         const curve = tr.curveDx ?? (from.x === to.x ? 30 : 0)
         const pathD = curvedArrowPath(startPt, endPt, curve)
 
-        // Midpoint for label pill positioned neatly above (ox) or below (red) arrow
-        const midX = (startPt.x + endPt.x) / 2
-        const midY = (startPt.y + endPt.y) / 2 + (isOx ? -36 : 36)
+        // Pill dimensions
+        const pillWidth = 98
+        const pillHeight = 24
+
+        // Placement helper positions label cleanly beside the arrow (above up arrow, below down arrow)
+        // with no stroke passing through any label
+        const labelPos = transitionLabelPosition(
+          startPt,
+          endPt,
+          isOx,
+          pillWidth,
+          pillHeight,
+          14
+        )
 
         const labelText =
           tr.label ?? (isOx ? 'Oxidation' : 'Reduction')
@@ -222,32 +234,32 @@ export const ONLadder = forwardRef<SVGGElement, ONLadderProps>(function ONLadder
               d={pathD}
               fill="none"
               stroke={color}
-              strokeWidth={2}
+              strokeWidth={2.4}
               markerEnd={p > 0.1 ? marker : undefined}
               strokeDasharray={approxLength}
               strokeDashoffset={strokeDashoffset}
               style={{ transition: 'stroke-dashoffset 0.25s ease' }}
             />
 
-            {/* Arrow label pill */}
+            {/* Arrow label pill positioned cleanly beside arrow without stroke collision */}
             {p > 0.4 && (
-              <g transform={`translate(${midX}, ${midY})`} opacity={p}>
+              <g transform={`translate(${labelPos.x}, ${labelPos.y})`} opacity={p}>
                 <rect
-                  x={-42}
-                  y={-11}
-                  width={84}
-                  height={22}
-                  rx={4}
+                  x={-pillWidth / 2}
+                  y={-pillHeight / 2}
+                  width={pillWidth}
+                  height={pillHeight}
+                  rx={5}
                   fill="var(--surface-raised)"
                   stroke={color}
-                  strokeWidth={1.2}
+                  strokeWidth={1.4}
                 />
                 <text
                   x={0}
                   y={0.5}
                   textAnchor="middle"
                   dominantBaseline="central"
-                  fontSize={13}
+                  fontSize={14}
                   fontWeight={600}
                   fontFamily="var(--font-sans)"
                   fill={color}
@@ -281,23 +293,23 @@ export const ONLadder = forwardRef<SVGGElement, ONLadderProps>(function ONLadder
 
             {/* Species badge */}
             <rect
-              x={-28}
-              y={-14}
-              width={56}
-              height={28}
+              x={-30}
+              y={-15}
+              width={60}
+              height={30}
               rx={6}
               fill="var(--surface)"
               stroke="var(--border)"
               strokeWidth={1.5}
             />
 
-            {/* Species label (minimum 13px) */}
+            {/* Species label (≥ 14 units) */}
             <text
               x={0}
               y={0.5}
               textAnchor="middle"
               dominantBaseline="central"
-              fontSize={14}
+              fontSize={15}
               fontWeight={600}
               fontFamily="var(--font-sans)"
               fill="var(--fg)"

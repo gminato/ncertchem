@@ -1,7 +1,7 @@
 import React, { forwardRef, useId } from 'react'
 import { clamp01, formatTrueMinus } from './geometry'
 
-export const DANIELL_CELL_SIZE = { width: 560, height: 350 } as const
+export const DANIELL_CELL_SIZE = { width: 560, height: 360 } as const
 
 export interface DaniellCellProps extends Omit<React.SVGAttributes<SVGGElement>, 'children'> {
   /** Circuit switch state: true = closed/active, false = open/inactive. */
@@ -59,28 +59,33 @@ export const DaniellCell = forwardRef<SVGGElement, DaniellCellProps>(function Da
   const bh = 145
   const bLeft = -bw / 2
   const bRight = bw / 2
-  const bTop = 15
+  const bTop = 20
   const bBottom = bTop + bh
-  const liquidY = 48
+  const liquidY = 55
 
   // Beaker Centers
   const znBeakerX = -140
   const cuBeakerX = 140
 
   // Electrodes
-  const znWidth = 16 + 14 * znM // thins as mass decreases
-  const cuWidth = 20 + 14 * cuM // thickens as copper deposits
-  const rodTopY = -55
-  const rodBottomY = 135
+  const znWidth = 18 + 14 * znM // thins as mass decreases
+  const cuWidth = 22 + 14 * cuM // thickens as copper deposits
+  const rodTopY = -45
+  const rodBottomY = 145
 
-  // Wire level
-  const wireY = -105
+  // Overhead wire level
+  const wireY = -90
 
   // Readout voltage text
   const displayVoltage = switchOn ? voltage : '0.00 V'
   const [vNum, vUnit] = displayVoltage.split(' ')
 
-  const numElectrons = 5
+  // Path distance calculations for continuous electron flow
+  const znLegLen = rodTopY - wireY // 45
+  const wireSpan = cuBeakerX - znBeakerX // 280
+  const cuLegLen = rodTopY - wireY // 45
+  const totalPathLen = znLegLen + wireSpan + cuLegLen // 370
+  const numElectrons = 7
 
   return (
     <g
@@ -171,10 +176,10 @@ export const DaniellCell = forwardRef<SVGGElement, DaniellCellProps>(function Da
         {/* Anode & solution label below beaker in --ox (amber) */}
         <text
           x={0}
-          y={bBottom + 16}
+          y={bBottom + 18}
           textAnchor="middle"
           dominantBaseline="central"
-          fontSize={13.5}
+          fontSize={15}
           fontWeight={600}
           fontFamily="var(--font-sans)"
           fill="var(--ox)"
@@ -184,10 +189,10 @@ export const DaniellCell = forwardRef<SVGGElement, DaniellCellProps>(function Da
         </text>
         <text
           x={0}
-          y={bBottom + 34}
+          y={bBottom + 38}
           textAnchor="middle"
           dominantBaseline="central"
-          fontSize={13}
+          fontSize={14}
           fontFamily="var(--font-sans)"
           fill="var(--fg-muted)"
           style={{ userSelect: 'none' }}
@@ -200,7 +205,7 @@ export const DaniellCell = forwardRef<SVGGElement, DaniellCellProps>(function Da
       {/* 2. Cu Cathode Compartment (Right)                               */}
       {/* ============================================================== */}
       <g transform={`translate(${cuBeakerX}, 0)`}>
-        {/* Solution (CuSO4 blue) */}
+        {/* Solution (CuSO4 blue - visibly blue in both themes) */}
         <g clipPath={`url(#${cuClipId})`}>
           <rect
             x={bLeft - 5}
@@ -208,7 +213,7 @@ export const DaniellCell = forwardRef<SVGGElement, DaniellCellProps>(function Da
             width={bw + 10}
             height={bBottom - liquidY + 5}
             fill="var(--sol-cu)"
-            opacity={0.15 + 0.65 * solT}
+            opacity={0.50 + 0.45 * solT}
           />
           <line
             x1={bLeft}
@@ -216,8 +221,8 @@ export const DaniellCell = forwardRef<SVGGElement, DaniellCellProps>(function Da
             x2={bRight}
             y2={liquidY}
             stroke="var(--sol-cu)"
-            strokeWidth={1.6}
-            opacity={0.4 + 0.6 * solT}
+            strokeWidth={2}
+            opacity={0.7 + 0.3 * solT}
           />
         </g>
 
@@ -246,10 +251,10 @@ export const DaniellCell = forwardRef<SVGGElement, DaniellCellProps>(function Da
         {/* Cathode & solution label below beaker in --red (indigo) */}
         <text
           x={0}
-          y={bBottom + 16}
+          y={bBottom + 18}
           textAnchor="middle"
           dominantBaseline="central"
-          fontSize={13.5}
+          fontSize={15}
           fontWeight={600}
           fontFamily="var(--font-sans)"
           fill="var(--red)"
@@ -259,10 +264,10 @@ export const DaniellCell = forwardRef<SVGGElement, DaniellCellProps>(function Da
         </text>
         <text
           x={0}
-          y={bBottom + 34}
+          y={bBottom + 38}
           textAnchor="middle"
           dominantBaseline="central"
-          fontSize={13}
+          fontSize={14}
           fontFamily="var(--font-sans)"
           fill="var(--fg-muted)"
           style={{ userSelect: 'none' }}
@@ -272,31 +277,31 @@ export const DaniellCell = forwardRef<SVGGElement, DaniellCellProps>(function Da
       </g>
 
       {/* ============================================================== */}
-      {/* 3. Salt Bridge (Inverted U-tube)                                */}
+      {/* 3. Salt Bridge (Inverted U-tube dipping deeply below surface)   */}
       {/* ============================================================== */}
       <g>
-        {/* Salt bridge body */}
+        {/* Salt bridge body (dips down to y = 95, well below liquidY = 55) */}
         <path
-          d="M -78 100 L -78 28 Q -78 6 -58 6 L 58 6 Q 78 6 78 28 L 78 100 L 62 100 L 62 30 Q 62 18 52 18 L -52 18 Q -62 18 -62 30 L -62 100 Z"
+          d="M -112 95 L -112 28 Q -112 8 -92 8 L 92 8 Q 112 8 112 28 L 112 95 L 88 95 L 88 32 Q 88 22 76 22 L -76 22 Q -88 22 -88 32 L -88 95 Z"
           fill="var(--surface-raised)"
           stroke="var(--glass-wall)"
           strokeWidth={1.8}
         />
         {/* Agar gel electrolyte core */}
         <path
-          d="M -75 96 L -75 28 Q -75 8 -56 8 L 56 8 Q 75 8 75 28 L 75 96 L 65 96 L 65 29 Q 65 17 53 17 L -53 17 Q -65 17 -65 29 L -65 96 Z"
+          d="M -108 92 L -108 28 Q -108 11 -90 11 L 90 11 Q 108 11 108 28 L 108 92 L 92 92 L 92 31 Q 92 24 78 24 L -78 24 Q -92 24 -92 31 L -92 92 Z"
           fill="var(--surface)"
           opacity={0.8}
         />
 
         {/* Salt bridge label pill */}
-        <g transform="translate(0, -6)">
+        <g transform="translate(0, 5)">
           <rect
-            x={-60}
-            y={-12}
-            width={120}
-            height={22}
-            rx={4}
+            x={-72}
+            y={-14}
+            width={144}
+            height={28}
+            rx={5}
             fill="var(--surface-raised)"
             stroke="var(--border)"
             strokeWidth={1.2}
@@ -306,7 +311,7 @@ export const DaniellCell = forwardRef<SVGGElement, DaniellCellProps>(function Da
             y={0.5}
             textAnchor="middle"
             dominantBaseline="central"
-            fontSize={13}
+            fontSize={14}
             fontWeight={600}
             fontFamily="var(--font-sans)"
             fill="var(--fg)"
@@ -320,17 +325,17 @@ export const DaniellCell = forwardRef<SVGGElement, DaniellCellProps>(function Da
         {switchOn && (
           <g>
             {/* Anions (Cl−) migrate toward Zn anode (left) */}
-            <g transform={`translate(${-46 - 8 * p}, 42)`}>
-              <rect x={-15} y={-9} width={30} height={18} rx={4} fill="var(--surface-raised)" stroke="var(--ox)" strokeWidth={1.2} />
-              <text x={0} y={1} textAnchor="middle" dominantBaseline="central" fontSize={13} fontWeight={600} fill="var(--ox)">
+            <g transform={`translate(${-56 - 8 * p}, 48)`}>
+              <rect x={-18} y={-11} width={36} height={22} rx={4} fill="var(--surface-raised)" stroke="var(--ox)" strokeWidth={1.2} />
+              <text x={0} y={1} textAnchor="middle" dominantBaseline="central" fontSize={14} fontWeight={600} fill="var(--ox)">
                 {formatTrueMinus('Cl−')}
               </text>
             </g>
 
             {/* Cations (K+) migrate toward Cu cathode (right) */}
-            <g transform={`translate(${46 + 8 * p}, 42)`}>
-              <rect x={-13} y={-9} width={26} height={18} rx={4} fill="var(--surface-raised)" stroke="var(--red)" strokeWidth={1.2} />
-              <text x={0} y={1} textAnchor="middle" dominantBaseline="central" fontSize={13} fontWeight={600} fill="var(--red)">
+            <g transform={`translate(${56 + 8 * p}, 48)`}>
+              <rect x={-16} y={-11} width={32} height={22} rx={4} fill="var(--surface-raised)" stroke="var(--red)" strokeWidth={1.2} />
+              <text x={0} y={1} textAnchor="middle" dominantBaseline="central" fontSize={14} fontWeight={600} fill="var(--red)">
                 K⁺
               </text>
             </g>
@@ -342,49 +347,49 @@ export const DaniellCell = forwardRef<SVGGElement, DaniellCellProps>(function Da
       {/* 4. Overhead Wire & Switch                                       */}
       {/* ============================================================== */}
       <g>
-        {/* Wire from Zn electrode up and over */}
+        {/* Wire from Zn rod top to switch */}
         <path
-          d={`M ${znBeakerX} ${rodTopY} L ${znBeakerX} ${wireY} L -70 ${wireY}`}
+          d={`M ${znBeakerX} ${rodTopY} L ${znBeakerX} ${wireY} L -85 ${wireY}`}
           fill="none"
           stroke="var(--fg-muted)"
-          strokeWidth={2}
+          strokeWidth={2.4}
           strokeLinecap="round"
         />
 
         {/* Switch */}
-        <g transform="translate(-60, 0)">
+        <g>
           {/* Terminals */}
-          <circle cx={-10} cy={wireY} r={3} fill="var(--fg-muted)" />
-          <circle cx={14} cy={wireY} r={3} fill="var(--fg-muted)" />
+          <circle cx={-85} cy={wireY} r={3.2} fill="var(--fg-muted)" />
+          <circle cx={-55} cy={wireY} r={3.2} fill="var(--fg-muted)" />
 
           {/* Switch blade */}
           {switchOn ? (
             <line
-              x1={-10}
+              x1={-85}
               y1={wireY}
-              x2={14}
+              x2={-55}
               y2={wireY}
               stroke="var(--fg)"
-              strokeWidth={2.5}
+              strokeWidth={2.6}
             />
           ) : (
             <line
-              x1={-10}
+              x1={-85}
               y1={wireY}
-              x2={8}
-              y2={wireY - 16}
+              x2={-65}
+              y2={wireY - 20}
               stroke="var(--fg)"
-              strokeWidth={2.5}
+              strokeWidth={2.6}
             />
           )}
 
-          {/* Switch label */}
+          {/* Switch label placed clear of voltmeter badge */}
           <text
-            x={2}
-            y={wireY + 16}
+            x={-70}
+            y={wireY + 18}
             textAnchor="middle"
             dominantBaseline="central"
-            fontSize={13}
+            fontSize={14}
             fontFamily="var(--font-sans)"
             fill="var(--fg-muted)"
             style={{ userSelect: 'none' }}
@@ -393,23 +398,73 @@ export const DaniellCell = forwardRef<SVGGElement, DaniellCellProps>(function Da
           </text>
         </g>
 
-        {/* Wire into meter and over to Cu */}
+        {/* Wire from switch to meter */}
         <path
-          d={`M -46 ${wireY} L -26 ${wireY}`}
+          d={`M -55 ${wireY} L -28 ${wireY}`}
           fill="none"
           stroke="var(--fg-muted)"
-          strokeWidth={2}
+          strokeWidth={2.4}
         />
+
+        {/* Wire from meter to Cu rod top */}
         <path
-          d={`M 26 ${wireY} L ${cuBeakerX} ${wireY} L ${cuBeakerX} ${rodTopY}`}
+          d={`M 28 ${wireY} L ${cuBeakerX} ${wireY} L ${cuBeakerX} ${rodTopY}`}
           fill="none"
           stroke="var(--fg-muted)"
-          strokeWidth={2}
+          strokeWidth={2.4}
           strokeLinecap="round"
         />
 
         {/* ============================================================ */}
-        {/* 5. Voltmeter Readout                                         */}
+        {/* 5. Electron dots flowing along wire path from Zn to Cu       */}
+        {/* ============================================================ */}
+        {switchOn && (
+          <g>
+            {Array.from({ length: numElectrons }).map((_, i) => {
+              const dotDist = ((p + i / numElectrons) % 1) * totalPathLen
+              let dotX: number
+              let dotY: number
+
+              if (dotDist < znLegLen) {
+                // Moving up from Zn rod to wire
+                dotX = znBeakerX
+                dotY = rodTopY - dotDist
+              } else if (dotDist < znLegLen + wireSpan) {
+                // Moving across overhead wire towards Cu
+                const horizDist = dotDist - znLegLen
+                dotX = znBeakerX + horizDist
+                dotY = wireY
+              } else {
+                // Moving down into Cu rod
+                const vertDist = dotDist - (znLegLen + wireSpan)
+                dotX = cuBeakerX
+                dotY = wireY + vertDist
+              }
+
+              return (
+                <g key={i}>
+                  <circle
+                    cx={dotX}
+                    cy={dotY}
+                    r={6.5}
+                    fill="var(--electron)"
+                    opacity={0.3}
+                    style={{ pointerEvents: 'none' }}
+                  />
+                  <circle
+                    cx={dotX}
+                    cy={dotY}
+                    r={3.8}
+                    fill="var(--electron)"
+                  />
+                </g>
+              )
+            })}
+          </g>
+        )}
+
+        {/* ============================================================ */}
+        {/* 6. Voltmeter Readout                                         */}
         {/* ============================================================ */}
         <g transform={`translate(0, ${wireY})`}>
           {meterSlot ?? (
@@ -417,7 +472,7 @@ export const DaniellCell = forwardRef<SVGGElement, DaniellCellProps>(function Da
               <circle
                 cx={0}
                 cy={0}
-                r={26}
+                r={28}
                 fill="var(--surface)"
                 stroke="var(--border)"
                 strokeWidth={2}
@@ -425,59 +480,59 @@ export const DaniellCell = forwardRef<SVGGElement, DaniellCellProps>(function Da
               <circle
                 cx={0}
                 cy={0}
-                r={23}
+                r={24}
                 fill="var(--surface)"
-                opacity={0.7}
+                opacity={0.8}
               />
 
               {/* Gauge ticks */}
-              <line x1={-14} y1={-8} x2={-10} y2={-5} stroke="var(--fg-muted)" strokeWidth={1.2} />
-              <line x1={0} y1={-15} x2={0} y2={-10} stroke="var(--fg-muted)" strokeWidth={1.5} />
-              <line x1={14} y1={-8} x2={10} y2={-5} stroke="var(--fg-muted)" strokeWidth={1.2} />
+              <line x1={-15} y1={-9} x2={-11} y2={-6} stroke="var(--fg-muted)" strokeWidth={1.3} />
+              <line x1={0} y1={-16} x2={0} y2={-11} stroke="var(--fg-muted)" strokeWidth={1.6} />
+              <line x1={15} y1={-9} x2={11} y2={-6} stroke="var(--fg-muted)" strokeWidth={1.3} />
 
               {/* Needle */}
               {switchOn ? (
                 <line
                   x1={0}
                   y1={6}
-                  x2={13}
-                  y2={-11}
+                  x2={14}
+                  y2={-12}
                   stroke="var(--heat)"
-                  strokeWidth={2}
+                  strokeWidth={2.4}
                   strokeLinecap="round"
                 />
               ) : (
                 <line
                   x1={0}
                   y1={6}
-                  x2={-12}
-                  y2={-8}
+                  x2={-13}
+                  y2={-9}
                   stroke="var(--fg-subtle)"
-                  strokeWidth={2}
+                  strokeWidth={2.4}
                   strokeLinecap="round"
                 />
               )}
-              <circle cx={0} cy={6} r={3} fill="var(--fg)" />
+              <circle cx={0} cy={6} r={3.2} fill="var(--fg)" />
 
-              {/* Digital Voltage Readout Badge below meter */}
-              <g transform="translate(0, 36)">
+              {/* Digital Voltage Readout Badge below meter (≥ 18 units) */}
+              <g transform="translate(0, 42)">
                 <rect
-                  x={-42}
-                  y={-12}
-                  width={84}
-                  height={24}
-                  rx={4}
+                  x={-52}
+                  y={-16}
+                  width={104}
+                  height={32}
+                  rx={6}
                   fill="var(--surface-raised)"
                   stroke="var(--border)"
-                  strokeWidth={1.4}
+                  strokeWidth={1.5}
                 />
                 <text
                   x={0}
-                  y={0.5}
+                  y={1}
                   textAnchor="middle"
                   dominantBaseline="central"
-                  fontSize={14}
-                  fontWeight={600}
+                  fontSize={18}
+                  fontWeight={700}
                   fontFamily="var(--font-sans)"
                   fill={switchOn ? 'var(--fg)' : 'var(--fg-muted)'}
                   style={{ userSelect: 'none' }}
@@ -490,26 +545,26 @@ export const DaniellCell = forwardRef<SVGGElement, DaniellCellProps>(function Da
         </g>
 
         {/* ============================================================ */}
-        {/* 6. Electron dots & Current arrow along wire                  */}
+        {/* 7. Current and electron direction indicators above wire      */}
         {/* ============================================================ */}
         {switchOn && (
           <g>
             {/* Electron Flow: Zn -> Cu (left to right) */}
-            <g transform={`translate(${cuBeakerX - 45}, ${wireY - 14})`}>
+            <g transform={`translate(80, ${wireY - 14})`}>
               <line
-                x1={-25}
+                x1={-20}
                 y1={0}
-                x2={10}
+                x2={16}
                 y2={0}
                 stroke="var(--electron)"
-                strokeWidth={1.5}
+                strokeWidth={1.6}
                 markerEnd={`url(#${arrowRightId})`}
               />
               <text
-                x={-7}
-                y={-10}
+                x={-2}
+                y={-11}
                 textAnchor="middle"
-                fontSize={13}
+                fontSize={14}
                 fontWeight={600}
                 fontFamily="var(--font-sans)"
                 fill="var(--electron)"
@@ -524,21 +579,21 @@ export const DaniellCell = forwardRef<SVGGElement, DaniellCellProps>(function Da
             </g>
 
             {/* Conventional Current Flow: Cu -> Zn (right to left) */}
-            <g transform={`translate(${znBeakerX + 45}, ${wireY - 14})`}>
+            <g transform={`translate(-100, ${wireY - 14})`}>
               <line
-                x1={25}
+                x1={20}
                 y1={0}
-                x2={-10}
+                x2={-16}
                 y2={0}
                 stroke="var(--fg-muted)"
-                strokeWidth={1.5}
+                strokeWidth={1.6}
                 markerEnd={`url(#${arrowLeftId})`}
               />
               <text
-                x={8}
-                y={-10}
+                x={2}
+                y={-11}
                 textAnchor="middle"
-                fontSize={13}
+                fontSize={14}
                 fontWeight={600}
                 fontFamily="var(--font-sans)"
                 fill="var(--fg-muted)"
@@ -547,24 +602,6 @@ export const DaniellCell = forwardRef<SVGGElement, DaniellCellProps>(function Da
                 Current (<tspan className="sym">I</tspan>)
               </text>
             </g>
-
-            {/* Electron dot pulses */}
-            {Array.from({ length: numElectrons }).map((_, i) => {
-              const dotProgress = (p + i / numElectrons) % 1
-              let dotX = -130 + dotProgress * 260
-              if (dotX > -26 && dotX < 26) dotX += 52
-              if (dotX > 135) return null
-
-              return (
-                <circle
-                  key={i}
-                  cx={dotX}
-                  cy={wireY}
-                  r={3.2}
-                  fill="var(--electron)"
-                />
-              )
-            })}
           </g>
         )}
       </g>

@@ -165,6 +165,41 @@ export function curvedArrowPath(from: Point, to: Point, curveDx: number): string
 }
 
 /**
+ * Computes a clear label placement beside a reaction transition arrow
+ * so the label pill never intersects or overlaps the arrow stroke.
+ * For an oxidation arrow (pointing upward/right), the label sits strictly above the arrow.
+ * For a reduction arrow (pointing downward/right), the label sits strictly below the arrow.
+ */
+export function transitionLabelPosition(
+  from: Point,
+  to: Point,
+  isOx: boolean,
+  pillWidth = 96,
+  pillHeight = 24,
+  gap = 16
+): Point {
+  const midX = from.x + (to.x - from.x) * 0.42
+  const dx = to.x - from.x
+  const dy = to.y - from.y
+  const slope = dx !== 0 ? dy / dx : 0
+
+  const xLeft = midX - pillWidth / 2
+  const xRight = midX + pillWidth / 2
+  const yLeft = from.y + slope * (xLeft - from.x)
+  const yRight = from.y + slope * (xRight - from.x)
+
+  if (isOx) {
+    const arrowTopY = Math.min(yLeft, yRight)
+    const labelY = arrowTopY - gap - pillHeight / 2
+    return { x: midX, y: labelY }
+  } else {
+    const arrowBottomY = Math.max(yLeft, yRight)
+    const labelY = arrowBottomY + gap + pillHeight / 2
+    return { x: midX, y: labelY }
+  }
+}
+
+/**
  * Evaluates a point along a quadratic bezier curve at parameter t in [0, 1].
  */
 export function quadraticBezierPoint(p0: Point, p1: Point, p2: Point, t: number): Point {

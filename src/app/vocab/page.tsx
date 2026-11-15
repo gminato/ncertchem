@@ -1895,7 +1895,7 @@ export default function VocabPage() {
           <article className={`${styles.card} ${styles.wide}`}>
             <div className={`${styles.cardCanvas} ${styles.cardCanvasTall}`}>
               <svg
-                viewBox="-480 -80 960 190"
+                viewBox="-480 -95 960 215"
                 className={styles.svgElement}
                 role="img"
                 aria-label="Electron transfer from sodium to chlorine at progress 0, 0.5, and 1"
@@ -1905,8 +1905,8 @@ export default function VocabPage() {
                   progress={0}
                   donorCaption="Oxidation: Na"
                   acceptorCaption="Reduction: Cl"
-                  x={-310}
-                  y={-8}
+                  x={-320}
+                  y={-10}
                 />
                 <ElectronTransfer
                   {...NA_CL_TRANSFER_BASE}
@@ -1914,19 +1914,19 @@ export default function VocabPage() {
                   donorCaption="Na → Na⁺ + e⁻"
                   acceptorCaption="Cl + e⁻ → Cl⁻"
                   x={0}
-                  y={-8}
+                  y={-10}
                 />
                 <ElectronTransfer
                   {...NA_CL_TRANSFER_BASE}
                   progress={1}
                   donorCaption="Na⁺ cation"
                   acceptorCaption="Cl⁻ anion"
-                  x={310}
-                  y={-8}
+                  x={320}
+                  y={-10}
                 />
-                <Label x={-310} y={78} fontSize={13} fill="var(--fg-muted)">Progress 0: neutral atoms</Label>
-                <Label x={0} y={78} fontSize={13} fill="var(--fg-muted)">Progress 0.5: <tspan className="sym">e</tspan>⁻ in transit</Label>
-                <Label x={310} y={78} fontSize={13} fill="var(--fg-muted)">Progress 1: ions formed</Label>
+                <Label x={-320} y={88} fontSize={14} fill="var(--fg-muted)">Progress 0: neutral atoms</Label>
+                <Label x={0} y={88} fontSize={14} fill="var(--fg-muted)">Progress 0.5: <tspan className="sym">e</tspan>⁻ in transit</Label>
+                <Label x={320} y={88} fontSize={14} fill="var(--fg-muted)">Progress 1: ions formed</Label>
               </svg>
             </div>
             <div className={styles.cardBody}>
@@ -2015,9 +2015,9 @@ export default function VocabPage() {
 
           {/* Card 5: Daniell cell switched off and on */}
           <article className={`${styles.card} ${styles.wide}`}>
-            <div className={`${styles.cardCanvas} ${styles.cardCanvasTall}`}>
+            <div className={`${styles.cardCanvas} ${styles.cardCanvasRedoxHero}`}>
               <svg
-                viewBox="-480 -130 960 345"
+                viewBox="-480 -148 960 375"
                 className={styles.svgElement}
                 role="img"
                 aria-label="Daniell cell switched off at 0 V and switched on at 1.10 V"
@@ -2030,7 +2030,7 @@ export default function VocabPage() {
                   copperMass={0.2}
                   solutionTint={0.9}
                   x={-235}
-                  y={-10}
+                  y={0}
                 />
                 <DaniellCell
                   switchOn={true}
@@ -2038,9 +2038,9 @@ export default function VocabPage() {
                   voltage="1.10 V"
                   zincMass={0.4}
                   copperMass={0.8}
-                  solutionTint={0.30}
+                  solutionTint={0.35}
                   x={235}
-                  y={-10}
+                  y={0}
                 />
               </svg>
             </div>
@@ -2058,10 +2058,10 @@ export default function VocabPage() {
           </article>
 
           {/* Card 6: Potential ladder */}
-          <article className={`${styles.card} ${styles.wideHalf}`}>
-            <div className={`${styles.cardCanvas} ${styles.cardCanvasTall}`}>
+          <article className={`${styles.card} ${styles.wide}`}>
+            <div className={`${styles.cardCanvas} ${styles.cardCanvasRedoxHero}`}>
               <svg
-                viewBox="0 0 450 440"
+                viewBox="0 0 760 460"
                 className={styles.svgElement}
                 role="img"
                 aria-label="Standard electrode potential ladder Table 7.1 with Zn and Cu highlighted"
@@ -2069,7 +2069,7 @@ export default function VocabPage() {
                 <PotentialLadder
                   couples={TABLE_7_1_COUPLES}
                   highlight={ZN_CU_HIGHLIGHT}
-                  range={[-1.0, 1.0]}
+                  range={[-1.75, 1.45]}
                 />
               </svg>
             </div>
@@ -2090,9 +2090,9 @@ export default function VocabPage() {
 
           {/* Card 7: Titration rig */}
           <article className={`${styles.card} ${styles.wide}`}>
-            <div className={`${styles.cardCanvas} ${styles.cardCanvasTall}`}>
+            <div className={`${styles.cardCanvas} ${styles.cardCanvasRedoxHero}`}>
               <svg
-                viewBox="-390 -185 780 405"
+                viewBox="-480 -225 960 475"
                 className={styles.svgElement}
                 role="img"
                 aria-label="Redox titration rig with KMnO4 burette and conical flask at 0.0 mL, 19.4 mL, and 20.0 mL endpoint"
@@ -2102,9 +2102,8 @@ export default function VocabPage() {
                   dropping={false}
                   endPoint={false}
                   subLabel="0.0 mL: Clear Fe²⁺ analyte"
-                  x={-260}
-                  y={-5}
-                  scale={0.78}
+                  x={-310}
+                  y={0}
                 />
                 <TitrationRig
                   addedMl={19.4}
@@ -2112,17 +2111,15 @@ export default function VocabPage() {
                   endPoint={false}
                   subLabel="19.4 mL: Droplet in transit"
                   x={0}
-                  y={-5}
-                  scale={0.78}
+                  y={0}
                 />
                 <TitrationRig
                   addedMl={20.0}
                   dropping={false}
                   endPoint={true}
                   subLabel="20.0 mL: Pink endpoint"
-                  x={260}
-                  y={-5}
-                  scale={0.78}
+                  x={310}
+                  y={0}
                 />
               </svg>
             </div>
