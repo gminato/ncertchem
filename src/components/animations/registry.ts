@@ -74,6 +74,8 @@ import { JouleAdiabatic } from './unit5/terms/JouleAdiabatic'
 import { StateFunction } from './unit5/terms/StateFunction'
 import { ThermoBomb } from './unit5/enthalpy/ThermoBomb'
 import { HessRoutes } from './unit5/enthalpy/HessRoutes'
+import { RedoxClassical } from './unit7/classical/RedoxClassical'
+import { RedoxElectronTransfer } from './unit7/transfer/RedoxElectronTransfer'
 
 /**
  * Animations available to a Scrolly Animation, keyed by the `animation` prop.
@@ -158,6 +160,8 @@ export const animations = {
   'thermo-state-function': StateFunction,
   'thermo-bomb': ThermoBomb,
   'thermo-hess': HessRoutes,
+  'redox-classical': RedoxClassical,
+  'redox-electron-transfer': RedoxElectronTransfer,
 } as const
 
 export type AnimationName = keyof typeof animations
