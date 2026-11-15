@@ -29,7 +29,7 @@ for (const scheme of ['light', 'dark'] as const) {
       await section.screenshot({ path: path.join(SCREEN_DIR, `vocab-unit2-spectra-${scheme}.png`) })
 
       // The 3D specimen: wait until the canvas has drawn at least one frame.
-      const stage = page.getByTestId('stage3d')
+      const stage = page.locator('#light-spectra').getByTestId('stage3d')
       await stage.scrollIntoViewIfNeeded()
       await expect(stage).toHaveAttribute('data-support', 'webgl')
       const canvas = stage.locator('canvas')
@@ -44,7 +44,7 @@ for (const scheme of ['light', 'dark'] as const) {
         .toBe(true)
       await page.waitForTimeout(800)
 
-      const card = page.getByRole('article').filter({ has: stage })
+      const card = stage.locator('xpath=ancestor::article[1]')
       await card.screenshot({ path: path.join(SCREEN_DIR, `vocab-unit2-3d-${scheme}.png`) })
 
       expect(errors).toEqual([])
@@ -70,7 +70,7 @@ for (const scheme of ['light', 'dark'] as const) {
       })
 
       await page.goto('/vocab#light-spectra')
-      const stage = page.getByTestId('stage3d')
+      const stage = page.locator('#light-spectra').getByTestId('stage3d')
       await stage.scrollIntoViewIfNeeded()
       await expect(stage).toHaveAttribute('data-support', 'none')
       await expect(stage.getByTestId('stage3d-fallback')).toBeVisible()
