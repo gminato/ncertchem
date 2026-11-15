@@ -1,0 +1,104 @@
+---
+class: 11
+unit: 6
+section: "6.13"
+order: 14
+title: "Solubility Equilibria of Sparingly Soluble Salts"
+slug: "6-13-solubility-equilibria-of-sparingly-soluble-salts"
+summary: "A sparingly soluble salt dissolves until the product of its ion concentrations reaches Ksp. Add a common ion and the solubility falls, and a solid forms whenever the ion product rises above Ksp."
+ncert: "Class 11, Part I — Unit 6, Section 6.13"
+---
+
+<Hook>
+Keep a steel kettle in a hard-water area for a few months and a white crust builds up on the heating element. The water went in clear, so the salts in it had dissolved. Where did the solid come from, and what made it come out of solution?
+</Hook>
+
+## Solubility classes
+
+Salts differ enormously in how much of them water will take up. Some, such as calcium chloride, are so soluble that they draw moisture out of the air. Others, such as lithium fluoride, dissolve so little that most people call them insoluble. Chemists sort them into three bands by molar solubility: above 0.1 mol L⁻¹, between 0.01 and 0.1 mol L⁻¹, and below 0.01 mol L⁻¹. The last band holds the sparingly soluble salts, and they are the subject of this Section.
+
+Whether a salt dissolves comes down to energy. The ions in the crystal attract each other strongly, and that lattice energy has to be paid for. Water molecules surrounding the ions release solvation energy in return. A salt dissolves in a solvent only when the solvation energy is large enough to pay for the lattice. A nonpolar solvent cannot supply that much solvation energy, so ionic salts barely dissolve in it.
+
+## 6.13.1 The solubility product
+
+Take solid barium sulphate in contact with its saturated solution. A little solid dissolves, and the dissolved ions come back out onto the solid, and the two processes run at equal rates:
+
+$$
+\ce{BaSO4(s) <=> Ba^{2+}(aq) + SO4^{2-}(aq)}
+$$
+
+The solid is pure and its concentration is fixed, so it drops out of the equilibrium constant. What is left is the solubility product, $K_{sp} = [\ce{Ba^{2+}}][\ce{SO4^{2-}}]$, which is $1.1 \times 10^{-10}$ at 298 K. Table 6.9 lists values like this one for many salts.
+
+The Scrolly below follows one salt from dry solid to saturated solution, then adds ions, adds a common ion and compares three salt types.
+
+<Scrolly animation="solubility-product" layout="wide">
+<Step>
+Drop solid barium sulphate into water. The water starts with a few barium and sulphate ions, so the ion product $Q$ is below $K_{sp}$ and more of the solid dissolves. Each formula unit that dissolves adds one barium ion and one sulphate ion. The solid shrinks as the solution fills, and the process carries on until $Q$ reaches $K_{sp}$.
+</Step>
+<Step>
+Now the solution is saturated. The solid and the ions meet at equal rates, so the ion concentrations stop changing while both processes still run. Each ion has the same concentration, the molar solubility $S$. So $K_{sp} = S \times S = S^2$, and $S = \sqrt{K_{sp}} = 1.05 \times 10^{-5}$ mol L⁻¹ from the Table 6.9 value.
+</Step>
+<Step>
+Now add barium and sulphate until each ion reaches $2.0 \times 10^{-4}$ M. The ion product is $Q_{sp} = (2.0 \times 10^{-4})^2 = 4.0 \times 10^{-8}$, which is 364 times $K_{sp}$. The solution is supersaturated, so the excess salt comes out as solid until $Q_{sp}$ falls back to $K_{sp}$. The pile on the beaker floor grows.
+</Step>
+<Step>
+Add 0.010 M sodium sulphate to the saturated solution. It adds sulphate ions but no barium ions, so the sulphate concentration is now 0.010 M. The product $K_{sp}$ is fixed, so the barium concentration must drop to about $K_{sp}/0.010$. Solving the equation exactly gives $S = 1.10 \times 10^{-8}$ mol L⁻¹, about 950 times less than in pure water.
+</Step>
+<Step>
+The same method gives the molar solubility of any salt, once the stoichiometry is known. For an AB salt, $S = \sqrt{K_{sp}}$. For an AB₂ salt such as PbI₂, $[\ce{Pb^{2+}}] = S$ and $[\ce{I-}] = 2S$, so $S = (K_{sp}/4)^{1/3} = 1.21 \times 10^{-3}$ mol L⁻¹. For an A₂B₃ salt with an illustrative $K_{sp}$ of $4.0 \times 10^{-20}$, $S = (K_{sp}/108)^{1/5} = 5.17 \times 10^{-5}$ mol L⁻¹.
+</Step>
+</Scrolly>
+
+Table 6.9 gives the $K_{sp}$ values used here, and the molar solubility for a salt with formula $\ce{M_xX_y}$ follows from the same algebra. Dissolve $\ce{M_xX_y}$ to give a molar solubility S. Then $[\ce{M}] = xS$ and $[\ce{X}] = yS$, so
+
+$$
+K_{sp} = x^{x}\,y^{y}\,S^{(x+y)}, \qquad S = \left(\frac{K_{sp}}{x^{x}\,y^{y}}\right)^{1/(x+y)}
+$$
+
+For a 1:1 salt this is $S = \sqrt{K_{sp}}$. For a 1:2 salt, such as lead iodide, it becomes $S = (K_{sp}/4)^{1/3}$. Two salts with the same $K_{sp}$ can therefore have quite different solubilities, because the power of S depends on the formula.
+
+## Predicting precipitation
+
+The ion product $Q_{sp}$ uses the ion concentrations that are actually present, not the ones at equilibrium. Compare it with $K_{sp}$:
+
+- $Q_{sp} < K_{sp}$: the solution is unsaturated, and more solid dissolves.
+- $Q_{sp} = K_{sp}$: the solution is saturated, and nothing changes on average.
+- $Q_{sp} > K_{sp}$: the solution is supersaturated, and solid comes out until $Q_{sp}$ falls back to $K_{sp}$.
+
+This is the same test as the reaction quotient in Section 6.6, applied to a solid. Mixing two solutions is the usual way to reach $Q_{sp} > K_{sp}$. Each stock is diluted by the mixing, so the ion concentrations fall to half their stock values when equal volumes are mixed.
+
+Consider a silver salt solution mixed with a chloride solution, each at $2.0 \times 10^{-4}$ M. After equal volumes are mixed, $[\ce{Ag+}] = [\ce{Cl-}] = 1.0 \times 10^{-4}$ M, so $Q_{sp} = 1.0 \times 10^{-8}$. Silver chloride has $K_{sp} = 1.8 \times 10^{-10}$, so $Q_{sp}$ is about 56 times larger, and a precipitate forms.
+
+The same test explains the kettle. Hard water carries its calcium as dissolved hydrogencarbonate. Boiling drives carbon dioxide out of the water, and calcium carbonate is left behind. Its $K_{sp}$ at 298 K is $2.8 \times 10^{-9}$ (Table 6.9). The solubility of a salt changes with temperature, so that figure is a guide at kettle temperature, not a measurement. Once the ion product of calcium carbonate is above $K_{sp}$, the solid deposits on the heating element.
+
+<Check n={1} numeric answer={1.21} tolerance={0.005} unit="× 10⁻³ mol L⁻¹" explanation="For PbI₂, an AB₂ salt with Ksp = 7.1 × 10⁻⁹ from Table 6.9: S = (Ksp/(1²·2²))^(1/3) = (7.1 × 10⁻⁹ / 4)^(1/3) = (1.775 × 10⁻⁹)^(1/3) = 1.21 × 10⁻³ mol L⁻¹.">
+Using $K_{sp}$ = 7.1 × 10⁻⁹ for lead iodide, what is the molar solubility of PbI₂ in pure water, in units of 10⁻³ mol L⁻¹?
+</Check>
+
+<Check n={2} options={["Yes, because Qsp = 8.0 × 10⁻⁸ is above Ksp", "No, because Qsp = 8.0 × 10⁻¹² is far below Ksp = 7.1 × 10⁻⁹", "Yes, because the mixing raises the ion concentrations", "No, because lead iodide is soluble"]} answer={1} explanation="Equal volumes halve each ion: [Pb²⁺] = 4.0 × 10⁻⁴ / 2 = 2.0 × 10⁻⁴ M and [I⁻] = 2.0 × 10⁻⁴ M. So Qsp = [Pb²⁺][I⁻]² = 2.0 × 10⁻⁴ × (2.0 × 10⁻⁴)² = 8.0 × 10⁻¹². That is about 0.001 times Ksp, so nothing precipitates.">
+Equal volumes of 4.0 × 10⁻⁴ M Pb(NO₃)₂ and 4.0 × 10⁻⁴ M KI are mixed. Does PbI₂ ($K_{sp}$ = 7.1 × 10⁻⁹) precipitate?
+</Check>
+
+<Simulation name="precipitation-lab" title="Precipitation Lab: mix two solutions, compare Qsp with Ksp, add a common ion" />
+
+## 6.13.2 The common-ion effect on solubility
+
+Le Chatelier's principle predicts what happens when one ion is added to a saturated solution. Adding an ion that is already in the solution pushes the equilibrium back towards the solid. Some of the salt precipitates until $Q_{sp}$ falls again to $K_{sp}$. Removing an ion does the reverse, and more salt dissolves. The $K_{sp}$ itself does not change, because it changes only with temperature. Only the molar solubility moves.
+
+Take the barium sulphate of the Scrolly. In pure water, S = 1.05 × 10⁻⁵ mol L⁻¹. In 0.010 M sodium sulphate, the sulphate is no longer negligible: $[\ce{Ba^{2+}}] = S$ and $[\ce{SO4^{2-}}] = 0.010 + S$, so $S(0.010 + S) = K_{sp}$. Solving exactly gives $S = 1.10 \times 10^{-8}$ mol L⁻¹. Replacing $0.010 + S$ with 0.010 gives the same answer to three figures, because S is so small.
+
+<Check n={3} numeric answer={1.10} tolerance={0.01} unit="× 10⁻⁸ mol L⁻¹" explanation="For BaSO₄ (Ksp = 1.1 × 10⁻¹⁰) with 0.010 M SO₄²⁻ already present: [Ba²⁺] = S and [SO₄²⁻] = 0.010 + S, so S(0.010 + S) = 1.1 × 10⁻¹⁰. Since S ≪ 0.010, S ≈ Ksp / 0.010 = 1.1 × 10⁻⁸ mol L⁻¹, and the exact root is 1.10 × 10⁻⁸.">
+Barium sulphate has $K_{sp}$ = 1.1 × 10⁻¹⁰. What is its molar solubility in 0.010 M sodium sulphate, in units of 10⁻⁸ mol L⁻¹?
+</Check>
+
+The same principle is used in the laboratory. Sodium chloride is made pure by passing hydrogen chloride gas through its saturated solution. The gas supplies chloride ions, $Q_{sp}$ for sodium chloride rises above its $K_{sp}$, and the salt comes out of solution while the sodium and magnesium sulphate impurities stay dissolved. At the high concentrations in a concentrated brine, chemists use activities rather than molar concentrations in $Q_{sp}$, but the reasoning is the same.
+
+Chemists also use the effect to remove one ion almost completely. Silver ions are precipitated as silver chloride, and barium ions as barium sulphate, so that the precipitate can be filtered and weighed. Each works because the salt has a very small $K_{sp}$, so almost all of the ion ends up in the solid.
+
+<KeyIdeas>
+- A sparingly soluble salt is a solid in equilibrium with its ions. Its solubility product $K_{sp}$ is the product of the ion concentrations raised to their stoichiometric powers, and the solid itself is left out.
+- The molar solubility follows from $K_{sp}$ and the formula: $S = \sqrt{K_{sp}}$ for AB, $S = (K_{sp}/4)^{1/3}$ for AB₂, and $S = (K_{sp}/x^x y^y)^{1/(x+y)}$ in general.
+- Compare the ion product $Q_{sp}$ with $K_{sp}$. Above $K_{sp}$ a solid precipitates; below it, the solid dissolves; equal means saturated.
+- A common ion lowers the solubility. $K_{sp}$ does not change, so the solid absorbs the extra ion until $Q_{sp} = K_{sp}$ again.
+- $K_{sp}$ is constant only at a fixed temperature. The values in Table 6.9 are all at 298 K.
+</KeyIdeas>
