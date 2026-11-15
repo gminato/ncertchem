@@ -88,6 +88,7 @@ import { QAndK } from './unit6/qk/QAndK'
 import { IceMethod } from './unit6/qk/IceMethod'
 import { GibbsCurve } from './unit6/qk/GibbsCurve'
 import { PhysicalEquilibria } from './unit6/physical/PhysicalEquilibria'
+import { WeakAcid } from './unit6/weakacid/WeakAcid'
 
 /**
  * Animations available to a Scrolly Animation, keyed by the `animation` prop.
@@ -186,6 +187,7 @@ export const animations = {
   'ice-method': IceMethod,
   'qk-gibbs': GibbsCurve,
   'physical-equilibria': PhysicalEquilibria,
+  'weak-acid': WeakAcid,
 } as const
 
 export type AnimationName = keyof typeof animations
