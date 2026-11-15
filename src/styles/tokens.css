@@ -372,3 +372,71 @@
     --cat-metalloid: rgba(79, 214, 200, 0.16);
   }
 }
+
+/* Unit 8 organic laboratory: glassware strokes, process fluids and test colours.
+   --glass-fill is shared with the vessel tokens above. */
+:root,
+[data-theme="light"] {
+  --glass: rgba(31, 32, 35, 0.42);
+  --vapour: rgba(120, 170, 200, 0.35);
+  --coolant: #3B9BD1;
+  --flame: #F2813A;
+  --prussian-blue: #1F4E89;
+  --blood-red: #B3262E;
+  --nitroprusside-violet: #7B3FA0;
+  --pbs-black: #1C1A17;
+  --agcl-white: #F7F6F2;
+  --agbr-pale-yellow: #EFE4A6;
+  --agi-yellow: #D9A92B;
+  --phosphomolybdate-yellow: #F4D83A;
+  --limewater-milky: #E4ECEF;
+  --cuso4-blue: #2563C9;
+  --spot-1: #2F6FEB;
+  --spot-2: #E0653F;
+  --spot-3: #17938A;
+  --spot-4: #8B4FD6;
+}
+
+[data-theme="dark"] {
+  --glass: rgba(240, 246, 252, 0.45);
+  --vapour: rgba(160, 205, 230, 0.3);
+  --coolant: #6CC4F0;
+  --flame: #FFA15C;
+  --prussian-blue: #4A86D6;
+  --blood-red: #FF5C63;
+  --nitroprusside-violet: #C07CF0;
+  --pbs-black: #1B1915;
+  --agcl-white: #F2F2EE;
+  --agbr-pale-yellow: #F2E6A8;
+  --agi-yellow: #F2C230;
+  --phosphomolybdate-yellow: #FFE35C;
+  --limewater-milky: #CFDDE3;
+  --cuso4-blue: #5AA2FF;
+  --spot-1: #6CB6FF;
+  --spot-2: #FF9B7E;
+  --spot-3: #4FD6C8;
+  --spot-4: #C49BFF;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --glass: rgba(240, 246, 252, 0.45);
+    --vapour: rgba(160, 205, 230, 0.3);
+    --coolant: #6CC4F0;
+    --flame: #FFA15C;
+    --prussian-blue: #4A86D6;
+    --blood-red: #FF5C63;
+    --nitroprusside-violet: #C07CF0;
+    --pbs-black: #1B1915;
+    --agcl-white: #F2F2EE;
+    --agbr-pale-yellow: #F2E6A8;
+    --agi-yellow: #F2C230;
+    --phosphomolybdate-yellow: #FFE35C;
+    --limewater-milky: #CFDDE3;
+    --cuso4-blue: #5AA2FF;
+    --spot-1: #6CB6FF;
+    --spot-2: #FF9B7E;
+    --spot-3: #4FD6C8;
+    --spot-4: #C49BFF;
+  }
+}
