@@ -87,6 +87,8 @@ import { Heterogeneous } from './unit6/heterogeneous/Heterogeneous'
 import { QAndK } from './unit6/qk/QAndK'
 import { IceMethod } from './unit6/qk/IceMethod'
 import { GibbsCurve } from './unit6/qk/GibbsCurve'
+import { AcidBaseConcepts } from './unit6/acidbase/AcidBaseConcepts'
+import { IonicElectrolytes } from './unit6/acidbase/IonicElectrolytes'
 import { PhysicalEquilibria } from './unit6/physical/PhysicalEquilibria'
 import { DynamicEquilibrium } from './unit6/dynamic/DynamicEquilibrium'
 import { MassAction } from './unit6/massaction/MassAction'
@@ -188,6 +190,8 @@ export const animations = {
   'q-and-k': QAndK,
   'ice-method': IceMethod,
   'qk-gibbs': GibbsCurve,
+  'acid-base-concepts': AcidBaseConcepts,
+  'ionic-electrolytes': IonicElectrolytes,
   'physical-equilibria': PhysicalEquilibria,
   'unit6-dynamic-equilibrium': DynamicEquilibrium,
   'unit6-mass-action': MassAction,
