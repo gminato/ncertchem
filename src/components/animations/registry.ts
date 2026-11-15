@@ -99,6 +99,7 @@ import { PhLadder } from './unit6/ph/PhLadder'
 import { WeakAcid } from './unit6/weakacid/WeakAcid'
 import { IsomerFamily } from './unit8/isomers/IsomerFamily'
 import { PurificationMethods } from './unit8/purification/PurificationMethods'
+import { LassaigneBench } from './unit8/lassaigne/LassaigneBench'
 
 /**
  * Animations available to a Scrolly Animation, keyed by the `animation` prop.
@@ -208,6 +209,7 @@ export const animations = {
   'weak-acid': WeakAcid,
   'isomer-family': IsomerFamily,
   'purification-methods': PurificationMethods,
+  'lassaigne': LassaigneBench,
 } as const
 
 export type AnimationName = keyof typeof animations
