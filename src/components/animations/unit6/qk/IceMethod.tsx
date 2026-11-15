@@ -24,7 +24,8 @@ const PROBLEM = solveIceProblem({
 const Q_EQ = reactionQuotient(NOCL_REACTION, ICE.equilibrium)
 
 /** Two decimal places, as the worked example is written. */
-const two = (v: number) => v.toFixed(2)
+/** Three significant figures, kept with trailing zeros (2.00, 0.500, 1.30). Zero is shown as 0. */
+const sf3 = (v: number) => (v === 0 ? '0' : v.toPrecision(3))
 
 const SPECIES = ['[NO]', '[Cl₂]', '[NOCl]']
 
@@ -41,11 +42,11 @@ export function IceMethod({ step }: IceMethodProps) {
   const solved = index >= 4
   const showX = index >= 3
 
-  const initial: IceCell[] = [NOCL_START.NO, NOCL_START.Cl2, NOCL_START.NOCl]
+  const initial: IceCell[] = [sf3(NOCL_START.NO), sf3(NOCL_START.Cl2), sf3(NOCL_START.NOCl)]
   const change: IceCell[] = ['−2x', '−x', '+2x']
   const equilibrium: IceCell[] = solved
-    ? [ICE.equilibrium.NO, ICE.equilibrium.Cl2, ICE.equilibrium.NOCl]
-    : [`${two(NOCL_START.NO)} − 2x`, `${two(NOCL_START.Cl2)} − x`, '2x']
+    ? [sf3(ICE.equilibrium.NO), sf3(ICE.equilibrium.Cl2), sf3(ICE.equilibrium.NOCl)]
+    : [`${sf3(NOCL_START.NO)} − 2x`, `${sf3(NOCL_START.Cl2)} − x`, '2x']
 
   return (
     <div className={styles.stage} data-testid="ice-method" data-step={index}>
@@ -56,30 +57,33 @@ export function IceMethod({ step }: IceMethodProps) {
           initial={initial}
           change={change}
           equilibrium={equilibrium}
-          rowNotes={showX ? { C: `x = ${ICE.extent.toFixed(2)}` } : undefined}
+          rowNotes={showX ? { C: `x = ${sf3(ICE.extent)}` } : undefined}
           revealStep={REVEAL[index]}
           caption="mol L⁻¹ (I: initial, C: change, E: equilibrium)"
         />
       </div>
 
       <div className={styles.working} aria-live="polite">
-        {index === 0 && <Tex tex={`K_{c} = ${two(NOCL_K)} \\text{ (given)}`} display />}
-        {index === 1 && <Tex tex={`\\text{Change: } -2x \\text{ for NO, } -x \\text{ for Cl}_2, +2x \\text{ for NOCl}`} display />}
+        {index === 0 && <Tex tex={`K_{c} = ${sf3(NOCL_K)} \\text{ (given)}`} display />}
+        {index === 1 && <Tex tex={`\\text{Change row: } -2x, \\; -x, \\; +2x`} display />}
         {index === 2 && (
-          <Tex tex={`\\text{Equilibrium: start plus change, for example } [\\mathrm{NO}] = ${two(NOCL_START.NO)} - 2x`} display />
+          <>
+            <p className={styles.note}>Equilibrium row: start plus change. For NO:</p>
+            <Tex tex={`[\\mathrm{NO}]_{\\mathrm{eq}} = ${sf3(NOCL_START.NO)} - 2x`} display />
+          </>
         )}
         {index === 3 && (
           <>
             <Tex tex={PROBLEM.equationTex} display />
             <p className={styles.note}>
-              Bisection gives x = {ICE.extent.toFixed(2)} mol L⁻¹.
+              Bisection gives x = {sf3(ICE.extent)} mol L⁻¹.
             </p>
           </>
         )}
         {index === 4 && (
           <>
             <Tex
-              tex={`Q_{c} = \\dfrac{[\\mathrm{NOCl}]^{2}}{[\\mathrm{NO}]^{2}[\\mathrm{Cl}_{2}]} = \\dfrac{(${two(ICE.equilibrium.NOCl)})^{2}}{(${two(ICE.equilibrium.NO)})^{2}(${two(ICE.equilibrium.Cl2)})} = ${two(Q_EQ)} = K_{c}`}
+              tex={`Q_{c} = \\dfrac{[\\mathrm{NOCl}]^{2}}{[\\mathrm{NO}]^{2}[\\mathrm{Cl}_{2}]} = \\dfrac{(${sf3(ICE.equilibrium.NOCl)})^{2}}{(${sf3(ICE.equilibrium.NO)})^{2}(${sf3(ICE.equilibrium.Cl2)})} = ${sf3(Q_EQ)} = K_{c}`}
               display
             />
           </>

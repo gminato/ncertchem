@@ -4,7 +4,7 @@ import { useMemo, useState, type ReactNode } from 'react'
 import katex from 'katex'
 import 'katex/contrib/mhchem'
 import { Button, NumberField, Slider } from '@/components/controls'
-import { IceTable, type IceCell } from '@/components/equilibrium'
+import { IceTable } from '@/components/equilibrium'
 import type { SimulationProps } from '@/components/simulation/registry'
 import {
   ICE_SOLVER_PRESETS,
@@ -176,9 +176,9 @@ export function IceSolver(_props: SimulationProps) {
               <div className={styles.tableWrap}>
                 <IceTable
                   species={speciesOrder.map((t) => `[${preset.names[t.species]}]`)}
-                  initial={speciesOrder.map((t) => initial[t.species] ?? 0) as IceCell[]}
+                  initial={speciesOrder.map((t) => sig(initial[t.species] ?? 0))}
                   change={speciesOrder.map((t) => changeText(t, preset.reaction.reactants.includes(t)))}
-                  equilibrium={speciesOrder.map((t) => problem!.ice.equilibrium[t.species])}
+                  equilibrium={speciesOrder.map((t) => sig(problem!.ice.equilibrium[t.species]))}
                   rowNotes={{ C: <span>x = {sig(problem.ice.extent)}</span> }}
                   revealStep={3}
                   caption={`${unit}: I, C and E rows`}
