@@ -1,0 +1,224 @@
+---
+class: 11
+unit: 5
+section: "5.2"
+order: 2
+title: "Applications: Work and Enthalpy"
+slug: "5-2-applications-work-and-enthalpy"
+summary: "A gas that pushes a piston does work set by its pressure and its volume change, and a reversible path does the most; enthalpy is the heat at constant pressure, and it differs from ΔU only when gas moles change."
+ncert: "Class 11, Part I — Unit 5, Section 5.2"
+---
+
+<Hook>
+Pump a bicycle tyre quickly and the barrel warms in your hand. Nothing is burning. The air is simply squeezed, and the work you put in has to go somewhere. How much work does a squeezed gas take, and does it depend on how gently you push?
+</Hook>
+
+## 5.2.1 Work
+
+A gas can do mechanical work, and in chemistry the work that matters is almost always pressure–volume work. Picture a cylinder with one mole of an ideal gas sealed under a frictionless piston. If the gas pushes the piston outwards against a constant external pressure $p_\text{ex}$, the piston rises by a distance $l$ across an area $A$, and the volume grows by $\Delta V = Al$.
+
+The force on the piston is $p_\text{ex} A$, so the work done against it is
+
+$$
+w = -p_\text{ex}\,\Delta V = -p_\text{ex}\,(V_\text{f} - V_\text{i})
+$$
+
+The minus sign is a convention. We follow the IUPAC rule that work is **positive when it is done on the system**. An expansion, where the gas does work on its surroundings, gives a negative $w$. A compression, where the surroundings squeeze the gas, gives a positive $w$. Heat follows the same rule: $q$ is positive when energy enters the system, and the first law reads
+
+$$
+\Delta U = q + w
+$$
+
+so do not mix this with the older form $\Delta U = q - w$, which uses the opposite sign for work.
+
+<Scrolly animation="work-piston">
+<Step>
+Start with a gas at volume $V_\text{i}$ under a piston that carries a weight. The gas pushes up on the piston. The weight pushes down with a pressure $p_\text{ex}$, and while the two balance, nothing moves. Here the weight is set at $2.00\ \text{bar}$.
+</Step>
+<Step>
+Now the gas wins. The piston rises a distance $l$ and lifts the weight with it, against the same $p_\text{ex}$. The volume grows by $\Delta V = 3.00\ \text{L}$. The external pressure stays put, so this is a single, constant push.
+</Step>
+<Step>
+The force on the piston is $p_\text{ex}A$, and the distance moved is $l$. Since $Al = \Delta V$, the work done against the weight is $-p_\text{ex}\,\Delta V$. For these numbers that is $-(2.00\ \text{bar})(3.00\ \text{L}) = -6.00\ \text{L bar}$, which is $-600\ \text{J}$, because $1\ \text{L bar} = 100\ \text{J}$.
+</Step>
+<Step>
+Now push the piston back in, against the same weight. The surroundings do work on the gas, so the sign of $w$ is positive, $+600\ \text{J}$. The same piston move carries the opposite sign in the other direction.
+</Step>
+</Scrolly>
+
+The work depends on the external pressure, not on the gas pressure. A gas can sit at a high pressure and still do only a little work, if the thing it pushes against is light. The external pressure sets the force, and the volume change sets the distance.
+
+### Irreversible expansion in one step
+
+Suppose the gas is released into a surrounding at a fixed pressure, all at once. For one mole of gas at $300\ \text{K}$, the gas starts at $6.00\ \text{L}$ and ends at $12.00\ \text{L}$. The gas pressure at the start is $p_\text{i} = nRT/V_\text{i} = 4.16\ \text{bar}$, and at the end it is $p_\text{f} = nRT/V_\text{f} = 2.08\ \text{bar}$, where $nRT = 24.94\ \text{L bar}$.
+
+If the surroundings are held at the final pressure, $p_\text{ex} = p_\text{f}$, the work is
+
+$$
+w = -p_\text{f}\,(V_\text{f} - V_\text{i}) = -(2.0785\ \text{bar})(6.00\ \text{L}) = -12.47\ \text{L bar} = -1247\ \text{J}
+$$
+
+Nothing about this expansion is gentle. The gas starts at a higher pressure than the surroundings and rushes out, so the work falls well short of the largest amount the gas could do between the same two volumes.
+
+### Reversible processes
+
+A process is **reversible** if it can be turned back at any moment by an infinitesimal change. It proceeds through a long series of equilibrium states, with the external pressure always differing from the gas pressure by an infinitesimal amount. A reversible process is an idealisation. No real expansion is infinitely slow, but it is the limit that a careful engineer approaches.
+
+For a reversible change the external pressure equals the gas pressure at each stage, $p_\text{ex} = p = nRT/V$. The work becomes an integral:
+
+$$
+w_\text{rev} = -\int_{V_\text{i}}^{V_\text{f}} p\,\mathrm{d}V
+$$
+
+For an ideal gas at constant temperature this integral is simple, and in the form NCERT uses, with a base-ten logarithm and the coefficient $2.303$:
+
+$$
+w_\text{rev} = -2.303\, nRT \log_{10}\!\frac{V_\text{f}}{V_\text{i}}
+$$
+
+For our one mole at $300\ \text{K}$, going from $6.00\ \text{L}$ to $12.00\ \text{L}$, this gives $w_\text{rev} = -17.29\ \text{L bar} = -1729\ \text{J}$. The reversible expansion does more work than the one-step expansion, $1729\ \text{J}$ against $1247\ \text{J}$.
+
+<Scrolly animation="work-paths">
+<Step>
+**One step.** The piston meets a single weight, set to the final pressure. The gas expands all the way in one move. The shaded rectangle under the path is the work: $-12.47\ \text{L bar}$, or $72\%$ of the reversible maximum.
+</Step>
+<Step>
+**Two steps.** The weight is changed once, halfway through. The staircase now follows the curve more closely, and the shaded area grows. The work is $-14.55\ \text{L bar}$, which is $84\%$ of the reversible value.
+</Step>
+<Step>
+**Eight steps.** Each drop in pressure is smaller, and the staircase hugs the isotherm. The work is $-16.53\ \text{L bar}$, or $96\%$ of the reversible value. More steps means more work, and fewer irreversible jumps.
+</Step>
+<Step>
+**Reversible.** Infinitely many infinitesimal steps trace the isotherm itself. The shaded area is the integral $\int p\,\mathrm{d}V$, and the work is $-2.303\,nRT\log_{10}(V_\text{f}/V_\text{i}) = -17.29\ \text{L bar}$. It is the largest work an expansion between these volumes can give.
+</Step>
+</Scrolly>
+
+The staircase is the key picture. Each step pushes against the gas pressure at the step's end, so each step does a little less than the gas could. The gap between the staircase and the curve is work lost to irreversibility. Halving the step size halves that gap roughly, so the reversible limit is approached but never reached by any finite number of steps.
+
+### Compression runs the other way
+
+Compression is where the reversible idea earns its keep. To squeeze a gas, the external pressure must be higher than the gas pressure at each stage. In one step, the surroundings push at the final pressure, which is the highest pressure the gas reaches, and every volume change happens against that pressure.
+
+For the same mole of gas, squeezed from $12.00\ \text{L}$ back to $6.00\ \text{L}$ in one step, the work is $+24.94\ \text{L bar}$, which is $+2494\ \text{J}$. The reversible compression needs only $+17.29\ \text{L bar}$. A single step therefore needs $144\%$ of the reversible minimum. With more steps the figure falls, towards $120\%$ for two, $110\%$ for four and $105\%$ for eight.
+
+<Simulation name="pv-work-lab" title="P–V work lab: step counts, compression and free expansion" />
+
+The lab uses the same gas and volumes as the Scrolly. Pick a number of steps and press Play. The piston drops its weights at each step boundary, the staircase grows on the p–V diagram, and the shaded area is the work so far. Choose **Compression** to watch the same process in reverse, and see that fewer steps need more work. The **Free expansion** toggle removes the weight altogether.
+
+### Isothermal and free expansion of an ideal gas
+
+For an ideal gas at constant temperature, the internal energy depends only on temperature, so $\Delta U = 0$ for any isothermal change. The first law then says $q = -w$. The heat absorbed in an isothermal expansion is exactly the work done, and the gas takes that heat from the surroundings to stay at the same temperature.
+
+The two cases are:
+
+1. **Irreversible isothermal change**, against a fixed $p_\text{ex}$: $q = -w = p_\text{ex}(V_\text{f} - V_\text{i})$, and $\Delta U = 0$.
+2. **Reversible isothermal change**: $q = -w = 2.303\,nRT\log_{10}(V_\text{f}/V_\text{i})$, and $\Delta U = 0$.
+
+**Free expansion** is an expansion into a vacuum, where $p_\text{ex} = 0$. The gas meets no pressure, so $w = 0$. Joule's experiments showed that no heat flows in a free expansion of a gas, so $q = 0$. Since $w = 0$ too, $\Delta U = 0$, and for an ideal gas the temperature stays the same. This holds for any expansion into a vacuum, reversible or not, because the work term is zero in both cases.
+
+<Check n={1} numeric answer={-1247} tolerance={3} unit="J" explanation="The one-step expansion holds the external pressure at the final value p_f = nRT/V_f = 24.94 L bar / 12.00 L = 2.0785 bar. Then w = −p_f ΔV = −(2.0785 bar)(6.00 L) = −12.47 L bar, and 1 L bar = 100 J, so w = −1247 J. The reversible value, −1729 J, is larger in magnitude.">
+One mole of an ideal gas at $300\ \text{K}$ expands from $6.00\ \text{L}$ to $12.00\ \text{L}$ in a single step against its final pressure. What is $w$, in joules, with its sign?
+</Check>
+
+<Check n={2} options={["One step, against the final pressure", "Eight steps", "The reversible path, with infinitely many steps", "Free expansion into a vacuum"]} answer={2} explanation="The reversible path gives the largest work for an expansion between the same two volumes. One step gives the least among the pressure-driven paths, and free expansion gives zero, because no pressure opposes the gas at all.">
+Between the same two volumes, which path gives the largest work for an expansion of an ideal gas?
+</Check>
+
+## 5.2.2 Enthalpy, H
+
+Most chemical reactions are carried out in open flasks and beakers, so they run at constant atmospheric pressure and not at constant volume. The heat that matters at constant pressure is therefore not $\Delta U$. We need a second state function that suits this case.
+
+At constant pressure, the work of expansion is $-p\,\Delta V$, and the first law becomes $\Delta U = q_p - p\,\Delta V$. Rearranging gives $q_p = (U_2 + pV_2) - (U_1 + pV_1)$. That motivates the definition of the **enthalpy**:
+
+$$
+H = U + pV
+$$
+
+The heat absorbed at constant pressure is then the change in enthalpy, $q_p = \Delta H$. Since $U$, $p$ and $V$ are all state functions, $H$ is a state function as well. Its change depends only on the initial and final states, not on the path. So $q_p$, which equals $\Delta H$, is also path independent. This is the reason enthalpy changes can be tabulated and added together.
+
+For a finite change at constant pressure,
+
+$$
+\Delta H = \Delta U + p\,\Delta V
+$$
+
+At constant volume $\Delta V = 0$, so $\Delta H = \Delta U = q_V$. An exothermic reaction has a negative $\Delta H$, because it gives heat to the surroundings, and an endothermic reaction has a positive one.
+
+### (a) When ΔH and ΔU differ
+
+For a reaction that involves only solids and liquids, $\Delta H$ and $\Delta U$ are almost the same, because a solid or liquid barely changes volume when it reacts. The difference becomes important when gases are involved.
+
+Suppose the gaseous reactants occupy volume $V_A$ with $n_A$ moles, and the gaseous products occupy $V_B$ with $n_B$ moles, all at the same pressure and temperature. The ideal gas law gives $pV_A = n_A RT$ and $pV_B = n_B RT$. Subtracting, $p\,\Delta V = (n_B - n_A)RT$. Writing $\Delta n_g = n_B - n_A$ for the change in moles of gas, the enthalpy becomes
+
+$$
+\Delta H = \Delta U + \Delta n_g\,RT
+$$
+
+Only gas moles enter $\Delta n_g$. A solid or liquid contributes no $RT$ term, which is why the two quantities agree for condensed systems.
+
+<Scrolly animation="work-enthalpy">
+<Step>
+At constant volume the heat you measure equals the change in internal energy, $\Delta U = q_V$. The left pair of bars shows the ammonia reaction, $\ce{N2(g) + 3H2(g) -> 2NH3(g)}$, and the first bar is $\Delta U$, the heat at constant volume.
+</Step>
+<Step>
+At constant pressure the heat is $\Delta H = q_p$. The second bar appears beside the first. It is the enthalpy, and it is not the same as $\Delta U$ for this reaction, because gas moles change.
+</Step>
+<Step>
+The gap between the bars is $p\,\Delta V = \Delta n_g RT$. The reaction starts with four moles of gas and ends with two, so $\Delta n_g = -2$. At $298\ \text{K}$ the gap is $-4.96\ \text{kJ mol}^{-1}$, and $\Delta H$ is more negative than $\Delta U$.
+</Step>
+<Step>
+For a change with no gas moles, the gap is zero. The right pair shows graphite becoming diamond, a solids-only change. There $\Delta H$ and $\Delta U$ are equal, and this is why the two quantities are usually interchangeable for condensed systems.
+</Step>
+</Scrolly>
+
+For the ammonia reaction the standard enthalpy of formation of $\ce{NH3}(g)$ is $-46.11\ \text{kJ mol}^{-1}$ (Table 5.2), and $\ce{N2}(g)$ and $\ce{H2}(g)$ are zero by convention. So $\Delta H = 2(-46.11) - 0 = -92.22\ \text{kJ mol}^{-1}$ for the equation as written. With $\Delta n_g = -2$ and $RT = 2.48\ \text{kJ mol}^{-1}$ at $298\ \text{K}$,
+
+$$
+\Delta U = \Delta H - \Delta n_g RT = -92.22 - (-2)(2.48) = -87.26\ \text{kJ mol}^{-1}
+$$
+
+The gap is small, but it is real, and it is exactly the work term $p\,\Delta V$ that the gas does on the surroundings.
+
+<Check n={3} numeric answer={-87.26} tolerance={0.1} unit="kJ mol⁻¹" explanation="ΔH = 2 × ΔfH(NH₃, g) = 2 × (−46.11) = −92.22 kJ mol⁻¹. Δn_g = 2 − 4 = −2 gas moles. Then ΔU = ΔH − Δn_g RT = −92.22 − (−2)(8.314)(298)/1000 = −92.22 + 4.96 = −87.26 kJ mol⁻¹.">
+For $\ce{N2}(g) + 3\ce{H2}(g) \rightarrow 2\ce{NH3}(g)$ at $298\ \text{K}$, $\Delta H = -92.22\ \text{kJ mol}^{-1}$. What is $\Delta U$ for the same equation, in $\text{kJ mol}^{-1}$?
+</Check>
+
+### (b) Extensive and intensive properties
+
+A property that depends on how much matter is present is **extensive**. Mass, volume, internal energy, enthalpy and heat capacity are extensive: double the sample and each doubles. A property that does not depend on the amount of matter is **intensive**. Temperature, pressure and density are intensive. If you cut a gas in a container into two equal halves, each half keeps the same temperature and the same pressure, but only half the volume.
+
+A **molar** property is the value of an extensive property for one mole of substance. Dividing by the amount $n$ gives an intensive quantity, so molar volume $V_\text{m} = V/n$ and molar heat capacity $C_\text{m} = C/n$ are both intensive. Per mole, the property no longer depends on the sample size.
+
+### (c) Heat capacity
+
+Heat added to a body raises its temperature in proportion to the amount of heat, $q \propto \Delta T$. The constant of proportionality is the **heat capacity**, $C$, so that
+
+$$
+q = C\,\Delta T
+$$
+
+A large heat capacity means that a given amount of heat produces only a small rise in temperature. Water has a large heat capacity, so it takes a lot of energy to warm it. The heat capacity is extensive, since it grows with the amount of matter. The **molar heat capacity** $C_\text{m} = C/n$ is the heat for one mole, and the **specific heat** is the heat for one unit of mass. For a sample of mass $m$ with specific heat $c$, $q = mc\,\Delta T$.
+
+### (d) Relationship between C_p and C_V for an ideal gas
+
+Heat capacity at constant volume is written $C_V$, and heat capacity at constant pressure is $C_p$. At constant volume $q_V = \Delta U$, so $C_V = (\partial U / \partial T)_V$. At constant pressure $q_p = \Delta H$, so $C_p = (\partial H / \partial T)_p$.
+
+For one mole of an ideal gas, $H = U + pV = U + RT$. Differentiating with respect to temperature and writing the changes in terms of $\Delta T$ gives $\Delta H = \Delta U + R\,\Delta T$. Dividing by $\Delta T$:
+
+$$
+C_p = C_V + R, \qquad C_p - C_V = R
+$$
+
+With $R = 8.314\ \text{J K}^{-1}\,\text{mol}^{-1}$, the constant-pressure heat capacity of an ideal gas is larger than its constant-volume value by exactly this amount. The extra $R$ pays for the expansion work that the gas does against the constant pressure while it warms.
+
+<Check n={4} options={["w = −p_ex ΔV, which is large", "w = 0 and q = 0, so ΔU = 0", "w = 0 but q = −2.303 nRT log(V_f/V_i)", "w is positive, because the gas is squeezed"]} answer={1} explanation="In a free expansion the external pressure is zero, so w = 0. The temperature of an ideal gas does not change, so q = 0 and ΔU = 0. The other options either use a pressure that is not there or give a heat that belongs to a reversible path.">
+An ideal gas expands freely into a vacuum at constant temperature. Which statement is correct?
+</Check>
+
+<KeyIdeas>
+- Pressure–volume work is $w = -p_\text{ex}\,\Delta V$ for a constant external pressure, with $w$ positive when work is done on the system (IUPAC) and $\Delta U = q + w$.
+- A reversible change, with $p_\text{ex}$ equal to the gas pressure at every stage, does the largest work in an expansion, $w_\text{rev} = -2.303\,nRT\log_{10}(V_\text{f}/V_\text{i})$, and the least work in a compression.
+- Free expansion into a vacuum, and any isothermal change of an ideal gas, has $\Delta U = 0$. Free expansion also has $w = 0$ and $q = 0$.
+- Enthalpy $H = U + pV$ gives $q_p = \Delta H$, and $\Delta H = \Delta U + \Delta n_g RT$, so the two differ only when gas moles change.
+- For an ideal gas, $C_p - C_V = R$. Extensive properties scale with the amount of matter, and intensive ones, including molar quantities, do not.
+</KeyIdeas>

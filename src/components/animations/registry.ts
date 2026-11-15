@@ -61,6 +61,9 @@ import { H2PotentialCurve } from './unit4/vbt/H2PotentialCurve'
 import { OverlapSteps } from './unit4/vbt/OverlapSteps'
 import { EthynePi } from './unit4/vbt/EthynePi'
 import { HybridGeometry } from './unit4/vbt/HybridGeometry'
+import { PistonWork } from './unit5/work/PistonWork'
+import { PathsOnPV } from './unit5/work/PathsOnPV'
+import { EnthalpyBars } from './unit5/work/EnthalpyBars'
 import { NaClBornHaber } from './unit5/NaClBornHaber'
 import { NaClDissolution } from './unit5/NaClDissolution'
 import { EntropyPhases } from './unit5/gibbs/EntropyPhases'
@@ -137,6 +140,9 @@ export const animations = {
   'vbt-overlap': OverlapSteps,
   'vbt-ethyne-pi': EthynePi,
   'vbt-hybrid-geometry': HybridGeometry,
+  'work-piston': PistonWork,
+  'work-paths': PathsOnPV,
+  'work-enthalpy': EnthalpyBars,
   'unit5-nacl-born-haber': NaClBornHaber,
   'unit5-nacl-dissolution': NaClDissolution,
   'gibbs-entropy-phases': EntropyPhases,
