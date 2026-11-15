@@ -101,6 +101,7 @@ import { Chromatography } from './unit8/chromatography/Chromatography'
 import { IsomerFamily } from './unit8/isomers/IsomerFamily'
 import { PurificationMethods } from './unit8/purification/PurificationMethods'
 import { LassaigneBench } from './unit8/lassaigne/LassaigneBench'
+import { CombustionAnalysis } from './unit8/quantitative/CombustionAnalysis'
 
 /**
  * Animations available to a Scrolly Animation, keyed by the `animation` prop.
@@ -212,6 +213,7 @@ export const animations = {
   'isomer-family': IsomerFamily,
   'purification-methods': PurificationMethods,
   'lassaigne': LassaigneBench,
+  'combustion-analysis': CombustionAnalysis,
 } as const
 
 export type AnimationName = keyof typeof animations

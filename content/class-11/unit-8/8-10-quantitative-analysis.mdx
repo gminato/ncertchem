@@ -1,0 +1,169 @@
+---
+class: 11
+unit: 8
+section: "8.10"
+order: 13
+title: "Quantitative Analysis"
+slug: "8-10-quantitative-analysis"
+summary: "Burn, absorb, precipitate or titrate a weighed sample, read off one mass or volume per element, and turn the percentages into an empirical formula."
+ncert: "Class 11, Part II — Unit 8, Section 8.10"
+---
+
+<Hook>
+A food lab that tests milk for protein does not look for protein at all. It digests a measured sample, reads off the nitrogen, and multiplies by a fixed factor. A chemist asked for the formula of an unknown white powder has the same kind of problem: the answer has to come from a balance, a burette and a few careful readings, not from a name on the bottle.
+</Hook>
+
+## The principle: weigh one element at a time
+
+Quantitative analysis asks how much of each element a weighed sample contains. Every method follows the same pattern. The element is converted into a compound that can be weighed or measured, such as carbon dioxide, a silver halide or a gas volume. The mass of that product tells you the mass of the element it came from, and dividing by the sample mass gives the mass percentage.
+
+Two rules hold for all of them. First, every atom of the element must end up in the product, so the conversion must be complete. Second, the percentages of all the elements in one compound add up to 100, which lets you find the last element by difference. Organic compounds are usually analysed for carbon, hydrogen, nitrogen, halogens, sulphur and phosphorus this way, with oxygen found from the rest.
+
+The scrolly below works through one worked sample, 4-chloroaniline, weighed as 0.2500 g, through the four main methods. Each subsection after it gives the general method.
+
+<Scrolly animation="combustion-analysis">
+<Step>
+The Liebig train burns the weighed sample in a stream of dry oxygen over hot copper(II) oxide. The carbon becomes $\ce{CO2}$ and the hydrogen becomes $\ce{H2O}$. Water is taken up by a tube of anhydrous $\ce{CaCl2}$, and carbon dioxide by potash bulbs of $\ce{KOH}$. Each absorber is weighed before and after. For our sample the bulbs gain 0.5176 g and the $\ce{CaCl2}$ tube gains 0.1066 g, and these two masses give %C = 56.47 and %H = 4.74.
+</Step>
+<Step>
+For nitrogen, Dumas' method heats the sample with copper(II) oxide in carbon dioxide. Nitrogen-bearing groups give free nitrogen, which is collected over potassium hydroxide solution in a graduated nitrometer. The gas is read at 300 K. Its pressure is $p_1 = 760 - 26.7 = 733.3$ mmHg, after the aqueous tension is subtracted, and the volume of 25.0 mL corresponds to 21.95 mL at STP. So %N = 10.98.
+</Step>
+<Step>
+Kjeldahl's method turns the nitrogen into ammonium sulphate by boiling with concentrated $\ce{H2SO4}$, then sets the ammonia free with alkali. The ammonia is absorbed in 20.00 mL of 0.1 M $\ce{H2SO4}$. The acid left over is titrated with 0.1 M $\ce{NaOH}$, and 20.40 mL is needed. The acid that took up the ammonia is $V - V_1/2 = 9.80$ mL, so %N = 1.4 × 0.1 × 2 × 9.80 / 0.2500 = 10.98, the same as Dumas.
+</Step>
+<Step>
+For a halogen, Carius' method seals the sample in a hard glass tube with fuming nitric acid and silver nitrate, then heats it in a furnace. The chlorine leaves as chloride and falls out as silver chloride. The solid is filtered, washed, dried and weighed: 0.2811 g of $\ce{AgCl}$. So %Cl = 35.5 × 0.2811 × 100 / (143.5 × 0.2500) = 27.82.
+</Step>
+</Scrolly>
+
+## 8.10.1 Carbon and hydrogen
+
+Carbon and hydrogen are found together by Liebig's method. A known mass $m$ of the compound is burned completely in oxygen. All the carbon appears as carbon dioxide, and all the hydrogen as water. If the carbon dioxide has mass $m_2$ and the water has mass $m_1$, then the mass of carbon in the sample is $\frac{12}{44}m_2$ and the mass of hydrogen is $\frac{2}{18}m_1$. Dividing each by $m$ and multiplying by 100 gives the percentages:
+
+$$
+\%\text{C} = \frac{12 \times m_2 \times 100}{44 \times m}
+\qquad
+\%\text{H} = \frac{2 \times m_1 \times 100}{18 \times m}
+$$
+
+The water is absorbed in a weighed U-tube of anhydrous calcium chloride, and the carbon dioxide in a second U-tube, this one filled with potassium hydroxide. The water tube comes first in the train, because potassium hydroxide would take up water as well as carbon dioxide and spoil the water reading. Each absorber is weighed before and after, and only the gain counts.
+
+<Check n={1} numeric answer={56.47} tolerance={0.05} unit="%" explanation="%C = 12 × m₂ × 100 / (44 × m). Here m₂ = 0.5176 g and m = 0.2500 g, so %C = 12 × 0.5176 × 100 / (44 × 0.2500) = 621.12 / 11.00 = 56.47 (56.4655 before rounding).">
+A 0.2500 g sample of 4-chloroaniline is burned, and the potash bulbs gain 0.5176 g of carbon dioxide. What is the percentage of carbon in the sample?
+</Check>
+
+## 8.10.2 Nitrogen
+
+Nitrogen is found by one of two methods. The first is Dumas' method. The sample is heated with copper(II) oxide in carbon dioxide, which converts the nitrogen to free nitrogen gas: a general form of the reaction is
+
+$$
+\ce{C_xH_yN_z + (2x + y/2) CuO -> x CO2 + (y/2) H2O + (z/2) N2 + (2x + y/2) Cu}
+$$
+
+The mixture of gases is collected over potassium hydroxide, which takes up the carbon dioxide and leaves nitrogen. Any nitrogen oxides formed are reduced to nitrogen by passing the gases over hot copper gauze first. The volume of nitrogen is read at room temperature and the barometric pressure $p$. The gas is saturated with water vapour, so the pressure that belongs to the nitrogen is
+
+$$
+p_1 = p - \text{aqueous tension}
+$$
+
+The volume is then converted to STP by $V_\text{STP} = \dfrac{p_1 V \times 273}{760 \times T}$, and since 22400 mL of $\ce{N2}$ at STP weighs 28 g,
+
+$$
+\%\text{N} = \frac{28 \times V_\text{STP} \times 100}{22400 \times m}
+$$
+
+The second is Kjeldahl's method. The compound is heated with concentrated $\ce{H2SO4}$, which converts its nitrogen into ammonium sulphate. Alkali then liberates ammonia, which is caught in a known volume $V$ of standard acid. The acid left over is titrated with alkali of the same molarity $M$, and the titre is $V_1$. The acid that reacted with ammonia is $V - V_1/2$ mL. Each millilitre of 1 M ammonia contains 14 mg of nitrogen, so the $2(V - V_1/2)$ mL of $M$ ammonia hold $14 \times M \times 2(V - V_1/2)$ mg of N, and
+
+$$
+\%\text{N} = \frac{1.4 \times M \times 2\,(V - V_1/2)}{m}
+$$
+
+Kjeldahl's method does not work for every nitrogen. Nitrogen in a nitro group, in an azo group, or in a ring such as pyridine does not change to ammonium sulphate under these conditions, so it is not counted. Nitrobenzene, for instance, must be analysed by Dumas' method.
+
+<Check n={2} options={["Its nitrogen is in a nitro group, which does not convert to ammonium sulphate", "It contains no hydrogen, so the acid cannot react with it", "It is too volatile to be boiled with sulphuric acid", "It does not dissolve in water"]} answer={0} explanation="The conversion to ammonium sulphate is what Kjeldahl's method measures. Nitrogen in a nitro group (as in nitrobenzene), in an azo group, or in a ring (as in pyridine) does not change to ammonium sulphate under the digestion conditions, so the titration would miss it. Dumas' method still works, because it converts every nitrogen to N₂.">
+Why is Kjeldahl's method not suitable for nitrobenzene, $\ce{C6H5NO2}$?
+</Check>
+
+## 8.10.3 Halogens
+
+Halogens are found by Carius' method. The sample is heated in a sealed hard glass tube with fuming nitric acid, which oxidises the compound, and with silver nitrate, which precipitates the halogen as a silver halide. The tube is heated in a furnace, opened after cooling, and the silver halide is filtered, washed, dried and weighed. For a halide AgX, with X the halogen, the mass of the halogen in $m_1$ g of AgX is
+
+$$
+\text{mass of X} = \frac{\text{atomic mass of X} \times m_1}{\text{molar mass of AgX}}
+$$
+
+and
+
+$$
+\%\text{X} = \frac{\text{atomic mass of X} \times m_1 \times 100}{\text{molar mass of AgX} \times m}
+$$
+
+The molar mass of $\ce{AgX}$ is $108 + A_r(\text{X})$. Silver chloride, silver bromide and silver iodide are white, pale yellow and yellow, which is a rough guide to the halide in the precipitate. Silver chloride dissolves in ammonia, but the bromide and iodide do not dissolve so easily.
+
+<Check n={3} numeric answer={27.82} tolerance={0.05} unit="%" explanation="%Cl = 35.5 × m₁ × 100 / (143.5 × m). Here m₁ = 0.2811 g of AgCl and m = 0.2500 g, so %Cl = 35.5 × 0.2811 × 100 / (143.5 × 0.2500) = 997.9 / 35.875 = 27.82.">
+A 0.2500 g sample of 4-chloroaniline gives 0.2811 g of silver chloride in the Carius tube. What is the percentage of chlorine?
+</Check>
+
+## 8.10.4 Sulphur
+
+Sulphur is oxidised to sulphuric acid, either by heating in a Carius tube with fuming nitric acid or by fusion with sodium peroxide. Barium chloride is then added in excess, which precipitates barium sulphate. The precipitate is filtered, washed, dried and weighed, and each mole of $\ce{BaSO4}$ contains one mole of sulphur:
+
+$$
+\ce{Ba^2+ + SO4^2- -> BaSO4 v}
+$$
+
+With $m_1$ g of $\ce{BaSO4}$ and molar mass 233 g mol⁻¹, the mass of sulphur is $\frac{32 \times m_1}{233}$ g, and
+
+$$
+\%\text{S} = \frac{32 \times m_1 \times 100}{233 \times m}
+$$
+
+Dimethyl sulphoxide, $\ce{C2H6OS}$, is a convenient example to check: a 0.2000 g sample gives 0.5977 g of $\ce{BaSO4}$ and therefore %S = 32 × 0.5977 × 100 / (233 × 0.2000) = 41.04.
+
+## 8.10.5 Phosphorus
+
+Phosphorus is oxidised to phosphoric acid in the same way, and then precipitated in one of two forms. In the first, the phosphoric acid is precipitated as ammonium phosphomolybdate, $(\ce{NH4})_3\ce{PO4}\cdot 12\ce{MoO3}$, by adding ammonia and ammonium molybdate. Its molar mass is 1877 g mol⁻¹, and with $m_1$ g of the precipitate,
+
+$$
+\%\text{P} = \frac{31 \times m_1 \times 100}{1877 \times m}
+$$
+
+In the second, the phosphoric acid is precipitated as magnesium ammonium phosphate, and the precipitate is ignited to magnesium pyrophosphate, $\ce{Mg2P2O7}$, of molar mass 222 g mol⁻¹. This compound holds two phosphorus atoms, which have a combined mass of 62, so
+
+$$
+\%\text{P} = \frac{62 \times m_1 \times 100}{222 \times m}
+$$
+
+For triethyl phosphate, $\ce{C6H15O4P}$, a 0.3000 g sample gives 0.1826 g of $\ce{Mg2P2O7}$, and %P = 62 × 0.1826 × 100 / (222 × 0.3000) = 17.00.
+
+## 8.10.6 Oxygen
+
+Oxygen is almost always found by difference. The percentages of the other elements are added, and the rest is oxygen:
+
+$$
+\%\text{O} = 100 - (\text{sum of the percentages of all other elements})
+$$
+
+This works only if every other element in the compound has been measured. Oxygen can also be estimated directly, but that method is not needed here. For ethyl ethanoate, $\ce{C4H8O2}$, the carbon and hydrogen give %C = 54.53 and %H = 9.15, so %O = 100 − 54.53 − 9.15 = 36.32.
+
+<Check n={4} numeric answer={36.32} tolerance={0.05} unit="%" explanation="%O = 100 − %C − %H = 100 − 54.53 − 9.15 = 36.32. The true oxygen percentage of ethyl ethanoate, C4H8O2, is 36.32 (lib: massPercent).">
+A sample of ethyl ethanoate, $\ce{C4H8O2}$, gives 54.53 % carbon and 9.15 % hydrogen. What is its percentage of oxygen, by difference?
+</Check>
+
+## From percentages to an empirical formula
+
+Once the mass percentage of each element is known, the empirical formula is the simplest whole-number ratio of the atoms. The method is three steps. Divide each percentage by the atomic mass of its element, which gives the relative number of moles of each element in 100 g of the compound. Divide all the results by the smallest. Round to whole numbers, and if a value is close to $x.5$, $x.33$ or $x.25$, multiply all the values by 2, 3 or 4 first.
+
+For ethyl ethanoate, the percentages 54.53, 9.15 and 36.32 give 4.54, 9.08 and 2.27 moles per 100 g. Dividing by 2.27 gives C 2.00, H 4.00 and O 1.00, so the empirical formula is $\ce{C2H4O}$. Its mass is 44.05 g mol⁻¹. The molar mass of the compound is 88.11 g mol⁻¹, so $n = 88.11 / 44.05 = 2$, and the molecular formula is $\ce{C4H8O2}$.
+
+The empirical formula is not always the molecular formula. It tells you the simplest ratio. The molar mass, from a vapour density or a mass spectrum, is needed to find $n$ and so the molecular formula. An empirical formula is also not an identity: two different compounds can have the same percentages, which is why the structure must still be worked out.
+
+<Simulation name="elemental-analyser" title="Elemental analyser: choose a sample, run the apparatus, work each percentage, then derive the empirical formula" />
+
+<KeyIdeas>
+- Each element is converted to a weighable product: CO₂ and H₂O for carbon and hydrogen, N₂ for nitrogen, AgX for a halogen, BaSO₄ for sulphur, the phosphate precipitates for phosphorus.
+- Liebig's method gives %C = 12 × m₂ × 100 / (44 × m) and %H = 2 × m₁ × 100 / (18 × m). Each absorber is weighed, and only its gain counts.
+- Dumas' method reads a volume and corrects it: p₁ = p − aqueous tension, then V(STP) and %N = 28 × V × 100 / (22400 × m). Kjeldahl's method gives %N = 1.4 × M × 2(V − V₁/2) / m, and fails for nitro, azo and ring nitrogen.
+- Carius' method gives %X = atomic mass × m₁ × 100 / (molar mass of AgX × m); sulphur and phosphorus follow from BaSO₄ and the phosphate precipitates. Oxygen is found by difference.
+- The empirical formula is the simplest whole-number ratio of the moles of each element. The molar mass fixes n and the molecular formula.
+</KeyIdeas>
