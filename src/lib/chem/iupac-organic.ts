@@ -17,7 +17,7 @@
  */
 
 import type { MolGraph } from './molecule-graph'
-import { neighbours, parseSmiles, toCondensed } from './molecule-parse'
+import { canonicalKey, neighbours, parseSmiles, toCondensed } from './molecule-parse'
 
 /** One step of the naming, for an animation: the parent, the numbering, each substituent, the name. */
 export interface NameStep {
@@ -776,7 +776,36 @@ function compareSignatures(a: number[][], b: number[][]): number {
  */
 export function iupacName(g: MolGraph): string {
   if (isUrea(g)) return 'urea'
+  const retained = retainedNames().get(canonicalKey(g))
+  if (retained) return retained
   return analyse(g).name
+}
+
+/**
+ * Parent compounds IUPAC keeps by their retained names (as NCERT uses them), which the
+ * chain/ring rules here cannot build: aromatic heterocycles, fused rings and a few benzene
+ * derivatives. Both Kekulé forms are listed where they differ, since the key follows the bonds.
+ */
+const RETAINED: Array<[string, string[]]> = [
+  ['furan', ['C1=COC=C1']],
+  ['thiophene', ['C1=CSC=C1']],
+  ['pyrrole', ['C1=CNC=C1']],
+  ['pyridine', ['C1=CC=NC=C1', 'C1=CN=CC=C1']],
+  ['tetrahydrofuran', ['C1CCOC1']],
+  ['naphthalene', ['C1=CC=C2C=CC=CC2=C1', 'C1=CC2=CC=CC=C2C=C1']],
+  ['benzoic acid', ['OC(=O)C1=CC=CC=C1', 'OC(=O)C1C=CC=CC=1']],
+  ['1-phenylethan-1-one', ['CC(=O)C1=CC=CC=C1', 'CC(=O)C1C=CC=CC=1']],
+  ['benzaldehyde', ['O=CC1=CC=CC=C1', 'O=CC1C=CC=CC=1']],
+  ['phenol', ['OC1=CC=CC=C1', 'OC1C=CC=CC=1']],
+  ['aniline', ['NC1=CC=CC=C1', 'NC1C=CC=CC=1']],
+]
+let retainedCache: Map<string, string> | null = null
+function retainedNames(): Map<string, string> {
+  if (retainedCache) return retainedCache
+  const m = new Map<string, string>()
+  for (const [name, list] of RETAINED) for (const smi of list) m.set(canonicalKey(parseSmiles(smi)), name)
+  retainedCache = m
+  return m
 }
 
 /** Urea, H₂N–CO–NH₂, keeps its retained name (it has no carbon chain to name). */
