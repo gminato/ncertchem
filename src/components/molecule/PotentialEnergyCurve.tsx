@@ -3,14 +3,14 @@ import { Label } from '../vocab/Label'
 import { H2_MORSE, morseCurve, morseEnergy, type MorseParams } from './morse'
 
 /** Drawing size in SVG units. Parents use it as the viewBox. */
-export const PE_CURVE_SIZE = { width: 320, height: 230 } as const
+export const PE_CURVE_SIZE = { width: 360, height: 262 } as const
 
-const PLOT = { left: 62, right: 306, top: 46, bottom: 190 }
+const PLOT = { left: 72, right: 344, top: 52, bottom: 216 }
 const R_MIN = 40
 const R_MAX = 240
 const E_MAX = 120
 const E_MIN = -560
-const TICK_SIZE = 12
+const TICK_SIZE = 13
 
 function px(r: number): number {
   return PLOT.left + ((r - R_MIN) / (R_MAX - R_MIN)) * (PLOT.right - PLOT.left)

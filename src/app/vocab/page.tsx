@@ -43,6 +43,7 @@ import {
   WATER_3D,
   METHANE_3D,
   SF4_3D,
+  SF4_VIEW,
   CO3_LEWIS,
   NACL_BEFORE,
   NACL_AFTER,
@@ -1170,7 +1171,7 @@ export default function VocabPage() {
           {/* Card: SF4 in 3D */}
           <article className={styles.card}>
             <Stage3DLazy
-              cameraPosition={cameraForMolecule(SF4_3D)}
+              cameraPosition={cameraForMolecule(SF4_3D, 0.8, SF4_VIEW)}
               label="Sulphur tetrafluoride (3D): a see-saw with the lone pair in an equatorial position. Drag to rotate."
               fallback={<Molecule3DFallback {...SF4_3D} />}
             >
@@ -1204,7 +1205,6 @@ export default function VocabPage() {
                   brackets={CO3_LEWIS.brackets}
                   fontSize={20}
                   dotRadius={2.5}
-                  pairHalfGap={2.9}
                   lonePairRadius={12}
                 />
               </svg>
@@ -1241,7 +1241,6 @@ export default function VocabPage() {
                     colourByOrigin
                     fontSize={22}
                     dotRadius={3.4}
-                    pairHalfGap={3.2}
                     lonePairRadius={12}
                   />
                 </g>
@@ -1257,7 +1256,6 @@ export default function VocabPage() {
                   colourByOrigin
                   fontSize={22}
                   dotRadius={3.4}
-                  pairHalfGap={3.2}
                   lonePairRadius={12}
                 />
               </svg>
