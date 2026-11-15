@@ -1,0 +1,75 @@
+.sim {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  font-family: var(--font-sans);
+  color: var(--fg);
+}
+
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+.readout {
+  margin: 0;
+  min-height: 3.2em;
+  font-size: 1.05rem;
+  line-height: 1.5;
+  color: var(--fg);
+}
+
+.stage {
+  width: 100%;
+  min-height: 220px;
+  display: grid;
+  place-items: center;
+  background: var(--surface-raised);
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-md);
+}
+
+.drawing {
+  height: min(320px, 62vw);
+  width: auto;
+  max-width: 100%;
+  display: block;
+  overflow: visible;
+}
+
+.formula {
+  margin: 0;
+  font-size: 0.95rem;
+  color: var(--fg-muted);
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.95rem;
+}
+
+.table th,
+.table td {
+  padding: var(--space-2) var(--space-3);
+  border-bottom: 1px solid var(--border);
+  text-align: left;
+}
+
+.ladder {
+  margin: 0;
+  padding-left: 1.4em;
+  font-size: 1.05rem;
+  line-height: 1.8;
+}
+
+.ladder li[data-current='true'] {
+  font-weight: 700;
+}
+
+.note {
+  color: var(--fg-muted);
+  font-size: 0.9rem;
+}
