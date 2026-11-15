@@ -166,3 +166,12 @@
     grid-template-columns: 1fr;
   }
 }
+
+/* Molecular orbital diagrams keep their own proportions across the full card width. */
+.moCanvas {
+  width: 100%;
+  aspect-ratio: 640 / 440;
+  background: var(--surface-raised);
+  border-bottom: 1px solid var(--border);
+  position: relative;
+}

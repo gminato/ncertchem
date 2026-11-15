@@ -13,8 +13,8 @@ export interface MorseParams {
   a: number
 }
 
-/** H–H: bond length 74 pm, bond enthalpy 436 kJ/mol. */
-export const H2_MORSE: MorseParams = { re: 74, de: 436, a: 0.0194 }
+/** H–H: bond length 74 pm, bond enthalpy 435.8 kJ/mol (NCERT). */
+export const H2_MORSE: MorseParams = { re: 74, de: 435.8, a: 0.0194 }
 
 /** Energy (kJ/mol) at separation r (pm). Equals -de at r = re, and 0 as r grows large. */
 export function morseEnergy(r: number, { re, de, a }: MorseParams): number {

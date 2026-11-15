@@ -47,13 +47,19 @@ export interface LewisDiagramProps extends Omit<React.SVGAttributes<SVGGElement>
   x?: number
   y?: number
   fontSize?: number
+  /** Radius of each electron dot, in SVG units. */
+  dotRadius?: number
+  /** Half the gap between the two dots of a lone pair. Tight pairs read as one unit. */
+  pairHalfGap?: number
+  /** Distance from the symbol to the lone-pair dots. */
+  lonePairRadius?: number
 }
 
 const BOND_STROKE = 1.5
 const BOND_SPACING = 4
-const DOT_RADIUS = 1.9
-const PAIR_HALF_GAP = 3.2
-const LONE_PAIR_RADIUS = 9
+const DEFAULT_DOT_RADIUS = 1.9
+const DEFAULT_PAIR_HALF_GAP = 2.2
+const DEFAULT_LONE_PAIR_RADIUS = 9
 const CHARGE_RADIUS = 6.5
 const BRACKET_PAD = 24
 const BRACKET_ARM = 6
@@ -85,6 +91,9 @@ export const LewisDiagram = forwardRef<SVGGElement, LewisDiagramProps>(function 
     x = 0,
     y = 0,
     fontSize = 16,
+    dotRadius = DEFAULT_DOT_RADIUS,
+    pairHalfGap = DEFAULT_PAIR_HALF_GAP,
+    lonePairRadius = DEFAULT_LONE_PAIR_RADIUS,
     className,
     style,
     ...rest
@@ -124,21 +133,21 @@ export const LewisDiagram = forwardRef<SVGGElement, LewisDiagramProps>(function 
   for (const atom of atoms) {
     const layout = layoutById.get(atom.id)
     if (!layout) continue
-    const ring = symbolClearance(atom.element) + LONE_PAIR_RADIUS
+    const ring = symbolClearance(atom.element) + lonePairRadius
     layout.lonePairAngles.forEach((angle, i) => {
       const centre = polar(atom.x, atom.y, angle, ring)
       const perp = { x: -Math.sin((angle * Math.PI) / 180), y: Math.cos((angle * Math.PI) / 180) }
       const origin = atom.pairOrigins?.[i] ?? null
-      const first = { x: centre.x - perp.x * PAIR_HALF_GAP, y: centre.y - perp.y * PAIR_HALF_GAP }
-      const second = { x: centre.x + perp.x * PAIR_HALF_GAP, y: centre.y + perp.y * PAIR_HALF_GAP }
+      const first = { x: centre.x - perp.x * pairHalfGap, y: centre.y - perp.y * pairHalfGap }
+      const second = { x: centre.x + perp.x * pairHalfGap, y: centre.y + perp.y * pairHalfGap }
       dots.push(
-        <circle key={`lp-${atom.id}-${i}-a`} cx={first.x} cy={first.y} r={DOT_RADIUS} style={{ fill: 'var(--fg)' }} />,
-        <circle key={`lp-${atom.id}-${i}-b`} cx={second.x} cy={second.y} r={DOT_RADIUS} style={{ fill: dotFill(origin) }} />
+        <circle key={`lp-${atom.id}-${i}-a`} cx={first.x} cy={first.y} r={dotRadius} style={{ fill: 'var(--fg)' }} />,
+        <circle key={`lp-${atom.id}-${i}-b`} cx={second.x} cy={second.y} r={dotRadius} style={{ fill: dotFill(origin) }} />
       )
     })
     layout.unpairedAngles.forEach((angle, i) => {
       const p = polar(atom.x, atom.y, angle, ring)
-      dots.push(<circle key={`up-${atom.id}-${i}`} cx={p.x} cy={p.y} r={DOT_RADIUS} style={{ fill: dotFill(atom.id) }} />)
+      dots.push(<circle key={`up-${atom.id}-${i}`} cx={p.x} cy={p.y} r={dotRadius} style={{ fill: dotFill(atom.id) }} />)
     })
   }
 
@@ -260,7 +269,7 @@ export const LewisDiagram = forwardRef<SVGGElement, LewisDiagramProps>(function 
             ])}
             style={{ fill: 'var(--accent)' }}
           />
-          <circle cx={sx} cy={sy} r={DOT_RADIUS} style={{ fill: dotFill(transfer.from) }} />
+          <circle cx={sx} cy={sy} r={dotRadius} style={{ fill: dotFill(transfer.from) }} />
         </g>
       )
     }

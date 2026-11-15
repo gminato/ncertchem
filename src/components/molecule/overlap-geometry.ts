@@ -31,7 +31,12 @@ export interface OverlapOrbital {
 export const S_RADIUS = 34
 export const P_LOBE_RADIUS = 20
 /** Distance from a p orbital's centre to each lobe's centre. */
-export const P_LOBE_OFFSET = 24
+export const P_LOBE_OFFSET = 20
+/**
+ * Side-on (π) overlap needs the nuclei closer, because the lobes lie beside each other rather
+ * than end to end. The π case uses this fraction of the spread.
+ */
+export const PI_SPREAD_FACTOR = 0.6
 /** Largest separation between the two orbital centres, in SVG units. */
 export const MAX_SPREAD = 110
 /**
@@ -78,6 +83,9 @@ export function overlapOrbitals(
   const flip: 1 | -1 = phase === 'negative' ? -1 : 1
   const unflip: 1 | -1 = flip === 1 ? -1 : 1
 
+  const dPi = d * PI_SPREAD_FACTOR
+  const halfPi = dPi / 2
+
   switch (kind) {
     case 'ss':
       return [sOrbital({ x: -half, y: 0 }, 1), sOrbital({ x: half, y: 0 }, flip)]
@@ -105,8 +113,8 @@ export function overlapOrbitals(
     case 'pp-pi':
       // Parallel p orbitals side by side: the top lobes meet, and so do the bottom lobes.
       return [
-        pOrbital({ x: -half, y: 0 }, 'y', [1, -1]),
-        pOrbital({ x: half, y: 0 }, 'y', [flip, unflip]),
+        pOrbital({ x: -halfPi, y: 0 }, 'y', [1, -1]),
+        pOrbital({ x: halfPi, y: 0 }, 'y', [flip, unflip]),
       ]
   }
 }

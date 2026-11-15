@@ -6,15 +6,18 @@ import { netOverlapSign, overlapOrbitals, overlapRegions, type OverlapKind, type
 /** Drawing size in SVG units. Parents use it as the viewBox. */
 export const OVERLAP_SIZE = { width: 300, height: 200 } as const
 const CENTRE: Vec2 = { x: OVERLAP_SIZE.width / 2, y: OVERLAP_SIZE.height / 2 }
+const NUCLEUS_RADIUS = 2.8
+const BADGE_RADIUS = 9
+const NET_BADGE_AT: Vec2 = { x: 268, y: 26 }
 
 export interface OverlapDiagramProps extends Omit<React.SVGAttributes<SVGGElement>, 'children'> {
   /** The overlap type: s–s, s–p, p–p head-on (σ), or p–p side-on (π). */
   kind: OverlapKind
   /** Which lobes face each other: positive pairs like signs, negative pairs opposite signs, zero cancels. */
   phase?: OverlapPhase
-  /** 0 is full overlap, 1 is far apart. Animations tween this value. */
+  /** 0 is as close as the lobes can get; 1 is far apart. Animations tween this value. */
   separation?: number
-  /** Mark the overlap region with its sign (+, −, or 0). */
+  /** Mark the overlap regions with their sign, and the net sign in a badge outside. */
   showRegions?: boolean
   x?: number
   y?: number
@@ -37,11 +40,24 @@ function centroid(points: readonly Vec2[]): Vec2 {
   }
 }
 
+/** A round badge with a sign, sitting on a drawing so the sign stays legible on any shading. */
+function SignBadge({ at, sign, radius = BADGE_RADIUS, testId }: { at: Vec2; sign: '+' | '−' | '0'; radius?: number; testId?: string }) {
+  return (
+    <g data-testid={testId}>
+      <circle cx={at.x} cy={at.y} r={radius} strokeWidth={1.2} style={{ fill: 'var(--surface)', stroke: 'var(--fg-muted)' }} />
+      <Label x={at.x} y={at.y + 0.5} fontSize={radius * 1.45} fill="var(--fg)">
+        {sign}
+      </Label>
+    </g>
+  )
+}
+
 /**
- * Two atomic orbitals and the region where they overlap. Each lobe is shaded by
- * its phase: the positive phase in --orbital-pos and the negative in --orbital-neg.
- * Overlap regions are the lenses where lobes meet, shaded by the product of
- * their signs, so a cancelling pair reads as zero.
+ * Two atomic orbitals and the region where they overlap. An s orbital is one disc; a p
+ * orbital is a dumbbell of two lobes with its nucleus (a dot) at the join. Each lobe is shaded
+ * by its phase: positive in --orbital-pos and negative in --orbital-neg. The overlap regions
+ * are the lenses where facing lobes meet, shaded by the product of their signs and badged
+ * with that sign. The net sign sits in a badge outside the drawing.
  */
 export const OverlapDiagram = forwardRef<SVGGElement, OverlapDiagramProps>(function OverlapDiagram(
   { kind, phase = 'positive', separation = 0.45, showRegions = true, x = 0, y = 0, className, style, ...rest },
@@ -50,7 +66,7 @@ export const OverlapDiagram = forwardRef<SVGGElement, OverlapDiagramProps>(funct
   const pair = overlapOrbitals(kind, phase, separation).map(translate) as [OverlapOrbital, OverlapOrbital]
   const regions = overlapRegions(pair[0], pair[1], (c1, r1, c2, r2) => lensPolygon(c1, r1, c2, r2))
   const net = netOverlapSign(regions)
-  const cluster = regions.length ? centroid(regions.map((r) => centroid(r.path))) : CENTRE
+  const netSign = net > 0 ? '+' : net < 0 ? '−' : '0'
 
   return (
     <g ref={ref} transform={`translate(${x}, ${y})`} className={className} style={style} data-kind={kind} data-phase={phase} {...rest}>
@@ -61,12 +77,12 @@ export const OverlapDiagram = forwardRef<SVGGElement, OverlapDiagramProps>(funct
             cx={lobe.centre.x}
             cy={lobe.centre.y}
             r={lobe.radius}
-            strokeWidth={1}
+            strokeWidth={1.2}
             style={{
               fill: lobe.sign > 0 ? 'var(--orbital-pos)' : 'var(--orbital-neg)',
-              fillOpacity: 0.28,
+              fillOpacity: 0.3,
               stroke: lobe.sign > 0 ? 'var(--orbital-pos)' : 'var(--orbital-neg)',
-              strokeOpacity: 0.85,
+              strokeOpacity: 0.9,
             }}
           />
         ))
@@ -79,17 +95,26 @@ export const OverlapDiagram = forwardRef<SVGGElement, OverlapDiagramProps>(funct
             d={polygonPath(region.path)}
             style={{
               fill: region.sign > 0 ? 'var(--orbital-pos)' : 'var(--orbital-neg)',
-              fillOpacity: 0.55,
+              fillOpacity: 0.6,
             }}
             data-testid="overlap-region"
             data-sign={region.sign > 0 ? '+' : '-'}
           />
         ))}
 
+      {/* Nuclei: small dots at each orbital's centre */}
+      {pair.map((orbital, i) => (
+        <circle key={`nucleus-${i}`} cx={orbital.centre.x} cy={orbital.centre.y} r={NUCLEUS_RADIUS} style={{ fill: 'var(--fg)' }} />
+      ))}
+
+      {showRegions &&
+        regions.map((region, i) => {
+          const c = centroid(region.path)
+          return <SignBadge key={`badge-${i}`} at={c} sign={region.sign > 0 ? '+' : '−'} radius={7.5} />
+        })}
+
       {showRegions && regions.length > 0 && (
-        <Label x={cluster.x} y={cluster.y + 1} fontSize={16} fill="var(--fg)" halo data-testid="overlap-sign">
-          {net > 0 ? '+' : net < 0 ? '−' : '0'}
-        </Label>
+        <SignBadge at={NET_BADGE_AT} sign={netSign} radius={11} testId="overlap-sign" />
       )}
     </g>
   )

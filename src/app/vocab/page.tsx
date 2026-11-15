@@ -37,6 +37,7 @@ import {
   PE_CURVE_SIZE,
   Molecule3D,
   Molecule3DFallback,
+  cameraForMolecule,
 } from '@/components/molecule'
 import {
   WATER_3D,
@@ -46,8 +47,8 @@ import {
   NACL_BEFORE,
   NACL_AFTER,
   NACL_TRANSFER,
-  O2_ELECTRONS,
-  N2_ELECTRONS,
+  O2_LEVELS,
+  N2_LEVELS,
 } from '@/components/molecule/fixture'
 
 /** Balmer lines in the visible range, with their relative brightness. */
@@ -1127,6 +1128,7 @@ export default function VocabPage() {
           {/* Card: H2O in 3D */}
           <article className={styles.card}>
             <Stage3DLazy
+              cameraPosition={cameraForMolecule(WATER_3D)}
               label="Water molecule (3D): oxygen with two hydrogens at 104.5 degrees and two lone pairs. Drag to rotate."
               fallback={<Molecule3DFallback {...WATER_3D} showSymbols />}
             >
@@ -1147,6 +1149,7 @@ export default function VocabPage() {
           {/* Card: CH4 in 3D */}
           <article className={styles.card}>
             <Stage3DLazy
+              cameraPosition={cameraForMolecule(METHANE_3D)}
               label="Methane molecule (3D): carbon at the centre of a regular tetrahedron of four hydrogens. Drag to rotate."
               fallback={<Molecule3DFallback {...METHANE_3D} />}
             >
@@ -1167,6 +1170,7 @@ export default function VocabPage() {
           {/* Card: SF4 in 3D */}
           <article className={styles.card}>
             <Stage3DLazy
+              cameraPosition={cameraForMolecule(SF4_3D)}
               label="Sulphur tetrafluoride (3D): a see-saw with the lone pair in an equatorial position. Drag to rotate."
               fallback={<Molecule3DFallback {...SF4_3D} />}
             >
@@ -1186,9 +1190,9 @@ export default function VocabPage() {
 
           {/* Card: CO3 2- Lewis structure with formal charges */}
           <article className={`${styles.card} ${styles.wideHalf}`}>
-            <div className={styles.cardCanvas}>
+            <div className={`${styles.cardCanvas} ${styles.cardCanvasTall}`}>
               <svg
-                viewBox="-112 -104 224 184"
+                viewBox="-118 -112 236 204"
                 className={styles.svgElement}
                 role="img"
                 aria-label="Lewis structure of the carbonate ion: carbon bonded to one oxygen by a double bond and to two oxygens by single bonds, with formal charges, octet counts and brackets carrying a 2 minus charge"
@@ -1198,7 +1202,10 @@ export default function VocabPage() {
                   atoms={CO3_LEWIS.atoms}
                   bonds={CO3_LEWIS.bonds}
                   brackets={CO3_LEWIS.brackets}
-                  octetBadges
+                  fontSize={20}
+                  dotRadius={2.5}
+                  pairHalfGap={2.9}
+                  lonePairRadius={12}
                 />
               </svg>
             </div>
@@ -1215,10 +1222,10 @@ export default function VocabPage() {
           </article>
 
           {/* Card: Ionic transfer, Na and Cl (full width) */}
-          <article className={`${styles.card} ${styles.wideHalf}`}>
-            <div className={styles.cardCanvas}>
+          <article className={`${styles.card} ${styles.wide}`}>
+            <div className={`${styles.cardCanvas} ${styles.cardCanvasTall}`}>
               <svg
-                viewBox="0 0 520 150"
+                viewBox="0 0 620 180"
                 className={styles.svgElement}
                 role="img"
                 aria-label="Electron transfer: a sodium atom with one electron and a chlorine atom with seven give the electron to chlorine, giving a sodium ion and a chloride ion in brackets with an octet"
@@ -1226,24 +1233,32 @@ export default function VocabPage() {
                 <VocabDefs />
                 <g>
                   <LewisDiagram
-                    x={112}
-                    y={78}
+                    x={150}
+                    y={100}
                     atoms={NACL_BEFORE.atoms}
                     bonds={[]}
                     transfer={NACL_TRANSFER}
                     colourByOrigin
+                    fontSize={22}
+                    dotRadius={3.4}
+                    pairHalfGap={3.2}
+                    lonePairRadius={12}
                   />
                 </g>
-                <Label x={262} y={78} fontSize={22} fill="var(--fg-muted)">
+                <Label x={312} y={100} fontSize={30} fill="var(--fg-muted)">
                   →
                 </Label>
                 <LewisDiagram
-                  x={410}
-                  y={78}
+                  x={470}
+                  y={100}
                   atoms={NACL_AFTER.atoms}
                   bonds={[]}
                   brackets={NACL_AFTER.brackets}
                   colourByOrigin
+                  fontSize={22}
+                  dotRadius={3.4}
+                  pairHalfGap={3.2}
+                  lonePairRadius={12}
                 />
               </svg>
             </div>
@@ -1260,8 +1275,8 @@ export default function VocabPage() {
           </article>
 
           {/* Card: O2 molecular orbitals (unmixed) */}
-          <article className={styles.card}>
-            <div className={`${styles.cardCanvas} ${styles.cardCanvasTall}`}>
+          <article className={`${styles.card} ${styles.wide}`}>
+            <div className={styles.moCanvas}>
               <svg
                 viewBox={`0 0 ${MO_DIAGRAM_SIZE.width} ${MO_DIAGRAM_SIZE.height}`}
                 className={styles.svgElement}
@@ -1270,9 +1285,9 @@ export default function VocabPage() {
               >
                 <VocabDefs />
                 <MODiagram
-                  order="unmixed"
-                  electrons={O2_ELECTRONS}
-                  highlight={['p*2p']}
+                  mixing={false}
+                  levels={O2_LEVELS}
+                  highlight={['π*2p']}
                   elementA="O"
                   elementB="O"
                   bondOrder="2"
@@ -1293,8 +1308,8 @@ export default function VocabPage() {
           </article>
 
           {/* Card: N2 molecular orbitals (mixed) */}
-          <article className={styles.card}>
-            <div className={`${styles.cardCanvas} ${styles.cardCanvasTall}`}>
+          <article className={`${styles.card} ${styles.wide}`}>
+            <div className={styles.moCanvas}>
               <svg
                 viewBox={`0 0 ${MO_DIAGRAM_SIZE.width} ${MO_DIAGRAM_SIZE.height}`}
                 className={styles.svgElement}
@@ -1303,9 +1318,9 @@ export default function VocabPage() {
               >
                 <VocabDefs />
                 <MODiagram
-                  order="mixed"
-                  electrons={N2_ELECTRONS}
-                  highlight={['p2p', 's2p']}
+                  mixing
+                  levels={N2_LEVELS}
+                  highlight={['π2p', 'σ2p']}
                   elementA="N"
                   elementB="N"
                   bondOrder="3"
@@ -1345,7 +1360,7 @@ export default function VocabPage() {
                   aria-label={`${o.title}: overlap of two orbitals, ${o.phase} overlap`}
                 >
                   <VocabDefs />
-                  <OverlapDiagram kind={o.kind} phase={o.phase} separation={0.42} />
+                  <OverlapDiagram kind={o.kind} phase={o.phase} separation={0.45} />
                 </svg>
               </div>
               <div className={styles.cardBody}>

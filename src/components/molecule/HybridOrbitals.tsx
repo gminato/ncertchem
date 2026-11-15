@@ -108,7 +108,7 @@ export const HybridOrbitals = forwardRef<SVGGElement, { kind: HybridKind; x?: nu
         {ordered.map((dir, i) => {
           const angle = (Math.atan2(dir.y, dir.x) * 180) / Math.PI
           const faded = dir.depth < 0
-          const opacity = faded ? 0.42 : 0.9
+          const opacity = faded ? 0.38 : 0.9
           const bx = CLUSTER.x + dir.x * BIG_OFFSET
           const by = CLUSTER.y + dir.y * BIG_OFFSET
           const sx = CLUSTER.x - dir.x * SMALL_OFFSET
@@ -118,7 +118,7 @@ export const HybridOrbitals = forwardRef<SVGGElement, { kind: HybridKind; x?: nu
               <ellipse
                 cx={bx}
                 cy={by}
-                rx={BIG_RX}
+                rx={faded ? BIG_RX * 0.55 : BIG_RX}
                 ry={BIG_RY}
                 transform={`rotate(${angle} ${bx} ${by})`}
                 style={{ fill: 'var(--orbital-pos)', fillOpacity: opacity }}
