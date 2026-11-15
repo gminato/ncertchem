@@ -2,17 +2,19 @@
 
 import { useMemo, useState } from 'react'
 import { Button, Segmented } from '@/components/controls'
-import { SkeletalFormula, ResonanceSet, resonanceBounds, subscriptDigits, type ResonanceContributor, type ResonanceHybrid } from '@/components/organic'
+import { SkeletalFormula, drawingFrame, subscriptDigits } from '@/components/organic'
+import { freeAngle } from '@/components/organic/layout'
+import { ResonanceFigure, figureSize } from '@/components/animations/unit8/effects/ResonanceFigure'
 import { SimulationControls } from '@/components/simulation/Simulation'
 import type { SimulationProps } from '@/components/simulation/registry'
-import { molecularFormula, parseSmiles, toCondensed } from '@/lib/chem/molecule-parse'
+import { molecularFormula, parseSmiles } from '@/lib/chem/molecule-parse'
+import { acidFormula, acidStrengthOrder, alphaCarbon, alphaWords } from '@/lib/chem/inductive-acids'
 import { iupacName } from '@/lib/chem/iupac-organic'
-import { acidStrengthOrder, alphaCarbon, alphaInductive } from '@/lib/chem/inductive-acids'
 import { NCERT_TABLE_8_1_COMMON_NAMES } from '@/lib/chem/ncert-unit8-tables'
 import { hybridOf, rankForms, RESONANCE_SPECIES, resonanceSpecies, speciesForms, type ResonanceSpecies } from '@/lib/chem/resonance-species'
 import styles from './resonance-lab.module.css'
 
-/** Acids of the inductive tab, from the strongest to the weakest qualitative order is decided by the lib. */
+/** The acids of the inductive tab, in the order they are listed (the lib sorts them by strength). */
 const ACIDS = [
   { id: 'acetic', smiles: 'CC(=O)O' },
   { id: 'chloro', smiles: 'ClCC(=O)O' },
@@ -28,15 +30,21 @@ const TAB_OPTIONS = [
 type Tab = (typeof TAB_OPTIONS)[number]['value']
 
 const sub = (text: string) => text.replace(/\d+/g, (d) => subscriptDigits(Number(d)))
+const SCALE = 44
+const GAP = 60
 
-/** Descriptive note for the -I or +I balance of an acid, from the lib's counts. */
-function inductiveNote(withdrawing: number, donating: number): string {
-  if (withdrawing > 0) return `${withdrawing} halogen${withdrawing > 1 ? 's' : ''} on the α carbon: −I pulls electrons towards the COOH group.`
-  if (donating > 0) return `${donating} alkyl group${donating > 1 ? 's' : ''} on the α carbon: +I pushes electrons towards the COOH group.`
-  return 'No halogen or alkyl group on the α carbon: the reference acid.'
+/** The lib's tiers as words: form 1, then forms 2 and 3 (tied). */
+function tierWords(tiers: number[][]): string {
+  return tiers
+    .map((tier) => {
+      const names = tier.map((i) => String(i + 1))
+      if (names.length === 1) return `form ${names[0]}`
+      return `forms ${names.slice(0, -1).join(', ')} and ${names[names.length - 1]} (tied)`
+    })
+    .join(', then ')
 }
 
-/** The resonance tab: pick a species, draw its forms one by one, then read the ranking and the hybrid. */
+/** The resonance tab: pick a species, draw its forms with the arrows that give them, then read the ranking and the hybrid. */
 function ResonanceTab() {
   const [speciesId, setSpeciesId] = useState<ResonanceSpecies['id']>(RESONANCE_SPECIES[0].id)
   const [drawn, setDrawn] = useState(1)
@@ -55,38 +63,22 @@ function ResonanceTab() {
     setPending(false)
   }
 
-  const shown = graphs.slice(0, drawn)
-  const contributors: ResonanceContributor[] = shown.map((graph, i) => ({
-    graph,
-    arrows: i === 0 && showArrows ? s.pushes[drawn - 1] : undefined,
-  }))
-  const hybridSpec: ResonanceHybrid = {
-    graph: hybrid.graph,
-    partialBonds: hybrid.partialBonds,
-    innerCircles: s.innerCircles,
-    partialCharges: hybrid.charges.map((c) => ({ atom: c.atom, label: c.label })),
-  }
+  const size = figureSize(speciesId, drawn, SCALE, GAP, complete)
+  const width = Math.max(size.width + 40, 200)
+  const height = size.height + 40
 
-  const tierText = ranking.tiers
-    .map((tier) => (tier.length === 1 ? `form ${tier[0] + 1}` : `forms ${tier.map((i) => i + 1).join(' and ')}`))
-    .join(', then ')
   const readout = !complete
-    ? pending
-      ? `Arrows from form 1 push electrons to give form ${drawn + 1}. Draw it to see the result.`
+    ? showArrows
+      ? `The arrows give form ${drawn + 1} from form 1. Draw the new form to see it.`
       : `Form ${drawn} of ${total} is drawn. Show the arrows that give the next form.`
-    : `All ${total} forms drawn. The lib ranks them ${tierText}${ranking.tiers.length === 1 ? ': all equal in energy' : ''}. The real ion is the hybrid below.`
+    : `All ${total} forms drawn. Ranked by the rules in NCERT 8.7.6: ${tierWords(ranking.tiers)}. The real ion is the hybrid.`
 
   return (
     <>
       <SimulationControls>
         <div role="group" aria-label="Species" className={styles.row}>
           {RESONANCE_SPECIES.map((sp) => (
-            <Button
-              key={sp.id}
-              variant={sp.id === speciesId ? 'primary' : 'secondary'}
-              aria-pressed={sp.id === speciesId}
-              onClick={() => choose(sp.id)}
-            >
+            <Button key={sp.id} variant={sp.id === speciesId ? 'primary' : 'secondary'} aria-pressed={sp.id === speciesId} onClick={() => choose(sp.id)}>
               {sp.name}
             </Button>
           ))}
@@ -95,13 +87,34 @@ function ResonanceTab() {
           <Button variant="secondary" onClick={() => setPending(true)} disabled={complete || pending}>
             Show the arrows
           </Button>
-          <Button variant="secondary" onClick={() => { setDrawn((d) => Math.min(total, d + 1)); setPending(false) }} disabled={complete || !pending}>
+          <Button
+            variant="secondary"
+            onClick={() => {
+              setDrawn((d) => Math.min(total, d + 1))
+              setPending(false)
+            }}
+            disabled={complete || !pending}
+          >
             Draw the new form
           </Button>
-          <Button variant="secondary" onClick={() => { setDrawn(total); setPending(false) }} disabled={complete}>
+          <Button
+            variant="secondary"
+            onClick={() => {
+              setDrawn(total)
+              setPending(false)
+            }}
+            disabled={complete}
+          >
             Draw all forms
           </Button>
-          <Button variant="secondary" onClick={() => { setDrawn(1); setPending(false) }} disabled={drawn === 1 && !pending}>
+          <Button
+            variant="secondary"
+            onClick={() => {
+              setDrawn(1)
+              setPending(false)
+            }}
+            disabled={drawn === 1 && !pending}
+          >
             Start again
           </Button>
         </div>
@@ -112,24 +125,34 @@ function ResonanceTab() {
       </p>
 
       <div className={styles.stage} data-testid="resonance-stage">
-        {drawn === 1 && !showArrows ? (
-          <svg viewBox={viewBoxFor(graphs[0], 64)} role="img" aria-label={`${s.name}, form 1`} className={styles.drawing}>
-            <SkeletalFormula graph={graphs[0]} scale={64} showLonePairs />
-          </svg>
-        ) : (
-          <svg viewBox={viewBoxForRow(contributors, hybridSpec, complete)} role="img" aria-label={`${s.name}: ${drawn} forms${showArrows ? ' with arrows' : ''}`} className={styles.drawing}>
-            <ResonanceSet contributors={contributors} hybrid={complete ? hybridSpec : undefined} scale={56} arrowGap={70} />
-          </svg>
-        )}
+        <svg viewBox={`0 0 ${width} ${height}`} role="img" aria-label={`${s.name}: ${drawn} of ${total} forms`} className={styles.drawing}>
+          {drawn === 1 && !showArrows ? (
+            <g transform={`translate(${width / 2}, ${height / 2})`}>
+              <SkeletalFormula graph={graphs[0]} scale={SCALE} showLonePairs />
+            </g>
+          ) : (
+            <ResonanceFigure
+              speciesId={speciesId}
+              count={drawn}
+              scale={SCALE}
+              gap={GAP}
+              arrows={showArrows ? s.pushes[drawn - 1] : undefined}
+              showHybrid={complete}
+              centreY={height / 2}
+              centreX={width / 2}
+            />
+          )}
+        </svg>
       </div>
 
       <p className={styles.formula} data-testid="resonance-formula">
         {`${s.name}: ${sub(molecularFormula(graphs[0]))}, the same formula in every form.`}
       </p>
+      {s.positions && complete ? <p className={styles.formula}>{s.positions}</p> : null}
 
       {complete ? (
         <table className={styles.table} data-testid="resonance-rank">
-          <caption>Ranking by NCERT 8.7.6 (from the lib)</caption>
+          <caption>Ranked by the rules in NCERT 8.7.6</caption>
           <thead>
             <tr>
               <th scope="col">Form</th>
@@ -157,69 +180,86 @@ function ResonanceTab() {
   )
 }
 
-function viewBoxFor(g: ReturnType<typeof parseSmiles>, scale: number): string {
-  const b = resonanceBounds([{ graph: g }], undefined, scale, 0)
-  return `${b.x - 16} ${b.y - 16} ${b.width + 32} ${b.height + 32}`
+/**
+ * Position of the δ+ label on the α carbon: the widest free direction around that carbon, so the
+ * label sits clear of the Cl–C and C–C bonds.
+ */
+function alphaLabel(g: ReturnType<typeof parseSmiles>, scale: number): { x: number; y: number } {
+  const frame = drawingFrame(g, scale)
+  const a = alphaCarbon(g)
+  const p = frame.points[a]
+  const th = freeAngle(frame.points, frame.adj, a)
+  return { x: p.x + Math.cos(th) * 0.5 * scale, y: p.y + Math.sin(th) * 0.5 * scale }
 }
 
-function viewBoxForRow(contributors: ResonanceContributor[], hybrid: ResonanceHybrid, withHybrid: boolean): string {
-  const b = resonanceBounds(contributors, withHybrid ? hybrid : undefined, 56, 70)
-  return `${b.x - 16} ${b.y - 16} ${b.width + 32} ${b.height + 32}`
-}
-
-/** The inductive tab: the acids ordered by the lib, the α-carbon counts shown for one chosen acid. */
+/** The inductive tab: the acids ordered by the α-carbon groups, one drawn with its δ+ on the α carbon. */
 function InductiveTab() {
-  const [chosen, setChosen] = useState<(typeof ACIDS)[number]['id']>('chloro')
+  const [chosen, setChosen] = useState<(typeof ACIDS)[number]['id']>('trichloro')
   const graphs = useMemo(() => ACIDS.map((a) => parseSmiles(a.smiles)), [])
   const order = useMemo(() => acidStrengthOrder(graphs), [graphs])
   const index = ACIDS.findIndex((a) => a.id === chosen)
   const g = graphs[index]
-  const counts = alphaInductive(g)
   const nameOf = (graph: ReturnType<typeof parseSmiles>) => {
     const common = NCERT_TABLE_8_1_COMMON_NAMES.rows.find((r) => r.compound === 'CH3COOH')
     const name = iupacName(graph)
     return common && name === 'ethanoic acid' ? `${name} (${common.commonName.toLowerCase()})` : name
   }
+  const frame = drawingFrame(g, SCALE)
+  const lab = alphaLabel(g, SCALE)
+  const vb = frame.bounds
+  const pad = 30
+  const bx = Math.min(vb.x, lab.x - 22) - pad
+  const by = Math.min(vb.y, lab.y - 22) - pad
+  const bw = Math.max(vb.x + vb.width, lab.x + 22) + pad - bx
+  const bh = Math.max(vb.y + vb.height, lab.y + 22) + pad - by
 
   return (
     <>
       <SimulationControls>
         <div role="group" aria-label="Acid" className={styles.row}>
-          {ACIDS.map((a) => (
+          {ACIDS.map((a, i) => (
             <Button key={a.id} variant={a.id === chosen ? 'primary' : 'secondary'} aria-pressed={a.id === chosen} onClick={() => setChosen(a.id)}>
-              {sub(toCondensed(parseSmiles(a.smiles)))}
+              {sub(acidFormula(graphs[i]))}
             </Button>
           ))}
         </div>
       </SimulationControls>
 
       <p className={styles.readout} aria-live="polite" data-testid="inductive-readout">
-        {`${nameOf(g)}: ${inductiveNote(counts.withdrawing, counts.donating)}`}
+        {`${nameOf(g)}: ${alphaWords(g)}.`}
       </p>
 
       <div className={styles.stage}>
-        <svg viewBox={viewBoxFor(g, 44)} role="img" aria-label={`${sub(toCondensed(g))} with the α carbon marked δ+`} className={styles.drawing}>
-          <SkeletalFormula graph={g} scale={44} partialCharges={[{ atom: alphaCarbon(g), label: 'δ+' }]} />
+        <svg viewBox={`${bx} ${by} ${bw} ${bh}`} role="img" aria-label={`${sub(acidFormula(g))} with δ+ on the α carbon`} className={styles.drawing}>
+          <SkeletalFormula
+            graph={g}
+            scale={SCALE}
+            overlay={
+              <text x={lab.x} y={lab.y} textAnchor="middle" dominantBaseline="central" fontSize={20} fontWeight={600} fontFamily="var(--font-sans)" fill="var(--delta-plus)">
+                δ+
+              </text>
+            }
+          />
         </svg>
       </div>
 
-      <ol className={styles.ladder} data-testid="inductive-ladder" aria-label="Acids from the strongest to the weakest, qualitative">
+      <ol className={styles.ladder} data-testid="inductive-ladder" aria-label="Acids from the strongest to the weakest">
         {order.map((i) => (
           <li key={ACIDS[i].id} data-current={ACIDS[i].id === chosen ? 'true' : 'false'}>
             {nameOf(graphs[i])}
-            <span className={styles.note}>{` balance ${alphaInductive(graphs[i]).balance > 0 ? '+' : ''}${alphaInductive(graphs[i]).balance}`}</span>
+            <span className={styles.note}>{` (${alphaWords(graphs[i])})`}</span>
           </li>
         ))}
       </ol>
-      <p className={styles.formula}>Order is qualitative: more −I groups on the α carbon give a stronger acid; no numbers are implied.</p>
+      <p className={styles.formula}>The order is qualitative: more −I groups on the α carbon give a stronger acid. No numbers are implied.</p>
     </>
   )
 }
 
 /**
  * Resonance and inductive lab (Section 8.7.4 to 8.7.7). The resonance tab draws each form of a
- * species one at a time, with the arrows that give it, then ranks the forms and shows the hybrid.
- * The inductive tab orders acids by the -I and +I groups on the α carbon.
+ * species with the arrows that give it, then ranks the forms and shows the hybrid. The inductive
+ * tab orders acids by the −I and +I groups on the α carbon.
  */
 export function ResonanceLab(_props: SimulationProps) {
   const [tab, setTab] = useState<Tab>('resonance')

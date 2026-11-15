@@ -60,3 +60,34 @@ export function acidStrengthOrder(acids: readonly MolGraph[]): number[] {
     .sort((x, y) => y.b - x.b || x.index - y.index)
     .map((x) => x.index)
 }
+
+/** Subscript digits in a formula fragment. */
+const SUB: Record<string, string> = { '2': '₂', '3': '₃' }
+
+/**
+ * The condensed formula of an acid of this family, built from the α-carbon counts: for example
+ * CH₃COOH, ClCH₂COOH, Cl₂CHCOOH, Cl₃CCOOH, CH₃CH₂COOH.
+ */
+export function acidFormula(g: MolGraph): string {
+  const { withdrawing, donating } = alphaInductive(g)
+  let alpha: string
+  if (withdrawing === 0) {
+    alpha = donating > 0 ? 'CH₃CH₂' : 'CH₃'
+  } else {
+    const n = withdrawing
+    const cl = n === 1 ? 'Cl' : n === 2 ? 'Cl₂' : 'Cl₃'
+    alpha = n === 1 ? `Cl${'CH' + SUB['2']}` : n === 2 ? `${cl}CH` : `${cl}C`
+  }
+  return `${alpha}COOH`
+}
+
+/** The α-carbon groups in plain words, for the readout. */
+export function alphaWords(g: MolGraph): string {
+  const { withdrawing, donating } = alphaInductive(g)
+  if (withdrawing > 0) {
+    const halogens = withdrawing === 1 ? '1 Cl' : `${withdrawing} Cl`
+    return `${halogens} on the α carbon (−I)`
+  }
+  if (donating > 0) return `${donating === 1 ? 'one CH₃' : `${donating} alkyl groups`} on the α carbon (+I)`
+  return 'no group on the α carbon'
+}

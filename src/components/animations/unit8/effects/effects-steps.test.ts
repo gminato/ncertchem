@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { EFFECT_STEP_KINDS, cationLadder, inductiveNodes } from './effects-steps'
+import { EFFECT_STEP_KINDS, cationLabel, cationLadder, inductiveNodes } from './effects-steps'
 
 describe('electron-effects Scrolly steps', () => {
   it('has seven Steps in the order of the Section', () => {
@@ -28,5 +28,12 @@ describe('electron-effects Scrolly steps', () => {
     expect(ladder.map((r) => r.alkylGroups)).toEqual([3, 2, 1, 0])
     expect(ladder.map((r) => r.rank)).toEqual([0, 1, 2, 3])
     expect(ladder[0].smiles).toBe('C[C+](C)C')
+  })
+})
+
+describe('written cation labels', () => {
+  it('writes the charge after the carbon that carries it', () => {
+    expect(cationLadder().map((r) => r.label)).toEqual(['(CH₃)₃C⁺', '(CH₃)₂CH⁺', 'CH₃CH₂⁺', 'CH₃⁺'])
+    expect(cationLabel(0)).toBe('CH₃⁺')
   })
 })

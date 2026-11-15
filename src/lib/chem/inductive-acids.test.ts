@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import { parseSmiles } from './molecule-parse'
-import { acidStrengthOrder, alphaCarbon, alphaInductive, carboxylCarbon } from './inductive-acids'
+import { acidFormula, acidStrengthOrder, alphaCarbon, alphaInductive, alphaWords, carboxylCarbon } from './inductive-acids'
 
 const ACIDS = {
   acetic: 'CC(=O)O',
@@ -36,5 +36,21 @@ describe('alpha-inductive counts', () => {
 
   it('throws for a molecule without a carboxyl group', () => {
     expect(() => carboxylCarbon(parseSmiles('CCO'))).toThrow(RangeError)
+  })
+})
+
+describe('acid labels from the counts', () => {
+  it('writes the condensed formula of each acid', () => {
+    expect(acidFormula(parseSmiles(ACIDS.acetic))).toBe('CH₃COOH')
+    expect(acidFormula(parseSmiles(ACIDS.chloro))).toBe('ClCH₂COOH')
+    expect(acidFormula(parseSmiles(ACIDS.dichloro))).toBe('Cl₂CHCOOH')
+    expect(acidFormula(parseSmiles(ACIDS.trichloro))).toBe('Cl₃CCOOH')
+    expect(acidFormula(parseSmiles(ACIDS.propanoic))).toBe('CH₃CH₂COOH')
+  })
+
+  it('describes the α-carbon groups in words', () => {
+    expect(alphaWords(parseSmiles(ACIDS.trichloro))).toBe('3 Cl on the α carbon (−I)')
+    expect(alphaWords(parseSmiles(ACIDS.propanoic))).toBe('one CH₃ on the α carbon (+I)')
+    expect(alphaWords(parseSmiles(ACIDS.acetic))).toBe('no group on the α carbon')
   })
 })

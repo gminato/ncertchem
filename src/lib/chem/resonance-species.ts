@@ -41,6 +41,8 @@ export interface ResonanceSpecies {
   hybridCharges: readonly HybridCharge[]
   /** Draw an inscribed circle in each ring of the hybrid. */
   innerCircles?: boolean
+  /** Which positions the later forms cover, when the species has ring positions to name. */
+  positions?: string
 }
 
 const lp = (atom: number): ArrowEnd => ({ lonePair: atom })
@@ -120,6 +122,8 @@ export const RESONANCE_SPECIES: readonly ResonanceSpecies[] = [
       { atom: 6, label: 'δ−' },
     ],
     innerCircles: true,
+    positions:
+      'Form 2 puts the charge on one ortho carbon and form 3 on the para carbon. The other ortho carbon gives the same form by symmetry.',
   },
   {
     id: 'nitrobenzene',
@@ -154,6 +158,8 @@ export const RESONANCE_SPECIES: readonly ResonanceSpecies[] = [
       { atom: 8, label: 'δ+' },
     ],
     innerCircles: true,
+    positions:
+      'Form 2 puts the positive charge on one ortho carbon and form 3 on the para carbon. The other ortho carbon gives the same form by symmetry.',
   },
   {
     id: 'benzene',
@@ -213,6 +219,8 @@ export const RESONANCE_SPECIES: readonly ResonanceSpecies[] = [
       { atom: 6, label: 'δ−' },
     ],
     innerCircles: true,
+    positions:
+      'Form 2 puts the negative charge on one ortho carbon and form 3 on the para carbon. The other ortho carbon gives the same form by symmetry.',
   },
 ]
 

@@ -74,7 +74,7 @@ for (const scheme of ['light', 'dark'] as const) {
       // Changed state 2: the inductive tab with trichloroacetic acid chosen.
       await sim.getByRole('radio', { name: 'Inductive effect' }).click()
       await sim.getByRole('group', { name: 'Acid' }).getByRole('button').nth(3).click()
-      await expect(sim.getByTestId('inductive-readout')).toContainText('3 halogens')
+      await expect(sim.getByTestId('inductive-readout')).toContainText('3 Cl on the α carbon')
       await sim.screenshot({ path: path.join(SCREEN_DIR, `u8-8-7-4-resonance-lab-inductive-${scheme}.png`) })
 
       expect(errors, errors.join('\n')).toEqual([])

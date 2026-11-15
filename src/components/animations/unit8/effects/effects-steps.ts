@@ -46,6 +46,8 @@ export function inductiveNodes(smiles = CHAIN_SMILES): InductiveNode[] {
 /** A carbocation of the Section 8.7.9 ladder, with the lib's own counts. */
 export interface CationRung {
   smiles: string
+  /** Written formula, from the lib's alkyl-group count: (CH₃)₃C⁺ and so on. */
+  label: string
   condensed: string
   alphaH: number
   alkylGroups: number
@@ -54,6 +56,20 @@ export interface CationRung {
 }
 
 const CATIONS = ['[CH3+]', '[CH2+]C', 'C[CH+]C', 'C[C+](C)C'] as const
+
+/** The written formula of a carbocation with this many alkyl groups on its positive carbon. */
+export function cationLabel(alkylGroups: number): string {
+  switch (alkylGroups) {
+    case 3:
+      return '(CH₃)₃C⁺'
+    case 2:
+      return '(CH₃)₂CH⁺'
+    case 1:
+      return 'CH₃CH₂⁺'
+    default:
+      return 'CH₃⁺'
+  }
+}
 
 /** The four alkyl carbocations, strongest first, with the α-hydrogens and alkyl groups the lib counts. */
 export function cationLadder(): CationRung[] {
@@ -69,6 +85,7 @@ export function cationLadder(): CationRung[] {
     const s = intermediateStability('carbocation', g, centre)
     return {
       smiles: CATIONS[index],
+      label: cationLabel(s.alkylGroups),
       condensed: toCondensed(g),
       alphaH: s.alphaH,
       alkylGroups: s.alkylGroups,

@@ -4,18 +4,17 @@ import React from 'react'
 import {
   IntermediateOrbital,
   InductiveChain,
-  ResonanceSet,
   SkeletalFormula,
   deltaText,
+  CurvedArrow,
   drawingFrame,
-  resonanceBounds,
   subscriptDigits,
   type ResonanceContributor,
   type ResonanceHybrid,
 } from '@/components/organic'
 import { parseSmiles, toCondensed } from '@/lib/chem/molecule-parse'
-import { hybridOf, resonanceSpecies, speciesForms } from '@/lib/chem/resonance-species'
-import { PushArrowOverlay } from './PushArrows'
+import { resonanceSpecies } from '@/lib/chem/resonance-species'
+import { ResonanceFigure } from './ResonanceFigure'
 import { CHAIN_SMILES, cationLadder, inductiveNodes, type EffectStepKind } from './effects-steps'
 import styles from './ElectronEffects.module.css'
 
@@ -77,39 +76,30 @@ function Caption({ lines }: { lines: readonly React.ReactNode[] }) {
   )
 }
 
-/** Forms of a species joined by the double-headed arrow, with the hybrid under them, centred in the panel. */
+/** One resonance figure: the forms of a species, with the curved arrows on the first form. */
 function ResonanceDrawing({
   speciesId,
+  count,
   scale,
   gap,
   arrows,
 }: {
   speciesId: string
+  count: number
   scale: number
   gap: number
   arrows: boolean
 }) {
   const s = resonanceSpecies(speciesId)
-  const h = hybridOf(s)
-  const contributors: ResonanceContributor[] = speciesForms(s).map((graph, i) => ({
-    graph,
-    arrows: i === 0 && arrows && s.pushes.length > 0 ? s.pushes[0] : undefined,
-  }))
-  const hybrid: ResonanceHybrid = {
-    graph: h.graph,
-    partialBonds: h.partialBonds,
-    innerCircles: s.innerCircles,
-    partialCharges: h.charges.map((c) => ({ atom: c.atom, label: c.label })),
-  }
-  const b = resonanceBounds(contributors, hybrid, scale, gap)
   return (
-    <ResonanceSet
-      contributors={contributors}
-      hybrid={hybrid}
+    <ResonanceFigure
+      speciesId={speciesId}
+      count={count}
       scale={scale}
-      arrowGap={gap}
-      x={VIEW_WIDTH / 2}
-      y={CENTRE_Y - (b.y + b.height / 2)}
+      gap={gap}
+      arrows={arrows && s.pushes.length > 0 ? s.pushes[0] : undefined}
+      showHybrid
+      centreY={CENTRE_Y}
     />
   )
 }
@@ -134,40 +124,76 @@ function InductiveStep() {
   )
 }
 
+/** Ethene with an H⁺ approaching C1, the π pair moving to C1, and the product CH₃–CH₂⁺ with the + on its carbon. */
 function ElectromericStep() {
-  const ethene = parseSmiles('C=C')
-  const cation = parseSmiles('[CH2+]C')
-  const scale = 150
-  const leftX = 140
-  const rightX = 430
-  const productScale = 118
-  const p0 = drawingFrame(ethene, scale).points[0]
+  const C1 = { x: 130, y: CENTRE_Y }
+  const C2 = { x: 230, y: CENTRE_Y }
+  const PA = { x: 400, y: CENTRE_Y }
+  const PB = { x: 500, y: CENTRE_Y }
+  const bond = (a: { x: number; y: number }, b: { x: number; y: number }, offset = 0) => {
+    const len = Math.hypot(b.x - a.x, b.y - a.y)
+    const ux = (b.x - a.x) / len
+    const uy = (b.y - a.y) / len
+    const nx = -uy * offset
+    const ny = ux * offset
+    return { x1: a.x + ux * 16 + nx, y1: a.y + uy * 16 + ny, x2: b.x - ux * 16 + nx, y2: b.y - uy * 16 + ny }
+  }
+  const hs = (c: { x: number; y: number }, dx: number, ys: number[]) =>
+    ys.map((dy) => ({ x: c.x + dx, y: c.y + dy }))
+  const labelled = (x: number, y: number, text: string, extra?: React.ReactNode) => (
+    <text x={x} y={y + 9} textAnchor="middle" fontSize={26} fontWeight={600} fontFamily={FONT} fill="var(--fg)">
+      {text}
+      {extra}
+    </text>
+  )
+  const H = (p: { x: number; y: number }) => labelled(p.x, p.y, 'H')
+  const hBonds = (c: { x: number; y: number }, list: { x: number; y: number }[]) =>
+    list.map((h, i) => <line key={i} {...bond(c, h)} stroke="var(--fg)" strokeWidth={2.4} strokeLinecap="round" />)
+  const reactantH = [...hs(C1, -58, [-78, 78]), ...hs(C2, 58, [-78, 78])]
+  const productH = [...hs(PA, -58, [-74, 74]), { x: PA.x, y: PA.y - 80 }, ...hs(PB, 58, [-74, 74])]
+  const pi = { x: (C1.x + C2.x) / 2, y: C1.y }
   return (
     <g>
       <Title>Electromeric effect: a reagent starts the shift (+E)</Title>
-      <SkeletalFormula
-        graph={ethene}
-        scale={scale}
-        x={leftX}
-        y={CENTRE_Y}
-        overlay={
-          <g>
-            <PushArrowOverlay graph={ethene} scale={scale} arrows={[{ from: { bond: [0, 1], t: 0.5 }, to: { atom: 0 } }]} />
-            <text x={p0.x - 0.05 * scale} y={p0.y - 0.62 * scale} textAnchor="middle" fontSize={22} fontWeight={600} fontFamily={FONT} fill="var(--fg)">
-              H⁺
-            </text>
-          </g>
-        }
-      />
-      <text x={VIEW_WIDTH / 2 - 4} y={CENTRE_Y + 10} textAnchor="middle" fontSize={34} fontFamily={FONT} fill="var(--fg-muted)">
+      {/* reactant: H2C=CH2 with the four hydrogens */}
+      <line {...bond(C1, C2, -5)} stroke="var(--fg)" strokeWidth={2.4} strokeLinecap="round" />
+      <line {...bond(C1, C2, 5)} stroke="var(--fg)" strokeWidth={2.4} strokeLinecap="round" />
+      {hBonds(C1, reactantH.slice(0, 2))}
+      {hBonds(C2, reactantH.slice(2))}
+      {labelled(C1.x, C1.y, 'C')}
+      {labelled(C2.x, C2.y, 'C')}
+      {reactantH.map((h, i) => (
+        <g key={`rh-${i}`}>{H(h)}</g>
+      ))}
+      {/* the H⁺ and the curved arrow from the π bond to C1 */}
+      <text x={C1.x + 10} y={C1.y - 112} textAnchor="middle" fontSize={24} fontWeight={600} fontFamily={FONT} fill="var(--fg)">
+        H⁺
+      </text>
+      <CurvedArrow from={{ x: pi.x - 6, y: pi.y - 18 }} to={{ x: C1.x + 10, y: C1.y - 22 }} bend={0.45} kind="pair" gap={4} />
+      <text x={305} y={C1.y + 12} textAnchor="middle" fontSize={34} fontFamily={FONT} fill="var(--fg-muted)">
         →
       </text>
-      <SkeletalFormula graph={cation} scale={productScale} x={rightX} y={CENTRE_Y} />
-      <text x={leftX} y={CENTRE_Y + 118} textAnchor="middle" fontSize={18} fontFamily={FONT} fill="var(--fg-muted)">
+      {/* product: CH3–CH2⁺, the + on the carbon */}
+      <line {...bond(PA, PB)} stroke="var(--fg)" strokeWidth={2.4} strokeLinecap="round" />
+      {hBonds(PA, productH.slice(0, 3))}
+      {hBonds(PB, productH.slice(3))}
+      {labelled(PA.x, PA.y, 'C')}
+      {labelled(
+        PB.x,
+        PB.y,
+        'C',
+        <tspan dx={2} dy={-14} fontSize={18}>
+          ⁺
+        </tspan>
+      )}
+      {productH.map((h, i) => (
+        <g key={`ph-${i}`}>{H(h)}</g>
+      ))}
+      <text x={C1.x} y={CENTRE_Y + 118} textAnchor="middle" fontSize={18} fontFamily={FONT} fill="var(--fg-muted)">
         ethene with a reagent
       </text>
-      <text x={rightX} y={CENTRE_Y + 118} textAnchor="middle" fontSize={18} fontFamily={FONT} fill="var(--fg-muted)">
-        ethyl cation
+      <text x={(PA.x + PB.x) / 2} y={CENTRE_Y + 118} textAnchor="middle" fontSize={18} fontFamily={FONT} fill="var(--fg-muted)">
+        ethyl cation, CH₃CH₂⁺
       </text>
       <Caption
         lines={[
@@ -192,7 +218,7 @@ function HyperconjugationStep() {
         {ladder.map((r, i) => (
           <g key={r.smiles} transform={`translate(0, ${40 + i * 56})`}>
             <text x={0} y={0} fontSize={20} fontWeight={600} fontFamily={FONT} fill="var(--fg)">
-              {sub(r.condensed).replace(/\+/g, '⁺')}
+              {r.label}
             </text>
             <text x={0} y={22} fontSize={16} fontFamily={FONT} fill="var(--fg-muted)">
               {`${CATION_NAMES[i]}: ${r.alphaH} α-H`}
@@ -242,7 +268,7 @@ function renderStep(kind: EffectStepKind): React.ReactNode {
       return (
         <g>
           <Title>Acetate ion: the charge is shared by two oxygens</Title>
-          <ResonanceDrawing speciesId="carboxylate" scale={46} gap={64} arrows />
+          <ResonanceDrawing speciesId="carboxylate" count={2} scale={46} gap={64} arrows />
           <Caption lines={['Two equal forms: the real ion is their hybrid, with each C–O bond 1½.', 'δ− marks the charge shared by the two oxygens.']} />
         </g>
       )
@@ -250,7 +276,7 @@ function renderStep(kind: EffectStepKind): React.ReactNode {
       return (
         <g>
           <Title>Benzene: two equal Kekulé forms, one hybrid</Title>
-          <ResonanceDrawing speciesId="benzene" scale={50} gap={72} arrows={false} />
+          <ResonanceDrawing speciesId="benzene" count={2} scale={50} gap={72} arrows={false} />
           <Caption lines={['All six C–C bonds are equal, between a single and a double bond.', 'The hybrid is a hexagon with a circle inside the ring.']} />
         </g>
       )
@@ -258,7 +284,7 @@ function renderStep(kind: EffectStepKind): React.ReactNode {
       return (
         <g>
           <Title>Aniline: the NH₂ lone pair feeds the ring (+R)</Title>
-          <ResonanceDrawing speciesId="aniline" scale={38} gap={56} arrows />
+          <ResonanceDrawing speciesId="aniline" count={3} scale={44} gap={60} arrows />
           <Caption lines={['Electron density rises at the ortho and para carbons: δ− there.', 'The ring is richer in electrons than benzene is.']} />
         </g>
       )
@@ -266,7 +292,7 @@ function renderStep(kind: EffectStepKind): React.ReactNode {
       return (
         <g>
           <Title>Nitrobenzene: the ring feeds the NO₂ group (−R)</Title>
-          <ResonanceDrawing speciesId="nitrobenzene" scale={34} gap={36} arrows />
+          <ResonanceDrawing speciesId="nitrobenzene" count={3} scale={44} gap={60} arrows />
           <Caption lines={['Electron density leaves the ortho and para carbons: δ+ there.', 'The positive carbons are where an electron-rich reagent attacks.']} />
         </g>
       )
