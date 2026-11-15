@@ -165,7 +165,8 @@ export const ChromatographyPlate = forwardRef<SVGGElement, ChromatographyPlatePr
           </Caption>
           <rect x={232} y={28} width={98} height={46} rx={6} fill="var(--surface)" stroke="var(--border)" strokeWidth={1.2} />
           <Caption x={281} y={41} size={15} fill="var(--fg)">
-            {`Rf = ${measuredRf.toFixed(2)}`}
+            {/* Rf from the two distances as printed, so a learner dividing them gets the same value */}
+            {`Rf = ${(Number(((BASELINE - measuredY) * CM_PER_PX).toFixed(1)) / Number(((BASELINE - front) * CM_PER_PX).toFixed(1))).toFixed(2)}`}
           </Caption>
           <Caption x={281} y={59} size={13}>
             {`${((BASELINE - measuredY) * CM_PER_PX).toFixed(1)} ÷ ${((BASELINE - front) * CM_PER_PX).toFixed(1)} cm`}
