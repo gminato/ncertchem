@@ -18,6 +18,7 @@ import { DipoleLab } from './sims/dipole-lab'
 import { MOBuilder } from './sims/mo-builder'
 import { HybridExplorer } from './sims/hybrid-explorer'
 import { BondEnergyLedger } from './sims/bond-energy-ledger'
+import { GibbsExplorer } from './sims/gibbs-explorer'
 
 export interface SimulationProps {
   /** True when the Learner has asked the OS for reduced motion. Skip tweens and loops when set. */
@@ -49,4 +50,5 @@ export const simulations: Record<string, ComponentType<SimulationProps>> = {
   'mo-builder': MOBuilder,
   'hybrid-explorer': HybridExplorer,
   'bond-energy-ledger': BondEnergyLedger,
+  'gibbs-explorer': GibbsExplorer,
 }

@@ -1,0 +1,108 @@
+---
+class: 11
+unit: 5
+section: "5.7"
+order: 7
+title: "Gibbs Energy and Equilibrium"
+slug: "5-7-gibbs-energy-and-equilibrium"
+summary: "At equilibrium the Gibbs energy change is zero, and the standard Gibbs energy change fixes the equilibrium constant through ΔG° = −RT ln K."
+ncert: "Class 11, Part I — Unit 5, Section 5.7"
+---
+
+<Hook>
+Nitrogen and hydrogen can be made to combine into ammonia in a reactor, but the gas leaving the reactor is never pure ammonia. Some nitrogen and hydrogen always remain, however long the reaction runs. Does the reaction simply stop, or does it balance? And if it balances, what decides where the balance point sits?
+</Hook>
+
+## Equilibrium is where ΔG is zero
+
+Consider a reaction $A + B \rightleftharpoons C + D$ run in a closed vessel at constant temperature and pressure. A reversible reaction runs in both directions at once, and a dynamic equilibrium is set up. Both directions cannot each lower the Gibbs energy at the same time. The only way this can hold is if, at equilibrium, the Gibbs energy of the mixture is at its minimum. If it is not, the system moves towards the lower value.
+
+So the criterion for equilibrium is
+
+$$
+\Delta_r G = 0
+$$
+
+where $\Delta_r G$ is the Gibbs energy change of the reaction as it actually runs, in the mixture at hand. The useful number is the same change with every reactant and product in its standard state, $\Delta_r G^\circ$, because the standard state fixes the reference point. The standard state of a gas is a pressure of 1 bar.
+
+## ΔG° and the equilibrium constant
+
+For reactants and products in standard states, the standard Gibbs energy change is tied to the equilibrium constant:
+
+$$
+\Delta_r G^\circ = -RT \ln K
+$$
+
+Using base-10 logarithms, the same relation reads $\Delta_r G^\circ = -2.303\,RT \log K$. The constant $K$ may be $K_p$ or $K_c$, as long as the standard state is used consistently. Here $R = 8.314\ \text{J K}^{-1}\,\text{mol}^{-1}$, and $T$ is in kelvin. Because $\Delta_r G^\circ$ is given in kJ mol⁻¹, divide the product $RT$ by 1000.
+
+Read the relation in both directions:
+
+- If $\Delta_r G^\circ$ is negative, $\ln K$ is positive, so $K > 1$: products are favoured at equilibrium.
+- If $\Delta_r G^\circ$ is positive, $K < 1$: reactants are favoured.
+- If $\Delta_r G^\circ = 0$, then $K = 1$ exactly.
+
+A large negative $\Delta_r G^\circ$ therefore gives a large $K$, and a strongly endothermic reaction with a large positive $\Delta_r H$ gives a $K$ far below 1. An exothermic reaction with a large negative $\Delta_r H$ tends to have a large $K$ and can go close to completion. The entropy change matters as well. $\Delta_r G^\circ = \Delta_r H^\circ - T\,\Delta_r S^\circ$ means that a positive $\Delta_r S^\circ$ pushes $K$ up as the temperature rises.
+
+The relation is useful in two directions. If you can estimate $\Delta_r H^\circ$ and $\Delta_r S^\circ$, you can estimate $K$ at any temperature and judge whether a reaction will give a good yield. If you measure $K$ in the laboratory, you can find $\Delta_r G^\circ$ at any other temperature.
+
+## The scale of K
+
+Because $K$ enters through a logarithm, a change of one decade in $K$ is a fixed amount of Gibbs energy. At 298 K one decade is about $5.7\ \text{kJ mol}^{-1}$. The ladder below runs from $K = 10^{-10}$ to $K = 10^{10}$, with $\Delta_r G^\circ$ read off at each rung.
+
+<Scrolly animation="gibbs-k-ladder">
+<Step>
+Start at the balance point. When $K = 1$, $\ln K = 0$ and $\Delta_r G^\circ = 0$. Products and reactants are equally favoured under standard conditions. Each decade of $K$ is worth about $5.7\ \text{kJ mol}^{-1}$ at 298 K, so every two decades up or down the ladder change the Gibbs energy by about $11\ \text{kJ mol}^{-1}$.
+</Step>
+<Step>
+Move up to $K = 10^5$. Once the standard states are taken into account, the equilibrium mixture holds about a hundred thousand times more product than reactant. Five decades of $K$ correspond to $\Delta_r G^\circ = -28.5\ \text{kJ mol}^{-1}$. The more negative $\Delta_r G^\circ$ becomes, the larger $K$ grows, and the more completely the reaction goes.
+</Step>
+<Step>
+Now $K = 10^{-5}$, the mirror image. Reactants dominate, and $\Delta_r G^\circ = +28.5\ \text{kJ mol}^{-1}$. A positive standard Gibbs energy change means that the reaction as written does not favour products under standard conditions. The same reaction run backwards would sit at the mirror-image rung, $K = 10^{5}$.
+</Step>
+<Step>
+At $K = 10^{10}$ the reaction runs almost to completion, with $\Delta_r G^\circ \approx -57.0\ \text{kJ mol}^{-1}$. Strongly exothermic reactions often sit at rungs like this one, which is why their yields are close to complete. Ten decades is the full width of this ladder, so there is no rung beyond it on the scale shown.
+</Step>
+<Step>
+At $K = 10^{-10}$, $\Delta_r G^\circ \approx +57.0\ \text{kJ mol}^{-1}$, and the equilibrium mixture is almost all reactant. Every rung assumes the same temperature, 298 K. Change the temperature and every rung moves, because $\Delta_r G^\circ = -RT\ln K$ depends on $T$. Read the ladder as a table of how strongly a reaction leans one way.
+</Step>
+</Scrolly>
+
+## A worked example with its own numbers
+
+Take a reaction with $\Delta_r H^\circ = -40.0\ \text{kJ mol}^{-1}$ and $\Delta_r S^\circ = -60.0\ \text{J K}^{-1}\,\text{mol}^{-1}$ at 400 K. Convert the entropy to kJ first, $-60.0\ \text{J K}^{-1}\,\text{mol}^{-1} = -0.0600\ \text{kJ K}^{-1}\,\text{mol}^{-1}$. Then
+
+$$
+\Delta_r G^\circ = \Delta_r H^\circ - T\,\Delta_r S^\circ = -40.0 - 400 \times (-0.0600) = -16.0\ \text{kJ mol}^{-1}
+$$
+
+The Gibbs energy is negative, so the reaction favours products at this temperature. The equilibrium constant follows:
+
+$$
+K = \exp\!\left(-\frac{\Delta_r G^\circ}{RT}\right) = \exp\!\left(\frac{16\,000}{8.314 \times 400}\right) \approx 1.2 \times 10^{2}
+$$
+
+Its base-10 logarithm is about 2.09. Notice that $K$ is about 120, so the reaction favours products, but not by the factor of a million that a large negative $\Delta_r G^\circ$ would give.
+
+<Check n={4} numeric answer={2.09} tolerance={0.05} explanation="log₁₀ K = −ΔG°/(2.303 RT). With ΔG° = −16 000 J mol⁻¹, R = 8.314 J K⁻¹ mol⁻¹ and T = 400 K, log₁₀ K = 16 000 / (2.303 × 8.314 × 400) = 16 000 / 7662 = 2.09.">
+A reaction has $\Delta_r G^\circ = -16.0\ \text{kJ mol}^{-1}$ at 400 K. What is $\log_{10} K$ at this temperature? Give two decimal places.
+</Check>
+
+## The explorer
+
+The explorer below takes ΔH and ΔS for a reaction and a temperature, and gives ΔG° and K for them. The sliders work in kJ mol⁻¹ for ΔH and J K⁻¹ mol⁻¹ for ΔS. Each time you change ΔS, the readout shows the conversion to kJ K⁻¹ mol⁻¹ before it multiplies by T. The three presets use real data: ice melting from Table 5.1, decomposition of calcium carbonate, and ammonia synthesis, with the source of each number written beside it.
+
+<Simulation name="gibbs-explorer" title="Gibbs energy explorer: ΔG°, the crossover temperature and K" />
+
+Spontaneity and equilibrium are not the same as speed. The explorer answers the question of whether a change can run and where it stops. Whether it runs quickly is a question for kinetics, which is not covered here.
+
+<Check n={5} options={["K = 0", "K = 1", "K = 10", "K cannot be found"]} answer={1} explanation="At equilibrium with reactants and products in their standard states, ΔG° = 0. Then ln K = −ΔG°/RT = 0, so K = e⁰ = 1.">
+A reaction has $\Delta_r G^\circ = 0$ at 298 K. What is its equilibrium constant?
+</Check>
+
+<KeyIdeas>
+- At equilibrium $\Delta_r G = 0$, and the standard Gibbs energy change fixes the equilibrium constant through $\Delta_r G^\circ = -RT\ln K$.
+- Negative $\Delta_r G^\circ$ gives $K > 1$ and products are favoured; positive $\Delta_r G^\circ$ gives $K < 1$, and reactants are favoured.
+- Each decade of $K$ is about $5.7\ \text{kJ mol}^{-1}$ at 298 K, so the ladder from $10^{-10}$ to $10^{10}$ spans about $\pm 57\ \text{kJ mol}^{-1}$.
+- Estimate $\Delta_r H^\circ$ and $\Delta_r S^\circ$ to predict $K$ at any temperature, or measure $K$ to find $\Delta_r G^\circ$ at another.
+- Keep the units consistent: convert $R T$ to kJ before comparing it with $\Delta_r G^\circ$ in kJ mol⁻¹.
+</KeyIdeas>

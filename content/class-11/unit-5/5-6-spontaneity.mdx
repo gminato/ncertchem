@@ -1,0 +1,146 @@
+---
+class: 11
+unit: 5
+section: "5.6"
+order: 6
+title: "Spontaneity, Entropy and Gibbs Energy"
+slug: "5-6-spontaneity"
+summary: "A change runs on its own when the total entropy of the universe grows; for a process at constant temperature and pressure, that is the same as a negative Gibbs energy change."
+ncert: "Class 11, Part I — Unit 5, Section 5.6"
+---
+
+<Hook>
+A tray of ice left on the kitchen counter melts with nobody touching it, and it takes in heat from the air while it does so. A stone dropped from a height falls and gives out energy as it lands. Both are one-way changes. Only one of them is about giving out energy, so what decides which way a change runs?
+</Hook>
+
+## What "spontaneous" means
+
+A spontaneous process is one that can go on by itself, without an outside agency pushing it. The word says nothing about speed. Hydrogen and oxygen can sit side by side at room temperature for years with no visible change, and the reaction is still spontaneous, because it has the potential to proceed. Once it has run in a given direction, a spontaneous change does not reverse by itself. Reversing it always needs an outside push.
+
+## (a) Is a decrease in enthalpy the criterion?
+
+It is tempting to think a change runs downhill in energy, as water runs downhill or a stone falls. Many chemical reactions do release heat. Formation of ammonia from its elements is one, with ΔfH° = −46.11 kJ mol⁻¹ (Table 5.2), and burning hydrogen to liquid water gives off 285.83 kJ mol⁻¹.
+
+Other spontaneous changes take in heat. Ice absorbs $6.01\ \text{kJ mol}^{-1}$ as it melts at 273.15 K, and it melts without help in a warm room. Dissolving ammonium nitrate in water also cools the solution and still proceeds on its own. A falling enthalpy helps, but it cannot be the whole answer.
+
+## (b) Entropy and spontaneity
+
+Take a closed, isolated container divided by a partition. Put one gas on one side and a second gas on the other, then lift the partition. The gases mix, and they never separate again on their own. Before the partition moved, a molecule taken from the left side was certainly of gas A. Afterwards, it could be either gas. The system has become less predictable, and its energy is spread across more arrangements.
+
+The measure of that spread is the **entropy**, $S$. Entropy is a state function. For a given substance, the solid is the most ordered state and has the lowest entropy, while the gas is the most disordered and has the highest. A chemical reaction changes entropy when the arrangement of its atoms or ions changes. A reaction that turns one solid into a solid and a gas has a large positive entropy change.
+
+Heat is the quantity that spreads energy. It has more effect on a cold system than a warm one, because the same heat stirs a cold system more. That is why entropy is defined with the temperature in the denominator, for a reversible change:
+
+$$
+\Delta S = \frac{q_\text{rev}}{T}
+$$
+
+A reversible change is an idealised limit: each step is so small that the system is always in equilibrium with its surroundings. A real process is irreversible, and its entropy change is found by computing a reversible path between the same two states.
+
+For a spontaneous process, the total entropy change of the system and its surroundings is positive:
+
+$$
+\Delta S_\text{total} = \Delta S_\text{sys} + \Delta S_\text{surr} > 0
+$$
+
+At equilibrium the total change is zero, and the entropy of the whole has reached its maximum. Because the process is at constant temperature and pressure, the heat the surroundings receive is $-\Delta H_\text{sys}$, and so
+
+$$
+\Delta S_\text{surr} = -\frac{\Delta H_\text{sys}}{T}
+$$
+
+with $\Delta H$ converted from kJ to J before dividing. The scrolly below shows the three phases and the two entropy changes at each transition.
+
+<Scrolly animation="gibbs-entropy-phases">
+<Step>
+Start with the solid. Its particles are locked into a lattice, each held near a fixed point and able only to vibrate about it. The arrangement is highly ordered, so the solid has the lowest entropy of the three phases. Nothing in the box is free to wander.
+</Step>
+<Step>
+Warm the ice to 273.15 K and it melts. The particles slip past one another, the lattice order is lost, and the box fills with a more random arrangement. Melting takes in $6.01\ \text{kJ mol}^{-1}$, so $\Delta S_\text{sys} = 6010 / 273.15 = 22.0\ \text{J K}^{-1}\,\text{mol}^{-1}$. The surroundings give up the same heat at the same temperature, so their entropy falls by 22.0, and the total change is zero: the two phases are in equilibrium.
+</Step>
+<Step>
+Heat the liquid to its boiling point, 373.15 K, and the molecules break free into the gas. Particles now move through the whole box, which makes the gas the most disordered phase. Vaporisation takes in $40.79\ \text{kJ mol}^{-1}$, so $\Delta S_\text{sys} = 109.3\ \text{J K}^{-1}\,\text{mol}^{-1}$, far larger than for melting. The total change is again zero at the boiling point.
+</Step>
+</Scrolly>
+
+<Check n={1} numeric answer={22.0} tolerance={0.2} unit="J K⁻¹ mol⁻¹" explanation="ΔS_sys = ΔfusH / T. Here ΔfusH = 6.01 kJ mol⁻¹ = 6010 J mol⁻¹, and T = 273.15 K. So 6010 / 273.15 = 22.0 J K⁻¹ mol⁻¹. The surroundings change by −22.0, so the total is zero at the melting point.">
+Ice melts at 273.15 K, and its enthalpy of fusion is $6.01\ \text{kJ mol}^{-1}$. What is the entropy change of the system, $\Delta S_\text{sys}$, in $\text{J K}^{-1}\,\text{mol}^{-1}$?
+</Check>
+
+## (c) Gibbs energy and spontaneity
+
+Most chemical reactions are carried out in open or closed vessels at constant pressure, and both the enthalpy and the entropy of such a reaction change. Neither the enthalpy change nor the entropy change decides the direction alone. The Gibbs energy, $G$, combines the two:
+
+$$
+G = H - TS
+$$
+
+$G$ is an extensive state function. At constant temperature, its change for a process is
+
+$$
+\Delta G = \Delta H - T\,\Delta S
+$$
+
+Multiply $\Delta S_\text{total}$ by $T$ and use $\Delta S_\text{surr} = -\Delta H_\text{sys}/T$. You get $T\,\Delta S_\text{total} = T\,\Delta S_\text{sys} - \Delta H_\text{sys}$, and since spontaneity needs $\Delta S_\text{total} > 0$, this gives $-\Delta G > 0$. So at constant $T$ and $P$:
+
+- $\Delta G < 0$: the process is spontaneous.
+- $\Delta G > 0$: the process is non-spontaneous, and the reverse is spontaneous.
+- $\Delta G = 0$: the system is at equilibrium.
+
+Units need care. $\Delta H$ is in kJ mol⁻¹, while $T\,\Delta S$ is kelvin times J K⁻¹ mol⁻¹, which is joules per mole. Convert before you subtract. The Gibbs energy change is the part of the enthalpy change that is free to do useful work, which is why it is also called the free energy of the reaction.
+
+A negative $\Delta G$ tells you that a process can go, not how quickly it goes. Diamond has a negative ΔG for conversion to graphite at room temperature, yet diamonds do not visibly turn into graphite. Speed belongs to kinetics, a separate subject.
+
+The sign of $\Delta G$ depends on the signs of $\Delta H$ and $\Delta S$ and on the temperature. Table 5.4 summarises all six cases.
+
+| $\Delta H$ | $\Delta S$ | $\Delta G$ | Effect of temperature |
+| --- | --- | --- | --- |
+| $-$ | $+$ | $-$ | Spontaneous at all temperatures |
+| $-$ | $-$ | $-$ at low $T$, $+$ at high $T$ | Spontaneous at low temperature only |
+| $+$ | $+$ | $+$ at low $T$, $-$ at high $T$ | Spontaneous at high temperature only |
+| $+$ | $-$ | $+$ | Non-spontaneous at all temperatures |
+
+Low and high are relative to the reaction. For a particular reaction, high temperature could be room temperature. The next scrolly sweeps the temperature across four of these cases.
+
+<Scrolly animation="gibbs-sign-cases">
+<Step>
+First, a reaction that releases heat and increases disorder. The line of $\Delta G$ against temperature starts below zero and stays there, so the reaction is spontaneous at every temperature. This is the top row of Table 5.4, and it needs no crossover.
+</Step>
+<Step>
+Next, ammonia synthesis. The reaction releases heat, $\Delta H \approx -92.2\ \text{kJ mol}^{-1}$, but four moles of gas become two, so $\Delta S$ is negative, about $-198.1\ \text{J K}^{-1}\,\text{mol}^{-1}$. The term $T\,\Delta S$ grows with temperature until it overtakes $\Delta H$. The line crosses zero near 465 K: spontaneous below that temperature, not above it.
+</Step>
+<Step>
+Now the decomposition of limestone. Both $\Delta H \approx +178.3\ \text{kJ mol}^{-1}$ and $\Delta S \approx +160.6\ \text{J K}^{-1}\,\text{mol}^{-1}$ are positive. Heat is needed and disorder increases. Below the crossover near 1110 K, $\Delta H$ wins and the reaction is non-spontaneous; once $T\,\Delta S$ outweighs $\Delta H$, it runs on its own. The marker sweeps across that crossover, which is why lime is made in hot kilns.
+</Step>
+<Step>
+Last, a reaction that absorbs heat and loses disorder. The line stays above zero at every temperature, so the reaction never proceeds on its own. The numbers here are illustrative. Together with the other three cases, this covers every sign combination in Table 5.4.
+</Step>
+</Scrolly>
+
+<Check n={2} numeric answer={400} tolerance={1} unit="K" explanation="At the crossover ΔG = 0, so T = ΔH / ΔS. Here ΔH = 40.0 kJ mol⁻¹ = 40 000 J mol⁻¹ and ΔS = 100 J K⁻¹ mol⁻¹, giving T = 40 000 / 100 = 400 K. Above 400 K, TΔS exceeds ΔH and ΔG is negative.">
+A reaction has $\Delta H = +40.0\ \text{kJ mol}^{-1}$ and $\Delta S = +100\ \text{J K}^{-1}\,\text{mol}^{-1}$. At what temperature, in kelvin, does ΔG become zero? Above that temperature, is the reaction spontaneous?
+</Check>
+
+## (d) Entropy and the second law
+
+For an isolated system, the energy stays constant. The natural direction of a spontaneous change in such a system is the one in which entropy increases. This is the second law of thermodynamics, and it can be stated in several equivalent ways. It explains why exothermic reactions are so common. The heat a reaction releases raises the random motion of the surroundings. The surroundings gain entropy, and that gain usually outweighs any entropy the system loses.
+
+## (e) Absolute entropy and the third law
+
+Molecules move in three ways: they translate, they rotate like a spinning top, and their bonds vibrate. When temperature rises, these motions grow more vigorous and the entropy rises with them. When temperature falls, the entropy falls.
+
+As the temperature approaches absolute zero, the entropy of a perfect crystal approaches zero. This is the third law of thermodynamics. A perfect crystal has one arrangement at 0 K, so its entropy is at its minimum. The law applies to pure crystalline solids. Solutions and supercooled liquids keep a residual entropy at 0 K, so the statement does not cover them.
+
+The third law makes absolute entropies possible. Starting from zero at 0 K and adding up the heat capacity divided by temperature gives the entropy at 298 K. Tables of these standard molar entropies then give the entropy change of any reaction, through a Hess's-law style sum over products and reactants.
+
+<Check n={3} options={["It is spontaneous at all temperatures", "It is spontaneous only at high temperature", "It is spontaneous only at low temperature", "It is never spontaneous"]} answer={2} explanation="A negative ΔH and a negative ΔS give ΔG = ΔH − TΔS. At low temperature the negative ΔH dominates and ΔG is negative. At high temperature the term −TΔS grows positive and wins. This is the case of Table 5.4 that is spontaneous only at low temperature.">
+A reaction has $\Delta H < 0$ and $\Delta S < 0$. Which statement is correct?
+</Check>
+
+<KeyIdeas>
+- A decrease in enthalpy helps a process along but does not decide spontaneity: melting ice is endothermic and spontaneous at room temperature.
+- A process is spontaneous when the total entropy change, $\Delta S_\text{sys} + \Delta S_\text{surr}$, is positive, and $\Delta S_\text{surr} = -\Delta H_\text{sys}/T$.
+- At constant $T$ and $P$, $\Delta G = \Delta H - T\,\Delta S$. A negative $\Delta G$ means spontaneous, a positive one means non-spontaneous, and zero means equilibrium.
+- Convert kJ to J before combining $\Delta H$ with $T\,\Delta S$. Negative $\Delta G$ shows that a change can run, not that it runs quickly.
+- Table 5.4 links the signs of $\Delta H$ and $\Delta S$ to the temperature range in which a reaction is spontaneous; the entropy of a perfect crystal is zero at 0 K.
+</KeyIdeas>
