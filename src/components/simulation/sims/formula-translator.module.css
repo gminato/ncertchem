@@ -71,8 +71,25 @@
 
 .panels {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: var(--space-3);
+}
+
+/* The complete formula takes a full row: its drawing keeps a fixed pixel size and scrolls inside the panel. */
+.wide {
+  grid-column: 1 / -1;
+}
+
+.scroll {
+  overflow-x: auto;
+  max-width: 100%;
+}
+
+.orthogonal {
+  display: block;
+  margin: 0 auto;
+  height: auto;
+  max-width: none;
 }
 
 @media (max-width: 959.98px) {

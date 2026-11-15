@@ -90,7 +90,8 @@ function OrthogonalComplete({ layout, highlighted, label }: { layout: Orthogonal
   const w = (layout.maxX - layout.minX) * UNIT + 2 * pad
   const h = (layout.maxY - layout.minY) * UNIT + 2 * pad
   return (
-    <svg viewBox={`${x0} ${y0} ${w} ${h}`} role="img" aria-label="Complete structural formula" className={styles.drawing}>
+    <div className={styles.scroll}>
+    <svg viewBox={`${x0} ${y0} ${w} ${h}`} width={w} height={h} role="img" aria-label="Complete structural formula" className={styles.orthogonal}>
         {[...highlighted].map((a) => {
           const p = posOf.get(a)
           return p ? <circle key={`hl-${a}`} cx={p.x * UNIT} cy={p.y * UNIT} r={0.42 * UNIT} fill="var(--highlight)" /> : null
@@ -134,6 +135,7 @@ function OrthogonalComplete({ layout, highlighted, label }: { layout: Orthogonal
           </text>
         ))}
       </svg>
+    </div>
   )
 }
 
@@ -309,7 +311,7 @@ export function FormulaTranslator(_props: SimulationProps) {
           ) : null}
 
           <div className={styles.panels}>
-            <section className={styles.panel} aria-label="Complete structural formula">
+            <section className={`${styles.panel} ${styles.wide}`} aria-label="Complete structural formula">
               <h4 className={styles.panelTitle}>Complete</h4>
               {orthogonal ? (
                 <OrthogonalComplete layout={orthogonal} highlighted={highlighted} label={(a) => graph.atoms[a].element} />

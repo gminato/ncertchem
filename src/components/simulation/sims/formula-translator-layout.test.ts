@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest'
 import { parseSmiles } from '@/lib/chem/molecule-parse'
 import { condensedAtoms } from '@/components/organic'
 import { orthogonalComplete } from './formula-translator-layout'
+import { TRANSLATOR_PRESETS } from '@/lib/chem/formula-translator'
 
 function layoutOf(smiles: string) {
   const g = parseSmiles(smiles)
@@ -58,5 +59,23 @@ describe('orthogonalComplete', () => {
   it('refuses a ring', () => {
     const g = parseSmiles('C1CCCCC1')
     expect(() => orthogonalComplete(g, [0, 1, 2])).toThrow(RangeError)
+  })
+})
+
+describe('orthogonalComplete on the translator presets', () => {
+  for (const preset of TRANSLATOR_PRESETS.filter((p) => p.kind === 'open')) {
+    it(`lays out ${preset.smiles} with every atom on its own cell`, () => {
+      const { g, layout } = layoutOf(preset.smiles)
+      const total = g.atoms.reduce((s, a) => s + (a.hCount ?? 0), 0)
+      expect(layout.hydrogens.length).toBe(total)
+      const cells = [...layout.heavy, ...layout.hydrogens].map((p) => `${p.x},${p.y}`)
+      expect(new Set(cells).size).toBe(cells.length)
+      expect([1, 2]).toContain(layout.step)
+    })
+  }
+
+  it('uses one column per bond for the simple chains', () => {
+    expect(layoutOf('CC(C)CC(C)C(C)O').layout.step).toBe(1)
+    expect(layoutOf('CC(=O)C').layout.step).toBe(1)
   })
 })
