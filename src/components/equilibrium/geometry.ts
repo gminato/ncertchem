@@ -57,14 +57,16 @@ export function powerOfTen(exponent: number): string {
  */
 export function formatSci(value: number, digits = 1): string {
   if (value === 0) return '0'
-  const exp = Math.floor(Math.log10(Math.abs(value)))
-  const mantissa = value / 10 ** exp
-  const rounded = Number(mantissa.toFixed(digits))
-  // Rounding can push the mantissa to 10.0; carry it into the exponent.
-  const carry = Math.abs(rounded) >= 10 ? 1 : 0
-  const shownMantissa = carry ? (rounded / 10).toFixed(digits) : rounded.toFixed(digits)
-  const shownExp = exp + carry
   const sign = value < 0 ? '−' : ''
+  const abs = Math.abs(value)
+  const exp = Math.floor(Math.log10(abs))
+  const rounded = Number((abs / 10 ** exp).toFixed(digits))
+  // Rounding can push the mantissa to 10.0; carry it into the exponent.
+  const carry = rounded >= 10 ? 1 : 0
+  const shownExp = exp + carry
+  // Values between 1 and 100 read better without "× 10⁰" or "× 10¹".
+  if (shownExp === 0 || shownExp === 1) return `${sign}${Number(abs.toPrecision(digits + 1)).toFixed(shownExp === 0 ? digits : 0)}`
+  const shownMantissa = carry ? (rounded / 10).toFixed(digits) : rounded.toFixed(digits)
   return `${sign}${shownMantissa} × ${powerOfTen(shownExp)}`
 }
 

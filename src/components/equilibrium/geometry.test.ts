@@ -82,6 +82,11 @@ describe('formatting', () => {
     expect(formatSci(0.0013)).toBe('1.3 × 10⁻³')
     expect(formatSci(4e4)).toBe('4.0 × 10⁴')
     expect(formatSci(0)).toBe('0')
+    expect(formatSci(2)).toBe('2.0')
+    expect(formatSci(50)).toBe('50')
+    expect(formatSci(46.4)).toBe('46')
+    expect(formatSci(-0.0013)).toBe('−1.3 × 10⁻³')
+    expect(formatSci(-2)).toBe('−2.0')
   })
 
   it('carries a rounded mantissa of 10.0 into the exponent', () => {
