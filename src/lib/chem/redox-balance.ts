@@ -152,6 +152,11 @@ function normalizeInput(
   return input
 }
 
+/** True for the electron token in a half-equation ("e" or "e-"); it carries charge but no atoms. */
+function isElectron(formula: string): boolean {
+  return /^e-?$/.test(formula.trim())
+}
+
 /**
  * Checks whether a reaction is balanced in both atom counts and net electric charge.
  *
@@ -165,7 +170,7 @@ export function isBalanced(
   const reactantAtoms: Record<string, number> = {}
   let reactantCharge = 0
   for (const r of reactants) {
-    const counts = parseFormula(r.formula)
+    const counts = isElectron(r.formula) ? {} : parseFormula(r.formula)
     for (const [sym, count] of Object.entries(counts)) {
       reactantAtoms[sym] = (reactantAtoms[sym] ?? 0) + count * r.coefficient
     }
@@ -175,7 +180,7 @@ export function isBalanced(
   const productAtoms: Record<string, number> = {}
   let productCharge = 0
   for (const p of products) {
-    const counts = parseFormula(p.formula)
+    const counts = isElectron(p.formula) ? {} : parseFormula(p.formula)
     for (const [sym, count] of Object.entries(counts)) {
       productAtoms[sym] = (productAtoms[sym] ?? 0) + count * p.coefficient
     }
