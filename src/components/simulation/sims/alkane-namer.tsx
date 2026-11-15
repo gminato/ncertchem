@@ -40,6 +40,13 @@ const WALK_MS = 450
 const EMPTY_DESIGN: AlkaneDesign = { backbone: 2, branches: [] }
 const START_DESIGN: AlkaneDesign = ALKANE_PRESETS[8].design
 
+const SUBSCRIPT_DIGITS: Record<string, string> = { '0': '₀', '1': '₁', '2': '₂', '3': '₃', '4': '₄', '5': '₅', '6': '₆', '7': '₇', '8': '₈', '9': '₉' }
+
+/** A formula with real subscript digits, e.g. C10H22 becomes C₁₀H₂₂. */
+function subscriptFormula(formula: string): string {
+  return formula.replace(/[0-9]/g, (d) => SUBSCRIPT_DIGITS[d])
+}
+
 /** The name, or null if the lib does not name this molecule (it throws outside its scope). */
 function safeName(g: MolGraph): string | null {
   try {
@@ -184,8 +191,8 @@ export function AlkaneNamer({ reducedMotion }: SimulationProps) {
     : []
 
   const summary = name
-    ? `${carbons} carbons, ${molecularFormula(graph)}. Parent chain of ${total} carbons, ${numberingText(numbering)}.`
-    : 'This molecule is outside the scope of the lib.'
+    ? `${carbons} carbons, ${subscriptFormula(molecularFormula(graph))}. Parent chain of ${total} carbons, ${numberingText(numbering)}.`
+    : 'This molecule cannot be named yet.'
 
   const showFeedback = mode === 'name' && verdict !== 'idle'
 
@@ -207,7 +214,7 @@ export function AlkaneNamer({ reducedMotion }: SimulationProps) {
           <svg
             viewBox="0 0 560 340"
             role="img"
-            aria-label={mode === 'name' ? 'A molecule to name. Type its name below.' : `Structure: ${name ?? 'outside the lib'}`}
+            aria-label={mode === 'name' ? 'A molecule to name. Type its name below.' : `Structure: ${name ?? 'not named yet'}`}
             className={styles.drawing}
             data-testid="alkane-drawing"
           >
@@ -230,7 +237,7 @@ export function AlkaneNamer({ reducedMotion }: SimulationProps) {
           {mode === 'explore' && (
             <>
               <p className={styles.name} data-testid="alkane-name">
-                {name ?? 'Not named by the lib'}
+                {name ?? 'Not named yet'}
               </p>
               <p className={styles.summary} data-testid="alkane-summary">{summary}</p>
               <ol className={styles.steps} data-testid="alkane-steps">
@@ -278,7 +285,7 @@ export function AlkaneNamer({ reducedMotion }: SimulationProps) {
             <div className={styles.quiz} data-testid="draw-quiz">
               <p className={styles.quizHead}>Target: {targetName}</p>
               <p className={styles.summary}>
-                Build it with the controls below. The lib names your drawing as you go: {name ?? 'not named'}.
+                Build it with the controls below. Your molecule is named as you build it: {name ?? 'not named yet'}.
               </p>
               <div className={styles.row}>
                 <Button onClick={checkDrawing}>Check my drawing</Button>
