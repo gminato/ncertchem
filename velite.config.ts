@@ -23,6 +23,10 @@ export default defineConfig({
   root: 'content',
   collections: { sections },
   mdx: {
+    // Keep compiled MDX unminified. Minified, a Section is one ~470k-character line, and React's
+    // dev-mode owner stacks pad a fake function to each element's column: GBs of memory and a
+    // crashed tab on `next dev`. Unminified, every element sits on its own short line.
+    minify: false,
     remarkPlugins: [remarkMath],
     rehypePlugins: [rehypeKatex],
   },
