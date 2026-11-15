@@ -44,6 +44,9 @@ import { NewlandsOctaves } from './unit3/history/NewlandsOctaves'
 import { MeyerVolume } from './unit3/history/MeyerVolume'
 import { MendeleevGaps } from './unit3/history/MendeleevGaps'
 import { ChemicalProperties } from './unit3/chemical/ChemicalProperties'
+import { KosselTransfer } from './unit4/lewis/KosselTransfer'
+import { OctetExceptions } from './unit4/lewis/OctetExceptions'
+import { BornHaberStaircase } from './unit4/lewis/BornHaberStaircase'
 import { MOWaveCombination } from './unit4/mo/MOWaveCombination'
 import { MOEnergyOrders } from './unit4/mo/MOEnergyOrders'
 import { MOO2Filling } from './unit4/mo/MOO2Filling'
@@ -107,6 +110,9 @@ export const animations = {
   'history-meyer': MeyerVolume,
   'history-mendeleev-gaps': MendeleevGaps,
   'chemical-properties': ChemicalProperties,
+  'lewis-kossel-transfer': KosselTransfer,
+  'lewis-octet-exceptions': OctetExceptions,
+  'lewis-born-haber': BornHaberStaircase,
   'mo-wave-combination': MOWaveCombination,
   'mo-energy-orders': MOEnergyOrders,
   'mo-o2-filling': MOO2Filling,

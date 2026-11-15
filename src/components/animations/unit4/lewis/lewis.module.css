@@ -1,0 +1,68 @@
+.wrapper {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  color: var(--fg);
+}
+
+.svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  max-height: 420px;
+}
+
+.headline {
+  font-family: var(--font-sans);
+  font-size: 16px;
+  fill: var(--fg);
+}
+
+.caption {
+  font-family: var(--font-sans);
+  font-size: 15px;
+  fill: var(--fg-muted);
+}
+
+.captionStrong {
+  font-family: var(--font-sans);
+  font-size: 17px;
+  fill: var(--fg);
+}
+
+.accentText {
+  font-family: var(--font-sans);
+  font-size: 15px;
+  fill: var(--accent);
+}
+
+/* A Step's diagram fades in when the Step changes. Reduced motion skips the class. */
+@keyframes lewisFade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.fadeIn {
+  animation: lewisFade 0.5s ease-out both;
+}
+
+.smallPrint {
+  margin: 0;
+  font-family: var(--font-sans);
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--fg-subtle);
+}
+
+.note {
+  margin: 0;
+  font-family: var(--font-sans);
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--fg-muted);
+}
