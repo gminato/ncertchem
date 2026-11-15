@@ -94,6 +94,7 @@ import { DynamicEquilibrium } from './unit6/dynamic/DynamicEquilibrium'
 import { MassAction } from './unit6/massaction/MassAction'
 import { BufferAction } from './unit6/buffer/BufferAction'
 import { LeChatelierStress } from './unit6/lechatelier/LeChatelierStress'
+import { SolubilityProduct } from './unit6/solubility/SolubilityProduct'
 import { PhLadder } from './unit6/ph/PhLadder'
 import { WeakAcid } from './unit6/weakacid/WeakAcid'
 
@@ -200,6 +201,7 @@ export const animations = {
   'unit6-mass-action': MassAction,
   'buffer-action': BufferAction,
   'le-chatelier': LeChatelierStress,
+  'solubility-product': SolubilityProduct,
   'ph-scale': PhLadder,
   'weak-acid': WeakAcid,
 } as const

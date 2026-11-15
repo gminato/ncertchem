@@ -35,6 +35,7 @@ import { SealedContainerLab } from './sims/sealed-container-lab'
 import { ApproachToEquilibrium } from './sims/approach-to-equilibrium'
 import { BufferDesigner } from './sims/buffer-designer'
 import { LeChatelierLab } from './sims/le-chatelier-lab'
+import { PrecipitationLab } from './sims/precipitation-lab'
 import { PhExplorer } from './sims/ph-explorer'
 import { WeakAcidLab } from './sims/weak-acid-lab'
 
@@ -86,6 +87,7 @@ export const simulations: Record<string, ComponentType<SimulationProps>> = {
   'approach-to-equilibrium': ApproachToEquilibrium,
   'buffer-designer': BufferDesigner,
   'le-chatelier-lab': LeChatelierLab,
+  'precipitation-lab': PrecipitationLab,
   'ph-explorer': PhExplorer,
   'weak-acid-lab': WeakAcidLab,
 }
