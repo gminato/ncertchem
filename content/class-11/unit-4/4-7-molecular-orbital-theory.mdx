@@ -1,0 +1,170 @@
+---
+class: 11
+unit: 4
+section: "4.7–4.8"
+order: 7
+title: "Molecular Orbital Theory"
+summary: "Atoms share their orbitals to make molecular orbitals. Bonding ones hold the atoms together, antibonding ones push them apart, and their difference gives the bond order."
+slug: "4-7-molecular-orbital-theory"
+ncert: "Class 11, Part I — Unit 4, Sections 4.7–4.8"
+---
+
+<Hook>
+Pour liquid oxygen near a strong magnet and it is pulled into the field and held there. Most liquids run straight off. A Lewis structure for O₂ shows every electron paired, which predicts the opposite. Which picture of the bond is wrong, and what does the right one say?
+</Hook>
+
+## The idea of molecular orbitals
+
+Valence bond theory and the Lewis picture both describe bonds between particular pairs of atoms. Molecular orbital theory takes a different view. It treats the molecule as a whole. Its ideas were developed by Hund and Mulliken, and three of them carry the rest of this section.
+
+First, the electrons of a molecule occupy molecular orbitals in the way that the electrons of an atom occupy atomic orbitals. Second, atomic orbitals of comparable energy and the right symmetry combine into molecular orbitals. Third, an atomic orbital belongs to one nucleus, but a molecular orbital is spread over two or more nuclei.
+
+The number of molecular orbitals always equals the number of atomic orbitals that combined to form them. Two atomic orbitals give one bonding and one antibonding molecular orbital. Electrons fill the molecular orbitals in order of increasing energy, obeying the Aufbau principle, the Pauli exclusion principle and Hund's rule, just as they do in atoms.
+
+## 4.7.1 Forming molecular orbitals by LCAO
+
+A wave function, written $\psi$, describes an electron as a wave. The Schrödinger equation can be solved exactly only for systems with one electron, such as the hydrogen atom, so it cannot give molecular orbitals directly for molecules with several electrons. The practical route is the **linear combination of atomic orbitals** (LCAO). Add or subtract the wave functions of the atomic orbitals, and each combination is an approximate molecular orbital.
+
+Take two hydrogen atoms, A and B, each with a 1s electron. Their wave functions are $\psi_A$ and $\psi_B$. Adding them gives the **bonding** orbital $\sigma_{1s} = \psi_A + \psi_B$. Subtracting them gives the **antibonding** orbital $\sigma^*_{1s} = \psi_A - \psi_B$. The star marks the antibonding partner.
+
+<Scrolly animation="mo-wave-combination">
+<Step>
+Start with two hydrogen atoms, one at each nucleus. Each has a 1s wave function, shown as $\psi_A$ and $\psi_B$. Squaring a wave function gives the electron density. Each atom's density is a peak on its own nucleus, and the two peaks are separate.
+</Step>
+<Step>
+Add the two waves point by point, $\psi_A + \psi_B$. Where the waves have the same sign they reinforce, which is constructive interference. Between the nuclei the sum is large, so electron density builds up there. This combination is the bonding orbital $\sigma_{1s}$.
+</Step>
+<Step>
+Subtract instead, $\psi_A - \psi_B$. In the middle the two waves now have opposite signs, so they cancel. This is destructive interference, and the wave passes through zero at the midpoint. That zero is a nodal plane with no density. This is the antibonding orbital $\sigma^*_{1s}$.
+</Step>
+<Step>
+Compare the two densities side by side. In $\sigma_{1s}$ the density between the nuclei is high, so the electrons there pull the nuclei together. In $\sigma^*_{1s}$ the density at the midpoint is zero, and most of the density lies away from the space between the nuclei, so the nuclei repel each other.
+</Step>
+<Step>
+The energies shift as well. The bonding orbital lies below the atomic 1s level, and the antibonding orbital lies above it. The two shifts balance, so the total energy of the two molecular orbitals equals that of the two atomic orbitals. Electrons in the bonding orbital stabilise the molecule, and electrons in the antibonding orbital destabilise it.
+</Step>
+</Scrolly>
+
+## 4.7.2 Conditions for combination
+
+Not every pair of atomic orbitals can combine. Three conditions must hold.
+
+1. The atomic orbitals must have the same or nearly the same energy. A 1s orbital combines with another 1s orbital, but not with a 2s orbital, because the 2s orbital is much higher in energy. The rule relaxes only when the two atoms differ greatly in their energies, which is not true for a homonuclear molecule.
+2. The atomic orbitals must have the same symmetry about the molecular axis. Take the bond axis as the $z$ axis. Two $2p_z$ orbitals combine, but a $2p_z$ orbital does not combine with a $2p_x$ or $2p_y$ orbital on the other atom.
+3. The orbitals must overlap as much as they can. The greater the overlap, the greater the electron density between the nuclei in the molecular orbital.
+
+<Check n="combine" options={["A 1s orbital of A with a 2s orbital of B", "A 2pz orbital of A with a 2px orbital of B", "A 2pz orbital of A with a 2pz orbital of B", "A 1s orbital of A with a 2pz orbital of B"]} answer={2} explanation={<p>Two 2p<sub>z</sub> orbitals along the bond axis have the same energy and the same symmetry about that axis, so they combine. The 1s and 2s pair fails the energy condition. The 2p<sub>z</sub> and 2p<sub>x</sub> pair fails the symmetry condition. The 1s and 2p<sub>z</sub> pair fails both.</p>}>
+Along the $z$ axis, which pair of atomic orbitals can combine to form molecular orbitals?
+</Check>
+
+## 4.7.3 Sigma and pi orbitals
+
+Molecular orbitals are named by their symmetry about the bond axis. A **σ** (sigma) orbital is symmetrical around that axis. Two 1s orbitals give $\sigma_{1s}$ and $\sigma^*_{1s}$. Two $2p_z$ orbitals, with the bond along $z$, give $\sigma_{2p_z}$ and $\sigma^*_{2p_z}$.
+
+A **π** (pi) orbital is not symmetrical around the axis, because it has one lobe above the axis and one lobe below. Two $2p_x$ orbitals, or two $2p_y$ orbitals, sideways to the bond, give $\pi_{2p_x}$ and $\pi^*_{2p_x}$, and likewise for $y$. A π bonding orbital has its density above and below the internuclear axis. A $\pi^*$ orbital has a node between the nuclei. Orbitals with a further type of symmetry are called δ (delta) orbitals.
+
+## 4.7.4 The two energy orders
+
+Eight molecular orbitals come from the 2s and 2p atomic orbitals of two second-period atoms: $\sigma_{2s}$, $\sigma^*_{2s}$, $\sigma_{2p_z}$, $\pi_{2p_x}$, $\pi_{2p_y}$, $\pi^*_{2p_x}$, $\pi^*_{2p_y}$ and $\sigma^*_{2p_z}$. Their energies come from spectroscopic measurements on homonuclear diatomic molecules of the second row. Fig. 4.21 in NCERT shows the two orders for B₂ to Ne₂, and the diagrams in this section rebuild them from the same energies.
+
+For O₂ and F₂, the order is
+$$\sigma_{1s} < \sigma^*_{1s} < \sigma_{2s} < \sigma^*_{2s} < \sigma_{2p_z} < (\pi_{2p_x} = \pi_{2p_y}) < (\pi^*_{2p_x} = \pi^*_{2p_y}) < \sigma^*_{2p_z}$$
+
+For B₂, C₂ and N₂, and for the lighter species, the order is
+$$\sigma_{1s} < \sigma^*_{1s} < \sigma_{2s} < \sigma^*_{2s} < (\pi_{2p_x} = \pi_{2p_y}) < \sigma_{2p_z} < (\pi^*_{2p_x} = \pi^*_{2p_y}) < \sigma^*_{2p_z}$$
+
+The difference is one pair. In B₂ to N₂, the $\pi_{2p}$ pair lies below $\sigma_{2p_z}$. In O₂ and beyond, $\sigma_{2p_z}$ lies below the $\pi_{2p}$ pair. The usual explanation is that the 2s and 2p levels are close enough in energy to mix, which pushes $\sigma_{2p_z}$ up. NCERT gives the two orders without a derivation, so treat the mixing as a common explanation of the observed order, not as a result the text derives. The simulation below lets you switch between the two orders and see the difference for B₂ and C₂.
+
+## 4.7.5 Electronic configuration and molecular behaviour
+
+The distribution of electrons over the molecular orbitals is the **electronic configuration** of the molecule. It tells you three things: whether the molecule is stable, how many bonds it has, and whether it is attracted to a magnetic field.
+
+Let $N_b$ be the number of electrons in bonding orbitals and $N_a$ the number in antibonding orbitals. The molecule is stable when $N_b > N_a$. It is unstable when $N_b < N_a$, and when $N_b = N_a$ it does not form a stable molecule either. These rules are restated in terms of the **bond order**:
+
+$$\text{bond order} = \tfrac{1}{2}\,(N_b - N_a)$$
+
+A positive bond order means a stable molecule, and a zero or negative one means an unstable molecule. Whole-number values of 1, 2 and 3 correspond to single, double and triple bonds. The bond order also gives an approximate measure of bond length: the bond length falls as the bond order rises.
+
+Magnetism follows from the spins. If every molecular orbital is doubly occupied, the substance is **diamagnetic** and is repelled by a magnetic field. If one or more orbitals hold a single electron, the substance is **paramagnetic** and is attracted to a field. O₂ is the standard paramagnetic example.
+
+<Check n="bond-order" numeric answer={1} explanation={<p>The bond order is one half of N<sub>b</sub> − N<sub>a</sub>. Here (8 − 6) / 2 = 2 / 2 = 1, a single bond. The molecule is stable, because N<sub>b</sub> is greater than N<sub>a</sub>.</p>}>
+A molecule has 8 electrons in bonding orbitals and 6 in antibonding orbitals. What is its bond order?
+</Check>
+
+## 4.8 Bonding in some homonuclear diatomic molecules
+
+The ladder below fills five homonuclear molecules with their electrons, using the energy order that NCERT uses for each. Each Step shows one molecule, with its highest occupied level outlined, and the bond order and magnetism read off the diagram.
+
+<Scrolly animation="mo-energy-orders" layout="wide">
+<Step>
+**H₂** has two electrons, and both go into $\sigma_{1s}$. The bond order is $(2 - 0)/2 = 1$, so the two hydrogen atoms share a single covalent bond. The bond length is 74 pm, as NCERT gives. Both electrons are paired, so H₂ is diamagnetic.
+</Step>
+<Step>
+**He₂** has four electrons. Two fill $\sigma_{1s}$ and two fill $\sigma^*_{1s}$. The bonding and antibonding electrons cancel, so the bond order is $(2 - 2)/2 = 0$. NCERT concludes that He₂ is unstable and does not exist. Be₂ has the same count of bonding and antibonding electrons, and it does not exist either.
+</Step>
+<Step>
+**Li₂** has six electrons: four in bonding orbitals and two in antibonding ones. The bond order is $(4 - 2)/2 = 1$. Every electron is paired, so Li₂ is diamagnetic. Its bond order equals that of H₂, so Li₂ is a single bond too, but its outer electrons are farther from the nuclei. NCERT notes that diamagnetic Li₂ molecules are known to exist in the vapour phase.
+</Step>
+<Step>
+**C₂** has twelve electrons, and in this species the $\pi_{2p}$ pair lies below $\sigma_{2p_z}$. The bond order is $(8 - 4)/2 = 2$. The double bond consists of two π bonds, because the two π orbitals hold four electrons and the σ orbital is empty. C₂ is diamagnetic.
+</Step>
+<Step>
+**N₂** has fourteen electrons, and its bond order is $(10 - 4)/2 = 3$, a triple bond. It is still in the mixed order, so $\sigma_{2p_z}$ lies above the π pair. The bond energy is about 945 kJ mol⁻¹, as NCERT's Fig. 4.21 prints it, and the bond length is 110 pm. N₂ is diamagnetic.
+</Step>
+<Step>
+**O₂** has sixteen electrons. For O₂ the order changes, so $\sigma_{2p_z}$ lies below the π pair. The bond order is $(10 - 6)/2 = 2$. The last two electrons sit alone in the two $\pi^*_{2p}$ orbitals, which makes O₂ paramagnetic. The MO picture predicts this, and the Lewis picture does not.
+</Step>
+</Scrolly>
+
+The table below collects the values that NCERT gives in Fig. 4.21 for B₂ to Ne₂. The bond energies and lengths are as NCERT prints them, and they are read from the figure.
+
+| Species | Bond order | Magnetism | Bond energy (kJ mol⁻¹) | Bond length (pm) |
+| --- | --- | --- | --- | --- |
+| B₂ | 1 | Paramagnetic | 290 | 159 |
+| C₂ | 2 | Diamagnetic | 620 | 131 |
+| N₂ | 3 | Diamagnetic | 945 | 110 |
+| O₂ | 2 | Paramagnetic | 498 | 121 |
+| F₂ | 1 | Diamagnetic | 159 | 143 |
+| Ne₂ | 0 | – | – | – |
+
+For O₂ the paramagnetism is the main success of the theory. Its 16 electrons are placed one at a time in the wide Scrolly below, from the σ levels through to the π* pair, and the last two electrons go into separate π* orbitals with parallel spins.
+
+<Scrolly animation="mo-o2-filling" layout="wide">
+<Step>
+Oxygen has 16 electrons in all, counting the 1s pairs, and they are placed here one at a time from the bottom of the diagram. The first eight fill $\sigma_{1s}$, $\sigma^*_{1s}$, $\sigma_{2s}$ and $\sigma^*_{2s}$. Each bonding pair is cancelled by an antibonding pair, so these electrons add nothing to the bond, and the bond order is still zero.
+</Step>
+<Step>
+Four more electrons are bonding. Two go into $\sigma_{2p_z}$, which is lower in energy than the $\pi_{2p}$ pair in this order, and one goes into each of the two $\pi_{2p}$ orbitals. The bonding count is now 8 and the antibonding count is 4, so the bond order is $(8 - 4)/2 = 2$, with two electrons still to place.
+</Step>
+<Step>
+Two more electrons fill the $\pi_{2p}$ pair completely, so each of its two orbitals holds two electrons with opposite spins. Every bonding orbital is now full, the total is 14 electrons, and the antibonding count is still 4, so the bond order is still 2 for these electrons.
+</Step>
+<Step>
+The last two electrons enter the two $\pi^*_{2p}$ orbitals separately, with parallel spins, as Hund's rule requires. Pairing would cost more energy than putting each electron in its own degenerate orbital. The bonding count is 10 and the antibonding count is 6, so the bond order is 2, and the two electrons are unpaired.
+</Step>
+<Step>
+A Lewis structure draws O₂ with every electron paired, which would make it diamagnetic. The MO diagram shows two unpaired electrons in the π* pair, and O₂ is measured to be paramagnetic, which is the result that MO theory gets right and Lewis does not.
+</Step>
+</Scrolly>
+
+The electrons in the other species follow the same rules. Build any of them yourself below. Choose a species, add its electrons one at a time, and watch the bond order and magnetism change. The bar chart collects the species you visit, so you can compare them.
+
+<Simulation name="mo-builder" title="MO builder: fill the orbitals and read the bond" />
+
+Two more checks. In B₂, the two electrons in the $\pi_{2p}$ level go into different orbitals. Use the diagram in the simulation to see whether there are unpaired electrons, and how many.
+
+<Check n="b2-unpaired" numeric answer={2} unit="unpaired electrons" explanation={<p>B₂ has ten electrons. The first eight fill σ<sub>1s</sub>, σ*<sub>1s</sub>, σ<sub>2s</sub> and σ*<sub>2s</sub>. The last two go into the two orbitals of the π<sub>2p</sub> level, one each, with parallel spins, because of Hund's rule. That leaves two unpaired electrons, so B₂ is paramagnetic. With the other order the two electrons would pair up in σ<sub>2p</sub>, which gives the wrong answer.</p>}>
+How many unpaired electrons does a B₂ molecule have in its ground state?
+</Check>
+
+<Check n="o2-lewis" options={["Lewis predicts the wrong bond order, so MO theory is needed for the bond order", "Lewis predicts that all electrons are paired, but O₂ is paramagnetic, which MO theory explains", "Lewis predicts O₂ is paramagnetic, but it is not", "Lewis and MO theory agree in every respect for O₂"]} answer={1} explanation={<p>A Lewis structure for O₂ pairs every electron, so it predicts a diamagnetic molecule. The measured O₂ is paramagnetic, and the MO picture explains this with two unpaired electrons in the π* orbitals. The bond order of 2 agrees with the double bond in the Lewis structure.</p>}>
+Which statement about O₂ is correct?
+</Check>
+
+<KeyIdeas>
+- Molecular orbitals form by adding (bonding, σ) and subtracting (antibonding, σ*) atomic wave functions. The bonding orbital concentrates electron density between the nuclei, and the antibonding one has a node there.
+- Orbitals combine only when they have similar energy, the same symmetry about the bond axis and good overlap.
+- B₂ to N₂ use the order with π2p below σ2p, which is usually explained by 2s–2p mixing. O₂ and beyond use the order with σ2p below π2p.
+- Bond order = ½ (N_b − N_a). A positive bond order means a stable molecule, and the bond order sets the bond length.
+- Electrons that are all paired make a diamagnetic substance. O₂ has two unpaired π* electrons, so it is paramagnetic, a result the Lewis picture cannot give.
+</KeyIdeas>
