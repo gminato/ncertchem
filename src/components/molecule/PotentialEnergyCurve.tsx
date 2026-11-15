@@ -49,7 +49,10 @@ export const PotentialEnergyCurve = forwardRef<SVGGElement, PotentialEnergyCurve
   const markerE = morseEnergy(markerR, params)
 
   const path = useMemo(() => {
-    const pts = morseCurve(params, R_MIN, R_MAX, 120).map((p) => ({ x: px(p.r), y: py(Math.max(p.e, E_MIN)) }))
+    // Points above the plotted energy range are dropped so the steep wall stops at the plot top.
+    const pts = morseCurve(params, R_MIN, R_MAX, 160)
+      .filter((p) => p.e <= E_MAX)
+      .map((p) => ({ x: px(p.r), y: py(Math.max(p.e, E_MIN)) }))
     return pts.map((p, i) => `${i === 0 ? 'M' : 'L'}${p.x.toFixed(2)},${p.y.toFixed(2)}`).join(' ')
   }, [params])
 
