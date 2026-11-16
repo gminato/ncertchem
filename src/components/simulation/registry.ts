@@ -49,6 +49,7 @@ import { FunctionalGroupNamer } from './sims/functional-group-namer'
 import { ElementalAnalyser } from './sims/elemental-analyser'
 import { ResonanceLab } from './sims/resonance-lab'
 import { AlkaneNamer } from './sims/alkane-namer'
+import { AdditionPredictor } from './sims/addition-predictor'
 import { NewmanRotor } from './sims/newman-rotor'
 import { AlkyneIsomers } from './sims/alkyne-isomers'
 import { FormulaTranslator } from './sims/formula-translator'
@@ -121,6 +122,7 @@ export const simulations: Record<string, ComponentType<SimulationProps>> = {
   'elemental-analyser': ElementalAnalyser,
   'resonance-lab': ResonanceLab,
   'alkane-namer': AlkaneNamer,
+  'addition-predictor': AdditionPredictor,
   'alkyne-isomers': AlkyneIsomers,
   'formula-translator': FormulaTranslator,
   'arrow-pusher': ArrowPusher,
