@@ -1,7 +1,7 @@
 import React, { forwardRef } from 'react'
 
 /** Size of the polymer drawing, for a parent viewBox. */
-export const POLYMER_CHAIN_SIZE = { width: 900, height: 344 } as const
+export const POLYMER_CHAIN_SIZE = { width: 900, height: 372 } as const
 
 export type Monomer = 'ethene' | 'propene' | 'ethyne'
 

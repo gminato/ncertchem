@@ -302,11 +302,12 @@ function PeroxideDrawing() {
     EQUATION_SIZE,
     450
   )
-  const [rad, , hbr, , , , brDot] = row2
+  const [rad, , hbr] = row2
   const radDot = { x: pieceCentre(rad, 2), y: y2 - 14 }
   const hGap = { x: (pieceCentre(rad, 2) + pieceCentre(hbr, 0)) / 2 + 4, y: y2 - 38 }
   const hbrBond = { x: pieceCentre(hbr, 1), y: y2 - 18 }
-  const brTarget = { x: pieceCentre(brDot, 0), y: y2 - 36 }
+  // The H–Br bond splits: one electron pairs with the carbon radical's, the other stays on Br.
+  const brTarget = { x: pieceCentre(hbr, 2), y: y2 - 30 }
 
   return (
     <g>
@@ -317,6 +318,7 @@ function PeroxideDrawing() {
 
       <EquationRow items={row2} y={y2} size={EQUATION_SIZE} />
       <Hook from={radDot} to={hGap} />
+      <Hook from={hbrBond} to={hGap} />
       <Hook from={hbrBond} to={brTarget} />
     </g>
   )
