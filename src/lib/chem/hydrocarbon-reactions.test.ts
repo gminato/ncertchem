@@ -146,6 +146,8 @@ describe('alkene reactions', () => {
   it('sulphuric acid addition gives the Markovnikov hydrogen sulphate', () => {
     const r = addH2SO4(g('C=CC'))
     expect(r.products[0].name).toBe('propan-2-yl hydrogen sulphate')
+    expect(r.products[0].formula).toBe('C3H8O4S')
+    expect(r.equation).toBe('\\ce{CH2=CHCH3 + H2SO4 -> CH3CH(OSO3H)CH3}')
   })
   it('hydration is Markovnikov', () => {
     expect(hydrate(g('C=CC')).products[0].name).toBe('propan-2-ol')
@@ -315,7 +317,7 @@ describe('product formulas across the engine (display rules, 25+ products)', () 
     expect(label(addHX(g('C=CC'), 'HBr').products[0])).toBe('CH3CHBrCH3')
     expect(label(addHX(g('C=CC'), 'HBr', { peroxide: true }).products[0])).toBe('CH3CH2CH2Br')
     expect(label(addX2(g('C=C'), 'Br2').products[0])).toBe('CH2BrCH2Br')
-    expect(label(hydrate(g('C=CC')).products[0])).toBe('CH3CHOHCH3')
+    expect(label(hydrate(g('C=CC')).products[0])).toBe('CH3CH(OH)CH3')
     expect(ozonolysis(g('CC(C)=CC')).products.map(label)).toEqual(['CH3COCH3', 'CH3CHO'])
     expect(acidicPermanganate(g('CC=CC')).products.map(label)).toEqual(['CH3COOH', 'CH3COOH'])
     expect(halogenate(g('CCC'), 'Cl').products.map(label)).toEqual(['CH3CHClCH3', 'CH3CH2CH2Cl'])

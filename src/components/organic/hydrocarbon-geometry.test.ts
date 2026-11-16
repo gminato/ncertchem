@@ -280,3 +280,19 @@ describe('label clearance in the conformation drawings', () => {
     }
   })
 })
+
+describe('sawhorse bonds stay clear of the C–C axis', () => {
+  it('keeps every substituent bond ≥ 25° from the axis on screen at 0° and 60°', () => {
+    for (const dihedral of [0, 60]) {
+      const g = sawhorseGeometry(dihedral)
+      const axisFront = Math.atan2(g.back.y, g.back.x)
+      const axisBack = axisFront + Math.PI
+      const gap = (a: number, b: number) => {
+        const d = Math.abs(Math.atan2(Math.sin(a - b), Math.cos(a - b)))
+        return (d * 180) / Math.PI
+      }
+      for (const b of g.front) expect(gap(Math.atan2(b.dir.y, b.dir.x), axisFront)).toBeGreaterThan(25)
+      for (const b of g.backBonds) expect(gap(Math.atan2(b.dir.y, b.dir.x), axisBack)).toBeGreaterThan(25)
+    }
+  })
+})
