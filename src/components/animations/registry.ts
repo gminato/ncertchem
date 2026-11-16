@@ -114,6 +114,7 @@ import { ElimMechanism } from './unit9/elimination/ElimMechanism'
 import { AlkeneStructure } from './unit9/alkene-structure/AlkeneStructure'
 import { HydrocarbonFamily } from './unit9/family/HydrocarbonFamily'
 import { AlkaneIsomers } from './unit9/family/AlkaneIsomers'
+import { EthaneRotation } from './unit9/conformations/EthaneRotation'
 import { TripleBond } from './unit9/alkyne-structure/TripleBond'
 
 /**
@@ -239,6 +240,7 @@ export const animations = {
   'double-bond': AlkeneStructure,
   'hydrocarbon-family': HydrocarbonFamily,
   'alkane-isomers': AlkaneIsomers,
+  'ethane-rotation': EthaneRotation,
   'triple-bond': TripleBond,
 } as const
 
