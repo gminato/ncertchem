@@ -81,8 +81,8 @@ function ButeneRow({ tipId }: { tipId: string }) {
       : 'no net dipole: the dipoles cancel'
   return (
     <g>
-      <IsomerDrawing placed={cis.placed} dipole={cis.dipole} polar={cis.polar} title={cis.name} note={note(cis)} cx={150} cy={146} tipId={tipId} />
-      <IsomerDrawing placed={trans.placed} dipole={trans.dipole} polar={trans.polar} title={trans.name} note={note(trans)} cx={430} cy={146} tipId={tipId} />
+      <IsomerDrawing placed={cis.placed} dipole={cis.dipole} polar={cis.polar} title={cis.name} note={note(cis)} cx={138} cy={146} tipId={tipId} />
+      <IsomerDrawing placed={trans.placed} dipole={trans.dipole} polar={trans.polar} title={trans.name} note={note(trans)} cx={446} cy={146} tipId={tipId} />
     </g>
   )
 }
