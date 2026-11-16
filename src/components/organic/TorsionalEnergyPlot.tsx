@@ -8,20 +8,20 @@ import {
   type PlotBox,
 } from './hydrocarbon-geometry'
 
-const BOX: PlotBox = { left: 66, top: 34, width: 380, height: 232, eMin: -0.8, eMax: 3.6 }
+const BOX: PlotBox = { left: 76, top: 40, width: 400, height: 260, eMin: -2.5, eMax: 15.5 }
 /** Size of the plot, for a parent viewBox. The right margin holds the barrier bracket. */
-export const TORSIONAL_PLOT_SIZE = { width: 580, height: 330 } as const
+export const TORSIONAL_PLOT_SIZE = { width: 610, height: 370 } as const
 
 export interface TorsionalEnergyPlotProps extends Omit<React.SVGAttributes<SVGGElement>, 'children'> {
   /** Dihedral of the marker, in degrees (0 to 360). */
   dihedral?: number
-  /** Energy in kcal/mol above the staggered form, as a function of dihedral in degrees. Defaults to ethane. */
+  /** Energy in kJ/mol above the staggered form, as a function of dihedral in degrees. Defaults to ethane (12.5 kJ/mol barrier). */
   energy?: (dihedral: number) => number
   x?: number
   y?: number
 }
 
-function Text({ x, y, children, anchor = 'middle', size = 15, fill = 'var(--fg-muted)' }: {
+function Text({ x, y, children, anchor = 'middle', size = 16, fill = 'var(--fg-muted)' }: {
   x: number
   y: number
   children: React.ReactNode
@@ -37,17 +37,17 @@ function Text({ x, y, children, anchor = 'middle', size = 15, fill = 'var(--fg-m
 }
 
 /**
- * Energy against dihedral angle for ethane: maxima are the eclipsed forms, minima the staggered
- * forms, and the barrier between them is bracketed. A marker follows the `dihedral` prop, so it
- * can sit beside a Newman projection and move with it.
+ * Energy against dihedral angle for ethane, in kJ/mol: maxima are the eclipsed forms, minima the
+ * staggered forms, and the barrier between them is bracketed. A marker follows the `dihedral` prop,
+ * so it can sit beside a Newman projection and move with it.
  */
 export const TorsionalEnergyPlot = forwardRef<SVGGElement, TorsionalEnergyPlotProps>(function TorsionalEnergyPlot(
   { dihedral = 0, energy = ethaneTorsionalEnergy, x = 0, y = 0, ...rest },
   ref
 ) {
-  const box = BOX
   const curve = useMemo(() => sampleCurve(BOX, energy, 2), [energy])
   const { maxima, minima } = useMemo(() => torsionalExtremes(energy), [energy])
+  const box = BOX
   const d = ((dihedral % 360) + 360) % 360
   const markerE = energy(d)
   const eStag = Math.min(...minima.map((m) => energy(m)))
@@ -56,14 +56,14 @@ export const TorsionalEnergyPlot = forwardRef<SVGGElement, TorsionalEnergyPlotPr
   const bottom = box.top + box.height
   const right = box.left + box.width
   const path = curve.map((p, i) => `${i === 0 ? 'M' : 'L'}${p.x.toFixed(2)},${p.y.toFixed(2)}`).join(' ')
-  const yTicks = [0, 1, 2, 3]
+  const yTicks = [0, 5, 10]
   const xTicks = [0, 60, 120, 180, 240, 300, 360]
   const markerX = plotX(box, d)
   const markerY = plotY(box, markerE)
+  const midBarrier = (plotY(box, eStag) + plotY(box, eEcl)) / 2
 
   return (
     <g ref={ref} transform={`translate(${x}, ${y})`} {...rest}>
-      {/* Gridlines and y ticks */}
       {yTicks.map((t) => (
         <g key={`y-${t}`}>
           <line x1={box.left} x2={right} y1={plotY(box, t)} y2={plotY(box, t)} stroke="var(--border)" strokeWidth={1} />
@@ -72,9 +72,11 @@ export const TorsionalEnergyPlot = forwardRef<SVGGElement, TorsionalEnergyPlotPr
           </Text>
         </g>
       ))}
-      {/* Eclipsed barrier reference */}
+      {/* The barrier height, marked on the axis and across the plot */}
       <line x1={box.left} x2={right} y1={plotY(box, eEcl)} y2={plotY(box, eEcl)} stroke="var(--fg-subtle)" strokeWidth={1} strokeDasharray="4 4" />
-      {/* Axes */}
+      <Text x={box.left - 12} y={plotY(box, eEcl)} anchor="end" fill="var(--fg)">
+        12.5
+      </Text>
       <line x1={box.left} x2={box.left} y1={box.top} y2={bottom} stroke="var(--fg-muted)" strokeWidth={1.6} />
       <line x1={box.left} x2={right} y1={bottom} y2={bottom} stroke="var(--fg-muted)" strokeWidth={1.6} />
       {xTicks.map((t) => (
@@ -85,41 +87,35 @@ export const TorsionalEnergyPlot = forwardRef<SVGGElement, TorsionalEnergyPlotPr
           </Text>
         </g>
       ))}
-      <Text x={box.left + box.width / 2} y={bottom + 50} size={16}>
+      <Text x={box.left + box.width / 2} y={bottom + 50} size={17}>
         Dihedral angle θ
       </Text>
-      <text x={18} y={box.top + box.height / 2} textAnchor="middle" dominantBaseline="central" fontSize={16} fontFamily="var(--font-sans)" fill="var(--fg-muted)" transform={`rotate(-90 18 ${box.top + box.height / 2})`}>
-        Energy / kcal mol⁻¹
+      <text x={20} y={box.top + box.height / 2} textAnchor="middle" dominantBaseline="central" fontSize={17} fontFamily="var(--font-sans)" fill="var(--fg-muted)" transform={`rotate(-90 20 ${box.top + box.height / 2})`}>
+        Energy / kJ mol⁻¹
       </text>
 
-      {/* Curve */}
-      <path d={path} fill="none" stroke="var(--energy-curve)" strokeWidth={3} strokeLinejoin="round" strokeLinecap="round" />
+      <path d={path} fill="none" stroke="var(--energy-curve)" strokeWidth={3.2} strokeLinejoin="round" strokeLinecap="round" />
 
       {/* Barrier bracket in the right margin */}
-      <line x1={right + 16} x2={right + 16} y1={plotY(box, eStag)} y2={plotY(box, eEcl)} stroke="var(--fg)" strokeWidth={1.6} />
-      <line x1={right + 10} x2={right + 22} y1={plotY(box, eStag)} y2={plotY(box, eStag)} stroke="var(--fg)" strokeWidth={1.6} />
-      <line x1={right + 10} x2={right + 22} y1={plotY(box, eEcl)} y2={plotY(box, eEcl)} stroke="var(--fg)" strokeWidth={1.6} />
-      <Text x={right + 30} y={(plotY(box, eStag) + plotY(box, eEcl)) / 2 - 22} anchor="start" size={15} fill="var(--fg)">
+      <line x1={right + 16} x2={right + 16} y1={plotY(box, eStag)} y2={plotY(box, eEcl)} stroke="var(--fg)" strokeWidth={1.8} />
+      <line x1={right + 10} x2={right + 22} y1={plotY(box, eStag)} y2={plotY(box, eStag)} stroke="var(--fg)" strokeWidth={1.8} />
+      <line x1={right + 10} x2={right + 22} y1={plotY(box, eEcl)} y2={plotY(box, eEcl)} stroke="var(--fg)" strokeWidth={1.8} />
+      <Text x={right + 30} y={midBarrier - 12} anchor="start" size={16} fill="var(--fg)">
         Barrier
       </Text>
-      <Text x={right + 30} y={(plotY(box, eStag) + plotY(box, eEcl)) / 2} anchor="start" size={15} fill="var(--fg)">
-        {`${barrier.toFixed(1)} kcal`}
-      </Text>
-      <Text x={right + 30} y={(plotY(box, eStag) + plotY(box, eEcl)) / 2 + 22} anchor="start" size={15} fill="var(--fg)">
-        mol⁻¹
+      <Text x={right + 30} y={midBarrier + 10} anchor="start" size={16} fill="var(--fg)">
+        {`${barrier.toFixed(1)} kJ mol⁻¹`}
       </Text>
 
-      {/* Labelled points: eclipsed maxima above, staggered minima below */}
       {maxima.map((m) => {
         const px = plotX(box, m)
         const py = plotY(box, energy(m))
-        // The label stays inside the plot: the one at 0 sits right of its point, the one at 360 left of it.
         const anchor = m === 0 ? 'start' : m === 360 ? 'end' : 'middle'
         const lx = m === 0 ? px + 12 : m === 360 ? px - 12 : px
         return (
           <g key={`max-${m}`}>
-            <circle cx={px} cy={py} r={4.5} fill="var(--surface)" stroke="var(--energy-curve)" strokeWidth={2} />
-            <Text x={lx} y={py - (m === 0 || m === 360 ? 4 : 18)} anchor={anchor} size={15} fill="var(--fg)">
+            <circle cx={px} cy={py} r={5} fill="var(--surface)" stroke="var(--energy-curve)" strokeWidth={2} />
+            <Text x={lx} y={py - (m === 0 || m === 360 ? 4 : 20)} anchor={anchor} size={16} fill="var(--fg)">
               eclipsed
             </Text>
           </g>
@@ -130,17 +126,16 @@ export const TorsionalEnergyPlot = forwardRef<SVGGElement, TorsionalEnergyPlotPr
         const py = plotY(box, energy(m))
         return (
           <g key={`min-${m}`}>
-            <circle cx={px} cy={py} r={4.5} fill="var(--surface)" stroke="var(--energy-curve)" strokeWidth={2} />
-            <Text x={px} y={py + 18} size={15} fill="var(--fg)">
+            <circle cx={px} cy={py} r={5} fill="var(--surface)" stroke="var(--energy-curve)" strokeWidth={2} />
+            <Text x={px} y={py + 20} size={16} fill="var(--fg)">
               staggered
             </Text>
           </g>
         )
       })}
 
-      {/* Marker that follows the dihedral prop */}
-      <line x1={markerX} x2={markerX} y1={markerY + 9} y2={bottom} stroke="var(--fg-subtle)" strokeWidth={1.2} strokeDasharray="3 3" />
-      <circle cx={markerX} cy={markerY} r={8} fill="var(--energy-curve)" stroke="var(--surface)" strokeWidth={2.5} />
+      <line x1={markerX} x2={markerX} y1={markerY + 10} y2={bottom} stroke="var(--fg-subtle)" strokeWidth={1.2} strokeDasharray="3 3" />
+      <circle cx={markerX} cy={markerY} r={9} fill="var(--energy-curve)" stroke="var(--surface)" strokeWidth={2.5} />
     </g>
   )
 })

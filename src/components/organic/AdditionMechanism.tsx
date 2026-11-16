@@ -1,18 +1,11 @@
 import React, { forwardRef } from 'react'
-import { CurvedArrow } from './CurvedArrow'
-import { SkeletalFormula, skeletalFrame } from './SkeletalFormula'
-import { bondAnchor } from './arrows'
-import type { Point } from './layout'
-import { PRIMARY_CATION, PROPENE, SECONDARY_CATION, TWO_BROMOPROPANE, ONE_BROMOPROPANE } from './hydrocarbon-fixture'
-import { formulaTextWidth, SCHEME_TEXT_SPECIES, stageAt, stageOpacity, unitClamp } from './hydrocarbon-geometry'
+import { revealFraction, stageOpacity } from './hydrocarbon-geometry'
 
-/** Size of the addition mechanism drawing, for a parent viewBox centred on the origin. */
+/** Size of every addition-mechanism drawing, for a parent viewBox. */
 export const ADDITION_MECHANISM_SIZE = { width: 900, height: 290 } as const
 
 export type AdditionMode = 'ionic' | 'radical'
-/** Ionic: the carbocation branch. `major` is the 2° carbocation (Markovnikov); `minor` the 1° one. */
 export type AdditionBranch = 'major' | 'minor'
-/** Radical chain steps: alkane halogenation, and the peroxide effect in HBr addition. */
 export type RadicalStep = 'initiation' | 'propagation' | 'termination' | 'peroxide'
 
 export interface AdditionMechanismProps extends Omit<React.SVGAttributes<SVGGElement>, 'children'> {
@@ -27,264 +20,307 @@ export interface AdditionMechanismProps extends Omit<React.SVGAttributes<SVGGEle
   y?: number
 }
 
-const ORB_STYLE = { fill: 'none', stroke: 'var(--orbital-pos)', strokeWidth: 1.8, strokeDasharray: '4 4' } as const
+type Pt = { x: number; y: number }
+const INK = 'var(--fg)'
+const SIGMA = 'var(--sigma-bond)'
+const LOBE = 'var(--orbital-pos)'
+const STAGES = 3
 
-function Label({ x, y, children, size = 20, fill = 'var(--fg)', weight = 600 }: { x: number; y: number; children: React.ReactNode; size?: number; fill?: string; weight?: number }) {
+/** A label on a surface-coloured halo, so the bonds stop cleanly behind it. */
+function Atom({ x, y, children, size = 20, weight = 600, fill = INK }: { x: number; y: number; children: React.ReactNode; size?: number; weight?: number; fill?: string }) {
   return (
-    <text x={x} y={y} textAnchor="middle" dominantBaseline="central" fontSize={size} fontWeight={weight} fontFamily="var(--font-sans)" fill={fill}>
+    <text x={x} y={y} textAnchor="middle" dominantBaseline="central" fontSize={size} fontWeight={weight} fontFamily="var(--font-sans)" fill={fill} stroke="var(--surface)" strokeWidth={6} strokeLinejoin="round" paintOrder="stroke">
       {children}
     </text>
   )
 }
 
-/** Empty p orbital drawn on a carbocation: dashed lobes above and below the trigonal plane. */
-function EmptyOrbital({ at }: { at: Point }) {
+function Bond({ a, b, width = 3 }: { a: Pt; b: Pt; width?: number }) {
+  return <line x1={a.x} y1={a.y} x2={b.x} y2={b.y} stroke={SIGMA} strokeWidth={width} strokeLinecap="round" />
+}
+
+/** A double bond: two parallel lines offset to either side of the axis. */
+function DoubleBond({ a, b }: { a: Pt; b: Pt }) {
+  const dx = b.x - a.x
+  const dy = b.y - a.y
+  const len = Math.hypot(dx, dy)
+  const nx = (-dy / len) * 4
+  const ny = (dx / len) * 4
   return (
     <g>
-      <ellipse cx={at.x} cy={at.y - 30} rx={11} ry={18} {...ORB_STYLE} />
-      <ellipse cx={at.x} cy={at.y + 30} rx={11} ry={18} {...ORB_STYLE} />
+      <Bond a={{ x: a.x + nx, y: a.y + ny }} b={{ x: b.x + nx, y: b.y + ny }} width={2.6} />
+      <Bond a={{ x: a.x - nx, y: a.y - ny }} b={{ x: b.x - nx, y: b.y - ny }} width={2.6} />
     </g>
   )
 }
 
-function Caption({ x, y, children, emphasis = false }: { x: number; y: number; children: React.ReactNode; emphasis?: boolean }) {
+/** A radical electron: a single dot beside an atom. */
+function Dot({ at }: { at: Pt }) {
+  return <circle cx={at.x} cy={at.y} r={3.6} fill={INK} />
+}
+
+/** A curved arrow from a π bond or a lone pair, with a full head. */
+function CurvedArrow({ p0, c, p1, opacity = 1 }: { p0: Pt; c: Pt; p1: Pt; opacity?: number }) {
+  const dx = p1.x - c.x
+  const dy = p1.y - c.y
+  const len = Math.hypot(dx, dy) || 1
+  const ux = dx / len
+  const uy = dy / len
+  const back = { x: p1.x - ux * 9, y: p1.y - uy * 9 }
+  const l = { x: back.x - uy * 5.5, y: back.y + ux * 5.5 }
+  const r = { x: back.x + uy * 5.5, y: back.y - ux * 5.5 }
   return (
-    <text x={x} y={y} textAnchor="middle" dominantBaseline="central" fontSize={16} fontFamily="var(--font-sans)" fill={emphasis ? 'var(--fg)' : 'var(--fg-muted)'}>
+    <g opacity={opacity} stroke={INK} fill={INK}>
+      <path d={`M${p0.x},${p0.y} Q${c.x},${c.y} ${back.x},${back.y}`} fill="none" strokeWidth={2.2} strokeLinecap="round" />
+      <path d={`M${p1.x},${p1.y} L${l.x},${l.y} L${r.x},${r.y} Z`} strokeWidth={0.6} />
+    </g>
+  )
+}
+
+/** A fishhook (radical arrow): a curve from the electron to its new place, with one barb at the end. */
+function Fishhook({ from, c, to }: { from: Pt; c: Pt; to: Pt }) {
+  const dx = to.x - c.x
+  const dy = to.y - c.y
+  const len = Math.hypot(dx, dy) || 1
+  const ux = dx / len
+  const uy = dy / len
+  // Single barb, on the outside of the curve.
+  const barbTip = { x: to.x - ux * 9 + uy * 7, y: to.y - uy * 9 - ux * 7 }
+  return (
+    <g stroke={INK} fill="none" strokeWidth={2.2} strokeLinecap="round">
+      <path d={`M${from.x},${from.y} Q${c.x},${c.y} ${to.x},${to.y}`} />
+      <path d={`M${to.x},${to.y} L${barbTip.x},${barbTip.y}`} />
+    </g>
+  )
+}
+
+/** A reaction arrow between two species. */
+function ReactionArrow({ x0, x1, y }: { x0: number; x1: number; y: number }) {
+  return (
+    <g stroke={INK} strokeWidth={2.4} strokeLinecap="round" strokeLinejoin="round" fill="none">
+      <line x1={x0} x2={x1} y1={y} y2={y} />
+      <path d={`M${x1 - 10},${y - 6} L${x1},${y} L${x1 - 10},${y + 6}`} />
+    </g>
+  )
+}
+
+/** A p orbital on a cation: dashed lobes above and below the trigonal plane, in perspective. */
+function EmptyOrbital({ at }: { at: Pt }) {
+  return (
+    <g fill="none" stroke={LOBE} strokeWidth={1.8} strokeDasharray="4 4">
+      <ellipse cx={at.x} cy={at.y - 24} rx={9} ry={14} />
+      <ellipse cx={at.x} cy={at.y + 24} rx={9} ry={14} />
+    </g>
+  )
+}
+
+/** Caption under a stage. */
+function Caption({ x, y, children }: { x: number; y: number; children: string }) {
+  return (
+    <text x={x} y={y} textAnchor="middle" dominantBaseline="central" fontSize={17} fontWeight={600} fontFamily="var(--font-sans)" fill={INK}>
       {children}
     </text>
   )
 }
 
-/** Lays radical-step tokens out in a row, returning each token's centre x and width. */
-function tokenRow(tokens: Array<{ id: string; text: string }>, startX: number, gap = 22) {
-  const out: Record<string, { cx: number; w: number; left: number }> = {}
-  let x = startX
-  for (const t of tokens) {
-    const w = formulaTextWidth(t.text)
-    out[t.id] = { cx: x + w / 2, w, left: x }
-    x += w + gap
-  }
-  return { at: out, end: x - gap }
+/** Propene as a zig-zag around an origin, with the C=C at the left and the methyl at the right. */
+function propeneAt(ox: number, oy: number) {
+  return { A: { x: ox - 34.64, y: oy + 20 }, B: { x: ox, y: oy }, C: { x: ox + 34.64, y: oy + 20 } }
 }
 
-/** The centre x of the character at `index` within a token. */
-function charCentre(left: number, text: string, index: number): number {
-  return left + formulaTextWidth(text.slice(0, index)) + formulaTextWidth(text[index] ?? '') / 2
-}
+/** Ionic addition of HBr to propene: π attack on H⁺, the carbocation, and Br⁻ capture. */
+function IonicAddition({ branch, progress }: { branch: AdditionBranch; progress: number }) {
+  const major = branch === 'major'
+  const stageX = [170, 460, 760]
+  const opacities = [0, 1, 2].map((i) => stageOpacity(progress, STAGES, i))
+  const a1 = revealFraction(progress, 0, 0.5)
+  const a2 = revealFraction(progress, 0.5, 1)
+  const oy = 150
 
-function RadicalStepDrawing({ step, progress }: { step: RadicalStep; progress: number }) {
-  const y = ADDITION_MECHANISM_SIZE.height / 2 - 6
-  const p = unitClamp(progress)
-  const arrowP = unitClamp(p * 2)
-  const fishP = unitClamp(p * 2 - 1)
-  const size = SCHEME_TEXT_SPECIES
+  // Stage 1: propene and H⁺; the first arrow leaves the π bond (A=B) for the proton.
+  const s1 = propeneAt(stageX[0], oy)
+  const mid1 = { x: (s1.A.x + s1.B.x) / 2, y: (s1.A.y + s1.B.y) / 2 }
+  const H1 = { x: stageX[0] + 10, y: oy - 74 }
 
-  // Each step: reactant tokens, product tokens and the fishhooks as [fromAnchor, toAnchor] pairs.
-  type Spec = {
-    left: Array<{ id: string; text: string }>
-    right: Array<{ id: string; text: string }>
-    title: string
-    caption: string
-    /** Fishhook arrows: from a token to a token, drawn above the row. `a` bends up, `b` bends down. */
-    hooks: Array<[string, string, 'a' | 'b']>
-  }
-  const specs: Record<RadicalStep, Spec> = {
-    initiation: {
-      title: 'Initiation',
-      caption: 'Light splits the Cl–Cl bond into two chlorine radicals',
-      left: [{ id: 'bond', text: 'Cl–Cl' }],
-      right: [
-        { id: 'a', text: 'Cl•' },
-        { id: 'b', text: '•Cl' },
-      ],
-      hooks: [
-        ['bond', 'a', 'a'],
-        ['bond', 'b', 'b'],
-      ],
-    },
-    propagation: {
-      title: 'Propagation',
-      caption: 'A chlorine radical takes H, leaving a methyl radical',
-      left: [
-        { id: 'cl', text: 'Cl•' },
-        { id: 'ch', text: 'H–CH₃' },
-      ],
-      right: [
-        { id: 'hcl', text: 'H–Cl' },
-        { id: 'me', text: '•CH₃' },
-      ],
-      hooks: [
-        ['cl', 'hcl', 'a'],
-        ['ch', 'me', 'b'],
-      ],
-    },
-    termination: {
-      title: 'Termination',
-      caption: 'Two radicals meet and pair up, and the chain stops',
-      left: [
-        { id: 'a', text: 'Cl•' },
-        { id: 'b', text: '•Cl' },
-      ],
-      right: [{ id: 'bond', text: 'Cl–Cl' }],
-      hooks: [
-        ['a', 'bond', 'a'],
-        ['b', 'bond', 'b'],
-      ],
-    },
-    peroxide: {
-      title: 'Peroxide effect: radical addition',
-      caption: 'Br• adds to the terminal carbon, so the radical forms on the middle carbon',
-      left: [
-        { id: 'br', text: 'Br•' },
-        { id: 'alk', text: 'CH₂=CH–CH₃' },
-      ],
-      right: [{ id: 'prod', text: 'BrCH₂–CH•–CH₃' }],
-      hooks: [
-        ['br', 'prod', 'a'],
-        ['alk', 'prod', 'b'],
-      ],
-    },
-  }
-  const spec = specs[step]
-  const leftRow = tokenRow(spec.left, 0, 26)
-  const arrowW = 96
-  const rightStart = leftRow.end + 26 + arrowW + 26
-  const rightRow = tokenRow(spec.right, rightStart, 26)
-  const shift = (ADDITION_MECHANISM_SIZE.width - rightRow.end) / 2
-  const leftAt = (id: string) => ({ ...leftRow.at[id], cx: leftRow.at[id].cx + shift })
-  const rightAt = (id: string) => ({ ...rightRow.at[id], cx: rightRow.at[id].cx + shift })
-  // A fishhook starts and ends at the centre of its token: a radical dot, or the middle of a bond.
-  const tokenFor = (id: string) => (spec.left.some((t) => t.id === id) ? leftAt(id) : rightAt(id))
+  // Stage 2: the carbocation. Major: H on A (the terminal CH₃ side), cation on B (2°). Minor: H on B, cation on A (1°).
+  const s2 = propeneAt(stageX[1], oy)
+  const cation = major ? s2.B : s2.A
+  const Br = { x: cation.x + 14, y: oy - 74 }
+  const lonePair = { x: Br.x - 22, y: Br.y }
+
+  // Stage 3: the product: Br on the cation carbon.
+  const s3 = propeneAt(stageX[2], oy)
+  const prodCation = major ? s3.B : s3.A
 
   return (
     <g>
-      <Label x={ADDITION_MECHANISM_SIZE.width / 2} y={36} size={22} weight={600}>
-        {spec.title}
-      </Label>
-      {spec.left.map((t) => (
-        <text key={`l-${t.id}`} x={leftAt(t.id).cx} y={y} textAnchor="middle" dominantBaseline="central" fontSize={size} fontFamily="var(--font-sans)" fill="var(--fg)">
-          {t.text}
-        </text>
-      ))}
-      {spec.right.map((t) => (
-        <text key={`r-${t.id}`} x={rightAt(t.id).cx} y={y} textAnchor="middle" dominantBaseline="central" fontSize={size} fontFamily="var(--font-sans)" fill="var(--fg)">
-          {t.text}
-        </text>
-      ))}
-      <g opacity={arrowP}>
-        <line x1={leftRow.end + 26 + shift} x2={leftRow.end + 26 + arrowW + shift - 2} y1={y} y2={y} stroke="var(--fg-muted)" strokeWidth={2.2} />
-        <path d={`M${leftRow.end + 26 + arrowW + shift - 12},${y - 7} L${leftRow.end + 26 + arrowW + shift},${y} L${leftRow.end + 26 + arrowW + shift - 12},${y + 7}`} fill="none" stroke="var(--fg-muted)" strokeWidth={2.2} strokeLinejoin="round" strokeLinecap="round" />
-        {step === 'initiation' && (
-          <Label x={leftRow.end + 26 + arrowW / 2 + shift} y={y - 22} size={16} fill="var(--fg-muted)" weight={500}>
-            hν
-          </Label>
-        )}
+      {/* Stage 1 */}
+      <g opacity={opacities[0]}>
+        <DoubleBond a={s1.A} b={s1.B} />
+        <Bond a={s1.B} b={s1.C} width={3} />
+        <Atom x={s1.A.x} y={s1.A.y}>H₂C</Atom>
+        <Atom x={s1.B.x} y={s1.B.y}>CH</Atom>
+        <Atom x={s1.C.x} y={s1.C.y}>CH₃</Atom>
+        <Atom x={H1.x} y={H1.y} size={22} weight={700}>H⁺</Atom>
+        <CurvedArrow p0={{ x: mid1.x - 4, y: mid1.y - 12 }} c={{ x: mid1.x - 48, y: mid1.y - 58 }} p1={{ x: H1.x - 16, y: H1.y + 6 }} opacity={a1} />
+        <Caption x={stageX[0]} y={250}>1  π bond attacks H⁺</Caption>
       </g>
-      {spec.hooks.map(([from, to, which], i) => (
-        <CurvedArrow
-          key={`hook-${i}`}
-          from={{ x: tokenFor(from).cx, y: y - 22 }}
-          to={{ x: tokenFor(to).cx, y: y - 22 }}
-          bend={which === 'a' ? -0.3 : -0.55}
-          kind="radical"
-          progress={fishP}
-          gap={8}
-          headSize={9}
-        />
-      ))}
-      <Caption x={ADDITION_MECHANISM_SIZE.width / 2} y={ADDITION_MECHANISM_SIZE.height - 40}>
-        {spec.caption}
-      </Caption>
+
+      {/* Stage 2 */}
+      <g opacity={opacities[1]}>
+        <Bond a={s2.A} b={s2.B} width={3} />
+        <Bond a={s2.B} b={s2.C} width={3} />
+        <Atom x={s2.A.x} y={s2.A.y}>{major ? 'H₃C' : '⁺H₂C'}</Atom>
+        <Atom x={s2.B.x} y={s2.B.y}>{major ? '⁺CH' : 'CH₂'}</Atom>
+        <Atom x={s2.C.x} y={s2.C.y}>CH₃</Atom>
+        <EmptyOrbital at={cation} />
+        <Atom x={Br.x} y={Br.y} size={22} weight={700}>Br⁻</Atom>
+        <Dot at={{ x: lonePair.x - 6, y: lonePair.y - 9 }} />
+        <Dot at={{ x: lonePair.x - 6, y: lonePair.y + 9 }} />
+        <g opacity={a2}>
+          <CurvedArrow p0={{ x: lonePair.x - 4, y: lonePair.y + 2 }} c={{ x: lonePair.x - 10, y: cation.y - 26 }} p1={{ x: cation.x - 4, y: cation.y - 12 }} />
+        </g>
+        <Caption x={stageX[1]} y={250}>{major ? '2  2° carbocation (major path)' : '2  1° carbocation (minor path)'}</Caption>
+      </g>
+
+      {/* Stage 3 */}
+      <g opacity={opacities[2]}>
+        <Bond a={s3.A} b={s3.B} width={3} />
+        <Bond a={s3.B} b={s3.C} width={3} />
+        <Atom x={s3.A.x} y={s3.A.y}>{major ? 'H₃C' : 'H₂C'}</Atom>
+        <Atom x={s3.B.x} y={s3.B.y}>{major ? 'CHBr' : 'CH₂'}</Atom>
+        <Atom x={s3.C.x} y={s3.C.y}>CH₃</Atom>
+        {!major && <Atom x={prodCation.x} y={prodCation.y - 36} size={20}>Br</Atom>}
+        <Caption x={stageX[2]} y={250}>{major ? '3  Br⁻ adds: 2-bromopropane' : '3  Br⁻ adds: 1-bromopropane'}</Caption>
+      </g>
+
+      <ReactionArrow x0={stageX[0] + 110} x1={stageX[0] + 180} y={oy} />
+      <ReactionArrow x0={stageX[1] + 110} x1={stageX[1] + 180} y={oy} />
     </g>
   )
 }
 
-/**
- * Electrophilic addition to propene, HBr, in two arrows over three stages: H⁺ adds and the
- * carbocation forms, then Br⁻ attacks it. `branch` shows the less stable 1° carbocation as the
- * minor path. The radical mode draws the chain steps with fishhook arrows.
- */
+/** Each step's content centre and scale, so the equation fills the card's width. */
+const RADICAL_FRAME: Record<RadicalStep, { cx: number; cy: number; scale: number }> = {
+  initiation: { cx: 435, cy: 130, scale: 1.9 },
+  propagation: { cx: 360, cy: 138, scale: 1.6 },
+  termination: { cx: 245, cy: 146, scale: 1.3 },
+  peroxide: { cx: 340, cy: 128, scale: 1.55 },
+}
+
+/** One radical step as a real equation, with fishhooks only on the reactant side. */
+function RadicalStepDrawing({ step }: { step: RadicalStep }) {
+  const f = RADICAL_FRAME[step]
+  return (
+    <g transform={`translate(450 145) scale(${f.scale}) translate(${-f.cx} ${-f.cy})`}>
+      {radicalEquation(step)}
+    </g>
+  )
+}
+
+function radicalEquation(step: RadicalStep) {
+  if (step === 'initiation') {
+    // Cl–Cl → Cl• + Cl•: two fishhooks start at the middle of the bond and end on one Cl each.
+    return (
+      <g>
+        <Atom x={250} y={150}>Cl</Atom>
+        <Atom x={330} y={150}>Cl</Atom>
+        <Bond a={{ x: 262, y: 150 }} b={{ x: 318, y: 150 }} width={3.2} />
+        <Fishhook from={{ x: 290, y: 136 }} c={{ x: 268, y: 104 }} to={{ x: 258, y: 138 }} />
+        <Fishhook from={{ x: 290, y: 136 }} c={{ x: 312, y: 104 }} to={{ x: 322, y: 138 }} />
+        <ReactionArrow x0={380} x1={440} y={150} />
+        <Atom x={500} y={150}>Cl</Atom>
+        <Dot at={{ x: 514, y: 138 }} />
+        <Atom x={600} y={150}>Cl</Atom>
+        <Dot at={{ x: 614, y: 138 }} />
+      </g>
+    )
+  }
+  if (step === 'propagation') {
+    // Cl• + H–CH₃ → H–Cl + •CH₃
+    return (
+      <g>
+        <Atom x={90} y={150}>Cl</Atom>
+        <Dot at={{ x: 104, y: 137 }} />
+        <Atom x={150} y={150} size={22}>+</Atom>
+        <Atom x={210} y={150}>H</Atom>
+        <Bond a={{ x: 222, y: 150 }} b={{ x: 246, y: 150 }} width={3.2} />
+        <Atom x={268} y={150}>CH₃</Atom>
+        <Fishhook from={{ x: 104, y: 136 }} c={{ x: 118, y: 96 }} to={{ x: 148, y: 110 }} />
+        <Fishhook from={{ x: 232, y: 136 }} c={{ x: 200, y: 92 }} to={{ x: 156, y: 112 }} />
+        <Fishhook from={{ x: 236, y: 160 }} c={{ x: 238, y: 186 }} to={{ x: 258, y: 164 }} />
+        <ReactionArrow x0={320} x1={380} y={150} />
+        <Atom x={400} y={150}>H</Atom>
+        <Bond a={{ x: 412, y: 150 }} b={{ x: 470, y: 150 }} width={3.2} />
+        <Atom x={482} y={150}>Cl</Atom>
+        <Atom x={540} y={150} size={22}>+</Atom>
+        <Dot at={{ x: 568, y: 136 }} />
+        <Atom x={588} y={150}>CH₃</Atom>
+      </g>
+    )
+  }
+  if (step === 'termination') {
+    // Two equations: Cl• + •Cl → Cl–Cl, and •CH₃ + •CH₃ → CH₃–CH₃, each with a fishhook from each radical.
+    return (
+      <g>
+        <Atom x={80} y={96}>Cl</Atom>
+        <Dot at={{ x: 94, y: 83 }} />
+        <Atom x={170} y={96}>Cl</Atom>
+        <Dot at={{ x: 184, y: 83 }} />
+        <Fishhook from={{ x: 94, y: 80 }} c={{ x: 110, y: 52 }} to={{ x: 124, y: 88 }} />
+        <Fishhook from={{ x: 184, y: 80 }} c={{ x: 164, y: 52 }} to={{ x: 146, y: 88 }} />
+        <ReactionArrow x0={230} x1={290} y={96} />
+        <Atom x={330} y={96}>Cl</Atom>
+        <Bond a={{ x: 342, y: 96 }} b={{ x: 390, y: 96 }} width={3.2} />
+        <Atom x={400} y={96}>Cl</Atom>
+
+        <Atom x={80} y={206}>CH₃</Atom>
+        <Dot at={{ x: 104, y: 193 }} />
+        <Atom x={170} y={206}>CH₃</Atom>
+        <Dot at={{ x: 194, y: 193 }} />
+        <Fishhook from={{ x: 104, y: 190 }} c={{ x: 118, y: 162 }} to={{ x: 124, y: 198 }} />
+        <Fishhook from={{ x: 194, y: 190 }} c={{ x: 176, y: 162 }} to={{ x: 146, y: 198 }} />
+        <ReactionArrow x0={230} x1={290} y={206} />
+        <Atom x={330} y={206}>CH₃</Atom>
+        <Bond a={{ x: 352, y: 206 }} b={{ x: 382, y: 206 }} width={3.2} />
+        <Atom x={400} y={206}>CH₃</Atom>
+      </g>
+    )
+  }
+  // Peroxide: Br• + CH₂=CH–CH₃ → BrCH₂–•CH–CH₃
+  return (
+    <g>
+      <Atom x={80} y={150}>Br</Atom>
+      <Dot at={{ x: 96, y: 137 }} />
+      <Atom x={140} y={150} size={22}>+</Atom>
+      <Atom x={200} y={150}>H₂C</Atom>
+      <DoubleBond a={{ x: 214, y: 150 }} b={{ x: 246, y: 128 }} />
+      <Atom x={252} y={120}>CH</Atom>
+      <Bond a={{ x: 258, y: 112 }} b={{ x: 290, y: 130 }} width={3} />
+      <Atom x={302} y={140}>CH₃</Atom>
+      <Fishhook from={{ x: 96, y: 136 }} c={{ x: 120, y: 92 }} to={{ x: 150, y: 110 }} />
+      <Fishhook from={{ x: 214, y: 132 }} c={{ x: 170, y: 86 }} to={{ x: 154, y: 110 }} />
+      <Fishhook from={{ x: 232, y: 110 }} c={{ x: 252, y: 84 }} to={{ x: 262, y: 102 }} />
+      <ReactionArrow x0={350} x1={410} y={150} />
+      <Atom x={424} y={150}>BrCH₂</Atom>
+      <Bond a={{ x: 452, y: 146 }} b={{ x: 484, y: 124 }} width={3} />
+      <Atom x={496} y={116}>CH</Atom>
+      <Dot at={{ x: 510, y: 100 }} />
+      <Bond a={{ x: 506, y: 122 }} b={{ x: 532, y: 136 }} width={3} />
+      <Atom x={546} y={144}>CH₃</Atom>
+    </g>
+  )
+}
+
+/** Addition of HBr to propene, drawn as ionic steps (Markovnikov) or as radical equations. */
 export const AdditionMechanism = forwardRef<SVGGElement, AdditionMechanismProps>(function AdditionMechanism(
   { mode = 'ionic', branch = 'major', step = 'initiation', progress = 1, x = 0, y = 0, ...rest },
   ref
 ) {
-  if (mode === 'radical') {
-    return (
-      <g ref={ref} transform={`translate(${x}, ${y})`} {...rest}>
-        <RadicalStepDrawing step={step} progress={progress} />
-      </g>
-    )
-  }
-
-  const p = unitClamp(progress)
-  const a1 = unitClamp(p * 2)
-  const a2 = unitClamp(p * 2 - 1)
-  const stage = stageAt(p, 3).index
-  const CY = 128
-  const X = [170, 460, 760] as const
-  const SCALE = 40
-
-  const propFrame = skeletalFrame(PROPENE, SCALE)
-  const cation = branch === 'major' ? SECONDARY_CATION : PRIMARY_CATION
-  const cationAtom = branch === 'major' ? 1 : 2
-  const catFrame = skeletalFrame(cation, SCALE)
-  const product = branch === 'major' ? TWO_BROMOPROPANE : ONE_BROMOPROPANE
-
-  // Stage 1: the π bond of propene (atoms 1 and 2) to the H⁺ above it.
-  const pi = bondAnchor(propFrame.points[1], propFrame.points[2], 0.5)
-  const hPlus: Point = { x: pi.x + X[0], y: pi.y + CY - 74 }
-  // Stage 2: Br⁻ attacks the cation carbon from the open side.
-  const cat = catFrame.points[cationAtom]
-  const catPt: Point = { x: cat.x + X[1], y: cat.y + CY }
-  const brPt: Point = { x: catPt.x + 96, y: catPt.y - 52 }
-
+  const p = Math.min(1, Math.max(0, progress))
   return (
     <g ref={ref} transform={`translate(${x}, ${y})`} {...rest}>
-      {/* Stage 1 */}
-      <g opacity={stageOpacity(p, 3, 0)}>
-        <g transform={`translate(${X[0]}, ${CY})`}>
-          <SkeletalFormula graph={PROPENE} scale={SCALE} />
-        </g>
-        <text x={hPlus.x} y={hPlus.y} textAnchor="middle" dominantBaseline="central" fontSize={22} fontWeight={600} fontFamily="var(--font-sans)" fill="var(--fg)">
-          H⁺
-        </text>
-        <CurvedArrow from={{ x: pi.x + X[0], y: pi.y + CY }} to={{ x: hPlus.x, y: hPlus.y + 14 }} bend={-0.35} progress={a1} gap={6} />
-      </g>
-
-      {/* Stage 2: the carbocation with its empty p orbital, and Br⁻ attacking */}
-      <g opacity={stageOpacity(p, 3, 1)}>
-        <g transform={`translate(${X[1]}, ${CY})`}>
-          <SkeletalFormula graph={cation} scale={SCALE} />
-        </g>
-        <EmptyOrbital at={catPt} />
-        <text x={brPt.x} y={brPt.y} textAnchor="middle" dominantBaseline="central" fontSize={20} fontWeight={600} fontFamily="var(--font-sans)" fill="var(--fg)">
-          Br⁻
-        </text>
-        <CurvedArrow from={{ x: brPt.x - 16, y: brPt.y + 6 }} to={{ x: catPt.x + 8, y: catPt.y - 6 }} bend={0.3} progress={a2} gap={6} />
-        <text x={X[1]} y={CY + 84} textAnchor="middle" dominantBaseline="central" fontSize={16} fontFamily="var(--font-sans)" fill={branch === 'major' ? 'var(--accent)' : 'var(--fg-subtle)'} fontStyle="italic">
-          {branch === 'major' ? 'more stable: 2° carbocation' : 'less stable: 1° carbocation (minor)'}
-        </text>
-      </g>
-
-      {/* Stage 3: the product */}
-      <g opacity={stageOpacity(p, 3, 2)}>
-        <g transform={`translate(${X[2]}, ${CY})`}>
-          <SkeletalFormula graph={product} scale={SCALE} />
-        </g>
-        <text x={X[2]} y={CY + 84} textAnchor="middle" dominantBaseline="central" fontSize={18} fontFamily="var(--font-sans)" fill="var(--fg-muted)">
-          {branch === 'major' ? '2-bromopropane (major)' : '1-bromopropane (minor)'}
-        </text>
-      </g>
-
-      <Caption x={X[0]} y={ADDITION_MECHANISM_SIZE.height - 40} emphasis={stage === 0}>
-        1  H⁺ adds to the C=C
-      </Caption>
-      <Caption x={X[1]} y={ADDITION_MECHANISM_SIZE.height - 40} emphasis={stage === 1}>
-        2  Br⁻ attacks the cation
-      </Caption>
-      <Caption x={X[2]} y={ADDITION_MECHANISM_SIZE.height - 40} emphasis={stage === 2}>
-        3  Bromoalkane formed
-      </Caption>
+      {mode === 'ionic' ? <IonicAddition branch={branch} progress={p} /> : <RadicalStepDrawing step={step} />}
     </g>
   )
 })

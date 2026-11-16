@@ -1,5 +1,6 @@
 import React, { forwardRef } from 'react'
-import { NEWMAN, NEWMAN_HALF, newmanGeometry } from './hydrocarbon-geometry'
+import { NEWMAN, NEWMAN_HALF, newmanRendered, type Seg } from './hydrocarbon-geometry'
+import { NewmanGlyph, drawSegment } from './conformation-glyphs'
 
 /** Size of a Newman projection, for a parent viewBox centred on the drawing. */
 export const NEWMAN_SIZE = { width: NEWMAN_HALF * 2, height: NEWMAN_HALF * 2 } as const
@@ -15,56 +16,32 @@ export interface NewmanProjectionProps extends Omit<React.SVGAttributes<SVGGElem
   y?: number
 }
 
-/** A label with a surface-coloured halo, so it reads cleanly where a bond passes behind it. */
-function Glyph({ x, y, children, fill, size = 18 }: { x: number; y: number; children: string; fill: string; size?: number }) {
-  return (
-    <text
-      x={x}
-      y={y}
-      textAnchor="middle"
-      dominantBaseline="central"
-      fontSize={size}
-      fontWeight={600}
-      fontFamily="var(--font-sans)"
-      fill={fill}
-      stroke="var(--surface)"
-      strokeWidth={5}
-      strokeLinejoin="round"
-      paintOrder="stroke"
-    >
-      {children}
-    </text>
-  )
-}
-
 /**
  * Newman projection looking down a C–C bond. The front carbon is the centre point with three
- * bonds; the back carbon is the circle, with its three bonds leaving the rim. The back bonds
- * are drawn lighter and nudged at eclipse so they stay visible.
+ * bonds; the back carbon is the circle, with its three bonds leaving the rim. Bonds are cut back
+ * so that no bond comes within the label clearance of any label, at any dihedral.
  */
 export const NewmanProjection = forwardRef<SVGGElement, NewmanProjectionProps>(function NewmanProjection(
   { dihedral = 0, front = ['H', 'H', 'H'], back = ['H', 'H', 'H'], x = 0, y = 0, ...rest },
   ref
 ) {
-  const geo = newmanGeometry(dihedral)
+  const r = newmanRendered(dihedral)
+  const labelsFront = r.labels.slice(0, 3)
+  const labelsBack = r.labels.slice(3)
   return (
     <g ref={ref} transform={`translate(${x}, ${y})`} {...rest}>
       <circle r={NEWMAN.rim} fill="none" stroke="var(--fg-subtle)" strokeWidth={2} />
-      {geo.back.map((b, i) => (
-        <line key={`bb-${i}`} x1={b.from.x} y1={b.from.y} x2={b.to.x} y2={b.to.y} stroke="var(--h-back)" strokeWidth={3} strokeLinecap="round" />
-      ))}
-      {geo.back.map((b, i) => (
-        <Glyph key={`bl-${i}`} x={b.label.x} y={b.label.y} fill="var(--fg-muted)">
+      {r.back.map((s: Seg, i) => drawSegment(s, `bb-${i}`, 'var(--h-back)', 3))}
+      {labelsBack.map((p, i) => (
+        <NewmanGlyph key={`bl-${i}`} x={p.x} y={p.y} fill="var(--fg-muted)">
           {back[i]}
-        </Glyph>
+        </NewmanGlyph>
       ))}
-      {geo.front.map((b, i) => (
-        <line key={`fb-${i}`} x1={b.from.x} y1={b.from.y} x2={b.to.x} y2={b.to.y} stroke="var(--h-front)" strokeWidth={3.4} strokeLinecap="round" />
-      ))}
-      {geo.front.map((b, i) => (
-        <Glyph key={`fl-${i}`} x={b.label.x} y={b.label.y} fill="var(--fg)">
+      {r.front.map((s: Seg, i) => drawSegment(s, `fb-${i}`, 'var(--h-front)', 3.4))}
+      {labelsFront.map((p, i) => (
+        <NewmanGlyph key={`fl-${i}`} x={p.x} y={p.y} fill="var(--fg)">
           {front[i]}
-        </Glyph>
+        </NewmanGlyph>
       ))}
       <circle r={4} fill="var(--fg)" />
     </g>

@@ -32,6 +32,72 @@ export function wrapDegrees(d: number): number {
 }
 
 // ---------------------------------------------------------------------------------------------
+// Label clearance (shared by the Newman and sawhorse drawings)
+// ---------------------------------------------------------------------------------------------
+
+/** Radius of the disc that bounds a label (covers a two-character substituent such as CH₃ at 18 px). */
+export const LABEL_RADIUS = 16
+/** Minimum gap between a bond and a label's disc, in drawing units. */
+export const LABEL_CLEARANCE = 4
+/** Bonds are cut back so they stay this far from every label centre. */
+export const LABEL_KNOCKOUT = LABEL_RADIUS + LABEL_CLEARANCE
+
+export interface Seg {
+  a: Pt
+  b: Pt
+}
+
+/** The parts of a segment that lie outside every disc (centre list, radius r). Used to knock bonds out behind labels. */
+export function segmentOutside(seg: Seg, centres: readonly Pt[], r: number): Seg[] {
+  const dx = seg.b.x - seg.a.x
+  const dy = seg.b.y - seg.a.y
+  const A = dx * dx + dy * dy
+  if (A < 1e-12) return []
+  const intervals: Array<[number, number]> = []
+  for (const c of centres) {
+    const fx = seg.a.x - c.x
+    const fy = seg.a.y - c.y
+    const B = 2 * (dx * fx + dy * fy)
+    const C = fx * fx + fy * fy - r * r
+    const disc = B * B - 4 * A * C
+    if (disc <= 0) continue
+    const root = Math.sqrt(disc)
+    const t1 = Math.max(0, (-B - root) / (2 * A))
+    const t2 = Math.min(1, (-B + root) / (2 * A))
+    if (t2 > t1) intervals.push([t1, t2])
+  }
+  intervals.sort((u, v) => u[0] - v[0])
+  const merged: Array<[number, number]> = []
+  for (const iv of intervals) {
+    const last = merged[merged.length - 1]
+    if (last && iv[0] <= last[1]) last[1] = Math.max(last[1], iv[1])
+    else merged.push([iv[0], iv[1]])
+  }
+  const out: Seg[] = []
+  let t = 0
+  for (const [t1, t2] of merged) {
+    if (t1 > t) out.push(sub(seg, t, t1))
+    t = Math.max(t, t2)
+  }
+  if (t < 1) out.push(sub(seg, t, 1))
+  return out.filter((g) => Math.hypot(g.b.x - g.a.x, g.b.y - g.a.y) > 1e-6)
+}
+
+function sub(seg: Seg, t0: number, t1: number): Seg {
+  const at = (t: number) => ({ x: seg.a.x + (seg.b.x - seg.a.x) * t, y: seg.a.y + (seg.b.y - seg.a.y) * t })
+  return { a: at(t0), b: at(t1) }
+}
+
+/** Shortest distance from a point to a segment. */
+export function distToSegment(p: Pt, seg: Seg): number {
+  const dx = seg.b.x - seg.a.x
+  const dy = seg.b.y - seg.a.y
+  const len2 = dx * dx + dy * dy || 1
+  const t = Math.min(1, Math.max(0, ((p.x - seg.a.x) * dx + (p.y - seg.a.y) * dy) / len2))
+  return Math.hypot(seg.a.x + dx * t - p.x, seg.a.y + dy * t - p.y)
+}
+
+// ---------------------------------------------------------------------------------------------
 // Newman projection
 // ---------------------------------------------------------------------------------------------
 
@@ -41,11 +107,11 @@ export const NEWMAN_FRONT_ANGLES: readonly number[] = [-90, 30, 150]
 /** Lengths in px for the Newman drawing. The back circle has radius `rim`. */
 export const NEWMAN = {
   rim: 46,
-  frontLen: 64,
+  frontLen: 60,
   backLen: 100,
-  frontLabel: 80,
-  backLabel: 116,
-  /** Eclipsed back bonds are nudged this many degrees so they never sit on the front bonds. */
+  frontLabel: 84,
+  backLabel: 120,
+  /** Eclipsed back bonds are nudged this many degrees so they stay visible beside the front bonds. */
   eclipseNudge: 9,
 } as const
 
@@ -78,6 +144,17 @@ function polar(r: number, angleDeg: number): Pt {
   return { x: r * Math.cos(angleDeg * DEG), y: r * Math.sin(angleDeg * DEG) }
 }
 
+/**
+ * The bonds of a Newman projection as drawn: each bond cut back so it keeps `LABEL_KNOCKOUT` from
+ * every label centre (a bond passing behind a label disappears behind it).
+ */
+export function newmanRendered(dihedral: number): { front: Seg[]; back: Seg[]; labels: Pt[] } {
+  const g = newmanGeometry(dihedral)
+  const labels = [...g.front.map((b) => b.label), ...g.back.map((b) => b.label)]
+  const cut = (bonds: NewmanBond[]) => bonds.flatMap((b) => segmentOutside({ a: b.from, b: b.to }, labels, LABEL_KNOCKOUT))
+  return { front: cut(g.front), back: cut(g.back), labels }
+}
+
 /** Geometry of a Newman projection at a dihedral (degrees). Origin at the front carbon. */
 export function newmanGeometry(dihedral: number): { front: NewmanBond[]; back: NewmanBond[] } {
   const front = NEWMAN_FRONT_ANGLES.map((angle) => ({
@@ -96,7 +173,7 @@ export function newmanGeometry(dihedral: number): { front: NewmanBond[]; back: N
 }
 
 /** Half-size of the Newman drawing's box (labels included), for a parent viewBox. */
-export const NEWMAN_HALF = NEWMAN.backLabel + 24
+export const NEWMAN_HALF = NEWMAN.backLabel + LABEL_RADIUS + 6
 
 // ---------------------------------------------------------------------------------------------
 // Sawhorse projection
@@ -151,7 +228,8 @@ export function sawhorseGeometry(dihedral: number): {
       from,
       to: end,
       dir,
-      label: { x: end.x + dir.x * 0.3, y: end.y + dir.y * 0.3 },
+      // The label sits 1.6 times the bond's screen length from its carbon: clear of its own bond's end.
+      label: { x: from.x + s.x * 1.6, y: from.y + s.y * 1.6 },
     }
   }
   const origin = { x: 0, y: 0 }
@@ -177,10 +255,10 @@ export function sawhorseGeometry(dihedral: number): {
 // Torsional energy plot
 // ---------------------------------------------------------------------------------------------
 
-/** Ethane's torsional barrier in kcal/mol (eclipsed minus staggered). */
-export const ETHANE_BARRIER = 2.9
+/** Ethane's torsional barrier in kJ/mol (eclipsed minus staggered), as NCERT gives it. */
+export const ETHANE_BARRIER = 12.5
 
-/** Ethane's energy at a dihedral (kcal/mol above the staggered minimum). */
+/** Ethane's energy at a dihedral (kJ/mol above the staggered minimum). */
 export function ethaneTorsionalEnergy(dihedral: number): number {
   return (ETHANE_BARRIER / 2) * (1 + Math.cos(3 * dihedral * DEG))
 }
@@ -368,7 +446,7 @@ export interface SchemeLayout {
  * Lays a scheme out to fit `maxWidth`. The largest scale that fits on one row wins; if none does,
  * the largest that fits on two rows. Rows are centred in the width.
  */
-export function layoutReactionScheme(path: SchemePath, maxWidth: number, scales: readonly number[] = [46, 42, 38, 34, 30, 26, 22]): SchemeLayout {
+export function layoutReactionScheme(path: SchemePath, maxWidth: number, scales: readonly number[] = [56, 52, 48, 44, 40]): SchemeLayout {
   let oneRow: SchemeLayout | undefined
   let twoRows: SchemeLayout | undefined
   let smallest: SchemeLayout | undefined
@@ -539,4 +617,28 @@ export function stageOpacity(progress: number, stages: number, stage: number): n
   const { index } = stageAt(progress, stages)
   if (stage === index) return 1
   return stage < index ? 0.7 : 0.12
+}
+
+/**
+ * A sawhorse as drawn, in px at `bond` px per bond length: the C–C axis and the bonds on both
+ * carbons, each cut back behind every label, plus the label centres.
+ */
+export function sawhorseRendered(dihedral: number, bond: number): { segments: Seg[]; labels: Pt[]; back: Pt } {
+  const g = sawhorseGeometry(dihedral)
+  const P = (p: Pt): Pt => ({ x: p.x * bond, y: p.y * bond })
+  const origin = { x: 0, y: 0 }
+  const backPx = P(g.back)
+  const labels = [...g.front, ...g.backBonds].map((b) => P(b.label))
+  const raw: Seg[] = [
+    { a: origin, b: backPx },
+    ...g.front.map((b) => ({ a: origin, b: P(b.to) })),
+    ...g.backBonds.map((b) => ({ a: backPx, b: P(b.to) })),
+  ]
+  const segments = raw.flatMap((s) => segmentOutside(s, labels, LABEL_KNOCKOUT))
+  return { segments, labels, back: backPx }
+}
+
+/** Every label centre of a sawhorse, and whether the drawing's bonds keep clear of them. */
+export function sawhorseLabelsPx(dihedral: number, bond: number): Pt[] {
+  return sawhorseRendered(dihedral, bond).labels
 }

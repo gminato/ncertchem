@@ -142,7 +142,7 @@ import {
   ReactionScheme,
   reactionSchemeSize,
   PiBondOrbitals,
-  PI_ORBITALS_SIZE,
+  PI_VIEWBOX,
   BenzeneRing,
   BENZENE_RING_SIZE,
   AreniumIon,
@@ -260,7 +260,7 @@ const MORPH_VIEW = `${STRUCTURAL_BOUNDS.x - 8} ${STRUCTURAL_BOUNDS.y - 8} ${(MOR
 /* Unit 9 hydrocarbons: reaction schemes and fixed positions for the demos. */
 const PROPENE_HBR_SCHEME: SchemePath = [
   [{ formula: PROPENE, highlightAtoms: [1, 2] }, { formula: 'HBr' }],
-  { reagents: 'HBr', conditions: 'dark, no peroxide' },
+  { reagents: 'HBr', conditions: 'no peroxide' },
   [
     { formula: TWO_BROMOPROPANE, tag: 'major', highlightAtoms: [1, 2] },
     { formula: ONE_BROMOPROPANE, tag: 'minor' },
@@ -270,7 +270,7 @@ const ETHYNE_STEPS: SchemePath = [
   [{ formula: 'H–C≡C–H' }],
   { reagents: 'H₂', conditions: 'Lindlar catalyst' },
   [{ formula: 'H₂C=CH₂' }],
-  { reagents: 'H₂', conditions: 'Ni, 473 K' },
+  { reagents: 'H₂', conditions: 'Pt/Pd/Ni' },
   [{ formula: 'H₃C–CH₃' }],
 ]
 
@@ -3453,7 +3453,7 @@ export default function VocabPage() {
                 </div>
                 <p className={styles.cardDescription}>
                   Looking down the C–C bond, the front carbon is the point and the back carbon the circle. The marker on the energy curve moves
-                  with the same angle, and the barrier between the eclipsed and staggered forms is 2.9 kcal mol⁻¹.
+                  with the same angle, and the barrier between the eclipsed and staggered forms is 12.5 kJ mol⁻¹.
                 </p>
               </div>
             </article>
@@ -3461,8 +3461,8 @@ export default function VocabPage() {
 
           <article className={`${styles.card} ${styles.cardWide}`}>
             <div className={styles.cardCanvas} style={{ height: 'auto', padding: 'var(--space-6) var(--space-4)' }}>
-              <svg viewBox={`0 0 ${reactionSchemeSize(PROPENE_HBR_SCHEME, 580).width} ${reactionSchemeSize(PROPENE_HBR_SCHEME, 580).height}`} className={styles.drawFit} role="img" aria-label="Propene reacts with HBr to give 2-bromopropane as the major product and 1-bromopropane as the minor product">
-                <ReactionScheme sequence={PROPENE_HBR_SCHEME} maxWidth={580} />
+              <svg viewBox={`0 0 ${reactionSchemeSize(PROPENE_HBR_SCHEME, 900).width} ${reactionSchemeSize(PROPENE_HBR_SCHEME, 900).height}`} className={styles.drawFit} role="img" aria-label="Propene reacts with HBr to give 2-bromopropane as the major product and 1-bromopropane as the minor product">
+                <ReactionScheme sequence={PROPENE_HBR_SCHEME} maxWidth={900} />
               </svg>
             </div>
             <div className={styles.cardBody}>
@@ -3478,8 +3478,8 @@ export default function VocabPage() {
 
           <article className={`${styles.card} ${styles.cardWide}`}>
             <div className={styles.cardCanvas} style={{ height: 'auto', padding: 'var(--space-6) var(--space-4)' }}>
-              <svg viewBox={`0 0 ${reactionSchemeSize(ETHYNE_STEPS, 580).width} ${reactionSchemeSize(ETHYNE_STEPS, 580).height}`} className={styles.drawFit} role="img" aria-label="Ethyne is reduced to ethene and then to ethane in two steps">
-                <ReactionScheme sequence={ETHYNE_STEPS} maxWidth={580} />
+              <svg viewBox={`0 0 ${reactionSchemeSize(ETHYNE_STEPS, 900).width} ${reactionSchemeSize(ETHYNE_STEPS, 900).height}`} className={styles.drawFit} role="img" aria-label="Ethyne is reduced to ethene and then to ethane in two steps">
+                <ReactionScheme sequence={ETHYNE_STEPS} maxWidth={900} />
               </svg>
             </div>
             <div className={styles.cardBody}>
@@ -3500,10 +3500,10 @@ export default function VocabPage() {
               <article key={`pi-${mono}`} className={`${styles.card} ${styles.cardWide}`}>
                 <div className={styles.cardCanvas} style={{ height: 260 }}>
                   <div className={styles.panes}>
-                    <svg viewBox={`${-PI_ORBITALS_SIZE.width / 2} ${-PI_ORBITALS_SIZE.height / 2} ${PI_ORBITALS_SIZE.width} ${PI_ORBITALS_SIZE.height}`} style={{ width: 300, height: 230 }} role="img" aria-label={`${mono} π orbitals before the lobes merge`}>
+                    <svg viewBox={`${PI_VIEWBOX[mono].x} ${PI_VIEWBOX[mono].y} ${PI_VIEWBOX[mono].width} ${PI_VIEWBOX[mono].height}`} style={{ width: 430, height: 430 * PI_VIEWBOX[mono].height / PI_VIEWBOX[mono].width }} role="img" aria-label={`${mono} π orbitals before the lobes merge`}>
                       <PiBondOrbitals molecule={mono} merge={0} />
                     </svg>
-                    <svg viewBox={`${-PI_ORBITALS_SIZE.width / 2} ${-PI_ORBITALS_SIZE.height / 2} ${PI_ORBITALS_SIZE.width} ${PI_ORBITALS_SIZE.height}`} style={{ width: 300, height: 230 }} role="img" aria-label={`${mono} π orbitals after the lobes merge`}>
+                    <svg viewBox={`${PI_VIEWBOX[mono].x} ${PI_VIEWBOX[mono].y} ${PI_VIEWBOX[mono].width} ${PI_VIEWBOX[mono].height}`} style={{ width: 430, height: 430 * PI_VIEWBOX[mono].height / PI_VIEWBOX[mono].width }} role="img" aria-label={`${mono} π orbitals after the lobes merge`}>
                       <PiBondOrbitals molecule={mono} merge={pv} />
                     </svg>
                   </div>
@@ -3526,9 +3526,9 @@ export default function VocabPage() {
           <article className={`${styles.card} ${styles.cardWide}`}>
             <div className={styles.cardCanvas} style={{ height: 240 }}>
               <div className={styles.panes}>
-                {(['kekule', 'kekule', 'hexagon'] as const).map((variant, i) => (
-                  <svg key={`ring-${i}`} viewBox={`${-BENZENE_RING_SIZE.width / 2} ${-BENZENE_RING_SIZE.height / 2} ${BENZENE_RING_SIZE.width} ${BENZENE_RING_SIZE.height}`} style={{ width: 230, height: 230 }} role="img" aria-label={['Kekulé form A of benzene', 'Kekulé form B of benzene', 'Benzene drawn as a hexagon with an inscribed circle'][i]}>
-                    <BenzeneRing variant={variant} kekuleMix={i === 0 ? 0 : 1} />
+                {(['kekule', 'kekule', 'hexagon', 'kekule'] as const).map((variant, i) => (
+                  <svg key={`ring-${i}`} viewBox={`${-BENZENE_RING_SIZE.width / 2} ${-BENZENE_RING_SIZE.height / 2} ${BENZENE_RING_SIZE.width} ${BENZENE_RING_SIZE.height}`} style={{ width: i === 3 ? 150 : 210, height: i === 3 ? 150 : 210 }} role="img" aria-label={['Kekulé form A of benzene', 'Kekulé form B of benzene', 'Benzene drawn as a hexagon with an inscribed circle', 'Benzene mid-way between Kekulé forms A and B'][i]}>
+                    <BenzeneRing variant={variant} kekuleMix={i === 0 ? 0 : i === 3 ? 0.5 : 1} />
                   </svg>
                 ))}
               </div>
@@ -3536,7 +3536,7 @@ export default function VocabPage() {
             <div className={styles.cardBody}>
               <div className={styles.cardHeading}>
                 <span>Benzene: three drawings, one molecule</span>
-                <span className={styles.cardBadge}>Kekulé A · B · hexagon</span>
+                <span className={styles.cardBadge}>Kekulé A · B · hexagon · mid-state</span>
               </div>
               <p className={styles.cardDescription}>
                 The two Kekulé forms differ only in where the double bonds sit, and neither is real. The hexagon with its inscribed circle
@@ -3671,7 +3671,7 @@ export default function VocabPage() {
             <article key={`poly-${mono}`} className={`${styles.card} ${styles.cardWide}`}>
               <div className={styles.cardCanvas} style={{ height: 'auto', padding: 'var(--space-6) var(--space-4)' }}>
                 <svg viewBox={`0 0 ${POLYMER_CHAIN_SIZE.width} ${POLYMER_CHAIN_SIZE.height}`} className={styles.drawFit} role="img" aria-label={`${mono} monomers joining into a chain with the repeat unit bracketed`}>
-                  <PolymerChain monomer={mono} progress={i === 0 ? 0.55 : 1} />
+                  <PolymerChain monomer={mono} progress={1} />
                 </svg>
               </div>
               <div className={styles.cardBody}>
@@ -3689,18 +3689,24 @@ export default function VocabPage() {
           ))}
 
           <article className={`${styles.card} ${styles.cardWide}`}>
-            <div className={styles.cardCanvas} style={{ height: 250 }}>
+            <div className={styles.cardCanvas} style={{ height: 'auto', padding: 'var(--space-6) var(--space-4)' }}>
               <div className={styles.panes}>
-                <svg viewBox={`0 0 ${REAGENT_TEST_SIZE.width * 2 + 40} ${REAGENT_TEST_SIZE.height}`} style={{ width: 480, height: 230 }} role="img" aria-label="Bromine water test on an alkene, before and after: red-brown turns colourless">
-                  <ReagentTest reagent="bromine" progress={0} label="Before" />
-                  <g transform={`translate(${REAGENT_TEST_SIZE.width + 40}, 0)`}>
-                    <ReagentTest reagent="bromine" progress={1} label="After" />
+                <svg viewBox={`0 0 ${REAGENT_TEST_SIZE.width * 2 + 40} ${REAGENT_TEST_SIZE.height + 34}`} style={{ width: 480, height: 264 }} role="img" aria-label="Bromine water with an alkene, before and after: red-brown turns colourless">
+                  <text x={(REAGENT_TEST_SIZE.width * 2 + 40) / 2} y={20} textAnchor="middle" dominantBaseline="central" fontSize={17} fontWeight={600} fontFamily="var(--font-sans)" fill="var(--fg)">Bromine water + alkene: before / after</text>
+                  <g transform="translate(0, 34)">
+                    <ReagentTest reagent="bromine" progress={0} label="before" />
+                    <g transform={`translate(${REAGENT_TEST_SIZE.width + 40}, 0)`}>
+                      <ReagentTest reagent="bromine" progress={1} label="after" />
+                    </g>
                   </g>
                 </svg>
-                <svg viewBox={`0 0 ${REAGENT_TEST_SIZE.width * 2 + 40} ${REAGENT_TEST_SIZE.height}`} style={{ width: 480, height: 230 }} role="img" aria-label="Baeyer's test on an alkene, before and after: purple turns colourless with brown MnO2">
-                  <ReagentTest reagent="baeyer" progress={0} label="Before" />
-                  <g transform={`translate(${REAGENT_TEST_SIZE.width + 40}, 0)`}>
-                    <ReagentTest reagent="baeyer" progress={1} label="After" />
+                <svg viewBox={`0 0 ${REAGENT_TEST_SIZE.width * 2 + 40} ${REAGENT_TEST_SIZE.height + 34}`} style={{ width: 480, height: 264 }} role="img" aria-label="Baeyer reagent with an alkene, before and after: purple turns colourless, with brown MnO₂">
+                  <text x={(REAGENT_TEST_SIZE.width * 2 + 40) / 2} y={20} textAnchor="middle" dominantBaseline="central" fontSize={17} fontWeight={600} fontFamily="var(--font-sans)" fill="var(--fg)">Baeyer&apos;s reagent + alkene: before / after</text>
+                  <g transform="translate(0, 34)">
+                    <ReagentTest reagent="baeyer" progress={0} label="before" />
+                    <g transform={`translate(${REAGENT_TEST_SIZE.width + 40}, 0)`}>
+                      <ReagentTest reagent="baeyer" progress={1} label="after" />
+                    </g>
                   </g>
                 </svg>
               </div>

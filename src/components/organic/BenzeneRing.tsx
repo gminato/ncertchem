@@ -5,7 +5,7 @@ import { benzeneExoAngle, benzeneVertices, kekuleWeights, relativeLocant } from 
 export const BENZENE_R = 92
 
 /** Size of a benzene drawing, for a parent viewBox centred on the origin. */
-export const BENZENE_RING_SIZE = { width: 380, height: 380 } as const
+export const BENZENE_RING_SIZE = { width: 236, height: 236 } as const
 
 export type BenzeneStyle = 'kekule' | 'hexagon'
 

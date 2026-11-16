@@ -1,132 +1,185 @@
 import React, { forwardRef } from 'react'
-import type { MolGraph } from '@/lib/chem/molecule-graph'
-import { DEFAULT_SCALE, drawingFrame, type Bounds } from './frame'
-import { SkeletalFormula, skeletalBounds } from './SkeletalFormula'
-import { ResonanceSet, resonanceBounds, type ResonanceContributor } from './ResonanceSet'
-import { arenium, type Electrophile } from './hydrocarbon-fixture'
-import type { Point } from './layout'
 
-/** Default bond length in px for the arenium drawings. */
-export const ARENIUM_SCALE = 44
+type Electrophile = 'NO2' | 'Br'
 
-/** Points of the dashed horseshoe that shows the delocalised + charge: ring positions 1 to 5, through the side away from position 0. */
-export function horseshoePoints(points: readonly Point[], centre: Point, steps = 48): Point[] {
-  const ang = (p: Point) => Math.atan2(p.y - centre.y, p.x - centre.x)
-  const R = Math.hypot(points[0].x - centre.x, points[0].y - centre.y)
-  const r = R * 0.6
-  const a1 = ang(points[1])
-  const a5 = ang(points[5])
-  const a0 = ang(points[0])
-  const wrap = (t: number) => Math.atan2(Math.sin(t), Math.cos(t))
-  // The arc from a1 to a5 that does not pass position 0.
-  let delta = wrap(a5 - a1)
-  const offset = wrap(a0 - a1)
-  const inside = (d: number) => (d >= 0 ? offset > 0 && offset < d : offset < 0 && offset > d)
-  if (inside(delta)) delta = delta > 0 ? delta - 2 * Math.PI : delta + 2 * Math.PI
-  const out: Point[] = []
-  for (let i = 0; i <= steps; i++) {
-    const t = a1 + (delta * i) / steps
-    out.push({ x: centre.x + r * Math.cos(t), y: centre.y + r * Math.sin(t) })
-  }
-  return out
+/** Ring radius of the flat-top hexagon. Vertex 0 (the sp³ carbon) sits at the right, angle 0. */
+const R = 70
+/** Length of the H and E bonds on the sp³ carbon. */
+const BOND = 62
+/** Half-angle of the V: H leaves up-right, E leaves down-right. */
+const SPLAY = 38
+const HORSESHOE_R = R + 18
+const SIGMA = 'var(--sigma-bond)'
+
+type Pt = { x: number; y: number }
+const deg = (d: number) => (d * Math.PI) / 180
+
+/** Vertex k of the ring; vertex 0 is the sp³ carbon. Screen y grows downward. */
+function vertex(k: number): Pt {
+  return { x: R * Math.cos(deg(60 * k)), y: R * Math.sin(deg(60 * k)) }
 }
 
-/**
- * Where things sit on the σ-complex, in the same frame as its skeletal drawing: the H on the
- * sp³ carbon (position 0), the midpoint of the bond from it into the ring, and a point a step
- * further out where a base can sit.
- */
-export function areniumAnchors(graph: MolGraph, scale = ARENIUM_SCALE) {
-  const frame = drawingFrame(graph, scale)
-  const p0 = frame.points[0]
-  const nbrs = frame.adj[0]
-  const centre = frame.ringCentres[0]
-  // The sp³ carbon's H points outward from the ring, turned away from the bonds it already has.
-  const angleOf = (q: { x: number; y: number }) => Math.atan2(q.y - p0.y, q.x - p0.x)
-  const taken = nbrs.map((q) => angleOf(frame.points[q]))
-  const outward = Math.atan2(p0.y - centre.y, p0.x - centre.x)
-  const wrap = (t: number) => Math.atan2(Math.sin(t), Math.cos(t))
-  let best = outward
-  let bestScore = -Infinity
-  for (let k = 0; k < 360; k += 2) {
-    const th = (k * Math.PI) / 180
-    const sep = Math.min(...taken.map((t) => Math.abs(wrap(th - t))))
-    const score = sep - 0.5 * Math.abs(wrap(th - outward))
-    if (score > bestScore) {
-      bestScore = score
-      best = th
-    }
-  }
-  const dir = { x: Math.cos(best), y: Math.sin(best) }
-  const H = { x: p0.x + dir.x * scale * 0.95, y: p0.y + dir.y * scale * 0.95 }
-  const p1 = frame.points[1]
-  return {
-    C0: p0,
-    H,
-    dir,
-    bond01: { x: (p0.x + p1.x) / 2, y: (p0.y + p1.y) / 2 },
-    base: { x: p0.x + dir.x * scale * 2.2, y: p0.y + dir.y * scale * 2.2 },
-    frame,
-  }
+function electrophileLabel(e: Electrophile): string {
+  return e === 'NO2' ? 'NO₂' : 'Br'
+}
+
+/** Positions of the sp³ carbon and of its H and E bond ends, in the drawing's frame (origin at the ring centre). */
+export function areniumAnchors(electrophile: Electrophile = 'NO2') {
+  const C0 = vertex(0)
+  const H = { x: C0.x + BOND * Math.cos(deg(-SPLAY)), y: C0.y + BOND * Math.sin(deg(-SPLAY)) }
+  const E = { x: C0.x + BOND * Math.cos(deg(SPLAY)), y: C0.y + BOND * Math.sin(deg(SPLAY)) }
+  return { C0, H, E, electrophile, ringRadius: R }
+}
+
+/** x of the drawing's bounding-box centre relative to the sp³ ring centre; AreniumIon's x is the box centre. */
+export const ARENIUM_CENTRE_X = (-112 + 172) / 2
+
+/** Horizontal extent of one σ-complex, including the labels and the circled charges. */
+const EXTENT = { minX: -112, maxX: 172, minY: -(HORSESHOE_R + 12), maxY: HORSESHOE_R + 12 }
+
+/** Bounds of the drawing, with the origin at its centre (so a viewBox of width/height centred on 0 fits). */
+export function areniumBounds(_electrophile: Electrophile = 'NO2', contributors = false): { width: number; height: number } {
+  const h = EXTENT.maxY - EXTENT.minY + 16
+  if (contributors) return { width: 2 * CONTRIB_SPACING + (EXTENT.maxX - EXTENT.minX) + 16, height: h }
+  return { width: EXTENT.maxX - EXTENT.minX + 16, height: h }
+}
+
+/** Spacing of the three contributor units; the gap between units holds the ↔ arrow. */
+const CONTRIB_SPACING = 352
+
+/** Dashed horseshoe around the five carbons other than the sp³ carbon, open towards it. */
+function Horseshoe() {
+  const a = { x: HORSESHOE_R * Math.cos(deg(30)), y: HORSESHOE_R * Math.sin(deg(30)) }
+  const b = { x: HORSESHOE_R * Math.cos(deg(-30)), y: HORSESHOE_R * Math.sin(deg(-30)) }
+  return (
+    <path
+      d={`M${a.x.toFixed(2)},${a.y.toFixed(2)} A${HORSESHOE_R} ${HORSESHOE_R} 0 1 1 ${b.x.toFixed(2)},${b.y.toFixed(2)}`}
+      fill="none"
+      stroke="var(--delta-plus)"
+      strokeWidth={2.4}
+      strokeDasharray="7 6"
+      strokeLinecap="round"
+    />
+  )
+}
+
+function Line({ a, b, width = 3.6 }: { a: Pt; b: Pt; width?: number }) {
+  return <line x1={a.x} y1={a.y} x2={b.x} y2={b.y} stroke={SIGMA} strokeWidth={width} strokeLinecap="round" />
+}
+
+/** A labelled substituent on the sp³ carbon. */
+function Substituent({ end, text }: { end: Pt; text: string }) {
+  return (
+    <text x={end.x + 6} y={end.y} dominantBaseline="central" fontSize={20} fontWeight={600} fontFamily="var(--font-sans)" fill="var(--fg)" stroke="var(--surface)" strokeWidth={5} strokeLinejoin="round" paintOrder="stroke">
+      {text}
+    </text>
+  )
+}
+
+/** The six ring bonds (solid) with the sp³ carbon marked by its two substituent bonds. */
+function Skeleton({ electrophile, kekule }: { electrophile: Electrophile; kekule?: readonly number[] }) {
+  const v = [0, 1, 2, 3, 4, 5].map(vertex)
+  const { H, E } = areniumAnchors(electrophile)
+  const dbl = new Set(kekule ?? [])
+  return (
+    <g>
+      {v.map((p, j) => (
+        <Line key={`b-${j}`} a={p} b={v[(j + 1) % 6]} />
+      ))}
+      {kekule &&
+        [...dbl].map((j) => {
+          const A = v[j]
+          const B = v[(j + 1) % 6]
+          const mid = { x: (A.x + B.x) / 2, y: (A.y + B.y) / 2 }
+          const n = { x: -mid.x / Math.hypot(mid.x, mid.y), y: -mid.y / Math.hypot(mid.x, mid.y) }
+          const t = 0.14
+          const pA = { x: A.x + (B.x - A.x) * t + n.x * 7, y: A.y + (B.y - A.y) * t + n.y * 7 }
+          const pB = { x: A.x + (B.x - A.x) * (1 - t) + n.x * 7, y: A.y + (B.y - A.y) * (1 - t) + n.y * 7 }
+          return <Line key={`d-${j}`} a={pA} b={pB} width={3.2} />
+        })}
+      <Line a={v[0]} b={H} />
+      <Line a={v[0]} b={E} />
+      <Substituent end={H} text="H" />
+      <Substituent end={E} text={electrophileLabel(electrophile)} />
+    </g>
+  )
+}
+
+/** A circled + on a ring carbon, pushed outward so it touches neither bonds nor the ring. */
+function Charge({ k }: { k: number }) {
+  const p = vertex(k)
+  const len = Math.hypot(p.x, p.y)
+  const c = { x: p.x + (p.x / len) * 26, y: p.y + (p.y / len) * 26 }
+  return (
+    <g>
+      <circle cx={c.x} cy={c.y} r={10} fill="var(--surface)" stroke="var(--fg)" strokeWidth={1.8} />
+      <text x={c.x} y={c.y + 0.5} textAnchor="middle" dominantBaseline="central" fontSize={16} fontWeight={700} fontFamily="var(--font-sans)" fill="var(--fg)">
+        +
+      </text>
+    </g>
+  )
+}
+
+/** Kekulé double bonds for the three contributors: the + sits on ring carbon k, and the bonds avoid it. */
+const CONTRIBUTOR_DOUBLES: Record<'ortho' | 'para' | 'ortho2', { cation: number; doubles: number[] }> = {
+  ortho: { cation: 1, doubles: [2, 4] },
+  para: { cation: 3, doubles: [1, 4] },
+  ortho2: { cation: 5, doubles: [1, 3] },
 }
 
 export interface AreniumIonProps extends Omit<React.SVGAttributes<SVGGElement>, 'children'> {
-  /** The group that replaces H on the sp³ carbon. */
   electrophile?: Electrophile
-  /** Shows the three resonance contributors (the charge on positions 2, 4 and 6 in turn) instead of the hybrid. */
+  /** Draw the three contributors (ortho, para, ortho) instead of the hybrid. */
   contributors?: boolean
-  scale?: number
   x?: number
   y?: number
 }
 
-/** The bounds of an arenium drawing, for a parent viewBox. */
-export function areniumBounds(electrophile: Electrophile, contributors = false, scale = ARENIUM_SCALE): Bounds {
-  if (contributors) return resonanceBounds(areniumContributors(electrophile), undefined, scale, 70)
-  const b = skeletalBounds(arenium(electrophile), scale)
-  return { x: b.x - 24, y: b.y - 20, width: b.width + 48, height: b.height + 40 }
-}
-
-/** The three Kekulé contributors of the σ-complex: the cation on position 2, 4 or 6 (atoms 1, 3, 5). */
-export function areniumContributors(electrophile: Electrophile): ResonanceContributor[] {
-  return [{ graph: arenium(electrophile, 1) }, { graph: arenium(electrophile, 3) }, { graph: arenium(electrophile, 5) }]
-}
-
-/**
- * The σ-complex (arenium ion) of electrophilic substitution: the sp³ carbon carrying H and the
- * electrophile, with the positive charge spread over the other five ring carbons, drawn as a
- * dashed horseshoe with a +. The contributors view shows the three Kekulé forms with ResonanceSet.
- */
+/** A σ-complex: the sp³ carbon with H and E in a V, the dashed horseshoe for the delocalised charge. */
 export const AreniumIon = forwardRef<SVGGElement, AreniumIonProps>(function AreniumIon(
-  { electrophile = 'NO2', contributors = false, scale = ARENIUM_SCALE, x = 0, y = 0, ...rest },
+  { electrophile = 'NO2', contributors = false, x = 0, y = 0, ...rest },
   ref
 ) {
-  if (contributors) {
+  if (!contributors) {
+    // Centre the drawing: its horizontal extent runs from EXTENT.minX to EXTENT.maxX.
+    const cx = (EXTENT.minX + EXTENT.maxX) / 2
     return (
-      <g ref={ref} transform={`translate(${x}, ${y})`} {...rest}>
-        <ResonanceSet contributors={areniumContributors(electrophile)} scale={scale} arrowGap={70} />
+      <g ref={ref} transform={`translate(${x - cx}, ${y})`} {...rest}>
+        <Skeleton electrophile={electrophile} />
+        <Horseshoe />
+        <text x={0} y={0.5} textAnchor="middle" dominantBaseline="central" fontSize={26} fontWeight={600} fontFamily="var(--font-sans)" fill="var(--delta-plus)">
+          +
+        </text>
       </g>
     )
   }
-  const graph = arenium(electrophile)
-  const a = areniumAnchors(graph, scale)
-  const centre = a.frame.ringCentres[0]
-  const arc = horseshoePoints(a.frame.points, centre)
-  const overlay = (
-    <g>
-      <path d={`M${arc.map((p) => `${p.x.toFixed(2)},${p.y.toFixed(2)}`).join(' L')}`} fill="none" stroke="var(--delta-plus)" strokeWidth={2.4} strokeDasharray="7 6" strokeLinecap="round" />
-      {/* The + sits in the middle of the ring, where the delocalised charge is shared */}
-      <text x={centre.x} y={centre.y} textAnchor="middle" dominantBaseline="central" fontSize={26} fontWeight={600} fontFamily="var(--font-sans)" fill="var(--delta-plus)">
-        +
-      </text>
-      <text x={a.H.x} y={a.H.y} textAnchor="middle" dominantBaseline="central" fontSize={19} fontWeight={600} fontFamily="var(--font-sans)" fill="var(--fg)" stroke="var(--surface)" strokeWidth={4} paintOrder="stroke">
-        H
-      </text>
-    </g>
-  )
+
+  const units = (['ortho', 'para', 'ortho2'] as const).map((key, i) => {
+    const spec = CONTRIBUTOR_DOUBLES[key]
+    const ux = i * CONTRIB_SPACING
+    return (
+      <g key={key} transform={`translate(${ux}, 0)`}>
+        <Skeleton electrophile={electrophile} kekule={spec.doubles} />
+        <Charge k={spec.cation} />
+      </g>
+    )
+  })
+  // Arrows: the ↔ between units, placed in the gap so that it touches no charge.
+  const arrows = [0, 1].map((i) => {
+    const mx = i * CONTRIB_SPACING + (EXTENT.maxX + (CONTRIB_SPACING + EXTENT.minX)) / 2
+    return (
+      <g key={`arr-${i}`} stroke="var(--fg)" strokeWidth={2.2} strokeLinecap="round" fill="none">
+        <line x1={mx - 30} x2={mx + 30} y1={0} y2={0} />
+        <path d={`M${mx - 30 + 9},-7 L${mx - 30},0 L${mx - 30 + 9},7`} />
+        <path d={`M${mx + 30 - 9},-7 L${mx + 30},0 L${mx + 30 - 9},7`} />
+      </g>
+    )
+  })
+  const totalCentre = CONTRIB_SPACING + (EXTENT.minX + EXTENT.maxX) / 2
   return (
-    <g ref={ref} transform={`translate(${x}, ${y})`} {...rest}>
-      <SkeletalFormula graph={graph} scale={scale} overlay={overlay} />
+    <g ref={ref} transform={`translate(${x - totalCentre}, ${y})`} {...rest}>
+      {units}
+      {arrows}
     </g>
   )
 })

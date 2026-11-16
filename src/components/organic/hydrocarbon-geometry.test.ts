@@ -22,6 +22,11 @@ import {
   formulaTextWidth,
   type PlotBox,
   type SchemePath,
+  LABEL_CLEARANCE,
+  LABEL_RADIUS,
+  distToSegment,
+  newmanRendered,
+  sawhorseRendered,
 } from './hydrocarbon-geometry'
 import { SAWHORSE_BOND } from './Sawhorse'
 import { PROPENE, TWO_BROMOPROPANE, ONE_BROMOPROPANE, arenium, nitrobenzene, BENZENE_KEKULE_A } from './hydrocarbon-fixture'
@@ -129,8 +134,8 @@ describe('torsional energy plot', () => {
     expect(minima).toEqual(expect.arrayContaining([60, 180, 300]))
   })
 
-  it('ethane energy: 2.9 kcal/mol barrier between eclipsed and staggered', () => {
-    expect(ethaneTorsionalEnergy(0)).toBeCloseTo(2.9, 9)
+  it('ethane energy: 12.5 kJ/mol barrier between eclipsed and staggered', () => {
+    expect(ethaneTorsionalEnergy(0)).toBeCloseTo(12.5, 9)
     expect(ethaneTorsionalEnergy(60)).toBeCloseTo(0, 9)
   })
 })
@@ -251,5 +256,27 @@ describe('fixture graphs', () => {
     expect(g.atoms[0].hCount).toBe(1)
     const bondsOn0 = g.bonds.filter((b) => b.a === 0 || b.b === 0)
     expect(bondsOn0.every((b) => b.order === 1)).toBe(true)
+  })
+})
+
+describe('label clearance in the conformation drawings', () => {
+  const minGap = (segs: Array<{ a: { x: number; y: number }; b: { x: number; y: number } }>, labels: Array<{ x: number; y: number }>) => {
+    let worst = Infinity
+    for (const s of segs) for (const l of labels) worst = Math.min(worst, distToSegment(l, s) - LABEL_RADIUS)
+    return worst
+  }
+  it('every Newman bond keeps at least 4 units clear of every label, at every 1°', () => {
+    for (let d = 0; d < 360; d++) {
+      const r = newmanRendered(d)
+      const gap = minGap([...r.front, ...r.back], r.labels)
+      expect(gap, `dihedral ${d}`).toBeGreaterThanOrEqual(LABEL_CLEARANCE - 1e-6)
+    }
+  })
+  it('every sawhorse bond keeps at least 4 units clear of every label, at every 1°', () => {
+    for (let d = 0; d < 360; d++) {
+      const r = sawhorseRendered(d, SAWHORSE_BOND)
+      const gap = minGap(r.segments, r.labels)
+      expect(gap, `dihedral ${d}`).toBeGreaterThanOrEqual(LABEL_CLEARANCE - 1e-6)
+    }
   })
 })
