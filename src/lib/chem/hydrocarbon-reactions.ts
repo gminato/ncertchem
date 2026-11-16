@@ -791,7 +791,14 @@ export function addH2SO4(g: MolGraph): Reaction {
   const sulphate: MolGraph = { atoms, bonds }
   const counts = { ...countsOf(g), H: (countsOf(g).H ?? 0) + 2, S: 1, O: 4 }
   // The label is the condensed formula with –OSO3H in place of the alcohol's –OH, so the equation reads as chemistry.
-  const label = condensedLabel(alcohol).replace(/OH/, 'OSO3H')
+  // A ring has no condensed formula, so cyclohexene gives C6H11OSO3H.
+  let label: string
+  try {
+    label = condensedLabel(alcohol).replace(/OH/, 'OSO3H')
+  } catch {
+    const c = countsOf(g)
+    label = `C${c.C}H${(c.H ?? 0) + 1}OSO3H`
+  }
   const sulphateSpecies: Species = { label, counts, name }
   const equation = balancedEquation([term(1, speciesOf(g)), term(1, inorganic('H2SO4', { H: 2, S: 1, O: 4 }, 'sulphuric acid'))], [term(1, sulphateSpecies)])
   return {
