@@ -111,6 +111,7 @@ import { AlkaneNaming } from './unit8/naming/AlkaneNaming'
 import { RepresentationsMorph } from './unit8/representations/RepresentationsMorph'
 import { BondFission } from './unit8/fission/BondFission'
 import { Markovnikov } from './unit9/addition/Markovnikov'
+import { AlkyneReactions } from './unit9/alkyne-reactions/AlkyneReactions'
 import { AlkaneRoutes } from './unit9/preparation/AlkaneRoutes'
 import { ElimMechanism } from './unit9/elimination/ElimMechanism'
 import { AlkeneStructure } from './unit9/alkene-structure/AlkeneStructure'
@@ -240,6 +241,7 @@ export const animations = {
   'structure-morph': RepresentationsMorph,
   'bond-fission': BondFission,
   markovnikov: Markovnikov,
+  'alkyne-reactions': AlkyneReactions,
   'alkane-routes': AlkaneRoutes,
   'double-bond': AlkeneStructure,
   'hydrocarbon-family': HydrocarbonFamily,
