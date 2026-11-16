@@ -71,3 +71,11 @@ describe('huckel', () => {
     expect(h('C1=CC=CC=C1').reasons.join(' ')).toMatch(/planar/)
   })
 })
+
+describe('fused rings larger than 12 atoms', () => {
+  it('anthracene counts 14 π electrons on its 14-atom perimeter (n = 3)', () => {
+    const r = huckel(parseSmiles('C1=CC=C2C=C3C=CC=CC3=CC2=C1'))
+    expect(r.piElectrons).toBe(14)
+    expect(r.n).toBe(3)
+  })
+})

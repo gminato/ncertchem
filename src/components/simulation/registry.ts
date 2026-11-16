@@ -50,9 +50,11 @@ import { ElementalAnalyser } from './sims/elemental-analyser'
 import { ResonanceLab } from './sims/resonance-lab'
 import { AlkaneNamer } from './sims/alkane-namer'
 import { AdditionPredictor } from './sims/addition-predictor'
+import { NewmanRotor } from './sims/newman-rotor'
 import { AlkyneIsomers } from './sims/alkyne-isomers'
 import { FormulaTranslator } from './sims/formula-translator'
 import { ArrowPusher } from './sims/arrow-pusher'
+import { AlkaneSynthesisPlanner } from './sims/alkane-synthesis-planner'
 import { AlkeneMaker } from './sims/alkene-maker'
 import { CisTransChecker } from './sims/cis-trans-checker'
 import { CarbonCounter } from './sims/carbon-counter'
@@ -124,8 +126,10 @@ export const simulations: Record<string, ComponentType<SimulationProps>> = {
   'alkyne-isomers': AlkyneIsomers,
   'formula-translator': FormulaTranslator,
   'arrow-pusher': ArrowPusher,
+  'alkane-synthesis-planner': AlkaneSynthesisPlanner,
   'alkene-maker': AlkeneMaker,
   'cis-trans-checker': CisTransChecker,
   'carbon-counter': CarbonCounter,
   'family-sorter': FamilySorter,
+  'newman-rotor': NewmanRotor,
 }

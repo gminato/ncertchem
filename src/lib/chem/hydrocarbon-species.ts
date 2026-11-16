@@ -303,8 +303,18 @@ export function halogensOf(g: MolGraph): number[] {
  * with ' + ' and the arrow is written with an optional condition, e.g. '\\ce{CH4 + 2O2 ->[Ni] CO2 + 2H2O}'.
  */
 export function equationText(reactants: Term[], products: Term[], condition?: string): string {
+  // Like terms on one side are written once with their coefficients added: 2NaBr, not NaBr + NaBr.
+  const merge = (terms: Term[]) => {
+    const out: Term[] = []
+    for (const t of terms) {
+      const same = out.find((u) => u.species.label === t.species.label)
+      if (same) same.coef += t.coef
+      else out.push({ ...t })
+    }
+    return out
+  }
   const side = (terms: Term[]) =>
-    terms.map((t) => `${t.coef === 1 ? '' : t.coef}${t.species.label}`).join(' + ')
+    merge(terms).map((t) => `${t.coef === 1 ? '' : t.coef}${t.species.label}`).join(' + ')
   const arrow = condition ? `->[${condition}]` : '->'
   return `\\ce{${side(reactants)} ${arrow} ${side(products)}}`
 }

@@ -464,7 +464,10 @@ function carboxylRest(acid: MolGraph, carboxyl: number): { graph: MolGraph; atta
 
 /** The sodium salt of an acid species: its acid hydrogen replaced by sodium. */
 function sodiumSalt(acid: Species): Species {
-  const label = acid.label.endsWith('OH') ? `${acid.label.slice(0, -2)}ONa` : `${acid.label}Na`
+  // A ring acid has only a molecular-formula label, so its salt is written from the counts: C6H5COONa.
+  const label = acid.label.endsWith('OH')
+    ? `${acid.label.slice(0, -2)}ONa`
+    : `C${(acid.counts.C ?? 1) - 1}H${(acid.counts.H ?? 1) - 1}COONa`
   return adjusted(acid, { H: -1, Na: 1 }, label)
 }
 
@@ -1041,7 +1044,42 @@ export function polymerise(monomer: MolGraph): Reaction {
     bonds: monomer.bonds.map((b) => (b === dbl ? { ...b, order: 1 as const } : { ...b })),
   }
   const name = `poly(${nameOf(monomer)})`
-  const equation = balancedEquation([term(1, speciesOf(monomer))], [term(1, { label: `(${speciesOf(monomer).label})n`, counts: countsOf(monomer), name })])
+  // The repeat unit as NCERT writes it, with single bonds and branches in brackets: n CH2=CH2 -> (CH2-CH2)n,
+  // n CH2=CHCH3 -> (CH2-CH(CH3))n.
+  const pieces = [dbl.a, dbl.b].map((c) => {
+    const partner = c === dbl.a ? dbl.b : dbl.a
+    const h = monomer.atoms[c].hCount ?? 0
+    let text = `C${h > 1 ? `H${h}` : h === 1 ? 'H' : ''}`
+    for (const n of heavyNeighbours(monomer, c)) {
+      if (n.atom === partner) continue
+      // The branch keeps the monomer's own atoms and hydrogen counts (no rebuild), so CH3 stays CH3.
+      const branch: number[] = []
+      const stack = [n.atom]
+      while (stack.length) {
+        const x = stack.pop() as number
+        if (x === c || branch.includes(x)) continue
+        branch.push(x)
+        for (const y of heavyNeighbours(monomer, x)) stack.push(y.atom)
+      }
+      const index = new Map(branch.map((old, i) => [old, i] as const))
+      const piece: MolGraph = {
+        atoms: branch.map((i) => ({ ...monomer.atoms[i] })),
+        bonds: monomer.bonds
+          .filter((b) => index.has(b.a) && index.has(b.b))
+          .map((b) => ({ ...b, a: index.get(b.a) as number, b: index.get(b.b) as number })),
+      }
+      let label: string
+      try {
+        label = condensedLabel(piece)
+      } catch {
+        label = molecularFormula(piece)
+      }
+      text += `(${label})`
+    }
+    return text
+  })
+  const unitLabel = `(${pieces.join('-')})_{n}`
+  const equation = balancedEquation([term(1, { ...speciesOf(monomer), label: `n ${speciesOf(monomer).label}` })], [term(1, { label: unitLabel, counts: countsOf(monomer), name })])
   return {
     reactants: [nameOf(monomer)],
     products: [{ graph: unit, name, formula: `(${molecularFormula(monomer)})n` }],
@@ -1179,7 +1217,13 @@ export function acetylide(g: MolGraph, base: 'Na' | 'NaNH2'): Reaction {
   const c = acidicCarbons[0]
   const anion = rebuild(g.atoms.map((a, i) => (i === c ? { ...a, charge: -1 } : { ...a })), g.bonds.map((b) => ({ ...b })))
   const alkyne = speciesOf(g)
-  const salt = adjusted(alkyne, { H: -1, Na: 1 }, `${alkyne.label.slice(0, -1)}Na`)
+  // Na replaces the H on the terminal sp carbon: CH#CH gives CH#CNa, CH#CCH3 gives NaC#CCH3.
+  const saltLabel = alkyne.label.endsWith('#CH')
+    ? `${alkyne.label.slice(0, -1)}Na`
+    : alkyne.label.startsWith('CH#')
+      ? `NaC#${alkyne.label.slice(3)}`
+      : formulaFromCounts({ ...alkyne.counts, H: (alkyne.counts.H ?? 0) - 1, Na: 1 })
+  const salt = adjusted(alkyne, { H: -1, Na: 1 }, saltLabel)
   const name = `sodium ${nameOf(g).replace(/yne$/, 'ynide')}`
   const equation =
     base === 'Na'
