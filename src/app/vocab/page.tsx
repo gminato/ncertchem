@@ -133,6 +133,30 @@ import {
   BENZENE_HYBRID,
   METHYL_BROMIDE,
   CHLORINE,
+  NewmanProjection,
+  NEWMAN_SIZE,
+  SawhorseProjection,
+  SAWHORSE_SIZE,
+  TorsionalEnergyPlot,
+  TORSIONAL_PLOT_SIZE,
+  ReactionScheme,
+  reactionSchemeSize,
+  PiBondOrbitals,
+  PI_VIEWBOX,
+  BenzeneRing,
+  BENZENE_RING_SIZE,
+  AreniumIon,
+  areniumBounds,
+  EASMechanism,
+  EAS_MECHANISM_SIZE,
+  AdditionMechanism,
+  ADDITION_MECHANISM_SIZE,
+  PolymerChain,
+  POLYMER_CHAIN_SIZE,
+  PROPENE,
+  TWO_BROMOPROPANE,
+  ONE_BROMOPROPANE,
+  type SchemePath,
 } from '@/components/organic'
 import {
   SealedVessel,
@@ -184,6 +208,10 @@ import {
   FUNNEL_LAYERS,
   COLUMN_BANDS,
   LASSAIGNE_TUBES,
+  ReagentTest,
+  REAGENT_TEST_SIZE,
+  CarbideGenerator,
+  CARBIDE_GENERATOR_SIZE,
 } from '@/components/organic/lab'
 import styles from './vocab.module.css'
 
@@ -228,6 +256,23 @@ const ORBITAL_VIEW = `${-INTERMEDIATE_SIZE.width / 2} ${-INTERMEDIATE_SIZE.heigh
 const MORPH_FRAMES = [0, 0.25, 0.5, 0.75, 1] as const
 const MORPH_SPACING = STRUCTURAL_BOUNDS.width + 28
 const MORPH_VIEW = `${STRUCTURAL_BOUNDS.x - 8} ${STRUCTURAL_BOUNDS.y - 8} ${(MORPH_FRAMES.length - 1) * MORPH_SPACING + STRUCTURAL_BOUNDS.width + 16} ${STRUCTURAL_BOUNDS.height + 52}`
+
+/* Unit 9 hydrocarbons: reaction schemes and fixed positions for the demos. */
+const PROPENE_HBR_SCHEME: SchemePath = [
+  [{ formula: PROPENE, highlightAtoms: [1, 2] }, { formula: 'HBr' }],
+  { reagents: 'HBr', conditions: 'no peroxide' },
+  [
+    { formula: TWO_BROMOPROPANE, tag: 'major', highlightAtoms: [1, 2] },
+    { formula: ONE_BROMOPROPANE, tag: 'minor' },
+  ],
+]
+const ETHYNE_STEPS: SchemePath = [
+  [{ formula: 'H–C≡C–H' }],
+  { reagents: 'H₂', conditions: 'Lindlar catalyst' },
+  [{ formula: 'H₂C=CH₂' }],
+  { reagents: 'H₂', conditions: 'Pt/Pd/Ni' },
+  [{ formula: 'H₃C–CH₃' }],
+]
 
 export default function VocabPage() {
   // Proportional hydrogen energy levels (converted from Joules to eV), n = 1..4
@@ -3368,6 +3413,328 @@ export default function VocabPage() {
               <p className={styles.cardDescription}>
                 Fuming nitric acid oxidises the sample in a sealed tube, and the halogen is precipitated as the silver halide.
                 The solid is filtered, washed and weighed to give the percentage of halogen.
+              </p>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section className={styles.section} id="hydrocarbons" aria-labelledby="hydrocarbons-heading">
+        <h2 id="hydrocarbons-heading" className={styles.sectionTitle}>
+          Hydrocarbons
+        </h2>
+        <p className={styles.sectionSubtitle}>
+          Conformations of ethane as Newman and sawhorse projections beside its torsional energy curve, reaction
+          schemes, σ and π bonding in ethene, ethyne and benzene, the three Kekulé styles of the ring,
+          electrophilic substitution and addition with their carbocations, free-radical chain steps, addition
+          polymerisation, and the unsaturation tests and the carbide generator of the laboratory.
+        </p>
+
+        <div className={styles.grid}>
+          {[0, 30, 60].map((angle) => (
+            <article key={`conf-${angle}`} className={`${styles.card} ${styles.cardWide}`}>
+              <div className={styles.cardCanvas} style={{ height: 330 }}>
+                <div className={styles.panes}>
+                  <svg viewBox={`${-NEWMAN_SIZE.width / 2} ${-NEWMAN_SIZE.height / 2} ${NEWMAN_SIZE.width} ${NEWMAN_SIZE.height}`} style={{ width: 230, height: 230 }} role="img" aria-label={`Newman projection of ethane at ${angle} degrees`}>
+                    <NewmanProjection dihedral={angle} />
+                  </svg>
+                  <svg viewBox={`0 0 ${SAWHORSE_SIZE.width} ${SAWHORSE_SIZE.height}`} style={{ width: 250, height: 250 * SAWHORSE_SIZE.height / SAWHORSE_SIZE.width }} role="img" aria-label={`Sawhorse projection of ethane at ${angle} degrees`}>
+                    <SawhorseProjection dihedral={angle} x={SAWHORSE_SIZE.width / 2} y={SAWHORSE_SIZE.height / 2} />
+                  </svg>
+                  <svg viewBox={`0 0 ${TORSIONAL_PLOT_SIZE.width} ${TORSIONAL_PLOT_SIZE.height}`} style={{ width: 520, height: 520 * TORSIONAL_PLOT_SIZE.height / TORSIONAL_PLOT_SIZE.width }} role="img" aria-label={`Energy against dihedral angle with the marker at ${angle} degrees`}>
+                    <TorsionalEnergyPlot dihedral={angle} />
+                  </svg>
+                </div>
+              </div>
+              <div className={styles.cardBody}>
+                <div className={styles.cardHeading}>
+                  <span>Ethane at {angle}°</span>
+                  <span className={styles.cardBadge}>{angle === 0 ? 'Eclipsed' : angle === 60 ? 'Staggered' : 'Between the two'}</span>
+                </div>
+                <p className={styles.cardDescription}>
+                  Looking down the C–C bond, the front carbon is the point and the back carbon the circle. The marker on the energy curve moves
+                  with the same angle, and the barrier between the eclipsed and staggered forms is 12.5 kJ mol⁻¹.
+                </p>
+              </div>
+            </article>
+          ))}
+
+          <article className={`${styles.card} ${styles.cardWide}`}>
+            <div className={styles.cardCanvas} style={{ height: 'auto', padding: 'var(--space-6) var(--space-4)' }}>
+              <svg viewBox={`0 0 ${reactionSchemeSize(PROPENE_HBR_SCHEME, 900).width} ${reactionSchemeSize(PROPENE_HBR_SCHEME, 900).height}`} className={styles.drawFit} role="img" aria-label="Propene reacts with HBr to give 2-bromopropane as the major product and 1-bromopropane as the minor product">
+                <ReactionScheme sequence={PROPENE_HBR_SCHEME} maxWidth={900} />
+              </svg>
+            </div>
+            <div className={styles.cardBody}>
+              <div className={styles.cardHeading}>
+                <span>Propene + HBr</span>
+                <span className={styles.cardBadge}>Markovnikov</span>
+              </div>
+              <p className={styles.cardDescription}>
+                The π bond of the alkene reacts, and the hydrogen goes to the carbon that already carries more hydrogens. The major product is 2-bromopropane.
+              </p>
+            </div>
+          </article>
+
+          <article className={`${styles.card} ${styles.cardWide}`}>
+            <div className={styles.cardCanvas} style={{ height: 'auto', padding: 'var(--space-6) var(--space-4)' }}>
+              <svg viewBox={`0 0 ${reactionSchemeSize(ETHYNE_STEPS, 900).width} ${reactionSchemeSize(ETHYNE_STEPS, 900).height}`} className={styles.drawFit} role="img" aria-label="Ethyne is reduced to ethene and then to ethane in two steps">
+                <ReactionScheme sequence={ETHYNE_STEPS} maxWidth={900} />
+              </svg>
+            </div>
+            <div className={styles.cardBody}>
+              <div className={styles.cardHeading}>
+                <span>Two steps, one reagent family</span>
+                <span className={styles.cardBadge}>A → B → C</span>
+              </div>
+              <p className={styles.cardDescription}>
+                Each step adds one molecule of hydrogen. Lindlar&apos;s catalyst stops at the alkene; nickel goes on to the alkane.
+              </p>
+            </div>
+          </article>
+
+          {[0, 1, 2].map((i) => {
+            const pv = 1
+            const mono = (['ethene', 'ethyne', 'benzene'] as const)[i]
+            return (
+              <article key={`pi-${mono}`} className={`${styles.card} ${styles.cardWide}`}>
+                <div className={styles.cardCanvas} style={{ height: 260 }}>
+                  <div className={styles.panes}>
+                    <svg viewBox={`${PI_VIEWBOX[mono].x} ${PI_VIEWBOX[mono].y} ${PI_VIEWBOX[mono].width} ${PI_VIEWBOX[mono].height}`} style={{ width: 430, height: 430 * PI_VIEWBOX[mono].height / PI_VIEWBOX[mono].width }} role="img" aria-label={`${mono} π orbitals before the lobes merge`}>
+                      <PiBondOrbitals molecule={mono} merge={0} />
+                    </svg>
+                    <svg viewBox={`${PI_VIEWBOX[mono].x} ${PI_VIEWBOX[mono].y} ${PI_VIEWBOX[mono].width} ${PI_VIEWBOX[mono].height}`} style={{ width: 430, height: 430 * PI_VIEWBOX[mono].height / PI_VIEWBOX[mono].width }} role="img" aria-label={`${mono} π orbitals after the lobes merge`}>
+                      <PiBondOrbitals molecule={mono} merge={pv} />
+                    </svg>
+                  </div>
+                </div>
+                <div className={styles.cardBody}>
+                  <div className={styles.cardHeading}>
+                    <span>{mono === 'ethene' ? 'Ethene: one π bond' : mono === 'ethyne' ? 'Ethyne: two π bonds' : 'Benzene: six delocalised electrons'}</span>
+                    <span className={styles.cardBadge}>{mono === 'ethene' ? 'sp² · 120°' : mono === 'ethyne' ? 'sp · 180°' : 'sp² · 120°'}</span>
+                  </div>
+                  <p className={styles.cardDescription}>
+                    {mono === 'ethene' && 'Each carbon has three sp² hybrids in the plane, and the p orbital left over overlaps sideways above and below the plane.'}
+                    {mono === 'ethyne' && 'Each carbon has two sp hybrids along the axis, and two p orbitals that give two π clouds at right angles, forming a cylinder.'}
+                    {mono === 'benzene' && 'The six p orbitals overlap all round the ring, giving one doughnut of electrons above and below the plane.'}
+                  </p>
+                </div>
+              </article>
+            )
+          })}
+
+          <article className={`${styles.card} ${styles.cardWide}`}>
+            <div className={styles.cardCanvas} style={{ height: 240 }}>
+              <div className={styles.panes}>
+                {(['kekule', 'kekule', 'hexagon', 'kekule'] as const).map((variant, i) => (
+                  <svg key={`ring-${i}`} viewBox={`${-BENZENE_RING_SIZE.width / 2} ${-BENZENE_RING_SIZE.height / 2} ${BENZENE_RING_SIZE.width} ${BENZENE_RING_SIZE.height}`} style={{ width: i === 3 ? 150 : 210, height: i === 3 ? 150 : 210 }} role="img" aria-label={['Kekulé form A of benzene', 'Kekulé form B of benzene', 'Benzene drawn as a hexagon with an inscribed circle', 'Benzene mid-way between Kekulé forms A and B'][i]}>
+                    <BenzeneRing variant={variant} kekuleMix={i === 0 ? 0 : i === 3 ? 0.5 : 1} />
+                  </svg>
+                ))}
+              </div>
+            </div>
+            <div className={styles.cardBody}>
+              <div className={styles.cardHeading}>
+                <span>Benzene: three drawings, one molecule</span>
+                <span className={styles.cardBadge}>Kekulé A · B · hexagon · mid-state</span>
+              </div>
+              <p className={styles.cardDescription}>
+                The two Kekulé forms differ only in where the double bonds sit, and neither is real. The hexagon with its inscribed circle
+                shows the delocalised six electrons.
+              </p>
+            </div>
+          </article>
+
+          <article className={styles.card}>
+            <div className={styles.cardCanvas} style={{ height: 'auto', padding: 'var(--space-6) var(--space-4)' }}>
+              <svg viewBox={`${-BENZENE_RING_SIZE.width / 2} ${-BENZENE_RING_SIZE.height / 2} ${BENZENE_RING_SIZE.width} ${BENZENE_RING_SIZE.height}`} className={styles.drawFit} role="img" aria-label="4-chlorotoluene: chlorine at position 1 and methyl at position 4, with the other positions labelled ortho, meta or para to chlorine">
+                <BenzeneRing
+                  variant="hexagon"
+                  substituents={[
+                    { position: 1, label: 'Cl' },
+                    { position: 4, label: 'CH₃' },
+                  ]}
+                  relativeTo={1}
+                />
+              </svg>
+            </div>
+            <div className={styles.cardBody}>
+              <div className={styles.cardHeading}>
+                <span>Disubstituted ring: o, m, p</span>
+                <span className={styles.cardBadge}>4-chlorotoluene</span>
+              </div>
+              <p className={styles.cardDescription}>
+                Positions next to the chlorine are ortho, two away meta, and opposite it para. The methyl sits para to the chlorine.
+              </p>
+            </div>
+          </article>
+
+          <article className={styles.card}>
+            <div className={styles.cardCanvas} style={{ height: 'auto', padding: 'var(--space-6) var(--space-4)' }}>
+              <svg viewBox={`${-areniumBounds('NO2').width / 2} ${-areniumBounds('NO2').height / 2} ${areniumBounds('NO2').width} ${areniumBounds('NO2').height}`} className={styles.drawFit} role="img" aria-label="The σ-complex of nitration: an sp³ carbon with H and NO₂, the positive charge shared over five ring carbons">
+                <AreniumIon electrophile="NO2" />
+              </svg>
+            </div>
+            <div className={styles.cardBody}>
+              <div className={styles.cardHeading}>
+                <span>σ-complex (arenium ion)</span>
+                <span className={styles.cardBadge}>Positive charge shared</span>
+              </div>
+              <p className={styles.cardDescription}>
+                The ring carbon that is attacked becomes sp³. The positive charge is spread over the other five carbons, drawn here as the dashed horseshoe.
+              </p>
+            </div>
+          </article>
+
+          <article className={`${styles.card} ${styles.cardWide}`}>
+            <div className={styles.cardCanvas} style={{ height: 'auto', padding: 'var(--space-6) var(--space-4)' }}>
+              <svg viewBox={`${-areniumBounds('NO2', true).width / 2} ${-areniumBounds('NO2', true).height / 2} ${areniumBounds('NO2', true).width} ${areniumBounds('NO2', true).height}`} className={styles.drawFit} role="img" aria-label="The three resonance contributors of the σ-complex, with the positive charge on the ortho and para carbons">
+                <AreniumIon electrophile="NO2" contributors />
+              </svg>
+            </div>
+            <div className={styles.cardBody}>
+              <div className={styles.cardHeading}>
+                <span>σ-complex: three contributors</span>
+                <span className={styles.cardBadge}>Ortho and para</span>
+              </div>
+              <p className={styles.cardDescription}>
+                The charge can sit only on the carbons ortho or para to the attacked carbon, never on the one that carries the electrophile.
+              </p>
+            </div>
+          </article>
+
+          {[0.3, 0.65, 1].map((pr, i) => (
+            <article key={`eas-${i}`} className={`${styles.card} ${styles.cardWide}`}>
+              <div className={styles.cardCanvas} style={{ height: 'auto', padding: 'var(--space-6) var(--space-4)' }}>
+                <svg viewBox={`0 0 ${EAS_MECHANISM_SIZE.width} ${EAS_MECHANISM_SIZE.height}`} className={styles.drawFit} role="img" aria-label={`Nitration of benzene, stage ${i + 1} of 3`}>
+                  <EASMechanism progress={pr} />
+                </svg>
+              </div>
+              <div className={styles.cardBody}>
+                <div className={styles.cardHeading}>
+                  <span>Nitration of benzene: stage {i + 1} of 3</span>
+                  <span className={styles.cardBadge}>Electrophilic substitution</span>
+                </div>
+                <p className={styles.cardDescription}>
+                  {i === 0 && 'Nitronium ion, NO₂⁺, is attacked by the π electrons of benzene, and the first curved arrow shows the pair moving to nitrogen.'}
+                  {i === 1 && 'The σ-complex keeps the sp³ carbon with its H and NO₂. The arrows show the C–H electrons re-forming the ring and a base taking H⁺.'}
+                  {i === 2 && 'Once the base has removed H⁺, the π system is complete again and nitrobenzene is formed.'}
+                </p>
+              </div>
+            </article>
+          ))}
+
+          {(['markovnikov', 'anti-markovnikov'] as const).map((kind, i) => (
+            <article key={`add-${kind}`} className={`${styles.card} ${styles.cardWide}`}>
+              <div className={styles.cardCanvas} style={{ height: 'auto', padding: 'var(--space-6) var(--space-4)' }}>
+                <svg viewBox={`0 0 ${ADDITION_MECHANISM_SIZE.width} ${ADDITION_MECHANISM_SIZE.height}`} className={styles.drawFit} role="img" aria-label={i === 0 ? 'Markovnikov addition of HBr to propene through the 2° carbocation' : 'Addition of HBr to propene through the 1° carbocation, the minor path'}>
+                  <AdditionMechanism mode="ionic" branch={i === 0 ? 'major' : 'minor'} progress={1} />
+                </svg>
+              </div>
+              <div className={styles.cardBody}>
+                <div className={styles.cardHeading}>
+                  <span>{i === 0 ? 'Markovnikov: the 2° carbocation' : 'The minor path: the 1° carbocation'}</span>
+                  <span className={styles.cardBadge}>{i === 0 ? 'Major' : 'Minor'}</span>
+                </div>
+                <p className={styles.cardDescription}>
+                  {i === 0
+                    ? 'H⁺ adds to the terminal carbon, so the positive charge lands on the middle carbon, which holds two alkyl groups. Br⁻ then attacks it.'
+                    : 'Adding H⁺ to the middle carbon would leave the charge on a primary carbon, which is far less stable, so little of this product forms.'}
+                </p>
+              </div>
+            </article>
+          ))}
+
+          {(['initiation', 'propagation', 'termination', 'peroxide'] as const).map((st) => (
+            <article key={`rad-${st}`} className={`${styles.card} ${styles.cardWide}`}>
+              <div className={styles.cardCanvas} style={{ height: 'auto', padding: 'var(--space-6) var(--space-4)' }}>
+                <svg viewBox={`0 0 ${ADDITION_MECHANISM_SIZE.width} ${ADDITION_MECHANISM_SIZE.height}`} className={styles.drawFit} role="img" aria-label={`Free-radical ${st} step drawn with fishhook arrows`}>
+                  <AdditionMechanism mode="radical" step={st} progress={1} />
+                </svg>
+              </div>
+              <div className={styles.cardBody}>
+                <div className={styles.cardHeading}>
+                  <span>{st === 'peroxide' ? 'Peroxide effect' : `Free-radical ${st}`}</span>
+                  <span className={styles.cardBadge}>Fishhook arrows</span>
+                </div>
+                <p className={styles.cardDescription}>
+                  {st === 'initiation' && 'Light breaks the weakest bond in the halogen, and each atom keeps one electron.'}
+                  {st === 'propagation' && 'Each radical reacts with a molecule and produces another radical, so the chain carries on.'}
+                  {st === 'termination' && 'When two radicals meet they pair up and the chain ends.'}
+                  {st === 'peroxide' && 'With peroxides, Br• adds to the terminal carbon first, which gives the more stable secondary radical. That is why HBr adds the other way.'}
+                </p>
+              </div>
+            </article>
+          ))}
+
+          {(['ethene', 'propene', 'ethyne'] as const).map((mono, i) => (
+            <article key={`poly-${mono}`} className={`${styles.card} ${styles.cardWide}`}>
+              <div className={styles.cardCanvas} style={{ height: 'auto', padding: 'var(--space-6) var(--space-4)' }}>
+                <svg viewBox={`0 0 ${POLYMER_CHAIN_SIZE.width} ${POLYMER_CHAIN_SIZE.height}`} className={styles.drawFit} role="img" aria-label={`${mono} monomers joining into a chain with the repeat unit bracketed`}>
+                  <PolymerChain monomer={mono} progress={1} />
+                </svg>
+              </div>
+              <div className={styles.cardBody}>
+                <div className={styles.cardHeading}>
+                  <span>Addition polymer: {mono === 'ethene' ? 'polythene' : mono === 'propene' ? 'polypropene' : 'polyacetylene'}</span>
+                  <span className={styles.cardBadge}>n monomers</span>
+                </div>
+                <p className={styles.cardDescription}>
+                  {i === 0 && 'The double bonds open, and each monomer joins the next through the electrons that were in the π bond.'}
+                  {i === 1 && 'Propene joins through the same double bond, leaving a methyl group on every second carbon of the chain.'}
+                  {i === 2 && 'Ethyne has two π bonds, and each unit keeps one double bond in the chain.'}
+                </p>
+              </div>
+            </article>
+          ))}
+
+          <article className={`${styles.card} ${styles.cardWide}`}>
+            <div className={styles.cardCanvas} style={{ height: 'auto', padding: 'var(--space-6) var(--space-4)' }}>
+              <div className={styles.panes}>
+                <svg viewBox={`0 0 ${REAGENT_TEST_SIZE.width * 2 + 40} ${REAGENT_TEST_SIZE.height + 34}`} style={{ width: 480, height: 264 }} role="img" aria-label="Bromine water with an alkene, before and after: red-brown turns colourless">
+                  <text x={(REAGENT_TEST_SIZE.width * 2 + 40) / 2} y={20} textAnchor="middle" dominantBaseline="central" fontSize={17} fontWeight={600} fontFamily="var(--font-sans)" fill="var(--fg)">Bromine water + alkene: before / after</text>
+                  <g transform="translate(0, 34)">
+                    <ReagentTest reagent="bromine" progress={0} label="before" />
+                    <g transform={`translate(${REAGENT_TEST_SIZE.width + 40}, 0)`}>
+                      <ReagentTest reagent="bromine" progress={1} label="after" />
+                    </g>
+                  </g>
+                </svg>
+                <svg viewBox={`0 0 ${REAGENT_TEST_SIZE.width * 2 + 40} ${REAGENT_TEST_SIZE.height + 34}`} style={{ width: 480, height: 264 }} role="img" aria-label="Baeyer reagent with an alkene, before and after: purple turns colourless, with brown MnO₂">
+                  <text x={(REAGENT_TEST_SIZE.width * 2 + 40) / 2} y={20} textAnchor="middle" dominantBaseline="central" fontSize={17} fontWeight={600} fontFamily="var(--font-sans)" fill="var(--fg)">Baeyer&apos;s reagent + alkene: before / after</text>
+                  <g transform="translate(0, 34)">
+                    <ReagentTest reagent="baeyer" progress={0} label="before" />
+                    <g transform={`translate(${REAGENT_TEST_SIZE.width + 40}, 0)`}>
+                      <ReagentTest reagent="baeyer" progress={1} label="after" />
+                    </g>
+                  </g>
+                </svg>
+              </div>
+            </div>
+            <div className={styles.cardBody}>
+              <div className={styles.cardHeading}>
+                <span>Unsaturation: bromine water and Baeyer&apos;s reagent</span>
+                <span className={styles.cardBadge}>Before · after</span>
+              </div>
+              <p className={styles.cardDescription}>
+                Bromine water is red-brown and loses its colour as it adds across a double bond. Baeyer&apos;s reagent is purple, and it turns brown with MnO₂ as the alkene is oxidised.
+              </p>
+            </div>
+          </article>
+
+          <article className={styles.card}>
+            <div className={styles.cardCanvas} style={{ height: 'auto', padding: 'var(--space-6) var(--space-4)' }}>
+              <svg viewBox={`0 0 ${CARBIDE_GENERATOR_SIZE.width} ${CARBIDE_GENERATOR_SIZE.height}`} className={styles.drawFit} role="img" aria-label="Ethyne from calcium carbide: water drips onto CaC2 and ethyne bubbles out into water">
+                <CarbideGenerator progress={0.6} />
+              </svg>
+            </div>
+            <div className={styles.cardBody}>
+              <div className={styles.cardHeading}>
+                <span>Ethyne from calcium carbide</span>
+                <span className={styles.cardBadge}>Water on carbide</span>
+              </div>
+              <p className={styles.cardDescription}>
+                Water is dripped onto calcium carbide, which gives ethyne and calcium hydroxide. The ethyne is collected over water.
               </p>
             </div>
           </article>

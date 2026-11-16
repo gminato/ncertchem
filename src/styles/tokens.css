@@ -473,3 +473,47 @@
     --spot-4: #C49BFF;
   }
 }
+
+/* Unit 9 hydrocarbons: sigma and pi bonds, Newman front and back bonds, energy curves, reagent colours
+   and polymer. Light and dark share one set of names; the forced-dark block mirrors [data-theme="dark"]. */
+:root,
+[data-theme="light"] {
+  --sigma-bond: #3D4A5C;
+  --pi-lobe: #0F9488;
+  --pi-lobe-2: #7C5CD6;
+  --h-front: #1F2023;
+  --h-back: #8A94A3;
+  --energy-curve: #2563EB;
+  --bromine: #A8441E;
+  --kmno4: #6B21A8;
+  --mno2: #6B4423;
+  --polymer: #0E7490;
+}
+
+[data-theme="dark"] {
+  --sigma-bond: #C9D3E0;
+  --pi-lobe: #4FD6C8;
+  --pi-lobe-2: #B79CFF;
+  --h-front: #F0F6FC;
+  --h-back: #6E7A8A;
+  --energy-curve: #6CB6FF;
+  --bromine: #FF8A5C;
+  --kmno4: #C49BFF;
+  --mno2: #D9A46B;
+  --polymer: #5EEAD4;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --sigma-bond: #C9D3E0;
+    --pi-lobe: #4FD6C8;
+    --pi-lobe-2: #B79CFF;
+    --h-front: #F0F6FC;
+    --h-back: #6E7A8A;
+    --energy-curve: #6CB6FF;
+    --bromine: #FF8A5C;
+    --kmno4: #C49BFF;
+    --mno2: #D9A46B;
+    --polymer: #5EEAD4;
+  }
+}
