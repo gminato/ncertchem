@@ -191,3 +191,35 @@
 .cardCanvasWide {
   height: 360px;
 }
+
+/* Unit 9 hydrocarbons: full-width cards for wide drawings, and a row of panes inside a canvas. */
+.cardWide {
+  grid-column: 1 / -1;
+}
+
+.panes {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-4);
+  width: 100%;
+  height: 100%;
+  padding: var(--space-4);
+}
+
+.pane {
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* A drawing that takes its natural height, capped at its design width. */
+.drawFit {
+  width: 100%;
+  max-width: 900px;
+  height: auto;
+  display: block;
+  margin: 0 auto;
+}
