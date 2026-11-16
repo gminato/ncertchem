@@ -148,6 +148,9 @@ describe('alkene reactions', () => {
     expect(r.products[0].name).toBe('propan-2-yl hydrogen sulphate')
     expect(r.products[0].formula).toBe('C3H8O4S')
     expect(r.equation).toBe('\\ce{CH2=CHCH3 + H2SO4 -> CH3CH(OSO3H)CH3}')
+    const ring = addH2SO4(g('C1=CCCCC1'))
+    expect(ring.products[0].name).toBe('cyclohexyl hydrogen sulphate')
+    expect(ring.equation).toBe('\\ce{C6H10 + H2SO4 -> C6H11OSO3H}')
   })
   it('hydration is Markovnikov', () => {
     expect(hydrate(g('C=CC')).products[0].name).toBe('propan-2-ol')
@@ -391,5 +394,24 @@ describe('potassium halide in β-elimination equations', () => {
     expect(eliminate(g('CCC(Br)C')).equation).toMatch(/KBr/)
     expect(eliminate(g('CCC(Cl)C')).equation).toMatch(/KCl/)
     expect(fromVicinalDihalide(g('BrCCBr')).equation).toMatch(/KBr/)
+  })
+})
+
+describe('equation labels found in the Unit 9 Section reviews', () => {
+  it('a propyne acetylide is written NaC#CCH3', () => {
+    expect(acetylide(g('C#CC'), 'NaNH2').equation).toBe('\\ce{CH#CCH3 + NaNH2 -> NaC#CCH3 + NH3}')
+  })
+  it('sodium benzoate is written C6H5COONa and the equation balances', () => {
+    expect(decarboxylate(g('OC(=O)C1=CC=CC=C1')).equation).toBe('\\ce{C6H5COONa + NaOH -> C6H6 + Na2CO3}')
+  })
+  it('like terms are merged: 2NaBr, not NaBr + NaBr', () => {
+    expect(wurtz(g('CBr'), g('CCCCBr')).equations[1]).toBe('\\ce{CH3Br + CH3CH2CH2CH2Br + 2Na -> CH3CH2CH2CH2CH3 + 2NaBr}')
+  })
+})
+
+describe('polymer repeat units as NCERT writes them', () => {
+  it('polythene and polypropene', () => {
+    expect(polymerise(g('C=C')).equation).toBe('\\ce{n CH2=CH2 -> (CH2-CH2)_{n}}')
+    expect(polymerise(g('C=CC')).equation).toBe('\\ce{n CH2=CHCH3 -> (CH2-CH(CH3))_{n}}')
   })
 })
