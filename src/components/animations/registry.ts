@@ -115,6 +115,7 @@ import { AlkeneStructure } from './unit9/alkene-structure/AlkeneStructure'
 import { HydrocarbonFamily } from './unit9/family/HydrocarbonFamily'
 import { AlkaneIsomers } from './unit9/family/AlkaneIsomers'
 import { TripleBond } from './unit9/alkyne-structure/TripleBond'
+import { EasScrolly } from './unit9/eas/EasScrolly'
 
 /**
  * Animations available to a Scrolly Animation, keyed by the `animation` prop.
@@ -240,6 +241,7 @@ export const animations = {
   'hydrocarbon-family': HydrocarbonFamily,
   'alkane-isomers': AlkaneIsomers,
   'triple-bond': TripleBond,
+  'eas-mechanism': EasScrolly,
 } as const
 
 export type AnimationName = keyof typeof animations

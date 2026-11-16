@@ -1,0 +1,148 @@
+.lab {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  width: 100%;
+  font-family: var(--font-sans);
+  color: var(--fg);
+}
+
+.reactions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+.reactionButton {
+  font: inherit;
+  font-size: 1rem;
+  font-weight: 600;
+  padding: var(--space-2) var(--space-3);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  background: var(--surface-raised);
+  color: var(--fg);
+  cursor: pointer;
+  min-height: 2.75rem;
+}
+
+.reactionButton[aria-pressed='true'] {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: var(--accent-fg);
+}
+
+.reactionButton:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.equation {
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 600;
+  text-align: center;
+}
+
+.conditions {
+  margin: 0;
+  font-size: 1rem;
+  color: var(--fg-muted);
+  text-align: center;
+}
+
+.condLabel {
+  font-weight: 600;
+}
+
+.stage {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: var(--space-3);
+}
+
+.drawing {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.order {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.orderTitle {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.cards {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  padding: var(--space-2) var(--space-3);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  background: var(--surface-raised);
+}
+
+.cardText {
+  font-size: 1rem;
+  font-weight: 500;
+}
+
+.cardMoves {
+  display: flex;
+  gap: var(--space-1);
+  flex-shrink: 0;
+}
+
+.move {
+  font: inherit;
+  font-size: 1rem;
+  min-width: 2.75rem;
+  min-height: 2.75rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  background: var(--surface);
+  color: var(--fg);
+  cursor: pointer;
+}
+
+.move:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+
+.move:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+.readout {
+  margin: 0;
+  font-size: 1rem;
+  line-height: 1.5;
+  color: var(--fg);
+  min-height: 3rem;
+}
