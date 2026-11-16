@@ -2,8 +2,9 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { sections } from '#site/content'
-import { ThemeToggle } from '@/components/ui/ThemeToggle'
+import { SiteHeader } from '@/components/ui/SiteHeader'
 import { findUnit, UNITS, type UnitInfo } from '@/content/units'
+import { pageTitle } from '@/lib/brand'
 import { parseSegment, sectionsForUnit } from '@/lib/unit-nav'
 import styles from './unit.module.css'
 
@@ -38,7 +39,7 @@ export async function generateMetadata({
   const resolved = resolveUnit(await params)
   if (!resolved) return {}
   return {
-    title: `${resolved.info.title} · Chemistry, Revisited`,
+    title: pageTitle(resolved.info.title),
     description: `Class ${resolved.cls}, Unit ${resolved.unit}: ${resolved.info.title}.`,
   }
 }
@@ -52,12 +53,7 @@ export default async function UnitPage({ params }: { params: Promise<UnitParams>
 
   return (
     <>
-      <header className={styles.topbar}>
-        <Link href="/" className={styles.siteName}>
-          Chemistry, Revisited
-        </Link>
-        <ThemeToggle />
-      </header>
+      <SiteHeader />
 
       <main className={styles.page}>
         <header className={styles.head}>

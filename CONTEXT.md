@@ -1,6 +1,6 @@
-# Chemistry, Revisited (working title)
+# NCERTCHEM
 
-A visual-first learning site for Class 11 and 12 chemistry. It follows the NCERT syllabus and structure but teaches through animations and simulations rather than text alone. The brand is independent: "NCERT" appears only as a reference ("Follows the NCERT syllabus"), never in the product name.
+A visual-first learning site for Class 11 and 12 chemistry. It follows the NCERT syllabus and structure but teaches through animations and simulations rather than text alone. The product name is NCERTCHEM (chosen 2026-11-17; the working title was "Chemistry, Revisited"). The project is independent of NCERT: it is not affiliated with or endorsed by NCERT, and the site says so wherever the name could suggest otherwise.
 
 ## Language
 

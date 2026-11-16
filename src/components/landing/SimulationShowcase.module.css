@@ -1,0 +1,68 @@
+.showcase {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.picker {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-3) var(--space-5);
+}
+
+.prompt {
+  flex: 1 1 22rem;
+  font-family: var(--font-sans);
+  font-size: 0.95rem;
+  line-height: 1.5;
+  color: var(--fg-muted);
+}
+
+/* The Simulation card brings its own top and bottom margin; here the gap does that job. */
+.frame > section {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+.placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 520px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  font-family: var(--font-sans);
+  font-size: 0.95rem;
+  color: var(--fg-subtle);
+}
+
+.source {
+  font-family: var(--font-sans);
+  font-size: 0.92rem;
+  color: var(--fg-muted);
+}
+
+.sourceLink {
+  font-weight: 600;
+  color: var(--accent);
+  text-decoration: none;
+}
+
+.sourceLink:hover {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.sourceLink:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+  border-radius: var(--radius-sm);
+}
+
+@media (max-width: 640px) {
+  .placeholder {
+    min-height: 420px;
+  }
+}

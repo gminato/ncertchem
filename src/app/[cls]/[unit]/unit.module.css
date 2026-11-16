@@ -1,26 +1,3 @@
-.topbar {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  max-width: 1120px;
-  margin: 0 auto;
-  padding: var(--space-4) var(--space-4);
-  border-bottom: 1px solid var(--border);
-}
-
-.siteName {
-  font-family: var(--font-sans);
-  font-size: 0.95rem;
-  font-weight: 600;
-  color: var(--fg);
-  text-decoration: none;
-  letter-spacing: -0.005em;
-}
-
-.siteName:hover {
-  color: var(--accent);
-}
-
 .page {
   max-width: 1120px;
   margin: 0 auto;

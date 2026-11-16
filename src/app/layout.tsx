@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import { Newsreader, Inter, JetBrains_Mono } from 'next/font/google'
+import { BRAND } from '@/lib/brand'
 import './globals.css'
 import 'katex/dist/katex.min.css'
 
@@ -23,8 +24,9 @@ const jetbrainsMono = JetBrains_Mono({
 })
 
 export const metadata: Metadata = {
-  title: 'Chemistry, Revisited',
-  description: 'A visual-first learning site for Class 11 and 12 chemistry.',
+  title: `${BRAND}: Class 11 and 12 chemistry in Animations and Simulations`,
+  description:
+    'A free, visual-first site for Class 11 and 12 chemistry. It follows the NCERT syllabus Section by Section, with Animations to scroll through and Simulations to run.',
 }
 
 export default function RootLayout({

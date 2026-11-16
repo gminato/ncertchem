@@ -1,6 +1,7 @@
 import React from 'react'
 import type { Metadata } from 'next'
 import { ThemeToggle } from '@/components/ui/ThemeToggle'
+import { pageTitle } from '@/lib/brand'
 import {
   VocabDefs,
   Electron,
@@ -218,7 +219,7 @@ import {
 import styles from './vocab.module.css'
 
 export const metadata: Metadata = {
-  title: 'Visual Vocabulary · Chemistry, Revisited',
+  title: pageTitle('Visual Vocabulary'),
   description:
     'Design tokens and visual vocabulary specimen sheet for Class 11 and 12 chemistry.',
 }
