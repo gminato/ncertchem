@@ -14,10 +14,12 @@ import {
 } from '@/lib/chem/huckel-gallery'
 import styles from './huckel-checker.module.css'
 
-/** Card drawings are 220 × 140 units and shown at that size, so a bond is at least 36 px and a label at least 13 px. */
+/** Card drawings are 220 × 140 units and shown at that size. A label is 0.36 × scale, so scale 40 keeps every label at 14 px or more. */
 const CARD = { w: 220, h: 140 }
-const CARD_MIN_SCALE = 36
-const CARD_MAX_SCALE = 50
+const CARD_MIN_SCALE = 40
+const CARD_MAX_SCALE = 100
+/** The card drawing is fitted into this share of the tile, so it fills at least 60% of it. */
+const CARD_FILL = 0.9
 /** The detail drawing is 560 × 300 units, shown at that size. */
 const STAGE = { w: 560, h: 300 }
 const STAGE_MAX_SCALE = 90
@@ -34,10 +36,23 @@ const VERDICT_OPTIONS: { value: RingVerdict; label: string }[] = [
 ]
 const VERDICT_WORD: Record<RingVerdict, string> = { aromatic: 'aromatic', antiaromatic: 'antiaromatic', 'non-aromatic': 'non-aromatic' }
 
-/** Scale that fits a drawing in a box, clamped to a range. */
+/** Scale that fits a drawing in a box of w × h units, clamped to a range. */
 function fitScale(r: RingReport, w: number, h: number, min: number, max: number): number {
   const f = drawingFrame(r.graph, 1)
-  const fit = Math.min((w - 24) / f.bounds.width, (h - 24) / f.bounds.height)
+  const fit = Math.min(w / f.bounds.width, h / f.bounds.height)
+  return Math.max(min, Math.min(max, fit))
+}
+
+/**
+ * Scale that fits the drawn structure (not its label padding, which drawingFrame adds as 0.6 bond on each side)
+ * in a box of w × h units, clamped to a range.
+ */
+function fitDrawn(r: RingReport, w: number, h: number, min: number, max: number): number {
+  const f = drawingFrame(r.graph, 1)
+  const pad = 1.2
+  // A charge sign sits beyond the ring, so a charged ring keeps one more bond length of width for it.
+  const charged = r.graph.atoms.some((a) => (a.charge ?? 0) !== 0)
+  const fit = Math.min(w / (f.bounds.width - pad - (charged ? 1 : 0)), h / (f.bounds.height - pad))
   return Math.max(min, Math.min(max, fit))
 }
 
@@ -103,7 +118,10 @@ export function HuckelChecker({ reducedMotion }: SimulationProps) {
       <div className={styles.gallery} role="group" aria-label="Rings to check">
         {reports.map((r, i) => {
           const isOn = i === selected
-          const scale = fitScale(r, CARD.w, CARD.h, CARD_MIN_SCALE, CARD_MAX_SCALE)
+          const scale = fitDrawn(r, CARD.w * CARD_FILL, CARD.h * CARD_FILL, CARD_MIN_SCALE, CARD_MAX_SCALE)
+          // A charged ring is moved half a bond to the left, so its charge sign sits inside the tile.
+          const charged = r.graph.atoms.some((a) => (a.charge ?? 0) !== 0)
+          const cardX = CARD.w / 2 - (charged ? 0.5 * scale : 0)
           return (
             <button
               key={r.id}
@@ -115,7 +133,7 @@ export function HuckelChecker({ reducedMotion }: SimulationProps) {
               onClick={() => select(i)}
             >
               <svg viewBox={`0 0 ${CARD.w} ${CARD.h}`} className={styles.cardDrawing} aria-hidden="true">
-                <SkeletalFormula graph={r.graph} scale={scale} x={CARD.w / 2} y={CARD.h / 2} />
+                <SkeletalFormula graph={r.graph} scale={scale} x={cardX} y={CARD.h / 2} />
               </svg>
               <span className={styles.cardName}>{HUCKEL_GALLERY[i].name}</span>
             </button>
@@ -126,7 +144,7 @@ export function HuckelChecker({ reducedMotion }: SimulationProps) {
       <section className={styles.detail} aria-label={`${report.name} checker`} data-testid="huckel-detail">
         <div className={styles.stage}>
           <svg viewBox={`0 0 ${STAGE.w} ${STAGE.h}`} className={styles.stageDrawing} role="img" aria-label={`${report.name}, ${report.formula}`}>
-            <SkeletalFormula graph={report.graph} scale={fitScale(report, STAGE.w, STAGE.h, 30, STAGE_MAX_SCALE)} x={STAGE.w / 2} y={STAGE.h / 2} />
+            <SkeletalFormula graph={report.graph} scale={fitScale(report, STAGE.w - 24, STAGE.h - 24, 30, STAGE_MAX_SCALE)} x={STAGE.w / 2} y={STAGE.h / 2} />
           </svg>
         </div>
         <div className={styles.heading}>

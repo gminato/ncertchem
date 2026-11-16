@@ -4,6 +4,7 @@ import React from 'react'
 import { BenzeneRing, PiBondOrbitals } from '@/components/organic'
 import { useSweptNumber } from '@/components/animations/unit5/gibbs/useTweenedNumber'
 import { benzeneBondPm, barLength, benzeneLadder, BENZENE_STEP_KINDS, type BenzeneStepKind } from './benzene-steps'
+import { HybridBenzene } from './HybridBenzene'
 import styles from './benzene.module.css'
 
 export interface BenzeneStructureProps {
@@ -42,19 +43,19 @@ function Caption({ lines }: { lines: readonly React.ReactNode[] }) {
   )
 }
 
-/** Step 1: the double bonds slide from Kekulé A (1=2, 3=4, 5=6) to Kekulé B, drawn once at the start. */
+/** Step 1: the double bonds drawn in the Kekulé A position (1=2, 3=4, 5=6), sliding to the Kekulé B positions as the drawing sweeps. */
 function KekuleSlide({ reducedMotion }: { reducedMotion: boolean }) {
   const mix = useSweptNumber(0, 0, 1, reducedMotion, 1.4)
   return (
     <g>
-      <Title>Kekulé’s ring: the double bonds slide</Title>
+      <Title>Kekulé’s two drawings of one ring</Title>
       <g transform={`translate(${RING_CX} ${RING_CY}) rotate(30) scale(${RING_SCALE})`}>
         <BenzeneRing variant="kekule" kekuleMix={mix} />
       </g>
       <Caption
         lines={[
-          'Kekulé A and Kekulé B differ only in where the three double bonds sit.',
-          'Both are real contributors, so the ring keeps swapping between them.',
+          'Kekulé A and B differ only in where the double bonds are drawn.',
+          'Neither exists on its own: the real molecule is a single hybrid of the two.',
         ]}
       />
     </g>
@@ -97,7 +98,7 @@ function HybridCircle({ reducedMotion }: { reducedMotion: boolean }) {
     <g>
       <Title>The hybrid: six equal bonds and one circle</Title>
       <g opacity={shown} transform={`translate(${RING_CX} ${RING_CY}) rotate(30) scale(${RING_SCALE})`}>
-        <BenzeneRing variant="hexagon" />
+        <HybridBenzene />
       </g>
       <Caption
         lines={[`The circle stands for six delocalised electrons over six carbons.`, `Every C–C bond is ${pm} pm, the same length in all six places.`]}
@@ -151,7 +152,7 @@ function BondLadder({ reducedMotion }: { reducedMotion: boolean }) {
 }
 
 const ARIA: Record<BenzeneStepKind, string> = {
-  'kekule-slide': 'Kekulé structure of benzene: the three double bonds slide from one set of alternate bonds to the other',
+  'kekule-slide': 'Kekulé structure of benzene: the three double bonds drawn on one set of alternate bonds, then on the other',
   'ortho-pair': 'Two Kekulé forms of ortho-dibromobenzene, with Br on a double bond and with Br on a single bond',
   'hybrid-circle': 'Benzene drawn as a hexagon with an inscribed circle, all six bonds equal',
   'pi-doughnuts': 'Six p orbitals, one on each carbon, overlap sideways and merge into two doughnuts above and below the ring',

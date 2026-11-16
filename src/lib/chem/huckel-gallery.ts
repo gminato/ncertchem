@@ -2,9 +2,8 @@
  * The ring gallery of Section 9.5.3 (Hückel's rule) and the report the Huckel checker shows for each ring.
  *
  * Every verdict comes from huckel() in aromaticity.ts. Two things the checker needs that huckel() does not give:
- * - the ring to test. huckel() without a ring only searches rings of up to 12 atoms, so anthracene's 14-atom
- *   perimeter is missed and it would count 10 π electrons (see the test). The report tests the largest cycle
- *   of the graph instead, up to 14 atoms.
+ * - the ring to test. The report passes the largest cycle of the graph (up to 14 atoms) to huckel(), so a fused
+ *   perimeter such as anthracene's is always the ring tested, whatever huckel()'s default search depth.
  * - a three-way verdict. huckel() says 'antiaromatic-or-non-aromatic' for a 4n π system. A planar ring of 4n
  *   π electrons is antiaromatic; a non-planar one (cyclooctatetraene, tub-shaped) is non-aromatic.
  *

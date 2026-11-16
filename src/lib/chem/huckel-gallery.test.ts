@@ -35,11 +35,12 @@ describe('Hückel gallery verdicts (Section 9.5.3)', () => {
     })
   }
 
-  it('anthracene is tested on its 14-atom perimeter, not the 10-atom ring huckel() finds by default', () => {
+  it('anthracene: the 14-atom perimeter gives 14 π electrons, n = 3, both from huckel() and from the report', () => {
     const g = parseSmiles(HUCKEL_GALLERY.find((r) => r.id === 'anthracene')!.smiles)
-    expect(huckel(g).piElectrons).toBe(10)
+    expect(huckel(g).piElectrons).toBe(14)
     expect(largestCycle(g)?.length).toBe(14)
     expect(ringReport('anthracene').piElectrons).toBe(14)
+    expect(ringReport('anthracene').n).toBe(3)
   })
 
   it('cyclooctatetraene says why it is not antiaromatic', () => {

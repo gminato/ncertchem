@@ -1,10 +1,11 @@
 'use client'
 
 import React from 'react'
-import { BenzeneRing, SkeletalFormula, drawingFrame } from '@/components/organic'
+import { SkeletalFormula, drawingFrame } from '@/components/organic'
 import { useSweptNumber } from '@/components/animations/unit5/gibbs/useTweenedNumber'
 import { ringReport, type RingReport, type RingVerdict } from '@/lib/chem/huckel-gallery'
 import { countLine, HUCKEL_COUNT_RINGS, type HuckelCountRing } from './huckel-count-steps'
+import { HybridBenzene } from './HybridBenzene'
 import styles from './benzene.module.css'
 
 export interface HuckelCountProps {
@@ -38,8 +39,8 @@ function reasonFor(r: RingReport): string {
 function RingDrawing({ report, id }: { report: RingReport; id: HuckelCountRing }) {
   if (id === 'benzene') {
     return (
-      <g transform={`translate(${BOX.cx} 160) rotate(30) scale(1.45)`}>
-        <BenzeneRing variant="hexagon" />
+      <g transform={`translate(${BOX.cx} 175) rotate(30) scale(1.3)`}>
+        <HybridBenzene />
       </g>
     )
   }
