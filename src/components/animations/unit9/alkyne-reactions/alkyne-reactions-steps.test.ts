@@ -9,6 +9,8 @@ import {
   pairRadius,
   plainEquation,
   sCharacter,
+  equationSides,
+  sodamideLine,
   sodiumEquation,
   sodiumScheme,
 } from './alkyne-reactions-steps'
@@ -59,5 +61,19 @@ describe('alkyne-reactions Steps', () => {
   it('the balanced sodium line reads as display text', () => {
     expect(sodiumEquation()).toBe('\\ce{2CH#CH + 2Na -> 2CH#CNa + H2}')
     expect(plainEquation(sodiumEquation())).toBe('2CH≡CH + 2Na → 2CH≡CNa + H₂')
+  })
+
+  it('the sodium scheme is the balanced equation only, with coefficients', () => {
+    const path = sodiumScheme()
+    const formulas = (group: unknown) => (group as { formula: string }[]).map((x) => x.formula)
+    expect(path).toHaveLength(3)
+    expect(formulas(path[0])).toEqual(['2CH≡CH', '2Na'])
+    expect(path[1]).toEqual({})
+    expect(formulas(path[2])).toEqual(['2CH≡CNa', 'H₂'])
+    expect(equationSides(sodiumEquation())).toEqual({ left: ['2CH≡CH', '2Na'], right: ['2CH≡CNa', 'H₂'] })
+  })
+
+  it('the sodamide line is the propyne equation from the acid test', () => {
+    expect(sodamideLine()).toBe('With sodamide: CH≡CCH₃ + NaNH₂ → CH₃C≡CNa + NH₃')
   })
 })

@@ -76,15 +76,30 @@ export function plainEquation(ce: string): string {
   return toDisplay(inner.replace(/->/g, '→'))
 }
 
-/** Step 2: ethyne with sodium gives the acetylide and hydrogen (the salt label comes from acidTest). */
+/**
+ * The two sides of a mhchem equation as scheme species: each term keeps its coefficient, and the text is display
+ * text, e.g. '\\ce{2CH#CH + 2Na -> 2CH#CNa + H2}' gives ['2CH≡CH', '2Na'] and ['2CH≡CNa', 'H₂'].
+ */
+export function equationSides(ce: string): { left: string[]; right: string[] } {
+  const inner = ce.replace(/^\\ce\{/, '').replace(/\}$/, '')
+  const [l, r] = inner.split(' -> ')
+  const terms = (side: string) => side.split(' + ').map((t) => toDisplay(t.trim()))
+  return { left: terms(l), right: terms(r) }
+}
+
+/** Step 2: the balanced sodium equation for ethyne (2 HC≡CH + 2 Na gives 2 HC≡CNa + H2), from the acid test. */
 export function sodiumScheme(): SchemePath {
   const r = acidTest(ethyne(), 'Na')
-  if (!r.reacts || !r.salt || !r.byproduct || !r.conditions) throw new RangeError('Ethyne reacts with sodium')
-  return [
-    [{ formula: displayFormula(ethyne()) }, { formula: 'Na' }],
-    { conditions: shortCondition(r.conditions) },
-    [{ formula: toDisplay(r.salt.label) }, { formula: r.byproduct }],
-  ]
+  if (!r.reacts || !r.equation) throw new RangeError('Ethyne reacts with sodium')
+  const { left, right } = equationSides(r.equation)
+  return [left.map((formula) => ({ formula })), {}, right.map((formula) => ({ formula }))]
+}
+
+/** The sodamide case for propyne, as a balanced display line from the acid test. */
+export function sodamideLine(): string {
+  const r = acidTest(parseSmiles('CC#C'), 'NaNH2')
+  if (!r.equation) throw new RangeError('Propyne reacts with sodamide')
+  return `With sodamide: ${plainEquation(r.equation)}`
 }
 
 /** Step 3: bromine adds twice; the lib gives the dibromoalkene and the tetrabromoalkane. */

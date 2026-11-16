@@ -4,7 +4,6 @@ import { useMemo, useState } from 'react'
 import katex from 'katex'
 import 'katex/contrib/mhchem'
 import { Segmented } from '@/components/controls'
-import { SimulationControls } from '@/components/simulation/Simulation'
 import type { SimulationProps } from '@/components/simulation/registry'
 import { ReactionScheme, layoutReactionScheme, type SchemePath } from '@/components/organic'
 import { acidTest, ACID_TEST_SMILES, shortCondition, speciesFormula, toDisplay, type AcidBase, type AcidTest } from '@/lib/chem/alkyne-acid-test'
@@ -34,8 +33,8 @@ const CHOICES = ACID_TEST_SMILES.map((smiles) => {
   return { value: smiles, graph, name: nameOf(graph) }
 })
 
-const SCHEME_WIDTH = 600
-const SCHEME_MARGIN = 24
+const SCHEME_WIDTH = 900
+const SCHEME_MARGIN = 30
 
 /** A mhchem equation from the lib (already wrapped in \ce{}), as KaTeX HTML. */
 function equationHtml(ce: string): string {
@@ -105,6 +104,7 @@ function AdditionPanel({ graph, reagent }: { graph: MolGraph; reagent: Reagent }
   }
   const reaction = addToAlkyne(graph, reagent, { x: 'Br' })
   const schemes = additionSchemes(graph, reaction, reagent)
+  // The schemes show every equation, so the addition panel prints no KaTeX lines of its own.
   const label = REAGENTS.find((r) => r.value === reagent)?.text ?? ''
   return (
     <div className={styles.panel} data-testid="addition-panel">
@@ -125,11 +125,6 @@ function AdditionPanel({ graph, reagent }: { graph: MolGraph; reagent: Reagent }
           </svg>
         )
       })}
-      <div className={styles.equations} data-testid="addition-equations">
-        {reaction.equations.map((eq, i) => (
-          <div key={i} dangerouslySetInnerHTML={{ __html: equationHtml(eq) }} />
-        ))}
-      </div>
       <p className={styles.summary} aria-live="polite">
         {reaction.products.length === 2
           ? `Two steps: ${reaction.products[0].name}, then ${reaction.products[1].name}.`
@@ -149,22 +144,20 @@ export function AlkyneAcidTest(_props: SimulationProps) {
 
   return (
     <div className={styles.sim} data-testid="alkyne-acid-test">
+      <div className={styles.controls}>
+        <Segmented
+          label="Hydrocarbon"
+          options={CHOICES.map((c) => ({ value: c.value, label: c.name }))}
+          value={smiles}
+          onChange={setSmiles}
+        />
+        <Segmented label="Base for the test" options={BASES} value={base} onChange={setBase} />
+        <Segmented label="Reagent for addition" options={REAGENTS.map((r) => ({ value: r.value, label: r.label }))} value={reagent} onChange={setReagent} />
+      </div>
       <div className={styles.grid}>
         <AcidPanel graph={choice.graph} base={base} result={result} />
         <AdditionPanel graph={choice.graph} reagent={reagent} />
       </div>
-      <SimulationControls>
-        <div className={styles.controls}>
-          <Segmented
-            label="Hydrocarbon"
-            options={CHOICES.map((c) => ({ value: c.value, label: c.name }))}
-            value={smiles}
-            onChange={setSmiles}
-          />
-          <Segmented label="Base for the test" options={BASES} value={base} onChange={setBase} />
-          <Segmented label="Reagent for addition" options={REAGENTS.map((r) => ({ value: r.value, label: r.label }))} value={reagent} onChange={setReagent} />
-        </div>
-      </SimulationControls>
     </div>
   )
 }

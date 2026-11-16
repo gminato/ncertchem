@@ -67,7 +67,7 @@
 }
 
 .equation .katex {
-  font-size: 0.9em;
+  font-size: 1.3rem;
 }
 
 .equations {
@@ -77,9 +77,6 @@
   overflow-x: auto;
 }
 
-.equations .katex {
-  font-size: 0.9em;
-}
 
 .summary {
   margin: 0;
@@ -97,6 +94,15 @@
   flex-wrap: wrap;
   gap: var(--space-3) var(--space-5);
   align-items: center;
+}
+
+/* Chips and their labels: at least 14 px, as the Simulation text rule requires. */
+.controls [role='radio'] {
+  font-size: 15px;
+}
+
+.controls [role='radiogroup'] {
+  font-size: 15px;
 }
 
 .formula {
