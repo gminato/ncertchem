@@ -31,6 +31,7 @@ async function gotoStep(page: Page, animation: string, index: number) {
 
 for (const scheme of ['light', 'dark'] as const) {
   test.describe(`Unit 9, Sections 9.5.6 and 9.6 (${scheme})`, () => {
+    test.use({ deviceScaleFactor: 2 })
     test.use({ colorScheme: scheme })
 
     test('9.5.6: every Scrolly Step and the orientation predictor render with no console errors', async ({ page }) => {
@@ -81,11 +82,34 @@ for (const scheme of ['light', 'dark'] as const) {
       await page.waitForTimeout(300)
       await section.screenshot({ path: path.join(SCREEN_DIR, `u9-9-5-6-predictor-nitro-meta-${scheme}.png`) })
 
-      // Text in the simulation is at least 14 px; names at least 16 px.
-      const sizes = await section.locator('button, [data-testid="predictor-readout"], [data-testid="predictor-products"] li, footer, p').evaluateAll((els) =>
-        els.map((e) => parseFloat(getComputedStyle(e).fontSize))
-      )
-      expect(Math.min(...sizes)).toBeGreaterThanOrEqual(14)
+      // Every visible text in the simulation renders at least 14 px (the rendered size, so SVG scaling counts).
+      // The header (the shell's eyebrow and title) and the screen-reader-only text are not visible text here.
+      const sizes = await section.evaluate((root) => {
+        const out: { text: string; size: number }[] = []
+        for (const el of Array.from(root.querySelectorAll('*'))) {
+          if (el.closest('header') || (el.className && String(el.className).includes('srOnly'))) continue
+          const text = Array.from(el.childNodes)
+            .filter((n) => n.nodeType === 3)
+            .map((n) => n.textContent ?? '')
+            .join('')
+            .replace(/\u200b/g, '')
+            .trim()
+          if (!text) continue
+          const svg = (el as SVGElement).ownerSVGElement
+          const m = svg && (el as unknown as SVGGraphicsElement).getScreenCTM ? (el as unknown as SVGGraphicsElement).getScreenCTM() : null
+          const scale = m ? Math.hypot(m.a, m.b) : 1
+          out.push({ text: text.slice(0, 24), size: parseFloat(getComputedStyle(el).fontSize) * scale })
+        }
+        return out
+      })
+      expect(sizes.length).toBeGreaterThan(10)
+      const small = sizes.filter((x) => x.size < 14)
+      expect(small, JSON.stringify(small)).toEqual([])
+      // The δ labels are at least 16 px and full contrast.
+      const deltas = section.getByTestId('density-label')
+      await expect(deltas.first()).toBeVisible()
+      const deltaSize = await deltas.first().evaluate((el) => parseFloat(getComputedStyle(el).fontSize) * Math.hypot((el as unknown as SVGGraphicsElement).getScreenCTM()!.a, (el as unknown as SVGGraphicsElement).getScreenCTM()!.b))
+      expect(deltaSize).toBeGreaterThanOrEqual(16)
 
       expect(errors).toEqual([])
     })

@@ -44,6 +44,14 @@ const sub = (formula: string) => formula.replace(/\d+/g, (d) => subscriptDigits(
 /** The lib gives a product's formula as its name when it cannot name the product; show the formula then. */
 const isFormulaOnly = (name: string, formula: string) => name === formula
 
+/** The unit vector of a point from a centre. */
+function outward(p: { x: number; y: number }, c: { x: number; y: number }) {
+  const d = Math.hypot(p.x - c.x, p.y - c.y) || 1
+  return { x: (p.x - c.x) / d, y: (p.y - c.y) / d }
+}
+
+const FONT = 'var(--font-sans)'
+
 const WORD: Record<RingPosition, string> = { ipso: 'the substituted carbon', ortho: 'ortho', meta: 'meta', para: 'para' }
 
 /** A short list such as "ortho and para", from the positions the lib gives. */
@@ -62,7 +70,7 @@ export function OrientationPredictor() {
   const [clicked, setClicked] = useState<number | null>(null)
 
   const graph = useMemo(() => substrateOf(group), [group])
-  const scale = useMemo(() => fitBounds(graph, 430, 250, 150), [graph])
+  const scale = useMemo(() => fitBounds(graph, 400, 230, 120), [graph])
   const frame = useMemo(() => drawingFrame(graph, scale), [graph, scale])
   const { ring, ipso } = useMemo(() => ringOf(graph), [graph])
   const entry = directingEntry(group)
@@ -105,7 +113,19 @@ export function OrientationPredictor() {
       <div className={styles.layout}>
         <figure className={styles.stage} style={{ margin: 0 }}>
           <svg viewBox={`0 0 ${SVG_W} ${SVG_H}`} role="img" aria-label={`${label} on benzene, with the ring carbons to choose from`} className={styles.drawing} data-testid="predictor-drawing">
-            <SkeletalFormula graph={graph} scale={scale} x={CX} y={CY} partialCharges={densityMarks.map((m) => ({ atom: m.atom, label: m.label }))} />
+            <SkeletalFormula graph={graph} scale={scale} x={CX} y={CY} />
+            {densityMarks.map((m) => {
+              const p = frame.points[m.atom]
+              const u = outward(p, frame.ringCentres[0] ?? { x: 0, y: 0 })
+              const lx = CX + p.x + u.x * 0.62 * scale
+              const ly = CY + p.y + u.y * 0.62 * scale
+              return (
+                <text key={m.atom} x={lx} y={ly + 6} textAnchor="middle" fontSize={20} fontWeight={700} fontFamily={FONT} fill="var(--fg)" className={styles.delta} data-testid="density-label">
+                  <tspan className="sym">δ</tspan>
+                  {m.label === 'δ−' ? '−' : '+'}
+                </text>
+              )
+            })}
             {ring
               .filter((a) => a !== ipso)
               .map((atom) => {

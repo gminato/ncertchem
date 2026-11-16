@@ -3,7 +3,7 @@
 import React from 'react'
 import { SkeletalFormula, drawingFrame, subscriptDigits } from '@/components/organic'
 import { NCERT_CARCINOGENS } from '@/lib/chem/ncert-unit9-tables'
-import { benzeneNodes, CARCINOGEN_STEP_KINDS, drawnPahs, namedOnly, type CarcinogenStepKind } from './carcinogens-steps'
+import { benzeneNodes, CARCINOGEN_STEP_KINDS, drawnPahs, type CarcinogenStepKind } from './carcinogens-steps'
 import { fitScale } from '../family/formula'
 import styles from '../directing/DirectingGroups.module.css'
 
@@ -92,20 +92,21 @@ function FusedStep() {
 
 function OthersStep() {
   const drawn = new Set(drawnPahs().map((p) => p.name))
-  const named = namedOnly()
   return (
     <g>
       <Title>NCERT&apos;s box of carcinogens</Title>
       {NCERT_CARCINOGENS.map((c, i) => {
-        const y = 118 + i * 52
+        const y = 118 + i * 50
         return (
           <g key={c.name}>
-            <text x={VIEW_WIDTH / 2} y={y} textAnchor="middle" fontSize={20} fontWeight={600} fontFamily={FONT} fill="var(--fg)">
+            <text x={VIEW_WIDTH / 2} y={y} textAnchor="middle" fontSize={21} fontWeight={600} fontFamily={FONT} fill="var(--fg)">
               {c.name}
             </text>
-            <text x={VIEW_WIDTH / 2} y={y + 22} textAnchor="middle" fontSize={15} fontFamily={FONT} fill="var(--fg-muted)">
-              {drawn.has(c.name) ? 'drawn above' : named.includes(c.name) ? 'named in NCERT’s box only' : ''}
-            </text>
+            {drawn.has(c.name) && (
+              <text x={VIEW_WIDTH / 2} y={y + 22} textAnchor="middle" fontSize={16} fontFamily={FONT} fill="var(--fg-muted)">
+                (drawn on the previous step)
+              </text>
+            )}
           </g>
         )
       })}

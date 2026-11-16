@@ -116,7 +116,7 @@ export function sigmaRow(): SigmaItem[] {
 /** The extra contributor: the + on the C–OH carbon, for the ortho and para attacks. The meta attack has none. */
 export function extraRow(): SigmaItem[] {
   const a = phenolAttacks()
-  return [oxoniumSigma(a.ortho, 'ortho attack'), basicSigma(a.meta, 'meta attack', 'no C=O⁺H form'), oxoniumSigma(a.para, 'para attack')]
+  return [oxoniumSigma(a.ortho, 'ortho attack'), basicSigma(a.meta, 'meta attack', 'no C=O⁺H'), oxoniumSigma(a.para, 'para attack')]
 }
 
 /** The forms of the nitrobenzene species (Unit 9 reuses the lib's species for the −NO₂ step). */
