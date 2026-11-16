@@ -1,0 +1,94 @@
+---
+class: 11
+unit: 9
+section: "9.2.4"
+order: 5
+title: "Conformations of Alkanes"
+slug: "9-2-4-conformations"
+summary: "A single C–C bond turns freely, so one alkane molecule can take endless shapes; ethane's eclipsed and staggered forms differ in torsional strain, and the difference is too small to separate them."
+ncert: "Class 11, Part II — Unit 9, Section 9.2.4"
+---
+
+<Hook>
+Ethane is a gas that comes out of natural gas wells along with methane, and a cylinder of it is labelled as one substance. Yet each molecule in that cylinder is always twisting about its carbon–carbon bond, so its shape keeps changing. If the molecule keeps changing shape, why does the cylinder still hold one compound?
+</Hook>
+
+## Free rotation about the C–C bond
+
+The bond between two carbon atoms in an alkane is a σ bond, made by the head-on overlap of two $\mathrm{sp^3}$ orbitals. Its electron density is symmetrical around the line joining the two nuclei. Turning one carbon about that line does not spoil the overlap, so a C–C single bond allows rotation.
+
+Each arrangement of the atoms that can be turned into another by rotation about a C–C single bond is a **conformation**, also called a conformer or a rotamer. Because the chain can turn through any angle, an alkane can take an endless number of conformations. Rotation is not entirely free, though. The bonds on neighbouring carbons repel one another a little as they pass, and that resistance is called **torsional strain**.
+
+The Scrolly below follows ethane, the simplest case, from a three-dimensional model to the sawhorse and Newman drawings, and then to the energy curve that governs the turn.
+
+<Scrolly animation="ethane-rotation">
+<Step>
+Start with ethane, $\ce{C2H6}$: two carbons joined by one σ bond, each carrying three hydrogens. In this model the back carbon is turned so that its hydrogens sit between the front ones. That is the staggered form, with the C–H bonds as far apart as they can be. Drag the model to look at it from any side. Bond lengths and angles are the same in every conformer, and only the twist changes.
+</Step>
+<Step>
+Now hold the front carbon still and turn the back carbon about the C–C axis. Its three hydrogens sweep round. The angle between a back hydrogen and the front hydrogen behind it, the H–C–C–H dihedral angle $\theta$, falls from 60° to 0°. At 0° the hydrogens are directly behind one another: the eclipsed form. The readout under the model names the conformer from the angle.
+</Step>
+<Step>
+A sawhorse projection draws the molecule from the side, with the C–C bond as a long slanted line. The front carbon is at the bottom and the back carbon at the top, and each carbon has three lines for its hydrogens. This drawing shows the eclipsed form: each line on the back carbon lies right behind a line on the front one. The picture keeps the three dimensions while showing the arrangement clearly.
+</Step>
+<Step>
+A Newman projection looks straight down the C–C bond. The front carbon is the dot in the middle, with its three bonds reaching out from it. The back carbon is the circle, and its three bonds start from the rim. Here the back bonds have turned into the gaps between the front bonds, so $\theta = 60°$. This is the staggered form, the one with the least torsional strain.
+</Step>
+<Step>
+Plot the energy against $\theta$. The eclipsed forms are the peaks, at 0° and 120°, and the staggered forms are the valleys, at 60° and 180°. The marker climbs from the valley at 60° over the barrier to 120°. That is also an eclipsed form, because the hydrogens repeat every 120°. The curve is a simple model, but the barrier it shows, of the order of 12.5 kJ mol⁻¹, is the value NCERT gives.
+</Step>
+</Scrolly>
+
+## Conformations of ethane
+
+Ethane has one C–C bond, and each carbon is bonded to three hydrogens. Keep one carbon fixed and turn the other about the C–C axis. The hydrogens of the two carbons then take up an infinite number of relative positions. Each of these is a conformer, and the infinite family has two extreme members.
+
+In the **eclipsed** conformation, the hydrogens of the two carbons are as close together as they can be, with each back hydrogen directly behind a front one. In the **staggered** conformation, they are as far apart as possible. Every other angle between these two is a **skew** conformation. Whatever the angle, the C–C and C–H bond lengths and the bond angles stay the same, so only the relative positions of the atoms change.
+
+Chemists draw the two extreme forms in two ways. The sawhorse projection shows the molecule from the side, and the Newman projection shows it looking straight down the bond. In a Newman drawing the front carbon is a point with three bonds, and the back carbon is a circle with three shorter bonds from its rim.
+
+## Torsional strain and the preferred form
+
+The dihedral angle $\theta$ fixes the conformer, and the strain depends on $\theta$. When the hydrogens are staggered, the electron clouds of the C–H bonds are as far apart as they can be, so the repulsion between them is least. Turning towards the eclipsed form brings those clouds closer, the repulsion grows, and the molecule must carry more energy. That repulsion between bonds on neighbouring carbons is the torsional strain.
+
+So the staggered form has the least torsional strain and the minimum energy, while the eclipsed form has the most. The staggered form is therefore the more stable one, and an ethane sample spends most of its time in it. NCERT gives the energy difference between the two extreme forms of ethane as of the order of 12.5 kJ mol⁻¹. This Section uses the simple model
+
+$$
+E(\theta) = \frac{12.5}{2}\left(1 + \cos 3\theta\right)\ \text{kJ mol}^{-1}
+$$
+
+which is zero at the staggered 60° and 12.5 kJ mol⁻¹ at the eclipsed 0°. It is a picture of the curve, not a measured one.
+
+<Check n={1} numeric answer={6.25} tolerance={0.005} unit="kJ mol⁻¹" explanation="At θ = 30° the angle 3θ is 90°, and cos 90° = 0. So E = (12.5/2)(1 + 0) = 6.25 kJ mol⁻¹. This is halfway up the barrier, in the skew region between the staggered and eclipsed forms.">
+Using the model above, what is the torsional energy of ethane at a dihedral angle of 30°, in kJ mol⁻¹?
+</Check>
+
+Rotation is almost free because the barrier is small. At 298 K, the thermal energy $RT$ is about 2.5 kJ mol⁻¹, so the 12.5 kJ mol⁻¹ barrier is roughly five times that. The model in the Simulation puts the staggered level as the reference and the eclipsed level 12.5 kJ mol⁻¹ higher. On that two-level model about 99.4 % of molecules are in the staggered level at 298 K. It ignores the skew region and the shape of the barrier, so read the figure as an illustration of how strongly a barrier this size favours the staggered form, not as a measured population.
+
+<Simulation name="newman-rotor" title="Newman rotor: turn the back carbon of ethane" />
+
+<Check n={2} options={["Eclipsed", "Staggered", "Skew, at 30°", "A new isomer"]} answer={1} explanation="Eclipsed is at 0° and staggered at 60°. Turning the back carbon by 60° moves each back hydrogen from directly behind a front hydrogen into the gap between two of them. Ethane has no new isomer, since the two carbons and six hydrogens are unchanged.">
+Start with ethane in the eclipsed form. You turn the back carbon by 60° about the C–C bond. Which conformation do you now have?
+</Check>
+
+## Why the conformers cannot be separated
+
+Conformers are not separable isomers. Every conformer of ethane turns into every other by rotation about the C–C bond, and at room temperature that rotation is almost free. A molecule in the eclipsed form therefore passes through the staggered form, and back, very many times a second. The interconversion is so fast at room temperature that no sample can be held in one conformer long enough to isolate it.
+
+Compare this with a true isomer such as 1,2-dichloroethene, where the two forms differ in how groups are attached to the double bond and rotation about that bond is blocked. Those isomers can be separated. Conformers of an alkane cannot, and that is why a cylinder of ethane is one compound.
+
+<Check n={3} options={["They have different bond lengths", "They interconvert by rotation about the C–C bond, which is almost free at room temperature", "They have different molecular formulas", "Their hydrogens are different atoms"]} answer={1} explanation="The bond lengths and angles are the same in every conformer, and the molecular formula is C₂H₆ in all of them. The hydrogens are the same atoms. The reason is that the rotation barrier is small, so the forms interconvert freely.">
+Why can the staggered and eclipsed forms of ethane not be separated and sold as two compounds?
+</Check>
+
+<Check n={4} numeric answer={3} tolerance={0} explanation="The staggered forms are at 60°, 180° and 300°, so there are three in one full turn of 360°. The eclipsed forms are also three, at 0°, 120° and 240°. Staggered and eclipsed alternate every 60°.">
+How many staggered forms does ethane have in one full turn of 360°?
+</Check>
+
+<KeyIdeas>
+- Free rotation about a C–C σ bond gives conformations, called conformers or rotamers. Their number is infinite, and they interconvert, so they cannot be isolated as separate compounds.
+- In ethane the eclipsed form is at 0° and 120°, the staggered form at 60° and 180°, and every other angle is skew.
+- Torsional strain is the repulsion between bonds on neighbouring carbons. It is largest in the eclipsed form and least in the staggered form, which is therefore the preferred form.
+- The barrier to rotation in ethane is about 12.5 kJ mol⁻¹, so rotation is almost free at room temperature.
+- Sawhorse and Newman projections draw the same conformer. Bond lengths and bond angles stay the same in all of them.
+</KeyIdeas>
