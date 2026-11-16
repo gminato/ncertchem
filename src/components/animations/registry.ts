@@ -113,6 +113,7 @@ import { BondFission } from './unit8/fission/BondFission'
 import { Markovnikov } from './unit9/addition/Markovnikov'
 import { AlkyneReactions } from './unit9/alkyne-reactions/AlkyneReactions'
 import { RadicalChain } from './unit9/halogenation/RadicalChain'
+import { AlkeneCleavage } from './unit9/ozonolysis/AlkeneCleavage'
 import { AlkaneRoutes } from './unit9/preparation/AlkaneRoutes'
 import { ElimMechanism } from './unit9/elimination/ElimMechanism'
 import { AlkeneStructure } from './unit9/alkene-structure/AlkeneStructure'
@@ -244,6 +245,7 @@ export const animations = {
   markovnikov: Markovnikov,
   'alkyne-reactions': AlkyneReactions,
   'radical-chain': RadicalChain,
+  'alkene-cleavage': AlkeneCleavage,
   'alkane-routes': AlkaneRoutes,
   'double-bond': AlkeneStructure,
   'hydrocarbon-family': HydrocarbonFamily,
