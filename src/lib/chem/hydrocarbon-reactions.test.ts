@@ -396,3 +396,15 @@ describe('potassium halide in β-elimination equations', () => {
     expect(fromVicinalDihalide(g('BrCCBr')).equation).toMatch(/KBr/)
   })
 })
+
+describe('equation labels found in the Unit 9 Section reviews', () => {
+  it('a propyne acetylide is written NaC#CCH3', () => {
+    expect(acetylide(g('C#CC'), 'NaNH2').equation).toBe('\\ce{CH#CCH3 + NaNH2 -> NaC#CCH3 + NH3}')
+  })
+  it('sodium benzoate is written C6H5COONa and the equation balances', () => {
+    expect(decarboxylate(g('OC(=O)C1=CC=CC=C1')).equation).toBe('\\ce{C6H5COONa + NaOH -> C6H6 + Na2CO3}')
+  })
+  it('like terms are merged: 2NaBr, not NaBr + NaBr', () => {
+    expect(wurtz(g('CBr'), g('CCCCBr')).equations[1]).toBe('\\ce{CH3Br + CH3CH2CH2CH2Br + 2Na -> CH3CH2CH2CH2CH3 + 2NaBr}')
+  })
+})

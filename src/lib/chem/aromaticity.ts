@@ -85,7 +85,7 @@ function isCycle(g: MolGraph, ring: number[]): boolean {
  */
 export function huckel(g: MolGraph, ringAtoms?: number[]): HuckelResult {
   if (ringAtoms && !isCycle(g, ringAtoms)) throw new RangeError('ringAtoms must list the atoms of a ring in ring order')
-  const rings = ringAtoms ? [ringAtoms] : findRings(g, 12)
+  const rings = ringAtoms ? [ringAtoms] : findRings(g, 18)
   if (rings.length === 0) {
     return {
       cyclic: false,
