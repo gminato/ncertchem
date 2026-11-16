@@ -19,6 +19,7 @@ import { canonicalKey, hybridisation, molecularFormula, neighbours, parseSmiles 
 import { conditionFor, NCERT_ORIENTING_GROUPS } from './ncert-unit9-tables'
 import {
   assertBalanced,
+  condensedLabel,
   formulaFromCounts,
   balancedEquation,
   components,
@@ -789,11 +790,13 @@ export function addH2SO4(g: MolGraph): Reaction {
   ]
   const sulphate: MolGraph = { atoms, bonds }
   const counts = { ...countsOf(g), H: (countsOf(g).H ?? 0) + 2, S: 1, O: 4 }
-  const sulphateSpecies: Species = { label: name, counts, name }
+  // The label is the condensed formula with –OSO3H in place of the alcohol's –OH, so the equation reads as chemistry.
+  const label = condensedLabel(alcohol).replace(/OH/, 'OSO3H')
+  const sulphateSpecies: Species = { label, counts, name }
   const equation = balancedEquation([term(1, speciesOf(g)), term(1, inorganic('H2SO4', { H: 2, S: 1, O: 4 }, 'sulphuric acid'))], [term(1, sulphateSpecies)])
   return {
     reactants: [nameOf(g), 'sulphuric acid'],
-    products: [productOf(sulphate, { name, formula: molecularFormula(alcohol).replace(/O\d*$/, '') + 'OSO3H', major: true })],
+    products: [productOf(sulphate, { name, formula: formulaFromCounts(counts), major: true })],
     equation,
     equations: [equation],
     conditions: conditionFor('h2so4-addition').text,
