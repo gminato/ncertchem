@@ -49,10 +49,12 @@ import { FunctionalGroupNamer } from './sims/functional-group-namer'
 import { ElementalAnalyser } from './sims/elemental-analyser'
 import { ResonanceLab } from './sims/resonance-lab'
 import { AlkaneNamer } from './sims/alkane-namer'
+import { NewmanRotor } from './sims/newman-rotor'
 import { AlkyneIsomers } from './sims/alkyne-isomers'
 import { FormulaTranslator } from './sims/formula-translator'
 import { ArrowPusher } from './sims/arrow-pusher'
 import { HalogenationLab } from './sims/halogenation-lab'
+import { AlkaneSynthesisPlanner } from './sims/alkane-synthesis-planner'
 import { AlkeneMaker } from './sims/alkene-maker'
 import { CisTransChecker } from './sims/cis-trans-checker'
 import { CarbonCounter } from './sims/carbon-counter'
@@ -124,8 +126,10 @@ export const simulations: Record<string, ComponentType<SimulationProps>> = {
   'formula-translator': FormulaTranslator,
   'arrow-pusher': ArrowPusher,
   'halogenation-lab': HalogenationLab,
+  'alkane-synthesis-planner': AlkaneSynthesisPlanner,
   'alkene-maker': AlkeneMaker,
   'cis-trans-checker': CisTransChecker,
   'carbon-counter': CarbonCounter,
   'family-sorter': FamilySorter,
+  'newman-rotor': NewmanRotor,
 }
