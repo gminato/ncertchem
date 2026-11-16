@@ -1044,7 +1044,42 @@ export function polymerise(monomer: MolGraph): Reaction {
     bonds: monomer.bonds.map((b) => (b === dbl ? { ...b, order: 1 as const } : { ...b })),
   }
   const name = `poly(${nameOf(monomer)})`
-  const equation = balancedEquation([term(1, speciesOf(monomer))], [term(1, { label: `(${speciesOf(monomer).label})n`, counts: countsOf(monomer), name })])
+  // The repeat unit as NCERT writes it, with single bonds and branches in brackets: n CH2=CH2 -> (CH2-CH2)n,
+  // n CH2=CHCH3 -> (CH2-CH(CH3))n.
+  const pieces = [dbl.a, dbl.b].map((c) => {
+    const partner = c === dbl.a ? dbl.b : dbl.a
+    const h = monomer.atoms[c].hCount ?? 0
+    let text = `C${h > 1 ? `H${h}` : h === 1 ? 'H' : ''}`
+    for (const n of heavyNeighbours(monomer, c)) {
+      if (n.atom === partner) continue
+      // The branch keeps the monomer's own atoms and hydrogen counts (no rebuild), so CH3 stays CH3.
+      const branch: number[] = []
+      const stack = [n.atom]
+      while (stack.length) {
+        const x = stack.pop() as number
+        if (x === c || branch.includes(x)) continue
+        branch.push(x)
+        for (const y of heavyNeighbours(monomer, x)) stack.push(y.atom)
+      }
+      const index = new Map(branch.map((old, i) => [old, i] as const))
+      const piece: MolGraph = {
+        atoms: branch.map((i) => ({ ...monomer.atoms[i] })),
+        bonds: monomer.bonds
+          .filter((b) => index.has(b.a) && index.has(b.b))
+          .map((b) => ({ ...b, a: index.get(b.a) as number, b: index.get(b.b) as number })),
+      }
+      let label: string
+      try {
+        label = condensedLabel(piece)
+      } catch {
+        label = molecularFormula(piece)
+      }
+      text += `(${label})`
+    }
+    return text
+  })
+  const unitLabel = `(${pieces.join('-')})_{n}`
+  const equation = balancedEquation([term(1, { ...speciesOf(monomer), label: `n ${speciesOf(monomer).label}` })], [term(1, { label: unitLabel, counts: countsOf(monomer), name })])
   return {
     reactants: [nameOf(monomer)],
     products: [{ graph: unit, name, formula: `(${molecularFormula(monomer)})n` }],

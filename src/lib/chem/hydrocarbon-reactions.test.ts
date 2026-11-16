@@ -408,3 +408,10 @@ describe('equation labels found in the Unit 9 Section reviews', () => {
     expect(wurtz(g('CBr'), g('CCCCBr')).equations[1]).toBe('\\ce{CH3Br + CH3CH2CH2CH2Br + 2Na -> CH3CH2CH2CH2CH3 + 2NaBr}')
   })
 })
+
+describe('polymer repeat units as NCERT writes them', () => {
+  it('polythene and polypropene', () => {
+    expect(polymerise(g('C=C')).equation).toBe('\\ce{n CH2=CH2 -> (CH2-CH2)_{n}}')
+    expect(polymerise(g('C=CC')).equation).toBe('\\ce{n CH2=CHCH3 -> (CH2-CH(CH3))_{n}}')
+  })
+})
