@@ -9,7 +9,7 @@
 
 import type { MolAtom, MolBond, MolGraph } from './molecule-graph'
 import { iupacName } from './iupac-organic'
-import { molecularFormula, neighbours, toCondensed } from './molecule-parse'
+import { molecularFormula, neighbours } from './molecule-parse'
 
 /** Standard valence of the elements the Unit 9 models build (carbon uses 4 minus |charge|). */
 const VALENCE: Record<string, number> = { C: 4, N: 3, O: 2, S: 2, P: 3, B: 3, F: 1, Cl: 1, Br: 1, I: 1, H: 1 }
@@ -143,14 +143,94 @@ export function nameOf(g: MolGraph): string {
     return iupacName(g)
   } catch (error) {
     if (RETAINED[formula]) return RETAINED[formula]
+    // Molecules the namer does not cover (sulphate, sulphur trioxide) are named by their formula.
+    if (error instanceof RangeError) return formula
     throw error
   }
 }
 
-/** Replaces the mhchem-unsafe ≡ with # in a condensed formula. */
-function mhchem(text: string): string {
-  return text.replace(/≡/g, '#')
+/** Number of atoms reached from atom i without passing back through parent (an acyclic graph). */
+function subtreeSize(g: MolGraph, i: number, parent: number): number {
+  let n = 1
+  for (const k of heavyNeighbours(g, i)) if (k.atom !== parent) n += subtreeSize(g, k.atom, i)
+  return n
 }
+
+/** Text of one atom in a condensed formula: carbon with its hydrogens (CH3), or a heteroatom with its own (OH). */
+function condensedAtomText(g: MolGraph, i: number): string {
+  const a = g.atoms[i]
+  const h = a.hCount ?? 0
+  return `${a.element}${h === 0 ? '' : h === 1 ? 'H' : `H${h}`}`
+}
+
+/**
+ * Writes the subtree at atom i, reached from parent. Carbon branches go in brackets; heteroatoms (Br, OH, the O of
+ * a C=O, the O of an ester) are written inline. The main chain continues after the last branch: the subtree
+ * with more atoms, then a carbon over a heteroatom, then the later atom. The bond to a carbon is shown as = or #;
+ * the C=O bond is not shown, so a ketone reads CH3COCH3.
+ */
+function writeCondensed(g: MolGraph, i: number, parent: number): string {
+  const kids = heavyNeighbours(g, i).filter((n) => n.atom !== parent)
+  const isC = (x: number) => g.atoms[x].element === 'C'
+  // Identical single-atom substituents on one carbon are counted: CH3CHBr2, CHCl3.
+  const leafCount = new Map<string, number>()
+  for (const k of kids) {
+    if (!isC(k.atom) && subtreeSize(g, k.atom, i) === 1) leafCount.set(condensedAtomText(g, k.atom), (leafCount.get(condensedAtomText(g, k.atom)) ?? 0) + 1)
+  }
+  const grouped = new Set<string>()
+  let main = -1
+  let bestKey: number[] = []
+  kids.forEach((k, idx) => {
+    const key = [subtreeSize(g, k.atom, i), isC(k.atom) ? 1 : 0, idx]
+    if (main < 0 || key[0] > bestKey[0] || (key[0] === bestKey[0] && (key[1] > bestKey[1] || (key[1] === bestKey[1] && key[2] > bestKey[2])))) {
+      main = idx
+      bestKey = key
+    }
+  })
+  const bondText = (k: { atom: number; order: 1 | 2 | 3 }) => (k.order === 3 ? '#' : k.order === 2 && isC(k.atom) ? '=' : '')
+  let out = condensedAtomText(g, i)
+  const isGroupedLeaf = (k: { atom: number }) => {
+    const t = condensedAtomText(g, k.atom)
+    return !isC(k.atom) && subtreeSize(g, k.atom, i) === 1 && (leafCount.get(t) ?? 1) > 1
+  }
+  kids.forEach((k, idx) => {
+    if (isGroupedLeaf(k)) {
+      const t = condensedAtomText(g, k.atom)
+      if (!grouped.has(t)) out += `${t}${leafCount.get(t)}`
+      grouped.add(t)
+      return
+    }
+    if (idx === main) return
+    const text = writeCondensed(g, k.atom, i)
+    out += isC(k.atom) ? `(${bondText(k)}${text})` : text
+  })
+  if (main >= 0 && !isGroupedLeaf(kids[main])) out += bondText(kids[main]) + writeCondensed(g, kids[main].atom, i)
+  return out
+}
+
+/**
+ * The condensed formula of an acyclic molecule as students write it: CH3CHBrCH3, CH3COCH3, CH3CHO, CH3COOH,
+ * CH3COOCH3, CH2=CHCH3, and alkyl branches in brackets as in CH3CH(CH3)CH3. The C≡C bond is written with #
+ * for mhchem.
+ *
+ * @throws {RangeError} For a molecule with a ring (use its molecular formula instead)
+ */
+export function condensedLabel(g: MolGraph): string {
+  if (findRings(g, 12).length > 0) throw new RangeError('A condensed formula is written for an acyclic molecule')
+  if (g.atoms.length === 0) throw new RangeError('An empty graph has no formula')
+  // Start at a terminal carbon, preferring one that starts a C=C or C≡C, so that an alkene reads CH2=CHCH2CH3.
+  const carbons = g.atoms.map((_, i) => i).filter((i) => g.atoms[i].element === 'C')
+  const pool = carbons.length ? carbons : g.atoms.map((_, i) => i)
+  const startsMultiple = (i: number) => heavyNeighbours(g, i).some((n) => n.order > 1 && g.atoms[n.atom].element === 'C')
+  const rank = (i: number): number[] => [heavyNeighbours(g, i).length, startsMultiple(i) ? 0 : 1, i]
+  const root = pool.reduce((best, i) => {
+    const a = rank(i)
+    const b = rank(best)
+    return a[0] !== b[0] ? (a[0] < b[0] ? i : best) : a[1] !== b[1] ? (a[1] < b[1] ? i : best) : (a[2] < b[2] ? i : best)
+  })
+  return writeCondensed(g, root, -1)
+}
+
 
 /**
  * The species of a molecule: a condensed label for an acyclic molecule (the molecular formula for a
@@ -159,7 +239,7 @@ function mhchem(text: string): string {
 export function speciesOf(g: MolGraph): Species {
   let label: string
   try {
-    label = mhchem(toCondensed(g))
+    label = condensedLabel(g)
   } catch {
     label = molecularFormula(g)
   }

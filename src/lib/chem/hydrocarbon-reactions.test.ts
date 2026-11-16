@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest'
-import { parseSmiles } from './molecule-parse'
+import { parseSmiles as g0 } from './molecule-parse'
+import { speciesOf } from './hydrocarbon-species'
 import {
   acetylide,
   acidicPermanganate,
@@ -30,6 +31,7 @@ import {
   isomerise,
   kolbe,
   ozonolysis,
+  ozonolysisOfArene,
   ozonolysisReverse,
   polymerise,
   pyrolysis,
@@ -40,7 +42,7 @@ import {
   wurtz,
 } from './hydrocarbon-reactions'
 
-const g = parseSmiles
+const g = g0
 
 describe('alkane reactions', () => {
   it('hydrogenates an alkene and an alkyne to the alkane', () => {
@@ -123,7 +125,7 @@ describe('alkene reactions', () => {
   it('Markovnikov HBr addition gives 2-bromopropane from propene', () => {
     const r = addHX(g('C=CC'), 'HBr')
     expect(r.products.find((p) => p.major)!.name).toBe('2-bromopropane')
-    expect(r.equation).toBe('\\ce{CH2=CHCH3 + HBr -> CH3CH(CH3)Br}')
+    expect(r.equation).toBe('\\ce{CH2=CHCH3 + HBr -> CH3CHBrCH3}')
   })
   it('peroxide HBr gives 1-bromopropane (anti-Markovnikov)', () => {
     const r = addHX(g('C=CC'), 'HBr', { peroxide: true })
@@ -139,7 +141,7 @@ describe('alkene reactions', () => {
   it('bromine adds across the double bond to a vicinal dibromide', () => {
     const r = addX2(g('C=C'), 'Br2')
     expect(r.products[0].name).toBe('1,2-dibromoethane')
-    expect(r.equation).toBe('\\ce{CH2=CH2 + Br2 -> BrCH2CH2Br}')
+    expect(r.equation).toBe('\\ce{CH2=CH2 + Br2 -> CH2BrCH2Br}')
   })
   it('sulphuric acid addition gives the Markovnikov hydrogen sulphate', () => {
     const r = addH2SO4(g('C=CC'))
@@ -271,5 +273,121 @@ describe('reaction records', () => {
   it('every reaction returns a condition text', () => {
     expect(hydrogenate(g('C=C')).conditions.length).toBeGreaterThan(0)
     expect(addX2(g('C=C'), 'Cl2').conditions.length).toBeGreaterThan(0)
+  })
+})
+
+describe('product formulas across the engine (display rules, 25+ products)', () => {
+  const label = (p: { graph: ReturnType<typeof g> }) => speciesOf(p.graph).label
+  it.each<[string, string[]]>([
+    ['hydrogenate C=C', [label(hydrogenate(g('C=C')).products[0])]],
+    ['HBr Markovnikov', [label(addHX(g('C=CC'), 'HBr').products[0])]],
+    ['HBr peroxide', [label(addHX(g('C=CC'), 'HBr', { peroxide: true }).products[0])]],
+    ['HCl Markovnikov', [label(addHX(g('C=CC'), 'HCl').products[0])]],
+    ['Br2 addition', [label(addX2(g('C=C'), 'Br2').products[0])]],
+    ['hydration', [label(hydrate(g('C=CC')).products[0])]],
+    ['Baeyer diol', [label(baeyer(g('C=C')).products[0])]],
+    ['ozonolysis 2-methylbut-2-ene', ozonolysis(g('CC(C)=CC')).products.map(label)],
+    ['acidic KMnO4', acidicPermanganate(g('CC=CC')).products.map(label)],
+    ['chlorination of propane', halogenate(g('CCC'), 'Cl').products.map(label)],
+    ['elimination from 2-bromobutane', eliminate(g('CCC(Br)C')).products.map(label)],
+    ['Kolbe', [label(kolbe(g('CC(=O)O')).products[0])]],
+    ['sodalime', [label(decarboxylate(g('CCCC(=O)O')).products[0])]],
+    ['Wurtz', [label(wurtz(g('CCBr'), g('CCBr')).products[0])]],
+    ['reduction of bromoethane', [label(reduceAlkylHalide(g('CCBr')).products[0])]],
+    ['methanol', [label(controlledOxidation('methanol').products[0])]],
+    ['ethanoic acid', [label(controlledOxidation('ethanoic-acid').products[0])]],
+    ['isomerisation of hexane', isomerise(g('CCCCCC')).products.map(label)],
+    ['pyrolysis of hexane', [label(pyrolysis(g('CCCCCC')).products[0])]],
+    ['ethyne + Br2', [label(addToAlkyne(g('C#C'), 'X2').products[0])]],
+    ['HBr twice on ethyne', [label(addToAlkyne(g('C#C'), 'HX').products[1])]],
+    ['Hg2+ on ethyne', [label(addToAlkyne(g('C#C'), 'H2O').products[1])]],
+    ['Hg2+ on propyne', [label(addToAlkyne(g('CC#C'), 'H2O').products[1])]],
+    ['dehydration of ethanol', [label(dehydrate(g('CCO')).products[0])]],
+    ['dehalogenation', [label(dehalogenate(g('BrCCBr')).products[0])]],
+    ['ethyne from dibromoethane', [label(fromVicinalDihalide(g('BrCCBr')).products[0])]],
+    ['biacetyl ozonolysis reverse', [label(ozonolysisReverse([g('CC=O'), g('CC=O')]).products[0])]],
+    ['o-xylene Kekulé ozonolysis (ring cleaved)', ozonolysis(g('CC1=C(C)C=CC=C1'), { aromatic: 'cleave' }).products.map(label)],
+  ])('%s', (_name, labels) => {
+    expect(labels.length).toBeGreaterThan(0)
+    for (const x of labels) expect(x).toMatch(/^[A-Za-z0-9()#=\[\]+\-. ]+$/)
+  })
+  it('the expected strings for the main products', () => {
+    expect(label(addHX(g('C=CC'), 'HBr').products[0])).toBe('CH3CHBrCH3')
+    expect(label(addHX(g('C=CC'), 'HBr', { peroxide: true }).products[0])).toBe('CH3CH2CH2Br')
+    expect(label(addX2(g('C=C'), 'Br2').products[0])).toBe('CH2BrCH2Br')
+    expect(label(hydrate(g('C=CC')).products[0])).toBe('CH3CHOHCH3')
+    expect(ozonolysis(g('CC(C)=CC')).products.map(label)).toEqual(['CH3COCH3', 'CH3CHO'])
+    expect(acidicPermanganate(g('CC=CC')).products.map(label)).toEqual(['CH3COOH', 'CH3COOH'])
+    expect(halogenate(g('CCC'), 'Cl').products.map(label)).toEqual(['CH3CHClCH3', 'CH3CH2CH2Cl'])
+    expect(eliminate(g('CCC(Br)C')).products.map(label)).toEqual(['CH3CH=CHCH3', 'CH2=CHCH2CH3'])
+    expect(label(controlledOxidation('methanol').products[0])).toBe('CH3OH')
+    expect(label(controlledOxidation('ethanoic-acid').products[0])).toBe('CH3COOH')
+    expect(label(addToAlkyne(g('C#C'), 'X2').products[0])).toBe('CHBr=CHBr')
+    expect(label(addToAlkyne(g('C#C'), 'HX').products[1])).toBe('CH3CHBr2')
+    expect(label(addToAlkyne(g('C#C'), 'H2O').products[1])).toBe('CH3CHO')
+    expect(label(addToAlkyne(g('CC#C'), 'H2O').products[1])).toBe('CH3COCH3')
+    expect(label(dehydrate(g('CCO')).products[0])).toBe('CH2=CH2')
+    expect(label(fromVicinalDihalide(g('BrCCBr')).products[0])).toBe('CH#CH')
+  })
+  it('no equation string carries a KX placeholder or an unbalanced condition', () => {
+    const texts = [
+      eliminate(g('CCC(Br)C')).equation,
+      eliminate(g('CCC(Br)C')).equations.join(' '),
+      fromVicinalDihalide(g('BrCCBr')).equation,
+    ]
+    for (const t of texts) {
+      expect(t).not.toMatch(/KX/)
+      expect(t).toMatch(/KBr/)
+    }
+  })
+  it('every function on its preset substrates builds balanced equations (each equation is checked when built)', () => {
+    const presets: Array<() => unknown> = [
+      () => hydrogenate(g('C=C')), () => hydrogenate(g('CC#CC'), { alkyne: 'lindlar' }), () => hydrogenate(g('CC#CC'), { alkyne: 'sodium-ammonia' }),
+      () => reduceAlkylHalide(g('CCBr')), () => wurtz(g('CCBr'), g('CCCBr')), () => decarboxylate(g('CC(=O)O')),
+      () => kolbe(g('CC(=O)O')), () => halogenate(g('CCC'), 'Cl'), () => halogenate(g('CCC'), 'Br'), () => combust(g('CCCC')),
+      () => controlledOxidation('methanol'), () => controlledOxidation('methanal'), () => controlledOxidation('ethanoic-acid'),
+      () => controlledOxidation('tertiary-alcohol'), () => isomerise(g('CCCCCC')), () => aromatise(g('CCCCCC')),
+      () => steamReform(g('C')), () => pyrolysis(g('CCCCCC')), () => pyrolysis(g('CCCCCCCCCCCC')),
+      () => addHX(g('C=CC'), 'HCl'), () => addHX(g('C=CC'), 'HBr', { peroxide: true }), () => addHX(g('C=CC'), 'HI'),
+      () => addX2(g('C=C'), 'Cl2'), () => addX2(g('C=C'), 'Br2'), () => addH2SO4(g('C=CC')), () => hydrate(g('C=CC')),
+      () => baeyer(g('C=C')), () => acidicPermanganate(g('CC=CC')), () => ozonolysis(g('CC(C)=CC')),
+      () => ozonolysisReverse([g('CC=O'), g('CCC(=O)CC')]), () => polymerise(g('C=C')), () => polymerise(g('CC=C')),
+      () => eliminate(g('CCC(Br)C')), () => dehydrate(g('CCO')), () => dehalogenate(g('BrCCBr')),
+      () => alkyneAcidity(g('C#C')), () => acetylide(g('C#C'), 'Na'), () => acetylide(g('C#C'), 'NaNH2'),
+      () => addToAlkyne(g('C#C'), 'H2'), () => addToAlkyne(g('C#C'), 'X2'), () => addToAlkyne(g('C#C'), 'HX'),
+      () => addToAlkyne(g('C#C'), 'H2O'), () => cyclicPolymerise(g('C#C')), () => fromCalciumCarbide(),
+      () => fromVicinalDihalide(g('BrCCBr')), () => electrophilicSubstitution(g('C1=CC=CC=C1'), 'nitration'),
+      () => electrophilicSubstitution(g('C1=CC=CC=C1'), 'chlorination'), () => electrophilicSubstitution(g('C1=CC=CC=C1'), 'bromination'),
+      () => electrophilicSubstitution(g('C1=CC=CC=C1'), 'sulphonation'), () => electrophilicSubstitution(g('C1=CC=CC=C1'), 'alkylation', { R: g('CCCCl') }),
+      () => electrophilicSubstitution(g('C1=CC=CC=C1'), 'acylation', { R: g('CC(=O)Cl') }), () => chlorinateExcess(g('C1=CC=CC=C1')),
+      () => addHydrogenToBenzene(g('C1=CC=CC=C1')), () => addChlorineUV(g('C1=CC=CC=C1')), () => decarboxylateBenzoate(),
+      () => reducePhenol(g('OC1=CC=CC=C1')),
+    ]
+    for (const run of presets) expect(run()).toBeDefined()
+  })
+})
+
+describe('ozonolysis of an arene, both Kekulé forms (Exercise 9.17)', () => {
+  it('o-xylene gives glyoxal, methylglyoxal and biacetyl in 3 : 2 : 1 by moles', () => {
+    const r = ozonolysisOfArene(g('CC1=C(C)C=CC=C1'))
+    expect(r.forms.length).toBe(2)
+    expect(Object.fromEntries(r.totals.map((t) => [t.name, t.moles]))).toEqual({ ethanedial: 3, '2-oxopropanal': 2, 'butane-2,3-dione': 1 })
+  })
+  it('form I gives biacetyl and two glyoxal; form II gives two methylglyoxal and glyoxal', () => {
+    const r = ozonolysisOfArene(g('CC1=C(C)C=CC=C1'))
+    const names = r.forms.map((f) => f.products.map((p) => p.name).sort())
+    expect(names).toContainEqual(['butane-2,3-dione', 'ethanedial', 'ethanedial'])
+    expect(names).toContainEqual(['2-oxopropanal', '2-oxopropanal', 'ethanedial'])
+  })
+  it('rejects a molecule with no benzene ring', () => {
+    expect(() => ozonolysisOfArene(g('CC'))).toThrow(RangeError)
+  })
+})
+
+describe('potassium halide in β-elimination equations', () => {
+  it('writes the real halide (KBr for a bromide), not KX', () => {
+    expect(eliminate(g('CCC(Br)C')).equation).toMatch(/KBr/)
+    expect(eliminate(g('CCC(Cl)C')).equation).toMatch(/KCl/)
+    expect(fromVicinalDihalide(g('BrCCBr')).equation).toMatch(/KBr/)
   })
 })

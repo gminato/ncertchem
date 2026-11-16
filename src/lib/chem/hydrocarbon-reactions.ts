@@ -141,6 +141,12 @@ function adjusted(species: Species, changes: Record<string, number>, label: stri
   return { label, counts, name: species.name }
 }
 
+/** The potassium halide formed by a β-elimination (KBr, KCl, KI), as a species. */
+function potassiumHalide(x: string): Species {
+  const names: Record<string, string> = { F: 'potassium fluoride', Cl: 'potassium chloride', Br: 'potassium bromide', I: 'potassium iodide' }
+  return inorganic(`K${x}`, { K: 1, [x]: 1 }, names[x] ?? `potassium ${x}`)
+}
+
 /** The hydrogen halide of a halogen symbol, as a species. */
 function hx(x: 'Cl' | 'Br' | 'I' | 'F'): Species {
   return hydrogenHalide(x)
@@ -925,6 +931,44 @@ export function ozonolysis(g: MolGraph, options: { aromatic?: 'keep' | 'cleave' 
   }
 }
 
+/** The products of ozonolysis of an arene, for each of its two Kekulé forms, and the total moles of each product. */
+export interface ArenePathway {
+  forms: { kekule: 1 | 2; products: ReactionProduct[] }[]
+  totals: { name: string; formula: string; moles: number }[]
+}
+
+/**
+ * Ozonolysis of a benzene ring in both Kekulé forms (NCERT Exercise 9.17): the three ring double bonds are cut in
+ * each form. For o-xylene, form I (the bond between the two methyl carbons is double) gives biacetyl and two glyoxal;
+ * form II gives two methylglyoxal and one glyoxal. Taken together the products are glyoxal : methylglyoxal :
+ * biacetyl = 3 : 2 : 1 by moles, the evidence for the two Kekulé structures.
+ *
+ * @throws {RangeError} If the molecule has no benzene ring
+ */
+export function ozonolysisOfArene(arene: MolGraph): ArenePathway {
+  const ring = benzeneRing(arene)
+  if (!ring) throw new RangeError('Ozonolysis of an arene needs a benzene ring')
+  const forms = ([1, 2] as const).map((kekule) => {
+    const bonds = arene.bonds.map((b) => ({ ...b }))
+    ring.forEach((a, k) => {
+      const b = ring[(k + 1) % ring.length]
+      const bond = bonds.find((x) => (x.a === a && x.b === b) || (x.a === b && x.b === a))
+      if (bond) bond.order = (kekule === 1 ? k % 2 === 0 : k % 2 === 1) ? 2 : 1
+    })
+    const kek = rebuild(arene.atoms.map((x) => ({ ...x })), bonds)
+    return { kekule, products: ozonolysis(kek, { aromatic: 'cleave' }).products }
+  })
+  const totals = new Map<string, { name: string; formula: string; moles: number }>()
+  for (const f of forms) {
+    for (const p of f.products) {
+      const t = totals.get(p.name) ?? { name: p.name, formula: p.formula, moles: 0 }
+      t.moles += 1
+      totals.set(p.name, t)
+    }
+  }
+  return { forms, totals: [...totals.values()].sort((x, y) => y.moles - x.moles) }
+}
+
 /**
  * The alkene that gives two given carbonyl compounds on ozonolysis (NCERT Exercises 9.5 and 9.7): the two
  * carbonyl carbons are joined by a C=C. Exactly two carbonyl carbons must be present.
@@ -1048,7 +1092,7 @@ function betaElimination(g: MolGraph, leaving: number, kind: 'halide' | 'alcohol
       return balancedEquation([term(1, reactant)], [term(1, speciesOf(alkene)), term(1, WATER)])
     }
     const x = g.atoms[leaving].element
-    const kx = inorganic(`KX`, { K: 1, [x]: 1 }, 'potassium halide')
+    const kx = potassiumHalide(x)
     return balancedEquation([term(1, reactant), term(1, inorganic('KOH', { K: 1, O: 1, H: 1 }, 'potassium hydroxide'))], [term(1, speciesOf(alkene)), term(1, kx), term(1, WATER)])
   })
   void leavingSpecies
@@ -1280,7 +1324,7 @@ export function fromVicinalDihalide(g: MolGraph): Reaction {
     })
   const alkyne = rebuild(kept.map((i) => ({ ...g.atoms[i] })), bonds)
   const x = g.atoms[p].element
-  const equation = balancedEquation([term(1, speciesOf(g)), term(2, inorganic('KOH', { K: 1, O: 1, H: 1 }, 'potassium hydroxide'))], [term(1, speciesOf(alkyne)), term(2, inorganic('KX', { K: 1, [x]: 1 }, 'potassium halide')), term(2, WATER)])
+  const equation = balancedEquation([term(1, speciesOf(g)), term(2, inorganic('KOH', { K: 1, O: 1, H: 1 }, 'potassium hydroxide'))], [term(1, speciesOf(alkyne)), term(2, potassiumHalide(x)), term(2, WATER)])
   return {
     reactants: [nameOf(g), 'alcoholic KOH, then NaNH2'],
     products: [productOf(alkyne, { major: true })],
@@ -1475,7 +1519,7 @@ export function electrophilicSubstitution(
     alkylation: speciesOf(options.R ?? EMPTY),
     acylation: speciesOf(options.R ?? EMPTY),
   }[kind]
-  const byproduct = kind === 'nitration' || kind === 'sulphonation' ? WATER : hx('Cl')
+  const byproduct = kind === 'nitration' || kind === 'sulphonation' ? WATER : kind === 'bromination' ? hx('Br') : hx('Cl')
   const equations = products.map((p) => {
     const counts = p.graph === EMPTY ? {} : countsOf(p.graph)
     const productSpecies: Species = p.graph === EMPTY ? { label: p.formula, counts, name: p.name } : { ...speciesOf(p.graph), name: p.name }

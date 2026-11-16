@@ -9,7 +9,7 @@ const g = parseSmiles
 describe('species helpers', () => {
   it('speciesOf gives a condensed label, counts and a name', () => {
     const s = speciesOf(g('CC=C'))
-    expect(s.label).toBe('CH3CH=CH2')
+    expect(s.label).toBe('CH2=CHCH3')
     expect(s.counts).toEqual({ C: 3, H: 6 })
     expect(s.name).toBe('propene')
   })
@@ -56,5 +56,37 @@ describe('species helpers', () => {
   it('rebuild gives a carbon the hydrogens its valence needs', () => {
     const m = rebuild([{ element: 'C' }, { element: 'C' }], [{ a: 0, b: 1, order: 2 }])
     expect(countsOf(m)).toEqual({ C: 2, H: 4 })
+  })
+})
+
+describe('condensed formulas shown to students (Unit 9 display rules)', () => {
+  it.each([
+    ['CC(Br)C', 'CH3CHBrCH3'],
+    ['CC(=O)C', 'CH3COCH3'],
+    ['CC=O', 'CH3CHO'],
+    ['CCC=O', 'CH3CH2CHO'],
+    ['CC(=O)O', 'CH3COOH'],
+    ['CC(=O)OC', 'CH3COOCH3'],
+    ['CC(C)C', 'CH3CH(CH3)CH3'],
+    ['C=CC', 'CH2=CHCH3'],
+    ['C=C', 'CH2=CH2'],
+    ['BrCCBr', 'CH2BrCH2Br'],
+    ['CC(O)C', 'CH3CHOHCH3'],
+    ['CC(C)=C', 'CH2=C(CH3)CH3'],
+    ['CC#C', 'CH#CCH3'],
+    ['CCCCCC', 'CH3CH2CH2CH2CH2CH3'],
+    ['CC(C)CC', 'CH3CH(CH3)CH2CH3'],
+    ['OCCO', 'CH2OHCH2OH'],
+    ['C=CC=C', 'CH2=CHCH=CH2'],
+    ['CCCl', 'CH3CH2Cl'],
+    ['CO', 'CH3OH'],
+    ['OCC', 'CH3CH2OH'],
+    ['BrC=CBr', 'CHBr=CHBr'],
+    ['CC(C)(C)O', 'CH3C(CH3)OHCH3'],
+    ['CC(=O)C(C)=O', 'CH3COCOCH3'],
+    ['O=CC=O', 'CHOCHO'],
+    ['CC(=O)C=O', 'CH3COCHO'],
+  ])('%s is written %s', (smiles, expected) => {
+    expect(speciesOf(g(smiles)).label).toBe(expected)
   })
 })
