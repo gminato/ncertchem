@@ -55,6 +55,7 @@ import { AlkyneIsomers } from './sims/alkyne-isomers'
 import { FormulaTranslator } from './sims/formula-translator'
 import { ArrowPusher } from './sims/arrow-pusher'
 import { AlkyneAcidTest } from './sims/alkyne-acid-test'
+import { HalogenationLab } from './sims/halogenation-lab'
 import { AlkaneSynthesisPlanner } from './sims/alkane-synthesis-planner'
 import { AlkeneMaker } from './sims/alkene-maker'
 import { CisTransChecker } from './sims/cis-trans-checker'
@@ -128,6 +129,7 @@ export const simulations: Record<string, ComponentType<SimulationProps>> = {
   'formula-translator': FormulaTranslator,
   'arrow-pusher': ArrowPusher,
   'alkyne-acid-test': AlkyneAcidTest,
+  'halogenation-lab': HalogenationLab,
   'alkane-synthesis-planner': AlkaneSynthesisPlanner,
   'alkene-maker': AlkeneMaker,
   'cis-trans-checker': CisTransChecker,
