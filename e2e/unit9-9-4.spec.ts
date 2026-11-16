@@ -57,7 +57,7 @@ for (const scheme of ['light', 'dark'] as const) {
       await section.scrollIntoViewIfNeeded()
       await expect(lab).toHaveAttribute('data-n', '5')
       await expect(lab).toHaveAttribute('data-isomers', '3')
-      await expect(section.getByTestId('alkyne-readout')).toContainText('C5H8 has 3 isomers')
+      await expect(section.getByTestId('alkyne-readout')).toContainText('C₅H₈ has 3 isomers')
       await page.waitForTimeout(300)
       await section.screenshot({ path: path.join(SCREEN_DIR, `u9-9-4-isomers-n5-default-${scheme}.png`) })
 
@@ -69,7 +69,17 @@ for (const scheme of ['light', 'dark'] as const) {
 
       await section.locator('input[type="range"]').fill('6')
       await expect(lab).toHaveAttribute('data-isomers', '7')
-      await expect(section.getByTestId('alkyne-readout')).toContainText('C6H10 has 7 isomers')
+      // Three columns at n = 6 on a wide panel, and labels of at least 14 px.
+      const columns = await section.locator('[data-name]').first().evaluate((el) => {
+        const grid = el.parentElement as HTMLElement
+        return getComputedStyle(grid).gridTemplateColumns.split(' ').length
+      })
+      expect(columns).toBe(3)
+      const sizes = await section.locator('[data-name] span').evaluateAll((els) => els.map((e) => parseFloat(getComputedStyle(e).fontSize)))
+      expect(Math.min(...sizes)).toBeGreaterThanOrEqual(14)
+      const readoutSize = await section.getByTestId('alkyne-readout').evaluate((el) => parseFloat(getComputedStyle(el).fontSize))
+      expect(readoutSize).toBeGreaterThanOrEqual(14)
+      await expect(section.getByTestId('alkyne-readout')).toContainText('C₆H₁₀ has 7 isomers')
       await page.waitForTimeout(300)
       await section.screenshot({ path: path.join(SCREEN_DIR, `u9-9-4-isomers-n6-${scheme}.png`) })
 
