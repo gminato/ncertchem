@@ -1,6 +1,7 @@
 'use client'
 
-import { PolymerChain, SkeletalFormula, drawingFrame } from '@/components/organic'
+import { PolymerChain, SkeletalFormula, drawingFrame, skeletalBounds } from '@/components/organic'
+import type { MolGraph } from '@/lib/chem/molecule-graph'
 import { ReagentTest } from '@/components/organic/lab'
 import { Label, VocabDefs } from '@/components/vocab'
 import { useStepTween } from '@/components/animations/unit4/vbt/useStepTween'
@@ -80,6 +81,25 @@ function cutAcross(): { x1: number; y1: number; x2: number; y2: number; lx: numb
 const CUT = cutAcross()
 
 /**
+ * Where a drawing goes in the panel: the scale that fits its width between `left` and `right`
+ * (never larger than `scale`), and the x that centres it. Keeps every molecule inside the viewBox.
+ */
+function place(g: MolGraph, scale: number, left: number, right: number): { scale: number; x: number } {
+  const full = skeletalBounds(g, scale)
+  const k = Math.min(1, (right - left) / full.width)
+  const s = scale * k
+  const b = skeletalBounds(g, s)
+  return { scale: s, x: (left + right) / 2 - (b.x + b.width / 2) }
+}
+
+/** Product region to the right of the arrow; the reverse reactant region to the left of its arrow. */
+const PRODUCT_SPACE = { left: 630, right: 888 }
+const CUT_PRODUCT_AT = place(CUT_PRODUCT, CHAIN_SCALE, PRODUCT_SPACE.left, PRODUCT_SPACE.right)
+const DIOL_AT = place(DIOL, DIOL_SCALE, PRODUCT_SPACE.left, PRODUCT_SPACE.right)
+const REVERSE_IN_AT = place(REVERSE_IN[0], CHAIN_SCALE, 24, 380)
+const REVERSE_OUT_AT = place(REVERSE_OUT.graph, ALKENE_SCALE, 640, 888)
+
+/**
  * The alkene-cleavage Scrolly. Baeyer's test (the tube decolourises and the diol forms), the C=C of
  * 1-methylcyclohexene cut by ozone, the carbonyl products, the reverse join, and the polymer. Each Step
  * sets opacities and progress values that tween from the last Step; the molecules, names and equations
@@ -113,7 +133,7 @@ export function AlkeneCleavage({ step, reducedMotion }: AlkeneCleavageProps) {
         <SkeletalFormula graph={CYCLOHEXENE} scale={ALKENE_SCALE} x={LEFT.x} y={LEFT.y} highlightBonds={current.alkeneBonds} />
       </g>
       <g opacity={t.diolA} data-testid="cleavage-diol">
-        <SkeletalFormula graph={DIOL} scale={DIOL_SCALE} x={RIGHT.x} y={RIGHT.y} highlightAtoms={current.diolAtoms} />
+        <SkeletalFormula graph={DIOL} scale={DIOL_AT.scale} x={DIOL_AT.x} y={RIGHT.y} highlightAtoms={current.diolAtoms} />
       </g>
       <g opacity={t.arrowA}>
         <Arrow {...ARROW} />
@@ -144,12 +164,12 @@ export function AlkeneCleavage({ step, reducedMotion }: AlkeneCleavageProps) {
         </Label>
       </g>
       <g opacity={t.productB} data-testid="cleavage-product">
-        <SkeletalFormula graph={CUT_PRODUCT} scale={CHAIN_SCALE} x={RIGHT.x} y={RIGHT.y} highlightAtoms={current.productAtoms} />
+        <SkeletalFormula graph={CUT_PRODUCT} scale={CUT_PRODUCT_AT.scale} x={CUT_PRODUCT_AT.x} y={RIGHT.y} highlightAtoms={current.productAtoms} />
       </g>
 
       {/* Step 4: the reverse puzzle, carbonyls joined back into the alkene */}
       <g opacity={t.revIn} data-testid="cleavage-reverse-in">
-        <SkeletalFormula graph={REVERSE_IN[0]} scale={CHAIN_SCALE} x={215} y={LEFT.y} highlightAtoms={current.revInAtoms} />
+        <SkeletalFormula graph={REVERSE_IN[0]} scale={REVERSE_IN_AT.scale} x={REVERSE_IN_AT.x} y={LEFT.y} highlightAtoms={current.revInAtoms} />
       </g>
       <g opacity={t.arrowR}>
         <Arrow x1={420} x2={585} y={ARROW.y} />
@@ -158,7 +178,7 @@ export function AlkeneCleavage({ step, reducedMotion }: AlkeneCleavageProps) {
         </Label>
       </g>
       <g opacity={t.revOut} data-testid="cleavage-reverse-out">
-        <SkeletalFormula graph={REVERSE_OUT.graph} scale={ALKENE_SCALE} x={765} y={LEFT.y} highlightBonds={current.revOutBonds} />
+        <SkeletalFormula graph={REVERSE_OUT.graph} scale={REVERSE_OUT_AT.scale} x={REVERSE_OUT_AT.x} y={LEFT.y} highlightBonds={current.revOutBonds} />
       </g>
 
       {/* Step 5: ethene units joining into polythene */}
