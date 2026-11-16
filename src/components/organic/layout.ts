@@ -165,6 +165,19 @@ export function layout2D(g: MolGraph): Point[] {
   const placed = new Array<boolean>(n).fill(false)
   const ringDone = rings.map(() => false)
   const ringCentre: Point[] = rings.map(() => ({ x: 0, y: 0 }))
+  // sp atoms (a triple bond, or two double bonds as in an allene) are linear: 180 degrees.
+  const linear = new Array<boolean>(n).fill(false)
+  {
+    const doubles = new Array<number>(n).fill(0)
+    for (const b of g.bonds) {
+      if (b.order === 3) linear[b.a] = linear[b.b] = true
+      if (b.order === 2) {
+        doubles[b.a]++
+        doubles[b.b]++
+      }
+    }
+    for (let i = 0; i < n; i++) if (doubles[i] >= 2) linear[i] = true
+  }
 
   // Connected components
   const compOf = new Array<number>(n).fill(-1)
@@ -211,15 +224,17 @@ export function layout2D(g: MolGraph): Point[] {
       ringCentre[ri] = { x: 0, y: 0 }
     } else {
       // Root: the longest chain as a horizontal zig-zag, bonds alternating at +30 and -30 degrees.
+      // Through an sp atom the chain runs straight on (180 degrees), so C–C≡C–C is one line.
       const path = diameterPath(comp, adj, n)
+      let ang = Math.PI / 6
       path.forEach((a, i) => {
         if (i === 0) {
           place(a, { x: 0, y: 0 })
           return
         }
         const prev = pts[path[i - 1]]
-        // Two atoms lie on the x-axis; longer chains zig-zag at +30 and -30 degrees.
-        const ang = path.length === 2 ? 0 : i % 2 === 1 ? Math.PI / 6 : -Math.PI / 6
+        if (path.length === 2) ang = 0
+        else if (i > 1 && !linear[path[i - 1]]) ang = -ang
         place(a, { x: prev.x + Math.cos(ang), y: prev.y + Math.sin(ang) })
       })
     }
@@ -231,6 +246,7 @@ export function layout2D(g: MolGraph): Point[] {
       if (nb.length === 0) return [0]
       if (nb.length === 1) {
         const back = Math.atan2(nb[0].y - pts[p].y, nb[0].x - pts[p].x)
+        if (linear[p] && !rings.some((r) => r.includes(p))) return [back + Math.PI]
         const cands = [back + (2 * Math.PI) / 3, back - (2 * Math.PI) / 3]
         if (k >= 3) cands.push(back + Math.PI)
         return cands
