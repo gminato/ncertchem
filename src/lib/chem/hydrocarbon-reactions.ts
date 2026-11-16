@@ -1129,7 +1129,7 @@ export function dehalogenate(g: MolGraph): Reaction {
     })
   const alkene = rebuild(kept.map((i) => ({ ...g.atoms[i] })), bonds)
   const x = g.atoms[p].element
-  const znX2 = inorganic('ZnX2', { Zn: 1, [x]: 2 }, `zinc ${x === 'Br' ? 'bromide' : x === 'Cl' ? 'chloride' : 'iodide'}`)
+  const znX2 = inorganic(`Zn${x}2`, { Zn: 1, [x]: 2 }, `zinc ${x === 'Br' ? 'bromide' : x === 'Cl' ? 'chloride' : 'iodide'}`)
   const equation = balancedEquation([term(1, speciesOf(g)), term(1, inorganic('Zn', { Zn: 1 }, 'zinc'))], [term(1, speciesOf(alkene)), term(1, znX2)])
   return {
     reactants: [nameOf(g), 'zinc'],
@@ -1137,7 +1137,7 @@ export function dehalogenate(g: MolGraph): Reaction {
     equation,
     equations: [equation],
     conditions: conditionFor('dehalogenation').text,
-    why: 'Zinc takes the two halogens as ZnX2, and the two carbons left bare form the C=C.',
+    why: 'Zinc takes the two halogens as the zinc halide, and the two carbons left bare form the C=C.',
   }
 }
 

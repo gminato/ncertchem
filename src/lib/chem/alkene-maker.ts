@@ -134,16 +134,6 @@ export function describeStart(g: MolGraph): AlkeneStart {
   return base
 }
 
-/**
- * The lib writes the zinc salt as ZnX2 (a placeholder). This replaces it with the halide of the
- * substrate (ZnBr2 from a dibromide), in the equation strings only, so the product is unchanged.
- */
-function withZincHalide(reaction: Reaction, g: MolGraph): Reaction {
-  const x = g.atoms[halogensOf(g)[0]].element
-  const fix = (text: string) => text.replace('ZnX2', `Zn${x}2`)
-  return { ...reaction, equation: fix(reaction.equation), equations: reaction.equations.map(fix), why: fix(reaction.why) }
-}
-
 const REASON_NO_BETA = 'The carbon that carries the halogen has no neighbour with a hydrogen, so no β-hydrogen can leave and no alkene forms. Bromomethane is one example.'
 
 /**
@@ -176,7 +166,7 @@ export function makeAlkenes(smiles: string, reagent: AlkeneReagent): AlkeneOutco
       return none('This compound has no halogen to eliminate with alcoholic KOH.')
     }
     case 'zinc': {
-      if (start.kind === 'vicinal-dihalide') return { kind: 'reaction', start, reaction: withZincHalide(dehalogenate(g), g) }
+      if (start.kind === 'vicinal-dihalide') return { kind: 'reaction', start, reaction: dehalogenate(g) }
       if (start.kind === 'alkyl-halide') {
         return none('Zinc takes two halogens from adjacent carbons. A single C–X bond gives no alkene with zinc alone.')
       }

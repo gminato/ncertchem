@@ -39,7 +39,7 @@
 }
 
 .caption {
-  font-size: 0.9rem;
+  font-size: 15px;
   color: var(--fg-muted);
   text-align: center;
 }
@@ -57,13 +57,14 @@
 
 .heading {
   margin: 0;
-  font-size: 1.05rem;
+  font-size: 19px;
   font-weight: 600;
 }
 
 .summary {
   margin: 0;
-  font-size: 0.98rem;
+  font-size: 17px;
+  line-height: 1.45;
 }
 
 .equations {
@@ -77,14 +78,14 @@
 }
 
 .equation {
-  font-size: 1.05rem;
+  font-size: 19px;
 }
 
 .condition,
 .why,
 .beta {
   margin: 0;
-  font-size: 0.92rem;
+  font-size: 15px;
   color: var(--fg-muted);
   line-height: 1.5;
 }

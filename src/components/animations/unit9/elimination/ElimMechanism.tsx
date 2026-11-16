@@ -157,7 +157,7 @@ function BaseStep() {
       <text x={212} y={122} fontSize={18} fontWeight={500} fontFamily={FONT} fill="var(--fg-muted)">
         β-H
       </text>
-      <Caption lines={['Alcoholic KOH supplies OH⁻, whose lone pair takes the β-H.', 'The C–H electron pair stays behind for the next step.']} />
+      <Caption lines={['Alcoholic KOH supplies OH⁻. Its lone pair reaches for the β-H.', 'Nothing has moved yet. The next Step moves the electrons.']} />
     </g>
   )
 }
@@ -194,8 +194,8 @@ function Ethene({ x, y, colour = 'var(--fg)', spread = 1 }: { x: number; y: numb
   ]
   return (
     <g>
-      <Bond a={a} b={b} offset={5} shrinkA={16} shrinkB={16} />
-      <Bond a={a} b={b} offset={-5} shrinkA={16} shrinkB={16} />
+      <Bond a={a} b={b} offset={5} shrinkA={14} shrinkB={14} />
+      <Bond a={a} b={b} offset={-5} shrinkA={14} shrinkB={14} />
       <Bond a={a} b={hs[0]} />
       <Bond a={a} b={hs[1]} />
       <Bond a={b} b={hs[2]} />
@@ -229,42 +229,46 @@ function EtheneStep() {
   )
 }
 
-/** Step 5: the vicinal dihalide with zinc: both halogens leave as ZnBr2 and ethene forms. */
+/** Step 5: the vicinal dihalide with zinc: Zn goes over the arrow, ZnBr2 is a product beside the ethene. */
 function DihalideStep() {
   const facts = eliminationFacts()
   const outcome = facts.dibromoethane
   const name = outcome.kind === 'reaction' ? outcome.reaction.products[0].name : 'ethene'
-  const c1 = { x: 96, y: 235 }
-  const c2 = { x: 176, y: 235 }
-  const br1 = { x: 30, y: 235 }
-  const br2 = { x: 242, y: 235 }
+  const c1 = { x: 82, y: 235 }
+  const c2 = { x: 142, y: 235 }
+  const br1 = { x: 20, y: 235 }
+  const br2 = { x: 204, y: 235 }
+  const up1 = { x: 82, y: 155 }
+  const dn1 = { x: 82, y: 315 }
+  const up2 = { x: 142, y: 155 }
+  const dn2 = { x: 142, y: 315 }
   return (
     <g>
       <Title>Zinc removes two halogens from neighbours</Title>
-      <Bond a={br1} b={c1} shrinkB={SHRINK} shrinkA={20} />
+      <Bond a={br1} b={c1} shrinkA={20} shrinkB={SHRINK} />
       <Bond a={c1} b={c2} />
       <Bond a={c2} b={br2} shrinkA={SHRINK} shrinkB={20} />
-      <Bond a={c1} b={{ x: 96, y: 160 }} />
-      <Bond a={c1} b={{ x: 96, y: 310 }} />
-      <Bond a={c2} b={{ x: 176, y: 160 }} />
-      <Bond a={c2} b={{ x: 176, y: 310 }} />
+      <Bond a={c1} b={up1} />
+      <Bond a={c1} b={dn1} />
+      <Bond a={c2} b={up2} />
+      <Bond a={c2} b={dn2} />
       <Atom at={br1} text="Br" colour="var(--atom-hal)" />
       <Atom at={br2} text="Br" colour="var(--atom-hal)" />
       <Atom at={c1} text="C" />
       <Atom at={c2} text="C" />
-      <Atom at={{ x: 96, y: 160 }} text="H" />
-      <Atom at={{ x: 96, y: 310 }} text="H" />
-      <Atom at={{ x: 176, y: 160 }} text="H" />
-      <Atom at={{ x: 176, y: 310 }} text="H" />
-      <text x={290} y={242} textAnchor="middle" fontSize={22} fontWeight={600} fontFamily={FONT} fill="var(--fg)">
-        + Zn
+      <Atom at={up1} text="H" />
+      <Atom at={dn1} text="H" />
+      <Atom at={up2} text="H" />
+      <Atom at={dn2} text="H" />
+      <text x={243} y={222} textAnchor="middle" fontSize={20} fontWeight={600} fontFamily={FONT} fill="var(--fg)">
+        Zn
       </text>
-      <line x1={318} y1={235} x2={356} y2={235} stroke="var(--fg-muted)" strokeWidth={2.4} strokeLinecap="round" />
-      <path d="M 348 228 L 358 235 L 348 242" fill="none" stroke="var(--fg-muted)" strokeWidth={2.4} strokeLinecap="round" strokeLinejoin="round" />
-      <text x={337} y={265} textAnchor="middle" fontSize={16} fontFamily={FONT} fill="var(--fg-muted)">
-        ZnBr₂
+      <line x1={222} y1={235} x2={264} y2={235} stroke="var(--fg-muted)" strokeWidth={2.4} strokeLinecap="round" />
+      <path d="M 256 228 L 266 235 L 256 242" fill="none" stroke="var(--fg-muted)" strokeWidth={2.4} strokeLinecap="round" strokeLinejoin="round" />
+      <Ethene x={330} y={235} spread={0.77} />
+      <text x={440} y={242} fontSize={21} fontWeight={600} fontFamily={FONT} fill="var(--fg)">
+        + ZnBr₂
       </text>
-      <Ethene x={450} y={235} spread={0.8} />
       <Caption lines={[`Zn takes both halogens away as ZnBr₂. Product: ${name}.`, 'A single C–X bond gives no alkene this way.']} />
     </g>
   )

@@ -141,10 +141,12 @@ import {
   TORSIONAL_PLOT_SIZE,
   ReactionScheme,
   reactionSchemeSize,
+  layoutReactionScheme,
   PiBondOrbitals,
   PI_VIEWBOX,
   BenzeneRing,
   BENZENE_RING_SIZE,
+  BENZENE_LABELLED_SIZE,
   AreniumIon,
   areniumBounds,
   EASMechanism,
@@ -273,6 +275,9 @@ const ETHYNE_STEPS: SchemePath = [
   { reagents: 'H₂', conditions: 'Pt/Pd/Ni' },
   [{ formula: 'H₃C–CH₃' }],
 ]
+/** Bond-length scales for the propene scheme: the largest that keeps it on one row fills most of the card. */
+const PROPENE_SCALES = [60, 56, 52, 48] as const
+const PROPENE_LAYOUT = layoutReactionScheme(PROPENE_HBR_SCHEME, 900, PROPENE_SCALES)
 
 export default function VocabPage() {
   // Proportional hydrogen energy levels (converted from Joules to eV), n = 1..4
@@ -3433,15 +3438,16 @@ export default function VocabPage() {
         <div className={styles.grid}>
           {[0, 30, 60].map((angle) => (
             <article key={`conf-${angle}`} className={`${styles.card} ${styles.cardWide}`}>
-              <div className={styles.cardCanvas} style={{ height: 330 }}>
+              <div className={styles.cardCanvas} style={{ height: 'auto', padding: 'var(--space-4)' }}>
                 <div className={styles.panes}>
-                  <svg viewBox={`${-NEWMAN_SIZE.width / 2} ${-NEWMAN_SIZE.height / 2} ${NEWMAN_SIZE.width} ${NEWMAN_SIZE.height}`} style={{ width: 230, height: 230 }} role="img" aria-label={`Newman projection of ethane at ${angle} degrees`}>
+                  {/* The Newman circle is ~141 px across at this size, and its H labels ~28 px. */}
+                  <svg viewBox={`${-NEWMAN_SIZE.width / 2} ${-NEWMAN_SIZE.height / 2} ${NEWMAN_SIZE.width} ${NEWMAN_SIZE.height}`} style={{ width: 436, height: 436 }} role="img" aria-label={`Newman projection of ethane at ${angle} degrees`}>
                     <NewmanProjection dihedral={angle} />
                   </svg>
-                  <svg viewBox={`0 0 ${SAWHORSE_SIZE.width} ${SAWHORSE_SIZE.height}`} style={{ width: 250, height: 250 * SAWHORSE_SIZE.height / SAWHORSE_SIZE.width }} role="img" aria-label={`Sawhorse projection of ethane at ${angle} degrees`}>
+                  <svg viewBox={`0 0 ${SAWHORSE_SIZE.width} ${SAWHORSE_SIZE.height}`} style={{ width: 320, height: 320 * SAWHORSE_SIZE.height / SAWHORSE_SIZE.width }} role="img" aria-label={`Sawhorse projection of ethane at ${angle} degrees`}>
                     <SawhorseProjection dihedral={angle} x={SAWHORSE_SIZE.width / 2} y={SAWHORSE_SIZE.height / 2} />
                   </svg>
-                  <svg viewBox={`0 0 ${TORSIONAL_PLOT_SIZE.width} ${TORSIONAL_PLOT_SIZE.height}`} style={{ width: 520, height: 520 * TORSIONAL_PLOT_SIZE.height / TORSIONAL_PLOT_SIZE.width }} role="img" aria-label={`Energy against dihedral angle with the marker at ${angle} degrees`}>
+                  <svg viewBox={`0 0 ${TORSIONAL_PLOT_SIZE.width} ${TORSIONAL_PLOT_SIZE.height}`} style={{ width: 300, height: 300 * TORSIONAL_PLOT_SIZE.height / TORSIONAL_PLOT_SIZE.width }} role="img" aria-label={`Energy against dihedral angle with the marker at ${angle} degrees`}>
                     <TorsionalEnergyPlot dihedral={angle} />
                   </svg>
                 </div>
@@ -3461,8 +3467,9 @@ export default function VocabPage() {
 
           <article className={`${styles.card} ${styles.cardWide}`}>
             <div className={styles.cardCanvas} style={{ height: 'auto', padding: 'var(--space-6) var(--space-4)' }}>
-              <svg viewBox={`0 0 ${reactionSchemeSize(PROPENE_HBR_SCHEME, 900).width} ${reactionSchemeSize(PROPENE_HBR_SCHEME, 900).height}`} className={styles.drawFit} role="img" aria-label="Propene reacts with HBr to give 2-bromopropane as the major product and 1-bromopropane as the minor product">
-                <ReactionScheme sequence={PROPENE_HBR_SCHEME} maxWidth={900} />
+              {/* The viewBox is fitted to the scheme's own width, so the structures fill most of the card. */}
+              <svg viewBox={`0 0 ${PROPENE_LAYOUT.width} ${Math.ceil(PROPENE_LAYOUT.height)}`} className={styles.drawFull} style={{ width: '84%' }} role="img" aria-label="Propene reacts with HBr to give 2-bromopropane as the major product and 1-bromopropane as the minor product">
+                <ReactionScheme sequence={PROPENE_HBR_SCHEME} maxWidth={900} scales={PROPENE_SCALES} />
               </svg>
             </div>
             <div className={styles.cardBody}>
@@ -3498,12 +3505,13 @@ export default function VocabPage() {
             const mono = (['ethene', 'ethyne', 'benzene'] as const)[i]
             return (
               <article key={`pi-${mono}`} className={`${styles.card} ${styles.cardWide}`}>
-                <div className={styles.cardCanvas} style={{ height: 260 }}>
+                <div className={styles.cardCanvas} style={{ height: 'auto', padding: 'var(--space-4)' }}>
                   <div className={styles.panes}>
-                    <svg viewBox={`${PI_VIEWBOX[mono].x} ${PI_VIEWBOX[mono].y} ${PI_VIEWBOX[mono].width} ${PI_VIEWBOX[mono].height}`} style={{ width: 430, height: 430 * PI_VIEWBOX[mono].height / PI_VIEWBOX[mono].width }} role="img" aria-label={`${mono} π orbitals before the lobes merge`}>
+                    {/* Each state fills about 45% of the card width, side by side. */}
+                    <svg viewBox={`${PI_VIEWBOX[mono].x} ${PI_VIEWBOX[mono].y} ${PI_VIEWBOX[mono].width} ${PI_VIEWBOX[mono].height}`} style={{ width: '45%', height: 'auto' }} role="img" aria-label={`${mono} π orbitals before the lobes merge`}>
                       <PiBondOrbitals molecule={mono} merge={0} />
                     </svg>
-                    <svg viewBox={`${PI_VIEWBOX[mono].x} ${PI_VIEWBOX[mono].y} ${PI_VIEWBOX[mono].width} ${PI_VIEWBOX[mono].height}`} style={{ width: 430, height: 430 * PI_VIEWBOX[mono].height / PI_VIEWBOX[mono].width }} role="img" aria-label={`${mono} π orbitals after the lobes merge`}>
+                    <svg viewBox={`${PI_VIEWBOX[mono].x} ${PI_VIEWBOX[mono].y} ${PI_VIEWBOX[mono].width} ${PI_VIEWBOX[mono].height}`} style={{ width: '45%', height: 'auto' }} role="img" aria-label={`${mono} π orbitals after the lobes merge`}>
                       <PiBondOrbitals molecule={mono} merge={pv} />
                     </svg>
                   </div>
@@ -3547,7 +3555,7 @@ export default function VocabPage() {
 
           <article className={styles.card}>
             <div className={styles.cardCanvas} style={{ height: 'auto', padding: 'var(--space-6) var(--space-4)' }}>
-              <svg viewBox={`${-BENZENE_RING_SIZE.width / 2} ${-BENZENE_RING_SIZE.height / 2} ${BENZENE_RING_SIZE.width} ${BENZENE_RING_SIZE.height}`} className={styles.drawFit} role="img" aria-label="4-chlorotoluene: chlorine at position 1 and methyl at position 4, with the other positions labelled ortho, meta or para to chlorine">
+              <svg viewBox={`${-BENZENE_LABELLED_SIZE.width / 2} ${-BENZENE_LABELLED_SIZE.height / 2} ${BENZENE_LABELLED_SIZE.width} ${BENZENE_LABELLED_SIZE.height}`} className={styles.drawFit} role="img" aria-label="4-chlorotoluene:chlorine at position 1 and methyl at position 4, with the other positions labelled ortho, meta or para to chlorine">
                 <BenzeneRing
                   variant="hexagon"
                   substituents={[
