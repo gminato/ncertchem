@@ -7,16 +7,8 @@ import type { SimulationProps } from '@/components/simulation/registry'
 import { useIsActive } from '@/components/simulation/useIsActive'
 import { Molecule3D, Molecule3DFallback, cameraForMolecule } from '@/components/molecule'
 import { Stage3DLazy } from '@/components/stage3d'
-import {
-  NewmanProjection,
-  SAWHORSE_BOND,
-  SAWHORSE_BOUNDS,
-  SAWHORSE_SIZE,
-  SawhorseProjection,
-  TorsionalEnergyPlot,
-  TORSIONAL_PLOT_SIZE,
-  sawhorseRendered,
-} from '@/components/organic'
+import { TorsionalEnergyPlot, TORSIONAL_PLOT_SIZE } from '@/components/organic'
+import { NewmanDrawing, SAWHORSE_VIEW, SawhorseDrawing } from '@/components/animations/unit9/conformations/conformation-drawings'
 import { ethaneModel } from '@/lib/chem/ethane-3d'
 import {
   ROTOR_BARRIER_KJ,
@@ -34,12 +26,12 @@ const TURN_SPEED = 30
 const KEY_STEP = 5
 const KEY_PAGE = 30
 const DEFAULT_TEMPERATURE = 298
-const NEWMAN_VIEW = 360
-const FONT = 'var(--font-sans)'
+/** The Newman drawing's viewBox: the rear circle is 140 units across and the labels fit inside 150. */
+const NEWMAN_VIEW = 300
+const SAWHORSE_VIEW_BOX = `${SAWHORSE_VIEW.x} ${SAWHORSE_VIEW.y} ${SAWHORSE_VIEW.width} ${SAWHORSE_VIEW.height}`
 
 /** Camera for the 3D model: fixed, so the model turns about its own C–C axis on screen. */
 const MODEL_CAMERA = cameraForMolecule(ethaneModel(60), 1)
-const SAWHORSE_VIEW = `${-SAWHORSE_SIZE.width / 2} ${-SAWHORSE_SIZE.height / 2} ${SAWHORSE_SIZE.width} ${SAWHORSE_SIZE.height}`
 
 /** The Newman projection as a slider. Pointer and keyboard turn the back carbon; the lib names the result. */
 function NewmanDial({ dihedral, onTurn, onSet }: { dihedral: number; onTurn: (delta: number) => void; onSet: (d: number) => void }) {
@@ -96,37 +88,7 @@ function NewmanDial({ dihedral, onTurn, onSet }: { dihedral: number; onTurn: (de
       }}
       onKeyDown={onKey}
     >
-      <g transform="scale(1.25)">
-        <NewmanProjection dihedral={dihedral} />
-      </g>
-    </svg>
-  )
-}
-
-/** The sawhorse drawing, with a C label on each carbon as in the Scrolly. */
-function SawhorseDrawing({ dihedral }: { dihedral: number }) {
-  const back = sawhorseRendered(0, SAWHORSE_BOND).back
-  const frontC = { x: -SAWHORSE_BOUNDS.cx, y: -SAWHORSE_BOUNDS.cy }
-  const backC = { x: back.x - SAWHORSE_BOUNDS.cx, y: back.y - SAWHORSE_BOUNDS.cy }
-  const label = {
-    fontSize: 20,
-    fontWeight: 600,
-    fontFamily: FONT,
-    fill: 'var(--fg)',
-    stroke: 'var(--surface)',
-    strokeWidth: 5,
-    paintOrder: 'stroke' as const,
-    textAnchor: 'middle' as const,
-  }
-  return (
-    <svg viewBox={SAWHORSE_VIEW} role="img" aria-label={`Sawhorse projection, ${rotorReadout(dihedral).name}`} className={styles.drawing} data-testid="sawhorse">
-      <SawhorseProjection dihedral={dihedral} />
-      <text x={frontC.x - 26} y={frontC.y + 24} {...label}>
-        C
-      </text>
-      <text x={backC.x + 26} y={backC.y - 22} {...label}>
-        C
-      </text>
+      <NewmanDrawing dihedral={dihedral} />
     </svg>
   )
 }
@@ -160,7 +122,6 @@ export function NewmanRotor({ reducedMotion }: SimulationProps) {
 
   const readout = rotorReadout(dihedral)
   const model = ethaneModel(dihedral)
-  const camera = MODEL_CAMERA
   const percent = staggeredPercent(temperature)
   const turn = (delta: number) => setDihedral((d) => wrapTurn(Math.round(d) + delta))
   const set = (d: number) => setDihedral(wrapTurn(d))
@@ -175,7 +136,9 @@ export function NewmanRotor({ reducedMotion }: SimulationProps) {
         </figure>
         <figure className={styles.card}>
           <figcaption className={styles.cardTitle}>Sawhorse projection</figcaption>
-          <SawhorseDrawing dihedral={dihedral} />
+          <svg viewBox={SAWHORSE_VIEW_BOX} role="img" aria-label={`Sawhorse projection, ${readout.name}`} className={styles.sawhorse} data-testid="sawhorse">
+            <SawhorseDrawing dihedral={dihedral} />
+          </svg>
         </figure>
         <figure className={styles.card}>
           <figcaption className={styles.cardTitle}>3D model</figcaption>
@@ -183,8 +146,8 @@ export function NewmanRotor({ reducedMotion }: SimulationProps) {
             <Stage3DLazy
               label={`Ethane model with the back carbon at ${readout.dihedral} degrees, ${readout.name}. Drag to turn the model.`}
               fallback={<Molecule3DFallback atoms={model.atoms} bonds={model.bonds} />}
-              cameraPosition={camera}
-              hint="Drag to turn"
+              cameraPosition={MODEL_CAMERA}
+              hint={<span className={styles.hintText}>Drag to turn</span>}
               className={styles.stage3d}
             >
               <Molecule3D atoms={model.atoms} bonds={model.bonds} />
@@ -194,7 +157,12 @@ export function NewmanRotor({ reducedMotion }: SimulationProps) {
       </div>
 
       <div className={styles.plot}>
-        <svg viewBox={`0 0 ${TORSIONAL_PLOT_SIZE.width} ${TORSIONAL_PLOT_SIZE.height}`} role="img" aria-label={`Energy against dihedral angle. The marker is at ${readout.dihedral} degrees.`} className={styles.plotSvg}>
+        <svg
+          viewBox={`0 0 ${TORSIONAL_PLOT_SIZE.width} ${TORSIONAL_PLOT_SIZE.height}`}
+          role="img"
+          aria-label={`Energy against dihedral angle. The marker is at ${readout.dihedral} degrees.`}
+          className={styles.plotSvg}
+        >
           <TorsionalEnergyPlot dihedral={dihedral} />
         </svg>
       </div>
@@ -209,22 +177,22 @@ export function NewmanRotor({ reducedMotion }: SimulationProps) {
       </div>
 
       <SimulationControls>
-        <Button variant="secondary" onClick={() => setPlaying((p) => !p)} disabled={reducedMotion} aria-pressed={playing} data-testid="rotor-play">
-          {playing ? 'Pause' : 'Turn slowly'}
-        </Button>
-        <Button variant="secondary" onClick={() => setDihedral(snapToNearestSixty(dihedral))} data-testid="rotor-snap">
-          Snap to nearest conformer
-        </Button>
-        <Slider label="Dihedral angle θ" value={readout.dihedral} min={0} max={359} step={1} unit="°" onChange={(v) => set(v)} />
-        <Slider
-          label="Temperature"
-          value={temperature}
-          min={ROTOR_TEMPERATURE_RANGE.min}
-          max={ROTOR_TEMPERATURE_RANGE.max}
-          step={10}
-          unit="K"
-          onChange={(v) => setTemperature(v)}
-        />
+          <Button variant="secondary" onClick={() => setPlaying((p) => !p)} disabled={reducedMotion} aria-pressed={playing} data-testid="rotor-play">
+            {playing ? 'Pause' : 'Turn slowly'}
+          </Button>
+          <Button variant="secondary" onClick={() => setDihedral(snapToNearestSixty(dihedral))} data-testid="rotor-snap">
+            Snap to nearest conformer
+          </Button>
+          <Slider label="Dihedral angle θ" value={readout.dihedral} min={0} max={359} step={1} unit="°" onChange={(v) => set(v)} />
+          <Slider
+            label="Temperature"
+            value={temperature}
+            min={ROTOR_TEMPERATURE_RANGE.min}
+            max={ROTOR_TEMPERATURE_RANGE.max}
+            step={10}
+            unit="K"
+            onChange={(v) => setTemperature(v)}
+          />
       </SimulationControls>
     </div>
   )

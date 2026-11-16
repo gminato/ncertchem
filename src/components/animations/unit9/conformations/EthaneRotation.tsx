@@ -4,16 +4,10 @@ import React from 'react'
 import { useTweenedNumber } from '@/components/animations/unit5/gibbs/useTweenedNumber'
 import { Molecule3DFallback, Molecule3D, cameraForMolecule } from '@/components/molecule'
 import { Stage3DLazy } from '@/components/stage3d'
-import {
-  NewmanProjection,
-  SAWHORSE_BOUNDS,
-  SAWHORSE_BOND,
-  SawhorseProjection,
-  TorsionalEnergyPlot,
-  sawhorseRendered,
-} from '@/components/organic'
+import { TorsionalEnergyPlot } from '@/components/organic'
 import { ethaneModel, type EthaneModel } from '@/lib/chem/ethane-3d'
 import { conformationName } from '@/lib/chem/conformations'
+import { NewmanDrawing, SawhorseDrawing, sawhorseTransform } from './conformation-drawings'
 import { ethaneStep, ETHANE_STEP_COUNT } from './conformations-steps'
 import styles from './EthaneRotation.module.css'
 
@@ -26,10 +20,10 @@ const VIEW_WIDTH = 580
 const VIEW_HEIGHT = 440
 const FONT = 'var(--font-sans)'
 /** Centre of the main drawing, in the 580 × 440 view. */
-const CENTRE = { x: VIEW_WIDTH / 2, y: 218 }
+const CENTRE = { x: VIEW_WIDTH / 2, y: 222 }
 /** Scale of the sawhorse and Newman drawings: bonds and labels stay legible at the panel's width. */
-const SAWHORSE_SCALE = 1.1
-const NEWMAN_SCALE = 1.2
+const SAWHORSE_SCALE = 1
+const NEWMAN_SCALE = 1
 /** The energy plot is 610 units wide natively; this scale fits it in the view with its labels. */
 const PLOT_SCALE = 0.85
 
@@ -92,24 +86,6 @@ function ModelPanel({ model, index, angle, reducedMotion }: { model: EthaneModel
   )
 }
 
-/** The sawhorse drawing with a C label on each carbon. The carbons sit at the origin and at the back vertex. */
-function SawhorseView({ angle }: { angle: number }) {
-  const back = sawhorseRendered(0, SAWHORSE_BOND).back
-  const frontC = { x: -SAWHORSE_BOUNDS.cx, y: -SAWHORSE_BOUNDS.cy }
-  const backC = { x: back.x - SAWHORSE_BOUNDS.cx, y: back.y - SAWHORSE_BOUNDS.cy }
-  return (
-    <g transform={`translate(${CENTRE.x} ${CENTRE.y + 12}) scale(${SAWHORSE_SCALE})`}>
-      <SawhorseProjection dihedral={angle} />
-      <text x={frontC.x - 24} y={frontC.y + 6} textAnchor="middle" fontSize={20} fontWeight={600} fontFamily={FONT} fill="var(--fg)" stroke="var(--surface)" strokeWidth={5} paintOrder="stroke">
-        C
-      </text>
-      <text x={backC.x - 24} y={backC.y - 16} textAnchor="middle" fontSize={20} fontWeight={600} fontFamily={FONT} fill="var(--fg)" stroke="var(--surface)" strokeWidth={5} paintOrder="stroke">
-        C
-      </text>
-    </g>
-  )
-}
-
 /**
  * The ethane-rotation Scrolly visual (Section 9.2.4). Step 1 shows staggered ethane in 3D; Step 2 turns its back
  * carbon to the eclipsed form; Step 3 draws that form as a sawhorse; Step 4 turns the Newman projection back to
@@ -145,10 +121,14 @@ export function EthaneRotation({ step, reducedMotion }: EthaneRotationProps) {
         {` = ${Math.round(angle)}°, ${name}`}
       </text>
       <g key={`step-${index}`} className={enter(reducedMotion)}>
-        {current.kind === 'sawhorse' ? <SawhorseView angle={angle} /> : null}
+        {current.kind === 'sawhorse' ? (
+          <g transform={sawhorseTransform(CENTRE.x, CENTRE.y + 8, SAWHORSE_SCALE)}>
+            <SawhorseDrawing dihedral={angle} />
+          </g>
+        ) : null}
         {current.kind === 'newman' ? (
           <g transform={`translate(${CENTRE.x} ${CENTRE.y}) scale(${NEWMAN_SCALE})`}>
-            <NewmanProjection dihedral={angle} />
+            <NewmanDrawing dihedral={angle} />
           </g>
         ) : null}
         {current.kind === 'energy' ? (

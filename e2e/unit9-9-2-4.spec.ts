@@ -55,10 +55,29 @@ for (const scheme of ['light', 'dark'] as const) {
           .screenshot({ path: path.join(SCREEN_DIR, `u9-9-2-4-${STEP_NAMES[i]}-${scheme}.png`) })
       }
 
-      // Simulation, default state: staggered ethane (60°).
+      // Simulation, default state: staggered ethane (60°). Text sizes and drawing sizes are checked in CSS pixels.
       const sim = page.locator(`[data-simulation="${SIM}"]`)
       await sim.scrollIntoViewIfNeeded()
       await page.waitForTimeout(600)
+      const small = await sim.evaluate((root) =>
+        [...root.querySelectorAll('figcaption, p, label, output, button, span')]
+          .filter((el) => el.textContent && el.textContent.trim().length > 0 && !el.closest('header'))
+          .map((el) => ({ text: el.textContent!.trim().slice(0, 40), size: parseFloat(getComputedStyle(el).fontSize) }))
+          .filter((x) => x.size < 14)
+      )
+      expect(small, JSON.stringify(small)).toEqual([])
+      const readoutSize = await sim.getByTestId('rotor-readout').evaluate((el) => parseFloat(getComputedStyle(el).fontSize))
+      expect(readoutSize).toBeGreaterThanOrEqual(16)
+      const rim = await sim.getByTestId('newman-dial').locator('circle').first().boundingBox()
+      expect(rim!.width).toBeGreaterThanOrEqual(140)
+      // Rendered H label size: font size times the drawing's scale (rendered width over viewBox width).
+      const labelPx = await sim.getByTestId('newman-dial').evaluate((el) => {
+        const svg = el as unknown as SVGSVGElement
+        const scale = svg.getBoundingClientRect().width / svg.viewBox.baseVal.width
+        const t = svg.querySelector('text')!
+        return parseFloat(t.getAttribute('font-size') ?? '0') * scale
+      })
+      expect(labelPx).toBeGreaterThanOrEqual(15)
       await expect(sim.getByTestId('rotor-readout')).toContainText('θ = 60°, staggered')
       await sim.screenshot({ path: path.join(SCREEN_DIR, `u9-9-2-4-newman-rotor-default-${scheme}.png`) })
 

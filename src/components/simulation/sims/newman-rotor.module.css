@@ -5,9 +5,11 @@
   width: 100%;
 }
 
+/* Three panes of content height, top aligned: no pane stretches to fill a taller neighbour. */
 .grid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
+  align-items: start;
   gap: var(--space-4);
 }
 
@@ -15,7 +17,7 @@
   margin: 0;
   display: flex;
   flex-direction: column;
-  align-items: center;
+  align-items: stretch;
   gap: var(--space-2);
   padding: var(--space-3);
   background: var(--surface);
@@ -26,14 +28,15 @@
 
 .cardTitle {
   font-family: var(--font-sans);
-  font-size: 0.85rem;
+  font-size: 15px;
   font-weight: 600;
+  line-height: 1.3;
   color: var(--fg);
+  text-align: center;
 }
 
 .dial {
   width: 100%;
-  max-width: 300px;
   height: auto;
   display: block;
   cursor: grab;
@@ -50,9 +53,8 @@
   cursor: grabbing;
 }
 
-.drawing {
+.sawhorse {
   width: 100%;
-  max-width: 300px;
   height: auto;
   display: block;
 }
@@ -60,7 +62,8 @@
 .hint {
   margin: 0;
   font-family: var(--font-sans);
-  font-size: 0.8rem;
+  font-size: 14px;
+  line-height: 1.4;
   color: var(--fg-muted);
   text-align: center;
 }
@@ -74,13 +77,18 @@
   height: 100% !important;
 }
 
+.hintText {
+  font-family: var(--font-sans);
+  font-size: 14px;
+}
+
 .plot {
   width: 100%;
 }
 
 .plotSvg {
   width: 100%;
-  max-width: 760px;
+  max-width: 720px;
   height: auto;
   display: block;
   margin: 0 auto;
@@ -95,8 +103,9 @@
 .live {
   margin: 0;
   font-family: var(--font-sans);
-  font-size: 1rem;
+  font-size: 18px;
   font-weight: 600;
+  line-height: 1.4;
   color: var(--fg);
   font-variant-numeric: tabular-nums;
 }
@@ -104,8 +113,21 @@
 .temperature {
   margin: 0;
   font-family: var(--font-sans);
-  font-size: 0.9rem;
+  font-size: 16px;
+  line-height: 1.5;
   color: var(--fg-muted);
+}
+
+/* The stage's hint line belongs to the shared 3D stage: size it from here. */
+:global([data-simulation='newman-rotor']) [class*='hint'] {
+  font-size: 14px;
+}
+
+/* The shared controls render into the shell's controls row: style their text from here. */
+:global([data-simulation='newman-rotor']) label,
+:global([data-simulation='newman-rotor']) output,
+:global([data-simulation='newman-rotor']) button {
+  font-size: 15px;
 }
 
 @media (max-width: 860px) {
