@@ -1,6 +1,6 @@
 import fs from 'node:fs'
 import path from 'node:path'
-import { test, expect, type Page } from '@playwright/test'
+import { test, expect, type Locator, type Page } from '@playwright/test'
 
 const SCREEN_DIR = path.join('test-results', 'screens')
 const SECTION = '/class-11/unit-9/9-2-2-preparation-of-alkanes'
@@ -30,9 +30,49 @@ async function gotoStep(page: Page, index: number) {
   await page.waitForTimeout(900)
 }
 
+
+/** The smallest computed font size of the planner's own text (outside SVG), with the element it belongs to. */
+async function plannerTextSizes(sim: Locator) {
+  return sim.evaluate((root) => {
+    const out: { text: string; px: number; tag: string }[] = []
+    const walker = document.createTreeWalker(root, NodeFilter.SHOW_ELEMENT)
+    let node = walker.currentNode as Element | null
+    while (node) {
+      if (!(node instanceof SVGElement) && node.closest('svg') === null && node.closest('header') === null) {
+        const own = Array.from(node.childNodes).filter((c) => c.nodeType === Node.TEXT_NODE && (c.textContent ?? '').replace(/\u200b/g, '').trim())
+        if (own.length > 0) {
+          const style = getComputedStyle(node)
+          if (style.display !== 'none' && style.visibility !== 'hidden') {
+            out.push({ text: (own[0].textContent ?? '').trim().slice(0, 40), px: parseFloat(style.fontSize), tag: node.tagName.toLowerCase() })
+          }
+        }
+      }
+      node = walker.nextNode() as Element | null
+    }
+    return out
+  })
+}
+
+/** Every drawn element of an SVG lies inside the SVG box, with a margin. */
+async function drawingInsideBox(svg: Locator) {
+  return svg.evaluate((el) => {
+    const box = el.getBoundingClientRect()
+    const bad: string[] = []
+    el.querySelectorAll('text, path, line, polygon').forEach((n) => {
+      const r = n.getBoundingClientRect()
+      if (r.width === 0 && r.height === 0) return
+      if (r.left < box.left + 4 || r.right > box.right - 4 || r.top < box.top + 2 || r.bottom > box.bottom - 2) {
+        bad.push(`${n.tagName} ${(n.textContent ?? '').slice(0, 30)}`)
+      }
+    })
+    return bad
+  })
+}
+
 for (const scheme of ['light', 'dark'] as const) {
   test.describe(`Unit 9, Section 9.2.2 (${scheme})`, () => {
     test.use({ colorScheme: scheme, viewport: { width: 1440, height: 900 }, deviceScaleFactor: 2 })
+    test.setTimeout(180_000)
 
     test('every Scrolly Step and the synthesis planner render with no console errors', async ({ page }) => {
       const errors: string[] = []
@@ -50,6 +90,7 @@ for (const scheme of ['light', 'dark'] as const) {
       await expect(page.locator(`[data-animation="${ANIMATION}"] [data-scrolly-step]`)).toHaveCount(6)
       for (let i = 0; i < 6; i++) {
         await gotoStep(page, i)
+        expect(await drawingInsideBox(page.locator(`[data-animation="${ANIMATION}"] [data-testid="routes-visual"]`)), `Step ${i} drawing`).toEqual([])
         await page
           .locator(`[data-animation="${ANIMATION}"] [data-testid="scrolly-visual"]`)
           .screenshot({ path: path.join(SCREEN_DIR, `u9-9-2-2-routes-step${i}-${scheme}.png`) })
@@ -67,6 +108,17 @@ for (const scheme of ['light', 'dark'] as const) {
       await page.waitForTimeout(300)
       await sim.screenshot({ path: path.join(SCREEN_DIR, `u9-9-2-2-planner-default-${scheme}.png`) })
 
+      // Planner text is at least 14 px, the outcome line 16 px, and the equation 15 px.
+      const sizes = await plannerTextSizes(sim)
+      expect(sizes.length).toBeGreaterThan(5)
+      const small = sizes.filter((x) => x.px < 14)
+      expect(small, JSON.stringify(small)).toEqual([])
+      const verdict = await sim.getByTestId('planner-verdict').evaluate((el) => parseFloat(getComputedStyle(el).fontSize))
+      expect(verdict).toBeGreaterThanOrEqual(16)
+      const eq = await sim.getByTestId('planner-equation').evaluate((el) => parseFloat(getComputedStyle(el).fontSize))
+      expect(eq).toBeGreaterThanOrEqual(15)
+
+
       await sim.getByTestId('planner-route').selectOption('decarboxylate')
       await sim.getByTestId('planner-target').selectOption('propane')
       await sim.getByTestId('planner-a').selectOption('butanoic')
@@ -80,6 +132,16 @@ for (const scheme of ['light', 'dark'] as const) {
       await expect(sim.getByTestId('planner-verdict')).toContainText('methane cannot be made this way')
       await page.waitForTimeout(300)
       await sim.screenshot({ path: path.join(SCREEN_DIR, `u9-9-2-2-planner-kolbe-methane-${scheme}.png`) })
+
+      // The Wurtz row fits its box: nothing is clipped at either edge.
+      await sim.getByTestId('planner-route').selectOption('wurtz')
+      await sim.getByTestId('planner-target').selectOption('pentane')
+      await sim.getByTestId('planner-a').selectOption('bromomethane')
+      await sim.getByTestId('planner-b').selectOption('1-bromobutane')
+      await expect(sim.getByTestId('planner-verdict')).toHaveText('Gives pentane, but only as one of 3 products.')
+      expect(await drawingInsideBox(sim.getByTestId('planner-drawing')), 'planner drawing').toEqual([])
+      await page.waitForTimeout(300)
+      await sim.screenshot({ path: path.join(SCREEN_DIR, `u9-9-2-2-planner-wurtz-${scheme}.png`) })
 
       expect(errors, errors.join('\n')).toEqual([])
     })

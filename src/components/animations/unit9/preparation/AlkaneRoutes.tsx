@@ -13,11 +13,13 @@ export interface AlkaneRoutesProps {
 
 /** Drawing width in viewBox units: the panel is about 570 px, so the text reads at 14 px or more. */
 const WIDTH = 600
-const SCHEME_WIDTH = 580
+const SCHEME_WIDTH = 540
 const TEXT_LINE = 21
 const CHARS = 66
 /** The viewBox is at least this tall, so a short step is centred in the panel rather than sitting at its top. */
 const MIN_HEIGHT = 480
+/** Space above and below the content in the viewBox. */
+const PAD = 14
 
 /**
  * The alkane-routes Scrolly: the four preparations of NCERT 9.2.2 as reaction schemes on one row,
@@ -37,13 +39,18 @@ export function AlkaneRoutes({ step, reducedMotion }: AlkaneRoutesProps) {
   const arithmetic = wrapText(current.arithmetic, CHARS)
   const names = current.names ? wrapText(current.names, CHARS) : []
   const conditions = wrapText(`Conditions: ${current.conditions}`, CHARS)
-  const contentHeight = fit.height + 36 + (arithmetic.length + names.length + conditions.length) * TEXT_LINE
-  const viewHeight = Math.max(MIN_HEIGHT, contentHeight + 60)
-  const shift = (viewHeight - contentHeight) / 2
-  const schemeTop = shift + 64
-  const textTop = schemeTop + fit.height + 36
+
+  // Positions from the top of the content, then the whole group is centred vertically.
+  const schemeY = 60
+  const textTop = schemeY + fit.height + 30
   const namesTop = textTop + arithmetic.length * TEXT_LINE
   const conditionsTop = namesTop + names.length * TEXT_LINE
+  const lastBaseline = conditionsTop + (conditions.length - 1) * TEXT_LINE
+  const contentTop = 22
+  const contentBottom = lastBaseline + 8
+  const span = contentBottom - contentTop
+  const viewHeight = Math.max(MIN_HEIGHT, span + 2 * PAD)
+  const shift = (viewHeight - span) / 2 - contentTop
   const schemeX = (WIDTH - fit.width) / 2
 
   return (
@@ -56,27 +63,29 @@ export function AlkaneRoutes({ step, reducedMotion }: AlkaneRoutesProps) {
       data-testid="routes-visual"
     >
       <VocabDefs />
-      <Label x={WIDTH / 2} y={shift + 36} textAnchor="middle" fontSize={19} fill="var(--fg)" data-testid="routes-title">
-        {current.title}
-      </Label>
-      <g transform={`translate(${schemeX}, ${schemeTop}) scale(${fit.scale})`}>
-        <ReactionScheme sequence={current.sequence} maxWidth={fit.layoutWidth} progress={reveal} />
+      <g transform={`translate(0, ${shift})`}>
+        <Label x={WIDTH / 2} y={36} textAnchor="middle" fontSize={19} fill="var(--fg)" data-testid="routes-title">
+          {current.title}
+        </Label>
+        <g transform={`translate(${schemeX}, ${schemeY}) scale(${fit.scale})`}>
+          <ReactionScheme sequence={current.sequence} maxWidth={fit.layoutWidth} progress={reveal} />
+        </g>
+        {arithmetic.map((line, k) => (
+          <Label key={`a${k}`} x={WIDTH / 2} y={textTop + k * TEXT_LINE} textAnchor="middle" fontSize={15} fill="var(--locant)" data-testid={k === 0 ? 'routes-arithmetic' : undefined}>
+            {line}
+          </Label>
+        ))}
+        {names.map((line, k) => (
+          <Label key={`n${k}`} x={WIDTH / 2} y={namesTop + k * TEXT_LINE} textAnchor="middle" fontSize={15} fill="var(--fg)" data-testid={k === 0 ? 'routes-names' : undefined}>
+            {line}
+          </Label>
+        ))}
+        {conditions.map((line, k) => (
+          <Label key={`c${k}`} x={WIDTH / 2} y={conditionsTop + k * TEXT_LINE} textAnchor="middle" fontSize={14} fill="var(--fg-muted)" data-testid={k === 0 ? 'routes-conditions' : undefined}>
+            {line}
+          </Label>
+        ))}
       </g>
-      {arithmetic.map((line, k) => (
-        <Label key={`a${k}`} x={WIDTH / 2} y={textTop + k * TEXT_LINE} textAnchor="middle" fontSize={15} fill="var(--locant)" data-testid={k === 0 ? 'routes-arithmetic' : undefined}>
-          {line}
-        </Label>
-      ))}
-      {names.map((line, k) => (
-        <Label key={`n${k}`} x={WIDTH / 2} y={namesTop + k * TEXT_LINE} textAnchor="middle" fontSize={15} fill="var(--fg)" data-testid={k === 0 ? 'routes-names' : undefined}>
-          {line}
-        </Label>
-      ))}
-      {conditions.map((line, k) => (
-        <Label key={`c${k}`} x={WIDTH / 2} y={conditionsTop + k * TEXT_LINE} textAnchor="middle" fontSize={14} fill="var(--fg-muted)" data-testid={k === 0 ? 'routes-conditions' : undefined}>
-          {line}
-        </Label>
-      ))}
     </svg>
   )
 }

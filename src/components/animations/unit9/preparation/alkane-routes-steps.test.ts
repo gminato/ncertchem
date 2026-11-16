@@ -26,7 +26,7 @@ describe('alkane-routes steps', () => {
   })
 
   it('states one fewer carbon for decarboxylation', () => {
-    expect(routeStep(4)).toMatchObject({ arithmetic: '4 carbons in the acid, 3 in the alkane: one carbon leaves as CO₂' })
+    expect(routeStep(4)).toMatchObject({ arithmetic: '4 carbons in the acid, 3 in the alkane: the carboxyl carbon leaves as carbonate (Na₂CO₃)' })
   })
 
   it('doubles the alkyl part for Kolbe', () => {

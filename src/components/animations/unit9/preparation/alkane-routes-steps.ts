@@ -216,7 +216,7 @@ export function routeStep(step: number): RouteStep {
           { reagents: 'NaOH, CaO', conditions: 'heat' },
           [organic(p), inorganic(carbonate)],
         ],
-        arithmetic: `${carbonCount(acid)} carbons in the acid, ${carbonCount(p.graph)} in the alkane: one carbon leaves as CO₂`,
+        arithmetic: `${carbonCount(acid)} carbons in the acid, ${carbonCount(p.graph)} in the alkane: the carboxyl carbon leaves as carbonate (Na₂CO₃)`,
         conditions: r.decarboxylate.conditions,
       }
     }

@@ -29,7 +29,7 @@ describe('planAlkaneSynthesis', () => {
     const r = planAlkaneSynthesis('decarboxylate', 'CCC', ['CCCC(=O)O'])
     expect(r.outcome).toBe('target')
     expect(r.products[0].carbons).toBe(3)
-    expect(r.carbonArithmetic).toBe('4 carbons in the acid − 1 (the carboxyl carbon leaves as CO₂) = 3 carbons.')
+    expect(r.carbonArithmetic).toBe('4 carbons in the acid − 1 (the carboxyl carbon leaves as carbonate, Na₂CO₃) = 3 carbons.')
     expect(r.equation).toBe('\\ce{CH3CH2CH2COONa + NaOH -> CH3CH2CH3 + Na2CO3}')
   })
 

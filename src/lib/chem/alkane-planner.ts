@@ -137,7 +137,7 @@ function carbonArithmeticFor(route: PlannerRoute, materials: MolGraph[], product
       return `${a} + ${a} = ${2 * a}, ${a} + ${b} = ${a + b} and ${b} + ${b} = ${2 * b} carbons: one alkane for each pair of alkyl groups.`
     }
     case 'decarboxylate':
-      return `${cs(counts[0])} in the acid − 1 (the carboxyl carbon leaves as CO₂) = ${cs(total[0])}.`
+      return `${cs(counts[0])} in the acid − 1 (the carboxyl carbon leaves as carbonate, Na₂CO₃) = ${cs(total[0])}.`
     case 'kolbe':
       return `2 × (${counts[0]} − 1) = ${cs(total[0])}: the carboxyl carbon leaves at the anode, and the two alkyl groups join.`
   }

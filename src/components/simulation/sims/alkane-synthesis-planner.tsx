@@ -4,7 +4,7 @@ import { useState } from 'react'
 import katex from 'katex'
 import 'katex/contrib/mhchem'
 import { ReactionScheme } from '@/components/organic/ReactionScheme'
-import type { SchemePath, SchemeSpecies } from '@/components/organic/hydrocarbon-geometry'
+import { layoutReactionScheme, type SchemePath, type SchemeSpecies } from '@/components/organic/hydrocarbon-geometry'
 import { SimulationControls } from '@/components/simulation/Simulation'
 import type { SimulationProps } from '@/components/simulation/registry'
 import { fitScheme } from '@/components/animations/unit9/preparation/scheme-fit'
@@ -34,9 +34,15 @@ const REAGENT: Record<PlannerRoute, { above: string; below: string }> = {
   kolbe: { above: 'electrolysis', below: 'of the aqueous sodium salt' },
 }
 
-/** The drawing is laid out to this width in viewBox units, then scaled up to fill it. */
-const SCHEME_WIDTH = 580
+/** The row is laid out to this width in viewBox units, leaving a margin on each side of the box. */
+const SCHEME_WIDTH = 540
 const VIEW_WIDTH = 600
+
+/** True when the scheme lays out on one row inside SCHEME_WIDTH, so nothing is clipped at either edge. */
+function fitsOneRow(sequence: SchemePath): boolean {
+  const layout = layoutReactionScheme(sequence, SCHEME_WIDTH)
+  return layout.rows === 1 && layout.width <= SCHEME_WIDTH
+}
 
 /** The menu item with this id, falling back to the first. */
 function pick(menu: readonly MenuItem[], id: string): MenuItem {
@@ -88,6 +94,15 @@ export function AlkaneSynthesisPlanner(_: SimulationProps) {
       return drawnSpecies(p.graph, p.isTarget ? `${p.carbons} C · target` : `${p.carbons} C`)
     })
     scheme = [starts, { reagents: REAGENT[route].above, conditions: REAGENT[route].below }, ends]
+    if (!fitsOneRow(scheme)) {
+      // Too many structures for one row: the products are written as one formula group, the same
+      // formulas the lib gives for each channel.
+      scheme = [
+        starts,
+        { reagents: REAGENT[route].above, conditions: REAGENT[route].below },
+        [{ formula: plan.products.map((p) => subscript(p.formula)).join(' + '), tag: `${plan.products.length} products` }],
+      ]
+    }
   }
   const fit = scheme ? fitScheme(scheme, SCHEME_WIDTH) : null
 
