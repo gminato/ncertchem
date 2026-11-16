@@ -52,6 +52,7 @@ import { AlkaneNamer } from './sims/alkane-namer'
 import { AdditionPredictor } from './sims/addition-predictor'
 import { NewmanRotor } from './sims/newman-rotor'
 import { AlkyneIsomers } from './sims/alkyne-isomers'
+import { HuckelChecker } from './sims/huckel-checker'
 import { FormulaTranslator } from './sims/formula-translator'
 import { ArrowPusher } from './sims/arrow-pusher'
 import { AlkyneAcidTest } from './sims/alkyne-acid-test'
@@ -128,6 +129,7 @@ export const simulations: Record<string, ComponentType<SimulationProps>> = {
   'alkane-namer': AlkaneNamer,
   'addition-predictor': AdditionPredictor,
   'alkyne-isomers': AlkyneIsomers,
+  'huckel-checker': HuckelChecker,
   'formula-translator': FormulaTranslator,
   'arrow-pusher': ArrowPusher,
   'alkyne-acid-test': AlkyneAcidTest,
