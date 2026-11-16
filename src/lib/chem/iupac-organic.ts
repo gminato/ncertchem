@@ -591,7 +591,8 @@ function analyse(g: MolGraph): Analysis {
     const multiple: number[] = []
     const doubles: number[] = []
     for (const b of pathBonds) {
-      if (b.order > 1 && !benzene) {
+      // Only the ring's own π bonds are fixed by the ring; a chain double bond with a phenyl substituent still counts.
+      if (b.order > 1 && !(mode === 'ring' && benzene)) {
         const l = bondLocant(loc.get(b.a) as number, loc.get(b.b) as number)
         multiple.push(l)
         if (b.order === 2) doubles.push(l)

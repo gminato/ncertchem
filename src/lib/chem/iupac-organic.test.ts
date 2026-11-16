@@ -230,3 +230,13 @@ describe('iupacName: anisole and radicals', () => {
     expect(() => iupacName(parseSmiles('C[CH2]'))).toThrow(RangeError)
   })
 })
+
+describe('iupacName: multiple bonds in a chain with a phenyl substituent (Unit 9 fix)', () => {
+  it.each([
+    ['C=CCCC1=CC=CC=C1', '4-phenylbut-1-ene'],
+    ['CC=CCC1=CC=CC=C1', '1-phenylbut-2-ene'],
+    ['C=CCC1=CC=CC=C1', '3-phenylprop-1-ene'],
+  ])('%s is named %s', (smiles, expected) => {
+    expect(name(smiles)).toBe(expected)
+  })
+})
