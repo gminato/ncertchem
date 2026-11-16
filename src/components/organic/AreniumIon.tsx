@@ -47,13 +47,18 @@ export function areniumBounds(_electrophile: Electrophile = 'NO2', contributors 
 /** Spacing of the three contributor units; the gap between units holds the ↔ arrow. */
 const CONTRIB_SPACING = 352
 
-/** Dashed horseshoe around the five carbons other than the sp³ carbon, open towards it. */
+/**
+ * Dashed horseshoe inside the ring, as textbooks draw it: an arc concentric with the ring at 0.6 of
+ * its radius, running from vertex 2 round through the far side to vertex 4, so it is open towards
+ * the sp³ carbon (vertex 0).
+ */
 function Horseshoe() {
-  const a = { x: HORSESHOE_R * Math.cos(deg(30)), y: HORSESHOE_R * Math.sin(deg(30)) }
-  const b = { x: HORSESHOE_R * Math.cos(deg(-30)), y: HORSESHOE_R * Math.sin(deg(-30)) }
+  const r = 0.6 * R
+  const a = { x: r * Math.cos(deg(60)), y: r * Math.sin(deg(60)) }
+  const b = { x: r * Math.cos(deg(300)), y: r * Math.sin(deg(300)) }
   return (
     <path
-      d={`M${a.x.toFixed(2)},${a.y.toFixed(2)} A${HORSESHOE_R} ${HORSESHOE_R} 0 1 1 ${b.x.toFixed(2)},${b.y.toFixed(2)}`}
+      d={`M${a.x.toFixed(2)},${a.y.toFixed(2)} A${r} ${r} 0 1 1 ${b.x.toFixed(2)},${b.y.toFixed(2)}`}
       fill="none"
       stroke="var(--delta-plus)"
       strokeWidth={2.4}

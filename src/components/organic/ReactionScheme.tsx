@@ -21,6 +21,8 @@ export interface ReactionSchemeProps extends Omit<React.SVGAttributes<SVGGElemen
   maxWidth: number
   /** 0 to 1: reveals the stages in order, one element after another. */
   progress?: number
+  /** Bond-length scales to try, largest first. Defaults to the layout's own list. */
+  scales?: readonly number[]
   x?: number
   y?: number
 }
@@ -31,10 +33,10 @@ export interface ReactionSchemeProps extends Omit<React.SVGAttributes<SVGGElemen
  * in the highlight colour. Rows wrap only at arrows. Origin is the top left of the scheme.
  */
 export const ReactionScheme = forwardRef<SVGGElement, ReactionSchemeProps>(function ReactionScheme(
-  { sequence, maxWidth, progress = 1, x = 0, y = 0, ...rest },
+  { sequence, maxWidth, progress = 1, scales, x = 0, y = 0, ...rest },
   ref
 ) {
-  const layout = useMemo(() => layoutReactionScheme(sequence, maxWidth), [sequence, maxWidth])
+  const layout = useMemo(() => layoutReactionScheme(sequence, maxWidth, scales), [sequence, maxWidth, scales])
   const count = Math.max(1, sequence.length)
 
   return (
