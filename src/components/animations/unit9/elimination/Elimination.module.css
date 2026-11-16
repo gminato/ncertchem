@@ -1,0 +1,18 @@
+.enter {
+  animation: eliminationEnter 480ms ease-out both;
+}
+
+@keyframes eliminationEnter {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .enter {
+    animation: none;
+  }
+}

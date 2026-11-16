@@ -183,8 +183,8 @@ export const NEWMAN_HALF = NEWMAN.backLabel + LABEL_RADIUS + 6
 const TET_COS = Math.cos(109.47 * DEG)
 const TET_SIN = Math.sin(109.47 * DEG)
 
-/** Substituent azimuths on the front carbon (chosen so none runs along the C–C axis on screen). */
-export const SAWHORSE_FRONT_ANGLES: readonly number[] = [30, 150, 270]
+/** Substituent azimuths on the front carbon: 30° clear of the C–C axis on screen (145° and 325°) in both the eclipsed and staggered forms. */
+export const SAWHORSE_FRONT_ANGLES: readonly number[] = [55, 175, 295]
 
 /** Screen direction of the C–C axis: back carbon lies up and to the right. */
 const AXIS_DEG = 35

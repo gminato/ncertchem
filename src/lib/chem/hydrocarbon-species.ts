@@ -202,7 +202,11 @@ function writeCondensed(g: MolGraph, i: number, parent: number): string {
     }
     if (idx === main) return
     const text = writeCondensed(g, k.atom, i)
-    out += isC(k.atom) ? `(${bondText(k)}${text})` : text
+    // A group of several atoms (OH, NH2, OSO3H) hanging off a carbon in the middle of the chain is
+    // bracketed, CH3CH(OH)CH3; a lone halogen or =O is not, CH3CHBrCH3 and CH3COCH3.
+    const midChain = main >= 0 && isC(kids[main].atom)
+    const bracket = !isC(k.atom) && midChain && k.order === 1 && !/^(F|Cl|Br|I)$/.test(text)
+    out += isC(k.atom) ? `(${bondText(k)}${text})` : bracket ? `(${text})` : text
   })
   if (main >= 0 && !isGroupedLeaf(kids[main])) out += bondText(kids[main]) + writeCondensed(g, kids[main].atom, i)
   return out
