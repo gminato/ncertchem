@@ -110,6 +110,7 @@ import { ElectronEffects } from './unit8/effects/ElectronEffects'
 import { AlkaneNaming } from './unit8/naming/AlkaneNaming'
 import { RepresentationsMorph } from './unit8/representations/RepresentationsMorph'
 import { BondFission } from './unit8/fission/BondFission'
+import { RadicalChain } from './unit9/halogenation/RadicalChain'
 
 /**
  * Animations available to a Scrolly Animation, keyed by the `animation` prop.
@@ -230,6 +231,7 @@ export const animations = {
   'alkane-naming': AlkaneNaming,
   'structure-morph': RepresentationsMorph,
   'bond-fission': BondFission,
+  'radical-chain': RadicalChain,
 } as const
 
 export type AnimationName = keyof typeof animations

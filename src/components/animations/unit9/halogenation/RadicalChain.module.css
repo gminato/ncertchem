@@ -1,0 +1,102 @@
+.panel {
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+  font-family: var(--font-sans);
+  color: var(--fg);
+}
+
+.svg {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.enter {
+  animation: chainEnter 480ms ease-out both;
+}
+
+@keyframes chainEnter {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.models {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  height: 100%;
+  min-height: 420px;
+}
+
+.heading {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 600;
+  text-align: center;
+  color: var(--fg);
+}
+
+.cards {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--space-2);
+  flex: 1;
+}
+
+.model {
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+}
+
+.modelStage {
+  height: 250px;
+  border-radius: var(--radius-md);
+  background: var(--surface-raised);
+  overflow: hidden;
+}
+
+.modelCaption {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  font-size: 14px;
+  text-align: center;
+}
+
+.modelName {
+  font-weight: 600;
+  overflow-wrap: anywhere;
+}
+
+.modelBp {
+  color: var(--fg-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.note {
+  margin: 0;
+  font-size: 14px;
+  color: var(--fg-muted);
+  text-align: center;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .enter {
+    animation: none;
+  }
+}
+
+.modelStage svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
