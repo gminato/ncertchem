@@ -64,6 +64,20 @@ for (const scheme of ['light', 'dark'] as const) {
       await page.waitForTimeout(300)
       await sim.screenshot({ path: path.join(SCREEN_DIR, `u9-9-3-sim-default-${scheme}.png`) })
 
+      // Readability: every drawing label renders at 14 px or more, and isomer names at 16 px or more.
+      const sizes = await sim.getByTestId('cis-trans-drawing').evaluate((svg) => {
+        const box = svg.getBoundingClientRect()
+        const scale = box.width / (svg as SVGSVGElement).viewBox.baseVal.width
+        return [...svg.querySelectorAll('text')].map((t) => ({
+          text: t.textContent ?? '',
+          px: parseFloat(getComputedStyle(t).fontSize) * scale,
+        }))
+      })
+      for (const t of sizes) expect(t.px, t.text).toBeGreaterThanOrEqual(14)
+      for (const t of sizes.filter((x) => x.text.startsWith('cis-') || x.text.startsWith('trans-') || x.text.startsWith('One arrangement'))) {
+        expect(t.px, t.text).toBeGreaterThanOrEqual(16)
+      }
+
       await sim.getByRole('button', { name: 'Two', exact: true }).click()
       await expect(sim.getByTestId('cis-trans-live')).toContainText('cis-but-2-ene')
       await expect(sim.getByTestId('cis-trans-live')).toContainText('trans-but-2-ene')

@@ -42,13 +42,17 @@ export function dipoleArrow(dipole: Point, centre: Point, tipId: string, polar: 
   const half = 24
   const start = { x: centre.x - ux * half, y: centre.y - uy * half }
   const end = { x: centre.x + ux * half, y: centre.y + uy * half }
+  // The labels sit beside the arrow, 18 units along its normal, so they clear the stroke and the head.
+  const nx = -uy
+  const ny = ux
+  const off = 18
   return (
     <g>
       <line x1={start.x} y1={start.y} x2={end.x} y2={end.y} stroke="var(--dipole)" strokeWidth={4} strokeLinecap="round" markerEnd={`url(#${tipId})`} />
-      <text x={start.x + 16} y={start.y} textAnchor="start" dominantBaseline="central" fontSize={15} fill="var(--delta-plus)" fontFamily="var(--font-sans)">
+      <text x={start.x + nx * off} y={start.y + ny * off} textAnchor="middle" dominantBaseline="central" fontSize={15} fill="var(--delta-plus)" fontFamily="var(--font-sans)">
         δ+
       </text>
-      <text x={end.x + 16} y={end.y} textAnchor="start" dominantBaseline="central" fontSize={15} fill="var(--delta-minus)" fontFamily="var(--font-sans)">
+      <text x={end.x + nx * off} y={end.y + ny * off} textAnchor="middle" dominantBaseline="central" fontSize={15} fill="var(--delta-minus)" fontFamily="var(--font-sans)">
         δ−
       </text>
     </g>
@@ -105,10 +109,10 @@ export function IsomerDrawing({ placed, dipole, polar, title, note, cx, cy, tipI
         )
       })}
       {dipoleArrow(dipole, { x: cx, y: cy + 98 }, tipId, polar)}
-      <text x={cx} y={cy + 150} textAnchor="middle" fontSize={16} fontWeight={600} fill="var(--fg)" fontFamily="var(--font-sans)">
+      <text x={cx} y={cy + 150} textAnchor="middle" fontSize={18} fontWeight={600} fill="var(--fg)" fontFamily="var(--font-sans)">
         {title}
       </text>
-      <text x={cx} y={cy + 172} textAnchor="middle" fontSize={14} fill="var(--fg-muted)" fontFamily="var(--font-sans)">
+      <text x={cx} y={cy + 172} textAnchor="middle" fontSize={15} fill="var(--fg-muted)" fontFamily="var(--font-sans)">
         {note}
       </text>
     </g>

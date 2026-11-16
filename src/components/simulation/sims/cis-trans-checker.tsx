@@ -40,7 +40,9 @@ const GROUP_NAMES: Record<Group, string> = {
   COOH: 'carboxyl',
 }
 
-const GROUP_VIEW = 290
+const GROUP_VIEW = 310
+/** Pixels per bond in the checker drawings: large enough for the pair to fill the column. */
+const CHECK_SCALE = 90
 
 /** One select for a group on one carbon of the double bond. */
 function GroupSelect({ id, label, value, onChange }: { id: string; label: string; value: Group; onChange: (g: Group) => void }) {
@@ -106,7 +108,7 @@ export function CisTransChecker({ reducedMotion }: SimulationProps) {
       <div className={styles.layout}>
         <div className={styles.main}>
         <figure className={styles.stage}>
-          <svg viewBox="0 0 580 330" role="img" aria-label={summary} data-testid="cis-trans-drawing">
+          <svg viewBox="0 0 620 330" role="img" aria-label={summary} data-testid="cis-trans-drawing">
             <defs>
               <marker id={tip} viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
                 <path d="M 0 0 L 10 5 L 0 10 z" fill="var(--dipole)" />
@@ -125,8 +127,9 @@ export function CisTransChecker({ reducedMotion }: SimulationProps) {
                   polar={verdict.isomers[0].polar}
                   title={verdict.isomers[0].name}
                   note={verdict.isomers[0].polar ? 'net dipole: arrow from δ+ to δ−' : 'no net dipole: the bond dipoles cancel'}
-                  cx={160}
+                  cx={150}
                   cy={118}
+                  scale={CHECK_SCALE}
                   tipId={tip}
                 />
                 <IsomerDrawing
@@ -135,8 +138,9 @@ export function CisTransChecker({ reducedMotion }: SimulationProps) {
                   polar={verdict.isomers[1].polar}
                   title={verdict.isomers[1].name}
                   note={verdict.isomers[1].polar ? 'net dipole: arrow from δ+ to δ−' : 'no net dipole: the bond dipoles cancel'}
-                  cx={420}
+                  cx={470}
                   cy={118}
+                  scale={CHECK_SCALE}
                   tipId={tip}
                 />
               </>
@@ -150,6 +154,7 @@ export function CisTransChecker({ reducedMotion }: SimulationProps) {
                 note={left[0] === left[1] ? `left carbon: two ${GROUP_LABEL[left[0]]}` : `right carbon: two ${GROUP_LABEL[right[0]]}`}
                 cx={GROUP_VIEW}
                 cy={118}
+                scale={CHECK_SCALE}
                 tipId={tip}
               />
             )}

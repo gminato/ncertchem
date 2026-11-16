@@ -35,7 +35,7 @@
 
 .caption {
   margin: var(--space-2) 0 0;
-  font-size: 0.875rem;
+  font-size: 1rem;
   color: var(--fg-muted);
 }
 
@@ -109,7 +109,7 @@
 
 .verdict {
   margin: 0;
-  font-size: 0.95rem;
+  font-size: 1rem;
   line-height: 1.5;
 }
 

@@ -78,7 +78,7 @@ function ButeneRow({ tipId }: { tipId: string }) {
   const note = (i: AlkeneIsomer) =>
     i.polar
       ? `net dipole, NCERT: ${NCERT_CIS_DIPOLE_D} D`
-      : 'no net dipole, the two C–CH₃ dipoles cancel'
+      : 'no net dipole: the dipoles cancel'
   return (
     <g>
       <IsomerDrawing placed={cis.placed} dipole={cis.dipole} polar={cis.polar} title={cis.name} note={note(cis)} cx={150} cy={146} tipId={tipId} />
