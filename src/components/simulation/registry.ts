@@ -50,6 +50,7 @@ import { ElementalAnalyser } from './sims/elemental-analyser'
 import { ResonanceLab } from './sims/resonance-lab'
 import { AlkaneNamer } from './sims/alkane-namer'
 import { NewmanRotor } from './sims/newman-rotor'
+import { AlkyneIsomers } from './sims/alkyne-isomers'
 import { FormulaTranslator } from './sims/formula-translator'
 import { ArrowPusher } from './sims/arrow-pusher'
 
@@ -115,6 +116,7 @@ export const simulations: Record<string, ComponentType<SimulationProps>> = {
   'elemental-analyser': ElementalAnalyser,
   'resonance-lab': ResonanceLab,
   'alkane-namer': AlkaneNamer,
+  'alkyne-isomers': AlkyneIsomers,
   'formula-translator': FormulaTranslator,
   'arrow-pusher': ArrowPusher,
   'newman-rotor': NewmanRotor,

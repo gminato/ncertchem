@@ -111,6 +111,7 @@ import { AlkaneNaming } from './unit8/naming/AlkaneNaming'
 import { RepresentationsMorph } from './unit8/representations/RepresentationsMorph'
 import { BondFission } from './unit8/fission/BondFission'
 import { EthaneRotation } from './unit9/conformations/EthaneRotation'
+import { TripleBond } from './unit9/alkyne-structure/TripleBond'
 
 /**
  * Animations available to a Scrolly Animation, keyed by the `animation` prop.
@@ -232,6 +233,7 @@ export const animations = {
   'structure-morph': RepresentationsMorph,
   'bond-fission': BondFission,
   'ethane-rotation': EthaneRotation,
+  'triple-bond': TripleBond,
 } as const
 
 export type AnimationName = keyof typeof animations
