@@ -1,0 +1,75 @@
+.lab {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  font-family: var(--font-sans);
+  color: var(--fg);
+}
+
+.controls {
+  max-width: 28rem;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
+  gap: var(--space-3);
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-1);
+  padding: var(--space-3);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  background: var(--surface-raised);
+  color: var(--fg);
+  font: inherit;
+  cursor: pointer;
+  transition: border-color 160ms ease, box-shadow 160ms ease;
+}
+
+.card:hover {
+  border-color: var(--fg-muted);
+}
+
+.card:focus-visible {
+  outline: 2px solid var(--focus, var(--fg));
+  outline-offset: 2px;
+}
+
+.card[data-selected='true'] {
+  border-color: var(--fg);
+  box-shadow: 0 0 0 3px var(--highlight);
+}
+
+.drawing {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.name {
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.formula {
+  font-size: 14px;
+  color: var(--fg-muted);
+}
+
+.readout {
+  margin: 0;
+  min-height: 3em;
+  font-size: 16px;
+  line-height: 1.5;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .card {
+    transition: none;
+  }
+}
