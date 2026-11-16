@@ -33,6 +33,7 @@ export const ANGLE_BY_HYBRIDISATION: Record<'sp3' | 'sp2' | 'sp', number> = { sp
 
 /** Everything a Step shows, computed from the lib. */
 export interface FamilyView {
+  smiles: string
   graph: MolGraph
   name: string
   formula: string
@@ -56,6 +57,7 @@ export function familyView(i: number): FamilyView {
   const hybrid = hybridisation(graph, carbon)
   const multipleBonds = graph.bonds.flatMap((b, k) => (b.order > 1 ? [k] : []))
   const view: FamilyView = {
+    smiles: step.smiles,
     graph,
     name: nameOf(graph),
     formula: molecularFormula(graph),

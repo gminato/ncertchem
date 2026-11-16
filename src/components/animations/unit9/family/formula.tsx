@@ -38,21 +38,35 @@ export function fitScale(g: MolGraph, max: number, width: number, height: number
 }
 
 /**
- * The unit direction in which a label sits free: the middle of the widest angular gap between an atom's
- * bonds (points are y-down, as in the frame).
+ * The unit direction in which a label sits clear of every bond of an atom: the candidate direction (in 10° steps)
+ * whose nearest bond is furthest away. An atom with no bonds gets a label above it.
  */
-export function freeDirection(points: readonly { x: number; y: number }[], adj: readonly number[][], a: number): { x: number; y: number } {
-  const angles = adj[a].map((n) => Math.atan2(points[n].y - points[a].y, points[n].x - points[a].x)).sort((p, q) => p - q)
-  if (angles.length === 0) return { x: 0, y: -1 }
-  if (angles.length === 1) return { x: -Math.cos(angles[0]), y: -Math.sin(angles[0]) }
-  let best = -1
-  let mid = 0
-  angles.forEach((a1, i) => {
-    const a2 = i + 1 < angles.length ? angles[i + 1] : angles[0] + 2 * Math.PI
-    if (a2 - a1 > best) {
-      best = a2 - a1
-      mid = (a1 + a2) / 2
+export function clearDirection(points: readonly { x: number; y: number }[], adj: readonly number[][], a: number): { x: number; y: number } {
+  if (adj[a].length === 0) return { x: 0, y: -1 }
+  const bondAngles = adj[a].map((n) => Math.atan2(points[n].y - points[a].y, points[n].x - points[a].x))
+  let best = { x: 0, y: -1 }
+  let bestScore = -1
+  for (let k = 0; k < 36; k++) {
+    const t = (k * Math.PI) / 18
+    let score = Math.PI
+    for (const b of bondAngles) {
+      let d = Math.abs(t - b) % (2 * Math.PI)
+      d = Math.min(d, 2 * Math.PI - d)
+      score = Math.min(score, d)
     }
-  })
-  return { x: Math.cos(mid), y: Math.sin(mid) }
+    if (score > bestScore + 1e-9) {
+      bestScore = score
+      best = { x: Math.cos(t), y: Math.sin(t) }
+    }
+  }
+  return best
+}
+
+/** A formula as text with each digit run in a <sub>, e.g. C₅H₁₂ written as C<sub>5</sub>H<sub>12</sub>. */
+export function SubFormula({ formula }: { formula: string }) {
+  return (
+    <>
+      {formula.split(/(\d+)/).filter((t) => t !== '').map((t, i) => (/^\d+$/.test(t) ? <sub key={i}>{t}</sub> : <span key={i}>{t}</span>))}
+    </>
+  )
 }

@@ -4,7 +4,7 @@ import { useMemo, useState } from 'react'
 import { Button, Segmented, Slider } from '@/components/controls'
 import { SimulationControls } from '@/components/simulation/Simulation'
 import { SkeletalFormula, drawingFrame } from '@/components/organic'
-import { fitScale as fitBox, freeDirection } from '@/components/animations/unit9/family/formula'
+import { fitScale as fitBox, clearDirection, SubFormula } from '@/components/animations/unit9/family/formula'
 import { Label, VocabDefs } from '@/components/vocab'
 import { ALKANE_PRESETS, designCarbons, designGraph, type AlkaneDesign } from '@/lib/chem/alkane-builder'
 import { nameOf } from '@/lib/chem/hydrocarbon-species'
@@ -147,8 +147,8 @@ export function CarbonCounter() {
             )}
             {rows.map((r) => {
               const p = frame.points[r.atom]
-              const d = freeDirection(frame.points, frame.adj, r.atom)
-              const offset = 0.62 * scale
+              const d = clearDirection(frame.points, frame.adj, r.atom)
+              const offset = 0.78 * scale
               const text = revealed ? r.degree : guesses[r.atom] ?? '?'
               const fill = revealed ? CLASS_FILL[r.degree] : guesses[r.atom] ? 'var(--fg)' : 'var(--fg-muted)'
               return (
@@ -169,16 +169,15 @@ export function CarbonCounter() {
             <Label x={280} y={336} fontSize={22} fill="var(--fg)" data-testid="counter-name">
               {name}
             </Label>
-            <Label x={280} y={62} fontSize={18} fill="var(--fg-muted)">
-              {revealed ? 'Classes from the lib' : 'Your predictions (?) appear on each carbon'}
-            </Label>
           </svg>
         </figure>
 
         <section className={styles.panel} aria-label="Predict and count">
-          <h2 className={styles.title}>{name}</h2>
+          <h2 className={styles.title}>
+            {name} (<SubFormula formula={formula} />)
+          </h2>
           <p className={styles.note}>
-            {formula}, {rows.length} carbons. {hydrogenLine}
+            {rows.length} carbons. {hydrogenLine}
           </p>
 
           <div>
@@ -243,7 +242,7 @@ export function CarbonCounter() {
           </div>
 
           <div>
-            <p className={styles.heading}>Chain isomers of {formula}</p>
+            <p className={styles.heading}>Chain isomers of <SubFormula formula={formula} /></p>
             {isomers ? (
               <ul className={styles.isomers} data-testid="counter-isomers">
                 {isomers.map((n) => (
@@ -292,7 +291,7 @@ export function CarbonCounter() {
             step={1}
             onChange={setBranch}
           />
-          <p className={styles.note}>
+          <p className={styles.footer}>
             {rows.length} carbons in all. The sliders build one methyl side chain; a preset can have more.
           </p>
         </div>

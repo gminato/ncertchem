@@ -3,7 +3,7 @@
 import { SkeletalFormula, drawingFrame } from '@/components/organic'
 import { Label, VocabDefs } from '@/components/vocab'
 import { useReveal } from '@/components/animations/unit4/vbt/useStepTween'
-import { fitScale, freeDirection } from './formula'
+import { fitScale, clearDirection } from './formula'
 import { ISOMER_STEP_COUNT, isomerViews, type IsomerView } from './isomer-steps'
 
 export interface AlkaneIsomersProps {
@@ -54,7 +54,7 @@ function IsomerDrawing({ view }: { view: IsomerView }) {
       <SkeletalFormula graph={view.graph} scale={scale} x={CENTRE.x} y={CENTRE.y} data-testid="isomer-drawing" />
       {carbons.map((a) => {
         const p = frame.points[a]
-        const d = freeDirection(frame.points, frame.adj, a)
+        const d = clearDirection(frame.points, frame.adj, a)
         const r = 0.62 * scale
         const cls = (view.degrees[a] === '0°' ? '1°' : view.degrees[a]) as '1°' | '2°' | '3°' | '4°'
         return (
@@ -89,14 +89,14 @@ function IsomerTable({ views }: { views: IsomerView[] }) {
   const rowY = [150, 240, 330]
   return (
     <>
-      <Label x={28} y={92} fontSize={18} fill="var(--fg-muted)" textAnchor="start">
+      <Label x={28} y={92} fontSize={20} fill="var(--fg-muted)" textAnchor="start">
         Isomer
       </Label>
-      <Label x={552} y={92} fontSize={18} fill="var(--fg-muted)" textAnchor="end">
+      <Label x={552} y={92} fontSize={20} fill="var(--fg-muted)" textAnchor="end">
         boiling point
       </Label>
-      <Label x={28} y={124} fontSize={16} fill="var(--fg-muted)" textAnchor="start">
-        carbons 1° · 2° · 3° · 4°, and hydrogens on 1° · 2° · 3° carbons
+      <Label x={28} y={124} fontSize={18} fill="var(--fg-muted)" textAnchor="start">
+        carbons 1°·2°·3°·4° | hydrogens 1°·2°·3°
       </Label>
       {views.map((v, i) => (
         <g key={v.name} data-testid="isomer-row">
@@ -106,12 +106,12 @@ function IsomerTable({ views }: { views: IsomerView[] }) {
           <Label x={552} y={rowY[i]} fontSize={22} fill="var(--fg)" textAnchor="end">
             {`${v.boilingK} K`}
           </Label>
-          <Label x={28} y={rowY[i] + 30} fontSize={17} fill="var(--fg-muted)" textAnchor="start">
+          <Label x={28} y={rowY[i] + 30} fontSize={19} fill="var(--fg-muted)" textAnchor="start">
             {`carbons ${v.counts['1°']} · ${v.counts['2°']} · ${v.counts['3°']} · ${v.counts['4°']}     hydrogens ${v.tally.primary} · ${v.tally.secondary} · ${v.tally.tertiary}`}
           </Label>
         </g>
       ))}
-      <Label x={290} y={398} fontSize={18} fill="var(--fg-muted)">
+      <Label x={290} y={398} fontSize={19} fill="var(--fg-muted)">
         Same formula: the more branched the isomer, the lower it boils.
       </Label>
     </>

@@ -4,7 +4,8 @@ import { useMemo, useState } from 'react'
 import { Button } from '@/components/controls'
 import { SimulationControls } from '@/components/simulation/Simulation'
 import { SkeletalFormula } from '@/components/organic'
-import { fitScale } from '@/components/animations/unit9/family/formula'
+import { fitScale, SubFormula } from '@/components/animations/unit9/family/formula'
+import { ExplicitDrawing, hasExplicit } from '@/components/animations/unit9/family/explicit'
 import { VocabDefs } from '@/components/vocab'
 import { nameOf } from '@/lib/chem/hydrocarbon-species'
 import { molecularFormula, parseSmiles } from '@/lib/chem/molecule-parse'
@@ -73,20 +74,23 @@ export function FamilySorter() {
         <figure className={styles.stage} style={{ margin: 0 }}>
           <svg viewBox="0 0 560 340" role="img" aria-label={`${name}, ${formula}`} className={styles.drawing} data-testid="sorter-drawing">
             <VocabDefs />
-            <SkeletalFormula
-              graph={graph}
-              scale={scale}
-              x={280}
-              y={168}
-              highlightBonds={graph.bonds.flatMap((b, k) => (b.order > 1 ? [k] : []))}
-              innerCircles={lib.family === 'Aromatic'}
-            />
+            {hasExplicit(smiles) ? (
+              <ExplicitDrawing smiles={smiles} cx={280} cy={170} scale={110} />
+            ) : (
+              <SkeletalFormula
+                graph={graph}
+                scale={scale}
+                x={280}
+                y={168}
+                highlightBonds={graph.bonds.flatMap((b, k) => (b.order > 1 ? [k] : []))}
+              />
+            )}
           </svg>
         </figure>
 
         <section className={styles.panel} aria-label="Sort the molecule">
           <h2 className={styles.title} data-testid="sorter-name">
-            {name} <span className={styles.note}>({formula})</span>
+            {name} (<SubFormula formula={formula} />)
           </h2>
           <p className={styles.heading}>Which family?</p>
           <div className={styles.row} role="group" aria-label="Families">
@@ -121,7 +125,7 @@ export function FamilySorter() {
         </section>
       </div>
       <SimulationControls>
-        <p className={styles.note}>
+        <p className={styles.footer}>
           Molecule {index + 1} of {DECK.length}. Score: {right} of {answered}.
         </p>
       </SimulationControls>
