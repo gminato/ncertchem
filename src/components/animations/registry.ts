@@ -110,6 +110,7 @@ import { ElectronEffects } from './unit8/effects/ElectronEffects'
 import { AlkaneNaming } from './unit8/naming/AlkaneNaming'
 import { RepresentationsMorph } from './unit8/representations/RepresentationsMorph'
 import { BondFission } from './unit8/fission/BondFission'
+import { ElimMechanism } from './unit9/elimination/ElimMechanism'
 
 /**
  * Animations available to a Scrolly Animation, keyed by the `animation` prop.
@@ -228,6 +229,7 @@ export const animations = {
   'combustion-analysis': CombustionAnalysis,
   'electron-effects': ElectronEffects,
   'alkane-naming': AlkaneNaming,
+  elimination: ElimMechanism,
   'structure-morph': RepresentationsMorph,
   'bond-fission': BondFission,
 } as const
