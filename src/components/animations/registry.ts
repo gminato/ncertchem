@@ -115,6 +115,8 @@ import { AlkeneStructure } from './unit9/alkene-structure/AlkeneStructure'
 import { HydrocarbonFamily } from './unit9/family/HydrocarbonFamily'
 import { AlkaneIsomers } from './unit9/family/AlkaneIsomers'
 import { TripleBond } from './unit9/alkyne-structure/TripleBond'
+import { BenzeneStructure } from './unit9/benzene/BenzeneStructure'
+import { HuckelCount } from './unit9/benzene/HuckelCount'
 
 /**
  * Animations available to a Scrolly Animation, keyed by the `animation` prop.
@@ -240,6 +242,8 @@ export const animations = {
   'hydrocarbon-family': HydrocarbonFamily,
   'alkane-isomers': AlkaneIsomers,
   'triple-bond': TripleBond,
+  'benzene-structure': BenzeneStructure,
+  'huckel-count': HuckelCount,
 } as const
 
 export type AnimationName = keyof typeof animations
