@@ -127,7 +127,7 @@ export const NCERT_UNIT9_CONDITIONS: readonly ReactionCondition[] = [
   { id: 'x2-addition', text: 'CCl4 solvent (bromine solution decolourised)', pdfPage: 17, example: 'ethene + Br2 (9.38)' },
   { id: 'h2so4-addition', text: 'cold concentrated H2SO4', pdfPage: 19, example: 'ethene + H2SO4 (9.44)' },
   { id: 'hydration', text: 'dilute H2SO4 (H+) and water', pdfPage: 19, example: '2-methylpropene (9.46)' },
-  { id: 'baeyer', text: 'dilute aqueous KMnO4, cold', pdfPage: 19, example: 'ethene to ethane-1,2-diol (9.47)' },
+  { id: 'baeyer', text: 'cold, dilute aqueous KMnO4 (273 K)', pdfPage: 19, example: 'ethene to ethane-1,2-diol (9.47)' },
   { id: 'acidic-permanganate', text: 'acidic KMnO4 (oxidation to ketones and/or acids)', pdfPage: 19, example: '2-methylpropene (9.49), but-2-ene (9.50)' },
   { id: 'ozonolysis', text: 'ozone, then Zn and water', pdfPage: 19, example: 'propene (9.51)' },
   { id: 'polymerisation', text: 'high temperature and pressure with a catalyst', pdfPage: 20, example: 'ethene (9.53)' },
