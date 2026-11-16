@@ -89,54 +89,87 @@ export interface SawhorseLayout {
   backCarbon: Pt
 }
 
-/** Sawhorse C–H bond length in units; the C–C bond is SAWHORSE_AXIS_RATIO times this (the textbook convention). */
-export const SAWHORSE_BOND = 60
-export const SAWHORSE_AXIS_RATIO = 1.6
-/** Direction of the C–C bond on screen, SVG degrees: the back carbon is up and to the right. */
-export const SAWHORSE_AXIS_DEG = -35
 /**
- * Front C–H directions, SVG degrees. Chosen 30° from the C–C axis and 120° apart, so no bond runs along the axis
- * at eclipse or staggered. The back bonds start from the same directions turned by the dihedral.
+ * Sawhorse geometry: a true oblique (cavalier) projection of the 3D ethane model. The front carbon is at the origin
+ * and the back carbon at z = L along the C–C axis, in C–H units. Each front H is at (r cos φ, r sin φ, −h) and each
+ * back H at (r cos(φ + θ), r sin(φ + θ), L + h), with θ the dihedral and φ = 15°, 135°, 255°. The projection is
+ * X = x + z cos 40°, Y = y + z sin 40°, so depth runs obliquely up and to the right, and the screen Y is flipped.
+ * At θ = 0 each back H therefore sits directly behind its front partner, offset only by the depth term 2h.
  */
-export const SAWHORSE_FRONT_DEG = [355, 115, 235] as const
+export const SAWHORSE_R = 1.03
+export const SAWHORSE_H = 0.36
+export const SAWHORSE_LENGTH = 2.2
+export const SAWHORSE_DEPTH_DEG = 40
+/** The labels sit this many times as far from the carbon as the H atoms do. */
+export const SAWHORSE_LABEL_FACTOR = 1.35
+/** Azimuths of the front hydrogens about the C–C axis, degrees. */
+export const SAWHORSE_AZIMUTHS = [15, 135, 255] as const
+/** Pixels per C–H unit in the sawhorse drawing. */
+export const SAWHORSE_BOND = 55
+
+type Vec3 = [number, number, number]
+
+/** The 3D position of each H of ethane in the sawhorse frame, scaled by `k` (1 for the atoms, 1.35 for labels). */
+function sawhorse3D(dihedralDeg: number, k: number): { front: Vec3[]; back: Vec3[] } {
+  if (!Number.isFinite(dihedralDeg)) throw new RangeError('The dihedral angle must be a finite number of degrees')
+  const r = SAWHORSE_R * k
+  const h = SAWHORSE_H * k
+  const L = SAWHORSE_LENGTH
+  const front = SAWHORSE_AZIMUTHS.map((p): Vec3 => [r * cosD(p), r * sinD(p), -h])
+  const back = SAWHORSE_AZIMUTHS.map((p): Vec3 => [r * cosD(p + dihedralDeg), r * sinD(p + dihedralDeg), L + h])
+  return { front, back }
+}
+
+const cosD = (d: number) => Math.cos((d * Math.PI) / 180)
+const sinD = (d: number) => Math.sin((d * Math.PI) / 180)
+
+/** The oblique projection of a 3D point to screen units, with the Y axis pointing down as in SVG. */
+function project(p: Vec3): Pt {
+  const dx = cosD(SAWHORSE_DEPTH_DEG)
+  const dy = sinD(SAWHORSE_DEPTH_DEG)
+  const X = p[0] + p[2] * dx
+  const Y = p[1] + p[2] * dy
+  return { x: X, y: -Y }
+}
 
 /**
- * Screen directions of the sawhorse's bonds at a dihedral, SVG degrees. At 0° each back bond has the same
- * direction as the front bond it hides (eclipsed, as NCERT Fig. 9.4); at 60° each back bond lies midway between
- * two front bonds, 60° from its front partner (staggered).
+ * The projected bond vectors of the sawhorse at a dihedral, in C–H units (screen, SVG orientation): from each carbon
+ * to its three hydrogens. Front and back vectors are the atoms' own, not the labels'.
  *
  * @throws {RangeError} If the angle is not finite
  */
-export function sawhorseDirections(dihedralDeg: number): { front: number[]; back: number[] } {
-  if (!Number.isFinite(dihedralDeg)) throw new RangeError('The dihedral angle must be a finite number of degrees')
+export function sawhorseVectors(dihedralDeg: number): { front: Pt[]; back: Pt[] } {
+  const { front, back } = sawhorse3D(dihedralDeg, 1)
+  const L = project([0, 0, SAWHORSE_LENGTH])
   return {
-    front: [...SAWHORSE_FRONT_DEG],
-    back: SAWHORSE_FRONT_DEG.map((a) => a + dihedralDeg),
+    front: front.map((p) => project(p)),
+    back: back.map((p) => ({ x: project(p).x - L.x, y: project(p).y - L.y })),
   }
 }
 
 /**
- * The sawhorse at a dihedral. The front carbon is the origin (lower left), the back carbon lies one C–C bond up
- * and to the right, and each carbon has three C–H bonds of SAWHORSE_BOND units. Each H label sits beyond the end
- * of its bond, further out where a neighbour would crowd it, and every bond is cut back from every label.
+ * The sawhorse at a dihedral in pixels. The front carbon is the origin (lower left) and the back carbon lies up and
+ * to the right. Each H label sits at SAWHORSE_LABEL_FACTOR times the H position, and every bond is cut back from
+ * every label.
  *
- * @throws {RangeError} If the angle is not finite
+ * @throws {RangeError} If the angle is not finite or the scale is not positive
  */
 export function sawhorseLayout(dihedralDeg: number, bond = SAWHORSE_BOND): SawhorseLayout {
   if (!Number.isFinite(dihedralDeg)) throw new RangeError('The dihedral angle must be a finite number of degrees')
   if (!(bond > 0)) throw new RangeError('The bond length must be positive')
-  const dirs = sawhorseDirections(dihedralDeg)
-  const origin: Pt = { x: 0, y: 0 }
-  const back = polar(bond * SAWHORSE_AXIS_RATIO, SAWHORSE_AXIS_DEG)
-  const offset = bond + LABEL_OFFSET
-  const place = (from: Pt, deg: number, len: number): Pt => ({ x: from.x + len * Math.cos(deg * DEG), y: from.y + len * Math.sin(deg * DEG) })
-  const frontEnds = dirs.front.map((d) => place(origin, d, bond))
-  const backEnds = dirs.back.map((d) => place(back, d, bond))
-  const labels: Glyph[] = [
-    ...dirs.front.map((d) => ({ ...place(origin, d, offset), text: 'H' })),
-    ...dirs.back.map((d) => ({ ...place(back, d, offset), text: 'H' })),
+  const toPx = (p: Pt): Pt => ({ x: p.x * bond, y: p.y * bond })
+  const atoms = sawhorse3D(dihedralDeg, 1)
+  const labels3 = sawhorse3D(dihedralDeg, SAWHORSE_LABEL_FACTOR)
+  const origin: Pt = toPx(project([0, 0, 0]))
+  const back: Pt = toPx(project([0, 0, SAWHORSE_LENGTH]))
+  const hLabels = [
+    ...labels3.front.map((p) => toPx(project(p))),
+    ...labels3.back.map((p) => toPx(project(p))),
   ]
+  const labels: Glyph[] = hLabels.map((p) => ({ x: p.x, y: p.y, text: 'H' }))
   const centres = labels.map((l) => ({ x: l.x, y: l.y }))
+  const frontEnds = atoms.front.map((p) => toPx(project(p)))
+  const backEnds = atoms.back.map((p) => toPx(project(p)))
   const raw: DrawnBond[] = [
     { seg: { a: origin, b: back }, kind: 'axis' },
     ...frontEnds.map((b) => ({ seg: { a: origin, b }, kind: 'front' as const })),

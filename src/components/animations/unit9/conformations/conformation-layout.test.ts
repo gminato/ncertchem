@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { LABEL_KNOCKOUT, SAWHORSE_BOND, newmanLayout, sawhorseDirections, sawhorseLayout, sawhorseViewBox, SAWHORSE_AXIS_RATIO, GLYPH_RADIUS, CLEARANCE, NEWMAN_UNITS, type DrawnBond, type Glyph } from './conformation-layout'
+import { LABEL_KNOCKOUT, SAWHORSE_BOND, SAWHORSE_H, SAWHORSE_DEPTH_DEG, newmanLayout, sawhorseLayout, sawhorseVectors, sawhorseViewBox, GLYPH_RADIUS, CLEARANCE, NEWMAN_UNITS, type DrawnBond, type Glyph } from './conformation-layout'
 import { distToSegment } from '@/components/organic'
 
 /** Clear distance between two glyphs: centre-to-centre minus both radii. */
@@ -52,33 +52,36 @@ describe('newmanLayout', () => {
   })
 })
 
-/** The signed angle from a to b, in degrees in (−180, 180]. */
-const angleBetween = (a: number, b: number) => ((((b - a) % 360) + 540) % 360) - 180
+describe('sawhorse projection', () => {
+  const cos40 = Math.cos((SAWHORSE_DEPTH_DEG * Math.PI) / 180)
+  const sin40 = Math.sin((SAWHORSE_DEPTH_DEG * Math.PI) / 180)
 
-describe('sawhorse bond directions', () => {
-  it('draws each back bond parallel to the front bond it hides at 0° (eclipsed)', () => {
-    const { front, back } = sawhorseDirections(0)
-    front.forEach((f, i) => expect(Math.abs(angleBetween(f, back[i]))).toBeLessThanOrEqual(1))
+  it('differs at θ = 0 only by the depth term: each back bond minus its front partner is 2h along the depth direction', () => {
+    const { front, back } = sawhorseVectors(0)
+    front.forEach((f, i) => {
+      expect(back[i].x - f.x).toBeCloseTo(2 * SAWHORSE_H * cos40, 9)
+      expect(back[i].y - f.y).toBeCloseTo(-2 * SAWHORSE_H * sin40, 9)
+    })
   })
 
-  it('turns each back bond 60° from its front partner at 60° (staggered)', () => {
-    const { front, back } = sawhorseDirections(60)
-    front.forEach((f, i) => expect(Math.abs(Math.abs(angleBetween(f, back[i])) - 60)).toBeLessThanOrEqual(1))
+  it('moves the back bonds apart from their front partners as the dihedral grows', () => {
+    const at0 = sawhorseVectors(0)
+    const at60 = sawhorseVectors(60)
+    at60.back.forEach((b, i) => {
+      const ex = b.x - at60.front[i].x - (at0.back[i].x - at0.front[i].x)
+      const ey = b.y - at60.front[i].y - (at0.back[i].y - at0.front[i].y)
+      expect(Math.hypot(ex, ey)).toBeGreaterThan(0.1)
+    })
   })
 
-  it('lines each back bond up with some front bond at 0°, 120° and 240°', () => {
-    for (const d of [0, 120, 240]) {
-      const { front, back } = sawhorseDirections(d)
-      back.forEach((b) => expect(Math.min(...front.map((f) => Math.abs(angleBetween(f, b))))).toBeLessThanOrEqual(1))
-    }
+  it('puts the back carbon up and to the right of the front carbon', () => {
+    const l = sawhorseLayout(0)
+    expect(l.backCarbon.x).toBeGreaterThan(l.frontCarbon.x)
+    expect(l.backCarbon.y).toBeLessThan(l.frontCarbon.y)
   })
 })
 
 describe('sawhorseLayout', () => {
-  it('makes the C–C bond 1.6 times the C–H bond length', () => {
-    expect(SAWHORSE_AXIS_RATIO).toBe(1.6)
-  })
-
   it('has no C labels: the carbons are marked only by the bond junctions', () => {
     expect(sawhorseLayout(0).labels).toHaveLength(6)
   })
