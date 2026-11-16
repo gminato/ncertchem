@@ -2,6 +2,7 @@ import { describe, it, expect } from 'vitest'
 import type { MolBond, MolGraph } from '@/lib/chem/molecule-graph'
 import { CLASH_DISTANCE, boundingBox, dist, findRings, layout2D, type Point } from './layout'
 import { CHLOROTOLUENE, CYCLOHEXENE, TRIMETHYLPENTANE } from './fixture'
+import { parseSmiles } from '@/lib/chem/molecule-parse'
 
 /** Builds an alkane from a SMILES-like string of C atoms, with '(' ')' for branches. */
 function alkane(smiles: string): MolGraph {
@@ -187,5 +188,29 @@ describe('boundingBox', () => {
     expect(box.height).toBe(6)
     expect(box.minX).toBe(-1)
     expect(box.maxY).toBe(2)
+  })
+})
+
+describe('sp atoms are linear', () => {
+  const angleAt = (p: { x: number; y: number }[], a: number, b: number, c: number) => {
+    const u = { x: p[a].x - p[b].x, y: p[a].y - p[b].y }
+    const v = { x: p[c].x - p[b].x, y: p[c].y - p[b].y }
+    const cos = (u.x * v.x + u.y * v.y) / (Math.hypot(u.x, u.y) * Math.hypot(v.x, v.y))
+    return (Math.acos(Math.max(-1, Math.min(1, cos))) * 180) / Math.PI
+  }
+  it('draws C–C≡C–C in a straight line in a chain and on a branch', () => {
+    const p = layout2D(parseSmiles('CC#CC'))
+    expect(angleAt(p, 0, 1, 2)).toBeCloseTo(180, 5)
+    expect(angleAt(p, 1, 2, 3)).toBeCloseTo(180, 5)
+    const q = layout2D(parseSmiles('CCC#CCC'))
+    expect(angleAt(q, 1, 2, 3)).toBeCloseTo(180, 5)
+    expect(angleAt(q, 2, 3, 4)).toBeCloseTo(180, 5)
+    expect(angleAt(q, 0, 1, 2)).toBeCloseTo(120, 5)
+    const r = layout2D(parseSmiles('CC(C)(C)C#C'))
+    expect(angleAt(r, 1, 4, 5)).toBeCloseTo(180, 5)
+  })
+  it('draws the central carbon of an allene at 180°', () => {
+    const p = layout2D(parseSmiles('C=C=C'))
+    expect(angleAt(p, 0, 1, 2)).toBeCloseTo(180, 5)
   })
 })
