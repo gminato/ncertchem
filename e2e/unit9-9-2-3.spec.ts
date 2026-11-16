@@ -1,6 +1,6 @@
 import fs from 'node:fs'
 import path from 'node:path'
-import { test, expect, type Page } from '@playwright/test'
+import { test, expect, type Locator, type Page } from '@playwright/test'
 
 const SCREEN_DIR = path.join('test-results', 'screens')
 const SECTION = '/class-11/unit-9/9-2-3-properties-of-alkanes'
@@ -8,6 +8,31 @@ const ANIMATION = 'radical-chain'
 const SIM = 'halogenation-lab'
 const STEP_NAMES = ['initiation', 'propagation', 'chain', 'termination', 'shape'] as const
 const DEFAULT_FRACTION = 0.4
+
+/**
+ * Every text element inside the simulation (except the SIMULATION eyebrow and text inside SVG drawings,
+ * KaTeX sub- and superscripts, and sub/sup) must be at least 14 px. Product names are at least 16 px and
+ * KaTeX equations at least 15 px. Returns the offending texts.
+ */
+async function undersizedText(sim: Locator): Promise<string[]> {
+  return sim.evaluate((root) => {
+    const bad: string[] = []
+    for (const el of Array.from(root.querySelectorAll<HTMLElement>('*'))) {
+      const own = Array.from(el.childNodes).some((n) => n.nodeType === Node.TEXT_NODE && (n.textContent ?? '').trim() !== '')
+      if (!own) continue
+      const text = (el.textContent ?? '').trim()
+      if (text.toLowerCase() === 'simulation' || el.closest('svg, sub, sup')) continue
+      const katexParent = el.parentElement?.closest('.katex')
+      if (katexParent && !el.classList.contains('katex')) continue
+      const size = parseFloat(getComputedStyle(el).fontSize)
+      const isName = el.className.toString().includes('productName')
+      const isEq = el.classList.contains('katex')
+      const min = isName ? 16 : isEq ? 15 : 14
+      if (size < min) bad.push(`${size}px (min ${min}) ${el.tagName.toLowerCase()}: ${text.slice(0, 60)}`)
+    }
+    return bad
+  })
+}
 
 /** Waits until hydration has run the Scrolly (it marks the first Step active). */
 async function waitForScrolly(page: Page) {
@@ -61,13 +86,15 @@ for (const scheme of ['light', 'dark'] as const) {
       await page.waitForTimeout(400)
       await expect(sim.getByTestId('halogen-panel')).toBeVisible()
       await expect(sim.getByTestId('halogen-readout')).toContainText('75% 1-chloropropane')
+      expect(await undersizedText(sim)).toEqual([])
       await sim.screenshot({ path: path.join(SCREEN_DIR, `u9-9-2-3-halogenation-lab-default-${scheme}.png`) })
 
       // Changed state 1: 2-methylbutane with Br2, reactivity order.
       await sim.getByRole('combobox', { name: 'Alkane' }).selectOption('2-methylbutane')
       await sim.getByRole('radio', { name: /Br/ }).click()
       await sim.getByRole('radio', { name: 'With 3° > 2° > 1°' }).click()
-      await expect(sim.getByTestId('halogen-readout')).toContainText('no ratio')
+      await expect(sim.getByTestId('halogen-readout')).toContainText('no percentages')
+      expect(await undersizedText(sim)).toEqual([])
       await expect(sim.getByTestId('halogen-panel')).toHaveAttribute('data-halogen', 'Br')
       await sim.screenshot({ path: path.join(SCREEN_DIR, `u9-9-2-3-halogenation-lab-reactivity-${scheme}.png`) })
 
@@ -75,6 +102,8 @@ for (const scheme of ['light', 'dark'] as const) {
       await sim.getByRole('radio', { name: 'Combustion' }).click()
       await sim.getByRole('slider').fill('8')
       await expect(sim.getByTestId('combustion-readout')).toContainText('12.5 mol of O₂')
+      await expect(sim.getByTestId('combustion-readout')).toContainText('Doubled to clear the fraction: 2 C₈H₁₈ + 25 O₂ → 16 CO₂ + 18 H₂O.')
+      expect(await undersizedText(sim)).toEqual([])
       await sim.screenshot({ path: path.join(SCREEN_DIR, `u9-9-2-3-halogenation-lab-combustion-${scheme}.png`) })
 
       expect(errors, errors.join('\n')).toEqual([])

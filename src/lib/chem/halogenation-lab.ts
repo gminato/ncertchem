@@ -92,3 +92,11 @@ export function labCombustion(n: number): Reaction {
 export function oxygenPerMole(n: number): number {
   return (3 * n + 1) / 2
 }
+
+/**
+ * The whole-number factor of the lib's combustion equation: 2 when the lib doubles the equation to clear
+ * the fraction in (3n + 1)/2 (n even), otherwise 1. Matches the rule in hydrocarbon-reactions.ts (combust).
+ */
+export function wholeNumberFactor(n: number): 1 | 2 {
+  return (6 * n + 2) % 4 === 0 ? 1 : 2
+}

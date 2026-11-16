@@ -15,6 +15,7 @@ import {
   oxygenPerMole,
   productsByReactivity,
   statisticalShares,
+  wholeNumberFactor,
   type LabHalogen,
   type ProductShare,
 } from '@/lib/chem/halogenation-lab'
@@ -42,9 +43,9 @@ const ORDER_OPTIONS: { value: Order; label: string }[] = [
 const DEFAULT_ALKANE = 'propane'
 const DEFAULT_N = 5
 const MAX_N = 12
-/** Bond lengths in the drawings, in pixels: long enough for the labels to read. */
-const SOURCE_BOND_PX = 46
-const PRODUCT_BOND_PX = 38
+/** Bond length in the drawings, in pixels: the viewBox is fitted to the drawing, so this sets the proportions. */
+const SOURCE_BOND_PX = 60
+const PRODUCT_BOND_PX = 44
 
 const SUBSCRIPT: Record<string, string> = { '0': '₀', '1': '₁', '2': '₂', '3': '₃', '4': '₄', '5': '₅', '6': '₆', '7': '₇', '8': '₈', '9': '₉' }
 
@@ -62,19 +63,24 @@ function ce(equation: string): string {
  * A drawing at a fixed bond length, with its viewBox fitted to the drawing. A molecule of one or two
  * carbons is written in full, with its hydrogens, because a bare carbon would read as a dash.
  */
-function Drawing({ graph, bond, label }: { graph: MolGraph; bond: number; label: string }) {
+function Drawing({ graph, bond, label, className, inset = 0 }: { graph: MolGraph; bond: number; label: string; className: string; inset?: number }) {
   const carbons = graph.atoms.filter((a) => a.element === 'C').length
+  // inset: how much of the frame's padding to cut, as a fraction of a bond (labels keep a margin).
+  const cut = (b: { x: number; y: number; width: number; height: number }) => {
+    const k = inset * bond
+    return `${b.x + k} ${b.y + k} ${b.width - 2 * k} ${b.height - 2 * k}`
+  }
   if (carbons <= 2) {
     const b = structuralBounds(graph, bond)
     return (
-      <svg viewBox={`${b.x} ${b.y} ${b.width} ${b.height}`} className={styles.drawing} role="img" aria-label={label}>
+      <svg viewBox={cut(b)} className={className} role="img" aria-label={label}>
         <StructuralFormula graph={graph} mode="complete" />
       </svg>
     )
   }
   const b = skeletalFrame(graph, bond).bounds
   return (
-    <svg viewBox={`${b.x} ${b.y} ${b.width} ${b.height}`} className={styles.drawing} role="img" aria-label={label}>
+    <svg viewBox={cut(b)} className={className} role="img" aria-label={label}>
       <SkeletalFormula graph={graph} scale={bond} />
     </svg>
   )
@@ -100,19 +106,19 @@ function HalogenationPanel({ alkaneId, halogen, order }: { alkaneId: string; hal
 
   let readout: string
   if (reaction.products.length === 1) {
-    readout = `${name} with ${haloName} gives one monohalogenated product, ${reaction.products[0].name}, because all ${shares[0].hydrogens} of its hydrogens are equivalent.`
+    readout = `${name} with ${haloName} gives one product, ${reaction.products[0].name}, because all ${shares[0].hydrogens} of its hydrogens are equivalent.`
   } else if (order === 'statistical') {
-    readout = `${name} with ${haloName} gives ${reaction.products.length} monohalogenated products. Counting hydrogens alone: ${shares
+    readout = `${name} with ${haloName} gives ${reaction.products.length} products. Counting hydrogens alone: ${shares
       .map((s) => `${s.percent}% ${s.product.name}`)
       .join(', ')}. This is the statistical split only.`
   } else {
-    readout = `${name} with ${haloName}: the order 3° > 2° > 1° favours ${listed[0].product.name} most. NCERT gives the order but no ratio, so this mode prints no percentages.`
+    readout = `${name} with ${haloName}: the order 3° > 2° > 1° puts ${listed[0].product.name} first. The order is qualitative, so no percentages are shown.`
   }
 
   return (
     <div className={styles.halogenation} data-testid="halogen-panel" data-alkane={alkaneId} data-halogen={halogen}>
       <div className={styles.source}>
-        <Drawing graph={graph} bond={SOURCE_BOND_PX} label={`${name}, skeletal formula`} />
+        <Drawing graph={graph} bond={SOURCE_BOND_PX} label={`${name}, skeletal formula`} className={styles.drawingSource} inset={0.2} />
         <p className={styles.sourceName}>
           {name} <span className={styles.formula}>{subscripted(molecularFormula(graph))}</span>
         </p>
@@ -123,7 +129,9 @@ function HalogenationPanel({ alkaneId, halogen, order }: { alkaneId: string; hal
           const i = reaction.products.indexOf(p)
           return (
             <li key={`${p.name}-${i}`} className={styles.product} data-degree={p.degree}>
-              <Drawing graph={p.graph} bond={PRODUCT_BOND_PX} label={`${p.name}, skeletal formula`} />
+              <div className={styles.thumb}>
+                <Drawing graph={p.graph} bond={PRODUCT_BOND_PX} label={`${p.name}, skeletal formula`} className={styles.drawingThumb} />
+              </div>
               <div className={styles.productText}>
                 <p className={styles.productName}>{p.name}</p>
                 <p className={styles.productMeta}>
@@ -154,16 +162,22 @@ function HalogenationPanel({ alkaneId, halogen, order }: { alkaneId: string; hal
 
 function CombustionPanel({ n, setN }: { n: number; setN: (n: number) => void }) {
   const reaction = useMemo(() => labCombustion(n), [n])
-  const formulaHtml = katex.renderToString(`C_{${n}}H_{${2 * n + 2}}`, { throwOnError: false })
+  const f = wholeNumberFactor(n)
+  const o2 = oxygenPerMole(n)
+  const formula = `C${subscripted(String(n))}H${subscripted(String(2 * n + 2))}`
+  const whole =
+    f === 2
+      ? `Doubled to clear the fraction: 2 ${formula} + ${f * o2} O₂ → ${f * n} CO₂ + ${f * (n + 1)} H₂O.`
+      : `Whole numbers already: ${formula} + ${o2} O₂ → ${n} CO₂ + ${n + 1} H₂O.`
   return (
     <div className={styles.combustion} data-testid="combustion-panel" data-n={n}>
       <div className={styles.slider}>
         <Slider label="Carbon atoms, n" value={n} min={1} max={MAX_N} step={1} onChange={setN} />
       </div>
-      <p className={styles.formulaBig} dangerouslySetInnerHTML={{ __html: formulaHtml }} />
+      <p className={styles.formulaBig}>{formula}</p>
       <p className={styles.sourceEq} dangerouslySetInnerHTML={{ __html: ce(reaction.equation) }} />
       <p className={styles.readout} aria-live="polite" data-testid="combustion-readout">
-        {`One mole of C${subscripted(String(n))}H${subscripted(String(2 * n + 2))} needs (3n + 1)/2 = ${oxygenPerMole(n)} mol of O₂, and gives ${n} mol of CO₂ and ${n + 1} mol of H₂O. The equation shown is the lib's whole-number form.`}
+        {`One mole of ${formula} needs (3n + 1)/2 = ${o2} mol of O₂ and gives ${n} mol of CO₂ and ${n + 1} mol of H₂O. ${whole}`}
       </p>
       <p className={styles.conditions}>{reaction.why}</p>
     </div>
@@ -173,8 +187,8 @@ function CombustionPanel({ n, setN }: { n: number; setN: (n: number) => void }) 
 /**
  * The halogenation lab. Monohalogenation: pick an alkane and Cl₂ or Br₂; every monohalogenated product
  * is listed with its equivalent hydrogens and its statistical share. The reactivity mode shows the order
- * 3° > 2° > 1° and names the favoured product, with no numbers the libs do not hold. Combustion: the
- * balanced equation for CₙH₂ₙ₊₂ + O₂ for any n. Every name, product and equation is from the lib.
+ * 3° > 2° > 1° and names the favoured product, with no numbers the order does not give. Combustion: the
+ * balanced equation for CₙH₂ₙ₊₂ + O₂ for any n. Every name, product and equation is from the chemistry data.
  */
 export function HalogenationLab(_: SimulationProps) {
   const [tab, setTab] = useState<Tab>('halogenation')

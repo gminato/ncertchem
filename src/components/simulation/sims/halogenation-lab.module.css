@@ -1,10 +1,20 @@
+/* Every text in the lab is at least 14 px (names 16 px, equations 15 px); the e2e spec checks this. */
 .lab {
   width: 100%;
   display: flex;
   flex-direction: column;
   gap: var(--space-4);
   font-family: var(--font-sans);
+  font-size: 16px;
   color: var(--fg);
+}
+
+.lab :global(button),
+.lab :global(label),
+.lab :global(legend),
+.lab :global(span),
+.lab :global(input) {
+  font-size: 15px;
 }
 
 .controls {
@@ -18,31 +28,25 @@
   display: flex;
   flex-direction: column;
   gap: 4px;
-  font-size: 14px;
+  font-size: 15px;
   color: var(--fg-muted);
 }
 
 .select {
   font: inherit;
-  font-size: 15px;
+  font-size: 16px;
   color: var(--fg);
   background: var(--surface);
   border: 1px solid var(--border);
   border-radius: var(--radius-sm);
   padding: 6px 10px;
-  min-height: 40px;
+  min-height: 42px;
 }
 
 .halogenation {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr);
-  gap: var(--space-4);
-}
-
-@media (min-width: 960px) {
-  .halogenation {
-    grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
-  }
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
 }
 
 .source {
@@ -50,17 +54,26 @@
   flex-direction: column;
   align-items: center;
   gap: var(--space-2);
+  height: 380px;
   padding: var(--space-3);
   background: var(--surface-raised);
   border: 1px solid var(--border);
   border-radius: var(--radius-md);
+  box-sizing: border-box;
 }
 
-.drawing {
-  width: 100%;
-  max-width: 320px;
-  height: auto;
+/* The alkane fills about three quarters of its panel in each direction. */
+.drawingSource {
+  flex: 1;
+  width: 75%;
+  min-height: 0;
   display: block;
+}
+
+@media (min-width: 960px) {
+  .drawingSource {
+    width: 75%;
+  }
 }
 
 .sourceName {
@@ -70,31 +83,30 @@
 }
 
 .formula {
-  color: var(--fg-muted);
+  font-style: normal;
   font-weight: 500;
+  color: var(--fg-muted);
 }
 
 .sourceEq {
-  grid-column: 1 / -1;
   margin: 0;
-  font-size: 16px;
+  font-size: 15px;
   overflow-x: auto;
   max-width: 100%;
-  padding: 0 var(--space-2);
 }
 
 .products {
   list-style: none;
   margin: 0;
   padding: 0;
-  display: grid;
-  grid-template-columns: minmax(0, 1fr);
+  display: flex;
+  flex-direction: column;
   gap: var(--space-2);
 }
 
 .product {
   display: grid;
-  grid-template-columns: 120px minmax(0, 1fr);
+  grid-template-columns: 220px minmax(0, 1fr);
   gap: var(--space-3);
   align-items: center;
   padding: var(--space-2) var(--space-3);
@@ -103,14 +115,24 @@
   border-radius: var(--radius-md);
 }
 
-.product .drawing {
-  max-width: 120px;
+.thumb {
+  height: 170px;
+  background: var(--surface-raised);
+  border-radius: var(--radius-sm);
+  padding: 8px;
+  box-sizing: border-box;
+}
+
+.drawingThumb {
+  width: 100%;
+  height: 100%;
+  display: block;
 }
 
 .productText {
   display: flex;
   flex-direction: column;
-  gap: 3px;
+  gap: 4px;
   min-width: 0;
 }
 
@@ -124,13 +146,13 @@
 .productMeta,
 .productShare {
   margin: 0;
-  font-size: 14px;
+  font-size: 15px;
   color: var(--fg-muted);
 }
 
 .productEq {
   margin: 0;
-  font-size: 13px;
+  font-size: 15px;
   overflow-x: auto;
 }
 
@@ -150,7 +172,7 @@
 
 .conditions {
   margin: 0;
-  font-size: 14px;
+  font-size: 15px;
   color: var(--fg-muted);
 }
 
@@ -175,11 +197,26 @@
 
 .formulaBig {
   margin: 0;
+  font-family: var(--font-sans);
+  font-style: normal;
   font-size: 26px;
+  font-weight: 600;
 }
 
 @media (prefers-reduced-motion: reduce) {
   .barFill {
     transition: none;
   }
+}
+
+@media (min-width: 960px) {
+  .product {
+    grid-template-columns: 260px minmax(0, 1fr);
+  }
+}
+
+/* The shared slider's value readout, sized to the lab's 14 px minimum. */
+.slider output,
+.slider :global(output) {
+  font-size: 16px;
 }

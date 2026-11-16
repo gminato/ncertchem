@@ -8,6 +8,7 @@ import {
   productsByReactivity,
   statisticalShares,
   totalSubstitutableHydrogens,
+  wholeNumberFactor,
 } from './halogenation-lab'
 
 describe('halogenation lab', () => {
@@ -54,5 +55,14 @@ describe('halogenation lab', () => {
     expect(oxygenPerMole(1)).toBe(2)
     expect(oxygenPerMole(3)).toBe(5)
     expect(oxygenPerMole(5)).toBe(8)
+  })
+})
+
+describe('whole-number factor of the combustion equation', () => {
+  it('is 2 exactly when the lib writes the equation doubled', () => {
+    for (let n = 1; n <= 12; n++) {
+      const doubled = labCombustion(n).equations[0].startsWith('\\ce{2')
+      expect(wholeNumberFactor(n) === 2).toBe(doubled)
+    }
   })
 })
