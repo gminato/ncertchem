@@ -53,6 +53,10 @@ import { AlkyneIsomers } from './sims/alkyne-isomers'
 import { FormulaTranslator } from './sims/formula-translator'
 import { ArrowPusher } from './sims/arrow-pusher'
 import { AlkaneSynthesisPlanner } from './sims/alkane-synthesis-planner'
+import { AlkeneMaker } from './sims/alkene-maker'
+import { CisTransChecker } from './sims/cis-trans-checker'
+import { CarbonCounter } from './sims/carbon-counter'
+import { FamilySorter } from './sims/family-sorter'
 
 export interface SimulationProps {
   /** True when the Learner has asked the OS for reduced motion. Skip tweens and loops when set. */
@@ -120,4 +124,8 @@ export const simulations: Record<string, ComponentType<SimulationProps>> = {
   'formula-translator': FormulaTranslator,
   'arrow-pusher': ArrowPusher,
   'alkane-synthesis-planner': AlkaneSynthesisPlanner,
+  'alkene-maker': AlkeneMaker,
+  'cis-trans-checker': CisTransChecker,
+  'carbon-counter': CarbonCounter,
+  'family-sorter': FamilySorter,
 }
