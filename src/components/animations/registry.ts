@@ -111,6 +111,7 @@ import { AlkaneNaming } from './unit8/naming/AlkaneNaming'
 import { RepresentationsMorph } from './unit8/representations/RepresentationsMorph'
 import { BondFission } from './unit8/fission/BondFission'
 import { ElimMechanism } from './unit9/elimination/ElimMechanism'
+import { AlkeneStructure } from './unit9/alkene-structure/AlkeneStructure'
 import { TripleBond } from './unit9/alkyne-structure/TripleBond'
 
 /**
@@ -233,6 +234,7 @@ export const animations = {
   elimination: ElimMechanism,
   'structure-morph': RepresentationsMorph,
   'bond-fission': BondFission,
+  'double-bond': AlkeneStructure,
   'triple-bond': TripleBond,
 } as const
 
