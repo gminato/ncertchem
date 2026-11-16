@@ -1,25 +1,28 @@
 'use client'
 
-import { ReactionScheme, reactionSchemeSize } from '@/components/organic/ReactionScheme'
+import { ReactionScheme } from '@/components/organic/ReactionScheme'
 import { Label, LabelSub, LabelSup, VocabDefs } from '@/components/vocab'
 import { useReveal } from '@/components/animations/unit4/vbt/useStepTween'
 import { ROUTE_STEP_COUNT, routeStep, wrapText, type RouteCell } from './alkane-routes-steps'
+import { fitScheme } from './scheme-fit'
 
 export interface AlkaneRoutesProps {
   step: number
   reducedMotion: boolean
 }
 
-/** The drawing is narrow on purpose: the panel scales it up, so the bonds and labels read large. */
-const WIDTH = 420
-const SCHEME_WIDTH = 396
-const TEXT_LINE = 19
-const CHARS = 56
+/** Drawing width in viewBox units: the panel is about 570 px, so the text reads at 14 px or more. */
+const WIDTH = 600
+const SCHEME_WIDTH = 580
+const TEXT_LINE = 21
+const CHARS = 66
+/** The viewBox is at least this tall, so a short step is centred in the panel rather than sitting at its top. */
+const MIN_HEIGHT = 480
 
 /**
- * The alkane-routes Scrolly: the four preparations of NCERT 9.2.2 as reaction schemes, each species
- * tagged with its carbon count, and Kolbe's electrolysis drawn as a cell with CO₂ at the anode and
- * H₂ at the cathode. The reagents, conditions and products come from the hydrocarbon lib.
+ * The alkane-routes Scrolly: the four preparations of NCERT 9.2.2 as reaction schemes on one row,
+ * each species tagged with its carbon count, and Kolbe's electrolysis drawn as a cell with CO₂ at the
+ * anode and H₂ at the cathode. The reagents, conditions and products come from the hydrocarbon lib.
  */
 export function AlkaneRoutes({ step, reducedMotion }: AlkaneRoutesProps) {
   const index = Math.min(ROUTE_STEP_COUNT - 1, Math.max(0, Math.round(step)))
@@ -30,16 +33,19 @@ export function AlkaneRoutes({ step, reducedMotion }: AlkaneRoutesProps) {
     return <KolbeCell cell={current} reveal={reveal} index={index} />
   }
 
-  const height = reactionSchemeSize(current.sequence, SCHEME_WIDTH).height
-  const schemeTop = 48
+  const fit = fitScheme(current.sequence, SCHEME_WIDTH)
   const arithmetic = wrapText(current.arithmetic, CHARS)
   const names = current.names ? wrapText(current.names, CHARS) : []
   const conditions = wrapText(`Conditions: ${current.conditions}`, CHARS)
-  const textTop = schemeTop + height + 14
-  const viewHeight = Math.max(300, textTop + (arithmetic.length + names.length + conditions.length) * TEXT_LINE + 12)
-
+  const contentHeight = fit.height + 36 + (arithmetic.length + names.length + conditions.length) * TEXT_LINE
+  const viewHeight = Math.max(MIN_HEIGHT, contentHeight + 60)
+  const shift = (viewHeight - contentHeight) / 2
+  const schemeTop = shift + 64
+  const textTop = schemeTop + fit.height + 36
   const namesTop = textTop + arithmetic.length * TEXT_LINE
   const conditionsTop = namesTop + names.length * TEXT_LINE
+  const schemeX = (WIDTH - fit.width) / 2
+
   return (
     <svg
       viewBox={`0 0 ${WIDTH} ${viewHeight}`}
@@ -50,22 +56,24 @@ export function AlkaneRoutes({ step, reducedMotion }: AlkaneRoutesProps) {
       data-testid="routes-visual"
     >
       <VocabDefs />
-      <Label x={WIDTH / 2} y={34} textAnchor="middle" fontSize={17} fill="var(--fg)" data-testid="routes-title">
+      <Label x={WIDTH / 2} y={shift + 36} textAnchor="middle" fontSize={19} fill="var(--fg)" data-testid="routes-title">
         {current.title}
       </Label>
-      <ReactionScheme sequence={current.sequence} maxWidth={SCHEME_WIDTH} x={(WIDTH - SCHEME_WIDTH) / 2} y={schemeTop} progress={reveal} />
+      <g transform={`translate(${schemeX}, ${schemeTop}) scale(${fit.scale})`}>
+        <ReactionScheme sequence={current.sequence} maxWidth={fit.layoutWidth} progress={reveal} />
+      </g>
       {arithmetic.map((line, k) => (
-        <Label key={`a${k}`} x={WIDTH / 2} y={textTop + k * TEXT_LINE} textAnchor="middle" fontSize={14} fill="var(--locant)" data-testid={k === 0 ? 'routes-arithmetic' : undefined}>
+        <Label key={`a${k}`} x={WIDTH / 2} y={textTop + k * TEXT_LINE} textAnchor="middle" fontSize={15} fill="var(--locant)" data-testid={k === 0 ? 'routes-arithmetic' : undefined}>
           {line}
         </Label>
       ))}
       {names.map((line, k) => (
-        <Label key={`n${k}`} x={WIDTH / 2} y={namesTop + k * TEXT_LINE} textAnchor="middle" fontSize={14} fill="var(--fg)" data-testid={k === 0 ? 'routes-names' : undefined}>
+        <Label key={`n${k}`} x={WIDTH / 2} y={namesTop + k * TEXT_LINE} textAnchor="middle" fontSize={15} fill="var(--fg)" data-testid={k === 0 ? 'routes-names' : undefined}>
           {line}
         </Label>
       ))}
       {conditions.map((line, k) => (
-        <Label key={`c${k}`} x={WIDTH / 2} y={conditionsTop + k * TEXT_LINE} textAnchor="middle" fontSize={13} fill="var(--fg-muted)" data-testid={k === 0 ? 'routes-conditions' : undefined}>
+        <Label key={`c${k}`} x={WIDTH / 2} y={conditionsTop + k * TEXT_LINE} textAnchor="middle" fontSize={14} fill="var(--fg-muted)" data-testid={k === 0 ? 'routes-conditions' : undefined}>
           {line}
         </Label>
       ))}
@@ -78,13 +86,15 @@ export function AlkaneRoutes({ step, reducedMotion }: AlkaneRoutesProps) {
  * The reactions are written as NCERT shows them, step by step, and the product is named by the lib.
  */
 function KolbeCell({ cell, reveal, index }: { cell: RouteCell; reveal: number; index: number }) {
-  const beaker = { x: 60, y: 92, w: 300, h: 150 }
-  const liquidTop = 150
-  const anodeX = 140
-  const cathodeX = 280
-  const electrodeTop = 60
+  const beaker = { x: 110, y: 96, w: 380, h: 170 }
+  const liquidTop = 170
+  const anodeX = 205
+  const cathodeX = 395
+  const electrodeTop = 66
   const arithmetic = wrapText(`${cell.product}: ${cell.arithmetic}`, CHARS)
-  const height = 384 + arithmetic.length * TEXT_LINE + 6
+  const columnsTop = 316
+  const arithmeticTop = columnsTop + 130
+  const height = arithmeticTop + arithmetic.length * TEXT_LINE + 12
 
   return (
     <svg
@@ -96,7 +106,7 @@ function KolbeCell({ cell, reveal, index }: { cell: RouteCell; reveal: number; i
       data-testid="routes-visual"
     >
       <VocabDefs />
-      <Label x={WIDTH / 2} y={30} textAnchor="middle" fontSize={17} fill="var(--fg)" data-testid="routes-title">
+      <Label x={WIDTH / 2} y={36} textAnchor="middle" fontSize={19} fill="var(--fg)" data-testid="routes-title">
         {cell.title}
       </Label>
       <g opacity={reveal}>
@@ -106,61 +116,53 @@ function KolbeCell({ cell, reveal, index }: { cell: RouteCell; reveal: number; i
           fill="var(--accent-soft)"
           opacity={0.7}
         />
-        <rect x={anodeX - 6} y={electrodeTop} width={12} height={beaker.y + beaker.h - electrodeTop - 14} rx={3} fill="var(--fg-muted)" />
-        <rect x={cathodeX - 6} y={electrodeTop} width={12} height={beaker.y + beaker.h - electrodeTop - 14} rx={3} fill="var(--fg-muted)" />
-        <Label x={anodeX} y={electrodeTop - 10} textAnchor="middle" fontSize={20} fill="var(--fg)" data-testid="routes-anode-sign">
+        <rect x={anodeX - 7} y={electrodeTop} width={14} height={beaker.y + beaker.h - electrodeTop - 16} rx={3} fill="var(--fg-muted)" />
+        <rect x={cathodeX - 7} y={electrodeTop} width={14} height={beaker.y + beaker.h - electrodeTop - 16} rx={3} fill="var(--fg-muted)" />
+        <Label x={anodeX} y={electrodeTop - 12} textAnchor="middle" fontSize={22} fill="var(--fg)" data-testid="routes-anode-sign">
           +
         </Label>
-        <Label x={cathodeX} y={electrodeTop - 10} textAnchor="middle" fontSize={20} fill="var(--fg)" data-testid="routes-cathode-sign">
+        <Label x={cathodeX} y={electrodeTop - 12} textAnchor="middle" fontSize={22} fill="var(--fg)" data-testid="routes-cathode-sign">
           −
         </Label>
-        <Label x={210} y={liquidTop + 36} textAnchor="middle" fontSize={15} fill="var(--fg)">
+        <Label x={300} y={liquidTop + 40} textAnchor="middle" fontSize={16} fill="var(--fg)">
           CH<LabelSub>3</LabelSub>COO<LabelSup>−</LabelSup>
         </Label>
-        <Label x={210} y={liquidTop + 58} textAnchor="middle" fontSize={15} fill="var(--fg)">
+        <Label x={300} y={liquidTop + 64} textAnchor="middle" fontSize={16} fill="var(--fg)">
           Na<LabelSup>+</LabelSup>
         </Label>
-        <Label x={104} y={beaker.y + 34} textAnchor="middle" fontSize={16} fill="var(--fg)" data-testid="routes-co2">
+        <Label x={156} y={beaker.y + 40} textAnchor="middle" fontSize={17} fill="var(--fg)" data-testid="routes-co2">
           CO<LabelSub>2</LabelSub> ↑
         </Label>
-        <Label x={316} y={beaker.y + 34} textAnchor="middle" fontSize={16} fill="var(--fg)" data-testid="routes-h2">
+        <Label x={444} y={beaker.y + 40} textAnchor="middle" fontSize={17} fill="var(--fg)" data-testid="routes-h2">
           H<LabelSub>2</LabelSub> ↑
         </Label>
       </g>
 
       <g opacity={reveal}>
-        <Label x={28} y={282} textAnchor="start" fontSize={16} fill="var(--fg)" data-testid="routes-anode">
+        <Label x={36} y={columnsTop} textAnchor="start" fontSize={17} fill="var(--fg)" data-testid="routes-anode">
           At the anode (+)
         </Label>
-        <Label x={28} y={306} textAnchor="start" fontSize={14} fill="var(--fg-muted)">
+        <Label x={36} y={columnsTop + 26} textAnchor="start" fontSize={15} fill="var(--fg-muted)">
           CH<LabelSub>3</LabelSub>COO<LabelSup>−</LabelSup> − e<LabelSup>−</LabelSup> → CH<LabelSub>3</LabelSub>COO•
         </Label>
-        <Label x={28} y={326} textAnchor="start" fontSize={14} fill="var(--fg-muted)">
+        <Label x={36} y={columnsTop + 50} textAnchor="start" fontSize={15} fill="var(--fg-muted)">
           CH<LabelSub>3</LabelSub>COO• → CH<LabelSub>3</LabelSub>• + CO<LabelSub>2</LabelSub>
         </Label>
-        <Label x={28} y={346} textAnchor="start" fontSize={14} fill="var(--fg-muted)">
+        <Label x={36} y={columnsTop + 74} textAnchor="start" fontSize={15} fill="var(--fg-muted)">
           CH<LabelSub>3</LabelSub>• + CH<LabelSub>3</LabelSub>• → CH<LabelSub>3</LabelSub>–CH<LabelSub>3</LabelSub>
         </Label>
-        <Label x={WIDTH - 28} y={282} textAnchor="end" fontSize={16} fill="var(--fg)" data-testid="routes-cathode">
+        <Label x={WIDTH - 36} y={columnsTop} textAnchor="end" fontSize={17} fill="var(--fg)" data-testid="routes-cathode">
           At the cathode (−)
         </Label>
-        <Label x={WIDTH - 28} y={306} textAnchor="end" fontSize={14} fill="var(--fg-muted)">
+        <Label x={WIDTH - 36} y={columnsTop + 26} textAnchor="end" fontSize={15} fill="var(--fg-muted)">
           H<LabelSub>2</LabelSub>O + e<LabelSup>−</LabelSup> → OH<LabelSup>−</LabelSup> + H•
         </Label>
-        <Label x={WIDTH - 28} y={326} textAnchor="end" fontSize={14} fill="var(--fg-muted)">
+        <Label x={WIDTH - 36} y={columnsTop + 50} textAnchor="end" fontSize={15} fill="var(--fg-muted)">
           2H• → H<LabelSub>2</LabelSub>
         </Label>
       </g>
       {arithmetic.map((line, k) => (
-        <Label
-          key={`a${k}`}
-          x={WIDTH / 2}
-          y={384 + k * TEXT_LINE}
-          textAnchor="middle"
-          fontSize={14}
-          fill="var(--locant)"
-          data-testid={k === 0 ? 'routes-arithmetic' : undefined}
-        >
+        <Label key={`a${k}`} x={WIDTH / 2} y={arithmeticTop + k * TEXT_LINE} textAnchor="middle" fontSize={15} fill="var(--locant)" data-testid={k === 0 ? 'routes-arithmetic' : undefined}>
           {line}
         </Label>
       ))}

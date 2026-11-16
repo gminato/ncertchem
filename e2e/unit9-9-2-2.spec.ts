@@ -32,7 +32,7 @@ async function gotoStep(page: Page, index: number) {
 
 for (const scheme of ['light', 'dark'] as const) {
   test.describe(`Unit 9, Section 9.2.2 (${scheme})`, () => {
-    test.use({ colorScheme: scheme, viewport: { width: 1440, height: 900 } })
+    test.use({ colorScheme: scheme, viewport: { width: 1440, height: 900 }, deviceScaleFactor: 2 })
 
     test('every Scrolly Step and the synthesis planner render with no console errors', async ({ page }) => {
       const errors: string[] = []

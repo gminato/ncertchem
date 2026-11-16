@@ -15,7 +15,9 @@ import {
   type ReactionProduct,
 } from '@/lib/chem/hydrocarbon-reactions'
 import { carbonCount } from '@/lib/chem/alkane-planner'
+import type { MolGraph } from '@/lib/chem/molecule-graph'
 import { molecularFormula, parseSmiles } from '@/lib/chem/molecule-parse'
+import { speciesOf } from '@/lib/chem/hydrocarbon-species'
 import type { SchemePath, SchemeSpecies } from '@/components/organic/hydrocarbon-geometry'
 
 export const ROUTE_STEP_COUNT = 6
@@ -48,9 +50,22 @@ function carbonTag(p: ReactionProduct): string {
   return `${carbonCount(p.graph)} C`
 }
 
+/**
+ * A species as the scheme draws it: a structure, or for a C1 or C2 species a condensed formula with
+ * real subscripts (CH₃CH₃, CH₃Br, CH₄). The label comes from the lib.
+ */
+export function drawnSpecies(g: MolGraph, tag: string): SchemeSpecies {
+  return carbonCount(g) <= 2 ? { formula: subscript(speciesOf(g).label), tag } : { formula: g, tag }
+}
+
 /** A product that is drawn as a structure, tagged with its carbon count. */
 function organic(p: ReactionProduct): SchemeSpecies {
-  return { formula: p.graph, tag: carbonTag(p) }
+  return drawnSpecies(p.graph, carbonTag(p))
+}
+
+/** A starting material, drawn as its structure or condensed formula, tagged with its carbon count. */
+export function startingSpecies(g: MolGraph): SchemeSpecies {
+  return drawnSpecies(g, `${carbonCount(g)} C`)
 }
 
 /** An inorganic product, written as a formula with real subscripts. */
@@ -63,6 +78,16 @@ const SUB: Record<string, string> = { '0': '₀', '1': '₁', '2': '₂', '3': '
 /** Digits to subscripts, e.g. Na2CO3 becomes Na₂CO₃. */
 export function subscript(formula: string): string {
   return formula.replace(/[0-9]/g, (d) => SUB[d])
+}
+
+/**
+ * The sodium salt of an acid, as a condensed formula: the carboxylic acid label with its acid hydrogen
+ * replaced by sodium (CH3CH2CH2COOH becomes CH3CH2CH2COONa). The label comes from the lib.
+ */
+export function sodiumSaltLabel(acid: MolGraph): string {
+  const label = speciesOf(acid).label
+  if (!label.endsWith('OH')) throw new RangeError('A sodium salt is written from a carboxylic acid label')
+  return `${label.slice(0, -2)}ONa`.replace(/^CHOO/, 'HCOO')
 }
 
 /** The scheme of one route step, as the ReactionScheme component draws it. */
@@ -121,7 +146,7 @@ export function routeStep(step: number): RouteStep {
         kind: 'scheme',
         title: 'Hydrogenation',
         sequence: [
-          [{ formula: sm, tag: `${carbonCount(sm)} C` }],
+          [startingSpecies(sm)],
           { reagents: '2 H₂', conditions: 'Pt/Pd/Ni' },
           [organic(p)],
         ],
@@ -137,7 +162,7 @@ export function routeStep(step: number): RouteStep {
         kind: 'scheme',
         title: 'Reduction of an alkyl halide',
         sequence: [
-          [{ formula: sm, tag: `${carbonCount(sm)} C` }],
+          [startingSpecies(sm)],
           { reagents: 'H₂', conditions: 'Zn, H⁺' },
           [organic(p), { formula: subscript(hx.formula) }],
         ],
@@ -152,7 +177,7 @@ export function routeStep(step: number): RouteStep {
         kind: 'scheme',
         title: 'Wurtz reaction, one halide',
         sequence: [
-          [{ formula: sm, tag: `${carbonCount(sm)} C` }, { formula: sm, tag: `${carbonCount(sm)} C` }],
+          [startingSpecies(sm), startingSpecies(sm)],
           { reagents: '2 Na', conditions: 'dry ether' },
           [organic(p)],
         ],
@@ -180,18 +205,18 @@ export function routeStep(step: number): RouteStep {
       }
     }
     case 4: {
-      const sm = parseSmiles(EXAMPLES.butanoic)
+      const acid = parseSmiles(EXAMPLES.butanoic)
       const p = r.decarboxylate.products[0]
       const carbonate = r.decarboxylate.products[1]
       return {
         kind: 'scheme',
-        title: 'Decarboxylation',
+        title: 'Decarboxylation of a sodium salt',
         sequence: [
-          [{ formula: sm, tag: `${carbonCount(sm)} C` }],
+          [{ formula: subscript(sodiumSaltLabel(acid)), tag: `${carbonCount(acid)} C` }],
           { reagents: 'NaOH, CaO', conditions: 'heat' },
           [organic(p), inorganic(carbonate)],
         ],
-        arithmetic: `${carbonCount(sm)} carbons in the acid, ${carbonCount(p.graph)} in the alkane: one carbon leaves as CO₂`,
+        arithmetic: `${carbonCount(acid)} carbons in the acid, ${carbonCount(p.graph)} in the alkane: one carbon leaves as CO₂`,
         conditions: r.decarboxylate.conditions,
       }
     }
