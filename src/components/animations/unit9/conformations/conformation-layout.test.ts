@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { LABEL_KNOCKOUT, SAWHORSE_BOND, newmanLayout, sawhorseLayout, sawhorseViewBox, GLYPH_RADIUS, CLEARANCE, NEWMAN_UNITS, type DrawnBond, type Glyph } from './conformation-layout'
+import { LABEL_KNOCKOUT, SAWHORSE_BOND, newmanLayout, sawhorseDirections, sawhorseLayout, sawhorseViewBox, SAWHORSE_AXIS_RATIO, GLYPH_RADIUS, CLEARANCE, NEWMAN_UNITS, type DrawnBond, type Glyph } from './conformation-layout'
 import { distToSegment } from '@/components/organic'
 
 /** Clear distance between two glyphs: centre-to-centre minus both radii. */
@@ -52,7 +52,37 @@ describe('newmanLayout', () => {
   })
 })
 
+/** The signed angle from a to b, in degrees in (−180, 180]. */
+const angleBetween = (a: number, b: number) => ((((b - a) % 360) + 540) % 360) - 180
+
+describe('sawhorse bond directions', () => {
+  it('draws each back bond parallel to the front bond it hides at 0° (eclipsed)', () => {
+    const { front, back } = sawhorseDirections(0)
+    front.forEach((f, i) => expect(Math.abs(angleBetween(f, back[i]))).toBeLessThanOrEqual(1))
+  })
+
+  it('turns each back bond 60° from its front partner at 60° (staggered)', () => {
+    const { front, back } = sawhorseDirections(60)
+    front.forEach((f, i) => expect(Math.abs(Math.abs(angleBetween(f, back[i])) - 60)).toBeLessThanOrEqual(1))
+  })
+
+  it('lines each back bond up with some front bond at 0°, 120° and 240°', () => {
+    for (const d of [0, 120, 240]) {
+      const { front, back } = sawhorseDirections(d)
+      back.forEach((b) => expect(Math.min(...front.map((f) => Math.abs(angleBetween(f, b))))).toBeLessThanOrEqual(1))
+    }
+  })
+})
+
 describe('sawhorseLayout', () => {
+  it('makes the C–C bond 1.6 times the C–H bond length', () => {
+    expect(SAWHORSE_AXIS_RATIO).toBe(1.6)
+  })
+
+  it('has no C labels: the carbons are marked only by the bond junctions', () => {
+    expect(sawhorseLayout(0).labels).toHaveLength(6)
+  })
+
   it('keeps every H label clear of every bond, at every dihedral', () => {
     for (const d of SAMPLES) {
       const l = sawhorseLayout(d, SAWHORSE_BOND)
@@ -67,18 +97,6 @@ describe('sawhorseLayout', () => {
       for (let i = 0; i < hs.length; i++)
         for (let j = i + 1; j < hs.length; j++)
           expect(glyphGap(hs[i], hs[j]), `dihedral ${d}, H ${i} and H ${j}`).toBeGreaterThanOrEqual(CLEARANCE - 1e-6)
-    }
-  })
-
-  it('keeps the two C labels clear of every bond and of every H label', () => {
-    for (const d of SAMPLES) {
-      const l = sawhorseLayout(d, SAWHORSE_BOND)
-      const cs = l.labels.slice(6)
-      expect(cs).toHaveLength(2)
-      for (const c of cs) {
-        expect(bondGap(c, l.bonds), `C label, dihedral ${d}`).toBeGreaterThanOrEqual(CLEARANCE - 1e-6)
-        for (const h of l.labels.slice(0, 6)) expect(glyphGap(c, h), `C vs H, dihedral ${d}`).toBeGreaterThanOrEqual(CLEARANCE - 1e-6)
-      }
     }
   })
 

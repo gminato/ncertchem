@@ -5,7 +5,7 @@
  * another label. The geometry of the bonds comes from the shared hydrocarbon-geometry module.
  */
 
-import { distToSegment, segmentOutside, sawhorseGeometry, type Pt, type Seg } from '@/components/organic'
+import { distToSegment, segmentOutside, type Pt, type Seg } from '@/components/organic'
 
 const DEG = Math.PI / 180
 
@@ -83,70 +83,67 @@ export function newmanLayout(dihedralDeg: number, front: readonly [string, strin
 
 export interface SawhorseLayout {
   bonds: DrawnBond[]
-  /** H labels, then the two C labels (front carbon first). */
+  /** The six H labels: the front three, then the back three. */
   labels: Glyph[]
   frontCarbon: Pt
   backCarbon: Pt
 }
 
-/** The clearest candidate for a carbon label: the one farthest from every drawn bond and every H label. */
-function carbonLabelSpot(carbon: Pt, bonds: readonly DrawnBond[], hydrogens: readonly Pt[], radius: number): Pt {
-  let best = polar(radius, 0)
-  let bestClear = -Infinity
-  for (let k = 0; k < 24; k++) {
-    const offset = polar(radius, k * 15)
-    const p = { x: carbon.x + offset.x, y: carbon.y + offset.y }
-    const clear = Math.min(
-      ...bonds.map((b) => distToSegment(p, b.seg)),
-      ...hydrogens.map((h) => Math.hypot(p.x - h.x, p.y - h.y))
-    )
-    if (clear > bestClear) {
-      bestClear = clear
-      best = p
-    }
+/** Sawhorse C–H bond length in units; the C–C bond is SAWHORSE_AXIS_RATIO times this (the textbook convention). */
+export const SAWHORSE_BOND = 60
+export const SAWHORSE_AXIS_RATIO = 1.6
+/** Direction of the C–C bond on screen, SVG degrees: the back carbon is up and to the right. */
+export const SAWHORSE_AXIS_DEG = -35
+/**
+ * Front C–H directions, SVG degrees. Chosen 30° from the C–C axis and 120° apart, so no bond runs along the axis
+ * at eclipse or staggered. The back bonds start from the same directions turned by the dihedral.
+ */
+export const SAWHORSE_FRONT_DEG = [355, 115, 235] as const
+
+/**
+ * Screen directions of the sawhorse's bonds at a dihedral, SVG degrees. At 0° each back bond has the same
+ * direction as the front bond it hides (eclipsed, as NCERT Fig. 9.4); at 60° each back bond lies midway between
+ * two front bonds, 60° from its front partner (staggered).
+ *
+ * @throws {RangeError} If the angle is not finite
+ */
+export function sawhorseDirections(dihedralDeg: number): { front: number[]; back: number[] } {
+  if (!Number.isFinite(dihedralDeg)) throw new RangeError('The dihedral angle must be a finite number of degrees')
+  return {
+    front: [...SAWHORSE_FRONT_DEG],
+    back: SAWHORSE_FRONT_DEG.map((a) => a + dihedralDeg),
   }
-  return { x: best.x, y: best.y }
 }
 
 /**
- * The sawhorse at a dihedral, with the bond length in units (the sawhorse is drawn from the front carbon at
- * the origin). The H labels are at the ends of their bonds and every bond is cut back from them. The two C
- * labels sit at the clearest spot beside each carbon.
+ * The sawhorse at a dihedral. The front carbon is the origin (lower left), the back carbon lies one C–C bond up
+ * and to the right, and each carbon has three C–H bonds of SAWHORSE_BOND units. Each H label sits beyond the end
+ * of its bond, further out where a neighbour would crowd it, and every bond is cut back from every label.
  *
- * @throws {RangeError} If the angle is not finite or the bond length is not positive
+ * @throws {RangeError} If the angle is not finite
  */
-export function sawhorseLayout(dihedralDeg: number, bond: number): SawhorseLayout {
+export function sawhorseLayout(dihedralDeg: number, bond = SAWHORSE_BOND): SawhorseLayout {
   if (!Number.isFinite(dihedralDeg)) throw new RangeError('The dihedral angle must be a finite number of degrees')
   if (!(bond > 0)) throw new RangeError('The bond length must be positive')
-  const g = sawhorseGeometry(dihedralDeg)
-  const P = (p: Pt): Pt => ({ x: p.x * bond, y: p.y * bond })
+  const dirs = sawhorseDirections(dihedralDeg)
   const origin: Pt = { x: 0, y: 0 }
-  const back = P(g.back)
-  // Each H label sits beyond the end of its bond, further out where a neighbouring label would crowd it.
-  const hBonds = [...g.front, ...g.backBonds]
-  const hydrogens: Pt[] = []
-  for (const b of hBonds) {
-    const start = P(b.from)
-    const len = Math.hypot(P(b.to).x - start.x, P(b.to).y - start.y)
-    const at = (f: number): Pt => ({ x: start.x + b.dir.x * len * f, y: start.y + b.dir.y * len * f })
-    const pick = LABEL_FACTORS.map(at).find((c) => hydrogens.every((h) => Math.hypot(c.x - h.x, c.y - h.y) >= LABEL_KNOCKOUT + GLYPH_RADIUS)) ?? at(LABEL_FACTORS[0])
-    hydrogens.push(pick)
-  }
+  const back = polar(bond * SAWHORSE_AXIS_RATIO, SAWHORSE_AXIS_DEG)
+  const offset = bond + LABEL_OFFSET
+  const place = (from: Pt, deg: number, len: number): Pt => ({ x: from.x + len * Math.cos(deg * DEG), y: from.y + len * Math.sin(deg * DEG) })
+  const frontEnds = dirs.front.map((d) => place(origin, d, bond))
+  const backEnds = dirs.back.map((d) => place(back, d, bond))
+  const labels: Glyph[] = [
+    ...dirs.front.map((d) => ({ ...place(origin, d, offset), text: 'H' })),
+    ...dirs.back.map((d) => ({ ...place(back, d, offset), text: 'H' })),
+  ]
+  const centres = labels.map((l) => ({ x: l.x, y: l.y }))
   const raw: DrawnBond[] = [
     { seg: { a: origin, b: back }, kind: 'axis' },
-    ...g.front.map((b) => ({ seg: { a: origin, b: P(b.to) }, kind: 'front' as const })),
-    ...g.backBonds.map((b) => ({ seg: { a: back, b: P(b.to) }, kind: 'back' as const })),
+    ...frontEnds.map((b) => ({ seg: { a: origin, b }, kind: 'front' as const })),
+    ...backEnds.map((b) => ({ seg: { a: back, b }, kind: 'back' as const })),
   ]
-  const bonds = raw.flatMap((b) => segmentOutside(b.seg, hydrogens, LABEL_KNOCKOUT).map((seg) => ({ seg, kind: b.kind })))
-  const labels: Glyph[] = hydrogens.map((h) => ({ x: h.x, y: h.y, text: 'H' }))
-  const frontC = carbonLabelSpot(origin, bonds, hydrogens, 30)
-  const backC = carbonLabelSpot(back, bonds, hydrogens, 30)
-  return {
-    bonds,
-    labels: [...labels, { x: frontC.x, y: frontC.y, text: 'C' }, { x: backC.x, y: backC.y, text: 'C' }],
-    frontCarbon: origin,
-    backCarbon: back,
-  }
+  const bonds = raw.flatMap((b) => segmentOutside(b.seg, centres, LABEL_KNOCKOUT).map((seg) => ({ seg, kind: b.kind })))
+  return { bonds, labels, frontCarbon: origin, backCarbon: back }
 }
 
 /**
@@ -176,8 +173,5 @@ export function sawhorseViewBox(bond: number): { x: number; y: number; width: nu
   return { x: minX - pad, y: minY - pad, width: maxX - minX + 2 * pad, height: maxY - minY + 2 * pad }
 }
 
-/** Label distances along a bond, as multiples of its length: the first that clears the others is used. */
-const LABEL_FACTORS = [1.6, 1.8, 2.0, 2.2, 2.4, 2.6] as const
-
-/** The bond length, in units, of the sawhorse drawing: its width then fits a 330-unit panel at about 1:1. */
-export const SAWHORSE_BOND = 60
+/** How far an H label sits beyond the end of its bond, in units. */
+const LABEL_OFFSET = 26

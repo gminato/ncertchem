@@ -69,7 +69,7 @@ export const SAWHORSE_VIEW = sawhorseViewBox(SAWHORSE_BOND)
 
 /**
  * Sawhorse projection of ethane: the C–C bond as a slanted line, the front carbon at the bottom and the back carbon
- * at the top, with three bonds on each. The C labels sit beside their carbons at the clearest spot.
+ * at the top, with three bonds on each. The carbons are marked only by the bond junctions, as in textbooks.
  */
 export function SawhorseDrawing({ dihedral }: { dihedral: number }) {
   const layout = sawhorseLayout(dihedral, SAWHORSE_BOND)
@@ -87,11 +87,8 @@ export function SawhorseDrawing({ dihedral }: { dihedral: number }) {
           strokeLinecap="round"
         />
       ))}
-      {layout.labels.slice(0, 6).map((g, i) => (
+      {layout.labels.map((g, i) => (
         <Label key={`h-${i}`} g={g} fill={i < 3 ? 'var(--fg)' : 'var(--fg-muted)'} />
-      ))}
-      {layout.labels.slice(6).map((g, i) => (
-        <Label key={`c-${i}`} g={g} fill="var(--fg)" size={20} />
       ))}
     </g>
   )
