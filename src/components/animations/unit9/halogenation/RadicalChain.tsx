@@ -2,8 +2,7 @@
 
 import React, { useId } from 'react'
 import { BondCleavage, CurvedArrow } from '@/components/organic'
-import { Molecule3D, Molecule3DFallback, cameraForMolecule } from '@/components/molecule'
-import { Stage3DLazy } from '@/components/stage3d'
+import { Molecule3DFallback } from '@/components/molecule'
 import { radicalStep, TERMINATIONS } from './radical-chain-steps'
 import { pentaneModels, type PentaneModel } from './pentane-shapes'
 import styles from './RadicalChain.module.css'
@@ -151,18 +150,10 @@ function TerminationDrawing({ reducedMotion, marker }: { reducedMotion: boolean;
 }
 
 function ModelCard({ model, reducedMotion }: { model: PentaneModel; reducedMotion: boolean }) {
-  const camera = cameraForMolecule(model.data, 0.8)
   return (
     <figure className={styles.model} data-testid="radical-model" data-smiles={model.smiles} data-enter={enter(reducedMotion) ? 'on' : 'off'}>
-      <div className={styles.modelStage}>
-        <Stage3DLazy
-          label={`${model.name} carbon skeleton in 3D, drag to turn it`}
-          fallback={<Molecule3DFallback {...model.data} />}
-          cameraPosition={camera}
-          hint="Drag to turn"
-        >
-          <Molecule3D {...model.data} />
-        </Stage3DLazy>
+      <div className={styles.modelStage} role="img" aria-label={`${model.name}: carbon skeleton in 3D`}>
+        <Molecule3DFallback {...model.data} />
       </div>
       <figcaption className={styles.modelCaption}>
         <span className={styles.modelName}>{model.name}</span>
@@ -193,7 +184,7 @@ export function RadicalChain({ step, reducedMotion }: RadicalChainProps) {
               <ModelCard key={m.smiles} model={m} reducedMotion={reducedMotion} />
             ))}
           </div>
-          <p className={styles.note}>Carbon skeletons drawn for shape; hydrogens are left out. Drag each model to turn it.</p>
+          <p className={styles.note}>3D views of carbon skeletons, drawn for shape; hydrogens are left out.</p>
         </div>
       ) : (
         <svg

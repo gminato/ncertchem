@@ -5,7 +5,7 @@ import katex from 'katex'
 import 'katex/contrib/mhchem'
 import { Segmented, Slider } from '@/components/controls'
 import type { SimulationProps } from '@/components/simulation/registry'
-import { SkeletalFormula, skeletalFrame } from '@/components/organic'
+import { SkeletalFormula, StructuralFormula, skeletalFrame, structuralBounds } from '@/components/organic'
 import {
   LAB_ALKANES,
   labAlkane,
@@ -58,8 +58,20 @@ function ce(equation: string): string {
   return katex.renderToString(`\\ce{${equation}}`, { throwOnError: false })
 }
 
-/** A skeletal drawing at a fixed bond length, with its viewBox fitted to the drawing. */
+/**
+ * A drawing at a fixed bond length, with its viewBox fitted to the drawing. A molecule of one or two
+ * carbons is written in full, with its hydrogens, because a bare carbon would read as a dash.
+ */
 function Drawing({ graph, bond, label }: { graph: MolGraph; bond: number; label: string }) {
+  const carbons = graph.atoms.filter((a) => a.element === 'C').length
+  if (carbons <= 2) {
+    const b = structuralBounds(graph, bond)
+    return (
+      <svg viewBox={`${b.x} ${b.y} ${b.width} ${b.height}`} className={styles.drawing} role="img" aria-label={label}>
+        <StructuralFormula graph={graph} mode="complete" />
+      </svg>
+    )
+  }
   const b = skeletalFrame(graph, bond).bounds
   return (
     <svg viewBox={`${b.x} ${b.y} ${b.width} ${b.height}`} className={styles.drawing} role="img" aria-label={label}>
@@ -151,7 +163,7 @@ function CombustionPanel({ n, setN }: { n: number; setN: (n: number) => void }) 
       <p className={styles.formulaBig} dangerouslySetInnerHTML={{ __html: formulaHtml }} />
       <p className={styles.sourceEq} dangerouslySetInnerHTML={{ __html: ce(reaction.equation) }} />
       <p className={styles.readout} aria-live="polite" data-testid="combustion-readout">
-        {`One mole of C${n}H${2 * n + 2} needs (3n + 1)/2 = ${oxygenPerMole(n)} mol of O₂, and gives ${n} mol of CO₂ and ${n + 1} mol of H₂O. The equation shown is the lib's whole-number form.`}
+        {`One mole of C${subscripted(String(n))}H${subscripted(String(2 * n + 2))} needs (3n + 1)/2 = ${oxygenPerMole(n)} mol of O₂, and gives ${n} mol of CO₂ and ${n + 1} mol of H₂O. The equation shown is the lib's whole-number form.`}
       </p>
       <p className={styles.conditions}>{reaction.why}</p>
     </div>
