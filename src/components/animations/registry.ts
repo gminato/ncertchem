@@ -125,6 +125,7 @@ import { DirectingGroups } from './unit9/directing/DirectingGroups'
 import { Carcinogens } from './unit9/carcinogens/Carcinogens'
 import { BenzeneStructure } from './unit9/benzene/BenzeneStructure'
 import { HuckelCount } from './unit9/benzene/HuckelCount'
+import { EasScrolly } from './unit9/eas/EasScrolly'
 
 /**
  * Animations available to a Scrolly Animation, keyed by the `animation` prop.
@@ -260,6 +261,7 @@ export const animations = {
   carcinogens: Carcinogens,
   'benzene-structure': BenzeneStructure,
   'huckel-count': HuckelCount,
+  'eas-mechanism': EasScrolly,
 } as const
 
 export type AnimationName = keyof typeof animations

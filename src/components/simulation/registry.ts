@@ -64,6 +64,7 @@ import { CisTransChecker } from './sims/cis-trans-checker'
 import { CarbonCounter } from './sims/carbon-counter'
 import { FamilySorter } from './sims/family-sorter'
 import { OrientationPredictor } from './sims/orientation-predictor'
+import { EasWorkbench } from './sims/eas-workbench'
 
 export interface SimulationProps {
   /** True when the Learner has asked the OS for reduced motion. Skip tweens and loops when set. */
@@ -141,5 +142,6 @@ export const simulations: Record<string, ComponentType<SimulationProps>> = {
   'carbon-counter': CarbonCounter,
   'family-sorter': FamilySorter,
   'orientation-predictor': OrientationPredictor,
+  'eas-workbench': EasWorkbench,
   'newman-rotor': NewmanRotor,
 }
