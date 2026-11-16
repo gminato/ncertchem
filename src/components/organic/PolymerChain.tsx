@@ -1,7 +1,7 @@
 import React, { forwardRef } from 'react'
 
 /** Size of the polymer drawing, for a parent viewBox. */
-export const POLYMER_CHAIN_SIZE = { width: 900, height: 300 } as const
+export const POLYMER_CHAIN_SIZE = { width: 900, height: 372 } as const
 
 export type Monomer = 'ethene' | 'propene' | 'ethyne'
 
@@ -18,15 +18,30 @@ const INK = 'var(--fg)'
 const SIGMA = 'var(--sigma-bond)'
 const UNITS = 4
 const CHAIN_X0 = 329
-const CHAIN_Y0 = 150
+const CHAIN_Y0 = 170
 const ZIG = 20
 const MONO_Y = 74
 const BOND = 40
+const REPEAT_Y = 270
 
-const SPEC: Record<Monomer, { formula: string; repeat: [string, string]; start: 'double' | 'triple'; end: 'single' | 'double'; branch: boolean }> = {
-  ethene: { formula: 'H₂C=CH₂', repeat: ['CH₂', 'CH₂'], start: 'double', end: 'single', branch: false },
-  propene: { formula: 'H₂C=CH–CH₃', repeat: ['CH₂', 'CH'], start: 'double', end: 'single', branch: true },
-  ethyne: { formula: 'HC≡CH', repeat: ['CH', 'CH'], start: 'triple', end: 'double', branch: false },
+/** Each monomer: its formula, the repeat unit as written inside the brackets, and the bond orders in the chain. */
+const SPEC: Record<Monomer, { formula: string; unit: string; start: 'double' | 'triple'; end: 'single' | 'double'; methyl: boolean }> = {
+  ethene: { formula: 'H₂C=CH₂', unit: 'CH₂–CH₂', start: 'double', end: 'single', methyl: false },
+  propene: { formula: 'H₂C=CH–CH₃', unit: 'CH₂–CH(CH₃)', start: 'double', end: 'single', methyl: true },
+  ethyne: { formula: 'HC≡CH', unit: 'CH=CH', start: 'triple', end: 'double', methyl: false },
+}
+
+/** Approximate advance of a run of text, in px at a font size. */
+function textWidth(s: string, size: number): number {
+  let w = 0
+  for (const ch of s) {
+    if (ch === ' ') w += 0.3
+    else if (ch === '–' || ch === '=' || ch === '≡') w += 0.6
+    else if (/[₀-₉]/.test(ch)) w += 0.6
+    else if (/[A-Z]/.test(ch)) w += 0.7
+    else w += 0.6
+  }
+  return w * size
 }
 
 function smooth(t: number) {
@@ -40,12 +55,12 @@ function lerpPt(a: Pt, b: Pt, t: number): Pt {
   return { x: lerp(a.x, b.x, t), y: lerp(a.y, b.y, t) }
 }
 
-/** Chain carbon j at its place in the chain: a zig-zag of 40-unit bonds. */
+/** Chain carbon j in the zig-zag of 40-unit bonds. Odd carbons (the CH carbons of propene) sit high, so their methyls point up. */
 function chainCarbon(j: number): Pt {
   return { x: CHAIN_X0 + j * 34.64, y: CHAIN_Y0 + (j % 2 === 1 ? -ZIG : 0) }
 }
 
-/** Monomer k's two carbons, before it joins: a horizontal C=C centred on its slot. */
+/** Monomer k's two carbons before it joins: a horizontal C=C (or C≡C) centred on its slot. */
 function monomerCarbons(k: number): [Pt, Pt] {
   const cx = 150 + k * 190
   return [
@@ -54,19 +69,20 @@ function monomerCarbons(k: number): [Pt, Pt] {
   ]
 }
 
-/** Bond between two points, drawn as one line (single), or as the parallel lines of a double or triple bond. */
+/** A bond as one line (single) or as parallel lines (double, triple), spaced so each line reads clearly. */
 function MultiBond({ a, b, order, opacity }: { a: Pt; b: Pt; order: 1 | 2 | 3; opacity: number }) {
   if (opacity <= 0.001) return null
   const dx = b.x - a.x
   const dy = b.y - a.y
   const len = Math.hypot(dx, dy) || 1
-  const nx = (-dy / len) * 4.5
-  const ny = (dx / len) * 4.5
+  const nx = (-dy / len) * 5
+  const ny = (dx / len) * 5
   const offsets = order === 1 ? [0] : order === 2 ? [-1, 1] : [-1, 0, 1]
+  const width = order === 1 ? 3 : 2.4
   return (
     <g opacity={opacity}>
       {offsets.map((o, i) => (
-        <line key={i} x1={a.x + nx * o} y1={a.y + ny * o} x2={b.x + nx * o} y2={b.y + ny * o} stroke={SIGMA} strokeWidth={3} strokeLinecap="round" />
+        <line key={i} x1={a.x + nx * o} y1={a.y + ny * o} x2={b.x + nx * o} y2={b.y + ny * o} stroke={SIGMA} strokeWidth={width} strokeLinecap="round" />
       ))}
     </g>
   )
@@ -84,52 +100,53 @@ function Label({ x, y, children, size = 18, anchor = 'middle', weight = 600, opa
   )
 }
 
-/** The bracketed repeat unit: brackets with the subscript n, and the bonds from the next and previous units crossing them. */
+/**
+ * The repeat unit in the textbook form: –[unit]ₙ–, with the bonds to the neighbouring units
+ * running through the brackets, the unit's atoms written on the line, and n at the lower right.
+ */
 function RepeatUnit({ monomer }: { monomer: Monomer }) {
-  const spec = SPEC[monomer]
-  const top = 232
-  const bottom = 292
-  const bl = 326
-  const br = 574
-  const c1 = { x: 374, y: 262 }
-  const c2 = { x: 454, y: 262 }
-  const stubL = { x: 286, y: 262 }
-  const stubR = { x: 622, y: 262 }
+  const unit = SPEC[monomer].unit
+  const size = 22
+  const unitW = textWidth(unit, size)
+  const stub = 40
+  const bracketGap = 12
+  const total = stub + bracketGap + unitW + bracketGap + 14 + stub
+  const left = 450 - total / 2
+  const unitL = left + stub + bracketGap
+  const unitR = unitL + unitW
+  const bracketL = unitL - bracketGap
+  const bracketR = unitR + bracketGap
+  const top = REPEAT_Y - 26
+  const bottom = REPEAT_Y + 26
   const bracket = (x: number, flip: boolean) => {
-    const serif = flip ? -8 : 8
-    return (
-      <path d={`M${x + serif},${top} L${x},${top} L${x},${bottom} L${x + serif},${bottom}`} fill="none" stroke={INK} strokeWidth={2.2} strokeLinecap="round" />
-    )
+    const serif = flip ? -7 : 7
+    return <path d={`M${x + serif},${top} L${x},${top} L${x},${bottom} L${x + serif},${bottom}`} fill="none" stroke={INK} strokeWidth={2.2} strokeLinecap="round" />
   }
   return (
     <g>
-      {bracket(bl, false)}
-      {bracket(br, true)}
-      <Label x={br + 36} y={bottom - 8} size={18}>{'n'}</Label>
-      {/* Bonds crossing the brackets, to the neighbouring repeat units. */}
-      <line x1={stubL.x} y1={stubL.y} x2={c1.x} y2={c1.y} stroke={SIGMA} strokeWidth={3} strokeLinecap="round" />
-      <line x1={c2.x} y1={c2.y} x2={stubR.x} y2={stubR.y} stroke={SIGMA} strokeWidth={3} strokeLinecap="round" />
-      <MultiBond a={c1} b={c2} order={spec.end === 'double' ? 2 : 1} opacity={1} />
-      <Carbon at={c1} />
-      <Carbon at={c2} />
-      <Label x={c1.x} y={c1.y + 26} size={18}>{spec.repeat[0]}</Label>
-      <Label x={c2.x} y={c2.y + 26} size={18}>{spec.repeat[1]}</Label>
-      {spec.branch && (
-        <g>
-          <line x1={c2.x} y1={c2.y} x2={c2.x} y2={c2.y + 36} stroke={SIGMA} strokeWidth={3} strokeLinecap="round" />
-          <Label x={c2.x} y={c2.y + 56} size={18}>CH₃</Label>
-        </g>
-      )}
-      <Label x={(bl + br) / 2} y={bottom + 24} size={17} weight={600}>{'repeat unit, bracketed with n'}</Label>
+      {/* Bonds to the neighbouring units run through the brackets. */}
+      <line x1={left} y1={REPEAT_Y} x2={unitL - 4} y2={REPEAT_Y} stroke={SIGMA} strokeWidth={3} strokeLinecap="round" />
+      <line x1={unitR + 4} y1={REPEAT_Y} x2={left + total} y2={REPEAT_Y} stroke={SIGMA} strokeWidth={3} strokeLinecap="round" />
+      {bracket(bracketL, false)}
+      {bracket(bracketR, true)}
+      <Label x={unitL} y={REPEAT_Y} anchor="start" size={size} weight={600}>
+        {unit}
+      </Label>
+      <Label x={bracketR + 6} y={REPEAT_Y + 16} anchor="start" size={18} weight={600}>
+        n
+      </Label>
+      <Label x={450} y={bottom + 24} size={17} weight={600}>
+        {'repeat unit, bracketed, with n units'}
+      </Label>
     </g>
   )
 }
 
 /**
  * Addition polymerisation. The monomers (ethene, propene, ethyne) join one at a time into a chain:
- * each monomer's C=C (or C≡C) becomes a single or double bond as it joins, and the bond to the
- * previous unit forms. The chain carries a dangling bond at each end. Below, the repeat unit is
- * bracketed with the subscript n, and the bonds to the neighbouring units cross the brackets.
+ * each monomer's multiple bond becomes a single or double bond as it joins, and the bond to the
+ * previous unit forms. Propene's CH carbons carry a methyl. Below, the repeat unit is written
+ * in brackets with n, and the bonds to the neighbouring units run through the brackets.
  */
 export const PolymerChain = forwardRef<SVGGElement, PolymerChainProps>(function PolymerChain(
   { monomer = 'ethene', progress = 1, x = 0, y = 0, ...rest },
@@ -147,11 +164,6 @@ export const PolymerChain = forwardRef<SVGGElement, PolymerChainProps>(function 
     const t = joinT(k)
     carbons.push(lerpPt(a, chainCarbon(2 * k), t), lerpPt(b, chainCarbon(2 * k + 1), t))
   }
-
-  // Each unit's internal bond morphs from the monomer's bond to the chain's bond.
-  const intra = Array.from({ length: UNITS }, (_, k) => joinT(k))
-  // The bond from unit k to unit k+1 appears as unit k+1 joins.
-  const inter = Array.from({ length: UNITS - 1 }, (_, k) => joinT(k + 1))
 
   return (
     <g ref={ref} transform={`translate(${x}, ${y})`} {...rest}>
@@ -171,43 +183,56 @@ export const PolymerChain = forwardRef<SVGGElement, PolymerChainProps>(function 
 
       {/* Intra-unit bonds: from the monomer's multiple bond to the chain's bond */}
       {Array.from({ length: UNITS }, (_, k) => {
-        const t = intra[k]
+        const t = joinT(k)
         const a = carbons[2 * k]
         const b = carbons[2 * k + 1]
+        const startOrder = monomer === 'ethyne' ? 3 : 2
         return (
           <g key={`intra-${k}`}>
-            <MultiBond a={a} b={b} order={monomer === 'ethyne' ? 3 : 2} opacity={1 - t} />
+            <MultiBond a={a} b={b} order={startOrder} opacity={1 - t} />
             <MultiBond a={a} b={b} order={spec.end === 'double' ? 2 : 1} opacity={t} />
           </g>
         )
       })}
 
       {/* Inter-unit bonds, forming as each unit joins */}
-      {inter.map((t, k) => (
-        <MultiBond key={`inter-${k}`} a={carbons[2 * k + 1]} b={carbons[2 * k + 2]} order={1} opacity={t} />
+      {Array.from({ length: UNITS - 1 }, (_, k) => (
+        <MultiBond key={`inter-${k}`} a={carbons[2 * k + 1]} b={carbons[2 * k + 2]} order={1} opacity={joinT(k + 1)} />
       ))}
 
       {/* Dangling bonds at the two ends of the chain, shown once the chain has formed */}
       <g opacity={joinT(0)}>
-        <line x1={carbons[0].x} y1={carbons[0].y} x2={carbons[0].x - 26} y2={carbons[0].y} stroke={SIGMA} strokeWidth={3} strokeLinecap="round" strokeDasharray="0" />
+        <line x1={carbons[0].x} y1={carbons[0].y} x2={carbons[0].x - 26} y2={carbons[0].y} stroke={SIGMA} strokeWidth={3} strokeLinecap="round" />
       </g>
       <g opacity={joinT(UNITS - 1)}>
         <line x1={carbons[carbons.length - 1].x} y1={carbons[carbons.length - 1].y} x2={carbons[carbons.length - 1].x + 26} y2={carbons[carbons.length - 1].y} stroke={SIGMA} strokeWidth={3} strokeLinecap="round" />
       </g>
 
-      {/* Methyl branches for propene, one per unit, on the CH carbon */}
-      {spec.branch &&
+      {/* Methyls for propene: one on each CH carbon (every second carbon), pointing up from the chain */}
+      {spec.methyl &&
         Array.from({ length: UNITS }, (_, k) => {
           const c = carbons[2 * k + 1]
-          return <line key={`me-${k}`} x1={c.x} y1={c.y} x2={c.x} y2={c.y + 30} stroke={SIGMA} strokeWidth={3} strokeLinecap="round" />
+          const t = joinT(k)
+          return (
+            <g key={`me-${k}`} opacity={t}>
+              <line x1={c.x} y1={c.y} x2={c.x} y2={c.y - 34} stroke={SIGMA} strokeWidth={3} strokeLinecap="round" />
+              <Label x={c.x} y={c.y - 50} size={16}>
+                CH₃
+              </Label>
+            </g>
+          )
         })}
 
       {Array.from({ length: UNITS * 2 }, (_, j) => (
         <Carbon key={`c-${j}`} at={carbons[j]} />
       ))}
 
-      <Label x={CHAIN_X0 + 3.5 * 34.64} y={CHAIN_Y0 + 44} size={17} weight={600}>{'Growing chain, dangling bonds at both ends'}</Label>
-      <Label x={150} y={24} size={17} weight={600} opacity={1 - joinT(UNITS - 1)}>{'Monomers'}</Label>
+      <Label x={CHAIN_X0 + 3.5 * 34.64} y={CHAIN_Y0 + 44} size={17} weight={600}>
+        {'Growing chain, dangling bonds at both ends'}
+      </Label>
+      <Label x={150} y={24} size={17} weight={600} opacity={1 - joinT(UNITS - 1)}>
+        {'Monomers'}
+      </Label>
 
       <RepeatUnit monomer={monomer} />
     </g>

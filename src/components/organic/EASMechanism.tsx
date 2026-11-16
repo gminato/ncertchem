@@ -1,5 +1,5 @@
 import React, { forwardRef } from 'react'
-import { AreniumIon, ARENIUM_CENTRE_X, areniumAnchors } from './AreniumIon'
+import { AreniumIon, areniumAnchors } from './AreniumIon'
 import { revealFraction, stageOpacity } from './hydrocarbon-geometry'
 
 /** Size of the nitration mechanism strip, for a parent viewBox. */
@@ -7,7 +7,7 @@ export const EAS_MECHANISM_SIZE = { width: 900, height: 290 } as const
 
 type Pt = { x: number; y: number }
 const deg = (d: number) => (d * Math.PI) / 180
-/** Bond length of every structure in the strip: 40 units. */
+/** Bond length of every ring in the strip: 40 units. */
 const R = 40
 
 const INK = 'var(--fg)'
@@ -15,19 +15,29 @@ const SIGMA = 'var(--sigma-bond)'
 const PI = 'var(--pi-lobe)'
 const STAGES = 3
 
-/** Centre of stage 1 (benzene), stage 2 (σ-complex) and stage 3 (nitrobenzene); the σ-complex box is centred on its x. */
-const CX1 = 96
-const CY = 128
-const CX2 = 440
-const CX3 = 672
+/** Each stage has its own column, with its caption under it. Centres of the columns. */
+const COL1 = 130
+const COL2 = 450
+const COL3 = 770
+/** Height of the structures' centre line. */
+const CY = 120
+/** The σ-complex is drawn at this scale so that its dashed horseshoe and labels fit the column. */
+const SIGMA_SCALE = 0.85
+/** Caption line under every column. */
+const CAPTION_Y = 250
 
-function ring(cx: number, cy: number) {
-  const v = [0, 1, 2, 3, 4, 5].map((k) => ({ x: cx + R * Math.cos(deg(60 * k)), y: cy + R * Math.sin(deg(60 * k)) }))
-  return v
+/** A point in the σ-complex's own frame (origin at the ring centre, as AreniumIon draws it) mapped to the strip. */
+function onSigma(u: number, v: number): Pt {
+  return { x: COL2 + SIGMA_SCALE * (u - 30), y: CY + SIGMA_SCALE * v }
 }
 
+function ringVertices(cx: number, cy: number) {
+  return [0, 1, 2, 3, 4, 5].map((k) => ({ x: cx + R * Math.cos(deg(60 * k)), y: cy + R * Math.sin(deg(60 * k)) }))
+}
+
+/** Benzene drawn with its inscribed circle. */
 function Ring({ cx, cy }: { cx: number; cy: number }) {
-  const v = ring(cx, cy)
+  const v = ringVertices(cx, cy)
   return (
     <g>
       <circle cx={cx} cy={cy} r={R * 0.58} fill="none" stroke={PI} strokeWidth={2} strokeOpacity={0.6} />
@@ -43,6 +53,15 @@ function Ring({ cx, cy }: { cx: number; cy: number }) {
 function Label({ x, y, anchor = 'middle', size = 18, weight = 600, children, fill = INK }: { x: number; y: number; anchor?: 'start' | 'middle' | 'end'; size?: number; weight?: number; children: string; fill?: string }) {
   return (
     <text x={x} y={y} textAnchor={anchor} dominantBaseline="central" fontSize={size} fontWeight={weight} fontFamily="var(--font-sans)" fill={fill} stroke="var(--surface)" strokeWidth={5} strokeLinejoin="round" paintOrder="stroke">
+      {children}
+    </text>
+  )
+}
+
+/** Caption under a column. */
+function Caption({ x, children }: { x: number; children: string }) {
+  return (
+    <text x={x} y={CAPTION_Y} textAnchor="middle" dominantBaseline="central" fontSize={17} fontWeight={600} fontFamily="var(--font-sans)" fill={INK}>
       {children}
     </text>
   )
@@ -80,78 +99,74 @@ export const EASMechanism = forwardRef<SVGGElement, EASMechanismProps>(function 
   const a1 = revealFraction(p, 0, 1 / STAGES)
   const a2 = revealFraction(p, 1 / STAGES, 2 / STAGES)
   const a3 = revealFraction(p, 2 / STAGES, 1)
-
-  // Stage 2 geometry, in the parent frame (the σ-complex box is centred on CX2).
-  const ringX2 = CX2 - ARENIUM_CENTRE_X
-  const anchors = areniumAnchors('NO2')
-  const C0 = { x: ringX2 + anchors.C0.x, y: CY + anchors.C0.y }
-  const H = { x: ringX2 + anchors.H.x, y: CY + anchors.H.y }
-  const B = { x: 650, y: 66 }
-
-  // Stage 1 arrow: from the π bond at ring vertex 0-5 to the nitrogen of the nitronium ion.
-  const v5 = { x: CX1 + R * Math.cos(deg(300)), y: CY + R * Math.sin(deg(300)) }
-  const v0 = { x: CX1 + R, y: CY }
-  const mid = { x: (v0.x + v5.x) / 2, y: (v0.y + v5.y) / 2 }
-  const outward = { x: mid.x - CX1, y: mid.y - CY }
-  const ol = Math.hypot(outward.x, outward.y)
-  const piStart = { x: mid.x + (outward.x / ol) * 14, y: mid.y + (outward.y / ol) * 14 }
-
   const stage = (i: number) => stageOpacity(p, STAGES, i)
+
+  // Stage 1: benzene's π bond on the right-hand edge (vertices 0 and 5) and the N of NO₂⁺, O=N⁺=O.
+  const ring1 = { cx: COL1 - 40, cy: CY }
+  const v0 = { x: ring1.cx + R, y: CY }
+  const v5 = { x: ring1.cx + R * Math.cos(deg(300)), y: CY + R * Math.sin(deg(300)) }
+  const edgeMid = { x: (v0.x + v5.x) / 2, y: (v0.y + v5.y) / 2 }
+  const out = { x: edgeMid.x - ring1.cx, y: edgeMid.y - CY }
+  const outLen = Math.hypot(out.x, out.y)
+  const piStart = { x: edgeMid.x + (out.x / outLen) * 8, y: edgeMid.y + (out.y / outLen) * 8 }
+  const nitrogen = { x: COL1 + 56, y: CY }
+  const nitroTip = { x: nitrogen.x - 6, y: nitrogen.y - 14 }
+
+  // Stage 2: the σ-complex. The sp³ carbon is vertex 0 of the ring; its H is at the upper right.
+  const anchors = areniumAnchors('NO2')
+  const C0 = onSigma(anchors.C0.x, anchors.C0.y)
+  const H = onSigma(anchors.H.x, anchors.H.y)
+  const B = onSigma(118, -92)
+  // C–H electrons move into the ring, to the bond beside the sp³ carbon.
+  const ringBondTip = onSigma(58.8, -33.9)
+  const chMid = { x: (C0.x + H.x) / 2, y: (C0.y + H.y) / 2 }
+
+  // Stage 3: nitrobenzene, with the ring centre left of the column so NO₂ fits to its right.
+  const ring3 = { cx: COL3 - 50, cy: CY }
 
   return (
     <g ref={ref} transform={`translate(${x}, ${y})`} {...rest}>
-      {/* Stage 1: benzene and the nitronium ion O=N⁺=O */}
+      {/* Stage 1 */}
       <g opacity={stage(0)}>
-        <Ring cx={CX1} cy={CY} />
-        <Label x={CX1} y={CY + 80} size={16} weight={600} fill={INK}>{'1  π cloud attacks NO₂⁺'}</Label>
-        <g stroke={INK} strokeWidth={2.2} strokeLinecap="round">
-          <line x1={190} x2={216} y1={CY - 3} y2={CY - 3} />
-          <line x1={190} x2={216} y1={CY + 3} y2={CY + 3} />
-          <line x1={244} x2={270} y1={CY - 3} y2={CY - 3} />
-          <line x1={244} x2={270} y1={CY + 3} y2={CY + 3} />
-        </g>
-        <Label x={184} y={CY}>O</Label>
-        <Label x={230} y={CY}>N⁺</Label>
-        <Label x={276} y={CY}>O</Label>
+        <Ring cx={ring1.cx} cy={ring1.cy} />
+        <Label x={COL1 + 62} y={CY} size={22} weight={600}>{'O=N⁺=O'}</Label>
         <g opacity={a1}>
-          <CurvedPath p0={piStart} c={{ x: 176, y: CY - 52 }} p1={{ x: 214, y: CY - 14 }} opacity={1} />
+          <CurvedPath p0={piStart} c={{ x: COL1 + 18, y: CY - 66 }} p1={nitroTip} opacity={1} />
         </g>
+        <Caption x={COL1}>{'1  π cloud attacks NO₂⁺'}</Caption>
       </g>
 
-      {/* Stage 2: the σ-complex and the base B: removing H⁺ */}
+      {/* Stage 2: the σ-complex, and the base B: removing H⁺ */}
       <g opacity={stage(1)}>
-        <AreniumIon electrophile="NO2" x={CX2} y={CY} />
-        <Label x={CX2} y={CY + 118} size={16} weight={600}>{'2  σ-complex: aromaticity lost'}</Label>
-        <g opacity={a2}>
-          {/* Lone pair on the base B: to the H of the sp³ carbon */}
-          <circle cx={B.x - 14} cy={B.y - 8} r={2.4} fill={INK} />
-          <circle cx={B.x - 14} cy={B.y + 6} r={2.4} fill={INK} />
-          <Label x={B.x} y={B.y} size={20} weight={700}>B:</Label>
-          <CurvedPath p0={{ x: B.x - 16, y: B.y - 2 }} c={{ x: 582, y: 40 }} p1={{ x: H.x + 4, y: H.y - 12 }} opacity={1} />
-          {/* The C–H bond electrons move into the ring */}
-          <CurvedPath
-            p0={{ x: (C0.x + H.x) / 2 + 6, y: (C0.y + H.y) / 2 + 4 }}
-            c={{ x: C0.x + 30, y: C0.y - 26 }}
-            p1={{ x: C0.x + 2, y: C0.y - 24 }}
-            opacity={1}
-          />
+        <g transform={`translate(${COL2}, ${CY}) scale(${SIGMA_SCALE})`}>
+          <AreniumIon electrophile="NO2" x={0} y={0} />
         </g>
+        <g opacity={a2}>
+          {/* Lone pair on the base, then the arrow from it to the H of the sp³ carbon */}
+          <Label x={B.x} y={B.y} size={20} weight={700}>{'B:'}</Label>
+          <CurvedPath p0={{ x: B.x - 8, y: B.y + 12 }} c={{ x: B.x - 6, y: B.y + 30 }} p1={{ x: H.x - 4, y: H.y - 12 }} opacity={1} />
+          {/* The C–H bond electrons move into the ring */}
+          <CurvedPath p0={{ x: chMid.x + 4, y: chMid.y - 4 }} c={{ x: chMid.x + 2, y: chMid.y - 26 }} p1={ringBondTip} opacity={1} />
+        </g>
+        <Caption x={COL2}>{'2  σ-complex: aromaticity lost'}</Caption>
       </g>
 
-      {/* Stage 3: nitrobenzene, and H–B⁺ leaving */}
+      {/* Stage 3: nitrobenzene, with H–B⁺ leaving */}
       <g opacity={stage(2)}>
-        <Ring cx={CX3} cy={CY} />
-        <line x1={CX3 + R} y1={CY} x2={CX3 + R + 38} y2={CY} stroke={SIGMA} strokeWidth={4} strokeLinecap="round" />
-        <Label x={CX3 + R + 44} y={CY} anchor="start">NO₂</Label>
-        <Label x={CX3 + R + 118} y={CY}>+</Label>
-        <Label x={CX3 + R + 176} y={CY} anchor="middle">H–B⁺</Label>
-        <Label x={CX3} y={CY + 80} size={16} weight={600}>{'3  H⁺ removed: ring restored'}</Label>
+        <Ring cx={ring3.cx} cy={ring3.cy} />
+        <line x1={ring3.cx + R} y1={CY} x2={ring3.cx + R + 36} y2={CY} stroke={SIGMA} strokeWidth={4} strokeLinecap="round" />
+        <Label x={ring3.cx + R + 42} y={CY} anchor="start">{'NO₂'}</Label>
+        <Caption x={COL3}>{'3  H⁺ lost: ring restored'}</Caption>
       </g>
 
-      {/* Reaction arrow between stages 2 and 3 */}
-      <g opacity={a3}>
-        <line x1={590} x2={622} y1={CY} y2={CY} stroke={INK} strokeWidth={2.2} strokeLinecap="round" />
-        <path d={`M614,${CY - 6} L622,${CY} L614,${CY + 6}`} fill="none" stroke={INK} strokeWidth={2.2} strokeLinecap="round" strokeLinejoin="round" />
+      {/* Reaction arrows between the columns, in the gaps */}
+      <g opacity={a1} stroke={INK} strokeWidth={2.2} strokeLinecap="round" fill="none">
+        <line x1={248} x2={316} y1={CY} y2={CY} />
+        <path d={`M${316 - 9},${CY - 6} L316,${CY} L${316 - 9},${CY + 6}`} />
+      </g>
+      <g opacity={a3} stroke={INK} strokeWidth={2.2} strokeLinecap="round" fill="none">
+        <line x1={586} x2={664} y1={CY} y2={CY} />
+        <path d={`M${664 - 9},${CY - 6} L664,${CY} L${664 - 9},${CY + 6}`} />
       </g>
     </g>
   )
