@@ -195,7 +195,8 @@ describe('sp atoms are linear', () => {
   const angleAt = (p: { x: number; y: number }[], a: number, b: number, c: number) => {
     const u = { x: p[a].x - p[b].x, y: p[a].y - p[b].y }
     const v = { x: p[c].x - p[b].x, y: p[c].y - p[b].y }
-    return (Math.acos((u.x * v.x + u.y * v.y) / (Math.hypot(u.x, u.y) * Math.hypot(v.x, v.y))) * 180) / Math.PI
+    const c = (u.x * v.x + u.y * v.y) / (Math.hypot(u.x, u.y) * Math.hypot(v.x, v.y))
+    return (Math.acos(Math.max(-1, Math.min(1, c))) * 180) / Math.PI
   }
   it('draws C–C≡C–C in a straight line in a chain and on a branch', () => {
     const p = layout2D(parseSmiles('CC#CC'))
