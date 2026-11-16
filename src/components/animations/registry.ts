@@ -121,6 +121,8 @@ import { HydrocarbonFamily } from './unit9/family/HydrocarbonFamily'
 import { AlkaneIsomers } from './unit9/family/AlkaneIsomers'
 import { EthaneRotation } from './unit9/conformations/EthaneRotation'
 import { TripleBond } from './unit9/alkyne-structure/TripleBond'
+import { DirectingGroups } from './unit9/directing/DirectingGroups'
+import { Carcinogens } from './unit9/carcinogens/Carcinogens'
 
 /**
  * Animations available to a Scrolly Animation, keyed by the `animation` prop.
@@ -252,6 +254,8 @@ export const animations = {
   'alkane-isomers': AlkaneIsomers,
   'ethane-rotation': EthaneRotation,
   'triple-bond': TripleBond,
+  'directing-groups': DirectingGroups,
+  carcinogens: Carcinogens,
 } as const
 
 export type AnimationName = keyof typeof animations

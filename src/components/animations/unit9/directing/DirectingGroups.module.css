@@ -1,0 +1,25 @@
+.drawing {
+  display: block;
+  width: 100%;
+  height: auto;
+  color: var(--fg);
+}
+
+.enter {
+  animation: directingEnter 480ms ease-out both;
+}
+
+@keyframes directingEnter {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .enter {
+    animation: none;
+  }
+}
