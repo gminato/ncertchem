@@ -111,6 +111,11 @@ import { AlkaneNaming } from './unit8/naming/AlkaneNaming'
 import { RepresentationsMorph } from './unit8/representations/RepresentationsMorph'
 import { BondFission } from './unit8/fission/BondFission'
 import { RadicalChain } from './unit9/halogenation/RadicalChain'
+import { ElimMechanism } from './unit9/elimination/ElimMechanism'
+import { AlkeneStructure } from './unit9/alkene-structure/AlkeneStructure'
+import { HydrocarbonFamily } from './unit9/family/HydrocarbonFamily'
+import { AlkaneIsomers } from './unit9/family/AlkaneIsomers'
+import { TripleBond } from './unit9/alkyne-structure/TripleBond'
 
 /**
  * Animations available to a Scrolly Animation, keyed by the `animation` prop.
@@ -229,9 +234,14 @@ export const animations = {
   'combustion-analysis': CombustionAnalysis,
   'electron-effects': ElectronEffects,
   'alkane-naming': AlkaneNaming,
+  elimination: ElimMechanism,
   'structure-morph': RepresentationsMorph,
   'bond-fission': BondFission,
   'radical-chain': RadicalChain,
+  'double-bond': AlkeneStructure,
+  'hydrocarbon-family': HydrocarbonFamily,
+  'alkane-isomers': AlkaneIsomers,
+  'triple-bond': TripleBond,
 } as const
 
 export type AnimationName = keyof typeof animations
