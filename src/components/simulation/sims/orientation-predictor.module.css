@@ -1,0 +1,169 @@
+.predictor {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  font-family: var(--font-sans);
+  color: var(--fg);
+}
+
+.layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--space-4);
+  align-items: start;
+}
+
+@media (min-width: 960px) {
+  .layout {
+    grid-template-columns: minmax(0, 1.25fr) minmax(0, 0.75fr);
+  }
+}
+
+.stage {
+  margin: 0;
+  min-width: 0;
+  background: var(--surface-raised);
+  border-radius: var(--radius-md, 10px);
+  padding: var(--space-3);
+}
+
+.drawing {
+  display: block;
+  width: 100%;
+  height: auto;
+  color: var(--fg);
+}
+
+/* Each ring carbon is a large target; it glows on hover and when chosen. */
+.hit {
+  cursor: pointer;
+  outline: none;
+}
+
+.hitOpen {
+  fill: transparent;
+  stroke: var(--border);
+  stroke-width: 1.5;
+  stroke-dasharray: 3 4;
+}
+
+.hit:hover .hitOpen,
+.hit:focus-visible .hitOpen {
+  stroke: var(--accent);
+  stroke-width: 2.5;
+  stroke-dasharray: none;
+  fill: var(--accent);
+  fill-opacity: 0.16;
+}
+
+.hitChosen {
+  fill: var(--accent);
+  fill-opacity: 0.3;
+  stroke: var(--accent);
+  stroke-width: 2.5;
+}
+
+.hit:focus-visible .hitChosen {
+  stroke-width: 3.5;
+}
+
+.panel {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.title {
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 600;
+}
+
+.formula {
+  font-weight: 400;
+  color: var(--fg-muted);
+}
+
+.kindLine {
+  margin: 0;
+  font-size: 1rem;
+  color: var(--fg-muted);
+}
+
+.heading {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.groups {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(92px, 1fr));
+  gap: var(--space-2);
+}
+
+.groupBtn {
+  font: inherit;
+  font-size: 1rem;
+  padding: 0.35rem 0.4rem;
+  border-radius: 8px;
+  border: 1.5px solid var(--border);
+  background: var(--surface-raised);
+  color: var(--fg);
+  cursor: pointer;
+}
+
+.groupBtn[aria-pressed='true'] {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: var(--accent-fg);
+}
+
+.readout {
+  margin: 0;
+  min-height: 6em;
+  font-size: 1.05rem;
+  line-height: 1.5;
+}
+
+.products {
+  margin: 0;
+  padding-left: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1, 4px);
+  font-size: 1.05rem;
+}
+
+.posTag {
+  display: inline-block;
+  min-width: 4.4em;
+  margin-right: 0.5em;
+  font-size: 0.95rem;
+  color: var(--fg-muted);
+  text-transform: none;
+}
+
+.footer {
+  margin: 0;
+  font-size: 1rem;
+  color: var(--fg-muted);
+}
+
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+/* The shared Segmented and Button controls set a smaller size; a Simulation's text is at least 14 px. */
+.panel button,
+.panel [role='radio'] {
+  font-size: 1rem;
+}
