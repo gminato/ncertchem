@@ -140,9 +140,9 @@ export function checkReverse(
 
 /** The reverse puzzles: the carbonyl products the lib cuts an alkene into (each set has exactly two carbonyl carbons). */
 export const REVERSE_PUZZLES = [
-  { id: 'two-molecules', label: 'Ethanal and propanone', smiles: ['CC=O', 'CC(=O)C'] },
+  { id: 'two-molecules', label: 'Propanal and propanone', smiles: ['CCC=O', 'CC(=O)C'] },
   { id: 'one-molecule', label: '6-Oxoheptanal', smiles: ['O=CCCCCC(=O)C'] },
-  { id: 'pent-2-ene', label: 'Propanal and ethanal', smiles: ['CCC=O', 'CC=O'] },
+  { id: 'hept-3-ene', label: 'Butanal and propanal', smiles: ['CCCC=O', 'CCC=O'] },
 ] as const
 
 /** The graphs of a reverse puzzle. */

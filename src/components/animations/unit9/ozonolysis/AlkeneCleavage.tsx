@@ -117,11 +117,11 @@ export function AlkeneCleavage({ step, reducedMotion }: AlkeneCleavageProps) {
       </g>
       <g opacity={t.arrowA}>
         <Arrow {...ARROW} />
-        <Label x={ARROW_MID} y={ARROW.y - 22} fontSize={17} fill="var(--fg)" textAnchor="middle">
-          cold dilute KMnO₄
+        <Label x={ARROW_MID} y={ARROW.y - 34} fontSize={17} fill="var(--fg)" textAnchor="middle">
+          cold, dilute aqueous
         </Label>
-        <Label x={ARROW_MID} y={ARROW.y + 30} fontSize={15} fill="var(--fg-muted)" textAnchor="middle">
-          273 K
+        <Label x={ARROW_MID} y={ARROW.y - 14} fontSize={17} fill="var(--fg)" textAnchor="middle">
+          KMnO₄ (273 K)
         </Label>
       </g>
 
@@ -149,16 +149,16 @@ export function AlkeneCleavage({ step, reducedMotion }: AlkeneCleavageProps) {
 
       {/* Step 4: the reverse puzzle, carbonyls joined back into the alkene */}
       <g opacity={t.revIn} data-testid="cleavage-reverse-in">
-        <SkeletalFormula graph={REVERSE_IN[0]} scale={CHAIN_SCALE} x={250} y={LEFT.y} highlightAtoms={current.revInAtoms} />
+        <SkeletalFormula graph={REVERSE_IN[0]} scale={CHAIN_SCALE} x={215} y={LEFT.y} highlightAtoms={current.revInAtoms} />
       </g>
       <g opacity={t.arrowR}>
-        <Arrow x1={395} x2={545} y={ARROW.y} />
-        <Label x={470} y={ARROW.y - 22} fontSize={17} fill="var(--fg)" textAnchor="middle">
+        <Arrow x1={420} x2={585} y={ARROW.y} />
+        <Label x={502} y={ARROW.y - 22} fontSize={17} fill="var(--fg)" textAnchor="middle">
           join the C=O carbons
         </Label>
       </g>
       <g opacity={t.revOut} data-testid="cleavage-reverse-out">
-        <SkeletalFormula graph={REVERSE_OUT.graph} scale={ALKENE_SCALE} x={720} y={LEFT.y} highlightBonds={current.revOutBonds} />
+        <SkeletalFormula graph={REVERSE_OUT.graph} scale={ALKENE_SCALE} x={765} y={LEFT.y} highlightBonds={current.revOutBonds} />
       </g>
 
       {/* Step 5: ethene units joining into polythene */}

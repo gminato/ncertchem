@@ -5,7 +5,7 @@ import { Button, Segmented, Slider } from '@/components/controls'
 import { SimulationControls } from '@/components/simulation/Simulation'
 import type { SimulationProps } from '@/components/simulation/registry'
 import { Tex } from '@/components/animations/unit6/qk/Tex'
-import { SkeletalFormula, drawingFrame } from '@/components/organic'
+import { SkeletalFormula, StructuralFormula, drawingFrame } from '@/components/organic'
 import { parseSmiles } from '@/lib/chem/molecule-parse'
 import type { MolGraph } from '@/lib/chem/molecule-graph'
 import { nameOf } from '@/lib/chem/hydrocarbon-species'
@@ -57,6 +57,16 @@ function wrapWords(text: string, max: number): string[] {
   }
   if (line) lines.push(line)
   return lines
+}
+
+/**
+ * A molecule drawn at (x, y). Molecules with one or two carbons (methanal, ethanal, ethene) are written
+ * in full, with every hydrogen, so that no bare C=O or C=C appears; larger ones are skeletal drawings.
+ */
+function Figure({ graph, scale, x, y, highlight = [] }: { graph: MolGraph; scale: number; x: number; y: number; highlight?: readonly number[] }) {
+  const carbons = graph.atoms.filter((a) => a.element === 'C').length
+  if (carbons <= 2) return <StructuralFormula graph={graph} mode="complete" completeScale={34} x={x} y={y} />
+  return <SkeletalFormula graph={graph} scale={scale} x={x} y={y} highlightAtoms={highlight} />
 }
 
 /** The atoms of the C=C bonds of an alkene (washed in the highlight colour). */
@@ -124,7 +134,7 @@ function ForwardPanel() {
             <text x={VIEW_WIDTH / 2} y={24} textAnchor="middle" fontSize={17} fill="var(--fg)">
               {alkeneName}
             </text>
-            <SkeletalFormula graph={alkene} scale={reactantScale} x={VIEW_WIDTH / 2} y={92} highlightAtoms={doubleBondAtoms(alkene)} />
+            <Figure graph={alkene} scale={reactantScale} x={VIEW_WIDTH / 2} y={92} highlight={doubleBondAtoms(alkene)} />
             <line x1={VIEW_WIDTH / 2} y1={132} x2={VIEW_WIDTH / 2} y2={172} stroke="var(--fg-muted)" strokeWidth={2.5} />
             <path d={`M ${VIEW_WIDTH / 2 - 7} 166 L ${VIEW_WIDTH / 2} 180 L ${VIEW_WIDTH / 2 + 7} 166 Z`} fill="var(--fg-muted)" />
             {condLines.map((line, i) => (
@@ -139,13 +149,13 @@ function ForwardPanel() {
               return (
                 <g key={`${p.name}-${i}`} data-testid="forward-product">
                   {frame ? (
-                    <SkeletalFormula graph={p.graph} scale={productScale} x={x} y={y} />
+                    <Figure graph={p.graph} scale={productScale} x={x} y={y} />
                   ) : (
                     <text x={x} y={y} textAnchor="middle" fontSize={17} fill="var(--fg)">
                       {p.formula}
                     </text>
                   )}
-                  <text x={x} y={y + 74} textAnchor="middle" fontSize={15} fill="var(--fg)">
+                  <text x={x} y={y + 74} textAnchor="middle" fontSize={16} fill="var(--fg)">
                     {p.name}
                   </text>
                   {i < count - 1 && (
@@ -183,10 +193,10 @@ function ReversePanel() {
 
   const products = useMemo(() => puzzleProducts(puzzleId), [puzzleId])
   const carbonyls = useMemo(() => carbonylCarbons(products), [products])
-  const frames = useMemo(() => products.map((g) => drawingFrame(g, 52)), [products])
+  const frames = useMemo(() => products.map((g) => drawingFrame(g, 60)), [products])
   const productNames = products.map((g) => nameOf(g))
   const count = products.length
-  const centres = products.map((_, i) => ({ x: (VIEW_WIDTH * (i + 1)) / (count + 1), y: 118 }))
+  const centres = products.map((_, i) => ({ x: (VIEW_WIDTH * (i + 1)) / (count + 1), y: 112 }))
 
   const isPicked = (c: CarbonylCarbon) => picks.some((p) => p.part === c.part && p.atom === c.atom)
   const toggle = (c: CarbonylCarbon) => {
@@ -224,21 +234,21 @@ function ReversePanel() {
       </p>
 
       <div className={styles.stage}>
-        <svg viewBox="0 0 560 360" role="group" aria-label="Carbonyl products. Choose two carbonyl carbons." className={styles.scheme}>
+        <svg viewBox="0 0 560 380" role="group" aria-label="Carbonyl products. Choose two carbonyl carbons." className={styles.scheme}>
           {products.map((g, i) => {
             const c = centres[i]
             const partAtoms = picks.filter((p) => p.part === i).map((p) => p.atom)
             return (
               <g key={`p-${i}`}>
-                <SkeletalFormula graph={g} scale={52} x={c.x} y={c.y} highlightAtoms={partAtoms} />
-                <text x={c.x} y={c.y + 104} textAnchor="middle" fontSize={16} fill="var(--fg)">
+                <SkeletalFormula graph={g} scale={60} x={c.x} y={c.y} highlightAtoms={partAtoms} />
+                <text x={c.x} y={c.y + 100} textAnchor="middle" fontSize={16} fill="var(--fg)">
                   {productNames[i]}
                 </text>
               </g>
             )
           })}
           {count > 1 && (
-            <text x={VIEW_WIDTH / 2} y={122} textAnchor="middle" fontSize={26} fill="var(--fg-muted)">
+            <text x={VIEW_WIDTH / 2} y={164} textAnchor="middle" fontSize={26} fill="var(--fg-muted)">
               +
             </text>
           )}
@@ -277,10 +287,10 @@ function ReversePanel() {
           })}
           {joined && (
             <g data-testid="reverse-built">
-              <line x1={VIEW_WIDTH / 2} y1={190} x2={VIEW_WIDTH / 2} y2={226} stroke="var(--fg-muted)" strokeWidth={2.5} />
-              <path d={`M ${VIEW_WIDTH / 2 - 7} 220 L ${VIEW_WIDTH / 2} 234 L ${VIEW_WIDTH / 2 + 7} 220 Z`} fill="var(--fg-muted)" />
-              <SkeletalFormula graph={joined.expected} scale={40} x={VIEW_WIDTH / 2} y={290} />
-              <text x={VIEW_WIDTH / 2} y={352} textAnchor="middle" fontSize={17} fill="var(--fg)">
+              <line x1={VIEW_WIDTH / 2} y1={224} x2={VIEW_WIDTH / 2} y2={258} stroke="var(--fg-muted)" strokeWidth={2.5} />
+              <path d={`M ${VIEW_WIDTH / 2 - 7} 252 L ${VIEW_WIDTH / 2} 266 L ${VIEW_WIDTH / 2 + 7} 252 Z`} fill="var(--fg-muted)" />
+              <SkeletalFormula graph={joined.expected} scale={40} x={VIEW_WIDTH / 2} y={296} />
+              <text x={VIEW_WIDTH / 2} y={370} textAnchor="middle" fontSize={17} fill="var(--fg)">
                 {joined.expectedName}
               </text>
             </g>

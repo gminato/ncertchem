@@ -62,7 +62,6 @@ for (const scheme of ['light', 'dark'] as const) {
       await sim.screenshot({ path: path.join(SCREEN_DIR, `u9-9-3-5-b-sim-forward-default-${scheme}.png`) })
 
       await sim.getByRole('radio', { name: 'Preset' }).click()
-      await sim.getByRole('radio', { name: 'Acidic' }).click().catch(() => undefined)
       await sim.getByRole('radio', { name: 'Hot acidic KMnO₄' }).click()
       await sim.getByRole('radio', { name: '1-methylcyclohexene' }).click()
       await page.waitForTimeout(300)
@@ -80,7 +79,7 @@ for (const scheme of ['light', 'dark'] as const) {
       const carbonyls = sim.locator('circle[role="button"]')
       await carbonyls.nth(0).click()
       await carbonyls.nth(1).click()
-      await expect(sim.getByTestId('reverse-readout')).toContainText('Joined: 2-methylbut-2-ene')
+      await expect(sim.getByTestId('reverse-readout')).toContainText('Joined: 2-methylpent-2-ene')
       await page.waitForTimeout(300)
       await sim.screenshot({ path: path.join(SCREEN_DIR, `u9-9-3-5-b-sim-reverse-joined-${scheme}.png`) })
 

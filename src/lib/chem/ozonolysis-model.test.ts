@@ -54,14 +54,14 @@ describe('carbonyl carbons and the reverse join', () => {
   it('finds both carbonyl carbons of 6-oxoheptanal', () => {
     expect(carbonylCarbons(puzzleProducts('one-molecule'))).toHaveLength(2)
   })
-  it('joining the two carbonyl carbons of ethanal and propanone gives 2-methylbut-2-ene', () => {
+  it('joining the two carbonyl carbons of propanal and propanone gives 2-methylpent-2-ene', () => {
     const products = puzzleProducts('two-molecules')
     const [a, b] = carbonylCarbons(products)
     const { matches, built, expectedName } = checkReverse(products, a, b)
     expect(matches).toBe(true)
-    expect(expectedName).toBe('2-methylbut-2-ene')
-    expect(nameOf(built)).toBe('2-methylbut-2-ene')
-    expect(molecularFormula(built)).toBe('C5H10')
+    expect(expectedName).toBe('2-methylpent-2-ene')
+    expect(nameOf(built)).toBe('2-methylpent-2-ene')
+    expect(molecularFormula(built)).toBe('C6H12')
   })
   it('joining the carbonyls of 6-oxoheptanal closes the ring to 1-methylcyclohexene', () => {
     const products = puzzleProducts('one-molecule')
