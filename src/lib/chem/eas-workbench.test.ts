@@ -78,3 +78,15 @@ describe('plain text with formulas', () => {
     expect(subscriptFormulas('323-333 K')).toBe('323-333 K')
   })
 })
+
+describe('NCERT conditions', () => {
+  it('prints nitration at 323–333 K and the UV addition at 500 K, as NCERT does', async () => {
+    const { conditionText, workbenchReactions: all } = await import('./eas-workbench')
+    const nitration = all().find((r) => r.id === 'nitration')!
+    const bhc = all().find((r) => r.id === 'bhc')!
+    expect(conditionText(nitration)).toContain('323–333 K')
+    expect(conditionText(nitration)).toContain('HNO₃')
+    expect(conditionText(bhc)).toContain('500 K')
+    expect(conditionText(bhc)).toContain('ultraviolet light')
+  })
+})

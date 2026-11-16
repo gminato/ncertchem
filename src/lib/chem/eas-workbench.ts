@@ -163,3 +163,17 @@ export function workbenchReactions(): WorkbenchReaction[] {
     addition('hydrogenation', 'Hydrogenation', addHydrogenToBenzene(benzene)),
   ]
 }
+
+/**
+ * The conditions NCERT prints where the lib's condition text is looser: nitration at 323–333 K (Eq. 9.72), and
+ * the addition of chlorine in ultraviolet light at 500 K (Eq. 9.81). Hard-coded here until the lib carries them.
+ */
+export const NCERT_CONDITIONS: Partial<Record<WorkbenchId, string>> = {
+  nitration: 'concentrated HNO₃ and concentrated H₂SO₄ (nitrating mixture), 323–333 K',
+  bhc: 'ultraviolet light, 500 K',
+}
+
+/** The condition shown for a reaction: NCERT's where it is given, otherwise the lib's, with formulas subscripted. */
+export function conditionText(r: WorkbenchReaction): string {
+  return subscriptFormulas(NCERT_CONDITIONS[r.id] ?? r.conditions)
+}

@@ -29,9 +29,73 @@ async function gotoStep(page: Page, animation: string, index: number) {
   await expect(page.locator(`[data-animation="${animation}"] [data-scrolly-step]`).nth(index)).toHaveAttribute('data-active', 'true')
 }
 
+/** Every drawn element of an SVG sits inside its box with a 4 px margin, and the text is big enough to read. */
+async function measureDrawing(page: Page, svgSelector: string) {
+  return page.locator(svgSelector).evaluate((svg) => {
+    const el = svg as SVGSVGElement
+    const box = el.getBoundingClientRect()
+    const m = 4
+    const outside: string[] = []
+    const sizes: { text: string; px: number; caption: boolean }[] = []
+    el.querySelectorAll('text, line, path, circle').forEach((node) => {
+      const r = node.getBoundingClientRect()
+      if (r.width === 0 && r.height === 0) return
+      if (r.left < box.left + m || r.right > box.right - m || r.top < box.top + m || r.bottom > box.bottom - m) {
+        outside.push(`${node.tagName} "${(node.textContent ?? '').slice(0, 24)}"`)
+      }
+      if (node.tagName === 'text') {
+        const ctm = (node as SVGGraphicsElement).getScreenCTM()
+        const px = parseFloat(node.getAttribute('font-size') ?? '0') * (ctm?.a ?? 0)
+        sizes.push({ text: (node.textContent ?? '').slice(0, 24), px, caption: node.getAttribute('data-caption') === 'true' })
+      }
+    })
+    return { outside, sizes }
+  })
+}
+
+test.describe('Unit 9, Section 9.5.5 drawings', () => {
+  test('9.5.5: every Scrolly Step and workbench stage sits inside its SVG box, with labels at least 18 px and captions 16 px', async ({ page }) => {
+    await page.setViewportSize({ width: 1440, height: 900 })
+    await page.goto(SECTION)
+    await waitForScrolly(page, 'eas-mechanism')
+    for (let i = 0; i < STEP_COUNT; i++) {
+      await gotoStep(page, 'eas-mechanism', i)
+      await page.waitForTimeout(300)
+      const report = await measureDrawing(page, '[data-animation="eas-mechanism"] [data-testid="scrolly-visual"] svg')
+      expect(report.outside, `Step ${i + 1} elements outside the box`).toEqual([])
+      for (const t of report.sizes) {
+        if (t.caption) expect(t.px, `Step ${i + 1} caption "${t.text}"`).toBeGreaterThanOrEqual(16)
+        // Charge signs (the circled + of the shared AreniumIon, the − of the nitro group) are drawn smaller by design; they stay at least 14 px.
+        else if (t.text === '+' || t.text === '−') expect(t.px, `Step ${i + 1} charge sign`).toBeGreaterThanOrEqual(14)
+        else expect(t.px, `Step ${i + 1} label "${t.text}"`).toBeGreaterThanOrEqual(18)
+      }
+    }
+
+    const section = page.locator('[data-simulation="eas-workbench"]')
+    await section.scrollIntoViewIfNeeded()
+    for (const id of ['nitration', 'alkylation', 'bhc']) {
+      await section.locator(`[data-id="${id}"]`).click()
+      if (id !== 'bhc') {
+        await section.getByRole('button', { name: 'Check the order' }).click()
+        await section.locator('[data-stage-id="generate"] button').nth(0).click()
+        await section.locator('[data-stage-id="generate"] button').nth(0).click()
+        await section.locator('[data-stage-id="deprotonate"] button').nth(0).click()
+        await section.getByRole('button', { name: 'Check the order' }).click()
+      }
+      if (id === 'bhc') await section.getByRole('button', { name: 'Show the product' }).click()
+      const stages = id === 'bhc' ? [4] : [0, 1, 2, 3, 4]
+      for (const stage of stages) {
+        if (id !== 'bhc' && stage > 0) await section.getByRole('button', { name: 'Next stage' }).click()
+        const report = await measureDrawing(page, `[data-simulation="eas-workbench"] svg[data-stage="${stage}"]`)
+        expect(report.outside, `${id} stage ${stage} elements outside the box`).toEqual([])
+      }
+    }
+  })
+})
+
 for (const scheme of ['light', 'dark'] as const) {
   test.describe(`Unit 9, Section 9.5.5 (${scheme})`, () => {
-    test.use({ colorScheme: scheme })
+    test.use({ colorScheme: scheme, viewport: { width: 1440, height: 900 }, deviceScaleFactor: 2 })
 
     test('9.5.5: every Scrolly Step and the electrophilic substitution workbench render with no console errors', async ({ page }) => {
       const errors: string[] = []

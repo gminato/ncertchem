@@ -3,18 +3,18 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { Button } from '@/components/controls'
 import type { SimulationProps } from '@/components/simulation/registry'
-import { ReactionScheme, SkeletalFormula, reactionSchemeSize, type SchemePath } from '@/components/organic'
+import { Row, type RowItem } from '@/components/animations/unit9/eas/row'
+import { BenzeneHexagon, BENZENE_HEX_WIDTH, sigmaItem, skeletalNode } from '@/components/animations/unit9/eas/parts'
 import { huckel } from '@/lib/chem/aromaticity'
-import type { MolGraph } from '@/lib/chem/molecule-graph'
-import { parseSmiles } from '@/lib/chem/molecule-parse'
 import {
+  conditionText,
   isMechanismOrder,
   MECHANISM_STAGES,
   protonatedBase,
   reactionText,
-  subscriptFormulas,
   STAGE_LABEL,
   workbenchReactions,
+  subscriptFormulas,
   type MechanismStage,
   type WorkbenchId,
   type WorkbenchReaction,
@@ -22,17 +22,20 @@ import {
 import { useIsActive } from '../useIsActive'
 import styles from './eas-workbench.module.css'
 
-/** The stage is about 1,000 px wide on a desktop, so its drawing box is that wide: text stays near 1 to 1.2 times its size. */
+/** The stage is 960 × 340 units; a drawing fills about 70% of its width. */
 const VIEW_W = 960
-const VIEW_H = 400
-/** The order the cards start in: a scramble of the mechanism, so the learner has to put it right. */
-const SCRAMBLED: MechanismStage[] = ['attack', 'restore', 'generate', 'deprotonate']
+const VIEW_H = 340
+const TARGET = Math.round(0.7 * VIEW_W)
+/** Drawings sit above the caption line (y = VIEW_H - 22) and never scale past 1.5, so they stay inside the box. */
+const ROW_CY = 160
+const ROW_MAX = 1.5
 /** Stage 0 is the reactants; stages 1 to 4 follow the four mechanism stages in order. */
 const LAST_STAGE = 4
 const STAGE_MS = 1400
-/** Benzene, the reactant of every reaction in the workbench. */
-const BENZENE = parseSmiles('C1=CC=CC=C1')
+/** The order the cards start in: a scramble of the mechanism, so the learner has to put it right. */
+const SCRAMBLED: MechanismStage[] = ['attack', 'restore', 'generate', 'deprotonate']
 const WORKBENCH_IDS: WorkbenchId[] = ['nitration', 'chlorination', 'sulphonation', 'alkylation', 'acylation', 'bhc', 'hydrogenation']
+const SKELETAL_SCALE = 40
 
 const BUTTON_LABEL: Record<WorkbenchId, string> = {
   nitration: 'Nitration',
@@ -44,84 +47,92 @@ const BUTTON_LABEL: Record<WorkbenchId, string> = {
   hydrogenation: 'Hydrogenation',
 }
 
-/** Top of a scheme that is centred in the space under the title. */
-function schemeY(height: number): number {
-  return 56 + (VIEW_H - 56 - height) / 2
+/**
+ * The σ-complex label on the sp³ carbon: the electrophile of the lib without its charge (CH₃⁺ gives CH₃).
+ * Nitration uses the shared drawing (NO₂); sulphonation's zwitterion carries SO₃⁻ and acylation its COCH₃.
+ */
+function sigmaLabel(r: WorkbenchReaction): string {
+  const f = r.electrophile?.formula ?? ''
+  if (r.id === 'sulphonation') return 'SO₃⁻'
+  if (r.id === 'acylation') return 'COCH₃'
+  if (r.id === 'nitration') return 'NO2'
+  return f.replace(/⁺$/, '')
 }
 
-/** The benzene and reagents of a reaction, as one group of a scheme. */
-function reactantGroup(r: WorkbenchReaction, benzene: MolGraph): SchemePath[number] {
-  return [{ formula: benzene }, ...r.reagents.map((f) => ({ formula: f }))]
+/** The species of a reaction as text items, with the benzene drawn as a hexagon. */
+function reactantItems(r: WorkbenchReaction): RowItem[] {
+  const items: RowItem[] = [{ kind: 'node', width: BENZENE_HEX_WIDTH, render: () => <BenzeneHexagon /> }]
+  for (const f of r.reagents) items.push({ kind: 'text', text: '+ ' + f, size: 26 })
+  return items
 }
 
-/** The reaction as a scheme from the reactants to the product, with the by-products after a plus. */
-function fullScheme(r: WorkbenchReaction, benzene: MolGraph): SchemePath {
-  return [reactantGroup(r, benzene), {}, [{ formula: r.product.graph, tag: r.product.name }, ...r.byproducts.map((f) => ({ formula: f }))]]
+/** The product of a reaction as a structure, with its by-products after a plus. */
+function productItems(r: WorkbenchReaction): RowItem[] {
+  const items: RowItem[] = [skeletalNode(r.product.graph, SKELETAL_SCALE)]
+  for (const f of r.byproducts) items.push({ kind: 'text', text: '+ ' + f, size: 26 })
+  return items
 }
 
 /** Stage 3: the σ-complex and the base give the restored product and the protonated base. */
-function baseScheme(r: WorkbenchReaction): SchemePath {
+function baseItems(r: WorkbenchReaction): RowItem[] {
   return [
-    [{ formula: r.sigma! }, { formula: r.base! }],
-    {},
-    [{ formula: r.product.graph, tag: r.product.name }, { formula: protonatedBase(r.base!) }],
+    sigmaItem(r.id === 'nitration' ? 'NO2' : sigmaLabel(r)),
+    { kind: 'text', text: '+ ' + r.base!, size: 26 },
+    { kind: 'arrow', width: 84 },
+    skeletalNode(r.product.graph, SKELETAL_SCALE),
+    { kind: 'text', text: '+ ' + protonatedBase(r.base!), size: 26 },
   ]
 }
 
-/** The drawing for one stage of a reaction, as an SVG. */
+/** The drawing for one stage of a reaction. */
 function StageDrawing({ r, stage }: { r: WorkbenchReaction; stage: number }) {
-  const benzene = BENZENE
   const title = stageTitle(r, stage)
   return (
     <svg viewBox={`0 0 ${VIEW_W} ${VIEW_H}`} role="img" aria-label={title} className={styles.drawing} data-stage={stage}>
-      <text x={VIEW_W / 2} y={28} textAnchor="middle" dominantBaseline="central" fontSize={20} fontWeight={600} fontFamily="var(--font-sans)" fill="var(--fg)">
+      <text x={VIEW_W / 2} y={28} textAnchor="middle" dominantBaseline="central" fontSize={22} fontWeight={600} fontFamily="var(--font-sans)" fill="var(--fg)">
         {title}
       </text>
-      {stage === 0 && <ReactionScheme sequence={[reactantGroup(r, benzene)]} maxWidth={VIEW_W - 40} x={20} y={schemeY(reactionSchemeSize([reactantGroup(r, benzene)], VIEW_W - 40).height)} />}
+      {stage === 0 && (
+        <Row items={reactantItems(r)} cx={VIEW_W / 2} cy={ROW_CY} targetWidth={TARGET} maxScale={ROW_MAX} />
+      )}
       {stage === 1 && r.electrophile && (
         <g>
-          <text x={VIEW_W / 2} y={170} textAnchor="middle" dominantBaseline="central" fontSize={56} fontWeight={600} fontFamily="var(--font-sans)" fill="var(--delta-plus)">
+          <text x={VIEW_W / 2} y={150} textAnchor="middle" dominantBaseline="central" fontSize={56} fontWeight={600} fontFamily="var(--font-sans)" fill="var(--delta-plus)">
             {r.electrophile.formula}
           </text>
-          <text x={VIEW_W / 2} y={232} textAnchor="middle" dominantBaseline="central" fontSize={20} fontWeight={500} fontFamily="var(--font-sans)" fill="var(--fg)">
+          <text x={VIEW_W / 2} y={212} textAnchor="middle" dominantBaseline="central" fontSize={20} fontWeight={500} fontFamily="var(--font-sans)" fill="var(--fg)">
             {r.electrophile.name}
           </text>
-          <text x={VIEW_W / 2} y={282} textAnchor="middle" dominantBaseline="central" fontSize={18} fontFamily="var(--font-sans)" fill="var(--fg-muted)">
+          <text x={VIEW_W / 2} y={262} textAnchor="middle" dominantBaseline="central" fontSize={20} fontFamily="var(--font-sans)" fill="var(--fg-muted)">
             {r.electrophile.generation}
           </text>
         </g>
       )}
-      {stage === 2 && r.sigma && (
+      {stage === 2 && r.kind === 'substitution' && (
         <g>
-          <g transform={`translate(${VIEW_W / 2}, ${(56 + VIEW_H - 30) / 2})`}>
-            <SkeletalFormula graph={r.sigma} scale={46} />
-          </g>
-          <text x={VIEW_W / 2} y={VIEW_H - 22} textAnchor="middle" dominantBaseline="central" fontSize={17} fontFamily="var(--font-sans)" fill="var(--fg-muted)">
+          <Row items={[sigmaItem(r.id === 'nitration' ? 'NO2' : sigmaLabel(r))]} cx={VIEW_W / 2} cy={ROW_CY} targetWidth={TARGET} maxScale={ROW_MAX} />
+          <text x={VIEW_W / 2} y={VIEW_H - 22} textAnchor="middle" dominantBaseline="central" fontSize={20} fontFamily="var(--font-sans)" fill="var(--fg-muted)">
             {`σ-complex ${r.sigmaFormula}: the sp³ carbon bears H and the electrophile`}
           </text>
         </g>
       )}
-      {stage === 3 && r.sigma && r.base && (
-        <ReactionScheme sequence={baseScheme(r)} maxWidth={VIEW_W - 40} x={20} y={schemeY(reactionSchemeSize(baseScheme(r), VIEW_W - 40).height)} />
-      )}
+      {stage === 3 && r.kind === 'substitution' && <Row items={baseItems(r)} cx={VIEW_W / 2} cy={ROW_CY} targetWidth={TARGET} maxScale={ROW_MAX} />}
       {stage === 4 &&
         (r.kind === 'substitution' ? (
           <g>
-            <g transform={`translate(${VIEW_W / 2}, ${(56 + VIEW_H - 50) / 2})`}>
-              <SkeletalFormula graph={r.product.graph} scale={46} />
-            </g>
-            <text x={VIEW_W / 2} y={VIEW_H - 40} textAnchor="middle" dominantBaseline="central" fontSize={18} fontWeight={600} fontFamily="var(--font-sans)" fill="var(--fg)">
+            <Row items={[skeletalNode(r.product.graph, SKELETAL_SCALE)]} cx={VIEW_W / 2} cy={ROW_CY} targetWidth={TARGET} maxScale={ROW_MAX} />
+            <text x={VIEW_W / 2} y={VIEW_H - 22} textAnchor="middle" dominantBaseline="central" fontSize={20} fontWeight={600} fontFamily="var(--font-sans)" fill="var(--fg)">
               {`${r.product.name} (${r.product.formula}): ${aromaticText(r)}`}
             </text>
           </g>
         ) : (
-          <ReactionScheme sequence={fullScheme(r, benzene)} maxWidth={VIEW_W - 40} x={20} y={schemeY(reactionSchemeSize(fullScheme(r, benzene), VIEW_W - 40).height)} />
+          <Row items={[...reactantItems(r), ...productItems(r)]} cx={VIEW_W / 2} cy={ROW_CY} targetWidth={TARGET} maxScale={ROW_MAX} />
         ))}
     </svg>
   )
 }
 
-/** Stage titles: the mechanism's names, with the reaction's own species where it has them. */
+/** Stage titles: the mechanism's names, with the reaction's own product where it has one. */
 function stageTitle(r: WorkbenchReaction, stage: number): string {
   if (stage === 0) return 'Reactants'
   if (stage === 1) return STAGE_LABEL.generate
@@ -130,7 +141,7 @@ function stageTitle(r: WorkbenchReaction, stage: number): string {
   return r.kind === 'substitution' ? STAGE_LABEL.restore : `Product: ${r.product.name}`
 }
 
-/** The lib's Hückel verdict for the product ring, in words (only for substitutions, where the ring is restored). */
+/** The lib's Hückel verdict for the product ring, in words (substitutions, where the ring is restored). */
 function aromaticText(r: WorkbenchReaction): string {
   const v = huckel(r.product.graph)
   return v.verdict === 'aromatic' ? `aromatic, ${v.piElectrons} π electrons (4n + 2 with n = ${v.n})` : v.verdict
@@ -224,7 +235,7 @@ export function EasWorkbench({ reducedMotion }: SimulationProps) {
       </p>
       <p className={styles.conditions}>
         <span className={styles.condLabel}>Condition: </span>
-        {subscriptFormulas(r.conditions)}
+        {conditionText(r)}
       </p>
 
       <div className={styles.stage}>
