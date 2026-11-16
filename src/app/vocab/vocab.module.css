@@ -223,3 +223,12 @@
   display: block;
   margin: 0 auto;
 }
+
+/* Hydrocarbons: a drawing whose viewBox is fitted to its content, so it may fill the whole card. */
+.drawFull {
+  width: 100%;
+  max-width: none;
+  height: auto;
+  display: block;
+  margin: 0 auto;
+}
