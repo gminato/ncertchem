@@ -25,7 +25,7 @@ export const FAMILY_STEPS: readonly FamilyStep[] = [
   { smiles: 'CC', family: 'Alkane', note: 'A second carbon takes one bond, and it is still saturated.' },
   { smiles: 'C=C', family: 'Alkene', note: 'One bond becomes a double bond: two hydrogens leave.' },
   { smiles: 'C#C', family: 'Alkyne', note: 'A triple bond, and two more hydrogens leave.' },
-  { smiles: 'C1=CC=CC=C1', family: 'Arene', note: 'Six carbons close into a ring with three double bonds.' },
+  { smiles: 'C1=CC=CC=C1', family: 'Arene', note: 'Six carbons close into a ring; its six π electrons are shared by all six.' },
 ]
 
 /** Bond angle at each hybridisation, as the Unit 9 text gives it (sp³ 109.5°, sp² 120°, sp 180°). */
