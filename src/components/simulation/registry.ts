@@ -49,9 +49,14 @@ import { FunctionalGroupNamer } from './sims/functional-group-namer'
 import { ElementalAnalyser } from './sims/elemental-analyser'
 import { ResonanceLab } from './sims/resonance-lab'
 import { AlkaneNamer } from './sims/alkane-namer'
+import { AlkyneIsomers } from './sims/alkyne-isomers'
 import { FormulaTranslator } from './sims/formula-translator'
 import { ArrowPusher } from './sims/arrow-pusher'
 import { AlkyneAcidTest } from './sims/alkyne-acid-test'
+import { AlkeneMaker } from './sims/alkene-maker'
+import { CisTransChecker } from './sims/cis-trans-checker'
+import { CarbonCounter } from './sims/carbon-counter'
+import { FamilySorter } from './sims/family-sorter'
 
 export interface SimulationProps {
   /** True when the Learner has asked the OS for reduced motion. Skip tweens and loops when set. */
@@ -115,7 +120,12 @@ export const simulations: Record<string, ComponentType<SimulationProps>> = {
   'elemental-analyser': ElementalAnalyser,
   'resonance-lab': ResonanceLab,
   'alkane-namer': AlkaneNamer,
+  'alkyne-isomers': AlkyneIsomers,
   'formula-translator': FormulaTranslator,
   'arrow-pusher': ArrowPusher,
   'alkyne-acid-test': AlkyneAcidTest,
+  'alkene-maker': AlkeneMaker,
+  'cis-trans-checker': CisTransChecker,
+  'carbon-counter': CarbonCounter,
+  'family-sorter': FamilySorter,
 }
