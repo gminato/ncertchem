@@ -464,7 +464,10 @@ function carboxylRest(acid: MolGraph, carboxyl: number): { graph: MolGraph; atta
 
 /** The sodium salt of an acid species: its acid hydrogen replaced by sodium. */
 function sodiumSalt(acid: Species): Species {
-  const label = acid.label.endsWith('OH') ? `${acid.label.slice(0, -2)}ONa` : `${acid.label}Na`
+  // A ring acid has only a molecular-formula label, so its salt is written from the counts: C6H5COONa.
+  const label = acid.label.endsWith('OH')
+    ? `${acid.label.slice(0, -2)}ONa`
+    : `C${(acid.counts.C ?? 1) - 1}H${(acid.counts.H ?? 1) - 1}COONa`
   return adjusted(acid, { H: -1, Na: 1 }, label)
 }
 
@@ -791,7 +794,14 @@ export function addH2SO4(g: MolGraph): Reaction {
   const sulphate: MolGraph = { atoms, bonds }
   const counts = { ...countsOf(g), H: (countsOf(g).H ?? 0) + 2, S: 1, O: 4 }
   // The label is the condensed formula with –OSO3H in place of the alcohol's –OH, so the equation reads as chemistry.
-  const label = condensedLabel(alcohol).replace(/OH/, 'OSO3H')
+  // A ring has no condensed formula, so cyclohexene gives C6H11OSO3H.
+  let label: string
+  try {
+    label = condensedLabel(alcohol).replace(/OH/, 'OSO3H')
+  } catch {
+    const c = countsOf(g)
+    label = `C${c.C}H${(c.H ?? 0) + 1}OSO3H`
+  }
   const sulphateSpecies: Species = { label, counts, name }
   const equation = balancedEquation([term(1, speciesOf(g)), term(1, inorganic('H2SO4', { H: 2, S: 1, O: 4 }, 'sulphuric acid'))], [term(1, sulphateSpecies)])
   return {
@@ -1172,7 +1182,13 @@ export function acetylide(g: MolGraph, base: 'Na' | 'NaNH2'): Reaction {
   const c = acidicCarbons[0]
   const anion = rebuild(g.atoms.map((a, i) => (i === c ? { ...a, charge: -1 } : { ...a })), g.bonds.map((b) => ({ ...b })))
   const alkyne = speciesOf(g)
-  const salt = adjusted(alkyne, { H: -1, Na: 1 }, `${alkyne.label.slice(0, -1)}Na`)
+  // Na replaces the H on the terminal sp carbon: CH#CH gives CH#CNa, CH#CCH3 gives NaC#CCH3.
+  const saltLabel = alkyne.label.endsWith('#CH')
+    ? `${alkyne.label.slice(0, -1)}Na`
+    : alkyne.label.startsWith('CH#')
+      ? `NaC#${alkyne.label.slice(3)}`
+      : formulaFromCounts({ ...alkyne.counts, H: (alkyne.counts.H ?? 0) - 1, Na: 1 })
+  const salt = adjusted(alkyne, { H: -1, Na: 1 }, saltLabel)
   const name = `sodium ${nameOf(g).replace(/yne$/, 'ynide')}`
   const equation =
     base === 'Na'

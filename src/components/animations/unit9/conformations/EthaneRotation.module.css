@@ -1,0 +1,61 @@
+.enter {
+  animation: ethaneEnter 480ms ease-out both;
+}
+
+@keyframes ethaneEnter {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.panel {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  align-items: stretch;
+}
+
+.title {
+  margin: 0;
+  font-family: var(--font-sans);
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--fg);
+  text-align: center;
+}
+
+.readout {
+  margin: 0;
+  font-family: var(--font-sans);
+  font-size: 0.95rem;
+  font-variant-numeric: tabular-nums;
+  color: var(--fg-muted);
+  text-align: center;
+}
+
+.model {
+  width: 100%;
+  height: 292px;
+}
+
+.stage3d {
+  height: 100% !important;
+}
+
+.caption {
+  margin: 0;
+  font-family: var(--font-sans);
+  font-size: 0.9rem;
+  line-height: 1.5;
+  color: var(--fg-muted);
+  text-align: center;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .enter {
+    animation: none;
+  }
+}
