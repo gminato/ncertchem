@@ -4,7 +4,7 @@
  */
 
 import type { SchemePath } from '@/components/organic'
-import { acidTest, toDisplay } from '@/lib/chem/alkyne-acid-test'
+import { acidTest, shortCondition, speciesFormula, toDisplay } from '@/lib/chem/alkyne-acid-test'
 import { addToAlkyne, cyclicPolymerise } from '@/lib/chem/hydrocarbon-reactions'
 import { condensedLabel, nameOf } from '@/lib/chem/hydrocarbon-species'
 import type { MolGraph } from '@/lib/chem/molecule-graph'
@@ -62,13 +62,6 @@ export function displayFormula(g: MolGraph): string {
   return toDisplay(condensedLabel(g))
 }
 
-/**
- * A lib condition shortened for an arrow: the text before its bracketed note, e.g. 'CCl₄ solvent' from
- * 'CCl4 solvent (bromine solution decolourised)'. The full text is in the lib and the caption.
- */
-export function shortCondition(text: string): string {
-  return toDisplay(text.replace(/\s*\(.*?\)/, ''))
-}
 
 /** The balanced sodium equation for ethyne, from the acid test (mhchem, with \ce{}). */
 export function sodiumEquation(): string {
@@ -100,9 +93,9 @@ export function brominationScheme(): SchemePath {
   return [
     [{ formula: displayFormula(ethyne()) }, { formula: 'Br₂' }],
     { conditions: shortCondition(conditionFor('x2-addition').text) },
-    [{ formula: r.products[0].graph, tag: 'first addition' }],
+    [{ formula: speciesFormula(r.products[0].graph), tag: 'first addition' }],
     { reagents: 'Br₂' },
-    [{ formula: r.products[1].graph, tag: 'second addition' }],
+    [{ formula: speciesFormula(r.products[1].graph), tag: 'second addition' }],
   ]
 }
 
@@ -112,9 +105,9 @@ export function hydrationScheme(): SchemePath {
   return [
     [{ formula: displayFormula(ethyne()) }, { formula: 'H₂O' }],
     { conditions: shortCondition(conditionFor('alkyne-hydration').text) },
-    [{ formula: r.products[0].graph, tag: 'enol' }],
+    [{ formula: speciesFormula(r.products[0].graph), tag: 'enol' }],
     { conditions: 'isomerisation' },
-    [{ formula: r.products[1].graph, tag: 'carbonyl' }],
+    [{ formula: speciesFormula(r.products[1].graph), tag: 'carbonyl' }],
   ]
 }
 

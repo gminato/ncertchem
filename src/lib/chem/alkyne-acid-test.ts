@@ -116,3 +116,20 @@ export function toDisplay(text: string): string {
     .replace(/#/g, '≡')
     .replace(/([A-Za-z)])(\d+)/g, (_, c: string, d: string) => `${c}${sub(d)}`)
 }
+
+/**
+ * A lib condition shortened for an arrow: the text before its bracketed note, e.g. 'CCl₄ solvent' from
+ * 'CCl4 solvent (bromine solution decolourised)'. The full text is in the lib and the caption.
+ */
+export function shortCondition(text: string): string {
+  return toDisplay(text.replace(/\s*\(.*?\)/, ''))
+}
+
+/**
+ * A species as a drawing input: a condensed formula for a molecule of one or two carbons (so its hydrogens show,
+ * as CH₃CHO and CH₂=CHOH do), and the skeletal graph for anything larger.
+ */
+export function speciesFormula(g: MolGraph): string | MolGraph {
+  const carbons = g.atoms.filter((a) => a.element === 'C').length
+  return carbons <= 2 ? toDisplay(condensedLabel(g)) : g
+}

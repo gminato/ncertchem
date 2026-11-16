@@ -7,7 +7,7 @@ import { Segmented } from '@/components/controls'
 import { SimulationControls } from '@/components/simulation/Simulation'
 import type { SimulationProps } from '@/components/simulation/registry'
 import { ReactionScheme, layoutReactionScheme, type SchemePath } from '@/components/organic'
-import { acidTest, ACID_TEST_SMILES, shortCondition, toDisplay, type AcidBase, type AcidTest } from '@/lib/chem/alkyne-acid-test'
+import { acidTest, ACID_TEST_SMILES, shortCondition, speciesFormula, toDisplay, type AcidBase, type AcidTest } from '@/lib/chem/alkyne-acid-test'
 import { addToAlkyne, type Reaction } from '@/lib/chem/hydrocarbon-reactions'
 import { condensedLabel, nameOf } from '@/lib/chem/hydrocarbon-species'
 import type { MolGraph } from '@/lib/chem/molecule-graph'
@@ -35,6 +35,7 @@ const CHOICES = ACID_TEST_SMILES.map((smiles) => {
 })
 
 const SCHEME_WIDTH = 600
+const SCHEME_MARGIN = 24
 
 /** A mhchem equation from the lib (already wrapped in \ce{}), as KaTeX HTML. */
 function equationHtml(ce: string): string {
@@ -49,14 +50,14 @@ function additionSchemes(graph: MolGraph, reaction: Reaction, reagent: Reagent):
   // The HX condition in the lib is a note, not a condition, so the arrow shows only the reagent for it.
   const firstArrow = reagent === 'HX' ? { reagents: reagentText } : { conditions: shortCondition(reaction.conditions) }
   const one: SchemePath = [
-    [{ formula: graph }, { formula: reagentText }],
+    [{ formula: speciesFormula(graph) }, { formula: reagentText }],
     firstArrow,
-    [{ formula: first.graph, tag: water ? 'enol' : 'first product' }],
+    [{ formula: speciesFormula(first.graph), tag: water ? 'enol' : 'first product' }],
   ]
   const two: SchemePath = [
-    [{ formula: first.graph }, ...(water ? [] : [{ formula: reagentText }])],
+    [{ formula: speciesFormula(first.graph) }, ...(water ? [] : [{ formula: reagentText }])],
     water ? { conditions: 'isomerisation' } : { reagents: reagentText },
-    [{ formula: second.graph, tag: water ? 'carbonyl' : 'second product' }],
+    [{ formula: speciesFormula(second.graph), tag: water ? 'carbonyl' : 'second product' }],
   ]
   return [one, two]
 }
@@ -64,9 +65,10 @@ function additionSchemes(graph: MolGraph, reaction: Reaction, reagent: Reagent):
 function AcidPanel({ graph, base, result }: { graph: MolGraph; base: AcidBase; result: AcidTest }) {
   const name = nameOf(graph)
   const baseName = base === 'Na' ? 'sodium' : 'sodamide'
+  const Name = name.charAt(0).toUpperCase() + name.slice(1)
   const verdict = result.reacts
-    ? `${name} reacts with ${baseName}. The terminal C–H is removed, and ${result.byproduct} escapes.`
-    : `${name} does not react with ${baseName}. ${result.reason}`
+    ? `${Name} reacts with ${baseName}. The terminal C–H is removed, and ${result.byproduct} escapes.`
+    : `${Name} does not react with ${baseName}. ${result.reason}`
   return (
     <div className={styles.panel} data-testid="acid-panel">
       <h4 className={styles.panelTitle}>Sodium and sodamide test</h4>
@@ -109,16 +111,17 @@ function AdditionPanel({ graph, reagent }: { graph: MolGraph; reagent: Reagent }
       <h4 className={styles.panelTitle}>Addition, one step at a time</h4>
       {schemes.map((scheme, i) => {
         const size = layoutReactionScheme(scheme, SCHEME_WIDTH)
+        // The viewBox has a margin so that a text species centred near the edge is not cut.
         return (
           <svg
             key={i}
-            viewBox={`0 0 ${SCHEME_WIDTH} ${Math.ceil(size.height)}`}
+            viewBox={`${-SCHEME_MARGIN} 0 ${SCHEME_WIDTH + 2 * SCHEME_MARGIN} ${Math.ceil(size.height)}`}
             width="100%"
             role="img"
             aria-label={`Step ${i + 1} of the addition of ${label} to ${nameOf(graph)}`}
             className={styles.scheme}
           >
-            <ReactionScheme sequence={scheme} maxWidth={SCHEME_WIDTH} x={0} y={0} />
+            <ReactionScheme sequence={scheme} maxWidth={SCHEME_WIDTH} x={(SCHEME_WIDTH - size.width) / 2} y={0} />
           </svg>
         )
       })}
