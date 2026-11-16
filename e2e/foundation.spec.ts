@@ -89,10 +89,29 @@ test.describe('Unit navigation', () => {
     await expect(page.getByRole('navigation', { name: 'Breadcrumb' })).toContainText('Unit 2')
   })
 
-  test('a Unit with no Sections yet shows a calm empty state', async ({ page }) => {
+  test('Unit 9 lists its fifteen Sections in order', async ({ page }) => {
     await page.goto('/class-11/unit-9')
     await expect(page.getByRole('heading', { level: 1 })).toHaveText('Hydrocarbons')
-    await expect(page.getByText('The Sections of this Unit are being written.')).toBeVisible()
+    const links = page.locator('a[href^="/class-11/unit-9/"]')
+    await expect(links).toHaveCount(15)
+    const hrefs = await links.evaluateAll((els) => els.map((e) => e.getAttribute('href')))
+    expect(hrefs.map((h) => h?.split('/').pop())).toEqual([
+      '9-1-classification',
+      '9-2-alkanes-nomenclature-isomerism',
+      '9-2-2-preparation-of-alkanes',
+      '9-2-3-properties-of-alkanes',
+      '9-2-4-conformations',
+      '9-3-alkenes-structure-isomerism',
+      '9-3-4-preparation-of-alkenes',
+      '9-3-5-addition-reactions-of-alkenes',
+      '9-3-5-oxidation-ozonolysis-polymerisation',
+      '9-4-alkynes-structure-preparation',
+      '9-4-4-properties-of-alkynes',
+      '9-5-aromatic-hydrocarbons',
+      '9-5-5-properties-of-arenes',
+      '9-5-6-directive-influence',
+      '9-6-carcinogenicity-and-toxicity',
+    ])
   })
 
   test('Unit 6 lists its fourteen Sections in order', async ({ page }) => {
