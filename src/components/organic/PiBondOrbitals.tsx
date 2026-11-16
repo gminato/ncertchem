@@ -5,7 +5,7 @@ export type PiMolecule = 'ethene' | 'ethyne' | 'benzene'
 /** View box of each molecule's drawing, centred on the origin. Use it as the parent's viewBox. */
 export const PI_VIEWBOX: Record<PiMolecule, { x: number; y: number; width: number; height: number }> = {
   ethene: { x: -118, y: -84, width: 236, height: 168 },
-  ethyne: { x: -124, y: -84, width: 248, height: 168 },
+  ethyne: { x: -132, y: -116, width: 264, height: 232 },
   benzene: { x: -200, y: -132, width: 400, height: 264 },
 }
 

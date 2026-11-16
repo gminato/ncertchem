@@ -7,6 +7,12 @@ export const BENZENE_R = 92
 /** Size of a benzene drawing, for a parent viewBox centred on the origin. */
 export const BENZENE_RING_SIZE = { width: 236, height: 236 } as const
 
+/**
+ * Size of a benzene drawing with substituent labels at the top and bottom (position 1 and 4), so the
+ * labels sit inside the viewBox: the labels reach 133 units from the centre, plus a margin.
+ */
+export const BENZENE_LABELLED_SIZE = { width: 360, height: 310 } as const
+
 export type BenzeneStyle = 'kekule' | 'hexagon'
 
 export interface RingSubstituent {
