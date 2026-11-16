@@ -110,6 +110,7 @@ import { ElectronEffects } from './unit8/effects/ElectronEffects'
 import { AlkaneNaming } from './unit8/naming/AlkaneNaming'
 import { RepresentationsMorph } from './unit8/representations/RepresentationsMorph'
 import { BondFission } from './unit8/fission/BondFission'
+import { ElimMechanism } from './unit9/elimination/ElimMechanism'
 import { TripleBond } from './unit9/alkyne-structure/TripleBond'
 
 /**
@@ -229,6 +230,7 @@ export const animations = {
   'combustion-analysis': CombustionAnalysis,
   'electron-effects': ElectronEffects,
   'alkane-naming': AlkaneNaming,
+  elimination: ElimMechanism,
   'structure-morph': RepresentationsMorph,
   'bond-fission': BondFission,
   'triple-bond': TripleBond,

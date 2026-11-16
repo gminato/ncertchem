@@ -52,6 +52,7 @@ import { AlkaneNamer } from './sims/alkane-namer'
 import { AlkyneIsomers } from './sims/alkyne-isomers'
 import { FormulaTranslator } from './sims/formula-translator'
 import { ArrowPusher } from './sims/arrow-pusher'
+import { AlkeneMaker } from './sims/alkene-maker'
 
 export interface SimulationProps {
   /** True when the Learner has asked the OS for reduced motion. Skip tweens and loops when set. */
@@ -118,4 +119,5 @@ export const simulations: Record<string, ComponentType<SimulationProps>> = {
   'alkyne-isomers': AlkyneIsomers,
   'formula-translator': FormulaTranslator,
   'arrow-pusher': ArrowPusher,
+  'alkene-maker': AlkeneMaker,
 }
