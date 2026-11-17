@@ -212,13 +212,10 @@ else
   warn "Members of the docker group have root-equivalent access to this machine."
   if confirm "Run: sudo usermod -aG docker $USER ?"; then
     sudo usermod -aG docker "$USER"
-    if sg docker -c "docker ps" >/dev/null 2>&1; then
-      say "${GREEN}✓${RESET} Docker answers in a fresh group session."
-      note "Log out and back in (or restart) so every new terminal gets the group."
-    else
-      warn "Docker still refuses. Check that the Docker service runs: sudo systemctl start docker"
-      SKIPPED+=("Docker access: check 'docker ps' after logging out and back in")
-    fi
+    say "${GREEN}✓${RESET} $USER is now in the docker group."
+    note "The group reaches only new login sessions: log out and back in (or restart),"
+    note "then check with: docker ps"
+    SKIPPED+=("Docker: log out and back in, then check 'docker ps' works")
   else
     SKIPPED+=("Docker access: sudo usermod -aG docker $USER, then log out and in")
   fi

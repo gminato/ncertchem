@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import { Newsreader, Inter, JetBrains_Mono } from 'next/font/google'
+import { AccountStart } from '@/components/account/AccountStart'
 import { BRAND } from '@/lib/brand'
 import './globals.css'
 import 'katex/dist/katex.min.css'
@@ -47,7 +48,10 @@ export default function RootLayout({
           }}
         />
       </head>
-      <body suppressHydrationWarning>{children}</body>
+      <body suppressHydrationWarning>
+        <AccountStart />
+        {children}
+      </body>
     </html>
   )
 }

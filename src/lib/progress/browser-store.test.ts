@@ -2,6 +2,7 @@ import { afterEach, describe, expect, it, vi } from 'vitest'
 import {
   PROGRESS_STORAGE_KEY,
   clearProgress,
+  onRecorded,
   parseProgress,
   readProgress,
   recordAnswered,
@@ -157,5 +158,29 @@ describe('the browser store with a blocked localStorage', () => {
     expect(() => recordAnswered('a:1')).not.toThrow()
     expect(() => recordOpened('a')).not.toThrow()
     expect(() => clearProgress()).not.toThrow()
+  })
+})
+
+describe('onRecorded', () => {
+  it('tells listeners about a new answer and an opened Section, and not about a repeat', () => {
+    stubBrowser()
+    const heard: string[] = []
+    const stop = onRecorded((event) => heard.push(event.kind === 'answered' ? `answered ${event.id}` : `opened ${event.slug}`))
+    recordAnswered('a:1', 100)
+    recordAnswered('a:1', 200)
+    recordOpened('a', 300)
+    stop()
+    recordAnswered('a:2', 400)
+    expect(heard).toEqual(['answered a:1', 'opened a'])
+  })
+
+  it('still records when a listener throws', () => {
+    stubBrowser()
+    const stop = onRecorded(() => {
+      throw new Error('offline')
+    })
+    recordAnswered('a:1', 100)
+    stop()
+    expect(readProgress().answered).toEqual({ 'a:1': 100 })
   })
 })

@@ -95,12 +95,43 @@ export function writeProgress(progress: Progress): void {
 export function recordAnswered(id: CheckId, at: number = Date.now()): void {
   const current = readProgress()
   const next = withAnswered(current, id, at)
-  if (next !== current) writeProgress(next)
+  if (next === current) return
+  writeProgress(next)
+  tell({ kind: 'answered', id, at })
 }
 
 /** Records that the Learner opened a Section. */
 export function recordOpened(slug: string, at: number = Date.now()): void {
   writeProgress(withOpened(readProgress(), slug, at))
+  tell({ kind: 'opened', slug, at })
+}
+
+/** Something the Learner just did that adds to their Progress. */
+export type Recorded =
+  | { kind: 'answered'; id: CheckId; at: number }
+  | { kind: 'opened'; slug: string; at: number }
+
+const recordedListeners = new Set<(event: Recorded) => void>()
+
+function tell(event: Recorded): void {
+  for (const listener of recordedListeners) {
+    try {
+      listener(event)
+    } catch {
+      // A listener's failure must never stop the browser's own record.
+    }
+  }
+}
+
+/**
+ * Listens for new answers and newly opened Sections in this tab, so that a signed-in Learner's
+ * Account can be sent each one as it happens. Returns a function that stops listening.
+ */
+export function onRecorded(listener: (event: Recorded) => void): () => void {
+  recordedListeners.add(listener)
+  return () => {
+    recordedListeners.delete(listener)
+  }
 }
 
 /** Removes all Progress from this browser. */
