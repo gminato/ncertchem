@@ -1,17 +1,14 @@
 'use client'
 
-import { useId, useState, useSyncExternalStore, type ReactNode } from 'react'
+import { useId, useState, type ReactNode } from 'react'
 import { usePathname } from 'next/navigation'
 import { Button } from '@/components/controls/Button'
 import controls from '@/components/controls/controls.module.css'
 import styles from './check.module.css'
-import {
-  checkStorageKey,
-  hashText,
-  readCheckDone,
-  subscribeCheckDone,
-  writeCheckDone,
-} from './checkStorage'
+import { recordAnswered } from '@/lib/progress/browser-store'
+import { checkId } from '@/lib/progress/rules'
+import { useCheckAnswered } from '@/lib/progress/useProgress'
+import { hashText } from './hashText'
 
 export interface CheckProps {
   /** The question. Also accepted as children, which suits MDX. */
@@ -30,8 +27,9 @@ export interface CheckProps {
   /** Shown after a correct answer, or after two tries. */
   explanation: ReactNode
   /**
-   * Position of this Check in its Section, used in the storage key. Defaults to a
-   * hash of the question, so pass `n` if the wording may change.
+   * The number of this Check in its Section. Progress is recorded against it, so every Check in
+   * a Section must have its own, and it must not change once the Section is published. Outside
+   * a Section it defaults to a hash of the question.
    */
   n?: number | string
 }
@@ -49,7 +47,7 @@ function slugFromPath(pathname: string | null): string {
  * A short question inside a Section. Choice mode shows selectable options;
  * numeric mode takes a number within a tolerance. Feedback is gentle: a wrong
  * answer invites another try, and the explanation appears after two tries or
- * once the answer is right. Completion is stored in this browser only.
+ * once the answer is right. A correct answer is recorded in the Learner's Progress.
  */
 export function Check({
   question,
@@ -66,15 +64,11 @@ export function Check({
   const groupName = useId()
   const pathname = usePathname()
   const questionText = question ?? children
-  const storageKey = checkStorageKey(
+  const id = checkId(
     slugFromPath(pathname),
     n ?? hashText(typeof questionText === 'string' ? questionText : '')
   )
-  const completed = useSyncExternalStore(
-    subscribeCheckDone,
-    () => readCheckDone(storageKey),
-    () => false
-  )
+  const completed = useCheckAnswered(id)
 
   const [selected, setSelected] = useState<number | null>(null)
   const [draft, setDraft] = useState('')
@@ -98,7 +92,7 @@ export function Check({
     if (locked || !hasAnswer) return
     if (isCorrect) {
       setStatus('correct')
-      writeCheckDone(storageKey)
+      recordAnswered(id)
       return
     }
     const nextTries = tries + 1

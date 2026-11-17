@@ -62,7 +62,7 @@ test.describe('Check behaviour', () => {
     await expect(check.getByText(/Electrons carry a negative charge/)).toBeVisible()
   })
 
-  test('the right answer is confirmed and recorded only in localStorage', async ({ page }) => {
+  test('the right answer is confirmed and recorded in the browser\'s Progress', async ({ page }) => {
     await page.goto('/dev/controls')
     const check = page.locator('section[data-status]').nth(1)
     await check.getByRole('spinbutton').fill('0.405')
@@ -70,11 +70,9 @@ test.describe('Check behaviour', () => {
     await expect(check).toHaveAttribute('data-status', 'correct')
     await expect(check.getByText('Correct.')).toBeVisible()
 
-    const stored = await page.evaluate(() => {
-      const keys = Object.keys(localStorage).filter((k) => k.startsWith('check:'))
-      return keys
-    })
-    expect(stored).toContain('check:controls:dev-numeric')
+    await expect(check.getByText('Answered')).toBeVisible()
+    const stored = await page.evaluate(() => JSON.parse(localStorage.getItem('progress:v1') ?? '{}'))
+    expect(Object.keys(stored.answered)).toEqual(['controls:dev-numeric'])
   })
 })
 
