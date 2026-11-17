@@ -2,7 +2,6 @@
 
 import { useProgress } from '@/lib/progress/useProgress'
 import { sectionProgress } from '@/lib/progress/rules'
-import controls from '@/components/controls/controls.module.css'
 import { Tick } from './Tick'
 import styles from './unit-progress.module.css'
 
@@ -22,7 +21,7 @@ export function SectionRowStatus({ slug, checkNumbers }: SectionRowStatusProps) 
       {complete && (
         <>
           <Tick size={22} />
-          <span className={controls.visuallyHidden}>Section complete</span>
+          <span className={styles.visuallyHidden}>Section complete</span>
         </>
       )}
       {state === 'started' && (
@@ -30,7 +29,7 @@ export function SectionRowStatus({ slug, checkNumbers }: SectionRowStatusProps) 
           <span className={styles.count}>
             {answered} of {total}
           </span>
-          <span className={controls.visuallyHidden}> Checks answered</span>
+          <span className={styles.visuallyHidden}> Checks answered</span>
         </>
       )}
     </span>

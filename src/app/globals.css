@@ -12,13 +12,23 @@
   unicode-range: U+2070-2071, U+2074-208E;
 }
 
-/* Minimal reset */
-*,
-*::before,
-*::after {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
+/*
+ * Cascade layers. The element reset and the shared controls (controls.module.css) sit in layers,
+ * so every unlayered rule (a component's own CSS module) beats them whatever order the build
+ * loads the stylesheets in. Turbopack regroups CSS chunks as the app changes, and a Simulation
+ * that restyles a shared Button with a class of equal specificity must not depend on that order.
+ */
+@layer base, controls;
+
+@layer base {
+  /* Minimal reset */
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
 }
 
 html {
@@ -45,16 +55,18 @@ body {
   transition: background-color 0.25s var(--ease-out), color 0.25s var(--ease-out);
 }
 
-/* UI font defaults */
-button,
-input,
-select,
-textarea,
-nav,
-header,
-footer,
-.font-sans {
-  font-family: var(--font-sans);
+@layer base {
+  /* UI font defaults */
+  button,
+  input,
+  select,
+  textarea,
+  nav,
+  header,
+  footer,
+  .font-sans {
+    font-family: var(--font-sans);
+  }
 }
 
 code,
