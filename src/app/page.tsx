@@ -2,6 +2,8 @@ import type { CSSProperties } from 'react'
 import Link from 'next/link'
 import { sections } from '#site/content'
 import { Check } from '@/components/check/Check'
+import { ContinueLink, type ContinueSection } from '@/components/progress/ContinueLink'
+import { UnitCardProgress } from '@/components/progress/UnitCardProgress'
 import { HeroAnimation } from '@/components/landing/HeroAnimation'
 import { SimulationShowcase, type ShowcaseItem } from '@/components/landing/SimulationShowcase'
 import { UnitGlyph } from '@/components/landing/UnitGlyph'
@@ -87,6 +89,17 @@ export default function Home() {
   const pilot = findSection(PILOT_SLUG)
   const totals = siteStats(sections)
 
+  /** Every Section in book order, for "Continue" in the hero. */
+  const continueSections: ContinueSection[] = [...sections]
+    .sort((a, b) => a.class - b.class || a.unit - b.unit || a.order - b.order)
+    .map((section) => ({
+      slug: section.slug,
+      checkNumbers: section.checkNumbers,
+      href: sectionHref(section),
+      section: section.section,
+      title: section.title,
+    }))
+
   const showcase: ShowcaseItem[] = SHOWCASE.map(({ slug, ...item }) => {
     const section = findSection(slug)
     return {
@@ -126,10 +139,7 @@ export default function Home() {
                 scroll through and Simulations you run yourself.
               </p>
               <div className={`${styles.ctaRow} ${styles.rise}`}>
-                <Link href="/class-11/unit-1" className={`${styles.cta} ${styles.ctaPrimary}`}>
-                  Start with Unit 1
-                  <span aria-hidden="true">→</span>
-                </Link>
+                <ContinueLink sections={continueSections} className={`${styles.cta} ${styles.ctaPrimary}`} />
                 <a href="#syllabus" className={`${styles.cta} ${styles.ctaSecondary}`}>
                   See the Syllabus Map
                 </a>
@@ -266,9 +276,14 @@ export default function Home() {
                           <span className={styles.unitText}>
                             <span className={styles.unitNumber}>Unit {info.unit}</span>
                             <span className={styles.unitTitle}>{info.title}</span>
-                            <span className={styles.unitMeta}>
+                            <UnitCardProgress
+                              className={styles.unitMeta}
+                              sections={sections
+                                .filter((s) => s.class === cls && s.unit === info.unit)
+                                .map((s) => ({ slug: s.slug, checkNumbers: s.checkNumbers }))}
+                            >
                               {plural(unit.sections, 'Section')} · {plural(unit.simulations, 'Simulation')}
-                            </span>
+                            </UnitCardProgress>
                           </span>
                         </Link>
                       </li>

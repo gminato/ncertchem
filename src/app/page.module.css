@@ -75,6 +75,7 @@
 }
 
 .cta {
+  white-space: nowrap;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -364,6 +365,8 @@
 }
 
 .unitCard {
+  position: relative;
+  overflow: hidden;
   flex: 1;
   display: grid;
   grid-template-columns: auto minmax(0, 1fr);
