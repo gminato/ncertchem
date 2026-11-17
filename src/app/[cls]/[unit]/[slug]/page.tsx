@@ -8,6 +8,7 @@ import { SiteHeader } from '@/components/ui/SiteHeader'
 import { Hook, KeyIdeas, Scrolly, Step } from '@/components/section'
 import { Check } from '@/components/check'
 import { ConfigBuilder } from '@/components/check/ConfigBuilder'
+import { SignInNudge } from '@/components/account/SignInNudge'
 import { RecordOpened } from '@/components/progress/RecordOpened'
 import { SectionStatus } from '@/components/progress/SectionStatus'
 import { Simulation } from '@/components/simulation'
@@ -124,6 +125,7 @@ export default async function SectionPage({
         </div>
 
         <SectionStatus slug={section.slug} checkNumbers={section.checkNumbers} />
+        <SignInNudge slug={section.slug} checkNumbers={section.checkNumbers} />
 
         {(previous || next) && (
           <nav aria-label="Sections in this Unit" className={styles.pager}>
