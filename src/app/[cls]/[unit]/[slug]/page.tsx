@@ -4,12 +4,13 @@ import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import * as runtime from 'react/jsx-runtime'
 import { sections } from '#site/content'
-import { ThemeToggle } from '@/components/ui/ThemeToggle'
+import { SiteHeader } from '@/components/ui/SiteHeader'
 import { Hook, KeyIdeas, Scrolly, Step } from '@/components/section'
 import { Check } from '@/components/check'
 import { ConfigBuilder } from '@/components/check/ConfigBuilder'
 import { Simulation } from '@/components/simulation'
 import { findUnit } from '@/content/units'
+import { pageTitle } from '@/lib/brand'
 import { parseSegment, prevNext, sectionsForUnit } from '@/lib/unit-nav'
 import styles from './section.module.css'
 
@@ -62,7 +63,7 @@ export async function generateMetadata({
   const section = findSection(await params)
   if (!section) return {}
   return {
-    title: `${section.title} · Chemistry, Revisited`,
+    title: pageTitle(section.title),
     description: `Class ${section.class}, Unit ${section.unit}, Section ${section.section}: ${section.title}.`,
   }
 }
@@ -90,12 +91,7 @@ export default async function SectionPage({
 
   return (
     <>
-      <header className={styles.topbar}>
-        <Link href="/" className={styles.siteName}>
-          Chemistry, Revisited
-        </Link>
-        <ThemeToggle />
-      </header>
+      <SiteHeader />
 
       <article className={styles.article}>
         <header className={styles.head}>

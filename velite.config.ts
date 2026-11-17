@@ -2,6 +2,7 @@ import { defineCollection, defineConfig, s } from 'velite'
 import remarkMath from 'remark-math'
 import rehypeKatex from 'rehype-katex'
 import 'katex/contrib/mhchem'
+import { countBlocks } from './src/lib/section-blocks'
 
 const sections = defineCollection({
   name: 'Section',
@@ -16,7 +17,10 @@ const sections = defineCollection({
     slug: s.slug('sections'),
     ncert: s.string().optional(),
     body: s.mdx(),
-  }),
+  })
+    // Each Section also carries how many Simulations, Scrolly Animations and Checks it holds,
+    // counted from its MDX source. The Syllabus Map shows these.
+    .transform((data, { meta }) => ({ ...data, ...countBlocks(meta.content ?? '') })),
 })
 
 export default defineConfig({

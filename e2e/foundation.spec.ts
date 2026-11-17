@@ -89,6 +89,12 @@ test.describe('Unit navigation', () => {
     await expect(page.getByRole('navigation', { name: 'Breadcrumb' })).toContainText('Unit 2')
   })
 
+  test('a Unit with no Sections yet shows a calm empty state', async ({ page }) => {
+    await page.goto('/class-12/unit-1')
+    await expect(page.getByRole('heading', { level: 1 })).toHaveText('Solutions')
+    await expect(page.getByText('The Sections of this Unit are being written.')).toBeVisible()
+  })
+
   test('Unit 9 lists its fifteen Sections in order', async ({ page }) => {
     await page.goto('/class-11/unit-9')
     await expect(page.getByRole('heading', { level: 1 })).toHaveText('Hydrocarbons')

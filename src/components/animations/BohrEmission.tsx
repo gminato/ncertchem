@@ -36,6 +36,11 @@ import styles from './BohrEmission.module.css'
 export interface BohrEmissionProps {
   step: number
   reducedMotion: boolean
+  /**
+   * Whether a screen reader is told about each Step change. Defaults to true. Pass false where the
+   * Steps advance on their own, so the announcements do not interrupt the reader.
+   */
+  announce?: boolean
 }
 
 // ---------------------------------------------------------------------------
@@ -222,7 +227,7 @@ function buildStepTimeline(
  * and a visible-spectrum strip along the bottom. The Steps move an electron
  * from n = 1 to n = 3, drop it to n = 2, and show the resulting 656 nm line.
  */
-export function BohrEmission({ step, reducedMotion }: BohrEmissionProps) {
+export function BohrEmission({ step, reducedMotion, announce = true }: BohrEmissionProps) {
   const activeStep = clampStep(step)
 
   // The live state is a mutable object that GSAP tweens; `view` is a React
@@ -468,7 +473,7 @@ export function BohrEmission({ step, reducedMotion }: BohrEmissionProps) {
         )}
       </svg>
 
-      <p className={styles.srOnly} aria-live="polite">
+      <p className={styles.srOnly} aria-live={announce ? 'polite' : 'off'}>
         {stepDescription(activeStep)}
       </p>
     </div>

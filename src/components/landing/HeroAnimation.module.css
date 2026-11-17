@@ -1,0 +1,254 @@
+/* The card matches the Simulation frame: a title bar, a stage and a footer. */
+.card {
+  margin: 0;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04), 0 24px 48px -28px rgba(31, 32, 35, 0.35);
+  overflow: hidden;
+}
+
+.titleBar {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  padding: var(--space-4) var(--space-5);
+  border-bottom: 1px solid var(--border);
+}
+
+.eyebrow {
+  font-family: var(--font-sans);
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
+.title {
+  font-family: var(--font-serif);
+  font-size: 1.25rem;
+  font-weight: 600;
+  line-height: 1.25;
+  color: var(--fg);
+}
+
+.stage {
+  aspect-ratio: 640 / 540;
+  padding: var(--space-3) var(--space-4) 0;
+}
+
+.footer {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  padding: var(--space-3) var(--space-5) var(--space-4);
+  border-top: 1px solid var(--border);
+  background: var(--surface);
+}
+
+/* The four Steps, as a row of buttons with a progress line under the current one. */
+.steps {
+  list-style: none;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: var(--space-2);
+}
+
+.stepItem {
+  min-width: 0;
+}
+
+.step {
+  position: relative;
+  appearance: none;
+  width: 100%;
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-2);
+  padding: var(--space-2) 0 var(--space-3);
+  border: 0;
+  background: transparent;
+  color: var(--fg-subtle);
+  font-family: var(--font-sans);
+  font-size: 0.82rem;
+  font-weight: 500;
+  line-height: 1.2;
+  text-align: left;
+  cursor: pointer;
+  transition: color 0.2s var(--ease-out);
+}
+
+.step:hover {
+  color: var(--fg);
+}
+
+.step:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+  border-radius: var(--radius-sm);
+}
+
+.step[aria-current="step"] {
+  color: var(--fg);
+  font-weight: 600;
+}
+
+/* The track, and the fill that runs across it while the Step is on screen. */
+.step::before,
+.step::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  height: 3px;
+  border-radius: 999px;
+}
+
+.step::before {
+  width: 100%;
+  background: var(--border);
+}
+
+.step::after {
+  width: 100%;
+  background: var(--accent);
+  transform-origin: left center;
+  transform: scaleX(0);
+}
+
+.step[aria-current="step"]::after {
+  transform: scaleX(1);
+}
+
+.step[data-playing="true"]::after {
+  animation: stepFill var(--hold, 3000ms) linear both;
+}
+
+@keyframes stepFill {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+
+.stepNumber {
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  font-variant-numeric: tabular-nums;
+  color: var(--accent);
+}
+
+.stepName {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Room for the longest caption is reserved, so the card keeps its height as the caption changes. */
+.caption {
+  font-family: var(--font-sans);
+  font-size: 0.92rem;
+  line-height: 1.5;
+  min-height: 3em;
+  color: var(--fg-muted);
+}
+
+/* Beside the headline the card is narrower, and the longest caption takes three lines. */
+@media (min-width: 960px) and (max-width: 1139.98px) {
+  .caption {
+    min-height: 4.5em;
+  }
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+}
+
+.playButton {
+  appearance: none;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-3);
+  font-family: var(--font-sans);
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--fg-muted);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: color 0.2s var(--ease-out), background-color 0.2s var(--ease-out),
+    border-color 0.2s var(--ease-out);
+}
+
+.playButton:hover {
+  color: var(--fg);
+  background: var(--surface-raised);
+  border-color: var(--fg-subtle);
+}
+
+.playButton:focus-visible,
+.sectionLink:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+  border-radius: var(--radius-sm);
+}
+
+.playIcon {
+  width: 12px;
+  height: 12px;
+  fill: currentColor;
+}
+
+.sectionLink {
+  margin-left: auto;
+  font-family: var(--font-sans);
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--accent);
+  text-decoration: none;
+}
+
+.sectionLink:hover {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+@media (max-width: 520px) {
+  .titleBar,
+  .footer {
+    padding-left: var(--space-4);
+    padding-right: var(--space-4);
+  }
+
+  .stage {
+    padding: var(--space-2) var(--space-2) 0;
+  }
+
+  /* On a phone the names would be cut short, so the Steps show their numbers only. */
+  .stepName {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+  }
+
+  .caption {
+    min-height: 4.5em;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .step[data-playing="true"]::after {
+    animation: none;
+  }
+}
