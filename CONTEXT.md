@@ -38,6 +38,30 @@ The NCERT class, unit and section number that a piece of site content correspond
 **Showcase Unit**:
 The first Unit built completely, to the full quality bar, to prove the concept. Currently Class 11, Unit 1 (Some Basic Concepts of Chemistry). Section 2.4 (Bohr's model) was built earlier as a pilot.
 
+### Access
+
+**Account**:
+The signed-in identity that Progress belongs to. A Learner can use every Free Section without one.
+_Avoid_: User, profile, login
+
+**Free Section**:
+A Section that anyone can open in full without signing in.
+_Avoid_: Sample, demo, preview
+
+**Paid Section**:
+A Section that opens in full only with paid access. Free and Paid are chosen by hand, Section by Section, with about 40% of Sections Free.
+_Avoid_: Premium, locked, pro
+
+### Progress
+
+**Progress**:
+A Learner's own record of the Checks they have answered correctly; wrong attempts and revealed answers are never recorded. It is private to the Learner: no Teacher and no other Learner can see it. A Learner has Progress whether or not they are signed in, and an Account makes it follow them from one device to another.
+_Avoid_: User progress, score, marks, grade, tracking
+
+**Complete Section**:
+A Section in which the Learner has correctly answered every Check it currently holds. Adding a Check to a Section makes it incomplete again until that Check is answered.
+_Avoid_: Finished, done, mastered
+
 ### Visual content
 
 **Animation**:
@@ -60,7 +84,7 @@ One discrete state of an Animation, tied to a single passage of Prose. Animation
 _Avoid_: Frame, slide, scene
 
 **Check**:
-A short question embedded in a Section that lets the Learner confirm understanding. It may be interactive (drag, select, build), but it is never graded or recorded beyond the Learner's own browser.
+A short question embedded in a Section that lets the Learner confirm understanding. It may be interactive (drag, select, build). It is never graded, and an answered Check is recorded only as part of the Learner's own Progress.
 _Avoid_: Quiz, test, exercise ("exercise" means NCERT's end-of-unit questions)
 
 **Visual Vocabulary**:
