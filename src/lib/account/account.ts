@@ -172,6 +172,37 @@ export async function signOut(): Promise<void> {
   setState(SIGNED_OUT)
 }
 
+/**
+ * Clears every answered Check and the last opened Section for the current Account,
+ * in this browser and in Supabase.
+ */
+export async function resetProgress(): Promise<{ ok: boolean }> {
+  const client = getSupabase()
+  if (!client || !userId) return { ok: false }
+  clearProgress()
+  const [answered, opened] = await Promise.all([
+    client.from('answered_checks').delete().neq('section_slug', ''),
+    client.from('last_opened').delete().neq('section_slug', ''),
+  ])
+  if (answered.error || opened.error) return { ok: false }
+  return { ok: true }
+}
+
+/**
+ * Deletes the calling Account and all its Progress immediately and permanently.
+ */
+export async function deleteAccount(): Promise<{ ok: boolean }> {
+  const client = getSupabase()
+  if (!client || !userId) return { ok: false }
+  const { error } = await client.rpc('delete_account')
+  if (error) return { ok: false }
+  clearProgress()
+  await client.auth.signOut({ scope: 'local' })
+  userId = null
+  setState(SIGNED_OUT)
+  return { ok: true }
+}
+
 // ── Reading the state in React ─────────────────────────────────────────────────────────────
 
 function subscribe(listener: () => void): () => void {
