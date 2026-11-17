@@ -1,0 +1,36 @@
+/* Progress on the Unit page: the status cell of each Section row, and the line under the Unit title.
+   Colours come only from tokens. */
+
+/* The status cell of a Section row. It always takes its place, even when empty, so nothing moves
+   when Progress arrives. Its height matches the first line of the Section title. */
+.rowStatus {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  min-height: 1.75rem;
+}
+
+.count {
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  font-variant-numeric: tabular-nums;
+  color: var(--fg-muted);
+  white-space: nowrap;
+}
+
+/* The line under the Unit title. Its height is fixed, so the list below never moves. */
+.line {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  height: 1.5rem;
+  line-height: 1.5rem;
+  margin-top: var(--space-3);
+  font-family: var(--font-sans);
+  font-size: 0.95rem;
+  color: var(--fg-muted);
+}
+
+.lineComplete {
+  color: var(--success);
+}
