@@ -63,7 +63,7 @@ const SECTION_PARTS: readonly { name: string; text: string }[] = [
   },
   {
     name: 'Check',
-    text: 'A short question inside the Section. You get two tries, then the explanation. Nothing is graded, and your answers stay in your browser.',
+    text: 'A short question inside the Section. You get two tries, then the explanation. Nothing is graded. Your answers are saved in your browser, or in your Account if you sign in.',
   },
   {
     name: 'Key Ideas',
@@ -145,7 +145,7 @@ export default function Home() {
                 </a>
               </div>
               <p className={`${styles.heroNote} ${styles.rise}`}>
-                Free to use. Nothing to install and nothing to sign up for.
+                Free to use. Nothing to install, and signing in is optional.
               </p>
             </div>
 
