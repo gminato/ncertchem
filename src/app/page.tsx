@@ -34,13 +34,6 @@ const SHOWCASE: readonly (Omit<ShowcaseItem, 'sectionLabel' | 'sectionHref'> & {
     slug: '4-4-vsepr-theory',
   },
   {
-    name: 'le-chatelier-lab',
-    tab: 'Le Chatelier Lab',
-    title: 'Le Chatelier Lab: one piston, three equilibria',
-    prompt: 'Add a gas, squeeze the piston or heat the mixture, then watch which way the equilibrium shifts.',
-    slug: '6-8-factors-affecting-equilibria',
-  },
-  {
     name: 'newman-rotor',
     tab: 'Newman rotor',
     title: 'Newman rotor: turn the back carbon of ethane',
