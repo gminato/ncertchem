@@ -106,6 +106,12 @@ export function Check({
     setDraft('')
   }
 
+  // After a reveal the Check starts over: no tries used, nothing chosen, the answer hidden.
+  const startOver = () => {
+    setTries(0)
+    tryAgain()
+  }
+
   const onButton = status === 'wrong' ? tryAgain : submit
 
   return (
@@ -211,6 +217,14 @@ export function Check({
       </div>
 
       {locked && <div className={styles.explanation}>{explanation}</div>}
+
+      {status === 'revealed' && (
+        <div className={styles.actions}>
+          <Button variant="secondary" onClick={startOver}>
+            Try again
+          </Button>
+        </div>
+      )}
     </section>
   )
 }

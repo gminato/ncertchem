@@ -8,6 +8,8 @@ import { SiteHeader } from '@/components/ui/SiteHeader'
 import { Hook, KeyIdeas, Scrolly, Step } from '@/components/section'
 import { Check } from '@/components/check'
 import { ConfigBuilder } from '@/components/check/ConfigBuilder'
+import { RecordOpened } from '@/components/progress/RecordOpened'
+import { SectionStatus } from '@/components/progress/SectionStatus'
 import { Simulation } from '@/components/simulation'
 import { findUnit } from '@/content/units'
 import { pageTitle } from '@/lib/brand'
@@ -94,6 +96,7 @@ export default async function SectionPage({
       <SiteHeader />
 
       <article className={styles.article}>
+        <RecordOpened slug={section.slug} />
         <header className={styles.head}>
           <nav aria-label="Breadcrumb" className={styles.eyebrow}>
             <Link href={unitHref} className={styles.crumb}>
@@ -119,6 +122,8 @@ export default async function SectionPage({
             ConfigBuilder,
           } as MdxComponents)}
         </div>
+
+        <SectionStatus slug={section.slug} checkNumbers={section.checkNumbers} />
 
         {(previous || next) && (
           <nav aria-label="Sections in this Unit" className={styles.pager}>
