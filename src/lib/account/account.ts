@@ -57,23 +57,32 @@ function stateFromSession(session: Session): AccountState {
 // ── Keeping Progress and the Account in step ────────────────────────────────────────────────
 
 let syncing: Promise<void> | null = null
+let activeSend: Promise<boolean> | null = null
 
 async function send(client: SupabaseClient, account: string, pending: PendingRows): Promise<boolean> {
-  let ok = true
-  for (let i = 0; i < pending.answered.length; i += 500) {
-    const batch = pending.answered.slice(i, i + 500).map((row) => ({ ...row, account_id: account }))
-    const { error } = await client
-      .from('answered_checks')
-      .upsert(batch, { onConflict: 'account_id,section_slug,check_number', ignoreDuplicates: true })
-    if (error) ok = false
+  const task = (async () => {
+    let ok = true
+    for (let i = 0; i < pending.answered.length; i += 500) {
+      const batch = pending.answered.slice(i, i + 500).map((row) => ({ ...row, account_id: account }))
+      const { error } = await client
+        .from('answered_checks')
+        .upsert(batch, { onConflict: 'account_id,section_slug,check_number', ignoreDuplicates: true })
+      if (error) ok = false
+    }
+    if (pending.lastOpened) {
+      const { error } = await client
+        .from('last_opened')
+        .upsert({ ...pending.lastOpened, account_id: account }, { onConflict: 'account_id' })
+      if (error) ok = false
+    }
+    return ok
+  })()
+  activeSend = task
+  try {
+    return await task
+  } finally {
+    if (activeSend === task) activeSend = null
   }
-  if (pending.lastOpened) {
-    const { error } = await client
-      .from('last_opened')
-      .upsert({ ...pending.lastOpened, account_id: account }, { onConflict: 'account_id' })
-    if (error) ok = false
-  }
-  return ok
 }
 
 /** Combines the browser's Progress with the Account's, keeps the result here, and sends the Account what it lacks. */
@@ -104,6 +113,8 @@ function syncNow(client: SupabaseClient, account: string): Promise<void> {
 // ── Starting up ────────────────────────────────────────────────────────────────────────────
 
 let started = false
+let authSubscription: { unsubscribe: () => void } | null = null
+let recordedUnsubscribe: (() => void) | null = null
 
 /** Starts following the Learner's sign-in state. Safe to call more than once. */
 export function startAccount(): void {
@@ -115,7 +126,7 @@ export function startAccount(): void {
     return
   }
 
-  client.auth.onAuthStateChange((event, session) => {
+  const { data } = client.auth.onAuthStateChange((event, session) => {
     // Supabase asks that no other Supabase call is awaited inside this callback, so the work
     // runs just after it.
     setTimeout(() => {
@@ -130,8 +141,9 @@ export function startAccount(): void {
       }
     }, 0)
   })
+  authSubscription = data.subscription
 
-  onRecorded((recorded) => {
+  recordedUnsubscribe = onRecorded((recorded) => {
     const account = userId
     if (!account) return
     if (recorded.kind === 'answered') {
@@ -220,4 +232,58 @@ const serverState = (): AccountState => (accountsConfigured() ? LOADING : UNAVAI
  */
 export function useAccount(): AccountState {
   return useSyncExternalStore(subscribe, () => state, serverState)
+}
+
+// ── Test helpers ───────────────────────────────────────────────────────────────────────────
+
+/**
+ * Test-only sign-in path using email and password against local Supabase.
+ * In production/cloud, email auth is disabled in Supabase.
+ */
+export async function signInWithEmailForTesting(
+  email: string,
+  password: string,
+  fullName?: string
+): Promise<{ ok: boolean; error?: string }> {
+  const client = getSupabase()
+  if (!client) return { ok: false, error: 'No client' }
+  let { error } = await client.auth.signInWithPassword({ email, password })
+  if (error && (error.message.includes('Invalid login credentials') || error.message.includes('User not found'))) {
+    const res = await client.auth.signUp({
+      email,
+      password,
+      options: { data: { full_name: fullName, name: fullName } },
+    })
+    error = res.error
+  }
+  if (error) return { ok: false, error: error.message }
+  await waitForSync()
+  return { ok: true }
+}
+
+/** Waits for any in-flight sync or background send to complete. */
+export async function waitForSync(): Promise<void> {
+  await new Promise((resolve) => setTimeout(resolve, 50))
+  while (syncing || activeSend) {
+    if (syncing) await syncing
+    if (activeSend) await activeSend
+  }
+}
+
+/** Resets all in-memory account tracking and listeners. Used between tests. */
+export function resetAccountForTesting(): void {
+  authSubscription?.unsubscribe()
+  authSubscription = null
+  recordedUnsubscribe?.()
+  recordedUnsubscribe = null
+  started = false
+  userId = null
+  state = LOADING
+  syncing = null
+  activeSend = null
+}
+
+/** Returns the current in-memory Account state synchronously, for testing. */
+export function getAccountStateForTesting(): AccountState {
+  return state
 }

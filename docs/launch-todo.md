@@ -20,15 +20,15 @@ Owner: **You** = a dashboard, a decision, or a legal step only you can do. **Ant
 
 ## 2. Antigravity: test signed-in behaviour locally
 
-- [ ] Start local Supabase (`npx supabase start`, uses the Docker containers that now work; do not touch `postgres-master` or `postgres-replica`).
-- [ ] Automated tests for the sync: combine on sign-in, second Account isolation, reset, delete. Use a test-only sign-in path (local email auth is on in `supabase/config.toml`); never put test credentials in the repo.
+- [x] Start local Supabase (`npx supabase start`, uses the Docker containers that now work; do not touch `postgres-master` or `postgres-replica`).
+- [x] Automated tests for the sync: combine on sign-in, second Account isolation, reset, delete. Use a test-only sign-in path (local email auth is on in `supabase/config.toml`); never put test credentials in the repo.
 
 ## 3. Antigravity: Privacy and Terms pages
 
-- [ ] `/privacy` and `/terms`, plain language, in the site's design. Draft only; mark them "Draft, pending legal review".
-- [ ] State exactly what is stored: email, name from Google, answered Checks, last Section opened. Say how to delete it (Account page → Delete Account).
-- [ ] Under-18 section: say that parental or guardian consent is being sought, and do not claim it is verified.
-- [ ] Link from the sign-in panel already exists; test it.
+- [x] `/privacy` and `/terms`, plain language, in the site's design. Draft only; mark them "Draft, pending legal review".
+- [x] State exactly what is stored: email, name from Google, answered Checks, last Section opened. Say how to delete it (Account page → Delete Account).
+- [x] Under-18 section: say that parental or guardian consent is being sought, and do not claim it is verified.
+- [x] Link from the sign-in panel already exists; test it.
 
 ## 4. Antigravity: slug and Check-number guard (decided before launch)
 

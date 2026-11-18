@@ -15,7 +15,7 @@ const KEY = process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY
 let client: SupabaseClient | null | undefined
 
 export function accountsConfigured(): boolean {
-  return Boolean(URL && KEY)
+  return Boolean(client || (URL && KEY))
 }
 
 export function getSupabase(): SupabaseClient | null {
@@ -31,4 +31,9 @@ export function getSupabase(): SupabaseClient | null {
     },
   })
   return client
+}
+
+/** Sets the Supabase client used by the account module, for testing. */
+export function setSupabaseClientForTesting(testClient: SupabaseClient | null | undefined): void {
+  client = testClient
 }
