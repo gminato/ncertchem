@@ -13,27 +13,32 @@ function watchErrors(page: Page): string[] {
 }
 
 test.describe('Privacy and Terms pages', () => {
-  test('the Privacy page loads and displays required draft notices', async ({ page }) => {
+  test('the Privacy page loads and displays published disclosures', async ({ page }) => {
     const errors = watchErrors(page)
     const response = await page.goto('/privacy')
     expect(response?.status()).toBe(200)
 
     await expect(page.getByRole('heading', { level: 1, name: 'Privacy Policy' })).toBeVisible()
-    await expect(page.getByText('Draft, pending legal review')).toBeVisible()
+    await expect(page.getByText('Draft, pending legal review')).toHaveCount(0)
+    await expect(page.getByText(/Last updated:/)).toBeVisible()
     await expect(page.getByRole('heading', { name: 'What is stored' })).toBeVisible()
+    await expect(page.getByRole('heading', { name: 'Payments and Razorpay' })).toBeVisible()
     await expect(page.getByRole('heading', { name: 'Learners under 18' })).toBeVisible()
 
     expect(errors).toEqual([])
   })
 
-  test('the Terms page loads and displays required draft notices', async ({ page }) => {
+  test('the Terms page loads and displays published commercial and grievance terms', async ({ page }) => {
     const errors = watchErrors(page)
     const response = await page.goto('/terms')
     expect(response?.status()).toBe(200)
 
     await expect(page.getByRole('heading', { level: 1, name: 'Terms of Use' })).toBeVisible()
-    await expect(page.getByText('Draft, pending legal review')).toBeVisible()
+    await expect(page.getByText('Draft, pending legal review')).toHaveCount(0)
+    await expect(page.getByText(/Last updated:/)).toBeVisible()
     await expect(page.getByRole('heading', { name: 'Access and Accounts' })).toBeVisible()
+    await expect(page.getByRole('heading', { name: 'Grievance Officer' })).toBeVisible()
+    await expect(page.getByText('grievance@ncertchem.com').first()).toBeVisible()
 
     expect(errors).toEqual([])
   })

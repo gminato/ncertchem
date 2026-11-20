@@ -122,3 +122,12 @@ export function checkProblems(mdx: string): string[] {
   })
   return problems
 }
+
+/**
+ * Extracts the `<Hook>...</Hook>` block (including its opening and closing tags) from a
+ * Section's raw MDX source. Returns `''` when the Section has no `<Hook>` block.
+ */
+export function extractHookSource(mdx: string): string {
+  const match = /<Hook(?:\s+[^>]*?(?<!\/))?>[\s\S]*?<\/Hook>/.exec(mdx)
+  return match ? match[0] : ''
+}

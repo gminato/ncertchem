@@ -47,19 +47,22 @@ A Section that anyone can open in full without signing in.
 _Avoid_: Sample, demo, preview
 
 **Paid Section**:
-A Section that opens in full only with an active Subscription. Free and Paid are chosen by hand, Section by Section, with about 40% of Sections Free.
+A Section that opens in full only with an active Subscription. Free and Paid are chosen by hand, Section by Section, with about 30–40% of Sections Free.
 _Avoid_: Premium, locked, pro
 
 **Subscription**:
-An annual entitlement tied to an Account that unlocks all Paid Sections across the site.
-_Avoid_: Plan, tier, membership
+A 365-day fixed-term entitlement tied to an Account that unlocks every Paid Section across all Units in Class 11 and Class 12.
+_Avoid_: Plan, tier, membership, recurring subscription
 
 **Paywall**:
-The barrier rendered on a Paid Section below the Hook when visited by an Account without an active Subscription, prompting the Learner to subscribe.
+The barrier rendered on a Paid Section directly below the Hook when visited by an Account without an active Subscription, prompting the Learner to subscribe.
 _Avoid_: Gate, lock screen, blocker
 
+**Lock**:
+The visual indicator shown beside a Paid Section on the Syllabus Map and Unit navigation to signal that paid access is required.
+
 **Entitlement**:
-The server-verified record confirming an Account has valid paid access to Paid Sections.
+The server-verified database record confirming an Account holds an active Subscription with an unexpired validity date.
 
 ## Progress
 

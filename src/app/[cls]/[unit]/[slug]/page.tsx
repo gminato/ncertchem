@@ -9,10 +9,12 @@ import { Hook, KeyIdeas, Scrolly, Step } from '@/components/section'
 import { Check } from '@/components/check'
 import { ConfigBuilder } from '@/components/check/ConfigBuilder'
 import { SignInNudge } from '@/components/account/SignInNudge'
+import { Paywall } from '@/components/paywall/Paywall'
 import { RecordOpened } from '@/components/progress/RecordOpened'
 import { SectionStatus } from '@/components/progress/SectionStatus'
 import { Simulation } from '@/components/simulation'
 import { findUnit } from '@/content/units'
+import { getServerEntitlement } from '@/lib/account/server'
 import { pageTitle } from '@/lib/brand'
 import { parseSegment, prevNext, sectionsForUnit } from '@/lib/unit-nav'
 import styles from './section.module.css'
@@ -50,12 +52,41 @@ function findSection(params: SectionParams): SectionEntry | undefined {
   )
 }
 
-export function generateStaticParams(): SectionParams[] {
-  return sections.map((entry) => ({
-    cls: `class-${entry.class}`,
-    unit: `unit-${entry.unit}`,
-    slug: entry.slug,
-  }))
+/**
+ * Paid Sections verify Account cookies on every request, so this route must render
+ * dynamically rather than using static/ISR fallback generation (which throws
+ * DYNAMIC_SERVER_USAGE when `cookies()` is called on non-prerendered slugs).
+ */
+export const dynamic = 'force-dynamic'
+
+function PagerAccessBadge({ access }: { access: SectionEntry['access'] }) {
+  if (access === 'paid') {
+    return (
+      <svg
+        className={styles.pagerLock}
+        width="14"
+        height="14"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        role="img"
+        aria-label="Paid Section"
+        data-access="paid"
+      >
+        <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
+        <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+      </svg>
+    )
+  }
+
+  return (
+    <span className={styles.pagerFree} data-access="free">
+      Free
+    </span>
+  )
 }
 
 export async function generateMetadata({
@@ -79,6 +110,10 @@ export default async function SectionPage({
   const section = findSection(await params)
   if (!section) notFound()
 
+  const isPaid = section.access === 'paid'
+  const entitlement = isPaid ? await getServerEntitlement() : null
+  const showPaywall = isPaid && !entitlement?.entitled
+
   const ncertReference =
     section.ncert ??
     `Class ${section.class}, Unit ${section.unit}, Section ${section.section}`
@@ -97,7 +132,7 @@ export default async function SectionPage({
       <SiteHeader />
 
       <article className={styles.article}>
-        <RecordOpened slug={section.slug} />
+        {!showPaywall && <RecordOpened slug={section.slug} />}
         <header className={styles.head}>
           <nav aria-label="Breadcrumb" className={styles.eyebrow}>
             <Link href={unitHref} className={styles.crumb}>
@@ -112,26 +147,42 @@ export default async function SectionPage({
           <h1 className={styles.title}>{section.title}</h1>
         </header>
 
-        <div className={styles.body}>
-          {renderMdx(section.body, {
-            Hook,
-            Scrolly,
-            Step,
-            KeyIdeas,
-            Check,
-            Simulation,
-            ConfigBuilder,
-          } as MdxComponents)}
-        </div>
+        {showPaywall ? (
+          <>
+            {section.hookBody && (
+              <div className={styles.body}>
+                {renderMdx(section.hookBody, { Hook } as MdxComponents)}
+              </div>
+            )}
+            <Paywall sectionTitle={section.title} />
+          </>
+        ) : (
+          <>
+            <div className={styles.body}>
+              {renderMdx(section.body, {
+                Hook,
+                Scrolly,
+                Step,
+                KeyIdeas,
+                Check,
+                Simulation,
+                ConfigBuilder,
+              } as MdxComponents)}
+            </div>
 
-        <SectionStatus slug={section.slug} checkNumbers={section.checkNumbers} />
-        <SignInNudge slug={section.slug} checkNumbers={section.checkNumbers} />
+            <SectionStatus slug={section.slug} checkNumbers={section.checkNumbers} />
+            <SignInNudge slug={section.slug} checkNumbers={section.checkNumbers} />
+          </>
+        )}
 
         {(previous || next) && (
           <nav aria-label="Sections in this Unit" className={styles.pager}>
             {previous ? (
               <Link href={hrefFor(previous)} className={styles.pagerLink}>
-                <span className={styles.pagerKicker}>← Previous</span>
+                <span className={styles.pagerMeta}>
+                  <span className={styles.pagerKicker}>← Previous</span>
+                  <PagerAccessBadge access={previous.access} />
+                </span>
                 <span className={styles.pagerTitle}>
                   {previous.section} {previous.title}
                 </span>
@@ -141,7 +192,10 @@ export default async function SectionPage({
             )}
             {next ? (
               <Link href={hrefFor(next)} className={`${styles.pagerLink} ${styles.pagerNext}`}>
-                <span className={styles.pagerKicker}>Next →</span>
+                <span className={`${styles.pagerMeta} ${styles.pagerMetaNext}`}>
+                  <PagerAccessBadge access={next.access} />
+                  <span className={styles.pagerKicker}>Next →</span>
+                </span>
                 <span className={styles.pagerTitle}>
                   {next.section} {next.title}
                 </span>

@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { sections } from '#site/content'
+import { AccessBadge } from '@/components/ui/AccessBadge'
 import { SiteHeader } from '@/components/ui/SiteHeader'
 import { SectionRowStatus } from '@/components/progress/SectionRowStatus'
 import { UnitProgressLine } from '@/components/progress/UnitProgressLine'
@@ -83,7 +84,12 @@ export default async function UnitPage({ params }: { params: Promise<UnitParams>
                     <span className={styles.rowTitle}>{section.title}</span>
                     {section.summary && <span className={styles.rowSummary}>{section.summary}</span>}
                   </span>
-                  <SectionRowStatus slug={section.slug} checkNumbers={section.checkNumbers} />
+                  <span className={styles.access}>
+                    <AccessBadge access={section.access} />
+                  </span>
+                  <span className={styles.status}>
+                    <SectionRowStatus slug={section.slug} checkNumbers={section.checkNumbers} />
+                  </span>
                   <span className={styles.arrow} aria-hidden="true">
                     →
                   </span>

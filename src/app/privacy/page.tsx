@@ -18,8 +18,8 @@ export default function PrivacyPage() {
             <p className={styles.eyebrow}>Privacy</p>
             <div className={styles.titleRow}>
               <h1 className={styles.title}>Privacy Policy</h1>
-              <span className={styles.draftBadge}>Draft, pending legal review</span>
             </div>
+            <p className={styles.updatedDate}>Last updated: November 20, 2026</p>
             <p className={styles.lede}>
               {BRAND} is an interactive learning site for Class 11 and 12 chemistry. We keep your learning private,
               collect only what is needed to sync your Progress across devices, and never track you across the web.
@@ -43,12 +43,13 @@ export default function PrivacyPage() {
                 What is stored
               </h2>
               <p className={styles.bodyText}>
-                When you use an Account with {BRAND}, we store exactly four pieces of information:
+                When you use an Account with {BRAND}, we store only the information needed to sync your Progress and
+                verify any active Subscription:
               </p>
               <ul className={styles.list}>
                 <li>
                   <strong>Your email address:</strong> Received from Google when you sign in, used solely to identify
-                  your Account.
+                  your Account and respond to support requests.
                 </li>
                 <li>
                   <strong>Your name:</strong> Your full name and first name received from Google, used to welcome you
@@ -62,7 +63,23 @@ export default function PrivacyPage() {
                   <strong>Last Section opened:</strong> The Section you opened most recently, along with the timestamp,
                   so that the &ldquo;Continue&rdquo; button can take you right back to where you left off.
                 </li>
+                <li>
+                  <strong>Subscription records (if you subscribe):</strong> Your Subscription start and expiry dates,
+                  status, and Razorpay order and payment reference IDs, used solely to verify access to Paid Sections
+                  and resolve billing or technical-failure requests.
+                </li>
               </ul>
+            </section>
+
+            <section className={styles.section} aria-labelledby="payments-heading">
+              <h2 id="payments-heading" className={styles.sectionTitle}>
+                Payments and Razorpay
+              </h2>
+              <p className={styles.bodyText}>
+                Subscription payments are processed securely by <strong>Razorpay</strong>. {BRAND} never sees,
+                receives, or stores your card number, CVV, UPI PIN, or bank account credentials. Razorpay processes
+                payment details under its own privacy policy and applicable Indian banking and payment regulations.
+              </p>
             </section>
 
             <section className={styles.section} aria-labelledby="not-stored-heading">
@@ -100,10 +117,11 @@ export default function PrivacyPage() {
                 to our servers or shared anywhere else.
               </p>
               <p className={styles.bodyText}>
-                When you sign in with Google, your Progress is saved to a secure cloud database so it stays in sync
-                across your devices. Strict account isolation and access controls ensure that your Account can only ever
-                access its own records. A copy is also kept in your browser so you can continue learning seamlessly
-                even if your internet connection drops.
+                When you sign in with Google, your Progress and any Subscription record are saved to a secure cloud
+                database so they stay in sync across your devices. Strict account isolation and access controls ensure
+                that your Account can only ever access its own records. We use essential authentication cookies to keep
+                your sign-in session active, and browser local storage to hold your offline Progress copy and theme
+                preference. We do not use advertising or cross-site tracking cookies.
               </p>
             </section>
 
@@ -121,8 +139,10 @@ export default function PrivacyPage() {
                     Account page
                   </Link>
                   , scroll to <em>Delete Account</em>, and type DELETE to confirm. Your Account, along with all its
-                  stored Progress (answered Checks and last-opened Section), is deleted immediately and permanently
-                  from the database and cleared from your browser.
+                  stored Progress (answered Checks and last-opened Section) and Subscription record, is deleted
+                  immediately and permanently from our database and cleared from your browser (which also ends any
+                  active Entitlement). Payment transaction records held by Razorpay remain subject to statutory
+                  financial and tax retention requirements.
                 </li>
                 <li>
                   <strong>Reset Progress:</strong> If you wish to clear your answered Checks and start fresh without
@@ -153,7 +173,16 @@ export default function PrivacyPage() {
                 <p className={styles.bodyText}>
                   Parental or guardian consent is being sought for underage Learners. We do not claim that parental
                   consent has been verified. We adhere to the principle of data minimization and do not engage in
-                  behavioral monitoring, targeted advertising, or profiling of children.
+                  behavioral monitoring, targeted advertising, or profiling of children. A parent or legal guardian may
+                  contact us at{' '}
+                  <a href="mailto:support@ncertchem.com" className={styles.link}>
+                    support@ncertchem.com
+                  </a>{' '}
+                  or{' '}
+                  <a href="mailto:grievance@ncertchem.com" className={styles.link}>
+                    grievance@ncertchem.com
+                  </a>{' '}
+                  at any time to inquire about or request deletion of a minor&rsquo;s Account.
                 </p>
               </div>
             </section>
@@ -172,16 +201,31 @@ export default function PrivacyPage() {
 
             <section className={styles.section} aria-labelledby="contact-heading">
               <h2 id="contact-heading" className={styles.sectionTitle}>
-                Questions and legal review
+                Contact and grievances
               </h2>
               <p className={styles.bodyText}>
-                This Privacy Policy is a draft pending final legal review prior to commercial launch. If you have any
-                questions about this policy or your personal data, you may reach out to the project maintainers.
+                For questions about this Privacy Policy, your Account data, or deletion requests, email{' '}
+                <a href="mailto:support@ncertchem.com" className={styles.link}>
+                  support@ncertchem.com
+                </a>
+                . For privacy grievances, contact our Grievance Officer, Harshit Gupta (Bengaluru, Karnataka, India), at{' '}
+                <a href="mailto:grievance@ncertchem.com" className={styles.link}>
+                  grievance@ncertchem.com
+                </a>
+                . Full Grievance Officer timelines are also listed in our{' '}
+                <Link href="/terms" className={styles.link}>
+                  Terms of Use
+                </Link>
+                .
               </p>
             </section>
 
             <nav className={styles.footerNav} aria-label="Legal navigation">
               <Link href="/terms">Terms of Use</Link>
+              <span className={styles.sep} aria-hidden="true">
+                ·
+              </span>
+              <Link href="/pricing">Pricing</Link>
               <span className={styles.sep} aria-hidden="true">
                 ·
               </span>

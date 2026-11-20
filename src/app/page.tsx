@@ -8,6 +8,7 @@ import { HeroAnimation } from '@/components/landing/HeroAnimation'
 import { SimulationShowcase, type ShowcaseItem } from '@/components/landing/SimulationShowcase'
 import { UnitGlyph } from '@/components/landing/UnitGlyph'
 import { Hook } from '@/components/section/Hook'
+import { LockIcon } from '@/components/ui/AccessBadge'
 import { SiteHeader, Wordmark } from '@/components/ui/SiteHeader'
 import { unitsForClass } from '@/content/units'
 import { BRAND } from '@/lib/brand'
@@ -145,7 +146,7 @@ export default function Home() {
                 </a>
               </div>
               <p className={`${styles.heroNote} ${styles.rise}`}>
-                Free to use. Nothing to install, and signing in is optional.
+                {plural(totals.freeSections, 'Free Section')} to explore without signing in. Nothing to install.
               </p>
             </div>
 
@@ -276,6 +277,21 @@ export default function Home() {
                           <span className={styles.unitText}>
                             <span className={styles.unitNumber}>Unit {info.unit}</span>
                             <span className={styles.unitTitle}>{info.title}</span>
+                            {(unit.freeSections > 0 || unit.paidSections > 0) && (
+                              <span className={styles.unitAccess}>
+                                {unit.freeSections > 0 && (
+                                  <span className={styles.unitFree} data-access="free">
+                                    {unit.freeSections} Free
+                                  </span>
+                                )}
+                                {unit.paidSections > 0 && (
+                                  <span className={styles.unitPaid} data-access="paid">
+                                    <LockIcon size={12} className={styles.unitLock} />
+                                    {unit.paidSections} Paid
+                                  </span>
+                                )}
+                              </span>
+                            )}
                             <UnitCardProgress
                               className={styles.unitMeta}
                               sections={sections
@@ -334,9 +350,14 @@ export default function Home() {
       </main>
 
       <footer className={styles.footer}>
-        <p>
-          <Wordmark className={styles.footerBrand} />
-        </p>
+        <div className={styles.footerTop}>
+          <p>
+            <Wordmark className={styles.footerBrand} />
+          </p>
+          <nav aria-label="Footer links" className={styles.footerNav}>
+            <Link href="/pricing">Pricing</Link>
+          </nav>
+        </div>
         <p>Follows the NCERT Chemistry syllabus for Classes 11 and 12.</p>
         <p>
           {BRAND} is an independent project. It is not affiliated with or endorsed by NCERT, the National

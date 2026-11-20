@@ -18,8 +18,8 @@ export default function TermsPage() {
             <p className={styles.eyebrow}>Terms</p>
             <div className={styles.titleRow}>
               <h1 className={styles.title}>Terms of Use</h1>
-              <span className={styles.draftBadge}>Draft, pending legal review</span>
             </div>
+            <p className={styles.updatedDate}>Last updated: November 20, 2026</p>
             <p className={styles.lede}>
               Welcome to {BRAND}. These terms describe how you may use our site, our visual learning materials, and
               optional Accounts.
@@ -48,9 +48,9 @@ export default function TermsPage() {
                   Account or payment.
                 </li>
                 <li>
-                  <strong>Accounts:</strong> An Account is optional and used solely to keep your Progress in sync
-                  across multiple devices. You sign in with Google. You are responsible for keeping your Google
-                  credentials secure.
+                  <strong>Accounts:</strong> An Account is optional for Free Sections and used to keep your Progress in
+                  sync across multiple devices and to hold a Subscription. You sign in with Google. You are responsible
+                  for keeping your Google credentials secure.
                 </li>
                 <li>
                   <strong>Account Deletion:</strong> You can permanently delete your Account and all saved Progress at
@@ -58,9 +58,80 @@ export default function TermsPage() {
                   <Link href="/account" className={styles.link}>
                     Account page
                   </Link>
-                  .
+                  . Deleting your Account also ends any active Subscription Entitlement tied to it.
                 </li>
               </ul>
+            </section>
+
+            <section className={styles.section} aria-labelledby="subscription-terms-heading">
+              <h2 id="subscription-terms-heading" className={styles.sectionTitle}>
+                Paid Sections and 365-Day Subscription
+              </h2>
+              <p className={styles.bodyText}>
+                Approximately 30–40% of Sections across {BRAND} are Free Sections and remain open without payment. The
+                remaining Paid Sections require an active Subscription linked to your Account. See our{' '}
+                <Link href="/pricing" className={styles.link}>
+                  Pricing page
+                </Link>{' '}
+                for full details.
+              </p>
+              <ul className={styles.list}>
+                <li>
+                  <strong>Price and validity:</strong> A Subscription costs ₹999 for a fixed 365-day Entitlement that
+                  unlocks all published Paid Sections across Class 11, as well as Class 12 Units as they are published
+                  during your 365-day Entitlement.
+                </li>
+                <li>
+                  <strong>Non-recurring payment:</strong> Each Subscription is a single one-time payment processed
+                  through Razorpay. It is non-recurring, with no automatic renewal and no auto-debit.
+                </li>
+                <li>
+                  <strong>Expiry and Progress:</strong> When your 365-day Entitlement expires, Paid Sections return to
+                  showing the Paywall, while all Free Sections remain open and your saved Progress stays intact on your
+                  Account.
+                </li>
+              </ul>
+            </section>
+
+            <section className={styles.section} aria-labelledby="parental-payment-heading">
+              <h2 id="parental-payment-heading" className={styles.sectionTitle}>
+                Parental or Guardian Consent for Payments
+              </h2>
+              <div className={styles.callout}>
+                <p className={styles.bodyText}>
+                  {BRAND} operates on a single Account model — we do not create separate parent Accounts. If you are a
+                  Learner under 18 years of age, a parent or legal guardian must review these Terms of Use and our{' '}
+                  <Link href="/privacy" className={styles.link}>
+                    Privacy Policy
+                  </Link>{' '}
+                  and authorize or complete the Subscription payment on your behalf (for example, by scanning the UPI QR
+                  code shown on the Learner&rsquo;s screen or completing card checkout).
+                </p>
+              </div>
+            </section>
+
+            <section className={styles.section} aria-labelledby="refund-policy-heading">
+              <h2 id="refund-policy-heading" className={styles.sectionTitle}>
+                Refund Policy and Technical Failures
+              </h2>
+              <p className={styles.bodyText}>
+                Because approximately 30–40% of Sections are Free Sections available for thorough evaluation beforehand,
+                Subscriptions are <strong>non-refundable once activated</strong>.
+              </p>
+              <p className={styles.bodyText}>
+                <strong>Statutory exception for technical failures:</strong> Nothing in this policy limits your right to
+                a remedy for technical or billing failures. If you experience a duplicate charge, or if your payment is
+                deducted without activating your Entitlement, email{' '}
+                <a href="mailto:support@ncertchem.com" className={styles.link}>
+                  support@ncertchem.com
+                </a>{' '}
+                or our Grievance Officer at{' '}
+                <a href="mailto:grievance@ncertchem.com" className={styles.link}>
+                  grievance@ncertchem.com
+                </a>{' '}
+                with your payment reference (such as your Razorpay payment ID or UPI transaction reference). Confirmed
+                duplicate charges or undelivered Entitlements will be resolved or refunded within 7 business days.
+              </p>
             </section>
 
             <section className={styles.section} aria-labelledby="content-heading">
@@ -117,17 +188,75 @@ export default function TermsPage() {
               </div>
             </section>
 
-            <section className={styles.section} aria-labelledby="changes-heading">
-              <h2 id="changes-heading" className={styles.sectionTitle}>
-                Changes and legal status
+            <section className={styles.section} aria-labelledby="grievance-officer-heading">
+              <h2 id="grievance-officer-heading" className={styles.sectionTitle}>
+                Grievance Officer
+              </h2>
+              <div className={styles.callout}>
+                <p className={styles.bodyText}>
+                  In accordance with the Information Technology (Intermediary Guidelines and Digital Media Ethics Code)
+                  Rules and the Consumer Protection (E-Commerce) Rules, the designated Grievance Officer for {BRAND} is:
+                </p>
+                <ul className={styles.list}>
+                  <li>
+                    <strong>Name:</strong> Harshit Gupta
+                  </li>
+                  <li>
+                    <strong>Designation:</strong> Grievance Officer, {BRAND}
+                  </li>
+                  <li>
+                    <strong>Grievance email:</strong>{' '}
+                    <a href="mailto:grievance@ncertchem.com" className={styles.link}>
+                      grievance@ncertchem.com
+                    </a>
+                  </li>
+                  <li>
+                    <strong>General and billing support:</strong>{' '}
+                    <a href="mailto:support@ncertchem.com" className={styles.link}>
+                      support@ncertchem.com
+                    </a>
+                  </li>
+                  <li>
+                    <strong>Location:</strong> Bengaluru, Karnataka, India
+                  </li>
+                  <li>
+                    <strong>Response and resolution timeline:</strong> All grievances and payment complaints will be
+                    acknowledged within 48 hours and resolved within 30 days of receipt.
+                  </li>
+                </ul>
+              </div>
+            </section>
+
+            <section className={styles.section} aria-labelledby="governing-law-heading">
+              <h2 id="governing-law-heading" className={styles.sectionTitle}>
+                Governing law
               </h2>
               <p className={styles.bodyText}>
-                These Terms of Use are a draft pending legal review. We may revise these terms as {BRAND} grows and
-                introduces new features. Any updates will be published on this page.
+                These Terms of Use are governed by the laws of India. Any disputes arising out of or relating to {BRAND}{' '}
+                or these Terms shall be subject to the exclusive jurisdiction of the courts in Bengaluru, Karnataka,
+                India.
+              </p>
+            </section>
+
+            <section className={styles.section} aria-labelledby="changes-heading">
+              <h2 id="changes-heading" className={styles.sectionTitle}>
+                Changes to these terms
+              </h2>
+              <p className={styles.bodyText}>
+                We may revise these Terms of Use as {BRAND} grows and introduces new features. Any updates will be
+                published on this page with an updated date. For questions about these terms, email{' '}
+                <a href="mailto:support@ncertchem.com" className={styles.link}>
+                  support@ncertchem.com
+                </a>
+                .
               </p>
             </section>
 
             <nav className={styles.footerNav} aria-label="Legal navigation">
+              <Link href="/pricing">Pricing</Link>
+              <span className={styles.sep} aria-hidden="true">
+                ·
+              </span>
               <Link href="/privacy">Privacy Policy</Link>
               <span className={styles.sep} aria-hidden="true">
                 ·

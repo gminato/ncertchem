@@ -324,42 +324,49 @@ export interface ProbabilityCloud {
 }
 
 /**
- * Samples the probability cloud by rejection: a seeded random point in the box is kept
- * with probability |ψ|² / max|ψ|² (both read from the grid). Points therefore follow the
- * probability density, and nodes stay empty.
+ * Samples the probability cloud by inverse-transform (CDF) sampling on the grid: each cell
+ * is chosen with probability |ψ|² / Σ|ψ|² and a seeded random point is placed uniformly
+ * inside that cell. Points therefore follow the probability density in O(cells + count log cells)
+ * time, and nodes stay empty.
  *
  * @throws {RangeError} If `count` is not a positive integer
  */
 export function sampleProbabilityCloud(grid: OrbitalGrid, count: number, seed = 1): ProbabilityCloud {
   if (!Number.isInteger(count) || count < 1) throw new RangeError(`count must be a positive integer (received ${count})`)
-  let maxDensity = 0
-  for (const v of grid.psi) if (v * v > maxDensity) maxDensity = v * v
+  const cellCount = grid.psi.length
+  const cdf = new Float64Array(cellCount)
+  let total = 0
+  for (let idx = 0; idx < cellCount; idx++) {
+    const v = grid.psi[idx]
+    total += v * v
+    cdf[idx] = total
+  }
+  if (!(total > 0)) {
+    throw new Error('Cannot sample a probability cloud from an all-zero grid')
+  }
   const random = mulberry32(seed)
   const positions = new Float32Array(count * 3)
   const signs = new Int8Array(count)
   const { size, half, step } = grid
-  let accepted = 0
-  let attempts = 0
-  const maxAttempts = count * 2000
-  while (accepted < count && attempts < maxAttempts) {
-    attempts++
-    const x = (random() * 2 - 1) * half
-    const y = (random() * 2 - 1) * half
-    const z = (random() * 2 - 1) * half
-    const i = Math.min(size - 1, Math.floor((x + half) / step))
-    const j = Math.min(size - 1, Math.floor((y + half) / step))
-    const k = Math.min(size - 1, Math.floor((z + half) / step))
-    const v = grid.psi[(i * size + j) * size + k]
-    if (random() * maxDensity < v * v) {
-      positions[accepted * 3] = x
-      positions[accepted * 3 + 1] = y
-      positions[accepted * 3 + 2] = z
-      signs[accepted] = v >= 0 ? 1 : -1
-      accepted++
+  const sizeSq = size * size
+  for (let p = 0; p < count; p++) {
+    const target = random() * total
+    let lo = 0
+    let hi = cellCount - 1
+    while (lo < hi) {
+      const mid = (lo + hi) >>> 1
+      if (cdf[mid] <= target) lo = mid + 1
+      else hi = mid
     }
-  }
-  if (accepted < count) {
-    throw new Error(`Sampling accepted only ${accepted} of ${count} points`)
+    const idx = lo
+    const i = Math.floor(idx / sizeSq)
+    const rem = idx - i * sizeSq
+    const j = Math.floor(rem / size)
+    const k = rem - j * size
+    positions[p * 3] = -half + (i + random()) * step
+    positions[p * 3 + 1] = -half + (j + random()) * step
+    positions[p * 3 + 2] = -half + (k + random()) * step
+    signs[p] = grid.psi[idx] >= 0 ? 1 : -1
   }
   return { positions, signs }
 }

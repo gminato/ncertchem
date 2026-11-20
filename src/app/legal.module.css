@@ -44,19 +44,11 @@
   margin: 0;
 }
 
-.draftBadge {
-  display: inline-flex;
-  align-items: center;
-  padding: 3px 10px;
+.updatedDate {
+  margin: 0;
   font-family: var(--font-sans);
-  font-size: 0.78rem;
-  font-weight: 600;
-  letter-spacing: 0.02em;
-  color: var(--caution);
-  background: var(--caution-soft);
-  border: 1px solid var(--caution);
-  border-radius: var(--radius-sm);
-  white-space: nowrap;
+  font-size: 0.85rem;
+  color: var(--fg-subtle);
 }
 
 .lede {

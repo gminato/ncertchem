@@ -245,6 +245,93 @@
   border-color: var(--fg-subtle);
 }
 
+.subscriptionHeader {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 10px;
+  font-family: var(--font-sans);
+  font-size: 0.78rem;
+  font-weight: 600;
+  line-height: 1.2;
+  border-radius: var(--radius-sm);
+  border: 1px solid transparent;
+}
+
+.badgeActive {
+  color: var(--success);
+  background: var(--success-soft);
+  border-color: var(--success);
+}
+
+.badgeExpired {
+  color: var(--caution);
+  background: var(--caution-soft);
+  border-color: var(--caution);
+}
+
+.badgeFree {
+  color: var(--fg-muted);
+  background: var(--surface-raised);
+  border-color: var(--border);
+}
+
+.subscriptionStatus {
+  margin: 0;
+  font-family: var(--font-sans);
+  font-size: 0.98rem;
+  font-weight: 600;
+  color: var(--fg);
+}
+
+.cardCta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 16px;
+  font-family: var(--font-sans);
+  font-size: 0.9rem;
+  font-weight: 600;
+  line-height: 1.2;
+  text-decoration: none;
+  border: 1px solid transparent;
+  border-radius: var(--radius-md);
+  transition: background-color 0.2s var(--ease-out), border-color 0.2s var(--ease-out),
+    filter 0.2s var(--ease-out);
+}
+
+.cardCta:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.cardCtaPrimary {
+  background: var(--accent);
+  color: var(--accent-fg);
+}
+
+.cardCtaPrimary:hover {
+  filter: brightness(1.07);
+}
+
+.cardCtaSecondary {
+  background: var(--surface);
+  color: var(--fg);
+  border-color: var(--border);
+}
+
+.cardCtaSecondary:hover {
+  background: var(--surface-raised);
+  border-color: var(--fg-subtle);
+}
+
 @media (max-width: 640px) {
   .page {
     padding: 0 var(--space-3) var(--space-8);
