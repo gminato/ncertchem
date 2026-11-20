@@ -80,6 +80,12 @@
   align-items: flex-end;
 }
 
+.pagerMeta {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
 .pagerKicker {
   font-family: var(--font-sans);
   font-size: 0.72rem;
@@ -87,6 +93,27 @@
   letter-spacing: 0.08em;
   text-transform: uppercase;
   color: var(--accent);
+}
+
+.pagerFree {
+  display: inline-flex;
+  align-items: center;
+  padding: 1px var(--space-2);
+  border-radius: 999px;
+  background: var(--success-soft);
+  color: var(--success);
+  font-family: var(--font-sans);
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  line-height: 1.4;
+}
+
+.pagerLock {
+  display: inline-block;
+  flex-shrink: 0;
+  color: var(--fg-subtle);
 }
 
 .pagerTitle {
@@ -104,6 +131,11 @@
   .pagerNext {
     text-align: left;
     align-items: flex-start;
+  }
+
+  .pagerMetaNext {
+    flex-direction: row-reverse;
+    justify-content: flex-end;
   }
 }
 

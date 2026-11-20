@@ -1,13 +1,33 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { Button } from '@/components/controls/Button'
 import { deleteAccount, resetProgress, signOut, useAccount } from '@/lib/account/account'
+import { getSupabase } from '@/lib/account/client'
 import { isDeleteConfirmed } from '@/lib/account/confirm'
+import {
+  fetchLatestSubscription,
+  isSubscriptionActive,
+  type SubscriptionRow,
+} from '@/lib/account/subscriptions'
 import styles from '@/app/account/account.module.css'
 
 const ERROR_MESSAGE = 'That did not work. Your Progress is unchanged. Try again.'
+
+function formatSubscriptionDate(iso: string): string {
+  const date = new Date(iso)
+  if (Number.isNaN(date.getTime())) return iso
+  return new Intl.DateTimeFormat('en-GB', {
+    day: 'numeric',
+    month: 'short',
+    year: 'numeric',
+  }).format(date)
+}
+
+type SubscriptionView =
+  | { status: 'loading' }
+  | { status: 'ready'; subscription: SubscriptionRow | null }
 
 /**
  * The Account page client content: displays the Learner's Account details,
@@ -15,12 +35,44 @@ const ERROR_MESSAGE = 'That did not work. Your Progress is unchanged. Try again.
  */
 export function AccountPage() {
   const account = useAccount()
+  const accountKey = account.status === 'signed-in' ? (account.email ?? 'signed-in') : null
   const [signingOut, setSigningOut] = useState(false)
   const [resetting, setResetting] = useState(false)
   const [deleting, setDeleting] = useState(false)
   const [showResetConfirm, setShowResetConfirm] = useState(false)
   const [deleteInput, setDeleteInput] = useState('')
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
+  const [loadedSubscription, setLoadedSubscription] = useState<{
+    key: string | null
+    subscription: SubscriptionRow | null
+  }>({ key: null, subscription: null })
+
+  useEffect(() => {
+    if (!accountKey) return
+
+    let cancelled = false
+    const client = getSupabase()
+    const task = client ? fetchLatestSubscription(client) : Promise.resolve(null)
+
+    task
+      .then((subscription) => {
+        if (cancelled) return
+        setLoadedSubscription({ key: accountKey, subscription })
+      })
+      .catch(() => {
+        if (cancelled) return
+        setLoadedSubscription({ key: accountKey, subscription: null })
+      })
+
+    return () => {
+      cancelled = true
+    }
+  }, [accountKey])
+
+  const subscriptionView: SubscriptionView =
+    accountKey !== null && loadedSubscription.key === accountKey
+      ? { status: 'ready', subscription: loadedSubscription.subscription }
+      : { status: 'loading' }
 
   const isBusy = signingOut || resetting || deleting
 
@@ -148,6 +200,78 @@ export function AccountPage() {
             {signingOut ? 'Signing out…' : 'Sign out'}
           </Button>
         </div>
+      </section>
+
+      <section
+        className={styles.card}
+        aria-labelledby="subscription-heading"
+        data-testid="subscription-card"
+      >
+        {subscriptionView.status === 'loading' ? (
+          <>
+            <h2 id="subscription-heading" className={styles.sectionHeading}>
+              Subscription
+            </h2>
+            <p className={styles.bodyText}>Checking your Subscription status…</p>
+          </>
+        ) : subscriptionView.subscription && isSubscriptionActive(subscriptionView.subscription) ? (
+          <>
+            <div className={styles.subscriptionHeader}>
+              <h2 id="subscription-heading" className={styles.sectionHeading}>
+                Subscription
+              </h2>
+              <span className={`${styles.badge} ${styles.badgeActive}`}>Active Subscription</span>
+            </div>
+            <p className={styles.subscriptionStatus}>
+              Valid until {formatSubscriptionDate(subscriptionView.subscription.expires_at)}
+            </p>
+            <p className={styles.bodyText}>365-day All-Access Pass (non-recurring)</p>
+            <div className={styles.actionRow}>
+              <Link href="/pricing" className={`${styles.cardCta} ${styles.cardCtaSecondary}`}>
+                View Subscription details
+              </Link>
+            </div>
+          </>
+        ) : subscriptionView.subscription ? (
+          <>
+            <div className={styles.subscriptionHeader}>
+              <h2 id="subscription-heading" className={styles.sectionHeading}>
+                Subscription
+              </h2>
+              <span className={`${styles.badge} ${styles.badgeExpired}`}>Expired</span>
+            </div>
+            <p className={styles.subscriptionStatus}>
+              Subscription expired on {formatSubscriptionDate(subscriptionView.subscription.expires_at)}
+            </p>
+            <p className={styles.bodyText}>
+              Your Progress is preserved, and all Free Sections remain open. Renew whenever you are ready to unlock
+              Paid Sections again.
+            </p>
+            <div className={styles.actionRow}>
+              <Link href="/pricing" className={`${styles.cardCta} ${styles.cardCtaPrimary}`}>
+                Renew Subscription
+              </Link>
+            </div>
+          </>
+        ) : (
+          <>
+            <div className={styles.subscriptionHeader}>
+              <h2 id="subscription-heading" className={styles.sectionHeading}>
+                Subscription
+              </h2>
+              <span className={`${styles.badge} ${styles.badgeFree}`}>Free access</span>
+            </div>
+            <p className={styles.bodyText}>
+              All Free Sections remain open without payment. Subscribe for 365 days of access to every Paid Section
+              across Class 11 and Class 12.
+            </p>
+            <div className={styles.actionRow}>
+              <Link href="/pricing" className={`${styles.cardCta} ${styles.cardCtaPrimary}`}>
+                Unlock all Sections
+              </Link>
+            </div>
+          </>
+        )}
       </section>
 
       <section className={styles.card} aria-labelledby="reset-progress-heading">

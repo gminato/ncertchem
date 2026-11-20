@@ -1,5 +1,11 @@
 import { describe, expect, it } from 'vitest'
-import { checkNumbers, checkProblems, countBlocks, findChecks } from './section-blocks'
+import {
+  checkNumbers,
+  checkProblems,
+  countBlocks,
+  extractHookSource,
+  findChecks,
+} from './section-blocks'
 
 describe('countBlocks', () => {
   it('counts each kind of block in a Section', () => {
@@ -107,5 +113,47 @@ describe('checkProblems', () => {
     const problems = checkProblems('<Check n={1} answer={0}/><Check n="1" answer={0}/>')
     expect(problems).toHaveLength(1)
     expect(problems[0]).toContain('repeats n="1"')
+  })
+})
+
+describe('extractHookSource', () => {
+  it('extracts a single-line Hook block including its tags', () => {
+    const mdx = '<Hook>Why only those colours?</Hook>\n\nLight is an electromagnetic wave.'
+    expect(extractHookSource(mdx)).toBe('<Hook>Why only those colours?</Hook>')
+  })
+
+  it('extracts a multi-line Hook block containing math and excludes surrounding Prose and Checks', () => {
+    const mdx = [
+      '',
+      '<Hook>',
+      'Your stomach holds $\\ce{HCl}$.',
+      'What links a stomach to a farm?',
+      '</Hook>',
+      '',
+      'Chemistry looks at what things are made of.',
+      '<Check n={1} answer={0}>Question</Check>',
+    ].join('\n')
+    expect(extractHookSource(mdx)).toBe(
+      '<Hook>\nYour stomach holds $\\ce{HCl}$.\nWhat links a stomach to a farm?\n</Hook>'
+    )
+  })
+
+  it('returns an empty string when no Hook block is present', () => {
+    expect(extractHookSource('Light is an electromagnetic wave.')).toBe('')
+    expect(extractHookSource('')).toBe('')
+  })
+
+  it('returns an empty string when a Hook tag is unclosed', () => {
+    expect(extractHookSource('<Hook>Missing closing tag')).toBe('')
+  })
+
+  it('ignores longer tag names and self-closing tags before a real Hook', () => {
+    const mdx = '<Hooked>Not a Hook</Hooked>\n<Hook />\n<Hook>Actual Hook</Hook>'
+    expect(extractHookSource(mdx)).toBe('<Hook>Actual Hook</Hook>')
+  })
+
+  it('extracts a Hook with attributes and stops at the first closing tag', () => {
+    const mdx = '<Hook id="intro">First</Hook>\n<Hook>Second</Hook>'
+    expect(extractHookSource(mdx)).toBe('<Hook id="intro">First</Hook>')
   })
 })

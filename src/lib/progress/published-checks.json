@@ -1,0 +1,460 @@
+{
+  "1-1-importance-of-chemistry": [
+    "1",
+    "2"
+  ],
+  "1-10-stoichiometry": [
+    "1",
+    "2",
+    "3",
+    "4"
+  ],
+  "1-2-nature-of-matter": [
+    "1",
+    "2",
+    "3"
+  ],
+  "1-3-properties-of-matter-and-measurement": [
+    "1",
+    "2",
+    "3",
+    "4"
+  ],
+  "1-4-uncertainty-in-measurement": [
+    "1",
+    "2",
+    "3"
+  ],
+  "1-5-laws-of-chemical-combinations": [
+    "1",
+    "2",
+    "3"
+  ],
+  "1-6-daltons-atomic-theory": [
+    "1",
+    "2"
+  ],
+  "1-7-atomic-and-molecular-masses": [
+    "1",
+    "2",
+    "3"
+  ],
+  "1-8-mole-concept-and-molar-masses": [
+    "1",
+    "2",
+    "3"
+  ],
+  "1-9-percentage-composition": [
+    "1",
+    "2",
+    "3"
+  ],
+  "2-1-discovery-of-subatomic-particles": [
+    "1",
+    "2",
+    "3"
+  ],
+  "2-2-atomic-models": [
+    "1",
+    "2",
+    "3",
+    "4"
+  ],
+  "2-3-developments-leading-to-bohr-model": [
+    "1",
+    "2",
+    "3",
+    "4"
+  ],
+  "2-4-bohr-model": [
+    "1",
+    "2",
+    "3"
+  ],
+  "2-5-towards-quantum-mechanical-model": [
+    "1",
+    "2"
+  ],
+  "2-6-filling-orbitals-electronic-configuration": [
+    "4f",
+    "config-Fe",
+    "config-N",
+    "config-O",
+    "cr-unpaired"
+  ],
+  "2-6-quantum-mechanical-model-orbitals": [
+    "1",
+    "2",
+    "3",
+    "4"
+  ],
+  "3-1-classifying-elements-and-genesis": [
+    "1",
+    "2",
+    "3"
+  ],
+  "3-3-modern-periodic-law-and-nomenclature": [
+    "locate-114",
+    "moseley-ratio",
+    "name-137",
+    "period-4"
+  ],
+  "3-5-electronic-configuration-and-blocks": [
+    "fe-block",
+    "group15-config",
+    "period6-orbitals"
+  ],
+  "3-7-chemical-properties-and-reactivity": [
+    "1",
+    "2",
+    "3",
+    "4"
+  ],
+  "3-7-ionization-electron-gain-electronegativity": [
+    "gain-most-negative",
+    "ie-kj",
+    "ie-n-vs-o"
+  ],
+  "3-7-periodic-trends-atomic-and-ionic-radii": [
+    "1",
+    "2",
+    "3"
+  ],
+  "4-1-kossel-lewis-approach": [
+    "1",
+    "2",
+    "3"
+  ],
+  "4-2-ionic-bond": [
+    "4",
+    "5"
+  ],
+  "4-3-bond-parameters": [
+    "1",
+    "2",
+    "3",
+    "4"
+  ],
+  "4-4-vsepr-theory": [
+    "1",
+    "2",
+    "3"
+  ],
+  "4-5-valence-bond-theory": [
+    "1",
+    "2",
+    "3"
+  ],
+  "4-6-hybridisation": [
+    "1",
+    "2",
+    "3",
+    "4"
+  ],
+  "4-7-molecular-orbital-theory": [
+    "b2-unpaired",
+    "bond-order",
+    "combine",
+    "o2-lewis"
+  ],
+  "4-9-hydrogen-bonding": [
+    "hb-atoms",
+    "water-c"
+  ],
+  "5-1-thermodynamic-terms": [
+    "1",
+    "2",
+    "3",
+    "4"
+  ],
+  "5-2-applications-work-and-enthalpy": [
+    "1",
+    "2",
+    "3",
+    "4"
+  ],
+  "5-3-measurement-of-du-and-dh": [
+    "1",
+    "2",
+    "3"
+  ],
+  "5-4-enthalpy-change-of-a-reaction": [
+    "1",
+    "2",
+    "3",
+    "4"
+  ],
+  "5-5-enthalpies-for-different-types-of-reactions": [
+    "1",
+    "2",
+    "3",
+    "4"
+  ],
+  "5-6-spontaneity": [
+    "1",
+    "2",
+    "3"
+  ],
+  "5-7-gibbs-energy-and-equilibrium": [
+    "4",
+    "5"
+  ],
+  "6-1-equilibrium-in-physical-processes": [
+    "1",
+    "2",
+    "3"
+  ],
+  "6-10-acids-bases-and-salts": [
+    "1",
+    "2"
+  ],
+  "6-11-1-ionization-kw-and-ph": [
+    "1",
+    "2",
+    "3",
+    "4"
+  ],
+  "6-11-3-weak-acids-and-weak-bases": [
+    "1",
+    "2",
+    "3",
+    "4"
+  ],
+  "6-11-8-common-ion-salt-hydrolysis-buffers": [
+    "1",
+    "2",
+    "3"
+  ],
+  "6-13-solubility-equilibria-of-sparingly-soluble-salts": [
+    "1",
+    "2",
+    "3"
+  ],
+  "6-2-dynamic-equilibrium": [
+    "1",
+    "2"
+  ],
+  "6-3-law-of-chemical-equilibrium": [
+    "1",
+    "2",
+    "3"
+  ],
+  "6-4-homogeneous-equilibria": [
+    "1",
+    "2",
+    "3"
+  ],
+  "6-5-heterogeneous-equilibria": [
+    "1",
+    "2"
+  ],
+  "6-6-applications-of-equilibrium-constants": [
+    "1",
+    "2",
+    "3",
+    "4"
+  ],
+  "6-7-k-q-and-gibbs-energy": [
+    "1",
+    "2"
+  ],
+  "6-8-factors-affecting-equilibria": [
+    "1",
+    "2",
+    "3"
+  ],
+  "6-9-ionic-equilibrium-in-solution": [
+    "1",
+    "2"
+  ],
+  "7-1-classical-idea-of-redox-reactions": [
+    "1",
+    "2",
+    "3"
+  ],
+  "7-2-redox-reactions-in-terms-of-electron-transfer": [
+    "1",
+    "2",
+    "3"
+  ],
+  "7-3-1-types-of-redox-reactions": [
+    "1",
+    "2",
+    "3",
+    "4"
+  ],
+  "7-3-2-balancing-of-redox-reactions": [
+    "1",
+    "2",
+    "3",
+    "4"
+  ],
+  "7-3-3-redox-reactions-as-the-basis-for-titrations": [
+    "1",
+    "2",
+    "3",
+    "4"
+  ],
+  "7-3-oxidation-number": [
+    "1",
+    "2",
+    "3",
+    "4"
+  ],
+  "7-4-redox-reactions-and-electrode-processes": [
+    "1",
+    "2",
+    "3",
+    "4"
+  ],
+  "8-1-general-introduction": [
+    "1"
+  ],
+  "8-10-quantitative-analysis": [
+    "1",
+    "2",
+    "3",
+    "4"
+  ],
+  "8-2-tetravalence-of-carbon-shapes-of-organic-compounds": [
+    "1",
+    "2",
+    "3"
+  ],
+  "8-3-structural-representations": [
+    "1",
+    "2",
+    "3"
+  ],
+  "8-4-classification-of-organic-compounds": [
+    "1",
+    "2",
+    "3"
+  ],
+  "8-5-3-functional-naming": [
+    "1",
+    "2",
+    "3"
+  ],
+  "8-5-nomenclature-alkanes": [
+    "1",
+    "2",
+    "3",
+    "4"
+  ],
+  "8-6-isomerism": [
+    "1",
+    "2",
+    "3"
+  ],
+  "8-7-1-reaction-mechanisms": [
+    "1",
+    "2",
+    "3",
+    "4"
+  ],
+  "8-7-4-electron-displacement-effects": [
+    "1",
+    "2",
+    "3",
+    "4"
+  ],
+  "8-8-5-chromatography": [
+    "1",
+    "2",
+    "3"
+  ],
+  "8-8-purification-methods": [
+    "1",
+    "2",
+    "3"
+  ],
+  "8-9-qualitative-analysis": [
+    "1",
+    "2",
+    "3"
+  ],
+  "9-1-classification": [
+    "1",
+    "2",
+    "3"
+  ],
+  "9-2-2-preparation-of-alkanes": [
+    "1",
+    "2",
+    "3",
+    "4"
+  ],
+  "9-2-3-properties-of-alkanes": [
+    "1",
+    "2",
+    "3",
+    "4"
+  ],
+  "9-2-4-conformations": [
+    "1",
+    "2",
+    "3",
+    "4"
+  ],
+  "9-2-alkanes-nomenclature-isomerism": [
+    "1",
+    "2",
+    "3",
+    "4"
+  ],
+  "9-3-4-preparation-of-alkenes": [
+    "1",
+    "2",
+    "3",
+    "4"
+  ],
+  "9-3-5-addition-reactions-of-alkenes": [
+    "1",
+    "2",
+    "3"
+  ],
+  "9-3-5-oxidation-ozonolysis-polymerisation": [
+    "1",
+    "2",
+    "3"
+  ],
+  "9-3-alkenes-structure-isomerism": [
+    "1",
+    "2",
+    "3"
+  ],
+  "9-4-4-properties-of-alkynes": [
+    "1",
+    "2",
+    "3",
+    "4"
+  ],
+  "9-4-alkynes-structure-preparation": [
+    "1",
+    "2",
+    "3",
+    "4"
+  ],
+  "9-5-5-properties-of-arenes": [
+    "1",
+    "2",
+    "3",
+    "4"
+  ],
+  "9-5-6-directive-influence": [
+    "1",
+    "2",
+    "3"
+  ],
+  "9-5-aromatic-hydrocarbons": [
+    "1",
+    "2",
+    "3",
+    "4"
+  ],
+  "9-6-carcinogenicity-and-toxicity": [
+    "1",
+    "2"
+  ]
+}

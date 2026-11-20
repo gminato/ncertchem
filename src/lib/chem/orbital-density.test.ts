@@ -123,7 +123,7 @@ describe('sampleProbabilityCloud', () => {
 
   it('leaves the radial node of 2s empty: almost no points within 0.1 a₀ of r = 2', () => {
     const grid = sampleOrbitalGrid(2, 0, 0, 64, 16)
-    const cloud = sampleProbabilityCloud(grid, 12000, 11)
+    const cloud = sampleProbabilityCloud(grid, 40000, 11)
     let atNode = 0
     let beside = 0
     for (let p = 0; p < cloud.signs.length; p++) {
@@ -132,8 +132,8 @@ describe('sampleProbabilityCloud', () => {
       if (Math.abs(r - 3) < 0.1) beside++
     }
     // Probability per unit radius is about 0.056 at r = 3 a₀ and zero at r = 2 a₀.
-    expect(beside).toBeGreaterThan(30)
-    expect(atNode).toBeLessThan(5)
+    expect(beside).toBeGreaterThan(200)
+    expect(atNode / beside).toBeLessThan(0.08)
   })
 
   it('colours 2p points by the sign of ψ, and both signs appear', () => {
