@@ -1,0 +1,34 @@
+/* Access badges for Free Sections and Paid Sections. Colours come only from tokens. */
+
+.free {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.14rem 0.5rem;
+  font-family: var(--font-sans);
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  line-height: 1.3;
+  color: var(--success);
+  background: var(--success-soft);
+  border-radius: 999px;
+  white-space: nowrap;
+  flex: none;
+}
+
+.paid {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.5rem;
+  height: 1.5rem;
+  color: var(--fg-muted);
+  border-radius: var(--radius-sm);
+  flex: none;
+}
+
+.lock {
+  display: block;
+  flex: none;
+}

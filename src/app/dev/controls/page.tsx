@@ -1,12 +1,24 @@
+import type { Metadata } from 'next'
+import { notFound } from 'next/navigation'
 import { Check } from '@/components/check'
 import { ControlsDemo } from './ControlsDemo'
 import styles from './controls.module.css'
 
+export const metadata: Metadata = {
+  title: 'Controls and Checks',
+  robots: { index: false, follow: false },
+}
+
 /**
  * Development page: every control primitive and both Check modes, in one place,
- * for visual and keyboard review. It is not linked from the site.
+ * for visual and keyboard review. It is not linked from the site and returns 404
+ * in Vercel production deployments.
  */
 export default function ControlsPage() {
+  if (process.env.VERCEL_ENV === 'production') {
+    notFound()
+  }
+
   return (
     <main className={styles.page}>
       <header className={styles.header}>

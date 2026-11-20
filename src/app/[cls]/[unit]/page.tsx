@@ -2,7 +2,10 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { sections } from '#site/content'
+import { AccessBadge } from '@/components/ui/AccessBadge'
 import { SiteHeader } from '@/components/ui/SiteHeader'
+import { SectionRowStatus } from '@/components/progress/SectionRowStatus'
+import { UnitProgressLine } from '@/components/progress/UnitProgressLine'
 import { findUnit, UNITS, type UnitInfo } from '@/content/units'
 import { pageTitle } from '@/lib/brand'
 import { parseSegment, sectionsForUnit } from '@/lib/unit-nav'
@@ -61,6 +64,11 @@ export default async function UnitPage({ params }: { params: Promise<UnitParams>
             Class {cls} · Unit {unit}
           </p>
           <h1 className={styles.title}>{info.title}</h1>
+          {list.length > 0 && (
+            <UnitProgressLine
+              sections={list.map((s) => ({ slug: s.slug, checkNumbers: s.checkNumbers }))}
+            />
+          )}
         </header>
 
         {list.length > 0 ? (
@@ -75,6 +83,12 @@ export default async function UnitPage({ params }: { params: Promise<UnitParams>
                   <span className={styles.text}>
                     <span className={styles.rowTitle}>{section.title}</span>
                     {section.summary && <span className={styles.rowSummary}>{section.summary}</span>}
+                  </span>
+                  <span className={styles.access}>
+                    <AccessBadge access={section.access} />
+                  </span>
+                  <span className={styles.status}>
+                    <SectionRowStatus slug={section.slug} checkNumbers={section.checkNumbers} />
                   </span>
                   <span className={styles.arrow} aria-hidden="true">
                     →

@@ -1,6 +1,7 @@
 import type { ReactNode } from 'react'
 import Link from 'next/link'
 import { BRAND_PARTS } from '@/lib/brand'
+import { AccountControl } from '@/components/account/AccountControl'
 import { ThemeToggle } from './ThemeToggle'
 import styles from './SiteHeader.module.css'
 
@@ -40,7 +41,7 @@ export function Wordmark({ className }: { className?: string }) {
   )
 }
 
-/** The bar at the top of every page: the wordmark links home, and the theme toggle sits on the right. */
+/** The bar at the top of every page: the wordmark links home; the Account control and the theme toggle sit on the right. */
 export function SiteHeader({ children }: SiteHeaderProps) {
   return (
     <header className={styles.topbar}>
@@ -53,7 +54,10 @@ export function SiteHeader({ children }: SiteHeaderProps) {
           {children}
         </nav>
       )}
-      <ThemeToggle />
+      <div className={styles.actions}>
+        <AccountControl />
+        <ThemeToggle />
+      </div>
     </header>
   )
 }

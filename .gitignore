@@ -35,4 +35,8 @@ yarn-error.log*
 
 # typescript
 *.tsbuildinfo
+next-env.d.ts
 /.claude/worktrees/
+
+# supabase CLI secrets for local auth
+supabase/.env

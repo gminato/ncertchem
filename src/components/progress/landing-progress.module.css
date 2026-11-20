@@ -1,0 +1,23 @@
+/* Learner Progress on the home page: the Syllabus Map's Unit cards. */
+
+/* A strip along the bottom edge of the card. The card clips it to its rounded corners. */
+.track {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 4px;
+  background: var(--border);
+}
+
+.fill {
+  display: block;
+  height: 100%;
+  background: var(--success);
+}
+
+/* A Unit whose every Section is complete reads in the success colour. */
+.complete {
+  color: var(--success);
+  font-weight: 600;
+}

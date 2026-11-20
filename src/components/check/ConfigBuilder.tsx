@@ -1,6 +1,6 @@
 'use client'
 
-import { useId, useRef, useState, useSyncExternalStore, type KeyboardEvent } from 'react'
+import { useId, useRef, useState, type KeyboardEvent } from 'react'
 import { usePathname } from 'next/navigation'
 import { Button } from '@/components/controls/Button'
 import { Segmented } from '@/components/controls/Segmented'
@@ -21,13 +21,18 @@ import {
   type BuilderViolation,
   type SpinChoice,
 } from '@/lib/chem/orbital-builder'
-import { checkStorageKey, readCheckDone, subscribeCheckDone, writeCheckDone } from './checkStorage'
+import { recordAnswered } from '@/lib/progress/browser-store'
+import { checkId } from '@/lib/progress/rules'
+import { useCheckAnswered } from '@/lib/progress/useProgress'
 import styles from './ConfigBuilder.module.css'
 
 export interface ConfigBuilderProps {
   /** The chemical symbol of the element, such as "N", "O" or "Fe". */
   element: string
-  /** Position of this Check in its Section, used in the storage key. Defaults to the element. */
+  /**
+   * The number of this Check in its Section. Progress is recorded against it, so give every
+   * builder in a Section its own. Defaults to `config-<element>`.
+   */
   n?: number | string
 }
 
@@ -58,7 +63,7 @@ function slugFromPath(pathname: string | null): string {
  * diagram of an element. Clicking an orbital adds an electron. Auto gives up,
  * then down, then clears. A fixed spin adds that spin on purpose, which lets a
  * Pauli violation happen. Check names the rule broken and highlights the subshell.
- * Completion is stored in this browser, as for Check.
+ * A correct diagram is recorded in the Learner's Progress, as for Check.
  */
 export function ConfigBuilder({ element, n }: ConfigBuilderProps) {
   const pathname = usePathname()
@@ -66,12 +71,8 @@ export function ConfigBuilder({ element, n }: ConfigBuilderProps) {
   const info = elementBySymbol(element)
   const Z = info?.Z ?? 0
 
-  const storageKey = checkStorageKey(slugFromPath(pathname), n ?? `config-${element}`)
-  const completed = useSyncExternalStore(
-    subscribeCheckDone,
-    () => readCheckDone(storageKey),
-    () => false
-  )
+  const id = checkId(slugFromPath(pathname), n ?? `config-${element}`)
+  const completed = useCheckAnswered(id)
 
   const [state, setState] = useState<BuilderState>(() => emptyBuilderState())
   const [spin, setSpin] = useState<SpinChoice>('auto')
@@ -148,7 +149,7 @@ export function ConfigBuilder({ element, n }: ConfigBuilderProps) {
     const result = validateBuilder(state, Z)
     if (result.valid) {
       setOutcome({ kind: 'correct' })
-      writeCheckDone(storageKey)
+      recordAnswered(id)
       return
     }
     const nextTries = tries + 1

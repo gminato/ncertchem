@@ -2,10 +2,13 @@ import type { CSSProperties } from 'react'
 import Link from 'next/link'
 import { sections } from '#site/content'
 import { Check } from '@/components/check/Check'
+import { ContinueLink, type ContinueSection } from '@/components/progress/ContinueLink'
+import { UnitCardProgress } from '@/components/progress/UnitCardProgress'
 import { HeroAnimation } from '@/components/landing/HeroAnimation'
 import { SimulationShowcase, type ShowcaseItem } from '@/components/landing/SimulationShowcase'
 import { UnitGlyph } from '@/components/landing/UnitGlyph'
 import { Hook } from '@/components/section/Hook'
+import { LockIcon } from '@/components/ui/AccessBadge'
 import { SiteHeader, Wordmark } from '@/components/ui/SiteHeader'
 import { unitsForClass } from '@/content/units'
 import { BRAND } from '@/lib/brand'
@@ -61,7 +64,7 @@ const SECTION_PARTS: readonly { name: string; text: string }[] = [
   },
   {
     name: 'Check',
-    text: 'A short question inside the Section. You get two tries, then the explanation. Nothing is graded, and your answers stay in your browser.',
+    text: 'A short question inside the Section. You get two tries, then the explanation. Nothing is graded. Your answers are saved in your browser, or in your Account if you sign in.',
   },
   {
     name: 'Key Ideas',
@@ -86,6 +89,17 @@ function plural(count: number, noun: string): string {
 export default function Home() {
   const pilot = findSection(PILOT_SLUG)
   const totals = siteStats(sections)
+
+  /** Every Section in book order, for "Continue" in the hero. */
+  const continueSections: ContinueSection[] = [...sections]
+    .sort((a, b) => a.class - b.class || a.unit - b.unit || a.order - b.order)
+    .map((section) => ({
+      slug: section.slug,
+      checkNumbers: section.checkNumbers,
+      href: sectionHref(section),
+      section: section.section,
+      title: section.title,
+    }))
 
   const showcase: ShowcaseItem[] = SHOWCASE.map(({ slug, ...item }) => {
     const section = findSection(slug)
@@ -126,16 +140,13 @@ export default function Home() {
                 scroll through and Simulations you run yourself.
               </p>
               <div className={`${styles.ctaRow} ${styles.rise}`}>
-                <Link href="/class-11/unit-1" className={`${styles.cta} ${styles.ctaPrimary}`}>
-                  Start with Unit 1
-                  <span aria-hidden="true">→</span>
-                </Link>
+                <ContinueLink sections={continueSections} className={`${styles.cta} ${styles.ctaPrimary}`} />
                 <a href="#syllabus" className={`${styles.cta} ${styles.ctaSecondary}`}>
                   See the Syllabus Map
                 </a>
               </div>
               <p className={`${styles.heroNote} ${styles.rise}`}>
-                Free to use. Nothing to install and nothing to sign up for.
+                {plural(totals.freeSections, 'Free Section')} to explore without signing in. Nothing to install.
               </p>
             </div>
 
@@ -266,9 +277,29 @@ export default function Home() {
                           <span className={styles.unitText}>
                             <span className={styles.unitNumber}>Unit {info.unit}</span>
                             <span className={styles.unitTitle}>{info.title}</span>
-                            <span className={styles.unitMeta}>
+                            {(unit.freeSections > 0 || unit.paidSections > 0) && (
+                              <span className={styles.unitAccess}>
+                                {unit.freeSections > 0 && (
+                                  <span className={styles.unitFree} data-access="free">
+                                    {unit.freeSections} Free
+                                  </span>
+                                )}
+                                {unit.paidSections > 0 && (
+                                  <span className={styles.unitPaid} data-access="paid">
+                                    <LockIcon size={12} className={styles.unitLock} />
+                                    {unit.paidSections} Paid
+                                  </span>
+                                )}
+                              </span>
+                            )}
+                            <UnitCardProgress
+                              className={styles.unitMeta}
+                              sections={sections
+                                .filter((s) => s.class === cls && s.unit === info.unit)
+                                .map((s) => ({ slug: s.slug, checkNumbers: s.checkNumbers }))}
+                            >
                               {plural(unit.sections, 'Section')} · {plural(unit.simulations, 'Simulation')}
-                            </span>
+                            </UnitCardProgress>
                           </span>
                         </Link>
                       </li>
@@ -319,9 +350,14 @@ export default function Home() {
       </main>
 
       <footer className={styles.footer}>
-        <p>
-          <Wordmark className={styles.footerBrand} />
-        </p>
+        <div className={styles.footerTop}>
+          <p>
+            <Wordmark className={styles.footerBrand} />
+          </p>
+          <nav aria-label="Footer links" className={styles.footerNav}>
+            <Link href="/pricing">Pricing</Link>
+          </nav>
+        </div>
         <p>Follows the NCERT Chemistry syllabus for Classes 11 and 12.</p>
         <p>
           {BRAND} is an independent project. It is not affiliated with or endorsed by NCERT, the National

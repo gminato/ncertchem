@@ -75,6 +75,7 @@
 }
 
 .cta {
+  white-space: nowrap;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -364,6 +365,8 @@
 }
 
 .unitCard {
+  position: relative;
+  overflow: hidden;
   flex: 1;
   display: grid;
   grid-template-columns: auto minmax(0, 1fr);
@@ -426,6 +429,44 @@
   font-weight: 600;
   line-height: 1.25;
   color: var(--fg);
+}
+
+.unitAccess {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2);
+  margin-top: var(--space-2);
+  font-family: var(--font-sans);
+}
+
+.unitFree {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.12rem 0.45rem;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  line-height: 1.3;
+  color: var(--success);
+  background: var(--success-soft);
+  border-radius: 999px;
+  white-space: nowrap;
+}
+
+.unitPaid {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  font-size: 0.78rem;
+  font-weight: 500;
+  line-height: 1.3;
+  color: var(--fg-muted);
+  white-space: nowrap;
+}
+
+.unitLock {
+  color: var(--fg-subtle);
 }
 
 /* The counts sit on the bottom edge, so they line up across a row of cards. */
@@ -528,6 +569,37 @@
 
 .footer p {
   max-width: 46rem;
+}
+
+.footerTop {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-2) var(--space-4);
+}
+
+.footerNav {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+}
+
+.footerNav a {
+  color: var(--fg-muted);
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.2s var(--ease-out);
+}
+
+.footerNav a:hover {
+  color: var(--fg);
+}
+
+.footerNav a:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+  border-radius: var(--radius-sm);
 }
 
 .footerBrand {

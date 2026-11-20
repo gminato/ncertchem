@@ -1,0 +1,154 @@
+/* The Account control in the header. The button matches the theme toggle beside it. */
+
+.anchor {
+  position: relative;
+}
+
+.button,
+.placeholder {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-1);
+  min-width: 5.5rem;
+  height: 36px;
+  padding: 0 var(--space-3);
+  font-family: var(--font-sans);
+  font-size: 0.875rem;
+  font-weight: 500;
+  line-height: 1;
+  border-radius: var(--radius-md);
+}
+
+.button {
+  color: var(--fg-muted);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  cursor: pointer;
+  transition: color 0.2s var(--ease-out), background-color 0.2s var(--ease-out),
+    border-color 0.2s var(--ease-out);
+}
+
+.button:hover,
+.button[aria-expanded='true'] {
+  color: var(--fg);
+  background: var(--surface-raised);
+  border-color: var(--fg-subtle);
+}
+
+.button:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/* Holds the button's space while the Account state loads. */
+.placeholder {
+  border: 1px solid transparent;
+}
+
+.name {
+  max-width: 12ch;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.caret {
+  width: 12px;
+  height: 12px;
+  flex: none;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.6;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+/* The panel and the menu hang below the button, aligned to its right edge. */
+.popover {
+  position: absolute;
+  top: calc(100% + var(--space-2));
+  right: 0;
+  z-index: 50;
+  /* Wide enough for Google's 280px button inside the padding. */
+  width: 340px;
+  padding: var(--space-5);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  box-shadow: 0 12px 32px -12px var(--fg-subtle);
+  font-family: var(--font-sans);
+  text-align: left;
+}
+
+.heading {
+  margin: 0 0 var(--space-3);
+  font-family: var(--font-sans);
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--fg);
+}
+
+.menu {
+  width: 240px;
+  padding: var(--space-2);
+}
+
+.email {
+  margin: 0;
+  padding: var(--space-2) var(--space-3) var(--space-3);
+  font-size: 0.8rem;
+  color: var(--fg-muted);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: var(--space-1);
+}
+
+.item {
+  display: block;
+  width: 100%;
+  padding: var(--space-2) var(--space-3);
+  font-family: var(--font-sans);
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: var(--fg);
+  text-align: left;
+  text-decoration: none;
+  background: none;
+  border: 0;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+}
+
+.item:hover,
+.item:focus-visible {
+  background: var(--surface-raised);
+  outline: none;
+}
+
+.item:disabled {
+  color: var(--fg-muted);
+  cursor: progress;
+}
+
+/* On a phone the panel spans the screen, 16px in from each side. */
+@media (max-width: 400px) {
+  .anchor {
+    position: static;
+  }
+
+  .popover {
+    left: var(--space-4);
+    right: var(--space-4);
+    top: calc(100% + var(--space-1));
+    width: auto;
+  }
+
+  .menu {
+    left: auto;
+    right: var(--space-4);
+    width: 240px;
+  }
+}
