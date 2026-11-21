@@ -1,0 +1,123 @@
+---
+class: 12
+unit: 2
+section: "2.3"
+order: 3
+title: "The Nernst Equation"
+slug: "12-2-3-nernst-equation"
+access: free
+summary: "An electrode's potential moves with the concentration of its ions on a logarithmic scale, so a whole cell's voltage sags as it runs and its reaction quotient Q climbs."
+ncert: "Class 12, Part I — Unit 2, Section 2.3"
+---
+
+<Hook>
+A phone battery often shows a healthy charge, then switches off while the chemistry inside still has plenty left to give. Why does the voltage sag steadily as a cell runs, and why does it never drop by the same amount for each bit of fuel used? The answer lies in how the concentrations of the dissolved ions change the pull each electrode exerts on the electrons.
+</Hook>
+
+## Potential depends on concentration
+
+Section 2.2 fixed every electrode at unit concentration, where each ion is at $1\ \text{mol L}^{-1}$ and the potential equals the standard value $E^\circ$. Real solutions are rarely that concentrated. For a general electrode reaction $\ce{M^{n+}(aq) + ne^- -> M(s)}$, the solid metal has unit activity, and the electrode potential at any concentration is given by the **Nernst equation**:
+
+$$
+E\left(\ce{M^{n+}/M}\right) = E^\circ\left(\ce{M^{n+}/M}\right) - \frac{RT}{nF}\ln\frac{1}{[\ce{M^{n+}}]}
+$$
+
+Here $R = 8.314\ \text{J K}^{-1}\ \text{mol}^{-1}$, $F = 96487\ \text{C mol}^{-1}$, $T$ is the temperature in kelvin, and $n$ is the number of electrons transferred. Raising the concentration of the ion makes the potential more positive, because the reduction is then easier. At $298\ \text{K}$ the natural logarithm becomes a base-10 logarithm, and the coefficient collapses to a single number:
+
+$$
+E = E^\circ - \frac{0.059\ \text{V}}{n}\,\log\frac{1}{[\ce{M^{n+}}]}
+$$
+
+## The Daniell cell as a concentration ratio
+
+Apply the same reasoning to both electrodes of the Daniell cell, $\ce{Zn(s) + Cu^2+(aq) -> Zn^2+(aq) + Cu(s)}$, with $n = 2$ in each half. The two logarithms combine into one ratio of the ion concentrations. The cell potential is
+
+$$
+E_{\text{cell}} = E^\circ_{\text{cell}} - \frac{0.059\ \text{V}}{2}\,\log\frac{[\ce{Zn^2+}]}{[\ce{Cu^2+}]}
+$$
+
+With $E^\circ_{\text{cell}} = 1.10\ \text{V}$, the cell potential rises when $[\ce{Cu^2+}]$ goes up and falls when $[\ce{Zn^2+}]$ goes up. The concentrations of the solids do not appear, since they have unit activity.
+
+## The general cell and the reaction quotient
+
+Any cell can be written as $a\,\ce{A} + b\,\ce{B} \rightarrow c\,\ce{C} + d\,\ce{D}$. Its reaction quotient is $Q = [\ce{C}]^c[\ce{D}]^d / ([\ce{A}]^a[\ce{B}]^b)$, and the Nernst equation for the whole cell reads
+
+$$
+E_{\text{cell}} = E^\circ_{\text{cell}} - \frac{RT}{nF}\ln Q
+$$
+
+Take the nickel–silver cell, $\ce{Ni(s) + 2Ag+(aq) -> Ni^2+(aq) + 2Ag(s)}$, with $E^\circ_{\text{cell}} = 1.05\ \text{V}$. Here $Q = [\ce{Ni^2+}]/[\ce{Ag+}]^2$, and the two electrons give $n = 2$. Every time $Q$ grows tenfold, the cell potential falls by $0.059/2 = 0.0295\ \text{V}$. The cell gets weaker as it runs, which is why the voltage sags.
+
+## The hydrogen electrode and pH
+
+The standard hydrogen electrode has $E^\circ = 0\ \text{V}$ by convention. Away from unit $[\ce{H+}]$, the Nernst equation for $\ce{2H+(aq) + 2e- -> H2(g)}$ at 1 bar of hydrogen gives $E = -0.059\ \text{V} \times \text{pH}$ at $298\ \text{K}$. A solution of pH 10 therefore sets the hydrogen electrode at $-0.590\ \text{V}$, so a solution's acidity can be read from an electrode potential.
+
+<Scrolly animation="nernst-concentration">
+  <Step>
+    **One electrode, one concentration:** A copper electrode in $\ce{CuSO4}$ solution at $1\ \text{mol L}^{-1}$ reads $0.340\ \text{V}$, exactly $E^\circ$. The Nernst form $E = E^\circ + \frac{0.059}{2}\log[\ce{Cu^2+}]$ says the reading is set by the ion concentration alone. Only the copper ions change between readings; the copper strip is the same solid metal throughout.
+  </Step>
+  <Step>
+    **Sliding down the log scale:** Lower the concentration to $10^{-4}\ \text{mol L}^{-1}$ and the potential falls to $0.222\ \text{V}$. Each tenfold drop subtracts the same $0.0295\ \text{V}$, so the scale is logarithmic. The drop is identical whether the concentration falls from $1$ to $0.1\ \text{mol L}^{-1}$ or from $10^{-3}$ to $10^{-4}\ \text{mol L}^{-1}$, because each step is a tenfold change.
+  </Step>
+  <Step>
+    **The Daniell ratio:** With $[\ce{Zn^2+}] = 1.0 \times 10^{-2}\ \text{mol L}^{-1}$ and $[\ce{Cu^2+}] = 1\ \text{mol L}^{-1}$, the quotient $Q = [\ce{Zn^2+}]/[\ce{Cu^2+}] = 0.010$ rises the cell potential from $1.10\ \text{V}$ to about $1.16\ \text{V}$. Raising $[\ce{Cu^2+}]$ does the same work. Notice that the two metal electrodes, zinc and copper, never appear in $Q$, because solids have unit activity.
+  </Step>
+  <Step>
+    **General cell and Q:** For $\ce{Ni(s) + 2Ag+ -> Ni^2+ + 2Ag(s)}$, nickel ions at $0.10\ \text{mol L}^{-1}$ and silver ions at $0.010\ \text{mol L}^{-1}$ give $Q = 10^3$. The cell potential is $1.05\ \text{V} - 0.0885\ \text{V} = 0.96\ \text{V}$, below its standard value.
+  </Step>
+  <Step>
+    **Hydrogen electrode and pH:** Raise the pH of the solution and $[\ce{H+}]$ falls, so the hydrogen electrode becomes more negative at $-0.059\ \text{V}$ per pH unit. At pH 10 the potential is $-0.590\ \text{V}$, a clear way to read acidity from a voltage. Between pH 0 and pH 14 the potential swings by about $0.83\ \text{V}$, so every pH unit shows up in the reading.
+  </Step>
+</Scrolly>
+
+## Explore the Nernst equation
+
+Pick a cell and slide the log-scale concentrations, then the temperature. Watch the live potential change with each substituted number, and see where the reading sits on the $E$ versus $\log Q$ line that crosses the standard potential at $Q = 1$.
+
+<Simulation name="nernst-lab" title="Nernst Lab" />
+
+## Check your understanding
+
+<Check
+  n={1}
+  numeric
+  answer={0.252}
+  tolerance={0.001}
+  unit="V"
+  explanation="For Cu²⁺/Cu with n = 2 and E° = 0.340 V, E = 0.340 − (0.059/2) log(1/[Cu²⁺]) = 0.340 − 0.0295 × 3 = 0.2515 V, which rounds to 0.252 V. Each tenfold drop from 1 mol L⁻¹ subtracts 0.0295 V."
+>
+A copper electrode dips into $\ce{CuSO4}$ solution in which $[\ce{Cu^2+}] = 1.0 \times 10^{-3}\ \text{mol L}^{-1}$ at 298 K. Using $E^\circ(\ce{Cu^2+}/\ce{Cu}) = 0.340\ \text{V}$, what is the electrode potential in volts?
+</Check>
+
+<Check
+  n={2}
+  options={[
+    "Increasing [Zn²⁺] tenfold at fixed [Cu²⁺] raises the cell potential",
+    "Increasing [Cu²⁺] tenfold at fixed [Zn²⁺] raises the cell potential by about 0.03 V",
+    "Diluting both solutions tenfold changes the cell potential by 0.059 V",
+    "Doubling the surface area of both electrodes changes the cell potential by 0.0295 V"
+  ]}
+  answer={1}
+  explanation="E = E° − (0.059/2) log([Zn²⁺]/[Cu²⁺]). Raising [Cu²⁺] tenfold lowers log Q by 1, so E rises by 0.0295 V (from 1.10 V to about 1.13 V). Raising [Zn²⁺] has the opposite effect. Dilution of both solutions by the same factor leaves Q unchanged, and electrode area does not enter the Nernst equation."
+>
+In the Daniell cell at 298 K, which statement about the cell potential is correct?
+</Check>
+
+<Check
+  n={3}
+  numeric
+  answer={-0.177}
+  tolerance={0.002}
+  unit="V"
+  explanation="For the hydrogen electrode at 298 K, E = −0.059 × pH = −0.059 × 3 = −0.177 V. The standard potential is 0 V by convention, so only the pH term remains."
+>
+A standard hydrogen electrode (1 bar H₂) dips into a solution of pH 3.00. What is its electrode potential in volts at 298 K?
+</Check>
+
+<KeyIdeas>
+- The **Nernst equation** $E = E^\circ - \frac{RT}{nF}\ln Q$ gives the electrode or cell potential at any concentration. Solids and pure liquids have unit activity and drop out of $Q$.
+- At $298\ \text{K}$ the coefficient is $0.059\ \text{V}/n$, so every tenfold change in concentration shifts the potential by $0.059/n$ volts.
+- For the Daniell cell, $E = E^\circ_{\text{cell}} - \frac{0.059}{2}\log\frac{[\ce{Zn^2+}]}{[\ce{Cu^2+}]}$: raising $[\ce{Cu^2+}]$ or lowering $[\ce{Zn^2+}]$ raises the cell potential.
+- For a general cell, $Q = [\ce{C}]^c[\ce{D}]^d/([\ce{A}]^a[\ce{B}]^b)$ and the potential falls as $Q$ grows; a running cell sags because its reactants are used up and its products build up.
+- The hydrogen electrode follows $E = -0.059\ \text{V} \times \text{pH}$ at $298\ \text{K}$, so a pH 10 solution sets it at $-0.590\ \text{V}$.
+</KeyIdeas>
