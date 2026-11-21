@@ -69,6 +69,7 @@ import { HenrySolubilityLab } from './sims/henry-solubility-lab'
 import { RaoultMixtureLab } from './sims/raoult-mixture-lab'
 import { SolutionTypeExplorer } from './sims/solution-type-explorer'
 import { OsmosisPressureLab } from './sims/osmosis-pressure-lab'
+import { CorrosionLab } from './sims/corrosion-lab'
 import { VantHoffLab } from './sims/vant-hoff-lab'
 import { ConcentrationConverter } from './sims/concentration-converter'
 import { AzeotropeExplorer } from './sims/azeotrope-explorer'
@@ -156,6 +157,7 @@ export const simulations: Record<string, ComponentType<SimulationProps>> = {
   'raoult-mixture-lab': RaoultMixtureLab,
   'solution-type-explorer': SolutionTypeExplorer,
   'osmosis-pressure-lab': OsmosisPressureLab,
+  'corrosion-lab': CorrosionLab,
   'vant-hoff-lab': VantHoffLab,
   'concentration-converter': ConcentrationConverter,
   'azeotrope-explorer': AzeotropeExplorer,
