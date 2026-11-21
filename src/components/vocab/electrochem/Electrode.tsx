@@ -124,7 +124,16 @@ export const Electrode = forwardRef<SVGGElement, ElectrodeProps>(function Electr
         </g>
       )}
       {roleText && (
-        <text x={x + 18} y={top - 15} fontSize={14} fontWeight={600} fill={roleColour}>
+        // Cells are drawn anode-left with the external wire leaving towards the centre, so the
+        // anode's label goes on its outer (left) side and the cathode's on its outer (right) side.
+        <text
+          x={role === 'anode' ? x - 18 : x + 18}
+          y={top - 15}
+          textAnchor={role === 'anode' ? 'end' : 'start'}
+          fontSize={14}
+          fontWeight={600}
+          fill={roleColour}
+        >
           {roleText}
         </text>
       )}
