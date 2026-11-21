@@ -32,7 +32,7 @@ export interface FaradayElectrolysisProps {
 }
 
 const W = 580
-const H = 482
+const H = 500
 
 /** DC source on top; its + terminal sits left of its − terminal. */
 const SOURCE = { x: 170, y: 40, width: 220, height: 60 }
@@ -43,8 +43,8 @@ const LENGTH = 160
 const ELECTRODE_W = 18
 
 const SINGLE = { x: 50, y: 170, width: 400, height: 230, level: 0.8, anodeX: 130, cathodeX: 420 }
-const LEFT = { x: 20, y: 170, width: 255, height: 230, level: 0.8, cathodeX: 100, anodeX: 200 }
-const RIGHT = { x: 305, y: 170, width: 255, height: 230, level: 0.8, cathodeX: 370, anodeX: 470 }
+const LEFT = { x: 20, y: 170, width: 255, height: 230, level: 0.8, cathodeX: 200, anodeX: 100 }
+const RIGHT = { x: 305, y: 170, width: 255, height: 230, level: 0.8, cathodeX: 470, anodeX: 370 }
 
 const CATION_ROW = 335
 const ANION_ROW = 375
@@ -52,6 +52,9 @@ const ANION_ROW = 375
 const BARS = { baseline: 392, maxH: 210, xs: [462, 528] as const, w: 40 }
 const CARD_Y = [36, 176, 316] as const
 const CARD_H = 118
+
+/** Labels the Scrolly draws itself: 24 units is 14 px at a 390 px phone width (the SVG scales by about 0.59). */
+const LABEL_PX = 24
 
 const TEXT = { fontFamily: 'var(--font-sans)', fill: 'var(--fg)' } as const
 const MUTED = { fontFamily: 'var(--font-sans)', fill: 'var(--fg-muted)' } as const
@@ -111,25 +114,27 @@ export function FaradayElectrolysis({ step, reducedMotion }: FaradayElectrolysis
     true,
   )
 
-  // Series: one wire passes through both cells (silver on the left, copper on the right).
+  // Series: source + -> cell 1 anode -> cell 1 cathode -> link -> cell 2 anode -> cell 2 cathode -> source −.
+  // Each wire lists its corners in electron-flow order (anode to +, − to cathode), so electrons run "forward".
+  // The top wires run at y = 10 and do not cross; the link runs under the supply box, above the electrode tags.
   const seriesWires = {
-    silver: [
-      { x: TERM.minus.x, y: TERM.minus.y },
-      { x: TERM.minus.x, y: 8 },
-      { x: LEFT.cathodeX, y: 8 },
-      { x: LEFT.cathodeX, y: TOP },
+    plus: [
+      { x: LEFT.anodeX, y: TOP },
+      { x: LEFT.anodeX, y: 10 },
+      { x: TERM.plus.x, y: 10 },
+      { x: TERM.plus.x, y: TERM.plus.y },
     ],
     link: [
-      { x: LEFT.anodeX, y: TOP },
-      { x: LEFT.anodeX, y: 90 },
-      { x: RIGHT.cathodeX, y: 90 },
-      { x: RIGHT.cathodeX, y: TOP },
-    ],
-    copper: [
       { x: RIGHT.anodeX, y: TOP },
-      { x: RIGHT.anodeX, y: 16 },
-      { x: TERM.plus.x, y: 16 },
-      { x: TERM.plus.x, y: TERM.plus.y },
+      { x: RIGHT.anodeX, y: 116 },
+      { x: LEFT.cathodeX, y: 116 },
+      { x: LEFT.cathodeX, y: TOP },
+    ],
+    minus: [
+      { x: TERM.minus.x, y: TERM.minus.y },
+      { x: TERM.minus.x, y: 10 },
+      { x: RIGHT.cathodeX, y: 10 },
+      { x: RIGHT.cathodeX, y: TOP },
     ],
   }
   const agIons = driftAlong(
@@ -199,11 +204,11 @@ export function FaradayElectrolysis({ step, reducedMotion }: FaradayElectrolysis
 
       {single && (
         <g opacity={singleO}>
-          <text x={16} y={452} fontSize={15} {...MUTED}>
-            e⁻ flow: anode → cathode (wire)
+          <text x={16} y={464} fontSize={LABEL_PX} className="faraday-label" {...MUTED}>
+            e⁻ flow: anode → cathode
           </text>
-          <text x={16} y={472} fontSize={15} {...MUTED}>
-            current I: cathode → anode (wire)
+          <text x={16} y={492} fontSize={LABEL_PX} className="faraday-label" {...MUTED}>
+            current I: cathode → anode
           </text>
           <Beaker
             x={SINGLE.x}
@@ -266,16 +271,16 @@ export function FaradayElectrolysis({ step, reducedMotion }: FaradayElectrolysis
 
       {series && (
         <g opacity={seriesO}>
-          <text x={100} y={452} textAnchor="middle" fontSize={17} {...TEXT}>
+          <text x={LEFT.cathodeX} y={458} textAnchor="middle" fontSize={LABEL_PX} className="faraday-label" {...TEXT}>
             Ag {seriesM.silver.toFixed(2)} g
           </text>
-          <text x={100} y={474} textAnchor="middle" fontSize={15} {...MUTED}>
+          <text x={LEFT.cathodeX} y={486} textAnchor="middle" fontSize={LABEL_PX} className="faraday-label" {...MUTED}>
             M/n = {AG_MOLAR_MASS.toFixed(2)}
           </text>
-          <text x={370} y={452} textAnchor="middle" fontSize={17} {...TEXT}>
+          <text x={RIGHT.cathodeX} y={458} textAnchor="middle" fontSize={LABEL_PX} className="faraday-label" {...TEXT}>
             Cu {seriesM.copper.toFixed(2)} g
           </text>
-          <text x={370} y={474} textAnchor="middle" fontSize={15} {...MUTED}>
+          <text x={RIGHT.cathodeX} y={486} textAnchor="middle" fontSize={LABEL_PX} className="faraday-label" {...MUTED}>
             M/n = {roundTo(CU_MOLAR_MASS / 2, 2).toFixed(2)}
           </text>
           <Beaker
@@ -296,9 +301,9 @@ export function FaradayElectrolysis({ step, reducedMotion }: FaradayElectrolysis
             tint="blue"
             label="CuSO₄(aq)"
           />
-          <Wire corners={seriesWires.silver} t={ph} electrons={state.electronsOn} dots={5} direction="forward" />
+          <Wire corners={seriesWires.plus} t={ph} electrons={state.electronsOn} dots={5} direction="forward" />
           <Wire corners={seriesWires.link} t={ph} electrons={state.electronsOn} dots={5} direction="forward" />
-          <Wire corners={seriesWires.copper} t={ph} electrons={state.electronsOn} dots={5} direction="forward" />
+          <Wire corners={seriesWires.minus} t={ph} electrons={state.electronsOn} dots={5} direction="forward" />
           <Electrode
             x={LEFT.cathodeX}
             top={TOP}
@@ -308,6 +313,7 @@ export function FaradayElectrolysis({ step, reducedMotion }: FaradayElectrolysis
             plating={depA}
             depositMaterial="ag"
             role="cathode"
+            polarity="−"
           />
           <Electrode
             x={LEFT.anodeX}
@@ -317,6 +323,7 @@ export function FaradayElectrolysis({ step, reducedMotion }: FaradayElectrolysis
             material="ag"
             thinning={eroA}
             role="anode"
+            polarity="+"
           />
           <Electrode
             x={RIGHT.cathodeX}
@@ -327,6 +334,7 @@ export function FaradayElectrolysis({ step, reducedMotion }: FaradayElectrolysis
             plating={depB}
             depositMaterial="cu"
             role="cathode"
+            polarity="−"
           />
           <Electrode
             x={RIGHT.anodeX}
@@ -336,6 +344,7 @@ export function FaradayElectrolysis({ step, reducedMotion }: FaradayElectrolysis
             material="cu"
             thinning={eroB}
             role="anode"
+            polarity="+"
           />
           {state.ionsOn &&
             agIons.map((p: Point, i: number) => (
