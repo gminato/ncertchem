@@ -52,7 +52,8 @@ interface CellGeom {
   readonly cathodeX: number
 }
 
-const SINGLE_GEOM: CellGeom = { bx: 150, bw: 280, anodeX: 230, cathodeX: 350 }
+// Electrodes sit outside the supply box (x 205–355), so no wire runs through it.
+const SINGLE_GEOM: CellGeom = { bx: 150, bw: 280, anodeX: 165, cathodeX: 390 }
 const SERIES_GEOM: readonly [CellGeom, CellGeom] = [
   { bx: 40, bw: 240, anodeX: 100, cathodeX: 210 },
   { bx: 300, bw: 240, anodeX: 370, cathodeX: 480 },
@@ -217,7 +218,6 @@ export function ElectroplatingLab({ reducedMotion }: SimulationProps) {
             max={5}
             step={0.1}
             unit="A"
-            format={(v) => v.toFixed(1)}
             onChange={setCurrentA}
           />
           <Slider
@@ -227,7 +227,6 @@ export function ElectroplatingLab({ reducedMotion }: SimulationProps) {
             max={60}
             step={1}
             unit="min"
-            format={(v) => v.toFixed(0)}
             onChange={setTimeMin}
           />
           <Slider
@@ -237,7 +236,6 @@ export function ElectroplatingLab({ reducedMotion }: SimulationProps) {
             max={100}
             step={1}
             unit="%"
-            format={(v) => v.toFixed(0)}
             onChange={(v) => {
               setRunning(false)
               setProgress(v / 100)
@@ -252,7 +250,7 @@ export function ElectroplatingLab({ reducedMotion }: SimulationProps) {
         </div>
       </div>
 
-      <div className={styles.stage}>
+      <div className={`${styles.stage} ${setup === 'series' ? styles.stageSeries : ''}`}>
         <div className={styles.scroller}>
         <svg
           viewBox="0 0 580 364"
@@ -279,7 +277,7 @@ export function ElectroplatingLab({ reducedMotion }: SimulationProps) {
             const tint = SOLUTION_TINT[cell.metal.id]
             const cathodeDeposit = MATERIAL[cell.metal.id]
             return (
-              <g key={`${cell.metal.id}-${i}`}>
+              <g key={`${cell.metal.id}-${i}`} data-cell={i}>
                 <Beaker x={geom.bx} y={170} width={width} height={180} level={0.82} tint={tint} />
                 {driftAlong(
                   [

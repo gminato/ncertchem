@@ -35,6 +35,15 @@
   border: 1px solid var(--border);
   border-radius: var(--radius-md);
   padding: var(--space-3);
+  container-type: inline-size;
+}
+
+/* Two-cell drawing on a narrow stage: scale the whole drawing to the width instead of scrolling. */
+@container (max-width: 559px) {
+  .stageSeries .svg {
+    min-width: 0;
+    max-width: none;
+  }
 }
 
 .scroller {

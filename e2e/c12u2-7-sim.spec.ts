@@ -117,3 +117,33 @@ test('electroplating lab does not scroll sideways on a phone', async ({ page }) 
   expect(scrollWidth).toBeLessThanOrEqual(390)
   expect(errors).toEqual([])
 })
+
+test('electroplating lab shows both cells in series on a phone, scaled to fit', async ({ page }) => {
+  test.setTimeout(120_000)
+  await page.setViewportSize({ width: 390, height: 844 })
+  const errors = watchErrors(page)
+  await page.goto(SIM)
+  const root = simRoot(page)
+  await expect(root.locator('svg').first()).toBeVisible()
+  await page.getByRole('radio', { name: 'Two cells in series' }).click()
+  await expect(root.getByTestId('sim-readout')).toContainText('Same charge through both cells')
+  // Both beakers are inside the phone viewport, and the stage has no inner horizontal scroll.
+  const beakers = root.locator('svg g[data-cell]')
+  await expect(beakers).toHaveCount(2)
+  for (let i = 0; i < 2; i++) {
+    const box = await beakers.nth(i).boundingBox()
+    expect(box).not.toBeNull()
+    expect(box!.x).toBeGreaterThanOrEqual(0)
+    expect(box!.x + box!.width).toBeLessThanOrEqual(390)
+  }
+  const stageScroll = await root.locator('svg').first().evaluate((svg) => {
+    const scroller = svg.parentElement as HTMLElement
+    return scroller.scrollWidth - scroller.clientWidth
+  })
+  expect(stageScroll).toBeLessThanOrEqual(0)
+  await expectGeometryRules(page)
+  await root.screenshot({ path: `${SCREEN_DIR}/c12u2-7-sim-series-phone-light.png` })
+  const scrollWidth = await page.evaluate(() => document.documentElement.scrollWidth)
+  expect(scrollWidth).toBeLessThanOrEqual(390)
+  expect(errors).toEqual([])
+})
