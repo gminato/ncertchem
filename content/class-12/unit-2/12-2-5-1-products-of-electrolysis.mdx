@@ -1,0 +1,156 @@
+---
+class: 12
+unit: 2
+section: "2.5.1"
+order: 8
+title: "Products of Electrolysis"
+slug: "12-2-5-1-products-of-electrolysis"
+access: free
+summary: "The products of electrolysis are not fixed by the formula alone: the electrolyte's state, the electrode material and a competition decided by standard potentials and overpotential choose what appears at each electrode."
+ncert: "Class 12, Part I — Unit 2, Section 2.5.1"
+---
+
+<Hook>
+A chlor-alkali plant pumps brine through a row of electrolysis cells and ships out caustic soda, chlorine and hydrogen, the three basic chemicals that a huge share of industry depends on. Sodium metal, the first product you might expect from electrolysing salt, never leaves the plant. Why does the same tank of salt solution yield one set of products in the factory and a different set in a laboratory cell with molten salt?
+</Hook>
+
+## Same cell, different products
+
+In the last section you saw that electrolysis forces a non-spontaneous reaction by pushing electrons through the cell from an external source. Charge and mass are linked by Faraday's laws, but those laws tell you how much of a product forms, not which product it is. The identity of the product is a separate question.
+
+For a given cell, the product depends on three things. The first is the **state of the electrolyte**: whether the ions are free to move in a melt or are shared with water molecules in solution. The second is the **electrode material**. An inert electrode such as platinum or gold does not take part in the chemistry; it only supplies or removes electrons. A reactive electrode, such as a copper rod, is oxidised or reduced itself. The third is the **list of species present**, each with its own tendency to gain or lose electrons.
+
+## Competition decides the winner
+
+When several species could react at an electrode, the one that reacts is the one that needs the least driving force. In a practical sense, you read it from the standard electrode potentials, $E^\circ$, that you met in Section 2.2 and in the table of reduction potentials.
+
+At the **cathode**, reduction takes place, so the species with the most positive reduction potential is reduced first. At the **anode**, oxidation takes place, so the species that is easiest to oxidise is the one with the lowest reduction potential, and it is oxidised first. Read the table in that direction and the rule is simple, even when the list of possible reactions looks long.
+
+Standard potentials describe ideal conditions at unit concentration, so they are a guide and not a final answer. Some electrode processes are also slow. A reaction can be thermodynamically favourable and still need a little extra voltage before it happens quickly. That extra voltage is the **overpotential**. The overpotential for oxygen evolution is large enough to change which product appears at an anode, as the aqueous sodium chloride case shows.
+
+## Molten sodium chloride: no competition
+
+Melt pure sodium chloride and the only mobile ions are $\ce{Na+}$ and $\ce{Cl-}$. Water is absent, so nothing else can be reduced or oxidised. At the cathode, sodium ions gain electrons:
+
+$$
+\ce{Na+ + e- -> Na(s)}
+$$
+
+At the anode, chloride ions lose electrons and form chlorine gas:
+
+$$
+\ce{Cl- -> 1/2 Cl2(g) + e-}
+$$
+
+The two products are sodium metal and chlorine. Because only one cation and one anion are present, there is nothing to compete with, and the outcome is set by the chemistry of those two ions.
+
+## Aqueous sodium chloride: the water arrives
+
+Dissolve the salt in water and the picture changes. Water molecules, and the $\ce{H+}$ and $\ce{OH-}$ ions they produce, now sit beside the sodium and chloride ions. At the cathode, $\ce{Na+}$ has a very negative standard potential, about $-2.71$ V. Hydrogen ions from water, with a potential of $0.00$ V, are reduced far more readily, so hydrogen gas is released and sodium never deposits. Because the $\ce{H+}$ comes from water, the cathode reaction is best written with water as the reactant:
+
+$$
+\ce{H2O(l) + e- -> 1/2 H2(g) + OH-(aq)}
+$$
+
+The hydroxide ions stay in solution, so the liquid near the cathode becomes alkaline. At the anode, there are two candidates: chloride, with $E^\circ = 1.36$ V, and water, with $E^\circ = 1.23$ V. The lower value suggests that water should be oxidised, releasing oxygen. Yet oxygen has a high overpotential, so chloride is oxidised instead and chlorine bubbles form. Combining the two electrode reactions with the spectator sodium ions gives:
+
+$$
+\ce{2NaCl(aq) + 2H2O(l) -> 2NaOH(aq) + H2(g) + Cl2(g)}
+$$
+
+This is the reaction behind the chlor-alkali industry that opened this Section. Sodium hydroxide remains in the solution, while hydrogen and chlorine are collected as gases.
+
+## Sulphuric acid: dilute or concentrated
+
+Electrolysing sulphuric acid also depends on the concentration of the acid. At the cathode, hydrogen ions are always reduced to hydrogen gas. The anode is where the choice happens. In dilute acid, water is oxidised to oxygen:
+
+$$
+\ce{2H2O(l) -> O2(g) + 4H+(aq) + 4e-}
+$$
+
+The standard potential for this reaction is $1.23$ V. In concentrated acid, sulphate ions are oxidised instead to peroxodisulfate:
+
+$$
+\ce{2SO4^2-(aq) -> S2O8^2-(aq) + 2e-}
+$$
+
+NCERT gives $1.96$ V for this persulfate reaction, and at higher acid concentrations it is the one that is preferred. The electrolyte's composition has changed the winner, and the anode product changes with it.
+
+## Metals obtained by electrolysis
+
+The same competition explains why some metals are extracted by electrolysis of their molten compounds, and not from aqueous solutions. Aluminium, for example, has $E^\circ = -1.66$ V for $\ce{Al^3+ + 3e- -> Al}$. Water is reduced to hydrogen at $-0.83$ V, which is a far less negative potential. In an aqueous solution, hydrogen forms at the cathode and no aluminium deposits. In the molten state, water is absent and aluminium can be reduced.
+
+<Scrolly animation="electrolysis-products">
+  <Step>
+    **Molten salt, no competition:** A crucible holds molten $\ce{NaCl}$. The battery's $+$ terminal is wired to the left electrode (the anode) and its $-$ terminal to the right electrode (the cathode). Only $\ce{Na+}$ and $\ce{Cl-}$ are present, so sodium ions drift right and form liquid sodium beads at the cathode, while chloride ions drift left and leave as chlorine bubbles at the anode.
+  </Step>
+  <Step>
+    **Add water, and the cathode competes:** Dissolve the salt in water. Now a card at the cathode shows two candidates: $\ce{Na+}$ at $-2.71$ V and $\ce{H2O}$ at $-0.83$ V (the $\ce{H+}$/$\ce{H2}$ couple sits at $0.00$ V). The water card lights up as the winner, hydrogen bubbles appear on the right, and sodium never deposits. Hydroxide ions collect near the cathode as a faint alkaline tint.
+  </Step>
+  <Step>
+    **The anode decides between chloride and water:** At the left electrode, $\ce{Cl-}$ at $1.36$ V and $\ce{H2O}$ at $1.23$ V are the two cards. The water card is marked lower, yet a small "O₂ overpotential" tag dims it, and the chloride card wins. Chlorine bubbles stream from the left electrode, and no oxygen forms.
+  </Step>
+  <Step>
+    **Net result in the solution:** Both electrode reactions run together, so the drawing shows the full balance: $\ce{2NaCl + 2H2O -> 2NaOH + H2 + Cl2}$. Hydrogen leaves at the right, chlorine at the left, and the solution now holds $\ce{Na+}$ and $\ce{OH-}$, shaded to mark sodium hydroxide building up. Sodium metal is absent from the outputs.
+  </Step>
+  <Step>
+    **Dilute versus concentrated sulphuric acid:** Switch the electrolyte to sulphuric acid. Hydrogen always forms at the cathode. In dilute acid, the left electrode releases oxygen bubbles from water (at $1.23$ V). Concentrate the acid and the left electrode instead releases $\ce{S2O8^2-}$ ions from sulphate (at $1.96$ V), and the bubbles stop. The label on the anode changes to match the product.
+  </Step>
+</Scrolly>
+
+## Explore the product choice
+
+The rule of competition is easy to state and easy to get wrong when several species are present. The simulation below lets you pick an electrolyte, its state and the electrodes. For each choice it shows the two half-reactions at each electrode with their standard potentials, the product that forms, and the reason it wins.
+
+<Simulation name="electrolysis-product-predictor" title="Electrolysis Product Predictor" />
+
+## Check your understanding
+
+<Check
+  n={1}
+  numeric
+  answer={0.89}
+  tolerance={0.01}
+  unit="V"
+  explanation="Cu²⁺ reduction (E° = 0.34 V) at the cathode and water oxidation (E° = 1.23 V) at the anode give E°cell = 0.34 V − 1.23 V = −0.89 V. The magnitude, 0.89 V, is the least voltage at which copper deposits and oxygen evolves under standard conditions. Real cells need more than this because of the oxygen overpotential and changing concentrations."
+>
+A dilute aqueous $\ce{CuSO4}$ solution is electrolysed between two platinum electrodes, so the electrodes do not dissolve. Using only the standard potentials $E^\circ(\ce{Cu^2+}/\ce{Cu}) = 0.34$ V and $E^\circ(\ce{O2}/\ce{H2O}) = 1.23$ V, what is the minimum applied voltage, in volts, at which copper deposits and oxygen is evolved?
+</Check>
+
+<Check
+  n={2}
+  options={[
+    "Water is reduced to hydrogen, because water is always reduced before any metal ion",
+    "Ag⁺ is reduced to silver metal, which deposits on the cathode, because its E° of 0.80 V is more positive than the −0.83 V of water",
+    "Ag⁺ is oxidised at the cathode, because silver is a reactive metal that dissolves easily",
+    "Platinum dissolves at the cathode as Pt²⁺, because the electrode is the only source of electrons"
+  ]}
+  answer={1}
+  explanation="At the cathode the species with the most positive reduction potential is reduced first. Ag⁺/Ag (E° = 0.80 V) lies well above the H₂O/H₂ couple (−0.83 V), so silver metal deposits. Cathodes always host reduction, not oxidation, and an inert platinum electrode does not dissolve."
+>
+An aqueous $\ce{AgNO3}$ solution is electrolysed with platinum electrodes. Which statement correctly identifies the cathode product?
+</Check>
+
+<Check
+  n={3}
+  options={[
+    "Oxygen gas, because water (E° = 1.23 V) is oxidised before bromide",
+    "Bromine, because Br⁻ (Br₂/Br⁻, E° = 1.09 V) is oxidised before water (E° = 1.23 V)",
+    "Hydrogen gas, because H⁺ is oxidised at the anode in every electrolysis",
+    "Potassium metal, because K⁺ ions migrate to the anode and are discharged there"
+  ]}
+  answer={1}
+  explanation="At the anode the species with the lower reduction potential is oxidised first. Bromide (1.09 V) is easier to oxidise than water (1.23 V), so bromine forms without any extra overpotential. Hydrogen and potassium do not form at the anode in this cell."
+>
+An aqueous $\ce{KBr}$ solution is electrolysed with inert platinum electrodes. Taking only standard potentials into account, what is formed at the anode?
+</Check>
+
+## Key ideas
+
+<KeyIdeas>
+- The product of electrolysis depends on the **state of the electrolyte**, the **electrode material** (inert or reactive) and which species are present to compete.
+- At the **cathode**, the species with the most positive reduction potential is reduced first. At the **anode**, the species with the lowest reduction potential is oxidised first.
+- **Molten NaCl** gives sodium at the cathode and chlorine at the anode, because only Na⁺ and Cl⁻ are present.
+- In **aqueous NaCl**, water supplies the cathode product (H₂ and OH⁻). At the anode chlorine forms rather than oxygen, because oxygen has a high overpotential. The net products are NaOH, H₂ and Cl₂.
+- In **dilute H₂SO₄** the anode releases O₂ from water; in **concentrated H₂SO₄** the anode forms peroxodisulfate (S₂O₈²⁻) instead.
+</KeyIdeas>
