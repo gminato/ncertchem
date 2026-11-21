@@ -1,0 +1,132 @@
+---
+class: 12
+unit: 1
+section: "1.5"
+order: 5
+title: "Ideal and Non-ideal Solutions"
+slug: "12-1-5-ideal-and-non-ideal-solutions"
+access: free
+summary: "Whether a mixture obeys Raoult's law hinges on comparing A–B forces against A–A and B–B forces; large deviations create azeotropes that boil at constant composition and cannot be separated by fractional distillation."
+ncert: "Class 12, Part I — Unit 1, Section 1.5"
+---
+
+<Hook>
+When fermented sugarcane wash enters a distillery's fractional distillation column, repeated boiling and condensation steadily enrich ethanol from 12% to 60%, then 85%, and finally about 95% by volume. Then the column hits an immovable wall: adding ten more trays or running it twice as long will not remove the last 5% of water. Why does a separation method built on boiling-point differences suddenly stall before reaching pure ethanol?
+</Hook>
+
+Liquid–liquid solutions are sorted into **ideal** and **non-ideal** solutions by one decisive test: whether their vapour pressure follows Raoult's law across the entire composition range from $x_2 = 0$ to $x_2 = 1$. The answer comes straight from the tug-of-war between intermolecular attractions in the liquid.
+
+### Ideal Solutions
+
+An **ideal solution** obeys Raoult's law at every composition:
+
+$$
+p_1 = x_1 p_1^0, \qquad p_2 = x_2 p_2^0, \qquad p_{\text{total}} = x_1 p_1^0 + x_2 p_2^0
+$$
+
+Because every partial pressure grows linearly with mole fraction, the vapour-pressure graph consists of straight lines. Ideal mixing also satisfies two thermodynamic signatures:
+
+$$
+\Delta_{\text{mix}}H = 0, \qquad \Delta_{\text{mix}}V = 0
+$$
+
+Mixing the two pure liquids neither absorbs nor releases heat, and pouring $50\text{ mL}$ of liquid A into $50\text{ mL}$ of liquid B yields exactly $100\text{ mL}$ of solution.
+
+At the molecular scale, pure liquid A contains only A–A attractions and pure liquid B contains only B–B attractions. Once mixed, A–B neighbours appear alongside them. Ideal behaviour emerges whenever **A–B attractions are nearly identical in strength to A–A and B–B attractions**. A molecule leaving the surface feels the same downward pull whether its neighbours are identical or different, so its escaping tendency matches the pure liquid.
+
+Strictly ideal mixtures are rare, yet structurally similar pairs come remarkably close:
+- **n-hexane + n-heptane** (both non-polar alkanes held by comparable dispersion forces)
+- **bromoethane + chloroethane** (similar polar haloalkanes)
+- **benzene + toluene** (closely matched aromatic rings)
+
+### Non-ideal Solutions
+
+Whenever A–B attractions differ noticeably from A–A and B–B attractions, the solution departs from Raoult's law and becomes a **non-ideal solution**. Two opposite regimes arise:
+
+- **Positive deviation from Raoult's law ($p_{\text{total}} > p_{\text{total,ideal}}$):**
+  Here **A–B attractions are weaker** than A–A and B–B attractions. Because unlike neighbours hold each other less tightly, molecules of both species escape into the vapour more readily than Raoult's law predicts, bowing all vapour-pressure curves **upward**. Breaking stronger like–like attractions absorbs energy and loosens packing, giving $\Delta_{\text{mix}}H > 0$ (endothermic) and $\Delta_{\text{mix}}V > 0$ (slight expansion).
+  - *Ethanol + acetone:* Pure ethanol forms an extensive network of $\ce{O-H}\cdots\ce{O}$ hydrogen bonds. When acetone is added, its molecules slip between ethanol chains and disrupt some of those hydrogen bonds, weakening the average attraction.
+  - *Carbon disulphide + acetone:* Non-polar $\ce{CS2}$ dilutes acetone's dipole–dipole attractions, producing weaker A–B forces.
+
+- **Negative deviation from Raoult's law ($p_{\text{total}} < p_{\text{total,ideal}}$):**
+  Here **A–B attractions are stronger** than A–A and B–B attractions. Unlike neighbours cling more tightly in the liquid, suppressing evaporation and bowing the vapour-pressure curves **downward**. Forming stronger A–B contacts releases energy and pulls molecules slightly closer together, giving $\Delta_{\text{mix}}H < 0$ (exothermic) and $\Delta_{\text{mix}}V < 0$ (slight contraction).
+  - *Chloroform + acetone:* Three electronegative chlorine atoms polarise the $\ce{C-H}$ bond in chloroform, allowing it to form a fresh hydrogen bond with acetone's carbonyl oxygen: $\ce{Cl3C-H}\cdots\ce{O=C(CH3)2}$. Neither pure liquid had this bond.
+  - *Phenol + aniline:* The phenolic $\ce{O-H}$ proton forms an unusually strong hydrogen bond with the lone pair on aniline's nitrogen atom, outcompeting the self-association in either pure component.
+
+### Azeotropes: Constant-Boiling Mixtures
+
+Moderate deviations bend the vapour-pressure curve while keeping $p_{\text{total}}$ monotonic between $p_1^0$ and $p_2^0$. **Large** deviations, however, push $p_{\text{total}}$ past a true peak or valley. At that extremum, the vapour rising off the boiling liquid has the **exact same composition as the liquid itself** ($y_1 = x_1$, $y_2 = x_2$). Such a mixture is an **azeotrope**: it boils at a single constant temperature like a pure substance and cannot be separated further by fractional distillation.
+
+1. **Minimum-boiling azeotropes** arise from **large positive deviations**. Because the vapour pressure peaks above both pure liquids, the mixture reaches atmospheric pressure at a boiling point *lower* than either pure component. Fermented **ethanol + water** hits this peak at roughly **95% ethanol by volume**—explaining why distillery columns stop at 95%.
+2. **Maximum-boiling azeotropes** arise from **large negative deviations**. Because the vapour pressure dips below both pure liquids, extra heating is needed to reach atmospheric pressure, giving a boiling point *higher* than either pure component. **Nitric acid + water** forms a classic maximum-boiling azeotrope at approximately **68% $\ce{HNO3}$ and 32% water by mass**, boiling steadily at $393.5\text{ K}$.
+
+Scroll through the five stages below to watch intermolecular forces bend Raoult's straight lines into positive deviations, negative deviations, and both kinds of azeotropes.
+
+<Scrolly animation="raoult-deviations">
+  <Step>
+    **Ideal baseline (n-hexane + n-heptane).** Because A–B attractions match A–A and B–B, every component's partial pressure tracks the dashed Raoult straight line. Mixing releases no heat ($\Delta_{\text{mix}}H = 0$) and preserves total volume ($\Delta_{\text{mix}}V = 0$).
+  </Step>
+  <Step>
+    **Positive deviation (ethanol + acetone).** Acetone wedges between hydrogen-bonded ethanol molecules, weakening A–B forces relative to A–A and B–B. Molecules escape faster into the vapour, bowing $p_1$, $p_2$, and $p_{\text{total}}$ **above** the dashed ideal lines ($\Delta_{\text{mix}}H > 0$, $\Delta_{\text{mix}}V > 0$).
+  </Step>
+  <Step>
+    **Negative deviation (chloroform + acetone).** Chloroform donates its polarised $\ce{C-H}$ proton to form a new $\ce{Cl3C-H}\cdots\ce{O=C}$ hydrogen bond with acetone. Stronger A–B attractions restrain evaporation, pulling all three curves **below** Raoult's lines ($\Delta_{\text{mix}}H < 0$, $\Delta_{\text{mix}}V < 0$).
+  </Step>
+  <Step>
+    **Minimum-boiling azeotrope (95% ethanol + 5% water).** A large positive deviation pushes $p_{\text{total}}$ to a peak higher than pure ethanol itself. At that peak, liquid and vapour share the exact same composition ($y_2 = x_2$), boiling at a lower temperature than either pure liquid and halting fractional distillation.
+  </Step>
+  <Step>
+    **Maximum-boiling azeotrope (68% $\ce{HNO3}$ + 32% water).** A large negative deviation carves a vapour-pressure valley deeper than either pure component. At this composition ($y_2 = x_2$), the mixture resists boiling until $393.5\text{ K}$ and distils over unchanged.
+  </Step>
+</Scrolly>
+
+Now test these regimes yourself. Switch between the three classic NCERT liquid pairs, slide the interaction parameter $w$ continuously from strong attraction ($w < 0$) to strong repulsion ($w > 0$), and watch the exact threshold where a peak or valley—and therefore an azeotrope—emerges.
+
+<Simulation name="azeotrope-explorer" title="Ideal, Non-ideal and Azeotrope Explorer" />
+
+<Check
+  n={1}
+  options={[
+    "Chloroform forms a new hydrogen bond with acetone's carbonyl oxygen, making A–B forces stronger than A–A and B–B.",
+    "Acetone breaks chloroform's strong hydrogen-bond network, making A–B forces weaker than A–A and B–B.",
+    "Chloroform and acetone have identical molar masses, so ΔH(mix) and ΔV(mix) are strictly zero.",
+    "Chloroform reacts irreversibly with acetone to precipitate a non-volatile solid."
+  ]}
+  answer={0}
+  explanation="Chloroform's three electronegative chlorine atoms polarise its C–H bond so it can form a Cl₃C–H···O=C(CH₃)₂ hydrogen bond with acetone. Because A–B attractions become stronger than A–A and B–B, molecules escape less readily, lowering vapour pressure below Raoult's law (negative deviation) with ΔmixH < 0."
+>
+Why does a liquid mixture of chloroform ($\ce{CHCl3}$) and acetone ($\ce{CH3COCH3}$) exhibit negative deviation from Raoult's law?
+</Check>
+
+<Check
+  n={2}
+  options={[
+    "The vapour has the exact same composition as the liquid at that point, so boiling produces no further enrichment.",
+    "Ethanol decomposes chemically into water and ethene above 95% purity.",
+    "Water stops evaporating completely once its concentration falls below 5%.",
+    "The mixture forms a maximum-boiling azeotrope whose boiling point is higher than pure water."
+  ]}
+  answer={0}
+  explanation="Ethanol and water show a large positive deviation from Raoult's law and form a minimum-boiling azeotrope near 95% ethanol by volume. At the azeotropic composition, y₂ = x₂ (vapour and liquid have identical composition), so fractional distillation can no longer enrich the vapour."
+>
+Why can fractional distillation concentrate an aqueous ethanol solution up to roughly 95% ethanol by volume, yet go no further?
+</Check>
+
+<Check
+  n={3}
+  numeric
+  answer={440}
+  tolerance={1}
+  unit="mm Hg"
+  explanation="For an ideal solution obeying Raoult's law, x(A) = 1 − 0.60 = 0.40, so p(total) = x(A) p°(A) + x(B) p°(B) = (0.40)(320) + (0.60)(520) = 128 + 312 = 440 mm Hg. Because the measured pressure (475 mm Hg) exceeds 440 mm Hg, the real mixture shows positive deviation from Raoult's law."
+>
+At $330\text{ K}$, pure liquid A has a vapour pressure of $p_A^0 = 320\text{ mm Hg}$ and pure liquid B has $p_B^0 = 520\text{ mm Hg}$. A mixture with mole fraction $x_B = 0.60$ is measured to have a total vapour pressure of $475\text{ mm Hg}$. What total vapour pressure (in $\text{mm Hg}$) would an ideal solution have at $x_B = 0.60$?
+</Check>
+
+<KeyIdeas>
+- **Ideal solutions** obey Raoult's law across all compositions with $\Delta_{\text{mix}}H = 0$ and $\Delta_{\text{mix}}V = 0$ because A–B attractions nearly match A–A and B–B attractions (e.g., n-hexane + n-heptane, benzene + toluene).
+- **Positive deviation** occurs when A–B attractions are weaker than A–A and B–B, increasing escaping tendency so vapour pressure bows above Raoult's line with $\Delta_{\text{mix}}H > 0$ and $\Delta_{\text{mix}}V > 0$ (e.g., ethanol + acetone, $\ce{CS2}$ + acetone).
+- **Negative deviation** occurs when A–B attractions are stronger than A–A and B–B, suppressing escaping tendency so vapour pressure bows below Raoult's line with $\Delta_{\text{mix}}H < 0$ and $\Delta_{\text{mix}}V < 0$ (e.g., chloroform + acetone, phenol + aniline).
+- **Azeotropes** are constant-boiling binary mixtures whose vapour and liquid phases have identical composition ($y_i = x_i$), making separation by fractional distillation impossible.
+- **Large positive deviations** form **minimum-boiling azeotropes** (e.g., ~95% ethanol + 5% water by volume), while **large negative deviations** form **maximum-boiling azeotropes** (e.g., ~68% $\ce{HNO3}$ + 32% water by mass, boiling at $393.5\text{ K}$).
+</KeyIdeas>

@@ -1,0 +1,153 @@
+---
+class: 12
+unit: 1
+section: "1.4"
+order: 4
+title: "Vapour Pressure of Liquid Solutions"
+slug: "12-1-4-vapour-pressure-liquid-solutions"
+access: free
+summary: "In an ideal liquid mixture each volatile component's partial pressure equals its pure vapour pressure times its mole fraction, making the vapour richer in the more volatile liquid — while a non-volatile solute crowds the surface and lowers vapour pressure."
+ncert: "Class 12, Part I — Unit 1, Section 1.4"
+---
+
+<Hook>
+Pour an exact 50:50 molar blend of two miscible liquids — chloroform ($\ce{CHCl3}$) and dichloromethane ($\ce{CH2Cl2}$) — into a sealed flask at room temperature. If you draw a tiny sample of the vapour hovering above the liquid, will it also be a 50:50 mix? Surprisingly, no: more than two-thirds of the vapour molecules turn out to be dichloromethane. Now imagine a different experiment — stirring ordinary sucrose into pure water inside a sealed bell jar. Even though adding sugar packs more particles into the liquid, the total pressure above the water drops. How can one simple surface rule explain both results?
+</Hook>
+
+Whenever a liquid sits inside a closed container at constant temperature, fast-moving molecules escape from the liquid surface into the space above while vapour molecules continuously strike the surface and condense back. Once the rate of evaporation equals the rate of condensation, the system reaches dynamic equilibrium, and the steady pressure exerted by the vapour is the **vapour pressure** of the liquid at that temperature.
+
+In this Section we examine two binary liquid solutions in which the solvent is a volatile liquid:
+1. A mixture of **two volatile liquids** (liquid-in-liquid solutions).
+2. A volatile liquid containing a **non-volatile solid solute** (solid-in-liquid solutions).
+
+## 1.4.1 Vapour Pressure of Liquid–Liquid Solutions
+
+Consider a closed vessel containing two volatile, miscible liquids labelled **1** and **2**, with liquid-phase mole fractions $x_1$ and $x_2$ ($x_1 + x_2 = 1$). Both species evaporate into the shared headspace until equilibrium is established, exerting partial vapour pressures $p_1$ and $p_2$.
+
+In 1886, François-Marie Raoult formulated the quantitative law governing such ideal mixtures: **for a solution of volatile liquids, the partial vapour pressure of each component is directly proportional to its mole fraction in the liquid solution.**
+
+$$
+p_1 = p_1^0\,x_1 \qquad \text{and} \qquad p_2 = p_2^0\,x_2
+$$
+
+Here $p_1^0$ and $p_2^0$ are the vapour pressures of pure liquid 1 and pure liquid 2 at the same temperature. Physically, if component 1 occupies only a fraction $x_1$ of the liquid surface, its rate of escape is scaled down to $x_1$ times its pure-liquid rate.
+
+By **Dalton's law of partial pressures**, the total equilibrium vapour pressure $p_{\text{total}}$ above the mixture is the sum of the two partial pressures:
+
+$$
+p_{\text{total}} = p_1 + p_2 = p_1^0\,x_1 + p_2^0\,x_2
+$$
+
+Substituting $x_1 = 1 - x_2$ lets us write the total pressure in terms of a single composition variable:
+
+$$
+p_{\text{total}} = p_1^0(1 - x_2) + p_2^0\,x_2 = p_1^0 + (p_2^0 - p_1^0)\,x_2
+$$
+
+Three geometric facts follow immediately from this equation at constant temperature:
+- **Single-variable control:** Knowing the mole fraction of either component fixes $p_{\text{total}}$ completely.
+- **Straight-line plots:** Plots of $p_1$, $p_2$, and $p_{\text{total}}$ against $x_2$ are all straight lines, with $p_{\text{total}}$ connecting $p_1^0$ at $x_2 = 0$ to $p_2^0$ at $x_2 = 1$.
+- **Direction of slope:** If component 2 is more volatile ($p_2^0 > p_1^0$), $p_{\text{total}}$ rises linearly as $x_2$ increases; if component 1 is more volatile ($p_1^0 > p_2^0$), $p_{\text{total}}$ falls linearly as $x_2$ increases.
+
+### Vapour Composition via Dalton's Law
+
+What is the composition of the vapour sitting above the liquid? Denoting the vapour-phase mole fractions as $y_1$ and $y_2$, Dalton's law gives:
+
+$$
+p_1 = y_1\,p_{\text{total}} \implies y_1 = \frac{p_1}{p_{\text{total}}}, \qquad p_2 = y_2\,p_{\text{total}} \implies y_2 = \frac{p_2}{p_{\text{total}}}
+$$
+
+Because each component's partial pressure is weighted by its pure volatility $p_i^0$, **the equilibrium vapour phase is always enriched in the more volatile component.** For example, at $300\text{ K}$ pure benzene ($\ce{C6H6}$) has $p_1^0 = 95\text{ mmHg}$ while pure toluene ($\ce{C7H8}$) has $p_2^0 = 32\text{ mmHg}$. In an equimolar liquid blend ($x_1 = x_2 = 0.50$), the partial pressures are $p_1 = 47.5\text{ mmHg}$ and $p_2 = 16.0\text{ mmHg}$, giving $p_{\text{total}} = 63.5\text{ mmHg}$. The vapour mole fraction of benzene jumps to $y_1 = 47.5 / 63.5 \approx 0.75$ — far richer than its 0.50 share in the liquid. Fractional distillation exploits this exact enrichment over repeated evaporation–condensation cycles.
+
+## 1.4.2 Raoult's Law as a Special Case of Henry's Law
+
+Compare Raoult's law for a volatile liquid component with Henry's law for a gas dissolved in a liquid (studied in Section 1.3):
+
+$$
+\text{Raoult's law: } p_i = p_i^0\,x_i \qquad \text{vs.} \qquad \text{Henry's law: } p = K_H\,x
+$$
+
+Both equations express the exact same linear proportionality between partial vapour pressure and liquid-phase mole fraction. The only difference is the slope constant: for a sparingly soluble gas, the slope is the empirical Henry constant $K_H$; for an ideal volatile liquid component, the slope is simply its pure vapour pressure $p_i^0$. Thus, **Raoult's law is a special case of Henry's law in which $K_H = p_i^0$.**
+
+## 1.4.3 Vapour Pressure of Solutions of Solids in Liquids
+
+Now replace the second volatile liquid with a **non-volatile solid solute** — such as sucrose, glucose, or urea dissolved in water, or sulphur dissolved in carbon disulphide ($\ce{CS2}$). Because the solute molecules have negligible tendency to evaporate, the vapour above the solution consists exclusively of solvent molecules.
+
+Why is the equilibrium vapour pressure of this solution always lower than that of the pure solvent at the same temperature? In the pure solvent, every site along the liquid–vapour boundary is occupied by a solvent molecule free to escape. Once a non-volatile solute dissolves, solute particles also occupy a fraction of those surface sites without evaporating. With fewer solvent molecules exposed at the surface, the escape rate falls proportionally, lowering the equilibrium vapour pressure.
+
+Crucially, for dilute ideal solutions this lowering depends on the **number (mole fraction)** of non-volatile solute particles, not on their chemical identity: dissolving $1.0\text{ mol}$ of sucrose or $1.0\text{ mol}$ of urea in $1\text{ kg}$ of water lowers water's vapour pressure by virtually the same amount.
+
+Applying Raoult's law in its general form — the partial vapour pressure of each volatile component is proportional to its mole fraction — to solvent (1) with non-volatile solute (2) gives:
+
+$$
+p_1 = p_1^0\,x_1
+$$
+
+Since $x_1 = 1 - x_2$, the absolute **vapour-pressure lowering** is $\Delta p_1 = p_1^0 - p_1 = p_1^0\,x_2$, and the relative lowering $\Delta p_1 / p_1^0$ equals the solute mole fraction $x_2$.
+
+<Scrolly animation="raoult-surface">
+  <Step>
+    **Pure volatile solvent ($x_1 = 1$):** Every surface site in the sealed vessel belongs to component 1 ($\ce{CHCl3}$ at $298\text{ K}$). Molecules escape across the entire surface until condensation matches evaporation at the pure vapour pressure $p_1^0 = 200\text{ mmHg}$.
+  </Step>
+  <Step>
+    **Binary volatile mixture ($x_1 = 0.50, x_2 = 0.50$):** Replacing half the surface sites with a more volatile liquid ($\ce{CH2Cl2}$, $p_2^0 = 415\text{ mmHg}$) cuts component 1's partial pressure in half to $p_1 = 100\text{ mmHg}$, while component 2 escapes much more briskly to exert $p_2 = 207.5\text{ mmHg}$, yielding $p_{\text{total}} = 307.5\text{ mmHg}$.
+  </Step>
+  <Step>
+    **Linear pressure plot and vapour enrichment:** Across all compositions, $p_1$, $p_2$, and $p_{\text{total}}$ are straight lines. At $x_2 = 0.50$, Dalton's law reveals that the vapour contains $y_2 = 207.5 / 307.5 = 0.675$ of the more volatile liquid — visibly enriched compared to the 50:50 liquid beneath it.
+  </Step>
+  <Step>
+    **Raoult's law meets Henry's law:** Plotting partial pressure against mole fraction produces straight lines through the origin for both laws. A dissolved gas follows a steep slope $K_H$, whereas an ideal liquid component follows slope $p_i^0$; Raoult's law is Henry's law at $K_H = p_i^0$.
+  </Step>
+  <Step>
+    **Non-volatile solute blocks surface sites:** When 30% of the surface ($x_2 = 0.30$) is occupied by non-volatile solid particles that cannot evaporate, only 70% of the surface remains available to solvent molecules. The solvent vapour pressure drops linearly to $p_1 = 0.70\,p_1^0 = 140\text{ mmHg}$, a lowering of $\Delta p_1 = 60\text{ mmHg}$.
+  </Step>
+</Scrolly>
+
+Explore both regimes interactively below. Switch between the three ideal liquid pairs to see how the slope of $p_{\text{total}}$ reverses when component 1 is more volatile than component 2, and watch how the vapour composition bar always tilts toward the higher-$p^0$ liquid. Then toggle to **Non-volatile solute** mode to watch surface blocking pull the solvent vapour pressure down linearly.
+
+<Simulation name="raoult-mixture-lab" title="Raoult's Law Mixture Lab" />
+
+## Checks
+
+<Check
+  n={1}
+  numeric
+  answer={200}
+  tolerance={1}
+  unit="mmHg"
+  explanation="Using Raoult's law, p(total) = p°(A) + (p°(B) - p°(A)) x(B) = 120 + (320 - 120) × 0.40 = 120 + 80 = 200 mmHg (equivalently, p(A) = 120 × 0.60 = 72 mmHg and p(B) = 320 × 0.40 = 128 mmHg, summing to 200 mmHg)."
+>
+At $300\text{ K}$, pure liquid A has a vapour pressure of $120\text{ mmHg}$ and pure liquid B has a vapour pressure of $320\text{ mmHg}$. If they form an ideal liquid mixture with mole fraction $x_B = 0.40$, calculate the total equilibrium vapour pressure $p_{\text{total}}$ of the solution in $\text{mmHg}$.
+</Check>
+
+<Check
+  n={2}
+  numeric
+  answer={0.5}
+  tolerance={0.01}
+  explanation="First find each partial pressure: p₁ = 0.75 × 150 = 112.5 mmHg and p₂ = 0.25 × 450 = 112.5 mmHg. Total pressure is p(total) = 112.5 + 112.5 = 225 mmHg. By Dalton's law, y₂ = p₂ / p(total) = 112.5 / 225 = 0.50 — twice component 2's liquid mole fraction because it is three times as volatile."
+>
+At $310\text{ K}$, two volatile liquids form an ideal solution with $p_1^0 = 150\text{ mmHg}$ and $p_2^0 = 450\text{ mmHg}$. The liquid contains $x_1 = 0.75$ and $x_2 = 0.25$. Calculate the mole fraction of component 2 in the equilibrium vapour phase ($y_2$).
+</Check>
+
+<Check
+  n={3}
+  options={[
+    "Sucrose molecules break covalent bonds inside water molecules so fewer H₂O molecules exist.",
+    "Non-volatile sucrose particles occupy a fraction of the liquid surface, reducing the fraction of surface sites from which water molecules can escape into the vapour.",
+    "Sucrose vapour pushes water vapour back into the liquid through Dalton's law.",
+    "Dissolving sucrose prevents water molecules from evaporating at any temperature below 373 K."
+  ]}
+  answer={1}
+  explanation="At equilibrium, evaporation happens only from the liquid surface. Non-volatile sucrose particles share the surface without escaping, reducing the fraction of surface sites occupied by water from 1 to x₁ and lowering the equilibrium vapour pressure to p₁ = p₁⁰ x₁."
+>
+When a non-volatile solid such as sucrose is dissolved in pure water at constant temperature, the equilibrium vapour pressure of the solution is lower than that of pure water. What is the primary molecular reason for this lowering?
+</Check>
+
+<KeyIdeas>
+- **Raoult's law for volatile mixtures:** Each volatile component exerts a partial vapour pressure proportional to its liquid mole fraction, $p_i = p_i^0 x_i$, and the total pressure varies linearly as $p_{\text{total}} = p_1^0 + (p_2^0 - p_1^0)x_2$.
+- **Vapour enrichment:** By Dalton's law ($y_i = p_i / p_{\text{total}}$), the equilibrium vapour above a binary mixture is always richer in whichever component has the higher pure vapour pressure $p^0$.
+- **Link to Henry's law:** Both Raoult's law ($p_i = p_i^0 x_i$) and Henry's law ($p = K_H x$) are linear in mole fraction; Raoult's law is simply the special case where $K_H = p_i^0$.
+- **Non-volatile solute lowering:** Non-volatile solid particles occupy surface sites without evaporating, reducing solvent escape so $p_1 = p_1^0 x_1$ and lowering the vapour pressure by $\Delta p_1 = p_1^0 x_2$.
+- **Particle count, not identity:** For ideal dilute solutions of non-volatile solutes, the vapour-pressure lowering depends on the mole fraction of dissolved solute particles rather than their chemical nature.
+</KeyIdeas>

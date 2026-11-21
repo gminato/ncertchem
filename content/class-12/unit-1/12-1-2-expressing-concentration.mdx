@@ -1,0 +1,175 @@
+---
+class: 12
+unit: 1
+section: "1.2"
+order: 2
+title: "Expressing Concentration of Solutions"
+slug: "12-1-2-expressing-concentration"
+access: free
+summary: "Seven quantitative scales describe how much solute sits in a solution, from parts per million to mole fraction, molarity and molality — and only the mass-based scales stay steady when temperature changes."
+ncert: "Class 12, Part I — Unit 1, Section 1.2"
+---
+
+<Hook>
+Imagine preparing two crisp bottles of aqueous urea in an air-conditioned $15\ ^\circ\text{C}$ laboratory: one labelled $1.00\text{ M}$ (molar) and the other labelled $1.00\text{ m}$ (molal). On a sweltering $42\ ^\circ\text{C}$ summer afternoon, neither bottle has lost a single drop of water or a single molecule of urea — yet the $1.00\text{ M}$ solution now reads slightly weaker than $1.00\text{ M}$, while the $1.00\text{ m}$ solution is still $1.00\text{ m}$ to the last decimal place. Why does a simple change in room temperature shift one concentration label while leaving the other untouched?
+</Hook>
+
+Describing a mixture casually as **dilute** (very little solute) or **concentrated** (abundant solute) gives a rough impression, but it breaks down the moment a pharmacist compounds an intravenous drip or an analytical chemist runs a titration. To reproduce a solution reliably anywhere in the world, chemists express **concentration** quantitatively as an exact ratio comparing the amount of solute to the amount of solution or solvent.
+
+In Class 12 chemistry (NCERT Unit 1, Section 1.2), seven quantitative concentration scales cover everything from trace dissolved gases in the ocean to industrial antifreeze blends and precision thermodynamics.
+
+<Scrolly animation="concentration-scales">
+  <Step>
+    **From vague labels to exact ratios.** Calling one beaker "dilute" and another "concentrated" depends on what you compare them against. A quantitative concentration scale replaces opinion with a measurable ratio — mass, volume, or moles of solute divided by total solution or pure solvent.
+  </Step>
+  <Step>
+    **Percentages and trace parts per million.** Everyday labels rely on parts per hundred: **mass percentage ($w/w$)** for industrial reagents, **volume percentage ($V/V$)** for liquid-in-liquid blends such as engine coolant, and **mass-by-volume percentage ($w/V$)** in medicine. When a solute is present only in trace amounts — like roughly $6\text{ mg}$ of dissolved $\ce{O2}$ in a litre of seawater — scaling by $10^6$ gives clean **parts per million (ppm)** numbers.
+  </Step>
+  <Step>
+    **Mole fraction counts particles directly.** Dividing the moles of one component by the total moles of every component produces a pure, dimensionless number $x_i$ between $0$ and $1$. Because every molecule in the beaker belongs to one component or another, the mole fractions of all components always sum to unity: $x_1 + x_2 + \dots + x_i = 1$.
+  </Step>
+  <Step>
+    **Molarity versus molality: watch the denominator.** Both **molarity ($M$)** and **molality ($m$)** put moles of solute in the numerator, so they look deceptively similar at first glance. The decisive difference sits underneath the fraction bar: molarity divides by **litres of total solution**, whereas molality divides by **kilograms of pure solvent**.
+  </Step>
+  <Step>
+    **Heat the flask and watch molarity drift.** When a sealed volumetric flask warms up, thermal expansion pushes the liquid meniscus above the calibration mark. The mass and mole counts inside never change, so **molality**, **mole fraction**, and **mass percentage** remain locked — while **molarity** drops because the same moles now occupy a larger volume.
+  </Step>
+</Scrolly>
+
+## The Seven Concentration Scales
+
+### 1. Mass Percentage ($w/w$)
+
+Mass percentage reports how many grams of a component sit inside $100\text{ g}$ of the total solution:
+
+$$
+\text{Mass \% of a component} = \frac{\text{Mass of the component in the solution}}{\text{Total mass of the solution}} \times 100
+$$
+
+For instance, a $12\%\ (w/w)$ aqueous sucrose solution contains $12\text{ g}$ of sucrose dissolved in $88\text{ g}$ of water, giving $100\text{ g}$ of solution in total. Industrial chemical stocks — such as commercial sodium hypochlorite ($\ce{NaOCl}$) bleach — routinely specify composition by mass percentage.
+
+### 2. Volume Percentage ($V/V$)
+
+When both solute and solvent are liquids, volume percentage is convenient:
+
+$$
+\text{Volume \% of a component} = \frac{\text{Volume of the component}}{\text{Total volume of solution}} \times 100
+$$
+
+A $35\%\ (V/V)$ radiator antifreeze mixture contains $35\text{ mL}$ of ethylene glycol ($\ce{C2H6O2}$) blended with water to reach a final solution volume of $100\text{ mL}$, depressing water's freezing point well below $0\ ^\circ\text{C}$.
+
+### 3. Mass-by-Volume Percentage ($w/V$)
+
+Pharmacists and clinicians frequently specify the mass of solute (in grams) contained in $100\text{ mL}$ of final solution:
+
+$$
+\text{Mass by volume \%} = \frac{\text{Mass of solute (g)}}{\text{Volume of solution (mL)}} \times 100
+$$
+
+Standard physiological saline ($0.9\%\ w/V$ $\ce{NaCl}$) holds $0.9\text{ g}$ of sodium chloride in every $100\text{ mL}$ of sterile aqueous solution.
+
+### 4. Parts per Million ($\text{ppm}$)
+
+When concentrations are extremely small — dissolved gases in natural waters, fluoride ions in drinking water, or airborne pollutants — percentages become clumsy decimals filled with leading zeros. Multiplying the part-to-whole ratio by one million produces compact **parts per million**:
+
+$$
+\text{ppm} = \frac{\text{Number of parts of the component}}{\text{Total number of parts of all components}} \times 10^6
+$$
+
+Like percentages, $\text{ppm}$ can be expressed on a mass-to-mass, volume-to-volume, or mass-to-volume basis. In seawater, roughly $6 \times 10^{-3}\text{ g}$ of dissolved $\ce{O2}$ per $1030\text{ g}$ (one litre) works out to about $5.8\text{ ppm}$.
+
+### 5. Mole Fraction ($x$)
+
+Mole fraction compares the mole count of a component $i$ to the sum of moles of every component in the solution:
+
+$$
+x_i = \frac{n_i}{n_1 + n_2 + \dots + n_k} = \frac{n_i}{\sum n_i}
+$$
+
+For a binary mixture of solvent $A$ and solute $B$:
+
+$$
+x_A = \frac{n_A}{n_A + n_B}, \qquad x_B = \frac{n_B}{n_A + n_B}, \qquad x_A + x_B = 1
+$$
+
+Because moles cancel in numerator and denominator, mole fraction has **no units**. It is the natural concentration variable for vapour-pressure laws (Raoult's law in later Sections) and gas mixtures.
+
+### 6. Molarity ($M$)
+
+**Molarity** is the number of moles of solute dissolved per litre (or cubic decimetre, $\text{dm}^3$) of **solution**:
+
+$$
+M = \frac{\text{Moles of solute}}{\text{Volume of solution in litres}} = \frac{n_{\text{solute}}}{V_{\text{solution}}\ (\text{L})}
+$$
+
+Its units are $\text{mol L}^{-1}$ (equivalently $\text{mol dm}^{-3}$, written concisely as $\text{M}$). Molarity shines in volumetric titrations where solutions are dispensed quickly by pipette and burette.
+
+### 7. Molality ($m$)
+
+**Molality** is the number of moles of solute dissolved per kilogram of **pure solvent**:
+
+$$
+m = \frac{\text{Moles of solute}}{\text{Mass of solvent in kg}} = \frac{n_{\text{solute}}}{W_{\text{solvent}}\ (\text{kg})}
+$$
+
+Its units are $\text{mol kg}^{-1}$ (written concisely as $\text{m}$). Notice the two crucial switches from molarity: **mass** replaces volume, and **solvent alone** replaces total solution.
+
+## Explore Every Scale Together
+
+Use the Simulation below to prepare an aqueous solution of ethanol, glucose, urea, or $\ce{NaOH}$. First adjust the solute and water masses to see how all six scales respond together. Then hold both masses fixed and slide the **Temperature** back and forth from $5\ ^\circ\text{C}$ to $85\ ^\circ\text{C}$ — watch how the thermal expansion of the liquid shifts **molarity** and **$w/V\ \%$** while **mass %**, **ppm**, **mole fraction**, and **molality** remain completely steady.
+
+<Simulation name="concentration-converter" title="Concentration Scale Converter" />
+
+## Why Temperature Separates the Scales
+
+Every concentration unit falls cleanly into one of two families depending on whether **volume** appears in its definition:
+
+- **Temperature-independent scales:** mass percentage ($w/w$), mass-based $\text{ppm}$, mole fraction ($x$), and molality ($m$). Because mass and particle count do not change when a sealed container is heated or cooled, these values stay exact across any temperature range.
+- **Temperature-dependent scales:** volume percentage ($V/V$), mass-by-volume percentage ($w/V$), and molarity ($M$). Heating expands the liquid ($V$ increases while $n_{\text{solute}}$ stays fixed), so molarity decreases slightly as temperature rises.
+
+That solves our opening Hook: whenever experiments span changing temperatures — such as boiling-point elevation or freezing-point depression in later Sections of this Unit — chemists reach for **molality** and **mole fraction** instead of molarity.
+
+## Check Your Understanding
+
+<Check
+  n={1}
+  numeric
+  answer={0.04}
+  tolerance={0.002}
+  explanation="Moles of urea = 12.0 g / 60 g mol⁻¹ = 0.200 mol. Moles of water = 86.4 g / 18 g mol⁻¹ = 4.800 mol. Total moles = 0.200 + 4.800 = 5.000 mol, so x(urea) = 0.200 / 5.000 = 0.04."
+>
+  A laboratory solution is prepared by dissolving $12.0\text{ g}$ of urea ($\ce{NH2CONH2}$, molar mass $60\text{ g mol}^{-1}$) in $86.4\text{ g}$ of water ($\ce{H2O}$, molar mass $18\text{ g mol}^{-1}$). Calculate the mole fraction of urea in this solution.
+</Check>
+
+<Check
+  n={2}
+  numeric
+  answer={0.6}
+  tolerance={0.02}
+  unit="mol kg⁻¹"
+  explanation="Moles of glucose = 27.0 g / 180 g mol⁻¹ = 0.150 mol. Mass of solvent (water) = 250 g = 0.250 kg. Molality m = 0.150 mol / 0.250 kg = 0.60 mol kg⁻¹."
+>
+  A chemist dissolves $27.0\text{ g}$ of glucose ($\ce{C6H12O6}$, molar mass $180\text{ g mol}^{-1}$) in $250\text{ g}$ of water. What is the molality ($m$) of the resulting solution?
+</Check>
+
+<Check
+  n={3}
+  options={[
+    "Both its molarity and its molality decrease by the same percentage because the liquid expands.",
+    "Its molarity decreases slightly, while its molality, mole fraction, and mass percentage stay unchanged.",
+    "Its molarity increases slightly while its mole fraction decreases as thermal motion speeds up.",
+    "All four concentration measures stay identical because the sealed flask prevents evaporation."
+  ]}
+  answer={1}
+  explanation="Warming the sealed flask increases solution volume through thermal expansion without changing solute or solvent masses or mole counts. Therefore molarity (mol / L solution) decreases slightly, whereas mass- and mole-based scales (molality, mole fraction, and mass %) stay strictly constant."
+>
+  A chemist seals a $1.00\text{ M}$ aqueous $\ce{KCl}$ solution in a glass flask at $15\ ^\circ\text{C}$ and carries it into a warm $45\ ^\circ\text{C}$ room. Assuming no water evaporates, which statement accurately describes the warmed solution?
+</Check>
+
+<KeyIdeas>
+- Quantitative concentration scales replace ambiguous words like "dilute" and "concentrated" with exact ratios of solute to solution or solvent.
+- Percentage scales ($w/w$, $V/V$, $w/V$) express parts per hundred, whereas parts per million ($\text{ppm}$) scales trace solutes by $10^6$.
+- Mole fraction ($x_i = n_i / \sum n_i$) is dimensionless and always satisfies $x_1 + x_2 + \dots + x_i = 1$ across all components.
+- Molarity ($M$) measures moles of solute per litre of **solution**, while molality ($m$) measures moles of solute per kilogram of **solvent**.
+- Mass percentage ($w/w$), mass-based $\text{ppm}$, mole fraction, and molality are **independent of temperature**; molarity depends on temperature because solution volume changes with heat.
+</KeyIdeas>

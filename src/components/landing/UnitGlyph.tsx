@@ -174,15 +174,52 @@ const GLYPHS: Readonly<Record<number, ReactNode>> = {
   ),
 }
 
+/** Small drawings for Class 12 Units, in a 64 by 64 box. */
+const CLASS_12_GLYPHS: Readonly<Record<number, ReactNode>> = {
+  // Class 12 Unit 1, Solutions: two chambers separated by a semipermeable membrane, with solute particles and rising vapour.
+  1: (
+    <>
+      <rect x="10" y="26" width="21" height="26" rx="2" fill="var(--liquid)" />
+      <rect x="33" y="18" width="21" height="34" rx="2" fill="var(--accent-soft)" />
+      <path d="M10 26H31M33 18H54" stroke="var(--liquid-edge)" strokeWidth="2" strokeLinecap="round" />
+      <path
+        d="M10 14V52H54V14"
+        fill="none"
+        stroke={NEUTRAL}
+        strokeWidth="2.2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      <line
+        x1="32"
+        y1="14"
+        x2="32"
+        y2="52"
+        stroke="var(--accent)"
+        strokeWidth="2.2"
+        strokeDasharray="3.5 3"
+      />
+      <circle cx="40" cy="30" r="2.6" fill="var(--spot-2)" />
+      <circle cx="47" cy="39" r="2.6" fill="var(--spot-2)" />
+      <circle cx="39" cy="44" r="2.6" fill="var(--spot-2)" />
+      <circle cx="20" cy="37" r="2.2" fill="var(--liquid-edge)" />
+      <path d="M24 37H35" stroke="var(--fwd)" strokeWidth="2" strokeLinecap="round" />
+      <path d="M37.5 37L33 34.4V39.6Z" fill="var(--fwd)" />
+    </>
+  ),
+}
+
 export interface UnitGlyphProps {
-  /** Class 11 Unit number, 1 to 9. */
+  /** Class number, 11 or 12. Defaults to 11. */
+  cls?: 11 | 12
+  /** Unit number within the class. */
   unit: number
   className?: string
 }
 
 /** A small decorative drawing for a Unit. It is hidden from screen readers: the Unit title says the same. */
-export function UnitGlyph({ unit, className }: UnitGlyphProps) {
-  const glyph = GLYPHS[unit]
+export function UnitGlyph({ cls = 11, unit, className }: UnitGlyphProps) {
+  const glyph = cls === 12 ? CLASS_12_GLYPHS[unit] : GLYPHS[unit]
   if (!glyph) return null
   return (
     <svg viewBox="0 0 64 64" className={className} aria-hidden="true" focusable="false">

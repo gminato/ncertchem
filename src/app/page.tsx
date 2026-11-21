@@ -111,7 +111,7 @@ export default function Home() {
   })
 
   const stats: readonly { value: number; label: string }[] = [
-    { value: totals.units, label: 'Units, all of Class 11' },
+    { value: totals.units, label: 'Units, Class 11 & 12' },
     { value: totals.sections, label: 'Sections' },
     { value: totals.animations, label: 'Animations' },
     { value: totals.simulations, label: 'Simulations' },
@@ -273,7 +273,7 @@ export default function Home() {
                     {live.map(({ info, stats: unit }) => (
                       <li key={info.unit}>
                         <Link href={`/class-${cls}/unit-${info.unit}`} className={styles.unitCard}>
-                          <UnitGlyph unit={info.unit} className={styles.glyph} />
+                          <UnitGlyph cls={cls} unit={info.unit} className={styles.glyph} />
                           <span className={styles.unitText}>
                             <span className={styles.unitNumber}>Unit {info.unit}</span>
                             <span className={styles.unitTitle}>{info.title}</span>

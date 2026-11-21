@@ -1,0 +1,178 @@
+---
+class: 12
+unit: 1
+section: "1.6.1"
+order: 6
+title: "Vapour Pressure Lowering, Boiling Elevation and Freezing Depression"
+slug: "12-1-6-1-vapour-boiling-freezing"
+access: free
+summary: "A single drop in the solvent's vapour-pressure curve explains three colligative properties at once: relative vapour pressure lowering, boiling-point elevation and freezing-point depression all scale with solute particle count."
+ncert: "Class 12, Part I — Unit 1, Sections 1.6.1–1.6.3"
+---
+
+<Hook>
+Drivers crossing high passes in Ladakh pour ethylene glycol ($\ce{C2H6O2}$) into their radiator water so the coolant will not freeze solid overnight at $-15^\circ\text{C}$. Yet mechanics in the blazing heat of Rajasthan recommend the **exact same additive** to stop engines from boiling over. How can one dissolved liquid simultaneously push the freezing point *down* and the boiling point *up*?
+</Hook>
+
+## What makes a property colligative?
+
+Whenever a **non-volatile solute** is dissolved in a volatile solvent, fewer solvent molecules occupy the liquid surface, so the solvent's equilibrium vapour pressure falls. Four macroscopic properties of dilute solutions stem directly from this drop:
+
+1. Relative lowering of vapour pressure of the solvent
+2. Elevation of boiling point of the solvent
+3. Depression of freezing point of the solvent
+4. Osmotic pressure of the solution (explored in the next Section)
+
+All four share a remarkable trait: in ideal dilute solutions, their magnitude depends **only on the number of solute particles** present relative to the solvent — never on the chemical identity, shape or colour of those particles. Such particle-counting properties are called **colligative properties** (from the Latin *co-* "together" and *ligare* "to bind", reflecting how they are tied together by a single physical cause).
+
+## 1. Relative lowering of vapour pressure
+
+For a binary solution of a volatile solvent (component $1$) and a non-volatile solute (component $2$), Raoult's law gives the vapour pressure of the solution purely from the solvent:
+
+$$
+p_1 = x_1 p_1^0
+$$
+
+The drop in vapour pressure is therefore $\Delta p_1 = p_1^0 - p_1 = p_1^0(1 - x_1)$. Since $x_1 + x_2 = 1$, dividing both sides by the pure-solvent vapour pressure $p_1^0$ yields the **relative lowering of vapour pressure**:
+
+$$
+\frac{\Delta p_1}{p_1^0} = \frac{p_1^0 - p_1}{p_1^0} = x_2 = \frac{n_2}{n_1 + n_2}
+$$
+
+Notice that the relative drop equals the solute's mole fraction $x_2$ directly. If multiple non-volatile solutes are dissolved together, the relative lowering equals the sum of all solute mole fractions.
+
+In a **dilute solution**, $n_2 \ll n_1$, so neglecting $n_2$ in the denominator simplifies the expression to:
+
+$$
+\frac{p_1^0 - p_1}{p_1^0} \approx \frac{n_2}{n_1} = \frac{w_2 \, M_1}{M_2 \, w_1}
+$$
+
+Here $w_1$ and $w_2$ are the masses (in $\text{g}$) and $M_1$ and $M_2$ are the molar masses (in $\text{g mol}^{-1}$) of solvent and solute. Rearranging this equation lets a chemist measure an unknown solute's molar mass $M_2$ straight from a vapour-pressure reading:
+
+$$
+M_2 = \frac{w_2 \, M_1}{w_1} \cdot \frac{p_1^0}{p_1^0 - p_1}
+$$
+
+## 2. One curve shift, two thermal consequences
+
+Once you see that a non-volatile solute shifts the solvent's **entire** vapour-pressure curve downward across all temperatures, both boiling-point elevation and freezing-point depression follow immediately from a single graph. Walk through the five Steps below to watch both temperature shifts emerge together.
+
+<Scrolly animation="colligative-phase-shift">
+  <Step>
+    **Start with the pure solvent.** Its liquid vapour-pressure curve rises steeply with temperature. The pure liquid freezes at $T_f^0$, where its vapour pressure matches that of the pure solid solvent, and boils at $T_b^0$, where its vapour pressure reaches atmospheric pressure ($1.013\ \text{bar}$).
+  </Step>
+  <Step>
+    **Dissolve a non-volatile solute.** Solvent molecules escape less readily at every temperature, so the entire liquid vapour-pressure curve drops downward by a fractional amount $\Delta p_1 / p_1^0 = x_2$.
+  </Step>
+  <Step>
+    **Boiling point shifts upward.** At the old boiling point $T_b^0$, the solution's vapour pressure now sits below $1.013\ \text{bar}$. You must heat the solution further to reach $1.013\ \text{bar}$ at a higher temperature $T_b = T_b^0 + \Delta T_b$.
+  </Step>
+  <Step>
+    **Freezing point shifts downward.** Because the solid solvent's vapour-pressure curve is steeper than the liquid curve (sublimation demands more enthalpy than vaporisation), the lowered solution curve intersects the solid curve further to the left at a lower freezing temperature $T_f = T_f^0 - \Delta T_f$.
+  </Step>
+  <Step>
+    **The liquid window widens on both ends.** One dissolved solute expands the liquid span $[T_f, T_b]$ in both directions at once — explaining radiator antifreeze, road de-icing salts and why measuring $\Delta T_b$ or $\Delta T_f$ reveals an unknown solute's molar mass $M_2$.
+  </Step>
+</Scrolly>
+
+## 3. Elevation of boiling point ($\Delta T_b$)
+
+A liquid boils when its vapour pressure equals the surrounding pressure ($1.013\ \text{bar}$ at normal atmospheric pressure). Because a non-volatile solute lowers vapour pressure, the solution requires a higher temperature $T_b$ to boil than the pure solvent ($T_b^0$). The **elevation of boiling point**, $\Delta T_b = T_b - T_b^0$, is directly proportional to the solution's **molality** $m$ (moles of solute per kilogram of solvent):
+
+$$
+\Delta T_b = K_b \, m
+$$
+
+The proportionality constant $K_b$ is the **ebullioscopic constant** (or molal boiling-point elevation constant), with units $\text{K kg mol}^{-1}$. It depends solely on the solvent, not on the solute. Writing molality in terms of masses $w_2$ (solute, $\text{g}$) and $w_1$ (solvent, $\text{g}$), $m = (1000 \, w_2) / (M_2 \, w_1)$, gives a direct formula for molar mass determination:
+
+$$
+\Delta T_b = \frac{1000 \, K_b \, w_2}{M_2 \, w_1} \qquad \Longrightarrow \qquad M_2 = \frac{1000 \, K_b \, w_2}{\Delta T_b \, w_1}
+$$
+
+## 4. Depression of freezing point ($\Delta T_f$)
+
+Freezing occurs at the temperature where the liquid phase and solid phase stand in dynamic equilibrium — meaning both phases share the **same vapour pressure**. When a non-volatile solute lowers the liquid curve (assuming pure solid solvent crystallises out), equilibrium with the solid is restored only at a lower temperature $T_f$. The **depression of freezing point**, $\Delta T_f = T_f^0 - T_f$, also scales linearly with molality in dilute solutions:
+
+$$
+\Delta T_f = K_f \, m
+$$
+
+Here $K_f$ is the **cryoscopic constant** (molal freezing-point depression constant), in $\text{K kg mol}^{-1}$. Substituting $m = (1000 \, w_2) / (M_2 \, w_1)$ yields the cryoscopic molar-mass equation:
+
+$$
+\Delta T_f = \frac{1000 \, K_f \, w_2}{M_2 \, w_1} \qquad \Longrightarrow \qquad M_2 = \frac{1000 \, K_f \, w_2}{\Delta T_f \, w_1}
+$$
+
+## 5. Why $K_b$ and $K_f$ belong strictly to the solvent
+
+Thermodynamics links both constants directly to the pure solvent's molar mass $M_1$ (in $\text{g mol}^{-1}$), normal transition temperatures ($T_f^0$, $T_b^0$ in $\text{K}$) and molar transition enthalpies ($\Delta_{\text{fus}} H$, $\Delta_{\text{vap}} H$ in $\text{J mol}^{-1}$), with $R = 8.314\ \text{J K}^{-1}\text{mol}^{-1}$:
+
+$$
+K_f = \frac{R \, M_1 \, (T_f^0)^2}{1000 \, \Delta_{\text{fus}} H} \qquad\text{and}\qquad K_b = \frac{R \, M_1 \, (T_b^0)^2}{1000 \, \Delta_{\text{vap}} H}
+$$
+
+Because melting a crystal requires much less energy than vaporising a liquid ($\Delta_{\text{fus}} H \ll \Delta_{\text{vap}} H$), $K_f$ is consistently larger than $K_b$ for the same solvent — which is why freezing-point depression is typically more sensitive than boiling-point elevation for measuring molar masses.
+
+| Solvent | Normal b.p. $T_b^0$ (K) | $K_b$ ($\text{K kg mol}^{-1}$) | Normal f.p. $T_f^0$ (K) | $K_f$ ($\text{K kg mol}^{-1}$) |
+| --- | ---: | ---: | ---: | ---: |
+| Water ($\ce{H2O}$) | 373.15 | 0.52 | 273.0 | 1.86 |
+| Ethanol ($\ce{C2H5OH}$) | 351.5 | 1.20 | 155.7 | 1.99 |
+| Benzene ($\ce{C6H6}$) | 353.3 | 2.53 | 278.6 | 5.12 |
+| Cyclohexane ($\ce{C6H12}$) | 353.74 | 2.79 | 279.55 | 20.00 |
+| Chloroform ($\ce{CHCl3}$) | 334.4 | 3.63 | 209.6 | 4.79 |
+| Carbon tetrachloride ($\ce{CCl4}$) | 350.0 | 5.03 | 250.5 | 31.8 |
+| Acetic acid ($\ce{CH3COOH}$) | 391.1 | 2.93 | 290.0 | 3.90 |
+
+*Reference values compiled from NCERT Class 12 Chemistry, Part I, Table 1.3.*
+
+## Explore the Simulation
+
+Try switching solvents in the lab below — notice how cyclohexane's huge $K_f = 20.00\ \text{K kg mol}^{-1}$ swings its freezing point dramatically compared to water. Then keep the solvent and molality fixed while toggling between **Glucose**, **Sucrose**, **Urea** and **Ethylene glycol**: watch what changes and what refuses to budge!
+
+<Simulation name="colligative-thermal-lab" title="Boiling Elevation and Freezing Depression Lab" />
+
+## Check your understanding
+
+<Check
+  n={1}
+  numeric
+  answer={3.72}
+  tolerance={0.05}
+  unit="K"
+  explanation="First find moles of ethylene glycol: n₂ = 31.0 g / 62.0 g mol⁻¹ = 0.50 mol. Since 250 g of water is 0.250 kg, the molality is m = 0.50 / 0.250 = 2.0 mol kg⁻¹. Thus ΔTf = Kf · m = 1.86 × 2.0 = 3.72 K."
+>
+A radiator coolant is prepared by dissolving $31.0\ \text{g}$ of ethylene glycol ($\ce{C2H6O2}$, molar mass $62.0\ \text{g mol}^{-1}$) in $250\ \text{g}$ of water ($K_f = 1.86\ \text{K kg mol}^{-1}$). Calculate the freezing-point depression $\Delta T_f$ of the solution.
+</Check>
+
+<Check
+  n={2}
+  numeric
+  answer={120}
+  tolerance={2}
+  unit="g mol⁻¹"
+  explanation="Using M₂ = (1000 × Kb × w₂) / (ΔTb × w₁) = (1000 × 1.20 × 4.50) / (0.30 × 150) = 5400 / 45 = 120 g mol⁻¹."
+>
+Dissolving $4.50\ \text{g}$ of an unknown non-volatile non-electrolyte in $150\ \text{g}$ of ethanol ($K_b = 1.20\ \text{K kg mol}^{-1}$) raises the boiling point of ethanol by $0.30\ \text{K}$. What is the molar mass $M_2$ of the solute?
+</Check>
+
+<Check
+  n={3}
+  options={[
+    "Glucose and urea have identical molar masses, so equal masses are dissolved.",
+    "Freezing-point depression is a colligative property determined by the number of dissolved solute particles per kilogram of solvent, not their molecular size or identity.",
+    "Both solutes release the exact same enthalpy of fusion when cooled in water.",
+    "Water's cryoscopic constant Kf adjusts inversely with the solute's molar mass."
+  ]}
+  answer={1}
+  explanation="At equal molality (0.50 mol kg⁻¹), both solutions contain the exact same number of non-electrolyte solute molecules per kilogram of water. Even though 0.50 mol of glucose weighs 90 g whereas 0.50 mol of urea weighs only 30 g, ΔTf = Kf · m depends strictly on molality and water's constant Kf."
+>
+A Learner prepares two aqueous solutions at the exact same molality ($0.50\ \text{mol kg}^{-1}$): one containing glucose ($M = 180\ \text{g mol}^{-1}$) and the other containing urea ($M = 60\ \text{g mol}^{-1}$). Neither solute dissociates in water. Why do both solutions show the exact same freezing-point depression $\Delta T_f$?
+</Check>
+
+<KeyIdeas>
+- **Colligative properties** count dissolved solute particles rather than identifying them: in dilute non-electrolyte solutions, equal molalities of different solutes in the same solvent produce identical $\Delta p_1 / p_1^0$, $\Delta T_b$ and $\Delta T_f$.
+- **Relative vapour-pressure lowering** equals the solute mole fraction: $(p_1^0 - p_1)/p_1^0 = x_2$, simplifying in dilute solutions to $(w_2 M_1)/(M_2 w_1)$.
+- **One vapour-pressure drop widens the liquid range on both ends**: the lowered liquid curve reaches $1.013\ \text{bar}$ at a higher boiling point ($\Delta T_b = K_b m$) and meets the steeper solid curve at a lower freezing point ($\Delta T_f = K_f m$).
+- **Solvent constants $K_b$ and $K_f$** depend only on the pure solvent's molar mass, transition temperature and transition enthalpy ($K_f = R M_1 (T_f^0)^2 / 1000 \Delta_{\text{fus}} H$ and $K_b = R M_1 (T_b^0)^2 / 1000 \Delta_{\text{vap}} H$), explaining why $K_f$ is generally larger than $K_b$.
+- **Molar mass determination**: measuring any of the three shifts in a known mass of solvent yields $M_2$ directly for non-volatile, non-electrolyte solutes.
+</KeyIdeas>

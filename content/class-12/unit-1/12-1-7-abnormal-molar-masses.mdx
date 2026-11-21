@@ -1,0 +1,151 @@
+---
+class: 12
+unit: 1
+section: "1.7"
+order: 8
+title: "Abnormal Molar Masses and the van't Hoff Factor"
+slug: "12-1-7-abnormal-molar-masses"
+access: free
+summary: "Dissociation multiplies solute particles while association pairs them up, making measured molar masses look too small or too large until van't Hoff's factor i restores exact agreement across all four colligative laws."
+ncert: "Class 12, Part I — Unit 1, Section 1.7"
+---
+
+<Hook>
+  Measure the freezing point of an aqueous potassium chloride solution and plug the result into the standard cryoscopic formula, and the arithmetic insists that one mole of $\ce{KCl}$ weighs about $37.3\text{ g}$—barely half its true molar mass of $74.5\text{ g mol}^{-1}$. Repeat the same experiment with ethanoic acid dissolved in benzene, and the thermometer makes the opposite mistake: the molecule suddenly appears to weigh close to $120\text{ g mol}^{-1}$, nearly double its true mass of $60\text{ g mol}^{-1}$. Neither molecule changed weight in the beaker—so what fooled the thermometer?
+</Hook>
+
+Colligative properties are strict particle counters: they track how many independent solute entities move through the solvent, not the chemical formula written on the reagent bottle. Whenever a solute either **breaks apart** into ions or **clusters together** into aggregates after dissolving, the actual number of particles in solution diverges from the nominal number of moles weighed out. Any molar mass inferred without accounting for that shift is called an **abnormal molar mass**.
+
+### Dissociation and Association in Solution
+
+Two opposite molecular processes produce abnormal molar masses (NCERT Class 12, Unit 1, Section 1.7):
+
+- **Dissociation multiplies particles ($i > 1$):** Ionic salts, strong acids, and strong bases split into cations and anions in polar solvents like water. Dissolving $1\text{ mol}$ of $\ce{KCl}$ releases $1\text{ mol}$ of $\ce{K+}$ and $1\text{ mol}$ of $\ce{Cl-}$—nearly $2\text{ mol}$ of particles in all. Because $\Delta T_b$ and $\Delta T_f$ scale directly with particle count, the observed temperature shift is nearly doubled. Since inferred molar mass is inversely proportional to $\Delta T_b$ or $\Delta T_f$, the calculated molar mass comes out **smaller** than the true formula mass.
+- **Association reduces particles ($i < 1$):** In non-polar solvents of low dielectric constant such as benzene, carboxylic acids such as ethanoic acid ($\ce{CH3COOH}$) or benzoic acid ($\ce{C6H5COOH}$) pair up through intermolecular hydrogen bonding to form cyclic dimers:
+
+$$
+\ce{2 CH3COOH <=> (CH3COOH)2}
+$$
+
+  If dimerisation goes nearly to completion, the count of independent particles drops toward half the weighed-out moles. The measured $\Delta T_b$ or $\Delta T_f$ shrinks toward half the expected value, making the apparent molar mass look up to **twice as large** as the true molar mass.
+
+### The van't Hoff Factor ($i$)
+
+In 1880, Jacobus van't Hoff introduced a single dimensionless multiplier, the **van't Hoff factor $i$**, to quantify the extent of dissociation or association. It can be expressed in three completely equivalent ways:
+
+$$
+i = \frac{\text{Normal molar mass}}{\text{Abnormal molar mass}} = \frac{\text{Observed colligative property}}{\text{Calculated colligative property}} = \frac{\text{Total moles of particles after dissociation/association}}{\text{Moles of particles before dissociation/association}}
+$$
+
+Here the *calculated* colligative property assumes the solute stays completely intact (neither splitting nor pairing), while the *abnormal* molar mass is the value obtained experimentally from that unadjusted formula.
+
+- For a non-electrolyte such as glucose or urea: $i = 1$.
+- For a dissociating solute: $i > 1$, so $M_{\text{abnormal}} = M_{\text{normal}} / i$ is **lower** than $M_{\text{normal}}$.
+- For an associating solute: $i < 1$, so $M_{\text{abnormal}} = M_{\text{normal}} / i$ is **higher** than $M_{\text{normal}}$.
+
+<Scrolly animation="vant-hoff-particles">
+  <Step title="Non-electrolyte baseline: one molecule stays one particle">
+    Dissolve neutral covalent molecules such as glucose or urea in water, and each weighed-out formula unit drifts independently as a single particle. Six nominal molecules remain six particles, so $i = 1.00$ and the colligatively measured molar mass matches the true formula mass.
+  </Step>
+  <Step title="Ionic dissociation: splitting doubles the particle count">
+    When $\ce{KCl}$ dissolves in water, each formula unit separates into $\ce{K+}$ and $\ce{Cl-}$. Six formula units yield twelve independent ions ($i \approx 2$). Because twice as many particles crowd the solvent, $\Delta T_b$ and $\Delta T_f$ double, causing an uncorrected calculation to report half the true molar mass.
+  </Step>
+  <Step title="Hydrogen-bonded association: pairing halves the particle count">
+    In benzene, carboxylic acid molecules link head-to-head through a pair of hydrogen bonds, turning six monomers into three cyclic dimers ($i \approx 0.5$). With half as many kinetic particles, the colligative signal is cut in half and the inferred molar mass appears nearly twice as large.
+  </Step>
+  <Step title="Defining i and watching strong electrolytes dilute">
+    All three definitions of $i$ collapse to the same ratio. In real aqueous salt solutions, opposite charges still tug on one another at moderate concentration, holding $i$ slightly below the ideal ion count. As the solution is diluted toward zero molality, interionic attractions fade and $i$ climbs smoothly toward $n$.
+  </Step>
+  <Step title="Four colligative laws unified by one multiplier">
+    Once $i$ multiplies the solute concentration term in all four colligative equations, every law handles non-electrolytes, strong and weak electrolytes, and associating solutes on the exact same footing.
+  </Step>
+</Scrolly>
+
+### Connecting $i$ to Degree of Dissociation and Association
+
+Suppose $1\text{ mol}$ of solute is initially dissolved and a fraction $\alpha$ undergoes transformation:
+
+1. **Dissociation into $n$ ions** ($\ce{A_x B_y -> x A^{y+} + y B^{x-}}$, where $n = x + y$):
+   At equilibrium, $(1 - \alpha)\text{ mol}$ stays undissociated while $n\alpha\text{ mol}$ of ions form, giving total moles $i = (1 - \alpha) + n\alpha$:
+
+$$
+i = 1 + (n - 1)\alpha \qquad \Longleftrightarrow \qquad \alpha = \frac{i - 1}{n - 1}
+$$
+
+2. **Association of $n$ monomers into one $n$-mer** ($\ce{n A <=> A_n}$):
+   At equilibrium, $(1 - \alpha)\text{ mol}$ remains unassociated and $\alpha / n\text{ mol}$ of aggregates exist, giving total moles $i = (1 - \alpha) + \alpha / n$:
+
+$$
+i = 1 - \alpha\!\left(1 - \frac{1}{n}\right) \qquad \Longleftrightarrow \qquad \alpha = \frac{n(1 - i)}{n - 1}
+$$
+
+   For dimerisation ($n = 2$), this simplifies directly to $i = 1 - \dfrac{\alpha}{2}$ and $\alpha = 2(1 - i)$.
+
+### Why $i$ Changes with Dilution (NCERT Table 1.4)
+
+Even for strong electrolytes that are essentially ionised, oppositely charged ions attract one another in solution and move partially in tandem at finite concentrations. That electrostatic drag reduces the effective particle count, making experimental $i$ smaller than the complete-dissociation integer $n$—especially for multiply charged ions like $\ce{Mg^{2+}}$ and $\ce{SO4^{2-}}$. Diluting the solution pulls ions farther apart, so $i$ steadily approaches $n$:
+
+| Electrolyte | $0.1\,m$ | $0.01\,m$ | $0.001\,m$ | Complete dissociation ($n$) |
+| :--- | :---: | :---: | :---: | :---: |
+| $\ce{NaCl}$ | $1.87$ | $1.94$ | $1.97$ | $2.00$ |
+| $\ce{KCl}$ | $1.85$ | $1.94$ | $1.98$ | $2.00$ |
+| $\ce{MgSO4}$ | $1.21$ | $1.53$ | $1.82$ | $2.00$ |
+| $\ce{K2SO4}$ | $2.32$ | $2.70$ | $2.84$ | $3.00$ |
+
+### The Four Modified Colligative Equations
+
+Including the van't Hoff factor $i$ updates all four dilute-solution colligative laws simultaneously:
+
+- **Relative lowering of vapour pressure:** $\dfrac{p_1^\circ - p_1}{p_1^\circ} = i\,\dfrac{n_2}{n_1}$
+- **Elevation of boiling point:** $\Delta T_b = i\,K_b\,m$
+- **Depression of freezing point:** $\Delta T_f = i\,K_f\,m$
+- **Osmotic pressure:** $\Pi = i\,C\,R\,T = i\,\dfrac{n_2 R T}{V}$
+
+Explore how switching between non-electrolytes, $1:1$ and $1:2$ salts, and hydrogen-bonded dimers shifts particle counts, apparent molar mass, and freezing-point depression in the Simulation below.
+
+<Simulation name="vant-hoff-lab" title="van't Hoff Factor and Particle Count Lab" />
+
+### Check Your Understanding
+
+<Check
+  n={1}
+  numeric
+  answer={2.6}
+  tolerance={0.03}
+  explanation="Each formula unit of CaCl₂ dissociates into n = 3 ions (one Ca²⁺ and two Cl⁻). Substituting n = 3 and α = 0.80 into i = 1 + (n − 1)α gives i = 1 + 2 × 0.80 = 2.60."
+>
+  In a dilute aqueous solution, calcium chloride ($\ce{CaCl2}$) is $80\%$ dissociated ($\alpha = 0.80$) into $\ce{Ca^{2+}}$ and $2\ce{Cl-}$ ions. Calculate the van't Hoff factor $i$ for this solution.
+</Check>
+
+<Check
+  n={2}
+  numeric
+  answer={76}
+  tolerance={0.5}
+  unit="%"
+  explanation="For dimerisation (n = 2), i = 1 − α/2, so α = 2(1 − i) = 2 × (1 − 0.62) = 0.76, which is 76% association."
+>
+  A carboxylic acid dissolves in benzene and partially forms hydrogen-bonded dimers ($\ce{2 RCOOH <=> (RCOOH)2}$). Freezing-point depression measurements give a van't Hoff factor of $i = 0.62$. What is the percentage dimerisation of the acid?
+</Check>
+
+<Check
+  n={3}
+  options={[
+    "All three solutions have the exact same ΔTf because their molalities are identical.",
+    "Urea has the largest ΔTf, followed by NaCl, then K₂SO₄.",
+    "K₂SO₄ has the largest ΔTf (≈ 3 Kf m), followed by NaCl (≈ 2 Kf m), then urea (1 Kf m).",
+    "NaCl has the largest ΔTf because it has the smallest molar mass."
+  ]}
+  answer={2}
+  explanation="Freezing-point depression obeys ΔTf = i·Kf·m. At equal molality m, assuming complete dissociation, i = 1 for urea, i = 2 for NaCl, and i = 3 for K₂SO₄, so K₂SO₄ lowers the freezing point most strongly."
+>
+  Three aqueous solutions are prepared at the same molality ($0.1\text{ mol kg}^{-1}$): urea ($\ce{NH2CONH2}$), sodium chloride ($\ce{NaCl}$), and potassium sulphate ($\ce{K2SO4}$). Assuming complete dissociation of the salts, how do their freezing-point depressions ($\Delta T_f$) compare?
+</Check>
+
+<KeyIdeas>
+  - **Abnormal molar masses** arise whenever solute dissociation increases or association decreases the true particle count relative to the weighed-out moles: $M_{\text{abnormal}} = M_{\text{normal}} / i$.
+  - **Dissociation** yields $i > 1$ and an apparent molar mass lower than the formula mass, governed by $i = 1 + (n - 1)\alpha$; **association** yields $i < 1$ and an apparent molar mass higher than the formula mass, governed by $i = 1 - \alpha(1 - 1/n)$.
+  - **Three equivalent ratios** define the van't Hoff factor: normal-to-abnormal molar mass, observed-to-calculated colligative property, and post-equilibrium-to-initial moles of particles.
+  - **Dilution weakens interionic drag** in strong electrolytes (NCERT Table 1.4), causing measured $i$ to climb monotonically toward the stoichiometric ion count $n$ as molality approaches zero.
+  - **All four colligative equations** are restored for electrolytes and associating solutes simply by inserting $i$: $\Delta p_1 / p_1^\circ = i n_2 / n_1$, $\Delta T_b = i K_b m$, $\Delta T_f = i K_f m$, and $\Pi = i C R T$.
+</KeyIdeas>

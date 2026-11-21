@@ -65,6 +65,14 @@ import { CarbonCounter } from './sims/carbon-counter'
 import { FamilySorter } from './sims/family-sorter'
 import { OrientationPredictor } from './sims/orientation-predictor'
 import { EasWorkbench } from './sims/eas-workbench'
+import { HenrySolubilityLab } from './sims/henry-solubility-lab'
+import { RaoultMixtureLab } from './sims/raoult-mixture-lab'
+import { SolutionTypeExplorer } from './sims/solution-type-explorer'
+import { OsmosisPressureLab } from './sims/osmosis-pressure-lab'
+import { VantHoffLab } from './sims/vant-hoff-lab'
+import { ConcentrationConverter } from './sims/concentration-converter'
+import { AzeotropeExplorer } from './sims/azeotrope-explorer'
+import { ColligativeThermalLab } from './sims/colligative-thermal-lab'
 
 export interface SimulationProps {
   /** True when the Learner has asked the OS for reduced motion. Skip tweens and loops when set. */
@@ -144,4 +152,12 @@ export const simulations: Record<string, ComponentType<SimulationProps>> = {
   'orientation-predictor': OrientationPredictor,
   'eas-workbench': EasWorkbench,
   'newman-rotor': NewmanRotor,
+  'henry-solubility-lab': HenrySolubilityLab,
+  'raoult-mixture-lab': RaoultMixtureLab,
+  'solution-type-explorer': SolutionTypeExplorer,
+  'osmosis-pressure-lab': OsmosisPressureLab,
+  'vant-hoff-lab': VantHoffLab,
+  'concentration-converter': ConcentrationConverter,
+  'azeotrope-explorer': AzeotropeExplorer,
+  'colligative-thermal-lab': ColligativeThermalLab,
 }

@@ -88,9 +88,27 @@ test.describe('Unit navigation', () => {
   })
 
   test('a Unit with no Sections yet shows a calm empty state', async ({ page }) => {
+    await page.goto('/class-12/unit-2')
+    await expect(page.getByRole('heading', { level: 1 })).toHaveText('Electrochemistry')
+    await expect(page.getByText('The Sections of this Unit are being written.')).toBeVisible()
+  })
+
+  test('Class 12 Unit 1 lists its eight Sections in order', async ({ page }) => {
     await page.goto('/class-12/unit-1')
     await expect(page.getByRole('heading', { level: 1 })).toHaveText('Solutions')
-    await expect(page.getByText('The Sections of this Unit are being written.')).toBeVisible()
+    const links = page.locator('a[href^="/class-12/unit-1/"]')
+    await expect(links).toHaveCount(8)
+    const hrefs = await links.evaluateAll((els) => els.map((e) => e.getAttribute('href')))
+    expect(hrefs.map((h) => h?.split('/').pop())).toEqual([
+      '12-1-1-types-of-solutions',
+      '12-1-2-expressing-concentration',
+      '12-1-3-solubility',
+      '12-1-4-vapour-pressure-liquid-solutions',
+      '12-1-5-ideal-and-non-ideal-solutions',
+      '12-1-6-1-vapour-boiling-freezing',
+      '12-1-6-4-osmosis-and-reverse-osmosis',
+      '12-1-7-abnormal-molar-masses',
+    ])
   })
 
   test('Unit 9 lists its fifteen Sections in order', async ({ page }) => {

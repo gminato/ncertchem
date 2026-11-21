@@ -31,26 +31,38 @@ test.describe('Home page', () => {
     await expect(page.getByRole('contentinfo')).toContainText('not affiliated with or endorsed by NCERT')
   })
 
-  test('the Syllabus Map links every Class 11 Unit and lists Class 12 as being written', async ({ page }) => {
+  test('the Syllabus Map links every Class 11 Unit and Class 12 Unit 1, and lists remaining Class 12 Units as being written', async ({ page }) => {
     await page.goto('/')
     const class11 = page.getByRole('list', { name: 'Class 11 Units' })
     const hrefs = await class11.getByRole('link').evaluateAll((els) => els.map((el) => el.getAttribute('href')))
     expect(hrefs).toEqual(Array.from({ length: 9 }, (_, i) => `/class-11/unit-${i + 1}`))
     await expect(class11.getByRole('link', { name: /Unit 9\s*Hydrocarbons/ })).toContainText('15 Sections')
 
+    const class12Live = page.getByRole('list', { name: 'Class 12 Units' })
+    await expect(class12Live.getByRole('link')).toHaveCount(1)
+    await expect(class12Live.getByRole('link', { name: /Unit 1\s*Solutions/ })).toHaveAttribute('href', '/class-12/unit-1')
+    await expect(class12Live.getByRole('link', { name: /Unit 1\s*Solutions/ })).toContainText('8 Sections')
+
     const class12 = page.getByRole('list', { name: 'Class 12 Units that are being written' })
-    await expect(class12.getByRole('listitem')).toHaveCount(10)
+    await expect(class12.getByRole('listitem')).toHaveCount(9)
     await expect(class12.getByRole('link')).toHaveCount(0)
     await expect(class12).toContainText('Biomolecules')
   })
 
   test('the Section count in the stats is the sum of the Unit cards', async ({ page }) => {
     await page.goto('/')
-    const metas = await page
+    const class11Metas = await page
       .getByRole('list', { name: 'Class 11 Units' })
       .getByRole('link')
       .evaluateAll((els) => els.map((el) => el.textContent ?? ''))
-    const total = metas.reduce((sum, text) => sum + Number(/(\d+) Sections?/.exec(text)?.[1] ?? 0), 0)
+    const class12Metas = await page
+      .getByRole('list', { name: 'Class 12 Units' })
+      .getByRole('link')
+      .evaluateAll((els) => els.map((el) => el.textContent ?? ''))
+    const total = [...class11Metas, ...class12Metas].reduce(
+      (sum, text) => sum + Number(/(\d+) Sections?/.exec(text)?.[1] ?? 0),
+      0
+    )
     expect(total).toBeGreaterThan(0)
     const stat = page.locator('dl > div', { hasText: /^Sections/ })
     await expect(stat.locator('dd')).toHaveText(String(total))

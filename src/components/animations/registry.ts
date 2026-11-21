@@ -126,6 +126,14 @@ import { Carcinogens } from './unit9/carcinogens/Carcinogens'
 import { BenzeneStructure } from './unit9/benzene/BenzeneStructure'
 import { HuckelCount } from './unit9/benzene/HuckelCount'
 import { EasScrolly } from './unit9/eas/EasScrolly'
+import { HenryLawPiston } from './c12-unit1/solubility/HenryLawPiston'
+import { RaoultSurface } from './c12-unit1/raoult/RaoultSurface'
+import { SolutionsNineTypes } from './c12-unit1/types/SolutionsNineTypes'
+import { OsmosisMembrane } from './c12-unit1/osmosis/OsmosisMembrane'
+import { VantHoffParticles } from './c12-unit1/vanthoff/VantHoffParticles'
+import { ConcentrationScales } from './c12-unit1/concentration/ConcentrationScales'
+import { RaoultDeviations } from './c12-unit1/deviations/RaoultDeviations'
+import { ColligativePhaseShift } from './c12-unit1/colligative/ColligativePhaseShift'
 
 /**
  * Animations available to a Scrolly Animation, keyed by the `animation` prop.
@@ -262,6 +270,14 @@ export const animations = {
   'benzene-structure': BenzeneStructure,
   'huckel-count': HuckelCount,
   'eas-mechanism': EasScrolly,
+  'henry-law-piston': HenryLawPiston,
+  'raoult-surface': RaoultSurface,
+  'solutions-nine-types': SolutionsNineTypes,
+  'osmosis-membrane': OsmosisMembrane,
+  'vant-hoff-particles': VantHoffParticles,
+  'concentration-scales': ConcentrationScales,
+  'raoult-deviations': RaoultDeviations,
+  'colligative-phase-shift': ColligativePhaseShift,
 } as const
 
 export type AnimationName = keyof typeof animations

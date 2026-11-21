@@ -1,0 +1,153 @@
+---
+class: 12
+unit: 1
+section: "1.3"
+order: 3
+title: "Solubility of Solids and Gases"
+slug: "12-1-3-solubility"
+access: free
+summary: "Polarity decides what dissolves in what, temperature shifts solid and gas solubility in opposite ways when enthalpy signs differ, and Henry's law links a gas's partial pressure linearly to its dissolved mole fraction."
+ncert: "Class 12, Part I — Unit 1, Section 1.3"
+---
+
+<Hook>
+Cold Himalayan streams teem with agile mountain trout, whereas warm stagnant ponds can leave fish gasping at the surface. Thousands of metres away under the ocean, deep-sea divers breathing pressurised air must replace part of the nitrogen in their tanks with helium to avoid painful bubbles in their bloodstream. Both mysteries come down to the same rulebook: how temperature, pressure, and molecular identity govern how much solute a liquid can hold.
+</Hook>
+
+**Solubility** is the maximum quantity of a solute that can dissolve in a fixed amount of solvent at a specified temperature. It is never a single universal number—it depends on the chemical nature of both solute and solvent, on temperature, and (for gases) dramatically on pressure.
+
+## Solubility of a Solid in a Liquid
+
+Not every solid mixes with every liquid. Common table salt ($\ce{NaCl}$) and cane sugar vanish quickly when stirred into water, yet naphthalene mothballs and anthracene flakes sit stubbornly undissolved at the bottom. Swap water for benzene and the behaviour flips completely: naphthalene and anthracene dissolve with ease, while salt and sugar stay untouched.
+
+The governing principle is **"like dissolves like"**: a solute mixes readily into a solvent when both share similar intermolecular forces. Polar and ionic solids interact strongly with polar solvents such as water, whereas non-polar solids dissolve in non-polar solvents such as benzene or carbon tetrachloride.
+
+### Dissolution, Crystallisation, and Dynamic Equilibrium
+
+When solid crystals enter a solvent, two opposing processes begin:
+
+- **Dissolution:** solute particles break free from the crystal lattice and disperse into the liquid, raising the solution concentration.
+- **Crystallisation:** dissolved solute particles collide back with the remaining solid and rejoin the lattice.
+
+Initially dissolution outpaces crystallisation. Eventually both rates match, establishing a **dynamic equilibrium**:
+
+$$
+\text{Solute} + \text{Solvent} \rightleftharpoons \text{Solution}
+$$
+
+At this point the concentration stops changing at the given temperature and pressure. A solution in dynamic equilibrium with undissolved solute is a **saturated solution**, and its solute concentration equals the solid's **solubility**. Any solution holding less solute than this limit is **unsaturated** and can still dissolve additional solid.
+
+### Temperature and Pressure Effects for Solids
+
+Because solid–solution saturation is a dynamic equilibrium, it obeys **Le Chatelier's principle**:
+
+- When dissolution absorbs heat ($\Delta_{\text{sol}} H > 0$, endothermic), raising the temperature shifts the equilibrium forward and **increases** solubility.
+- When dissolution releases heat ($\Delta_{\text{sol}} H < 0$, exothermic), raising the temperature opposes the forward step and **decreases** solubility.
+
+By contrast, **pressure has almost no effect** on the solubility of a solid in a liquid. Both solids and liquids are condensed phases with tightly packed particles, so squeezing them barely alters their volumes or equilibrium positions.
+
+## Solubility of a Gas in a Liquid
+
+Gases show an enormous spread in water solubility. Hydrogen chloride ($\ce{HCl}$) dissolves vigorously, whereas oxygen ($\ce{O2}$) dissolves only sparingly—yet that tiny fraction of dissolved oxygen sustains all aquatic life. Unlike solids, gas solubility responds powerfully to both **pressure** and **temperature**.
+
+### Pressure and Henry's Law
+
+Picture a gas confined above a liquid in a sealed piston cylinder at equilibrium: gas molecules enter the liquid at the same rate that dissolved molecules escape back into the vapour space. If you push the piston downward to increase the gas pressure, more gas molecules crowd each unit volume right above the liquid surface. Collisions with the surface accelerate, driving gas into solution faster than it leaves until a higher dissolved concentration restores equilibrium.
+
+William Henry captured this proportionality quantitatively, and John Dalton independently showed that for gas mixtures it is each gas's **partial pressure** that matters. In its most widely used form, **Henry's law** states that at constant temperature the partial pressure $p$ of a gas in the vapour phase is directly proportional to its mole fraction $x$ in solution:
+
+$$
+p = K_H \, x
+$$
+
+Here $K_H$ is **Henry's law constant**, which carries the same units as pressure (commonly $\text{kbar}$, where $1\text{ kbar} = 1000\text{ bar}$). Plotting $p$ on the vertical axis against $x$ on the horizontal axis yields a straight line through the origin whose slope is $K_H$.
+
+Rearranging to $x = p / K_H$ reveals a crucial inverse reading: **at the same partial pressure, a larger $K_H$ means a lower gas solubility**. Values from NCERT Table 1.2 for gases in water illustrate this vividly:
+
+- At $293\text{ K}$, $\ce{He}$ has $K_H = 144.97\text{ kbar}$, $\ce{N2}$ has $76.48\text{ kbar}$, $\ce{H2}$ has $69.16\text{ kbar}$, and $\ce{O2}$ has $34.86\text{ kbar}$—so at equal pressure $\ce{O2}$ is more than twice as soluble as $\ce{N2}$ and over four times as soluble as $\ce{He}$.
+- At $298\text{ K}$, $\ce{CO2}$ has $K_H = 1.67\text{ kbar}$, far lower than $\ce{O2}$ or $\ce{N2}$, making $\ce{CO2}$ substantially more soluble in water.
+
+### Why Warming Drives Gases Out of Water
+
+Dissolving a gas pulls fast-moving vapour molecules into close contact with liquid solvent molecules—a process much like condensation that releases heat ($\Delta_{\text{sol}} H < 0$). Applying Le Chatelier's principle, warming an exothermic equilibrium pushes it backward, so **$K_H$ rises with temperature and gas solubility falls**. NCERT Table 1.2 confirms this shift: between $293\text{ K}$ and $303\text{ K}$, $K_H$ climbs from $34.86$ to $46.82\text{ kbar}$ for $\ce{O2}$ and from $76.48$ to $88.84\text{ kbar}$ for $\ce{N2}$. Because cold water retains substantially more dissolved oxygen, cold-water fish are far more comfortable in chilly rivers than in warm pools.
+
+### Everyday and Biological Applications
+
+Henry's law explains three classic real-world phenomena highlighted in NCERT Section 1.3.2:
+
+1. **Carbonated beverages:** Soft drinks and soda water are bottled under high $\ce{CO2}$ pressure to force extra gas into solution. Opening the cap drops the headspace pressure back toward atmospheric pressure, so excess $\ce{CO2}$ rushes out as effervescent bubbles.
+2. **Scuba diving and the bends:** Every $10\text{ m}$ of depth adds roughly $1\text{ bar}$ of hydrostatic pressure. Underwater, higher partial pressures drive far more atmospheric nitrogen into a diver's blood. If the diver surfaces too quickly, the sudden pressure drop releases dissolved $\ce{N2}$ as bubbles inside capillaries—a painful, life-threatening condition called **the bends** (decompression sickness). To minimise both bends and nitrogen toxicity at depth, divers breathe helium-diluted mixes ($11.7\%\text{ He}$, $56.2\%\text{ N}_2$, $32.1\%\text{ O}_2$), taking advantage of helium's huge $K_H$ and very low solubility in blood.
+3. **High-altitude anoxia:** High in the mountains, atmospheric pressure—and therefore the partial pressure of $\ce{O2}$—is markedly lower than at sea level. Less oxygen dissolves into the blood and tissues of climbers, causing weakness and foggy thinking, a condition known as **anoxia**.
+
+<Scrolly animation="henry-law-piston">
+  <Step>
+    Start with a solid crystal in a liquid solvent. Polar solutes dissolve in polar solvents ("like dissolves like"). Once the rate of particles leaving the crystal matches the rate of particles re-depositing onto it, the saturated solution reaches dynamic equilibrium, and temperature shifts follow the sign of $\Delta_{\text{sol}} H$.
+  </Step>
+  <Step>
+    Now seal a gas over liquid water under a light piston at $P_1 = 1.0\text{ bar}$. Gas molecules strike the surface and dissolve at the exact same rate that dissolved molecules escape back into the headspace, pinning the system to a low mole fraction $x_1$ on the $p$ versus $x$ line.
+  </Step>
+  <Step>
+    Stack three weights onto the piston to triple the gas pressure to $P_2 = 3.0\text{ bar}$. Compressing the headspace crowds molecules against the liquid surface, boosting the entry rate until the dissolved mole fraction triples to $x_2 = 3x_1$ along the straight Henry's-law line $p = K_H x$.
+  </Step>
+  <Step>
+    Hold the pressure steady and compare slopes across gases and temperatures. Helium's steep ray ($K_H = 144.97\text{ kbar}$) yields tiny solubility, while oxygen's gentler ray dissolves much more—and warming $\ce{O2}$ from $293\text{ K}$ to $303\text{ K}$ steepens its slope from $34.86$ to $46.82\text{ kbar}$, cutting dissolved oxygen.
+  </Step>
+  <Step>
+    The same proportionality governs fizzing soda bottles sealed under high $p(\ce{CO2})$, helium-diluted scuba tanks that prevent nitrogen bubbles during ascent, and mountain climbers facing low blood oxygen (anoxia) where $p(\ce{O2})$ is thin.
+  </Step>
+</Scrolly>
+
+## Explore Henry's Law Interactively
+
+Switch between $\ce{O2}$, $\ce{N2}$, $\ce{CO2}$, and $\ce{He}$ in the Simulation below, vary partial pressure from $0.2$ to $5.0\text{ bar}$, and warm or cool the water between $283\text{ K}$ and $313\text{ K}$. Watch how the slope $K_H$ tilts relative to the reference temperature line and how dissolved millimoles per litre respond.
+
+<Simulation name="henry-solubility-lab" title="Henry's Law Solubility Lab" />
+
+## Check Your Understanding
+
+<Check
+  n={1}
+  numeric
+  answer={2.39}
+  tolerance={0.05}
+  unit="mmol"
+  explanation="First convert Kₕ = 34.86 kbar = 34,860 bar. By Henry's law, x(O₂) = p / Kₕ = 1.50 / 34,860 = 4.303 × 10⁻⁵. Because 1 L of water contains 55.5 mol of H₂O and n ≪ 55.5, n(O₂) ≈ 55.5 × 4.303 × 10⁻⁵ mol = 2.39 × 10⁻³ mol = 2.39 mmol."
+>
+  Pure oxygen gas ($\ce{O2}$) is maintained at a partial pressure of $1.50\text{ bar}$ over $1\text{ L}$ of water at $293\text{ K}$, where $K_H(\ce{O2}) = 34.86\text{ kbar}$ (NCERT Table 1.2). How many millimoles of $\ce{O2}$ dissolve in $1\text{ L}$ of water? (Take $1\text{ L}$ of water $= 55.5\text{ mol}$.)
+</Check>
+
+<Check
+  n={2}
+  options={[
+    "Oxygen (O₂), because it has the smallest Kₕ value",
+    "Helium (He), because it has the largest Kₕ value",
+    "Nitrogen (N₂), because its molar mass is closest to water",
+    "All four gases have identical solubility at equal partial pressure",
+  ]}
+  answer={0}
+  explanation="From Henry's law, x = p / Kₕ. At identical partial pressure p, mole fraction x is inversely proportional to Kₕ. Because O2 has the smallest Kₕ (34.86 kbar) among He (144.97), N2 (76.48), H2 (69.16), and O2 (34.86) at 293 K, O2 dissolves to the greatest extent."
+>
+  At $293\text{ K}$, NCERT Table 1.2 lists $K_H$ in water as $144.97\text{ kbar}$ for $\ce{He}$, $76.48\text{ kbar}$ for $\ce{N2}$, $69.16\text{ kbar}$ for $\ce{H2}$, and $34.86\text{ kbar}$ for $\ce{O2}$. At the same partial pressure, which gas has the **highest** solubility in water?
+</Check>
+
+<Check
+  n={3}
+  options={[
+    "Helium reacts chemically with nitrogen in blood to neutralise it",
+    "Helium has a much higher Kₕ (far lower solubility) than N₂ and lowers p(N₂), preventing nitrogen bubbles (bends) on ascent",
+    "Helium lowers blood temperature so more oxygen freezes out of solution",
+    "Helium has a much lower Kₕ than N₂ so it dissolves rapidly and displaces oxygen",
+  ]}
+  answer={1}
+  explanation="Helium has the highest Kₕ (144.97 kbar at 293 K), so very little He dissolves in blood even under high underwater pressure. Replacing part of the air's nitrogen with 11.7% He also lowers the partial pressure of N2, sharply reducing both dissolved N2 toxicity and the formation of painful N2 bubbles (bends) during decompression."
+>
+  Why do deep-sea divers use helium-diluted tank mixtures ($11.7\%\text{ He}$, $56.2\%\text{ N}_2$, $32.1\%\text{ O}_2$) instead of ordinary compressed air?
+</Check>
+
+<KeyIdeas>
+  - **Like dissolves like:** polar and ionic solids dissolve in polar solvents, while non-polar solids dissolve in non-polar solvents; saturation is a dynamic equilibrium where dissolution and crystallisation rates are equal.
+  - **Opposite temperature trends:** for solids, raising temperature boosts solubility when $\Delta_{\text{sol}} H > 0$ and lowers it when $\Delta_{\text{sol}} H < 0$, while pressure has a negligible effect.
+  - **Henry's law ($p = K_H x$):** at constant temperature, a gas's dissolved mole fraction $x$ scales linearly with its partial pressure $p$ above the liquid, and inversely with Henry's constant $K_H$.
+  - **Cold water holds more gas:** gas dissolution is exothermic ($\Delta_{\text{sol}} H < 0$), so warming raises $K_H$ and lowers gas solubility—explaining why aquatic life thrives in cooler waters.
+  - **Real-world impact:** Henry's law underpins pressurised carbonated beverages, helium-diluted scuba mixes that guard against decompression bends, and high-altitude anoxia where $p(\ce{O2})$ drops.
+</KeyIdeas>
