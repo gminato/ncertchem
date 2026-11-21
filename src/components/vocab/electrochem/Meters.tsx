@@ -75,6 +75,10 @@ export const Meter = forwardRef<SVGGElement, MeterProps>(function Meter(
     const large = a1 - a0 > 180 ? 1 : 0
     return `M${p0.x} ${p0.y} A${r} ${r} 0 ${large} 1 ${p1.x} ${p1.y}`
   }
+  // The readout is 28 units tall, sits 6 units above the frame's bottom edge and is at least 6 units in from each side.
+  const READOUT_H = 28
+  const readoutW = Math.min(124, width - 12)
+  const readoutTop = y + height / 2 - READOUT_H - 6
   const tip = toXY(angle, radius * 0.86)
   const tail = toXY(angle + 180, radius * 0.18)
 
@@ -126,8 +130,9 @@ export const Meter = forwardRef<SVGGElement, MeterProps>(function Meter(
       <circle cx={cx} cy={cy} r={5} fill="var(--fg)" />
       {digital && (
         <g>
-          <rect x={x - 62} y={y + height * 0.26} width={124} height={30} rx={6} fill="var(--surface)" stroke="var(--glass-wall)" strokeWidth={1} />
-          <text x={x} y={y + height * 0.26 + 21} textAnchor="middle" fontSize={17} fontWeight={600} fill="var(--fg)" style={{ fontVariantNumeric: 'tabular-nums' }}>
+          {/* Sits at the bottom of the frame, 6 units clear of its edge, so it never crosses the frame. */}
+          <rect x={x - readoutW / 2} y={readoutTop} width={readoutW} height={READOUT_H} rx={6} fill="var(--surface)" stroke="var(--glass-wall)" strokeWidth={1} />
+          <text x={x} y={readoutTop + 19} textAnchor="middle" fontSize={17} fontWeight={600} fill="var(--fg)" style={{ fontVariantNumeric: 'tabular-nums' }}>
             {shown} {unit}
           </text>
         </g>
