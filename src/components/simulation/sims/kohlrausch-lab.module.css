@@ -178,3 +178,10 @@
 .field output {
   font-size: 14px;
 }
+
+/* Readouts use the sans body face like the controls (one font across both panels). */
+.root .readout,
+.root .result p,
+.root .caution {
+  font-family: var(--font-sans);
+}

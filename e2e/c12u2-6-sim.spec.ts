@@ -39,14 +39,12 @@ for (const scheme of ['light', 'dark'] as const) {
     await root.scrollIntoViewIfNeeded()
     await root.screenshot({ path: `test-results/screens/c12u2-6-sim-default-${scheme}.png` })
 
-    // Learner adds two more KCl points and two acetic acid points.
-    await page.getByRole('button', { name: 'Add next KCl point' }).click()
-    await page.getByRole('button', { name: 'Add next KCl point' }).click()
+    // Learner adds two acetic acid points (both KCl points are always shown).
     await page.getByRole('button', { name: 'Add next acetic acid point' }).click()
     await page.getByRole('button', { name: 'Add next acetic acid point' }).click()
     const readout = root.locator('p[aria-live="polite"]').first()
-    await expect(readout).toContainText('KCl: 4 of 4 points')
-    await expect(readout).toContainText('149.8')
+    await expect(readout).toContainText('the two dilute Table 2.3 points')
+    await expect(readout).toContainText('146.5')
     await root.screenshot({ path: `test-results/screens/c12u2-6-sim-plot-${scheme}.png` })
 
     // Ion builder: calcium with chloride gives CaCl₂ and Λ°m 271.6.
@@ -62,14 +60,14 @@ for (const scheme of ['light', 'dark'] as const) {
     await page.getByRole('radio', { name: 'CH₃COO⁻', exact: true }).click()
     await expect(result).toContainText('weak electrolyte')
 
-    // Concentration slider: α and Ka change with c, and Ka stays 1.78 × 10⁻⁵ at every c.
+    // Concentration slider: α and Ka change with c, and Ka stays 1.24 × 10⁻⁵ at every c.
     const slider = root.getByRole('slider')
     await slider.focus()
     await page.keyboard.press('ArrowRight')
     await page.keyboard.press('ArrowRight')
     const acetic = root.locator('[aria-live="polite"]').last()
     await expect(acetic).toContainText('mol L⁻¹')
-    await expect(acetic).toContainText('1.78 × 10⁻⁵')
+    await expect(acetic).toContainText('1.24 × 10⁻⁵')
     await root.screenshot({ path: `test-results/screens/c12u2-6-sim-conc-${scheme}.png` })
 
     // Every text element is at least 14 px computed size.

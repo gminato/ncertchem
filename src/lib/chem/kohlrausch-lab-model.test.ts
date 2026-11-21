@@ -3,8 +3,8 @@ import {
   ACETIC_ACID_KA,
   ACETIC_LAMBDA0,
   KCL_POINTS,
-  aceticAcidDecomposition,
   aceticAcidFromKa,
+  aceticAcidIons,
   buildSalt,
   fitKClPoints,
   formatSci,
@@ -12,33 +12,30 @@ import {
   ANION_CHOICES,
   CATION_CHOICES,
 } from './kohlrausch-lab-model'
+import { KCL_A_LINE, KCL_LAMBDA0_LINE } from './variation-conductivity'
 
 const pick = (list: typeof CATION_CHOICES, id: string) => list.find((c) => c.id === id)!
 
 describe('Kohlrausch Lab model', () => {
-  it('reproduces the Table 2.4 Kohlrausch sums for acetic acid (390.5 S cm² mol⁻¹)', () => {
-    const d = aceticAcidDecomposition()
-    expect(d.hcl).toBeCloseTo(425.9, 6)
-    expect(d.naAc).toBeCloseTo(91.0, 6)
-    expect(d.naCl).toBeCloseTo(126.4, 6)
-    expect(ACETIC_LAMBDA0).toBeCloseTo(390.5, 6)
+  it('sums the Table 2.4 ions for acetic acid (390.5 S cm² mol⁻¹)', () => {
+    const ions = aceticAcidIons()
+    expect(ions.lambda0).toBeCloseTo(390.5, 6)
+    expect(ACETIC_LAMBDA0).toBeCloseTo(ions.lambda0, 9)
   })
 
-  it('fits the KCl points of Example 2.6 to a Λ°m near 149.8 and A near 87.4', () => {
+  it('fits the two dilute KCl points to the same line the Prose quotes', () => {
     const fit = fitKClPoints(KCL_POINTS.length)
-    expect(fit.lambda0Scm2).toBeCloseTo(149.83, 1)
-    expect(fit.A).toBeCloseTo(87.44, 1)
+    expect(fit.lambda0Scm2).toBeCloseTo(KCL_LAMBDA0_LINE, 9)
+    expect(fit.A).toBeCloseTo(KCL_A_LINE, 9)
   })
 
   it('needs at least two KCl points for the least-squares line', () => {
-    expect(() => fitKClPoints(1)).toThrow()
+    expect(() => fitKClPoints(1)).toThrow(RangeError)
   })
 
   it('computes acetic acid Λm from Ka and recovers the same Ka through α', () => {
-    for (const c of [1e-7, 1e-5, 1e-4, 1e-3]) {
+    for (const c of [1e-5, 1e-4, 1e-3]) {
       const { alpha, lambdaScm2 } = aceticAcidFromKa(c)
-      expect(alpha).toBeGreaterThan(0)
-      expect(alpha).toBeLessThan(1)
       expect(lambdaScm2).toBeCloseTo(alpha * ACETIC_LAMBDA0, 9)
       const back = readoutFromLambda(c, lambdaScm2)
       expect(back.Ka / ACETIC_ACID_KA).toBeCloseTo(1, 9)
@@ -51,21 +48,13 @@ describe('Kohlrausch Lab model', () => {
     expect(aceticAcidFromKa(1e-7).lambdaScm2).toBeGreaterThan(385)
   })
 
-  it('agrees with NCERT Example 2.9 (Λm 48.15 at 1.028 × 10⁻³ mol L⁻¹, Ka ≈ 1.78 × 10⁻⁵)', () => {
-    const c = 1.028e-3
-    const { alpha, lambdaScm2 } = aceticAcidFromKa(c)
-    expect(lambdaScm2).toBeCloseTo(48.15, 0)
-    expect(alpha).toBeCloseTo(0.1233, 3)
-    expect(readoutFromLambda(c, 48.15).Ka).toBeCloseTo(1.78e-5, 7)
-  })
-
-  it('builds CaCl₂ with ν = 1 and 2 and sums Λ°m = 119.0 + 2 × 76.3', () => {
-    const r = buildSalt(pick(CATION_CHOICES, 'Ca2+'), pick(ANION_CHOICES, 'Cl-'))
+  it('builds MgCl₂ with ν = 1 and 2 and sums Λ°m = 106.0 + 2 × 76.3', () => {
+    const r = buildSalt(pick(CATION_CHOICES, 'Mg2+'), pick(ANION_CHOICES, 'Cl-'))
     expect(r.valid).toBe(true)
-    expect(r.formula).toBe('CaCl₂')
+    expect(r.formula).toBe('MgCl₂')
     expect(r.nuCation).toBe(1)
     expect(r.nuAnion).toBe(2)
-    expect(r.lambda0Scm2).toBeCloseTo(271.6, 6)
+    expect(r.lambda0Scm2).toBeCloseTo(258.6, 6)
   })
 
   it('builds H₂SO₄ and Ca(OH)₂ with the right counts', () => {

@@ -7,12 +7,13 @@ import { lambda0OfIon } from '@/lib/chem/conductance'
 import { NCERT_LIMITING_ION_CONDUCTIVITY } from '@/lib/chem/ncert-c12-unit2-tables'
 import {
   ACETIC_LAMBDA0,
+  ACETIC_ACID_KA,
   ACETIC_STEPS,
   ANION_CHOICES,
   CATION_CHOICES,
   KCL_POINTS,
   aceticAcidFromKa,
-  aceticAcidDecomposition,
+  aceticAcidIons,
   buildSalt,
   fitKClPoints,
   formatSci,
@@ -28,14 +29,14 @@ const X0 = 70
 const X1 = 530
 const Y_TOP = 24
 const Y_BOT = 318
-const S_MAX = 0.035
+const S_MAX = 0.35
 const LAMBDA_MAX = 400
 const TEXT: CSSProperties = { fontSize: 14, fontFamily: 'var(--font-sans)' }
 
 const sx = (s: number) => X0 + (s / S_MAX) * (X1 - X0)
 const sy = (lambda: number) => Y_BOT - (lambda / LAMBDA_MAX) * (Y_BOT - Y_TOP)
 
-const X_TICKS = [0, 0.01, 0.02, 0.03] as const
+const X_TICKS = [0, 0.1, 0.2, 0.3] as const
 const Y_TICKS = [0, 100, 200, 300, 400] as const
 
 /** Concentrations on the weak-acid curve, log-spaced from 1 × 10⁻⁷ to 1.2 × 10⁻³ mol L⁻¹. */
@@ -48,7 +49,8 @@ function ionLabel(id: IonId): string {
 }
 
 export function KohlrauschLab(_props: SimulationProps) {
-  const [kclCount, setKclCount] = useState(2)
+  // Both dilute Table 2.3 points are always shown; the learner adds acetic acid points.
+  const kclCount = KCL_POINTS.length
   const [aceticCount, setAceticCount] = useState(0)
   const [cationId, setCationId] = useState<IonId>('Na+')
   const [anionId, setAnionId] = useState<IonId>('Cl-')
@@ -59,7 +61,7 @@ export function KohlrauschLab(_props: SimulationProps) {
   const salt = buildSalt(cation, anion)
 
   const fit = fitKClPoints(kclCount)
-  const decomposition = aceticAcidDecomposition()
+  const ions = aceticAcidIons()
   const c = 10 ** logC
   const acetic = aceticAcidFromKa(c)
   const readout = readoutFromLambda(c, acetic.lambdaScm2)
@@ -82,16 +84,12 @@ export function KohlrauschLab(_props: SimulationProps) {
           A. Λm against √c
         </h3>
         <div className={styles.controlRow}>
-          <Button variant="secondary" onClick={() => setKclCount((n) => Math.min(KCL_POINTS.length, n + 1))} disabled={kclCount >= KCL_POINTS.length}>
-            Add next KCl point
-          </Button>
           <Button variant="secondary" onClick={() => setAceticCount((n) => Math.min(ACETIC_STEPS.length, n + 1))} disabled={aceticCount >= ACETIC_STEPS.length}>
             Add next acetic acid point
           </Button>
           <Button
             variant="secondary"
             onClick={() => {
-              setKclCount(2)
               setAceticCount(0)
             }}
           >
@@ -141,21 +139,21 @@ export function KohlrauschLab(_props: SimulationProps) {
           <g>
             <circle cx={318} cy={36} r={6} className={styles.strongPoint} />
             <text x={330} y={41} className={styles.label} style={TEXT}>
-              KCl (measured, Ex. 2.6)
+              KCl (Table 2.3, dilute)
             </text>
             <circle cx={318} cy={62} r={5} className={styles.weakPoint} />
             <text x={330} y={67} className={styles.label} style={TEXT}>
-              CH₃COOH (from Ka)
+              CH₃COOH (illustrative, from Ka)
             </text>
           </g>
         </svg>
 
         <p className={styles.readout} aria-live="polite">
-          KCl: {kclCount} of {KCL_POINTS.length} points. Least-squares line gives <span className="sym">Λ°m</span> = {fit.lambda0Scm2.toFixed(1)} S cm² mol⁻¹ and <span className="sym">A</span> = {fit.A.toFixed(1)} S cm² mol⁻¹ (mol L⁻¹)^−½.
+          KCl: the two dilute Table 2.3 points. The line through them gives <span className="sym">Λ°m</span> = {fit.lambda0Scm2.toFixed(1)} S cm² mol⁻¹ and <span className="sym">A</span> = {fit.A.toFixed(1)} S cm² mol⁻¹ (mol L⁻¹)^−½.
           {aceticCount > 0
-            ? ` Acetic acid (${aceticCount} points) is computed from Ka = 1.78 × 10⁻⁵, not measured: its curve has no straight-line intercept.`
+            ? ` Acetic acid (${aceticCount} points) is computed from Ka = ${formatSci(ACETIC_ACID_KA, 3)}, not measured: its curve has no straight-line intercept.`
             : ' Add acetic acid points to compare the steep weak-electrolyte curve.'}
-        </p>
+        </p>{' '}
       </section>
 
       <section className={styles.panel} aria-labelledby="kohl-ions-title">
@@ -186,33 +184,24 @@ export function KohlrauschLab(_props: SimulationProps) {
             <>
               <p className={styles.formula}>
                 {salt.formula} <span className={styles.muted}>ν₊ = {salt.nuCation}, ν₋ = {salt.nuAnion}</span>
-              </p>
+              </p>{' '}
               <div className={styles.stack} role="img" aria-label={`${sumText}, made of cation ${salt.cationContribution.toFixed(1)} and anion ${salt.anionContribution.toFixed(1)}`}>
-                <span className={styles.segCation} style={{ flexBasis: `${(salt.cationContribution / totalForBar) * 100}%` }} />
-                <span className={styles.segAnion} style={{ flexBasis: `${(salt.anionContribution / totalForBar) * 100}%` }} />
+                <span className={styles.segCation} style={{ flexBasis: `${(salt.cationContribution / totalForBar) * 100}%` }}>{ionLabel(cation.id)} {salt.cationContribution.toFixed(1)}</span>
+                <span className={styles.segAnion} style={{ flexBasis: `${(salt.anionContribution / totalForBar) * 100}%` }}>{ionLabel(anion.id)} {salt.anionContribution.toFixed(1)}</span>
               </div>
               <p className={styles.sum}>
                 Λ°m({salt.formula}) = {salt.nuCation} × {lambda0OfIon(cation.id).toFixed(1)} + {salt.nuAnion} × {lambda0OfIon(anion.id).toFixed(1)} = <strong>{salt.lambda0Scm2.toFixed(1)}</strong> S cm² mol⁻¹
-              </p>
+              </p>{' '}
             </>
           ) : (
             <p className={styles.caution}>{salt.reason}</p>
           )}
         </div>
 
-        <h4 className={styles.subTitle}>Acetic acid from three strong electrolytes</h4>
+        <h4 className={styles.subTitle}>Acetic acid from its two ions</h4>
         <ul className={styles.sumList}>
           <li>
-            HCl: {lambda0OfIon('H+').toFixed(1)} + {lambda0OfIon('Cl-').toFixed(1)} = {decomposition.hcl.toFixed(1)}
-          </li>
-          <li>
-            NaCH₃COO: {lambda0OfIon('Na+').toFixed(1)} + {lambda0OfIon('CH3COO-').toFixed(1)} = {decomposition.naAc.toFixed(1)}
-          </li>
-          <li>
-            NaCl: {lambda0OfIon('Na+').toFixed(1)} + {lambda0OfIon('Cl-').toFixed(1)} = {decomposition.naCl.toFixed(1)}
-          </li>
-          <li>
-            Λ°m(CH₃COOH) = {decomposition.hcl.toFixed(1)} + {decomposition.naAc.toFixed(1)} − {decomposition.naCl.toFixed(1)} = <strong>{ACETIC_LAMBDA0.toFixed(1)}</strong> S cm² mol⁻¹
+            H⁺: {ions.h.toFixed(1)} + CH₃COO⁻: {ions.ac.toFixed(1)} = <strong>{ACETIC_LAMBDA0.toFixed(1)}</strong> S cm² mol⁻¹
           </li>
         </ul>
 
@@ -233,16 +222,16 @@ export function KohlrauschLab(_props: SimulationProps) {
         <div className={styles.result} aria-live="polite">
           <p className={styles.sum}>
             At <span className="sym">c</span> = {formatSci(c)} mol L⁻¹
-          </p>
+          </p>{' '}
           <p className={styles.sum}>
             <span className="sym">Λm</span> = {acetic.lambdaScm2.toFixed(1)} S cm² mol⁻¹ (computed from Ka, not measured)
-          </p>
+          </p>{' '}
           <p className={styles.sum}>
             <span className="sym">α</span> = <span className="sym">Λm</span>/<span className="sym">Λ°m</span> = {readout.alpha.toFixed(4)}
-          </p>
+          </p>{' '}
           <p className={styles.sum}>
             <span className="sym">Ka</span> = <span className="sym">cα</span>²/(1 − <span className="sym">α</span>) = {formatSci(readout.Ka, 3)}
-          </p>
+          </p>{' '}
         </div>
       </section>
     </div>

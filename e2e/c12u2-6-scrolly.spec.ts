@@ -45,3 +45,12 @@ for (const scheme of ['light', 'dark'] as const) {
     })
   })
 }
+
+test('Section 2.4.2 page has display maths and does not scroll sideways at 390 × 844', async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 })
+  await page.goto(`/class-12/unit-2/${SLUG}`)
+  await expect(page.locator('.katex-display').first()).toBeVisible()
+  expect(await page.locator('.katex-display').count()).toBeGreaterThanOrEqual(1)
+  const scrollWidth = await page.evaluate(() => document.documentElement.scrollWidth)
+  expect(scrollWidth).toBeLessThanOrEqual(390)
+})

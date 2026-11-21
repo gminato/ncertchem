@@ -1,48 +1,40 @@
-// Model for the Kohlrausch Lab (Class 12 Unit 2, Section 2.4.2).
-// Every number comes from the Unit 2 tables or from conductance.ts; the only constant
-// of its own is the acetic acid Ka, which is the value NCERT Example 2.9 arrives at.
+// Model for the Kohlrausch Lab (Class 12 Unit 2, Section 2.4.2). Every number comes from
+// variation-conductivity.ts (the same values the Prose uses), Table 2.4 via conductance.ts, or the ion lists here.
 
-import { NCERT_EXAMPLE_2_6_KCL, NCERT_LIMITING_ION_CONDUCTIVITY, type LimitingIonRow } from './ncert-c12-unit2-tables'
+import { NCERT_LIMITING_ION_CONDUCTIVITY, type LimitingIonRow } from './ncert-c12-unit2-tables'
+import {
+  ACETIC_KA,
+  ACETIC_LAMBDA0,
+  KCL_DILUTE_POINTS,
+  type KClPoint,
+} from './variation-conductivity'
 import {
   degreeOfDissociation,
   dissociationConstantFromAlpha,
   fitDebyeHuckelOnsager,
-  lambda0ByCombination,
-  lambda0Electrolyte,
   lambda0OfIon,
 } from './conductance'
 
 export type IonId = LimitingIonRow['id']
 
-/** KCl molar conductivities of NCERT Example 2.6 (298 K), in the order the learner adds them. */
-export const KCL_POINTS: readonly { readonly c: number; readonly lambdaScm2: number }[] = NCERT_EXAMPLE_2_6_KCL.map(
-  (r) => ({ c: r.c, lambdaScm2: r.lambdaScm2 }),
-)
+/** KCl molar conductivities at the dilute Table 2.3 concentrations, in the order the learner adds them. */
+export const KCL_POINTS: readonly KClPoint[] = KCL_DILUTE_POINTS
 
-/** Ka of acetic acid at 298 K: the result NCERT Example 2.9 reaches (1.78 × 10⁻⁵). */
-export const ACETIC_ACID_KA = 1.78e-5
+/** Ka of the illustrative acetic acid measurement (see variation-conductivity.ts). */
+export const ACETIC_ACID_KA: number = ACETIC_KA
 
 /** Concentrations (mol L⁻¹) at which the acetic acid curve gets a marker, in the order the learner adds them. */
 export const ACETIC_STEPS: readonly number[] = [1e-5, 2e-5, 5e-5, 1e-4, 3e-4, 1e-3]
 
-/** Λ°m of acetic acid from Kohlrausch: Λ°(HCl) + Λ°(NaCH₃COO) − Λ°(NaCl), S cm² mol⁻¹. */
-export function aceticAcidDecomposition() {
-  const hcl = lambda0Electrolyte([
-    { ion: 'H+', count: 1 },
-    { ion: 'Cl-', count: 1 },
-  ])
-  const naAc = lambda0Electrolyte([
-    { ion: 'Na+', count: 1 },
-    { ion: 'CH3COO-', count: 1 },
-  ])
-  const naCl = lambda0Electrolyte([
-    { ion: 'Na+', count: 1 },
-    { ion: 'Cl-', count: 1 },
-  ])
-  return { hcl, naAc, naCl, lambda0: lambda0ByCombination([hcl, naAc], [naCl]) }
-}
+/** Λ°m of acetic acid as the sum of its two ions in Table 2.4, S cm² mol⁻¹. */
+export { ACETIC_LAMBDA0 }
 
-export const ACETIC_LAMBDA0 = aceticAcidDecomposition().lambda0
+/** The two ion contributions to Λ°m(CH₃COOH), S cm² mol⁻¹. */
+export function aceticAcidIons(): { readonly h: number; readonly ac: number; readonly lambda0: number } {
+  const h = lambda0OfIon('H+')
+  const ac = lambda0OfIon('CH3COO-')
+  return { h, ac, lambda0: h + ac }
+}
 
 /**
  * Least-squares line through the first `count` KCl points: intercept Λ°m and slope magnitude A.
