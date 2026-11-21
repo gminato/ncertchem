@@ -1,0 +1,135 @@
+---
+class: 12
+unit: 2
+section: "2.2"
+order: 2
+title: "Galvanic Cells and Electrode Potential"
+slug: "12-2-2-galvanic-cells"
+access: free
+summary: "No single electrode potential can be read on its own, so each half-cell is measured against a reference, the standard hydrogen electrode, and the results stack into a ladder that predicts every pairing."
+ncert: "Class 12, Part I — Unit 2, Section 2.2"
+---
+
+<Hook>
+Drop a copper spoon into silver nitrate solution and, within minutes, it wears a bright silvery coat. Leave zinc metal in copper sulphate solution and the zinc slowly dissolves while red copper forms on its surface. Neither metal is "stronger" in every situation. Each reaction is a contest for electrons, and the winner is recorded in a table of numbers that electrochemists consult before they ever touch a beaker.
+</Hook>
+
+## Two half-cells make one galvanic cell
+
+A galvanic cell turns the Gibbs energy of a spontaneous redox reaction into electrical work. Every such reaction splits into two halves: oxidation at one electrode and reduction at the other. Each half, a metal dipped in a solution of its own ions, is called a **half-cell**, or a **redox couple**. Join the two halves with an external wire that contains a voltmeter and a switch, and link the two solutions with a salt bridge to close the internal circuit.
+
+Electrons leave the **anode**, where oxidation happens, and travel through the wire to the **cathode**, where reduction happens. Conventional current flows the other way. Inside the cell, the charge is carried by ions. That is why the anode is the negative terminal of a galvanic cell and the cathode the positive one.
+
+## Cell notation and the sign of the cell potential
+
+Chemists write the cell in a compact form. The anode goes on the left and the cathode on the right. A single vertical line marks a boundary between phases, and a double line marks the salt bridge:
+
+$$
+\ce{Zn(s)|Zn^2+(aq)||Cu^2+(aq)|Cu(s)}
+$$
+
+With this convention, the cell potential is the potential of the right-hand half-cell minus that of the left-hand one:
+
+$$
+E^\circ_{\text{cell}} = E^\circ_{\text{right}} - E^\circ_{\text{left}} = E^\circ_{\text{cathode}} - E^\circ_{\text{anode}}
+$$
+
+A positive $E^\circ_{\text{cell}}$ means the reaction, as written in the cell, is spontaneous.
+
+## Electrode potential and why only differences are measured
+
+When a metal meets its own ions in solution, a charge separation builds up at the interface, and a potential difference develops between the metal and the liquid. This is the **electrode potential**. It depends on how strongly the metal and its ions hold on to electrons, and on the concentrations involved.
+
+When every species in the half-cell is at unit concentration, the electrode potential becomes the **standard electrode potential**, $E^\circ$. Gases are taken at 1 bar and the temperature is 298 K. IUPAC now calls these values standard electrode potentials for reduction reactions, which is the convention used throughout this Section.
+
+A voltmeter can only report a difference between two electrodes. A single half-cell potential therefore cannot be measured in isolation. We must choose one reference and measure everything against it.
+
+## The standard hydrogen electrode
+
+The reference is the **standard hydrogen electrode (SHE)**: a platinum foil coated with platinum black, dipped into $1\ \text{M}\ \ce{H+}(aq)$, with hydrogen gas at 1 bar bubbling over it. By convention its potential is set to zero at every temperature:
+
+$$
+\ce{2H+(aq, 1 M) + 2e- -> H2(g, 1 bar)} \qquad E^\circ = 0.00\ \text{V}
+$$
+
+Platinum is used because it is inert. It does not take part in the reaction. It only provides a surface where the hydrogen couple can reach equilibrium and carries electrons to the external circuit.
+
+<Scrolly animation="she-measurement">
+  <Step>
+    **One half-cell, one unknown:** A copper electrode sits in blue $\ce{Cu^2+}(aq)$. At the metal and solution interface, ions tend to deposit on the metal while metal atoms tend to leave as ions, and a charge separation sets up a potential. The potential is real, but a voltmeter on this single electrode has nothing to push against, so the reading is a question mark.
+  </Step>
+  <Step>
+    **Building the reference:** Pass pure hydrogen at 1 bar over platinum black in $1\ \text{M}\ \ce{H+}$. This standard hydrogen electrode is fixed at $E^\circ = 0\ \text{V}$ at every temperature. Every other standard electrode potential in this Section is measured against it, so the zero is a choice of reference rather than a physical fact about hydrogen.
+  </Step>
+  <Step>
+    **SHE against copper:** Put the SHE on the left as the anode and the copper half-cell on the right as the cathode. The meter reads $+0.34\ \text{V}$, and electrons flow from the hydrogen electrode through the wire to the copper. Copper ions are reduced more readily than hydrogen ions, so $E^\circ(\ce{Cu^2+}/\ce{Cu}) = +0.34\ \text{V}$.
+  </Step>
+  <Step>
+    **SHE against zinc:** Now zinc goes on the left. Zinc is oxidised, so it is the anode and sits at the negative terminal, while hydrogen ions are reduced at the SHE. The meter reads $0.76\ \text{V}$ with zinc negative. The SHE is the cathode here, so $E^\circ(\ce{Zn^2+}/\ce{Zn}) = 0 - 0.76 = -0.76\ \text{V}$. The negative sign says zinc metal is a stronger reducing agent than hydrogen.
+  </Step>
+  <Step>
+    **The electrochemical series:** Arrange the couples by standard electrode potential and a ladder appears. Fluorine sits at the top at $+2.87\ \text{V}$, the strongest oxidising agent in Table 2.1. Lithium sits at the bottom at $-3.05\ \text{V}$, the strongest reducing agent. Moving down the ladder, oxidising power falls and reducing power rises. Any metal whose couple lies below H⁺/H₂ can reduce hydrogen ions.
+  </Step>
+  <Step>
+    **Pairing any two couples:** Choose silver ($+0.80\ \text{V}$) and zinc ($-0.76\ \text{V}$). The couple with the higher $E^\circ$ is reduced, so silver is the cathode and zinc the anode. Then $E^\circ_{\text{cell}} = 0.80 - (-0.76) = 1.56\ \text{V}$. The cell is $\ce{Zn(s)|Zn^2+(aq)||Ag+(aq)|Ag(s)}$, and its overall reaction is $\ce{Zn(s) + 2Ag+(aq) -> Zn^2+(aq) + 2Ag(s)}$.
+  </Step>
+</Scrolly>
+
+## Predicting reactions from the table
+
+Read the table as a list of who wins a contest for electrons. Copper sits above H⁺/H₂ at $+0.34\ \text{V}$, so hydrogen ions cannot oxidise copper under standard conditions. The reaction $\ce{Cu(s) + 2H+(aq) -> Cu^2+(aq) + H2(g)}$ would have $E^\circ_{\text{cell}} = 0 - 0.34 = -0.34\ \text{V}$, which is not spontaneous as written. Copper does dissolve in nitric acid, but there the oxidant is the nitrate ion, whose couple lies higher at $0.97\ \text{V}$.
+
+The same reasoning answers the spoon and the zinc pot from the opening. Silver ions are reduced more readily than copper ions, so $E^\circ_{\text{cell}} = 0.80 - 0.34 = +0.46\ \text{V}$ and copper plates out silver. Zinc and copper ions give $E^\circ_{\text{cell}} = 0.34 - (-0.76) = +1.10\ \text{V}$, so zinc is oxidised and a zinc pot holding copper sulphate would slowly dissolve.
+
+Try any pair of couples on the bench below. It decides the anode and the cathode, writes the cell notation, balances the overall reaction and draws the ladder of both couples.
+
+<Simulation name="half-cell-pairing" title="Half-Cell Pairing Bench" />
+
+## Check your understanding
+
+<Check
+  n={1}
+  numeric
+  answer={0.46}
+  tolerance={0.005}
+  unit="V"
+  explanation="Ag⁺/Ag (E° = +0.80 V) is the cathode and Cu²⁺/Cu (E° = +0.34 V) is the anode, so E°cell = 0.80 − 0.34 = +0.46 V."
+>
+Using Table 2.1, calculate the standard cell potential of a galvanic cell in which the cathode is $\ce{Ag+(aq)|Ag(s)}$ and the anode is $\ce{Cu(s)|Cu^2+(aq)}$.
+</Check>
+
+<Check
+  n={2}
+  options={[
+    "Yes: copper dissolves and hydrogen gas is released, since E°cell = +0.34 V",
+    "No: E°cell = −0.34 V, so the reaction is not spontaneous as written",
+    "Yes: copper dissolves because hydrogen ions have a higher E° than copper",
+    "No: E°cell = +0.34 V, but the reaction needs a catalyst to start"
+  ]}
+  answer={1}
+  explanation="E°(Cu²⁺/Cu) = +0.34 V is above E°(H⁺/H₂) = 0 V, so hydrogen ions cannot oxidise copper under standard conditions. The cell potential for Cu + 2H⁺ → Cu²⁺ + H₂ is 0 − 0.34 = −0.34 V."
+>
+Can dilute hydrochloric acid under standard conditions dissolve a copper rod by oxidising it to $\ce{Cu^2+}$?
+</Check>
+
+<Check
+  n={3}
+  options={[
+    "Zinc is the anode and dissolves; copper deposits on the pot; E°cell = +1.10 V",
+    "Copper dissolves and zinc deposits; E°cell = −1.10 V",
+    "Nothing happens, because zinc is inert in every solution",
+    "Zinc is the cathode and copper is oxidised; E°cell = +1.10 V"
+  ]}
+  answer={0}
+  explanation="E°(Cu²⁺/Cu) = +0.34 V and E°(Zn²⁺/Zn) = −0.76 V. Zinc is the anode with E°cell = 0.34 − (−0.76) = +1.10 V, so the zinc is oxidised while copper is reduced onto the surface."
+>
+A zinc vessel is filled with copper sulphate solution and left for a day. Which description is correct under standard conditions?
+</Check>
+
+<KeyIdeas>
+- A galvanic cell pairs two half-cells. Oxidation happens at the **anode**, which is negative; reduction happens at the **cathode**, which is positive. Electrons flow from anode to cathode through the wire.
+- Only potential **differences** can be measured, so every standard electrode potential is referred to the **standard hydrogen electrode**, which is fixed at $E^\circ = 0\ \text{V}$.
+- Cell notation puts the anode on the left, uses $|$ for phase boundaries and $\|$ for the salt bridge, and gives $E^\circ_{\text{cell}} = E^\circ_{\text{right}} - E^\circ_{\text{left}}$.
+- In Table 2.1 the standard electrode potential falls from fluorine at $+2.87\ \text{V}$ down to lithium at $-3.05\ \text{V}$. A higher $E^\circ$ means a stronger oxidising agent; a lower one means a stronger reducing agent.
+- Any two couples can be paired: the higher $E^\circ$ is reduced, and $E^\circ_{\text{cell}} > 0$ predicts a spontaneous reaction.
+</KeyIdeas>
