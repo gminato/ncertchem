@@ -77,6 +77,9 @@ export function CorrosionLab({ reducedMotion }: SimulationProps) {
   const ironFraction = rustFraction(state.ironRate, weeks)
 
   // Geometry (viewBox 420 x 300). Anode on the left, except magnesium, which sits on the right.
+  // The tube fills most of the stage width (x 60 to 380 of 420), so the labels sit inside the glass.
+  const TUBE_X = 60
+  const TUBE_W = 320
   const NAIL_X = 205
   const NAIL_W = 10
   const anodeY =
@@ -164,23 +167,23 @@ export function CorrosionLab({ reducedMotion }: SimulationProps) {
         >
           <defs>
             <clipPath id={`tube-${uid}`}>
-              <rect x={150} y={24} width={120} height={262} rx={14} />
+              <rect x={TUBE_X} y={24} width={TUBE_W} height={262} rx={14} />
             </clipPath>
           </defs>
 
-          <rect className={styles.glass} x={150} y={24} width={120} height={262} rx={14} />
+          <rect className={styles.glass} x={TUBE_X} y={24} width={TUBE_W} height={262} rx={14} />
           {env !== 'dry-air' && (
             <rect
               className={styles.liquid}
               data-env={env}
-              x={150}
+              x={TUBE_X}
               y={120}
-              width={120}
+              width={TUBE_W}
               height={166}
               clipPath={`url(#tube-${uid})`}
             />
           )}
-          <rect className={styles.glassEdge} x={150} y={24} width={120} height={262} rx={14} />
+          <rect className={styles.glassEdge} x={TUBE_X} y={24} width={TUBE_W} height={262} rx={14} />
 
           <text className={styles.caption} x={210} y={14} textAnchor="middle">
             {env === 'dry-air' ? 'no water' : env === 'water-no-air' ? 'water, no O₂' : 'O₂ present'}
@@ -242,15 +245,15 @@ export function CorrosionLab({ reducedMotion }: SimulationProps) {
             <g>
               {anodeOnRight ? (
                 <>
-                  <path className={styles.leader} d={`M 284 ${anodeY} H 250`} />
-                  <text className={styles.label} x={288} y={anodeY + 5}>
+                  <path className={styles.leader} d={`M 268 ${anodeY} H 250`} />
+                  <text className={styles.label} x={272} y={anodeY + 5}>
                     anode: {METAL_SYMBOL[state.anode]}
                   </text>
                 </>
               ) : (
                 <>
-                  <path className={styles.leader} d={`M 134 ${anodeY} H ${NAIL_X - 4}`} />
-                  <text className={styles.label} x={130} y={anodeY + 5} textAnchor="end">
+                  <path className={styles.leader} d={`M 154 ${anodeY} H ${NAIL_X - 4}`} />
+                  <text className={styles.label} x={150} y={anodeY + 5} textAnchor="end">
                     anode: {METAL_SYMBOL[state.anode]}
                   </text>
                 </>
@@ -259,8 +262,8 @@ export function CorrosionLab({ reducedMotion }: SimulationProps) {
           )}
           {state.cathode && (
             <g>
-              <path className={styles.leader} d={`M 284 ${cathodeY} H ${NAIL_X + NAIL_W + 4}`} />
-              <text className={styles.label} x={288} y={cathodeY + 5}>
+              <path className={styles.leader} d={`M 268 ${cathodeY} H ${NAIL_X + NAIL_W + 4}`} />
+              <text className={styles.label} x={272} y={cathodeY + 5}>
                 cathode: {METAL_SYMBOL[state.cathode]}
               </text>
             </g>

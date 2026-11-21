@@ -1,5 +1,7 @@
 import { describe, expect, it } from 'vitest'
 import {
+  ENVIRONMENTS,
+  RATE_LABELS,
   anodeE0,
   cathodeE0,
   corrosionState,
@@ -56,6 +58,26 @@ describe('corrosion-lab model', () => {
   it('no rust without an electrolyte or oxygen, even with a scratched tin coat', () => {
     expect(corrosionState({ env: 'water-no-air', protection: 'tin', scratched: true }).anode).toBeNull()
     expect(corrosionState({ env: 'dry-air', protection: 'tin', scratched: true }).anode).toBeNull()
+  })
+
+  it('keeps every simulated comparison strictly ordered where an electrolyte and oxygen are present', () => {
+    // Dry air and water without air give no rust for any protection, so they cannot be ordered.
+    const wet = ENVIRONMENTS.filter((e) => e.hasWater && e.hasAir)
+    expect(wet.map((e) => e.id)).toEqual(['water-air', 'salt-water', 'acid'])
+    for (const { id } of wet) {
+      const bare = corrosionState({ env: id, protection: 'none', scratched: false }).ironRate
+      const tin = corrosionState({ env: id, protection: 'tin', scratched: true }).ironRate
+      const zinc = corrosionState({ env: id, protection: 'zinc', scratched: true }).ironRate
+      expect(bare, id).toBeGreaterThan(0)
+      expect(tin, `scratched tin vs bare iron in ${id}`).toBeGreaterThan(bare)
+      expect(zinc, `scratched zinc vs bare iron in ${id}`).toBeLessThan(bare)
+    }
+  })
+
+  it('scale runs 0 to 5 with a label for every level, so scratched tin in acid stays above bare iron', () => {
+    expect(RATE_LABELS).toHaveLength(6)
+    expect(corrosionState({ env: 'acid', protection: 'none', scratched: false }).ironRate).toBe(4)
+    expect(corrosionState({ env: 'acid', protection: 'tin', scratched: true }).ironRate).toBe(5)
   })
 
   it('rust fraction grows with time, is capped at 1 and is zero at rate 0', () => {

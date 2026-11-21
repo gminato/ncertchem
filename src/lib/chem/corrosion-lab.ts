@@ -1,7 +1,7 @@
 import { NCERT_STANDARD_POTENTIALS } from './ncert-c12-unit2-tables'
 
 /**
- * Corrosion Lab model. Rates are an ILLUSTRATIVE relative scale (0 to 4), not
+ * Corrosion Lab model. Rates are an ILLUSTRATIVE relative scale (0 to 5), not
  * measured data. The only numbers shown as numbers are standard potentials,
  * taken from NCERT_STANDARD_POTENTIALS by id.
  */
@@ -9,7 +9,7 @@ import { NCERT_STANDARD_POTENTIALS } from './ncert-c12-unit2-tables'
 export type Environment = 'dry-air' | 'water-no-air' | 'water-air' | 'salt-water' | 'acid'
 export type Protection = 'none' | 'paint' | 'zinc' | 'tin' | 'magnesium'
 export type Metal = 'iron' | 'zinc' | 'tin' | 'magnesium'
-export type RateLevel = 0 | 1 | 2 | 3 | 4
+export type RateLevel = 0 | 1 | 2 | 3 | 4 | 5
 
 export const ENVIRONMENTS: readonly { id: Environment; label: string; hasWater: boolean; hasAir: boolean }[] = [
   { id: 'dry-air', label: 'Dry air', hasWater: false, hasAir: true },
@@ -27,7 +27,8 @@ export const PROTECTIONS: readonly { id: Protection; label: string }[] = [
   { id: 'magnesium', label: 'Mg block' },
 ]
 
-export const RATE_LABELS: readonly string[] = ['none', 'very slow', 'slow', 'moderate', 'fast']
+/** Illustrative labels; index = RateLevel. Scratched tin in acid (5) sits above bare iron in acid (4). */
+export const RATE_LABELS: readonly string[] = ['none', 'very slow', 'slow', 'moderate', 'fast', 'very fast']
 export const MAX_WEEKS = 52
 /** Illustrative: weeks at rate 4 for a full rust fraction, scaled per rate level. */
 const WEEKS_PER_FULL_RUST_AT_RATE_1 = 160
@@ -98,7 +99,7 @@ export function corrosionState(input: {
       return {
         anode: 'iron',
         cathode: 'tin',
-        ironRate: Math.min(4, envRate + 1) as RateLevel,
+        ironRate: Math.min(5, envRate + 1) as RateLevel,
         sacrificialRate: 0,
         scratched,
       }

@@ -18,11 +18,11 @@ Iron gates by the sea often show far more rust than identical gates inland, wher
 
 Most of the electricity we use is made in thermal power plants. Coal, gas or oil is burnt to heat water into high-pressure steam, the steam drives a turbine, and the turbine spins a generator. Each of these steps wastes energy, and the plants also release a great deal of pollution. The chemical energy of the fuel is converted into electricity only in part.
 
-A galvanic cell takes a different route. It converts chemical energy directly into electrical energy, with no boiler and no turbine in between, so it can be far more efficient. The idea that follows is simple: if we could feed a fuel continuously to a galvanic cell and remove its products continuously, the cell would keep running for as long as the fuel lasted. Galvanic cells built this way are called **fuel cells**.
+A galvanic cell takes a different route. It converts chemical energy directly into electrical energy, with no boiler and no turbine in between, so it can be far more efficient. The idea that follows is simple: if we could feed a fuel continuously to a galvanic cell and remove its products continuously, the cell would keep running for as long as the fuel lasted. Galvanic cells built this way are called **fuel cells**. The fuel need not be hydrogen: methane and methanol are also used, fed in the same manner.
 
 ## The hydrogen–oxygen fuel cell
 
-One of the most successful fuel cells uses hydrogen and oxygen to make water. Hydrogen and oxygen are bubbled through porous carbon electrodes into concentrated aqueous sodium hydroxide. Finely divided platinum or palladium is built into the electrodes as a catalyst, which speeds up the electrode reactions. This cell supplied electrical power during the Apollo space missions, and the water it made was condensed and added to the astronauts' drinking supply.
+One of the most successful fuel cells uses hydrogen and oxygen to make water. Hydrogen and oxygen are bubbled through porous carbon electrodes into concentrated aqueous sodium hydroxide. Tiny particles of platinum or palladium are embedded in the electrodes, where they quicken the reactions at both electrodes. This cell supplied electrical power during the Apollo space missions, and the water it made was condensed and added to the astronauts' drinking supply.
 
 At the anode, hydrogen reacts with hydroxide ions and releases electrons. At the cathode, oxygen, water and electrons combine to form hydroxide ions. Writing each electrode reaction on its own line:
 
@@ -40,15 +40,15 @@ $$
 \ce{2H2(g) + O2(g) -> 2H2O(l)}
 $$
 
-The cell runs continuously as long as hydrogen and oxygen are supplied, and no electrode is consumed. Only the fuel and the oxidant are used up, and the electrodes are left to do their job.
+Keep feeding in the gases and the cell keeps producing current. Only the fuel and the oxidant are consumed; the electrodes survive intact.
 
 ## Why fuel cells are attractive
 
-A fuel cell turns about 70% of the fuel's energy into electricity, whereas a thermal plant manages about 40%. A fuel cell also produces no pollution at the point of use, since its only product is water. Its efficiency and its clean output have driven a great deal of work on better electrode materials, better catalysts and better electrolytes, and fuel cells have already been tried experimentally in automobiles.
+A fuel cell converts about 70% of the fuel's energy into electricity, against roughly 40% for a thermal plant. At the point of use its only product is water, so it adds no pollution there. That pairing of high efficiency and clean output is why researchers keep improving electrodes, catalysts and electrolytes, and prototype fuel-cell cars have already been run.
 
 ## Rusting as a corrosion cell
 
-Corrosion slowly coats the surface of a metal with its oxides or other salts. The rusting of iron, the tarnishing of silver and the green coating on copper and bronze are all examples. Corrosion damages buildings, bridges and ships, and it costs enormous sums every year.
+Corrosion is the slow conversion of a metal's surface into oxides or other salts. Familiar cases include the rust on iron, the dulling of silver, and the green patina on copper and bronze. Such attack weakens buildings, bridges and ships, and it drains large sums of money every year.
 
 Rusting needs both water and air, and it is best understood as an electrochemical process. A single spot on an iron object acts as the **anode**, where iron is oxidised:
 
@@ -62,11 +62,23 @@ $$
 \ce{O2(g) + 4H^+(aq) + 4e^- -> 2H2O(l)}
 $$
 
-Ferrous ions formed at the anode are oxidised further by atmospheric oxygen to ferric oxide. The product comes out as rust, roughly $\ce{Fe2O3}\cdot x\ce{H2O}$, and releases more hydrogen ions in the process. Notice that the potential is worked out the same way as for any cell: the cathode potential of $+1.23$ V minus the anode potential of $-0.44$ V gives $E^\circ_{\text{cell}} = 1.67$ V for the overall reaction.
+Ferrous ions formed at the anode are then oxidised further by atmospheric oxygen. The product is rust, roughly $\ce{Fe2O3}\cdot x\ce{H2O}$, and the step releases more hydrogen ions:
+
+$$
+\ce{2Fe^{2+}(aq) + 2H2O(l) + 1/2O2(g) -> Fe2O3(s) + 4H^+(aq)}
+$$
+
+Doubling the anode reaction and adding the cathode reaction gives the overall change, before any rust forms:
+
+$$
+\ce{2Fe(s) + O2(g) + 4H^+(aq) -> 2Fe^{2+}(aq) + 2H2O(l)}
+$$
+
+Notice that the potential is worked out the same way as for any cell: the cathode potential of $+1.23$ V minus the anode potential of $-0.44$ V gives $E^\circ_{\text{cell}} = 1.67$ V for the overall reaction.
 
 ## Stopping the cell
 
-Prevention matters a great deal, because it saves money and prevents accidents such as a bridge failing or a key component breaking. The simplest method is to keep the metal away from air and water: cover the surface with paint, or with a chemical such as bisphenol. A second method coats the iron with another metal such as tin or zinc.
+Prevention pays for itself: it cuts costs and reduces the risk of failures, such as a collapsing bridge or a broken critical part. The most direct approach denies the metal both water and air. Paint does this, and so does a chemical coating such as bisphenol. Another approach covers the iron with a second metal, tin or zinc.
 
 These two coatings work differently. A tin coat is less reactive than iron, since $E^\circ(\text{Sn}^{2+}/\text{Sn}) = -0.14$ V lies above $E^\circ(\text{Fe}^{2+}/\text{Fe}) = -0.44$ V. Once the tin is scratched, iron becomes the anode and rusts. A zinc coat, with $E^\circ(\text{Zn}^{2+}/\text{Zn}) = -0.76$ V, is more reactive than iron, so zinc corrodes first and protects the iron even where it is exposed.
 
