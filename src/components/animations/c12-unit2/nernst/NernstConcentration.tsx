@@ -9,6 +9,7 @@ import {
   Electrode,
   HydrogenElectrode,
   Ion,
+  SaltBridge,
   VocabDefs,
   Voltmeter,
   Wire,
@@ -25,6 +26,8 @@ import {
   hydrogenPotential,
   niAgPotential,
   niAgReactionQuotient,
+  placeIons,
+  type Rect,
 } from './nernst-steps'
 
 export interface NernstConcentrationProps {
@@ -33,10 +36,6 @@ export interface NernstConcentrationProps {
 }
 
 const SVG_H = 560
-const SLOTS: readonly (readonly [number, number])[] = [
-  [0.1, 0.25], [0.3, 0.55], [0.12, 0.7], [0.7, 0.6], [0.08, 0.86], [0.24, 0.93], [0.68, 0.8],
-  [0.84, 0.3], [0.22, 0.45], [0.78, 0.62], [0.88, 0.5], [0.3, 0.2], [0.7, 0.2], [0.92, 0.85],
-]
 
 /** Ions drawn for a log10 concentration: `max` at 1 mol L⁻¹, falling as the square root of the concentration (schematic). */
 export function ionCountFor(logC: number, max = 14): number {
@@ -51,25 +50,26 @@ export function powerOfTen(logC: number): string {
   return `10${k < 0 ? '⁻' : ''}${body}`
 }
 
+/** The rod as an obstacle: its strip from the top down its length. */
+function rodRect(x: number, top: number, length: number, width: number): Rect {
+  return { x: x - width / 2, y: top, width, height: length }
+}
+
 function IonCloud({
-  bx, by, bw, bh, level, formula, charge, logC, max = 14,
-}: { bx: number; by: number; bw: number; bh: number; level: number; formula: string; charge: string; logC: number; max?: number }) {
+  bx, by, bw, bh, level, formula, charge, logC, rod, max = 14,
+}: { bx: number; by: number; bw: number; bh: number; level: number; formula: string; charge: string; logC: number; rod: Rect; max?: number }) {
   const g = beakerGeometry({ x: bx, y: by, width: bw, height: bh, level })
-  const w = g.innerRight - g.innerLeft
-  const h = g.innerBottom - g.liquidTop
   const n = ionCountFor(logC, max)
+  const region: Rect = {
+    x: g.innerLeft + 4,
+    y: g.liquidTop + 8,
+    width: g.innerRight - g.innerLeft - 8,
+    height: g.innerBottom - g.liquidTop - 16,
+  }
   return (
     <g>
-      {SLOTS.slice(0, n).map(([fx, fy], i) => (
-        <Ion
-          key={i}
-          x={g.innerLeft + fx * w}
-          y={g.liquidTop + 14 + fy * (h - 28)}
-          kind="cation"
-          formula={formula}
-          charge={charge}
-          fontSize={14}
-        />
+      {placeIons(region, n, rod).map(([x, y], i) => (
+        <Ion key={i} x={x} y={y} kind="cation" formula={formula} charge={charge} fontSize={14} />
       ))}
     </g>
   )
@@ -112,7 +112,7 @@ function SingleHalfCell({ step, logCu }: { step: number; logCu: number }) {
     <g>
       <Beaker x={36} y={60} width={250} height={270} level={0.72} tint="blue" label="CuSO₄(aq)" />
       <Electrode x={161} top={22} length={254} width={26} material="cu" />
-      <IonCloud bx={36} by={60} bw={250} bh={270} level={0.72} formula="Cu" charge="2+" logC={logCu} />
+      <IonCloud bx={36} by={60} bw={250} bh={270} level={0.72} formula="Cu" charge="2+" logC={logCu} rod={rodRect(161, 22, 254, 26)} max={10} />
       <text x={340} y={84} fontSize={16} fill="var(--fg)" fontFamily="var(--font-sans)">
         E = E° + (0.059 / 2) log[Cu²⁺]
       </text>
@@ -139,49 +139,60 @@ interface CellHalf {
   logC: number
 }
 
-/** Two half-cells, a salt bridge and a digital voltmeter. Left is the cathode (+), right the anode (−). */
+/**
+ * Two half-cells, a vocab salt bridge and a digital voltmeter. Left is the anode (−),
+ * right the cathode (+), as in the cell notation. The external wire runs from the anode
+ * to the meter's − terminal and from the cathode to its + terminal.
+ */
 function TwoHalfCells({
-  left, right, emf, t,
-}: { left: CellHalf; right: CellHalf; emf: number; t: number }) {
+  anode, cathode, emf, t,
+}: { anode: CellHalf; cathode: CellHalf; emf: number; t: number }) {
   const bw = 200
   const by = 60
   const bh = 250
   const level = 0.72
+  const top = 50
+  const length = 220
+  const rodW = 24
   const cx = 290
-  const cy = 400
+  const cy = 372
   const meter = meterTerminals(cx, cy, 70)
-  const lx = left.x + bw / 2
-  const rx = right.x + bw / 2
+  const ax = anode.x + bw / 2
+  const kx = cathode.x + bw / 2
+  const anodeRod = rodRect(ax, top, length, rodW)
+  const cathodeRod = rodRect(kx, top, length, rodW)
   return (
     <g>
-      <Beaker x={left.x} y={by} width={bw} height={bh} level={level} tint={left.tint} label={left.label} />
-      <Beaker x={right.x} y={by} width={bw} height={bh} level={level} tint={right.tint} label={right.label} />
-      <IonCloud bx={left.x} by={by} bw={bw} bh={bh} level={level} formula={left.formula} charge={left.charge} logC={left.logC} max={7} />
-      <IonCloud bx={right.x} by={by} bw={bw} bh={bh} level={level} formula={right.formula} charge={right.charge} logC={right.logC} max={7} />
-      <Electrode x={lx} top={50} length={220} width={24} material={left.material} polarity="+" role="cathode" />
-      <Electrode x={rx} top={50} length={220} width={24} material={right.material} polarity="−" role="anode" />
-      <path
-        d={`M ${left.x + bw - 26} ${by + 190} Q 290 ${by - 40} ${right.x + 26} ${by + 190}`}
-        fill="none"
-        stroke="var(--fg-muted)"
-        strokeWidth={10}
-        strokeLinecap="round"
-        opacity={0.45}
-      />
-      <Wire
-        corners={[{ x: lx, y: 22 }, { x: 8, y: 22 }, { x: 8, y: meter.plus.y }, { x: meter.plus.x, y: meter.plus.y }]}
+      <Beaker x={anode.x} y={by} width={bw} height={bh} level={level} tint={anode.tint} label={anode.label} />
+      <Beaker x={cathode.x} y={by} width={bw} height={bh} level={level} tint={cathode.tint} label={cathode.label} />
+      <IonCloud bx={anode.x} by={by} bw={bw} bh={bh} level={level} formula={anode.formula} charge={anode.charge} logC={anode.logC} rod={anodeRod} max={7} />
+      <IonCloud bx={cathode.x} by={by} bw={bw} bh={bh} level={level} formula={cathode.formula} charge={cathode.charge} logC={cathode.logC} rod={cathodeRod} max={7} />
+      <Electrode x={ax} top={top} length={length} width={rodW} material={anode.material} polarity="−" role="anode" />
+      <Electrode x={kx} top={top} length={length} width={rodW} material={cathode.material} polarity="+" role="cathode" />
+      <SaltBridge
+        start={{ x: anode.x + bw, y: 230 }}
+        finish={{ x: cathode.x, y: 230 }}
+        apex={92}
+        plugs
         t={t}
-        electrons
-        dots={3}
-        direction="reverse"
-        strokeWidth={3}
+        ions
+        ionCount={4}
+        cationsTo="to"
       />
       <Wire
-        corners={[{ x: rx, y: 22 }, { x: 572, y: 22 }, { x: 572, y: meter.minus.y + 16 }, { x: meter.minus.x, y: meter.minus.y + 16 }, { x: meter.minus.x, y: meter.minus.y }]}
+        corners={[{ x: ax, y: 22 }, { x: 8, y: 22 }, { x: 8, y: meter.minus.y + 24 }, { x: meter.minus.x, y: meter.minus.y + 24 }, { x: meter.minus.x, y: meter.minus.y }]}
         t={t}
         electrons
         dots={3}
         direction="forward"
+        strokeWidth={3}
+      />
+      <Wire
+        corners={[{ x: kx, y: 22 }, { x: 572, y: 22 }, { x: 572, y: meter.plus.y + 40 }, { x: meter.plus.x, y: meter.plus.y + 40 }, { x: meter.plus.x, y: meter.plus.y }]}
+        t={t}
+        electrons
+        dots={3}
+        direction="reverse"
         strokeWidth={3}
       />
       <Voltmeter x={cx} y={cy} width={150} height={70} value={emf} range={[0, 1.5]} unit="V" caption="Voltmeter" terminals />
@@ -226,8 +237,8 @@ export function NernstConcentration({ step, reducedMotion }: NernstConcentration
     scene = (
       <g>
         <TwoHalfCells
-          left={{ x: 24, tint: 'blue', label: 'CuSO₄(aq)', material: 'cu', formula: 'Cu', charge: '2+', logC: logCu }}
-          right={{ x: 356, tint: 'clear', label: 'ZnSO₄(aq)', material: 'zn', formula: 'Zn', charge: '2+', logC: logZn }}
+          anode={{ x: 24, tint: 'clear', label: 'ZnSO₄(aq)', material: 'zn', formula: 'Zn', charge: '2+', logC: logZn }}
+          cathode={{ x: 356, tint: 'blue', label: 'CuSO₄(aq)', material: 'cu', formula: 'Cu', charge: '2+', logC: logCu }}
           emf={daniellPotential(logZn, logCu)}
           t={t}
         />
@@ -244,8 +255,8 @@ export function NernstConcentration({ step, reducedMotion }: NernstConcentration
     scene = (
       <g>
         <TwoHalfCells
-          left={{ x: 24, tint: 'clear', label: 'AgNO₃(aq)', material: 'ag', formula: 'Ag', charge: '+', logC: logAg }}
-          right={{ x: 356, tint: 'clear', label: 'NiSO₄(aq)', material: 'ni', formula: 'Ni', charge: '2+', logC: logNi }}
+          anode={{ x: 24, tint: 'clear', label: 'NiSO₄(aq)', material: 'ni', formula: 'Ni', charge: '2+', logC: logNi }}
+          cathode={{ x: 356, tint: 'clear', label: 'AgNO₃(aq)', material: 'ag', formula: 'Ag', charge: '+', logC: logAg }}
           emf={niAgPotential(logNi, logAg)}
           t={t}
         />

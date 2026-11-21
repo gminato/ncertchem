@@ -28,6 +28,13 @@ describe('Nernst Lab cells', () => {
     expect(nernstCell('daniell').notation.startsWith('Zn(s) |')).toBe(true)
   })
 
+  it('writes each cell in IUPAC form: anode left, | between phases, || at the salt bridge, Pt as the last phase', () => {
+    expect(nernstCell('daniell').notation).toBe('Zn(s) | Zn^{2+}(aq) || Cu^{2+}(aq) | Cu(s)')
+    expect(nernstCell('cu-ag').notation).toBe('Cu(s) | Cu^{2+}(aq) || Ag^{+}(aq) | Ag(s)')
+    expect(nernstCell('zn-she').notation).toBe('Zn(s) | Zn^{2+}(aq) || H^{+}(aq) | H_2(g) | Pt(s)')
+    expect(nernstCell('concentration').notation).toBe('Cu(s) | Cu^{2+}(aq) || Cu^{2+}(aq) | Cu(s)')
+  })
+
   it('reads 1.10 V for the Daniell cell at unit concentrations', () => {
     const r = readNernst(nernstCell('daniell'), [0, 0])
     expect(r.q).toBeCloseTo(1, 10)

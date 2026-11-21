@@ -95,7 +95,7 @@ function buildCells(): readonly NernstCell[] {
     {
       id: 'zn-she',
       label: 'Zinc against the hydrogen electrode',
-      notation: 'Zn(s) | Zn^{2+}(aq) || H^{+}(aq) | H_2(g), Pt(s)',
+      notation: 'Zn(s) | Zn^{2+}(aq) || H^{+}(aq) | H_2(g) | Pt(s)',
       reaction: 'Zn(s) + 2H^{+}(aq) -> Zn^{2+}(aq) + H_2(g)',
       n: 2,
       e0Cell: eH - eZn,

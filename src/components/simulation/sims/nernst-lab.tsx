@@ -69,7 +69,7 @@ const LEFT_X = 83
 const RIGHT_X = 217
 const ELECTRODE_TOP = 176
 const ELECTRODE_LENGTH = 126
-const METER = { x: 150, y: 76, width: 170, height: 70 }
+const METER = { x: 150, y: 62, width: 170, height: 70 }
 
 /** Round a number to 3 decimals and write U+2212 for minus signs. */
 function signed(x: number, digits: number): string {
@@ -165,17 +165,19 @@ export function NernstLab({ reducedMotion }: SimulationProps) {
 
   const meterValue = r.eCell
   const terminals = meterTerminals(METER.x, METER.y, METER.height)
-  const leftLead = [
-    { x: terminals.plus.x, y: terminals.plus.y },
-    { x: terminals.plus.x, y: ELECTRODE_TOP - 20 },
+  // The anode (left, −) goes to the meter's − terminal, the cathode (right, +) to its + terminal.
+  // Both leads leave the electrode badges upward and pass above the salt bridge.
+  const anodeLead = [
     { x: LEFT_X, y: ELECTRODE_TOP - 20 },
-    { x: LEFT_X, y: ELECTRODE_TOP },
-  ]
-  const rightLead = [
+    { x: LEFT_X, y: 131 },
+    { x: terminals.minus.x, y: 131 },
     { x: terminals.minus.x, y: terminals.minus.y },
-    { x: terminals.minus.x, y: ELECTRODE_TOP - 20 },
+  ]
+  const cathodeLead = [
     { x: RIGHT_X, y: ELECTRODE_TOP - 20 },
-    { x: RIGHT_X, y: ELECTRODE_TOP },
+    { x: RIGHT_X, y: 143 },
+    { x: terminals.plus.x, y: 143 },
+    { x: terminals.plus.x, y: terminals.plus.y },
   ]
 
   const markerX = plotX(r.logQ)
@@ -237,8 +239,8 @@ export function NernstLab({ reducedMotion }: SimulationProps) {
             decimals={2}
             caption="Voltmeter"
           />
-          <Wire corners={leftLead} />
-          <Wire corners={rightLead} />
+          <Wire corners={anodeLead} />
+          <Wire corners={cathodeLead} />
 
           <Beaker {...LEFT_BEAKER} level={0.72} tint={dress.left.tint} label={dress.left.label} />
           {dress.shE ? (
@@ -272,7 +274,7 @@ export function NernstLab({ reducedMotion }: SimulationProps) {
           <SaltBridge
             start={{ x: 112, y: 300 }}
             finish={{ x: 188, y: 300 }}
-            apex={158}
+            apex={170}
             plugs
             t={t}
             ions={!reducedMotion}

@@ -148,3 +148,46 @@ export function clampNernstStep(step: number): number {
 export function getNernstStepState(step: number): NernstStepState {
   return NERNST_STEPS[clampNernstStep(step)]
 }
+
+export interface Rect {
+  x: number
+  y: number
+  width: number
+  height: number
+}
+
+/** Pill size used for ion labels (14 px text with a 12 px pad, as in the vocab Ion). */
+export const ION_PILL = { width: 46, height: 26 } as const
+
+/** Keep-clear gap around the rod and around every other pill. */
+const ION_GAP = 4
+
+function boxesTouch(a: Rect, b: Rect, gap: number): boolean {
+  return a.x < b.x + b.width + gap && a.x + a.width + gap > b.x && a.y < b.y + b.height + gap && a.y + a.height + gap > b.y
+}
+
+/**
+ * Deterministic ion placement. Candidate centres come from a low-discrepancy
+ * sequence inside `region`; a candidate is kept only if its pill clears the rod
+ * and every pill already kept. Taking the first `count` kept centres means that
+ * a smaller count never moves the ions that remain.
+ */
+export function placeIons(region: Rect, count: number, rod: Rect): Array<readonly [number, number]> {
+  const { width: pw, height: ph } = ION_PILL
+  const x0 = region.x + pw / 2
+  const x1 = region.x + region.width - pw / 2
+  const y0 = region.y + ph / 2
+  const y1 = region.y + region.height - ph / 2
+  const placed: Array<readonly [number, number]> = []
+  const boxes: Rect[] = [rod]
+  for (let i = 1; i <= 4000 && placed.length < count; i++) {
+    const cx = x0 + ((i * 0.6180339887498949) % 1) * (x1 - x0)
+    const cy = y0 + ((i * 0.7548776662466927) % 1) * (y1 - y0)
+    const box = { x: cx - pw / 2, y: cy - ph / 2, width: pw, height: ph }
+    if (boxes.every((b) => !boxesTouch(box, b, ION_GAP))) {
+      placed.push([cx, cy] as const)
+      boxes.push(box)
+    }
+  }
+  return placed
+}

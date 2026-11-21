@@ -14,6 +14,7 @@ import {
   hydrogenPotential,
   niAgPotential,
   niAgReactionQuotient,
+  placeIons,
 } from './nernst-steps'
 
 describe('Nernst animation steps', () => {
@@ -95,5 +96,31 @@ describe('Nernst animation steps', () => {
     expect(clampNernstStep(99)).toBe(4)
     expect(clampNernstStep(Number.NaN)).toBe(0)
     expect(getNernstStepState(2).id).toBe('daniell-ratio')
+  })
+})
+
+describe('placeIons', () => {
+  // The one-electrode beaker's liquid (250 × 270 px beaker, level 0.72) beside its copper rod.
+  const region = { x: 44, y: 154, width: 234, height: 164 }
+  const rod = { x: 148, y: 22, width: 26, height: 254 }
+  const pill = (x: number, y: number) => ({ x: x - 23, y: y - 13, width: 46, height: 26 })
+  const touch = (a: ReturnType<typeof pill>, b: { x: number; y: number; width: number; height: number }) =>
+    a.x < b.x + b.width + 4 && a.x + a.width + 4 > b.x && a.y < b.y + b.height + 4 && a.y + a.height + 4 > b.y
+
+  it('places the same ions every time and keeps a smaller count as a prefix', () => {
+    expect(placeIons(region, 10, rod)).toEqual(placeIons(region, 10, rod))
+    expect(placeIons(region, 5, rod)).toEqual(placeIons(region, 10, rod).slice(0, 5))
+  })
+
+  it('keeps every pill clear of the rod and of the other pills, inside the region', () => {
+    const pts = placeIons(region, 10, rod)
+    expect(pts).toHaveLength(10)
+    pts.forEach(([x, y], i) => {
+      const box = pill(x, y)
+      expect(touch(box, rod)).toBe(false)
+      expect(box.x).toBeGreaterThanOrEqual(region.x)
+      expect(box.x + box.width).toBeLessThanOrEqual(region.x + region.width)
+      pts.slice(i + 1).forEach(([qx, qy]) => expect(touch(box, pill(qx, qy))).toBe(false))
+    })
   })
 })
