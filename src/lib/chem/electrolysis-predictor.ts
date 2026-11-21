@@ -69,11 +69,15 @@ function table21(id: string): number {
   return row.e0
 }
 
-const WATER_REDUCTION: RawCandidate = {
+/**
+ * The H⁺ that reaches the cathode comes from water (H₂O ⇌ H⁺ + OH⁻, NCERT p.23), so the
+ * learner sees the water-based net equation, but the potential that competes is H⁺/H₂ at 0.00 V.
+ */
+const WATER_HYDROGEN: RawCandidate = {
   key: 'water',
-  couple: 'H₂O/H₂',
-  half: '2H₂O + 2e⁻ → H₂ + 2OH⁻',
-  e0: table21('H2O/H2'),
+  couple: 'H⁺/H₂',
+  half: 'H₂O + e⁻ → ½H₂ + OH⁻',
+  e0: table21('H+/H2'),
   product: 'H₂',
 }
 
@@ -131,7 +135,7 @@ const RAW_CASES: readonly RawCase[] = [
     description: 'Aqueous NaCl with inert electrodes',
     cathode: [
       { key: 'sodium', couple: 'Na⁺/Na', half: 'Na⁺ + e⁻ → Na', e0: table21('Na+/Na'), product: 'Na' },
-      WATER_REDUCTION,
+      WATER_HYDROGEN,
     ],
     anode: [
       { key: 'chlorine', couple: 'Cl₂/Cl⁻', half: '2Cl⁻ → Cl₂ + 2e⁻', e0: table21('Cl2/Cl-'), product: 'Cl₂' },
@@ -156,14 +160,14 @@ const RAW_CASES: readonly RawCase[] = [
   {
     id: 'aqueous-CuSO4-Pt-electrodes',
     description: 'Aqueous CuSO₄ with platinum electrodes',
-    cathode: [PT_CATHODE_COPPER, WATER_REDUCTION],
+    cathode: [PT_CATHODE_COPPER, WATER_HYDROGEN],
     anode: [WATER_OXIDATION],
     anodeRule: 'only-candidate',
   },
   {
     id: 'aqueous-CuSO4-Cu-electrodes',
     description: 'Aqueous CuSO₄ with copper electrodes',
-    cathode: [PT_CATHODE_COPPER, WATER_REDUCTION],
+    cathode: [PT_CATHODE_COPPER, WATER_HYDROGEN],
     anode: [
       { key: 'copper-anode', couple: 'Cu²⁺/Cu', half: 'Cu → Cu²⁺ + 2e⁻', e0: table21('Cu2+/Cu'), product: 'Cu²⁺', dissolves: true },
       WATER_OXIDATION,
@@ -173,14 +177,14 @@ const RAW_CASES: readonly RawCase[] = [
   {
     id: 'aqueous-AgNO3-Pt-electrodes',
     description: 'Aqueous AgNO₃ with platinum electrodes',
-    cathode: [PT_CATHODE_SILVER, WATER_REDUCTION],
+    cathode: [PT_CATHODE_SILVER, WATER_HYDROGEN],
     anode: [WATER_OXIDATION],
     anodeRule: 'only-candidate',
   },
   {
     id: 'aqueous-AgNO3-Ag-electrodes',
     description: 'Aqueous AgNO₃ with silver electrodes',
-    cathode: [PT_CATHODE_SILVER, WATER_REDUCTION],
+    cathode: [PT_CATHODE_SILVER, WATER_HYDROGEN],
     anode: [
       { key: 'silver-anode', couple: 'Ag⁺/Ag', half: 'Ag → Ag⁺ + e⁻', e0: table21('Ag+/Ag'), product: 'Ag⁺', dissolves: true },
       WATER_OXIDATION,
@@ -192,7 +196,7 @@ const RAW_CASES: readonly RawCase[] = [
     description: 'Aqueous KBr with platinum electrodes',
     cathode: [
       { key: 'potassium', couple: 'K⁺/K', half: 'K⁺ + e⁻ → K', e0: table21('K+/K'), product: 'K' },
-      WATER_REDUCTION,
+      WATER_HYDROGEN,
     ],
     anode: [
       { key: 'bromine', couple: 'Br₂/Br⁻', half: '2Br⁻ → Br₂ + 2e⁻', e0: table21('Br2/Br-'), product: 'Br₂' },

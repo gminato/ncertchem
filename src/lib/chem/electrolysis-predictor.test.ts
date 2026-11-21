@@ -18,10 +18,19 @@ describe('predictElectrolysis: winners', () => {
     expect(p.cathode).toHaveLength(1)
   })
 
-  it('aqueous NaCl: water beats Na⁺ at the cathode (−0.83 vs −2.71 V)', () => {
+  it('aqueous NaCl: H⁺ from water beats Na⁺ at the cathode (0.00 vs −2.71 V)', () => {
     const p = predictElectrolysis('aqueous-NaCl-inert')
-    expect(winner(p.cathode)[0].couple).toBe('H₂O/H₂')
-    expect(winner(p.cathode)[0].e0).toBe(-0.83)
+    expect(winner(p.cathode)[0].couple).toBe('H⁺/H₂')
+    expect(winner(p.cathode)[0].e0).toBe(0)
+    expect(winner(p.cathode)[0].half).toBe('H₂O + e⁻ → ½H₂ + OH⁻')
+    expect(p.cathode.find((c) => c.key === 'sodium')?.e0).toBe(-2.71)
+  })
+
+  it('no case lists the H₂O/H₂ couple at −0.83 V as a competitor', () => {
+    for (const id of ELECTROLYSIS_CASES.map((c) => c.id) as PredictorCaseId[]) {
+      const p = predictElectrolysis(id)
+      for (const c of [...p.cathode, ...p.anode]) expect(c.e0).not.toBe(-0.83)
+    }
   })
 
   it('aqueous NaCl: Cl2 wins at the anode even though O2 has the lower E°', () => {
@@ -59,7 +68,7 @@ describe('predictElectrolysis: winners', () => {
     expect(p.reason).toBe('active-anode-dissolves')
   })
 
-  it('AgNO3 with Pt: Ag deposits (0.80 V beats water at −0.83 V), O2 evolves', () => {
+  it('AgNO3 with Pt: Ag deposits (0.80 V beats H⁺/H₂ at 0.00 V), O2 evolves', () => {
     const p = predictElectrolysis('aqueous-AgNO3-Pt-electrodes')
     expect(winner(p.cathode)[0].product).toBe('Ag')
     expect(winner(p.anode)[0].product).toBe('O₂')

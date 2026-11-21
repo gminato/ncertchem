@@ -4,7 +4,7 @@ import { useState } from 'react'
 import { useAmbientTime } from '@/components/animations/c12-unit1/ChemSvg'
 import { Segmented } from '@/components/controls'
 import type { SimulationProps } from '@/components/simulation/registry'
-import { Beaker, DcSource, Electrode, GasBubbles, Ion, VocabDefs, Wire } from '@/components/vocab'
+import { Beaker, DcSource, Electrode, GasBubbles, Ion, METAL_FILL, VocabDefs, Wire } from '@/components/vocab'
 import {
   E0_PERSULFATE,
   predictElectrolysis,
@@ -55,10 +55,14 @@ function anodeReason(p: Prediction, winner: Candidate): string {
       return 'Only one cation and one anion are present, so there is no competition.'
     case 'overpotential-of-O2': {
       const o2 = p.anode.find((c) => c.isOxygen)
-      return `O₂ (${fmtV(o2?.e0 ?? 1.23)}) would win on E° alone, but its overpotential holds it back, so ${winner.product} forms.`
+      if (!o2) throw new RangeError('Overpotential case has no O₂ candidate')
+      return `O₂ (${fmtV(o2.e0)}) would win on E° alone, but its overpotential holds it back, so ${winner.product} forms.`
     }
-    case 'concentration-favours-persulfate':
-      return `At this acid strength S₂O₈²⁻ (${fmtV(E0_PERSULFATE)}) is preferred, so water is not oxidised.`
+    case 'concentration-favours-persulfate': {
+      const water = p.anode.find((c) => c.isOxygen)
+      if (!water) throw new RangeError('Concentrated acid case has no water candidate')
+      return `On E° alone, water (${fmtV(water.e0)}) would be oxidised before persulfate (${fmtV(E0_PERSULFATE)}). NCERT says that at higher acid concentration S₂O₈²⁻ is preferred instead, so water is not oxidised.`
+    }
     case 'active-anode-dissolves':
       return 'The metal anode is oxidised first, so it dissolves and the metal deposits on the cathode.'
     case 'lower-E°':
@@ -220,14 +224,29 @@ export function ElectrolysisProductPredictor({ reducedMotion }: SimulationProps)
             role="cathode"
           />
           {anodeGas ? (
-            <GasBubbles x={56} y={312} width={6} height={110} count={6} t={t} formula={anodeWinner.product} />
+            <GasBubbles x={110} y={316} width={6} height={110} count={6} t={t} formula={anodeWinner.product} />
           ) : null}
           {cathodeGas ? (
-            <GasBubbles x={284} y={312} width={6} height={110} count={6} t={t} formula={cathodeWinner.product} />
+            <GasBubbles x={270} y={316} width={6} height={110} count={6} t={t} formula={cathodeWinner.product} />
           ) : null}
-          {persulfate ? <Ion x={110} y={250} kind="anion" formula="S₂O₈" charge="2−" /> : null}
+          {electrolyte === 'molten-nacl' ? (
+            <g aria-hidden="true">
+              {[0, 1, 2, 3].map((i) => (
+                <circle
+                  key={i}
+                  cx={252 + i * 12}
+                  cy={322 - (i % 2) * 8}
+                  r={4}
+                  fill={METAL_FILL.ag}
+                  stroke="var(--fg-muted)"
+                  strokeWidth={1}
+                />
+              ))}
+            </g>
+          ) : null}
+          {persulfate ? <Ion x={160} y={250} kind="anion" formula="S₂O₈" charge="2−" /> : null}
           {anodeDissolves ? (
-            <Ion x={110} y={250} kind="cation" formula={dissolvingMetal} charge={dissolvedCharge} />
+            <Ion x={160} y={250} kind="cation" formula={dissolvingMetal} charge={dissolvedCharge} />
           ) : null}
           {liquidLabel ? (
             <text x={180} y={300} textAnchor="middle" className={styles.svgLabel}>

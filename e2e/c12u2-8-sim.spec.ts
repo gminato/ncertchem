@@ -85,7 +85,7 @@ test.describe('Electrolysis Product Predictor (2.5.1)', () => {
 
       // Default state: aqueous NaCl with inert electrodes.
       await expect(page.getByRole('radio', { name: 'Aqueous NaCl' })).toHaveAttribute('aria-checked', 'true')
-      await expect(page.getByRole('region', { name: 'Competing half-reactions' })).toContainText('H₂O/H₂')
+      await expect(page.getByRole('region', { name: 'Competing half-reactions' })).toContainText('H⁺/H₂')
       await page.screenshot({ path: `${SCRATCH_SHOTS}/c12u2-8-sim-default-${scheme}.png`, fullPage: false })
 
       // Molten NaCl: no competition.
