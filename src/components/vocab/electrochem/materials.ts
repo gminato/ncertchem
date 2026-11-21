@@ -24,7 +24,7 @@ export const METAL_FILL: Readonly<Record<ElectrodeMaterial, string>> = {
 export type SolutionTint = 'clear' | 'blue' | 'pink' | 'violet' | 'amber'
 
 export const SOLUTION_FILL: Readonly<Record<SolutionTint, string | null>> = {
-  clear: null,
+  clear: 'var(--sol-clear)',
   blue: 'var(--sol-cu)',
   pink: 'var(--sol-pink)',
   violet: 'var(--sol-mno4)',

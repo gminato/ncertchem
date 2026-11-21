@@ -106,6 +106,7 @@
   --ph-14: #5B3FB8;
 
   /* Redox solution and metal tints */
+  --sol-clear: rgba(148, 163, 184, 0.42);
   --sol-cu: #1E88E5;
   --sol-mno4: #7B1FA2;
   --sol-starch: #0F172A;
@@ -249,6 +250,7 @@
   --ph-14: #9B7BFF;
 
   /* Redox solution and metal tints */
+  --sol-clear: rgba(203, 213, 225, 0.26);
   --sol-cu: #38BDF8;
   --sol-mno4: #D946EF;
   --sol-starch: #1E293B;
@@ -369,6 +371,7 @@
     --ph-14: #9B7BFF;
 
     /* Redox solution and metal tints */
+    --sol-clear: rgba(203, 213, 225, 0.26);
     --sol-cu: #38BDF8;
     --sol-mno4: #D946EF;
     --sol-starch: #1E293B;
