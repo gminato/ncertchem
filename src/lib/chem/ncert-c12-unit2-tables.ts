@@ -80,27 +80,33 @@ export interface ConductivityMaterialRow {
   readonly sPerM: number
   /** The value exactly as NCERT prints it. */
   readonly printed: string
+  /**
+   * The value to SHOW students, S m⁻¹. Equal to `sPerM` except for the metals, whose printed
+   * 10³ exponent is a misprint for 10⁷ (copper is 5.9 × 10⁷ S m⁻¹), and graphite, whose exponent
+   * is missing: `null` means "don't show a number for this row".
+   */
+  readonly displaySPerM: number | null
 }
 
 /** Table 2.2 (book p. 44), 298.15 K. */
 export const NCERT_CONDUCTIVITY_MATERIALS: readonly ConductivityMaterialRow[] = [
-  { material: 'Sodium', group: 'conductor', sPerM: 2.1e3, printed: '2.1×10³' },
-  { material: 'Copper', group: 'conductor', sPerM: 5.9e3, printed: '5.9×10³' },
-  { material: 'Silver', group: 'conductor', sPerM: 6.2e3, printed: '6.2×10³' },
-  { material: 'Gold', group: 'conductor', sPerM: 4.5e3, printed: '4.5×10³' },
-  { material: 'Iron', group: 'conductor', sPerM: 1.0e3, printed: '1.0×10³' },
-  { material: 'Graphite', group: 'conductor', sPerM: 12, printed: '1.2×10' },
-  { material: 'Glass', group: 'insulator', sPerM: 1.0e-16, printed: '1.0×10⁻¹⁶' },
-  { material: 'Teflon', group: 'insulator', sPerM: 1.0e-18, printed: '1.0×10⁻¹⁸' },
-  { material: 'Pure water', group: 'aqueous', sPerM: 3.5e-5, printed: '3.5×10⁻⁵' },
-  { material: '0.1 M HCl', group: 'aqueous', sPerM: 3.91, printed: '3.91' },
-  { material: '0.01 M KCl', group: 'aqueous', sPerM: 0.14, printed: '0.14' },
-  { material: '0.01 M NaCl', group: 'aqueous', sPerM: 0.12, printed: '0.12' },
-  { material: '0.1 M HAc', group: 'aqueous', sPerM: 0.047, printed: '0.047' },
-  { material: '0.01 M HAc', group: 'aqueous', sPerM: 0.016, printed: '0.016' },
-  { material: 'CuO', group: 'semiconductor', sPerM: 1e-7, printed: '1×10⁻⁷' },
-  { material: 'Si', group: 'semiconductor', sPerM: 1.5e-2, printed: '1.5×10⁻²' },
-  { material: 'Ge', group: 'semiconductor', sPerM: 2.0, printed: '2.0' },
+  { material: 'Sodium', group: 'conductor', sPerM: 2.1e3, printed: '2.1×10³', displaySPerM: 2.1e7 },
+  { material: 'Copper', group: 'conductor', sPerM: 5.9e3, printed: '5.9×10³', displaySPerM: 5.9e7 },
+  { material: 'Silver', group: 'conductor', sPerM: 6.2e3, printed: '6.2×10³', displaySPerM: 6.2e7 },
+  { material: 'Gold', group: 'conductor', sPerM: 4.5e3, printed: '4.5×10³', displaySPerM: 4.5e7 },
+  { material: 'Iron', group: 'conductor', sPerM: 1.0e3, printed: '1.0×10³', displaySPerM: 1.0e7 },
+  { material: 'Graphite', group: 'conductor', sPerM: 12, printed: '1.2×10', displaySPerM: null },
+  { material: 'Glass', group: 'insulator', sPerM: 1.0e-16, printed: '1.0×10⁻¹⁶', displaySPerM: 1.0e-16 },
+  { material: 'Teflon', group: 'insulator', sPerM: 1.0e-18, printed: '1.0×10⁻¹⁸', displaySPerM: 1.0e-18 },
+  { material: 'Pure water', group: 'aqueous', sPerM: 3.5e-5, printed: '3.5×10⁻⁵', displaySPerM: 3.5e-5 },
+  { material: '0.1 M HCl', group: 'aqueous', sPerM: 3.91, printed: '3.91', displaySPerM: 3.91 },
+  { material: '0.01 M KCl', group: 'aqueous', sPerM: 0.14, printed: '0.14', displaySPerM: 0.14 },
+  { material: '0.01 M NaCl', group: 'aqueous', sPerM: 0.12, printed: '0.12', displaySPerM: 0.12 },
+  { material: '0.1 M HAc', group: 'aqueous', sPerM: 0.047, printed: '0.047', displaySPerM: 0.047 },
+  { material: '0.01 M HAc', group: 'aqueous', sPerM: 0.016, printed: '0.016', displaySPerM: 0.016 },
+  { material: 'CuO', group: 'semiconductor', sPerM: 1e-7, printed: '1×10⁻⁷', displaySPerM: 1e-7 },
+  { material: 'Si', group: 'semiconductor', sPerM: 1.5e-2, printed: '1.5×10⁻²', displaySPerM: 1.5e-2 },
+  { material: 'Ge', group: 'semiconductor', sPerM: 2.0, printed: '2.0', displaySPerM: 2.0 },
 ]
 
 export interface KClConductivityRow {

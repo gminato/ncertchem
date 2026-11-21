@@ -153,3 +153,15 @@ describe('errata', () => {
     expect(NCERT_UNIT2_ERRATA.length).toBeGreaterThanOrEqual(8)
   })
 })
+
+describe('Table 2.2 display values', () => {
+  it('shows metals at 10⁷ S m⁻¹, hides graphite, and keeps every other row as printed', () => {
+    const row = (m: string) => NCERT_CONDUCTIVITY_MATERIALS.find((r) => r.material === m)!
+    expect(row('Copper').displaySPerM).toBeCloseTo(5.9e7)
+    expect(row('Iron').displaySPerM).toBeCloseTo(1.0e7)
+    expect(row('Graphite').displaySPerM).toBeNull()
+    for (const r of NCERT_CONDUCTIVITY_MATERIALS.filter((r) => r.group !== 'conductor')) {
+      expect(r.displaySPerM).toBe(r.sPerM)
+    }
+  })
+})
