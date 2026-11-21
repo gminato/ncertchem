@@ -1,0 +1,102 @@
+.bench {
+  display: grid;
+  gap: 16px;
+}
+
+.controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 12px 20px;
+}
+
+.toggleRow {
+  min-width: 0;
+  max-width: 100%;
+  padding-right: 16px;
+  box-sizing: border-box;
+}
+
+.field {
+  display: grid;
+  gap: 4px;
+  font-size: 14px;
+  color: var(--fg-muted);
+}
+
+.select {
+  min-height: 44px;
+  min-width: min(260px, 100%);
+  max-width: 100%;
+  padding: 8px 10px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--surface);
+  color: var(--fg);
+  font: inherit;
+  font-size: 15px;
+}
+
+.select:focus-visible {
+  outline: 2px solid var(--accent, currentColor);
+  outline-offset: 2px;
+}
+
+.stage {
+  display: block;
+  width: 100%;
+  max-width: 840px;
+  height: auto;
+  margin: 0 auto;
+}
+
+.caption {
+  margin: 0;
+  font-size: 15px;
+  color: var(--fg-muted);
+}
+
+.readout {
+  display: grid;
+  gap: 12px;
+}
+
+.summary {
+  margin: 0;
+  font-size: 16px;
+  color: var(--fg);
+}
+
+.summary[data-spontaneous='false'] {
+  color: var(--red);
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(220px, 100%), 1fr));
+  gap: 10px;
+  margin: 0;
+}
+
+.grid > div {
+  min-width: 0;
+  padding: 10px 12px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: var(--surface);
+}
+
+.grid > div.wide {
+  grid-column: 1 / -1;
+}
+
+.grid dt {
+  font-size: 14px;
+  color: var(--fg-muted);
+}
+
+.grid dd {
+  margin: 4px 0 0;
+  font-size: 16px;
+  overflow-x: auto;
+}

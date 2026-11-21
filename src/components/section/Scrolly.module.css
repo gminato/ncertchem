@@ -77,6 +77,8 @@
 
 .stepText :global(.katex) {
   max-width: 100%;
+  white-space: normal;
+  overflow-wrap: anywhere;
 }
 
 .stepText p {

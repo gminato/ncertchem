@@ -123,6 +123,7 @@
   --metal-ni: #8E9A93;
   --metal-cd: #7D8BA3;
   --metal-graphite: #2E3136;
+  --metal-generic: #9A8F7E;
   /* Electrochemistry: ions, current and the salt-bridge gel */
   --ion-cation: #D6336C;
   --ion-anion: #0E7490;
@@ -268,6 +269,7 @@
   --metal-ni: #AEBBB4;
   --metal-cd: #A3B0C6;
   --metal-graphite: #4B5058;
+  --metal-generic: #B3A893;
   /* Electrochemistry: ions, current and the salt-bridge gel */
   --ion-cation: #FF7A9C;
   --ion-anion: #5CD0E8;
@@ -390,6 +392,7 @@
     --metal-ni: #AEBBB4;
     --metal-cd: #A3B0C6;
     --metal-graphite: #4B5058;
+    --metal-generic: #B3A893;
     /* Electrochemistry: ions, current and the salt-bridge gel */
     --ion-cation: #FF7A9C;
     --ion-anion: #5CD0E8;
