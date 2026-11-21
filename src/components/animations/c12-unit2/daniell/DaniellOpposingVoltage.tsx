@@ -58,7 +58,7 @@ export function DaniellOpposingVoltage({ step, reducedMotion }: DaniellOpposingV
         style={{ display: 'block', height: 'auto' }}
       >
         <VocabDefs />
-        <Beaker x={130} y={180} width={320} height={240} level={0.82} tint="blue" label="CuSO₄(aq)" />
+        <Beaker x={80} y={180} width={420} height={240} level={0.82} tint="blue" label="CuSO₄(aq)" />
         <Ion x={210} y={300} kind="cation" formula="Cu" charge="2+" fontSize={17} />
         <Ion x={380} y={262} kind="anion" formula="SO4" charge="2−" fontSize={17} />
         <Ion x={200} y={370} kind="anion" formula="SO4" charge="2−" fontSize={17} />
@@ -168,7 +168,7 @@ export function DaniellOpposingVoltage({ step, reducedMotion }: DaniellOpposingV
           <Galvanometer
             x={200}
             y={RAIL_Y - 72}
-            width={110}
+            width={130}
             height={100}
             value={galvanometerValue}
             range={[-1, 1]}
