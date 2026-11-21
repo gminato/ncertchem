@@ -62,8 +62,6 @@ const ION_SETS: Record<IonSet, readonly IonSpec[]> = {
     { formula: 'Na', charge: '+', kind: 'cation', lo: 256, hi: 330, y: 364, phase: 0.3 },
   ],
   persulphate: [
-    { formula: 'H', charge: '+', kind: 'cation', lo: 256, hi: 300, y: 236, phase: 0.15 },
-    { formula: 'H', charge: '+', kind: 'cation', lo: 300, hi: 330, y: 282, phase: 0.55 },
     { formula: 'SO4', charge: '2−', kind: 'anion', lo: 262, hi: 330, y: 322, phase: 0.8 },
     { formula: 'S2O8', charge: '2−', kind: 'anion', lo: 262, hi: 286, y: 362, phase: 0.4 },
   ],
@@ -75,10 +73,11 @@ function triangle(u: number): number {
   return 1 - Math.abs(2 * f - 1)
 }
 
-const TONE_OPACITY: Record<RowTone, number> = { win: 1, dim: 0.5, idle: 0.7 }
+/** Dim rows use the muted text token (not opacity), so they stay readable in both themes. */
+const TONE_OPACITY: Record<RowTone, number> = { win: 1, dim: 1, idle: 0.85 }
 
 function RedoxCardView({ card, x, anchorSide }: { card: RedoxCard; x: number; anchorSide: 'left' | 'right' }) {
-  const rowHeights = card.rows.map((r) => (r.note ? 36 : 18))
+  const rowHeights = card.rows.map((r) => (r.note ? 40 : 18))
   const height = 26 + rowHeights.reduce((a, b) => a + b, 0) + 6
   const rowTops: number[] = []
   let top = CARD_Y + 22
@@ -104,20 +103,21 @@ function RedoxCardView({ card, x, anchorSide }: { card: RedoxCard; x: number; an
       {card.rows.map((row, i) => {
         const rowY = rowTops[i] + 14
         const isWin = row.tone === 'win'
+        const textFill = row.tone === 'dim' ? 'var(--fg-muted)' : 'var(--fg)'
         return (
           <Fragment key={`${row.label}-${i}`}>
             {isWin && (
               <rect x={x + 6} y={rowY - 14} width={CARD_W - 12} height={20} rx={5} fill="var(--accent-soft)" />
             )}
             <g opacity={TONE_OPACITY[row.tone]}>
-              <text x={x + 10} y={rowY} fontSize={14} fill="var(--fg)" fontWeight={isWin ? 600 : 400}>
+              <text x={x + 10} y={rowY} fontSize={14} fill={textFill} fontWeight={isWin ? 600 : 400}>
                 {row.label}
               </text>
-              <text x={x + CARD_W - 10} y={rowY} fontSize={14} fill="var(--fg)" textAnchor="end" fontWeight={isWin ? 600 : 400}>
+              <text x={x + CARD_W - 10} y={rowY} fontSize={14} fill={textFill} textAnchor="end" fontWeight={isWin ? 600 : 400}>
                 {row.value}
               </text>
               {row.note && (
-                <text x={x + 10} y={rowY + 16} fontSize={13} fill="var(--fg-muted)">
+                <text x={x + 10} y={rowY + 20} fontSize={13} fill="var(--fg-muted)">
                   {row.note}
                 </text>
               )}

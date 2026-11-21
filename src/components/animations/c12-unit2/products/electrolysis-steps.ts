@@ -1,14 +1,24 @@
+import { E0_PERSULFATE } from '@/lib/chem/electrolysis-predictor'
 import { NCERT_STANDARD_POTENTIALS } from '@/lib/chem/ncert-c12-unit2-tables'
 
-/** E° of a Table 2.1 couple, read from the lib and formatted with a true minus sign. */
+/** Formats a potential in volts with a true minus sign. */
+function volts(v: number): string {
+  return `${v < 0 ? '−' : ''}${Math.abs(v).toFixed(2)} V`
+}
+
+/** E° of a Table 2.1 couple, read from the lib. */
 function e0(id: string): string {
   const row = NCERT_STANDARD_POTENTIALS.find((r) => r.id === id)
   if (!row) throw new Error(`Missing standard potential for ${id}`)
-  return `${row.e0 < 0 ? '−' : ''}${Math.abs(row.e0).toFixed(2)} V`
+  return volts(row.e0)
 }
 
-/** 2SO₄²⁻ → S₂O₈²⁻ + 2e⁻ is not a Table 2.1 row; NCERT quotes it in its text (see electrolysis.ts). */
-const E0_PERSULPHATE = '1.96 V'
+const NA_E0 = e0('Na+/Na')
+const H_E0 = e0('H+/H2')
+const CL_E0 = e0('Cl2/Cl-')
+const O2_E0 = e0('O2/H2O')
+/** S₂O₈²⁻ formation is not a Table 2.1 row; the predictor lib holds NCERT's quoted value. */
+const PERSULPHATE_E0 = volts(E0_PERSULFATE)
 
 export type ElectrolysisStepId =
   | 'molten-salt'
@@ -57,12 +67,12 @@ export interface ElectrolysisStepState {
   readonly ariaLabel: string
 }
 
+/** NCERT p.23: H⁺/H₂ (0.00 V) beats Na⁺/Na (−2.71 V); the H⁺ comes from water. */
 const CATHODE_WATER_CARD: RedoxCard = {
   title: 'Cathode, reduction',
   rows: [
-    { label: 'Na⁺ / Na', value: e0('Na+/Na'), tone: 'dim' },
-    { label: 'H₂O / H₂', value: e0('H2O/H2'), tone: 'win', note: 'less negative, wins' },
-    { label: 'H⁺ / H₂', value: e0('H+/H2'), tone: 'idle' },
+    { label: 'Na⁺ / Na', value: NA_E0, tone: 'dim' },
+    { label: 'H⁺ / H₂', value: H_E0, tone: 'win', note: 'higher E°: wins' },
   ],
 }
 
@@ -89,7 +99,7 @@ export const ELECTROLYSIS_STEPS: readonly ElectrolysisStepState[] = [
     index: 1,
     id: 'water-at-cathode',
     title: 'Water competes at the cathode',
-    subtitle: 'The less negative E° wins the reduction, so water is reduced and sodium never deposits',
+    subtitle: `The higher E° wins, so H⁺ (${H_E0}) beats Na⁺ (${NA_E0}). The H⁺ comes from water: H₂O + e⁻ → ½H₂ + OH⁻`,
     electrolyte: 'aqueous-nacl',
     beakerLabel: 'NaCl(aq)',
     anodeCard: null,
@@ -101,7 +111,7 @@ export const ELECTROLYSIS_STEPS: readonly ElectrolysisStepState[] = [
     ionSet: 'aqueous',
     equation: null,
     ariaLabel:
-      'Electrolytic cell with aqueous sodium chloride. A card at the cathode compares Na⁺ at −2.71 V with H₂O at −0.83 V; the water card is highlighted as the winner. Hydrogen bubbles rise from the cathode and a faint alkaline tint marks hydroxide ions near it.',
+      `Electrolytic cell with aqueous sodium chloride. A card at the cathode compares Na⁺ at ${NA_E0} with H⁺ at ${H_E0}; the H⁺ card is highlighted as the winner, because the H⁺ comes from water and hydroxide is left behind. Hydrogen bubbles rise from the cathode and a faint alkaline tint marks hydroxide ions near it.`,
   },
   {
     index: 2,
@@ -113,8 +123,8 @@ export const ELECTROLYSIS_STEPS: readonly ElectrolysisStepState[] = [
     anodeCard: {
       title: 'Anode, oxidation',
       rows: [
-        { label: 'H₂O / O₂', value: e0('O2/H2O'), tone: 'dim', note: 'O₂ overpotential slows it' },
-        { label: 'Cl⁻ / Cl₂', value: e0('Cl2/Cl-'), tone: 'win', note: 'chloride is oxidised' },
+        { label: 'H₂O / O₂', value: O2_E0, tone: 'dim', note: 'O₂ overpotential slows it' },
+        { label: 'Cl⁻ / Cl₂', value: CL_E0, tone: 'win', note: 'chloride is oxidised' },
       ],
     },
     cathodeCard: CATHODE_WATER_CARD,
@@ -125,7 +135,7 @@ export const ELECTROLYSIS_STEPS: readonly ElectrolysisStepState[] = [
     ionSet: 'aqueous',
     equation: null,
     ariaLabel:
-      'Aqueous sodium chloride cell with the anode card comparing Cl⁻ at 1.36 V with H₂O at 1.23 V. The water card is dimmed by an overpotential tag, and chlorine bubbles stream from the left anode. No oxygen bubbles are drawn.',
+      `Aqueous sodium chloride cell with the anode card comparing Cl⁻ at ${CL_E0} with H₂O at ${O2_E0}. The water card is dimmed by an overpotential tag, and chlorine bubbles stream from the left anode. No oxygen bubbles are drawn.`,
   },
   {
     index: 3,
@@ -149,14 +159,14 @@ export const ELECTROLYSIS_STEPS: readonly ElectrolysisStepState[] = [
     index: 4,
     id: 'acid-strength',
     title: 'Dilute versus concentrated sulphuric acid',
-    subtitle: 'Hydrogen always forms at the cathode; the anode product depends on the acid strength',
+    subtitle: 'Hydrogen always forms at the cathode; at the anode the product depends on the acid strength',
     electrolyte: 'sulphuric-acid',
     beakerLabel: 'concentrated H₂SO₄(aq)',
     anodeCard: {
       title: 'Anode, oxidation',
       rows: [
-        { label: 'H₂O / O₂ (dilute)', value: e0('O2/H2O'), tone: 'dim', note: 'O₂ bubbles, dilute acid only' },
-        { label: 'SO₄²⁻ / S₂O₈²⁻', value: E0_PERSULPHATE, tone: 'win', note: 'concentrated acid: bubbles stop' },
+        { label: 'H₂O / O₂ (dilute)', value: O2_E0, tone: 'dim', note: 'O₂ bubbles, dilute acid only' },
+        { label: 'SO₄²⁻ / S₂O₈²⁻', value: PERSULPHATE_E0, tone: 'win', note: 'preferred at high conc.' },
       ],
     },
     cathodeCard: null,
@@ -167,7 +177,7 @@ export const ELECTROLYSIS_STEPS: readonly ElectrolysisStepState[] = [
     ionSet: 'persulphate',
     equation: null,
     ariaLabel:
-      'Electrolytic cell with concentrated sulphuric acid. Hydrogen bubbles rise from the cathode. At the anode no gas forms; a peroxydisulphate ion S₂O₈²⁻ appears, and the anode card shows the dilute-acid oxygen route at 1.23 V as dimmed.',
+      `Electrolytic cell with concentrated sulphuric acid. Hydrogen bubbles rise from the cathode. At the anode no gas forms; a peroxydisulphate ion S₂O₈²⁻ appears, and the anode card shows the dilute-acid oxygen route at ${O2_E0} as dimmed.`,
   },
 ]
 

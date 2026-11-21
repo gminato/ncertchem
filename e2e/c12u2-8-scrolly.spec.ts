@@ -41,6 +41,9 @@ for (const scheme of ['light', 'dark'] as const) {
       await expect(steps.nth(k)).toHaveAttribute('data-active', 'true')
       await expect(scrolly.locator('svg[data-testid="electrolysis-products"]')).toHaveAttribute('data-step', String(k))
       await scrolly.locator('svg[data-testid="electrolysis-products"]').screenshot({ path: `test-results/screens/c12u2-8-step${k + 1}-${scheme}.png` })
+      // The Scrolly must never show the −0.83 V water couple as a cathode competitor (NCERT p.23).
+      const label = await scrolly.locator('svg[data-testid="electrolysis-products"]').getAttribute('aria-label')
+      expect(label).not.toMatch(/0\.83/)
     }
 
     await expect(page.locator('.katex-error')).toHaveCount(0)
