@@ -81,6 +81,11 @@ export function signedVolts(x: number): string {
   return x < 0 ? `(−${body})` : body
 }
 
+/** Volts with a true minus sign and no brackets, for equations written out in full. */
+export function plainVolts(x: number): string {
+  return `${x < 0 ? '−' : ''}${Math.abs(x).toFixed(2)}`
+}
+
 export type SheScene =
   | { readonly kind: 'single'; readonly half: HalfSpec }
   | { readonly kind: 'she' }
@@ -106,7 +111,7 @@ export interface SheStepState {
   readonly scene: SheScene
   /** Meter reading in volts, or null when no meter is drawn. */
   readonly meter: number | null
-  /** Single line under the drawing, with the numbers the Step uses. */
+  /** Lines under the drawing (joined with \n), with the numbers the Step uses. */
   readonly readout: string
   readonly ariaLabel: string
 }
@@ -116,6 +121,7 @@ function buildSteps(): readonly SheStepState[] {
   const znVsShe = pairScene(ZN_HALF, SHE_HALF)
   const agZn = pairScene(AG_HALF, ZN_HALF)
   const eZn = standardRow('Zn2+/Zn').e0
+  const eSHE = standardRow('H+/H2').e0
   const eCu = standardRow('Cu2+/Cu').e0
   const eAg = standardRow('Ag+/Ag').e0
 
@@ -156,7 +162,10 @@ function buildSteps(): readonly SheStepState[] {
       title: 'SHE against Zn²⁺/Zn',
       scene: { kind: 'pair', pair: znVsShe },
       meter: znVsShe.eCell,
-      readout: `Zn is the anode: E°(Zn²⁺/Zn) = ${signedVolts(0)} − ${signedVolts(znVsShe.eCell)} = ${signedVolts(eZn)} V`,
+      readout: [
+        `E°cell = E°(SHE) − E°(Zn²⁺/Zn) = ${plainVolts(znVsShe.eCell)} V`,
+        `so E°(Zn²⁺/Zn) = ${plainVolts(eSHE)} − ${plainVolts(znVsShe.eCell)} = ${plainVolts(eZn)} V`,
+      ].join('\n'),
       ariaLabel:
         'Zinc on the left as the anode, standard hydrogen electrode on the right as the cathode. The meter reads 0.76 volts with zinc at the negative terminal, so the standard electrode potential of zinc is minus 0.76 volts.',
     },

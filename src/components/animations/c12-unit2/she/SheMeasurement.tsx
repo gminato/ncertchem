@@ -4,7 +4,6 @@ import type { ReactNode } from 'react'
 import {
   Beaker,
   Electrode,
-  GasBubbles,
   HydrogenElectrode,
   Ion,
   SaltBridge,
@@ -30,21 +29,24 @@ export interface SheMeasurementProps {
 }
 
 const VIEW_W = 580
-const VIEW_H = 410
-const BEAKER_Y = 150
-const BEAKER_H = 200
+const VIEW_H = 440
+const BEAKER_Y = 198
+const BEAKER_H = 152
 const BEAKER_W = 200
-const LEFT_X = 30
-const RIGHT_X = 350
-const ELECTRODE_TOP = 96
-const ELECTRODE_LEN = 170
+const LEFT_X = 24
+const RIGHT_X = 320
+const ELECTRODE_TOP = 128
+const ELECTRODE_LEN = 172
 const METER_X = 290
 const METER_Y = 34
 const METER_W = 120
 const METER_H = 70
-const PLUS_X = METER_X - 34
-const MINUS_X = METER_X + 34
+/** Voltmeter plusSide="right": + is the right terminal (cathode side), − the left (anode side). */
+const PLUS_X = METER_X + 34
+const MINUS_X = METER_X - 34
 const METER_TERM_Y = METER_Y + METER_H / 2 + 22
+/** Bus height for both leads: below the meter body, above the electrode tops, so the leads never cross. */
+const BUS_Y = 116
 
 function fmtE(e: number): string {
   const body = Math.abs(e).toFixed(2)
@@ -53,7 +55,21 @@ function fmtE(e: number): string {
 
 function PairHalf({ spec, x, role, t }: { spec: HalfSpec; x: number; role: 'anode' | 'cathode'; t: number }) {
   const cx = x + BEAKER_W / 2
-  const isH2 = spec.material === 'pt'
+  if (spec.material === 'pt') {
+    return (
+      <g data-half={spec.couple}>
+        <HydrogenElectrode
+          x={x}
+          y={BEAKER_Y}
+          width={BEAKER_W}
+          height={BEAKER_H}
+          t={t}
+          label={spec.solution}
+          gasLabel="H₂ (1 bar)"
+        />
+      </g>
+    )
+  }
   return (
     <g data-half={spec.couple}>
       <Beaker x={x} y={BEAKER_Y} width={BEAKER_W} height={BEAKER_H} level={0.74} tint={spec.tint} label={spec.solution} />
@@ -66,15 +82,9 @@ function PairHalf({ spec, x, role, t }: { spec: HalfSpec; x: number; role: 'anod
         polarity={role === 'anode' ? '−' : '+'}
         role={role}
       />
-      {isH2 ? (
-        <GasBubbles x={x + 30} y={250} width={140} height={80} count={6} t={t} formula="H₂" />
-      ) : (
-        <>
-          <Ion x={x + 52} y={246} kind="cation" formula={spec.ion} charge={spec.charge} fontSize={16} />
-          <Ion x={x + 148} y={282} kind="cation" formula={spec.ion} charge={spec.charge} fontSize={16} />
-          <Ion x={x + 70} y={322} kind="cation" formula={spec.ion} charge={spec.charge} fontSize={16} />
-        </>
-      )}
+      <Ion x={x + 52} y={250} kind="cation" formula={spec.ion} charge={spec.charge} fontSize={16} />
+      <Ion x={x + 148} y={290} kind="cation" formula={spec.ion} charge={spec.charge} fontSize={16} />
+      <Ion x={x + 70} y={326} kind="cation" formula={spec.ion} charge={spec.charge} fontSize={16} />
     </g>
   )
 }
@@ -87,14 +97,14 @@ function Pair({ scene, meter, t }: { scene: Extract<SheScene, { kind: 'pair' }>;
   const plus = { x: PLUS_X, y: METER_TERM_Y }
   const anodeLead: Point[] = [
     { x: anodeX, y: ELECTRODE_TOP },
-    { x: anodeX, y: 128 },
-    { x: minus.x, y: 128 },
+    { x: anodeX, y: BUS_Y },
+    { x: minus.x, y: BUS_Y },
     { x: minus.x, y: minus.y },
   ]
   const cathodeLead: Point[] = [
     { x: plus.x, y: plus.y },
-    { x: plus.x, y: 108 },
-    { x: cathodeX, y: 108 },
+    { x: plus.x, y: BUS_Y },
+    { x: cathodeX, y: BUS_Y },
     { x: cathodeX, y: ELECTRODE_TOP },
   ]
   return (
@@ -114,8 +124,9 @@ function Pair({ scene, meter, t }: { scene: Extract<SheScene, { kind: 'pair' }>;
         digital
         decimals={2}
         terminals
+        plusSide="right"
       />
-      <SaltBridge start={{ x: LEFT_X + BEAKER_W - 4, y: 236 }} finish={{ x: RIGHT_X + 4, y: 236 }} apex={186} t={t} ions legend="KCl(aq)" />
+      <SaltBridge start={{ x: LEFT_X + BEAKER_W - 4, y: 290 }} finish={{ x: RIGHT_X + 4, y: 290 }} apex={230} t={t} ions legend="KCl(aq)" />
     </>
   )
 }
@@ -168,8 +179,8 @@ export function SheMeasurement({ step, reducedMotion }: SheMeasurementProps) {
       <g>
         <Beaker x={190} y={BEAKER_Y} width={BEAKER_W} height={BEAKER_H} level={0.74} tint={scene.half.tint} label={scene.half.solution} />
         <Electrode x={290} top={ELECTRODE_TOP} length={ELECTRODE_LEN} width={16} material={scene.half.material} />
-        <Ion x={242} y={246} kind="cation" formula={scene.half.ion} charge={scene.half.charge} fontSize={16} />
-        <Ion x={338} y={282} kind="cation" formula={scene.half.ion} charge={scene.half.charge} fontSize={16} />
+        <Ion x={242} y={250} kind="cation" formula={scene.half.ion} charge={scene.half.charge} fontSize={16} />
+        <Ion x={338} y={290} kind="cation" formula={scene.half.ion} charge={scene.half.charge} fontSize={16} />
         <rect x={METER_X - METER_W / 2} y={METER_Y} width={METER_W} height={METER_H} rx={10} className={styles.unknownMeter} />
         <text x={METER_X} y={METER_Y + METER_H / 2 + 12} textAnchor="middle" fontSize={34} className={styles.unknownMark}>
           ?
@@ -208,8 +219,12 @@ export function SheMeasurement({ step, reducedMotion }: SheMeasurementProps) {
       <VocabDefs />
       {drawing}
       {scene.kind === 'ladder' ? null : (
-        <text x={VIEW_W / 2} y={VIEW_H - 12} textAnchor="middle" fontSize={15} className={styles.readout}>
-          {state.readout}
+        <text x={VIEW_W / 2} textAnchor="middle" fontSize={15} className={styles.readout}>
+          {state.readout.split('\n').map((line, i, all) => (
+            <tspan key={i} x={VIEW_W / 2} y={VIEW_H - 12 - (all.length - 1 - i) * 20}>
+              {line}
+            </tspan>
+          ))}
         </text>
       )}
     </svg>

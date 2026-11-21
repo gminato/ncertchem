@@ -36,12 +36,19 @@ const GROUPS: readonly { readonly label: string; readonly kind: CoupleKind }[] =
 ]
 
 /** Ion pill positions inside a beaker, relative to the electrode centre. */
+/** Ion positions relative to the beaker centre (x offset, absolute y). */
 const ION_SLOTS: readonly (readonly [number, number])[] = [
-  [-36, 252],
-  [36, 252],
-  [-36, 304],
-  [36, 304],
+  [-52, 262],
+  [52, 262],
+  [-52, 314],
+  [52, 314],
 ]
+const BEAKER_W = 200
+const BEAKER_TOP = 214
+const BEAKER_H = 166
+const ELECTRODE_TOP = 190
+const LADDER_Y = 490
+const VIEW_H = 530
 
 const SUBSCRIPT_DIGITS = '₀₁₂₃₄₅₆₇₈₉'
 
@@ -76,10 +83,10 @@ interface HalfProps {
 
 function Half({ couple, cx, role, t }: HalfProps) {
   const roleColour = role === 'anode' ? 'var(--ox)' : 'var(--red)'
-  const tagX = role === 'anode' ? cx - 16 : cx + 16
+  const tagX = role === 'anode' ? cx - 18 : cx + 18
   return (
     <g>
-      <Beaker x={cx - 80} y={200} width={160} height={160} level={0.78} tint={couple.tint} />
+      <Beaker x={cx - BEAKER_W / 2} y={BEAKER_TOP} width={BEAKER_W} height={BEAKER_H} level={0.78} tint={couple.tint} />
       {couple.solution.slice(0, ION_SLOTS.length).map((ion, i) => {
         const [dx, dy] = ION_SLOTS[i] ?? [0, 0]
         return (
@@ -94,21 +101,21 @@ function Half({ couple, cx, role, t }: HalfProps) {
         )
       })}
       <rect
-        x={cx - 8}
-        y={150}
-        width={16}
-        height={170}
+        x={cx - 9}
+        y={ELECTRODE_TOP}
+        width={18}
+        height={172}
         rx={4}
         fill={METAL_FILL[couple.electrode]}
         stroke="var(--glass-wall)"
         strokeWidth={1.2}
       />
-      <text x={cx} y={350} textAnchor="middle" fontSize={16} fontWeight={600} fill="var(--fg)">
+      <text x={cx} y={404} textAnchor="middle" fontSize={16} fontWeight={600} fill="var(--fg)">
         {couple.electrodeLabel}
       </text>
       <text
         x={tagX}
-        y={176}
+        y={200}
         textAnchor={role === 'anode' ? 'end' : 'start'}
         fontSize={15}
         fontWeight={600}
@@ -118,11 +125,11 @@ function Half({ couple, cx, role, t }: HalfProps) {
       </text>
       {couple.kind === 'gas' && couple.gasCe ? (
         <g>
-          <text x={cx + 14} y={214} fontSize={15} fill="var(--fg)">
+          <text x={cx + 14} y={240} fontSize={15} fill="var(--fg)">
             {`${subscriptDigits(couple.gasCe)}(g)`}
           </text>
           {[0, 1, 2].map((i) => {
-            const y = 318 - ((t * 28 + i * 33) % 90)
+            const y = 370 - ((t * 28 + i * 33) % 100)
             return <circle key={i} cx={cx + 14 + (i % 2) * 4} cy={y} r={3.5} fill="var(--fg-muted)" opacity={0.75} />
           })}
         </g>
@@ -197,17 +204,17 @@ export function HalfCellPairingBench({ reducedMotion }: SimulationProps) {
         <>
           <svg
             className={styles.stage}
-            viewBox="0 0 600 490"
+            viewBox={`0 0 600 ${VIEW_H}`}
             role="img"
             aria-label={`Cell diagram: ${plainNotation(pairing.notation)}. Anode, oxidation: ${pairing.anode.label}. Cathode, reduction: ${pairing.cathode.label}.`}
           >
             <VocabDefs idPrefix="hcp" />
-            <Half couple={pairing.anode} cx={120} role="anode" t={t} />
-            <Half couple={pairing.cathode} cx={480} role="cathode" t={t} />
+            <Half couple={pairing.anode} cx={150} role="anode" t={t} />
+            <Half couple={pairing.cathode} cx={450} role="cathode" t={t} />
             <SaltBridge
-              start={{ x: 190, y: 280 }}
-              finish={{ x: 410, y: 280 }}
-              apex={200}
+              start={{ x: 246, y: 300 }}
+              finish={{ x: 354, y: 300 }}
+              apex={206}
               width={26}
               t={t}
               ionCount={4}
@@ -215,23 +222,24 @@ export function HalfCellPairingBench({ reducedMotion }: SimulationProps) {
             />
             <Voltmeter
               x={300}
-              y={114}
-              width={170}
-              height={116}
+              y={81}
+              width={200}
+              height={110}
               value={pairing.eCell}
               range={[-1.5, 1.5]}
               scaleLabels={['−1.5', '0', '+1.5']}
               unit="V"
               decimals={2}
               digital={false}
-              terminals={false}
+              terminals
+              plusSide="right"
             />
             <Wire
               corners={[
-                { x: 120, y: 150 },
-                { x: 120, y: 18 },
-                { x: 256, y: 18 },
-                { x: 256, y: 56 },
+                { x: 150, y: ELECTRODE_TOP },
+                { x: 150, y: 176 },
+                { x: 266, y: 176 },
+                { x: 266, y: 158 },
               ]}
               t={t}
               electrons={false}
@@ -239,29 +247,27 @@ export function HalfCellPairingBench({ reducedMotion }: SimulationProps) {
             />
             <Wire
               corners={[
-                { x: 480, y: 150 },
-                { x: 480, y: 18 },
-                { x: 344, y: 18 },
-                { x: 344, y: 56 },
+                { x: 450, y: ELECTRODE_TOP },
+                { x: 450, y: 176 },
+                { x: 334, y: 176 },
+                { x: 334, y: 158 },
               ]}
               t={t}
               electrons={false}
               dots={0}
             />
-            <circle cx={256} cy={56} r={4} fill="var(--fg)" />
-            <circle cx={344} cy={56} r={4} fill="var(--fg)" />
 
-            <text x={50} y={398} fontSize={15} fill="var(--fg-muted)">
+            <text x={50} y={436} fontSize={15} fill="var(--fg-muted)">
               Standard potentials E° / V (higher means a stronger oxidising agent)
             </text>
-            <line x1={50} y1={440} x2={550} y2={440} stroke="var(--fg-muted)" strokeWidth={1.2} />
+            <line x1={50} y1={LADDER_Y} x2={550} y2={LADDER_Y} stroke="var(--fg-muted)" strokeWidth={1.2} />
             {COUPLES.map((c) => (
               <line
                 key={c.id}
                 x1={ladderX(c.e0)}
                 x2={ladderX(c.e0)}
-                y1={434}
-                y2={446}
+                y1={LADDER_Y - 6}
+                y2={LADDER_Y + 6}
                 stroke="var(--fg-muted)"
                 strokeWidth={1}
               />
@@ -274,10 +280,10 @@ export function HalfCellPairingBench({ reducedMotion }: SimulationProps) {
               const colour = role === 'cathode' ? 'var(--red)' : 'var(--ox)'
               return (
                 <g key={c.id}>
-                  <circle cx={x} cy={440} r={7} fill={colour} />
+                  <circle cx={x} cy={LADDER_Y} r={7} fill={colour} />
                   <text
                     x={x}
-                    y={above ? 420 : 470}
+                    y={above ? 470 : 516}
                     textAnchor={anchor}
                     fontSize={15}
                     fontWeight={600}
