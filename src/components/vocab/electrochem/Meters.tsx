@@ -19,6 +19,11 @@ export interface MeterProps extends React.SVGAttributes<SVGGElement> {
   decimals?: number
   /** Show the + and − terminals under the body. */
   terminals?: boolean
+  /**
+   * Which side the + terminal sits on. Cells are drawn anode-left, cathode-right, so a meter
+   * reading a positive cell potential wants `'right'` (its + lead goes to the cathode).
+   */
+  plusSide?: 'left' | 'right'
   /** Scale labels at the minimum, middle and maximum of the range. */
   scaleLabels?: readonly string[]
   /** Dial caption above the scale, e.g. "Voltmeter" or "Galvanometer". Pass it already formatted. */
@@ -26,9 +31,16 @@ export interface MeterProps extends React.SVGAttributes<SVGGElement> {
 }
 
 /** Positions of the + and − terminals for a meter centred on (x, y). */
-export function meterTerminals(x: number, y: number, height: number): { plus: Point; minus: Point } {
+export function meterTerminals(
+  x: number,
+  y: number,
+  height: number,
+  plusSide: 'left' | 'right' = 'left'
+): { plus: Point; minus: Point } {
   const yy = y + height / 2 + 22
-  return { plus: { x: x - 34, y: yy }, minus: { x: x + 34, y: yy } }
+  const left = { x: x - 34, y: yy }
+  const right = { x: x + 34, y: yy }
+  return plusSide === 'left' ? { plus: left, minus: right } : { plus: right, minus: left }
 }
 
 /**
@@ -49,6 +61,7 @@ export const Meter = forwardRef<SVGGElement, MeterProps>(function Meter(
     digital = true,
     decimals = 2,
     terminals = true,
+    plusSide = 'left',
     scaleLabels,
     caption,
     className,
@@ -67,7 +80,7 @@ export const Meter = forwardRef<SVGGElement, MeterProps>(function Meter(
   const majors = 4
   const ticks = Array.from({ length: majors + 1 }, (_, i) => -span / 2 + (i / majors) * span)
   const labels = scaleLabels ?? [String(range[0]), String(range[1])]
-  const t = terminals ? meterTerminals(x, y, height) : null
+  const t = terminals ? meterTerminals(x, y, height, plusSide) : null
   const shown = Number.isFinite(value) ? value.toFixed(decimals).replace('-', '\u2212') : '—'
   const arc = (a0: number, a1: number, r: number) => {
     const p0 = toXY(a0, r)
@@ -75,6 +88,10 @@ export const Meter = forwardRef<SVGGElement, MeterProps>(function Meter(
     const large = a1 - a0 > 180 ? 1 : 0
     return `M${p0.x} ${p0.y} A${r} ${r} 0 ${large} 1 ${p1.x} ${p1.y}`
   }
+  // The readout is 28 units tall, sits 6 units above the frame's bottom edge and is at least 6 units in from each side.
+  const READOUT_H = 28
+  const readoutW = Math.min(124, width - 12)
+  const readoutTop = y + height / 2 - READOUT_H - 6
   const tip = toXY(angle, radius * 0.86)
   const tail = toXY(angle + 180, radius * 0.18)
 
@@ -126,8 +143,9 @@ export const Meter = forwardRef<SVGGElement, MeterProps>(function Meter(
       <circle cx={cx} cy={cy} r={5} fill="var(--fg)" />
       {digital && (
         <g>
-          <rect x={x - 62} y={y + height * 0.26} width={124} height={30} rx={6} fill="var(--surface)" stroke="var(--glass-wall)" strokeWidth={1} />
-          <text x={x} y={y + height * 0.26 + 21} textAnchor="middle" fontSize={17} fontWeight={600} fill="var(--fg)" style={{ fontVariantNumeric: 'tabular-nums' }}>
+          {/* Sits at the bottom of the frame, 6 units clear of its edge, so it never crosses the frame. */}
+          <rect x={x - readoutW / 2} y={readoutTop} width={readoutW} height={READOUT_H} rx={6} fill="var(--surface)" stroke="var(--glass-wall)" strokeWidth={1} />
+          <text x={x} y={readoutTop + 19} textAnchor="middle" fontSize={17} fontWeight={600} fill="var(--fg)" style={{ fontVariantNumeric: 'tabular-nums' }}>
             {shown} {unit}
           </text>
         </g>
