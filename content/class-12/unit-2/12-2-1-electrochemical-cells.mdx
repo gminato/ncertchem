@@ -1,0 +1,110 @@
+---
+class: 12
+unit: 2
+section: "2.1"
+order: 1
+title: "Electrochemical Cells"
+slug: "12-2-1-electrochemical-cells"
+access: free
+summary: "A zinc rod in copper sulphate can release energy as heat or as electricity; a Daniell cell captures that energy at 1.1 V, and a stronger opposing voltage reverses it into an electrolytic cell."
+ncert: "Class 12, Part I — Unit 2, Section 2.1"
+---
+
+<Hook>
+Your TV remote runs on two AA cells that are thrown away when they die, while the inverter battery in a home during a power cut is recharged every night and runs the fan again the next morning. Both are electrochemical cells, and both store energy as a chemical change. So why can one be recharged and the other not, and what does it mean for a cell to run "backwards"?
+</Hook>
+
+## What electrochemistry studies
+
+Think of the torch in your pocket and the charger that refills your phone overnight. The torch runs until its reactants are used up, while the phone's battery is filled again from the mains. Both depend on the same thing: a substance gives up electrons to another substance, and those electrons are made to travel through a wire. Electrochemistry is the study of exactly this link between chemical change and electrical current.
+
+The ideas pay off in daily life. An engineer choosing a cell for a hearing aid weighs how long it lasts against its weight. A plant that turns brine into caustic soda drives a current through the solution instead of heating it. A steel gate that rusts is, in effect, a cell whose anode is a patch of iron. Knowing the mechanism tells you which of these designs is worth the metal and the energy they cost.
+
+## The Daniell cell: a spontaneous reaction, a useful current
+
+Drop a zinc rod into blue copper sulphate solution and the rod slowly dissolves while a reddish coat of copper forms on it. Electrons pass straight from zinc atoms to copper ions. Nothing useful is achieved except warmth: the energy of the reaction leaves as heat.
+
+$$
+\ce{Zn(s) + Cu^2+(aq) -> Zn^2+(aq) + Cu(s)}
+$$
+
+The Daniell cell does the same chemistry, but it keeps the two halves apart. Zinc sits in zinc sulphate solution and copper in copper sulphate solution. A wire carries electrons from the zinc to the copper, and a **salt bridge** (a tube of potassium chloride in agar gel) lets ions move between the two beakers so that neither solution builds up a charge. Under unit ion concentration, this cell gives a potential of **1.1 V**, which is the energy the reaction makes available per unit of charge that passes.
+
+## The opposing external potential
+
+How do we know the cell is really delivering 1.1 V? Connect an opposing external supply (Eext) in the circuit, with its positive terminal on the copper side, and vary it. Below 1.1 V, the cell still drives electrons from zinc to copper, but the current falls as Eext rises. At exactly 1.1 V the current stops, and the cell is in balance: nothing reacts, and the cell has no net energy to give.
+
+Push Eext past 1.1 V and the current turns around. Electrons now run from copper toward zinc, so the zinc electrode gains mass as metal forms on it, and the copper electrode loses mass into the solution. The same hardware has become an **electrolytic cell**: the supply, not the chemistry, is driving the change, and the energy you put in ends up stored as a chemical difference.
+
+<Scrolly animation="daniell-opposing-voltage">
+  <Step>
+    **Direct transfer:** Zinc placed directly in copper sulphate solution takes electrons from copper ions with no wire between them. The zinc rod is eaten away and copper coats it, and the energy escapes only as heat. Nothing can be captured here, because the electrons never travel along a path you could place a meter across.
+  </Step>
+  <Step>
+    **Two half-cells:** Separate the zinc and copper compartments, join them with a wire and a salt bridge, and the voltmeter reads 1.10 V. Electrons travel from the zinc electrode, the anode, through the wire to the copper electrode. The salt bridge carries ions, not electrons, so the circuit stays complete and both solutions stay electrically neutral.
+  </Step>
+  <Step>
+    **Eext below 1.1 V:** A supply of 0.60 V opposing the cell leaves the flow in the same direction but reduces it. The cell still works, with a smaller current, because the chemical driving force still exceeds the opposing supply. The current shown here is schematic, but its direction and its fall as Eext rises are exact.
+  </Step>
+  <Step>
+    **Eext equal to 1.1 V:** At 1.10 V the two potentials cancel exactly. The galvanometer needle rests at zero, no electrons move, and both electrodes stay unchanged. The cell is not dead at this point: its energy is simply in balance with the supply, and no net reaction takes place.
+  </Step>
+  <Step>
+    **Eext above 1.1 V:** At 1.50 V the external supply wins. Electrons flow back from copper to zinc, zinc deposits on its electrode and copper dissolves. The galvanic cell has become an electrolytic cell, and the external supply, not the chemistry alone, decides the direction of every reaction that follows.
+  </Step>
+</Scrolly>
+
+## Why this matters for everyday devices
+
+A rechargeable battery is simply a cell that can be run in both modes. When you charge a lead storage battery, an external supply slightly higher than the cell's voltage drives the reaction backwards, which is exactly the situation of Step 5 above. A dry cell in a remote has no practical way to be pushed back to its starting state, so once its reactants are used up it is spent. The same principle, on a larger scale, is how aluminium, chlorine and sodium hydroxide are made from their salts.
+
+Use the lab below to set the opposing voltage yourself. Watch which way the electrons travel, which electrode gains or loses mass as the cell runs, and where the mode changes from galvanic to balanced to electrolytic.
+
+<Simulation name="opposing-voltage-lab" title="Opposing Voltage Lab" />
+
+<Check
+  n={1}
+  numeric
+  answer={-0.4}
+  tolerance={0.01}
+  unit="V"
+  explanation="The Daniell cell gives 1.10 V at unit ion concentration. The net driving potential is Ecell − Eext = 1.10 V − 1.50 V = −0.40 V. The negative sign means the external supply overrides the cell and the cell is driven backwards, as an electrolytic cell."
+>
+A Daniell cell has a potential of $1.10\ \text{V}$ at unit ion concentration. An external supply of $1.50\ \text{V}$ is connected in opposition. What is the net driving potential $E_{\text{cell}} - E_{\text{ext}}$ in volts?
+</Check>
+
+<Check
+  n={2}
+  options={[
+    "Zinc, because zinc is the anode and loses electrons in the external wire",
+    "Copper, because copper ions are reduced at the cathode",
+    "Both electrodes, because the wire carries electrons from each one",
+    "Neither, because the salt bridge carries electrons between the beakers"
+  ]}
+  answer={0}
+  explanation="In the galvanic Daniell cell zinc is oxidised at the anode and releases electrons. These flow through the external wire to the copper cathode. The salt bridge carries ions, not electrons."
+>
+In the Daniell cell working as a galvanic cell with no opposing supply, which electrode is the source of electrons in the external wire?
+</Check>
+
+<Check
+  n={3}
+  options={[
+    "The cell runs backwards and zinc dissolves faster",
+    "Electrons flow from copper back to zinc and zinc deposits on its electrode",
+    "The cell keeps producing 1.1 V because the supply cannot affect it",
+    "Electrons stop flowing, but copper dissolves onto the zinc electrode"
+  ]}
+  answer={1}
+  explanation="When Eext exceeds 1.1 V the external supply overrides the cell. Electrons flow from copper back to zinc, zinc ions are reduced and deposited on the zinc electrode, and copper dissolves from the copper electrode."
+>
+An external supply of $2.0\ \text{V}$ is connected in opposition to a Daniell cell. What happens to the cell?
+</Check>
+
+<KeyIdeas>
+- **Electrochemistry** links chemical change with electrical work: a spontaneous redox reaction can drive current through a wire, and electrical energy can force a non-spontaneous reaction.
+- In the **Daniell cell**, zinc and copper are kept in separate compartments so that electrons travel through an external wire, and a salt bridge keeps both solutions electrically neutral.
+- The Daniell cell delivers **1.1 V** at unit ion concentration. Connecting an opposing supply below this value still allows a galvanic current; at exactly 1.1 V the current stops.
+- An external potential **above 1.1 V** reverses the flow: the cell becomes an **electrolytic cell**, zinc deposits and copper dissolves, and electrical energy is stored chemically.
+- Rechargeable batteries and industrial electrolysis (for example, sodium hydroxide, chlorine and fluorine) are the same principle run in the forward or reverse direction.
+</KeyIdeas>
