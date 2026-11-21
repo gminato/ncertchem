@@ -19,14 +19,14 @@
 
   .fieldLabel {
     font-family: var(--font-sans);
-    font-size: 0.85rem;
+    font-size: 0.875rem;
     font-weight: 500;
     color: var(--fg-muted);
   }
 
   .readout {
     font-family: var(--font-mono);
-    font-size: 0.85rem;
+    font-size: 0.875rem;
     font-variant-numeric: tabular-nums;
     color: var(--fg);
     white-space: nowrap;
@@ -125,7 +125,7 @@
   .segment {
     appearance: none;
     font-family: var(--font-sans);
-    font-size: 0.85rem;
+    font-size: 0.875rem;
     font-weight: 500;
     line-height: 1;
     padding: var(--space-2) var(--space-3);
@@ -161,7 +161,7 @@
     align-items: center;
     gap: var(--space-3);
     font-family: var(--font-sans);
-    font-size: 0.85rem;
+    font-size: 0.875rem;
     font-weight: 500;
     color: var(--fg-muted);
   }
@@ -307,7 +307,7 @@
 
   .numberUnit {
     font-family: var(--font-mono);
-    font-size: 0.85rem;
+    font-size: 0.875rem;
     color: var(--fg-subtle);
     white-space: nowrap;
   }
