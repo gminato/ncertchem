@@ -56,4 +56,16 @@ test.describe('Batteries Section at phone width', () => {
     const scrollWidth = await page.evaluate(() => document.documentElement.scrollWidth)
     expect(scrollWidth).toBeLessThanOrEqual(390)
   })
+
+  test('every display equation fits its column without sideways scrolling', async ({ page }) => {
+    await page.goto(`/class-12/unit-2/${SLUG}`)
+    const displays = page.locator('.katex-display')
+    await expect(displays).not.toHaveCount(0)
+    const overflow = await displays.evaluateAll((els) =>
+      els.map((el) => ({ scroll: el.scrollWidth, client: el.clientWidth, text: (el.textContent ?? '').slice(0, 60) })),
+    )
+    for (const { scroll, client, text } of overflow) {
+      expect(scroll, `display overflows: ${text}`).toBeLessThanOrEqual(client + 1)
+    }
+  })
 })

@@ -28,14 +28,14 @@ export const BATTERY_STEPS: readonly BatteryStep[] = [
     index: 0,
     id: 'dry-cell',
     title: 'Dry cell',
-    ariaLabel: 'Cut-away dry cell: zinc container as the anode, graphite rod as the cathode in MnO₂ paste, electrons flowing to the voltmeter.',
+    ariaLabel: 'Cut-away dry cell: zinc container as the anode, graphite rod as the cathode in MnO₂ paste, electrons flowing through a bulb in the external circuit.',
     targets: { coverage: 0, acid: 0 },
   },
   {
     index: 1,
     id: 'mercury-cell',
     title: 'Mercury cell',
-    ariaLabel: 'Cut-away mercury cell: zinc amalgam anode, HgO cathode, KOH and ZnO paste, voltmeter steady at 1.35 V.',
+    ariaLabel: 'Cut-away mercury cell: zinc amalgam anode, HgO cathode, KOH and ZnO paste, steady 1.35 V through a bulb.',
     targets: { coverage: 0, acid: 0 },
   },
   {

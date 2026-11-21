@@ -7,7 +7,6 @@ import {
   BatteryCutaway,
   Electrode,
   Ion,
-  Voltmeter,
   Wire,
   type Point,
 } from '@/components/vocab'
@@ -27,10 +26,10 @@ const VIEW_W = 580
 const VIEW_H = 546
 const VIEW_Y = -26
 /** Meter body centre and the top wiring row (meter terminals sit 22 px below the body). */
-const METER = { x: 290, y: 50, width: 150, height: 64 }
-const TERMINAL_Y = METER.y + METER.height / 2 + 22
-const TERMINAL_LEFT = METER.x - 34
-const TERMINAL_RIGHT = METER.x + 34
+const LOAD = { x: 262, y: 72, width: 78, height: 40 }
+const LOAD_Y = LOAD.y + LOAD.height / 2
+const LOAD_LEFT = LOAD.x
+const LOAD_RIGHT = LOAD.x + LOAD.width
 
 const LABEL = { fontSize: 15, fill: 'var(--fg)', fontFamily: 'var(--font-sans)' } as const
 const MUTED = { fontSize: 15, fill: 'var(--fg-muted)', fontFamily: 'var(--font-sans)' } as const
@@ -63,13 +62,21 @@ function Drift({ x, y, span, phase, t, formula, charge, kind }: { x: number; y: 
   return <Ion x={x + dx} y={y} kind={kind} formula={formula} charge={charge} fontSize={14} />
 }
 
-function DryCell({ t, reducedMotion }: { t: number; reducedMotion: boolean }) {
-  const voltage = ncertVoltageOf('dry-cell')
+function LoadBox() {
   return (
     <g>
-      <Voltmeter x={METER.x} y={METER.y} width={METER.width} height={METER.height} value={voltage} range={[0, 2]} unit="V" caption="Voltmeter" terminals plusSide="right" />
-      <Lead corners={[{ x: 212, y: 190 }, { x: 212, y: TERMINAL_Y }, { x: TERMINAL_LEFT, y: TERMINAL_Y }]} t={t} electrons={!reducedMotion} />
-      <Lead corners={[{ x: TERMINAL_RIGHT, y: TERMINAL_Y }, { x: 368, y: TERMINAL_Y }, { x: 368, y: 190 }]} t={t} electrons={!reducedMotion} />
+      <rect x={LOAD.x} y={LOAD.y} width={LOAD.width} height={LOAD.height} rx={6} fill="var(--surface-raised)" stroke="var(--glass-wall)" strokeWidth={2} />
+      <text x={LOAD.x + LOAD.width / 2} y={LOAD.y + 25} textAnchor="middle" {...LABEL}>bulb</text>
+    </g>
+  )
+}
+
+function DryCell({ t, reducedMotion }: { t: number; reducedMotion: boolean }) {
+  return (
+    <g>
+      <LoadBox />
+      <Lead corners={[{ x: 212, y: 190 }, { x: 212, y: LOAD_Y }, { x: LOAD_LEFT, y: LOAD_Y }]} t={t} electrons={!reducedMotion} />
+      <Lead corners={[{ x: LOAD_RIGHT, y: LOAD_Y }, { x: 368, y: LOAD_Y }, { x: 368, y: 190 }]} t={t} electrons={!reducedMotion} />
       <BatteryCutaway x={150} y={140} width={280} height={290} shape="can" terminals={false}>
         <rect x={240} y={200} width={100} height={200} rx={6} fill="var(--metal-graphite)" fillOpacity={0.22} />
         <Electrode x={212} top={190} length={190} width={24} material="zn" role="anode" polarity="−" />
@@ -89,12 +96,11 @@ function DryCell({ t, reducedMotion }: { t: number; reducedMotion: boolean }) {
 }
 
 function MercuryCell({ t, reducedMotion }: { t: number; reducedMotion: boolean }) {
-  const voltage = ncertVoltageOf('mercury-cell')
   return (
     <g>
-      <Voltmeter x={METER.x} y={METER.y} width={METER.width} height={METER.height} value={voltage} range={[0, 2]} unit="V" caption="Voltmeter" terminals plusSide="right" />
-      <Lead corners={[{ x: 220, y: 236 }, { x: 220, y: TERMINAL_Y }, { x: TERMINAL_LEFT, y: TERMINAL_Y }]} t={t} electrons={!reducedMotion} />
-      <Lead corners={[{ x: TERMINAL_RIGHT, y: TERMINAL_Y }, { x: 372, y: TERMINAL_Y }, { x: 372, y: 236 }]} t={t} electrons={!reducedMotion} />
+      <LoadBox />
+      <Lead corners={[{ x: 220, y: 236 }, { x: 220, y: LOAD_Y }, { x: LOAD_LEFT, y: LOAD_Y }]} t={t} electrons={!reducedMotion} />
+      <Lead corners={[{ x: LOAD_RIGHT, y: LOAD_Y }, { x: 372, y: LOAD_Y }, { x: 372, y: 236 }]} t={t} electrons={!reducedMotion} />
       <BatteryCutaway x={130} y={180} width={320} height={170} shape="can" terminals={false}>
         <rect x={300} y={226} width={130} height={80} rx={6} fill="var(--metal-graphite)" fillOpacity={0.22} />
         <Electrode x={220} top={236} length={60} width={30} material="zn" role="anode" polarity="−" />
@@ -156,29 +162,37 @@ function LeadCell({ t, reducedMotion, coverage, acid, recharge }: { t: number; r
   )
 }
 
-function NickelCadmium() {
-  const x = 212
-  const w = 156
-  const stripe = 54
-  const top = 182
-  const stripes = [
-    { fill: 'var(--metal-ni)' },
-    { fill: 'var(--surface-raised)' },
-    { fill: 'var(--metal-cd)' },
-    { fill: 'var(--surface-raised)' },
-  ]
+function NickelCadmium({ t, reducedMotion }: { t: number; reducedMotion: boolean }) {
+  // Cd (anode, left) and Ni(OH)3 (cathode, right) side by side across the can, as in cell notation.
+  const stackLeft = 170
+  const plateW = 115
+  const sepW = 10
+  const top = 170
+  const plateH = 240
+  const cdX = stackLeft
+  const sepX = cdX + plateW
+  const niX = sepX + sepW
+  const cdTab = cdX + plateW / 2
+  const niTab = niX + plateW / 2
+  const bulb = { x: 251, y: 72, width: 78, height: 40 }
+  const bulbY = bulb.y + bulb.height / 2
   return (
     <g>
-      <BatteryCutaway x={190} y={150} width={200} height={280} shape="can" terminals={false}>
-        {stripes.map((s, i) => (
-          <rect key={i} x={x} y={top + i * stripe} width={w} height={stripe} fill={s.fill} fillOpacity={s.fill === 'var(--surface-raised)' ? 0.9 : 0.85} />
-        ))}
+      <BatteryCutaway x={140} y={140} width={300} height={300} shape="can" terminals={false}>
+        <rect x={cdX} y={top} width={plateW} height={plateH} rx={3} fill="var(--metal-cd)" fillOpacity={0.85} />
+        <rect x={sepX} y={top} width={sepW} height={plateH} fill="var(--surface-raised)" fillOpacity={0.9} />
+        <rect x={niX} y={top} width={plateW} height={plateH} rx={3} fill="var(--metal-ni)" fillOpacity={0.85} />
       </BatteryCutaway>
-      <Label x={178} y={262} anchor="end">Ni(OH)₃ (+)</Label>
-      <Label x={178} y={282} anchor="end" muted>positive plate</Label>
-      <Label x={402} y={262}>Cd (−)</Label>
-      <Label x={402} y={282} muted>negative plate</Label>
-      <Label x={290} y={458} anchor="middle" muted>Jelly-roll stack in moist alkali (NaOH or KOH)</Label>
+      <rect x={bulb.x} y={bulb.y} width={bulb.width} height={bulb.height} rx={6} fill="var(--surface-raised)" stroke="var(--glass-wall)" strokeWidth={2} />
+      <text x={bulb.x + bulb.width / 2} y={bulb.y + 25} textAnchor="middle" {...LABEL}>bulb</text>
+      <Lead corners={[{ x: cdTab, y: top }, { x: cdTab, y: bulbY }, { x: bulb.x, y: bulbY }]} t={t} electrons={!reducedMotion} />
+      <Lead corners={[{ x: bulb.x + bulb.width, y: bulbY }, { x: niTab, y: bulbY }, { x: niTab, y: top }]} t={t} electrons={!reducedMotion} />
+      <Label x={130} y={262} anchor="end">Cd (−)</Label>
+      <Label x={130} y={282} anchor="end" muted>negative plate</Label>
+      <Label x={450} y={262}>Ni(OH)₃ (+)</Label>
+      <Label x={450} y={282} muted>positive plate</Label>
+      <Label x={290} y={462} anchor="middle" muted>Plates in moist alkali (NaOH or KOH)</Label>
+      <Label x={28} y={506} muted>Cd is oxidised at the anode; Ni(OH)₃ is reduced at the cathode.</Label>
     </g>
   )
 }
@@ -232,7 +246,7 @@ export function BatteryCutaways({ step, reducedMotion }: BatteryCutawaysProps) {
       break
     }
     case 'nickel-cadmium':
-      scene = <NickelCadmium />
+      scene = <NickelCadmium t={t} reducedMotion={reducedMotion} />
       captions = <Label x={28} y={484} muted>Overall, discharge: {reactionText('nickel-cadmium', 'overallCe')}</Label>
       break
   }

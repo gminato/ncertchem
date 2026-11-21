@@ -141,16 +141,27 @@ export function LeadAcidCycle({ reducedMotion }: SimulationProps) {
 
           <Beaker x={120} y={150} width={340} height={210} level={0.8} tint="clear" />
 
+          {/* Two runs that stop at the load box edges, so no electron dot is ever drawn under the box. */}
           <Wire
             corners={[
               { x: LEFT_WIRE_X, y: PLATE_TOP },
               { x: LEFT_WIRE_X, y: WIRE_Y },
+              { x: LOAD.x, y: WIRE_Y },
+            ]}
+            t={t}
+            electrons
+            dots={2}
+            direction={flowDirection}
+          />
+          <Wire
+            corners={[
+              { x: LOAD.x + LOAD.width, y: WIRE_Y },
               { x: RIGHT_WIRE_X, y: WIRE_Y },
               { x: RIGHT_WIRE_X, y: PLATE_TOP },
             ]}
             t={t}
             electrons
-            dots={4}
+            dots={2}
             direction={flowDirection}
           />
 
@@ -258,8 +269,8 @@ export function LeadAcidCycle({ reducedMotion }: SimulationProps) {
           <dd>{`${fmtGram(readout.leadMassG)} (${fmtMol(readout.leadMoles)})`}</dd>
         </div>
         <div>
-          <dt>{discharging ? 'PbSO₄ formed, both plates' : 'PbSO₄ removed, both plates'}</dt>
-          <dd>{fmtGram(readout.pbSO4MassG)}</dd>
+          <dt>{discharging ? 'PbSO₄ formed, total on both plates' : 'PbSO₄ removed, total on both plates'}</dt>
+          <dd>{`${fmtGram(readout.pbSO4MassG)} (half on each plate)`}</dd>
         </div>
         <div>
           <dt>{discharging ? 'H₂SO₄ used' : 'H₂SO₄ made back'}</dt>

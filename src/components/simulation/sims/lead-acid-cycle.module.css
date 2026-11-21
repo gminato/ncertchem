@@ -48,7 +48,7 @@
 }
 
 .crust {
-  fill: var(--agcl-white);
+  fill: var(--pbso4);
   fill-opacity: 0.9;
   stroke: var(--fg-subtle);
   stroke-width: 0.75;

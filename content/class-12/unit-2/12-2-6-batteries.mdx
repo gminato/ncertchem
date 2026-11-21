@@ -24,10 +24,13 @@ Batteries fall into two families. In a **primary battery** the reaction can happ
 
 The **dry cell**, also called the Leclanché cell after its discoverer, is the one in your torch and wall clock. Its zinc container doubles as the anode, so zinc atoms leave the metal as $\ce{Zn^2+}$ and release two electrons each. The cathode is a graphite rod sitting in a mixture of powdered manganese dioxide and carbon. Between the two lies a moist paste of ammonium chloride and zinc chloride. The electrode reactions are complicated in detail, but a useful summary is that manganese is reduced from the +4 to the +3 state, and the cell gives a potential of nearly 1.5 V.
 
-The **mercury cell** is built for steady, low-current work, such as hearing aids and watches. Its anode is zinc dissolved in mercury, an amalgam, and its cathode is a paste of mercury(II) oxide and carbon. The electrolyte is a paste of potassium hydroxide and zinc oxide. Its overall reaction is
+The **mercury cell** is built for steady, low-current work, such as hearing aids and watches. Its anode is zinc dissolved in mercury, an amalgam, and its cathode is a paste of mercury(II) oxide and carbon. Around the electrodes sits an alkaline paste made from potassium hydroxide, with zinc oxide mixed in. Its overall reaction is
 
 $$
-\ce{Zn(Hg) + HgO(s) -> ZnO(s) + Hg(l)}
+\begin{aligned}
+&\ce{Zn(Hg) + HgO(s)} \\
+&\quad\ce{-> ZnO(s) + Hg(l)}
+\end{aligned}
 $$
 
 and the cell potential is about 1.35 V. The reason it stays put is the subject of the first Check below.
@@ -51,23 +54,35 @@ The most important secondary cell is the **lead storage battery** that starts a 
 
 $$
 \begin{aligned}
-&\text{Anode:}\quad \ce{Pb(s) + SO4^2-(aq) -> PbSO4(s) + 2e-} \\
-&\text{Cathode:}\quad \ce{PbO2(s) + SO4^2-(aq) + 4H+(aq) + 2e- -> PbSO4(s) + 2H2O(l)}
+&\text{Anode:} \\
+&\quad\ce{Pb(s) + SO4^2-(aq)} \\
+&\qquad\ce{-> PbSO4(s) + 2e-} \\[0.6em]
+&\text{Cathode:} \\
+&\quad\ce{PbO2(s) + SO4^2-(aq)} \\
+&\qquad\ce{+ 4H+(aq) + 2e-} \\
+&\qquad\ce{-> PbSO4(s) + 2H2O(l)}
 \end{aligned}
 $$
 
 Adding the two gives the overall discharge reaction:
 
 $$
-\ce{Pb(s) + PbO2(s) + 2H2SO4(aq) -> 2PbSO4(s) + 2H2O(l)}
+\begin{aligned}
+&\ce{Pb(s) + PbO2(s) + 2H2SO4(aq)} \\
+&\quad\ce{-> 2PbSO4(s) + 2H2O(l)}
+\end{aligned}
 $$
 
 Notice that the acid is consumed and water is produced, so the electrolyte gets weaker as the cell discharges. That is exactly what the hydrometer in the Hook measures.
 
-Charging reverses the process. Current pushed back through the cell turns the PbSO₄ on the anode back into lead and the PbSO₄ on the cathode back into PbO₂, regenerating the acid. The **nickel–cadmium cell** is a second rechargeable choice. It lasts longer than the lead storage cell but is more expensive to make. Its plates, separated by a layer, are rolled into a jelly-roll arrangement and soaked in moist sodium or potassium hydroxide. Its overall discharge reaction is
+Charging reverses the process. Current pushed back through the cell turns the PbSO₄ on the anode back into lead and the PbSO₄ on the cathode back into PbO₂, regenerating the acid. The **nickel–cadmium cell** is a second rechargeable choice. Its working life is longer than that of a lead storage cell, but building it costs more. Its positive plate, separator and negative plate are rolled into a compact spiral and wetted with an alkali solution. Its overall discharge reaction is
 
 $$
-\ce{Cd(s) + 2Ni(OH)3(s) -> CdO(s) + 2Ni(OH)2(s) + H2O(l)}
+\begin{aligned}
+&\ce{Cd(s) + 2Ni(OH)3(s)} \\
+&\quad\ce{-> CdO(s) + 2Ni(OH)2(s)} \\
+&\qquad\ce{+ H2O(l)}
+\end{aligned}
 $$
 
 <Scrolly animation="battery-cutaways">
@@ -75,10 +90,10 @@ $$
 Start with the dry cell. Its zinc container is the anode, where $\ce{Zn -> Zn^2+ + 2e-}$ releases electrons into the external wire. The graphite rod at the centre is the cathode, sitting in powdered manganese dioxide and carbon. A moist paste of ammonium chloride and zinc chloride fills the gap, and the electrons travel from zinc to carbon through the circuit.
 </Step>
 <Step>
-Next, the mercury cell of a hearing aid. Zinc dissolved in mercury, the amalgam, is the anode, and the cathode is mercury(II) oxide with carbon in a paste of potassium hydroxide and zinc oxide. The overall change turns solid $\ce{HgO}$ into liquid mercury and zinc into zinc oxide. A voltmeter reads about 1.35 V and the reading stays flat for the whole life of the cell.
+Next, the mercury cell of a hearing aid. Zinc dissolved in mercury, the amalgam, is the anode, and the cathode is mercury(II) oxide with carbon in a paste of potassium hydroxide and zinc oxide. The overall change turns solid $\ce{HgO}$ into liquid mercury and zinc into zinc oxide. Here a small bulb stands in for the device, and the potential stays at about 1.35 V for most of the cell's life.
 </Step>
 <Step>
-Now the lead storage battery is discharging. The lead anode forms $\ce{PbSO4}$, and the $\ce{PbO2}$ cathode also turns into $\ce{PbSO4}$. Both plates grow a coating of lead sulphate while the sulphuric acid between them is used up and water appears. An acid-strength bar drops steadily, and the current runs out of the cell through the wire.
+Now the lead storage battery is discharging. The lead anode forms $\ce{PbSO4}$, and the $\ce{PbO2}$ cathode also turns into $\ce{PbSO4}$. Both plates grow a coating of lead sulphate while the sulphuric acid between them is used up and water appears. An acid-strength bar drops steadily. Electrons leave the lead plate, the anode, and travel through the external wire to the PbO₂ plate, while conventional current leaves the cell through the PbO₂ (+) terminal.
 </Step>
 <Step>
 Connect a charger and push current the other way. The reaction runs in reverse: lead sulphate on the lead plate is turned back into lead, and lead sulphate on the other plate into $\ce{PbO2}$. The plate that was the anode is now the site of reduction and so acts as the cathode during charging. The acid bar rises again as sulphuric acid is regenerated.
