@@ -1,0 +1,109 @@
+---
+class: 12
+unit: 2
+section: "2.5"
+order: 7
+title: "Electrolytic Cells and Faraday's Laws"
+slug: "12-2-5-electrolytic-cells-and-electrolysis"
+access: free
+summary: "An external source can force a non-spontaneous reaction, and Faraday's laws turn the charge that flows into an exact mass of metal: Q = It, and n(e⁻) = Q/F."
+ncert: "Class 12, Part I — Unit 2, Section 2.5"
+---
+
+<Hook>
+An imitation-jewellery workshop silver-plates brass earrings by hanging them in a tank for a few minutes. Plate too little and the coat is dull and patchy; plate too much and the costly silver wastes away and flakes. The earrings are dipped and lifted out by hand, and nobody weighs them mid-bath. So how does the craftsperson know, from the electrical settings alone, how much silver has landed on each pair?
+</Hook>
+
+## An electrolytic cell runs on borrowed energy
+
+In a Daniell cell, a spontaneous reaction makes electricity. An **electrolytic cell** does the reverse. An external DC source, rather than the chemistry itself, supplies the voltage that makes a reaction happen. Reactions that would never run on their own, such as pulling metal out of a solution, become possible this way.
+
+Electrolysis matters far beyond the lab. Industry uses it to make chlorine, caustic soda and fluorine, and to plate, refine and extract metals. The apparatus is simple: two electrodes dip into an electrolyte, which can be a melt or a solution, and a DC source drives electrons through the external wire. The same rule as in a galvanic cell still holds, with a twist. The anode is the electrode joined to the positive terminal of the source, and it is still the site of oxidation. The cathode is joined to the negative terminal, and it is still the site of reduction.
+
+## Copper in copper sulphate: an anode that dissolves
+
+The simplest electrolytic cell has two copper strips dipping into aqueous $\ce{CuSO4}$. Switch on a DC source and two things happen at once. At the cathode, $\ce{Cu^{2+}}$ ions gain two electrons and deposit as copper metal. At the anode, copper atoms lose two electrons and enter the solution as $\ce{Cu^{2+}}$. The anode thins while the cathode thickens, and the blue colour of the solution stays roughly constant because copper leaves one electrode as fast as it arrives at the other.
+
+This is not a curiosity. Impure copper is cast as the anode, the current dissolves it, and pure copper deposits on a starter sheet at the cathode. Metal that leaves the anode carries its impurities into the sludge below, while the cathode gains copper of high purity.
+
+<Scrolly animation="faraday-electrolysis">
+  <Step>
+    **The electrolytic cell:** Two copper electrodes sit in one beaker of aqueous $\ce{CuSO4}$. A DC source has its positive terminal on the anode and its negative terminal on the cathode. Electrons travel through the external wire from the anode to the cathode, while a conventional current flows the opposite way. Nothing happens until the source drives the current.
+  </Step>
+  <Step>
+    **Ions carry the current:** Inside the solution, $\ce{Cu^{2+}}$ ions drift toward the cathode and $\ce{SO4^{2-}}$ ions drift toward the anode. At the cathode, $\ce{Cu^{2+}}$ gains two electrons and plates out as reddish copper metal. At the anode, copper loses two electrons and dissolves as $\ce{Cu^{2+}}$. The anode visibly thins while the cathode thickens.
+  </Step>
+  <Step>
+    **Double the time, double the metal (first law):** At 1.00 A, the cathode gains 0.329 g of copper in 1000 s. Let the same current run for 2000 s and the cathode gains 0.659 g. Twice the charge deposits twice the mass. The amount of product is proportional to the charge passed, Q = It, whatever the shape of the cell.
+  </Step>
+  <Step>
+    **Same charge, two metals (second law):** Two cells are joined in series so one current passes through both. The first holds $\ce{Ag+}$ and the second holds $\ce{Cu^{2+}}$. A charge of 3600 C deposits 4.02 g of silver and only 1.19 g of copper. Each silver ion needs one electron and each copper ion needs two, so the masses scale with molar mass divided by electrons needed: 107.87 for silver against 31.78 for copper.
+  </Step>
+  <Step>
+    **Counting electrons with Q = It:** Multiply the current by the time in seconds to get Q in coulombs. Divide Q by the faraday, $F = 96\,487\ \text{C mol}^{-1}$, to get moles of electrons. 3600 C is 0.0373 mol of electrons. That is enough for 0.0373 mol of $\ce{Ag+}$, but only 0.0187 mol of $\ce{Cu^{2+}}$, because each copper ion needs two electrons.
+  </Step>
+</Scrolly>
+
+## Faraday's two laws, in numbers
+
+Michael Faraday worked this out in the 1830s, before constant-current sources existed. He used a coulometer, a standard cell that showed how much metal a charge had deposited. Today we set the current directly and time it, so the two laws become a short calculation.
+
+**First law:** the mass of product at an electrode is proportional to the quantity of electricity that passed. Doubling Q doubles the mass.
+
+**Second law:** the same charge liberates different masses of different substances in proportion to their equivalent masses, that is, molar mass divided by the number of electrons each ion takes.
+
+The **faraday** is the charge carried by one mole of electrons: $F = 96\,487\ \text{C mol}^{-1}$, usually rounded to $96\,500\ \text{C mol}^{-1}$ for rough work. Put these together and any electrolysis problem follows the same three steps: find Q from $Q = It$, convert Q into moles of electrons, then use the stoichiometry of the electrode reaction to get moles of product and grams.
+
+Take a 2.00 A current running for 1800 s. Q is 3600 C, which corresponds to 0.0373 mol of electrons. At the silver electrode that means 0.0373 mol of silver, which is 4.02 g. At the copper electrode it means 0.0187 mol of copper, which is 1.19 g.
+
+<Check
+  n={1}
+  numeric
+  answer={1.48}
+  tolerance={0.01}
+  unit="g"
+  explanation="Q = 3.00 A × 1500 s = 4500 C. Moles of electrons = 4500 / 96487 = 0.04664 mol. Each Cu²⁺ takes two electrons, so moles of Cu = 0.02332 mol, and mass = 0.02332 × 63.55 = 1.48 g."
+>
+A jeweller passes a steady $3.00\ \text{A}$ through an aqueous copper sulphate bath for $25.0\ \text{min}$. Taking $F = 96\,487\ \text{C mol}^{-1}$, what mass of copper is deposited at the cathode, in grams?
+</Check>
+
+Aluminium is a special case that catches out plating workshops. Water is reduced to hydrogen before an $\ce{Al^{3+}}$ ion can be reduced, so no metallic aluminium deposits from an aqueous bath. Aluminium is made instead by electrolysing molten aluminium oxide dissolved in cryolite.
+
+## Plate it yourself
+
+The **Electroplating Lab** below lets you choose the metal ion, the current and the time. Watch the cathode thicken, then read Q, the moles of electrons and the mass deposited. In series mode, the same current feeds two cells at once, so you can compare how much each metal deposits from the same charge.
+
+<Simulation name="electroplating-lab" title="Electroplating Lab" />
+
+<Check
+  n={2}
+  numeric
+  answer={1789}
+  tolerance={2}
+  unit="s"
+  explanation="Moles of Ag = 1.00 / 107.87 = 0.009271 mol. Each Ag⁺ takes one electron, so Q = 0.009271 × 96487 = 894.5 C. Time = Q / I = 894.5 / 0.50 = 1789 s, or about 29.8 min."
+>
+A workshop needs to silver-plate exactly $1.00\ \text{g}$ of silver from an aqueous $\ce{Ag+}$ bath at a steady $0.50\ \text{A}$. How long, in seconds, must the current run? Use $M(\ce{Ag}) = 107.87\ \text{g mol}^{-1}$.
+</Check>
+
+<Check
+  n={3}
+  options={[
+    "Equal masses of about 2.0 g in both cells",
+    "Silver 1.19 g and copper 4.02 g",
+    "Silver 4.02 g and copper 1.19 g",
+    "No metal at all, because the charge passes only as ions"
+  ]}
+  answer={2}
+  explanation="Q = 2.00 A × 1800 s = 3600 C = 0.0373 mol of electrons. Silver takes one electron per ion: 0.0373 mol × 107.87 g mol⁻¹ = 4.02 g. Copper takes two electrons per ion: 0.01866 mol × 63.55 g mol⁻¹ = 1.19 g."
+>
+Two cells, one holding aqueous $\ce{Ag+}$ and one holding aqueous $\ce{Cu^{2+}}$, are joined in series and carry a steady $2.00\ \text{A}$ for $30.0\ \text{min}$. Which pair of masses is deposited at the two cathodes?
+</Check>
+
+<KeyIdeas>
+- **Electrolytic cells** use an external DC source to drive a reaction that is not spontaneous. The anode is joined to the positive terminal and is still the site of oxidation; the cathode is joined to the negative terminal and is still the site of reduction.
+- **Copper electrolysis** dissolves copper at the anode and deposits it at the cathode with the same stoichiometry, which is the basis of refining impure copper.
+- **Faraday's first law:** the mass deposited is proportional to the charge passed, Q = It.
+- **Faraday's second law:** for the same charge, masses are proportional to molar mass divided by the number of electrons per ion.
+- **The faraday** is $F = 96\,487\ \text{C mol}^{-1}$, so moles of electrons = Q / F, and every electrolysis mass follows from that count.
+</KeyIdeas>
