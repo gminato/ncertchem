@@ -80,6 +80,7 @@ import { EGKConverter } from './sims/e-g-k-converter'
 import { ConductivityCellLab } from './sims/conductivity-cell-lab'
 import { KohlrauschLab } from './sims/kohlrausch-lab'
 import { ElectrolysisProductPredictor } from './sims/electrolysis-product-predictor'
+import { ElectroplatingLab } from './sims/electroplating-lab'
 
 export interface SimulationProps {
   /** True when the Learner has asked the OS for reduced motion. Skip tweens and loops when set. */
@@ -174,4 +175,5 @@ export const simulations: Record<string, ComponentType<SimulationProps>> = {
   'e-g-k-converter': EGKConverter,
   'conductivity-cell-lab': ConductivityCellLab,
   'kohlrausch-lab': KohlrauschLab,
+  'electroplating-lab': ElectroplatingLab,
 }

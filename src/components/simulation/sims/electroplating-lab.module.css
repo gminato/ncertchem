@@ -1,0 +1,139 @@
+.sim {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  min-width: 0;
+}
+
+.controls {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.sliderGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: var(--space-3);
+}
+
+.sim button,
+.sim label,
+.sim output {
+  font-size: 14px;
+}
+
+.buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+.stage {
+  background: var(--surface-raised);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: var(--space-3);
+  container-type: inline-size;
+}
+
+/* Two-cell drawing on a narrow stage: scale the whole drawing to the width instead of scrolling. */
+@container (max-width: 559px) {
+  .stageSeries .svg {
+    min-width: 0;
+    max-width: none;
+  }
+}
+
+.scroller {
+  overflow-x: auto;
+}
+
+/* Drawn at 1:1 or larger so the 14 px labels stay 14 px on a phone; the stage scrolls sideways instead. */
+.svg {
+  display: block;
+  width: 100%;
+  min-width: 580px;
+  max-width: 580px;
+  height: auto;
+  margin: 0 auto;
+}
+
+.readouts {
+  background: var(--surface-raised);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: var(--space-4);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.summary {
+  margin: 0;
+  font-size: 16px;
+  line-height: 1.5;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: var(--space-3);
+  margin: 0;
+}
+
+.tile {
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: var(--space-2) var(--space-3);
+  min-width: 0;
+}
+
+.tile dt {
+  font-size: 14px;
+  color: var(--fg-muted);
+  overflow-wrap: anywhere;
+}
+
+.tile dd {
+  margin: var(--space-1) 0 0;
+  font-size: 18px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+.equations {
+  margin: 0;
+  padding-left: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  font-size: 15px;
+  line-height: 1.6;
+  overflow-wrap: anywhere;
+}
+
+.tag {
+  display: inline-block;
+  min-width: 7.5em;
+  font-weight: 600;
+  color: var(--fg-muted);
+}
+
+.note {
+  font-size: 14px;
+  color: var(--fg-muted);
+}
+
+/* Screen-reader-only live status: visually hidden, announced on state changes. */
+.sr {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}

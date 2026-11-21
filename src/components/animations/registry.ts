@@ -141,6 +141,7 @@ import { NernstConcentration } from './c12-unit2/nernst/NernstConcentration'
 import { ConductivityMeasurement } from './c12-unit2/conductance/ConductivityMeasurement'
 import { DilutionConductivity } from './c12-unit2/dilution/DilutionConductivity'
 import { ElectrolysisProducts } from './c12-unit2/products/ElectrolysisProducts'
+import { FaradayElectrolysis } from './c12-unit2/faraday/FaradayElectrolysis'
 
 /**
  * Animations available to a Scrolly Animation, keyed by the `animation` prop.
@@ -292,6 +293,7 @@ export const animations = {
   'conductivity-measurement': ConductivityMeasurement,
   'dilution-conductivity': DilutionConductivity,
   'electrolysis-products': ElectrolysisProducts,
+  'faraday-electrolysis': FaradayElectrolysis,
 } as const
 
 export type AnimationName = keyof typeof animations
