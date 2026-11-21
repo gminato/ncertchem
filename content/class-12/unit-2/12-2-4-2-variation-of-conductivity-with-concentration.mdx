@@ -1,0 +1,127 @@
+---
+class: 12
+unit: 2
+section: "2.4.2"
+order: 6
+title: "Variation of Conductivity with Concentration"
+slug: "12-2-4-2-variation-of-conductivity-with-concentration"
+access: free
+summary: "Dilution lowers the conductivity κ but raises the molar conductivity Λm, because each mole now occupies a larger volume; plotted against √c, strong electrolytes give straight lines whose intercepts Λ°m add up ion by ion, and those values unlock the degree of dissociation of weak acids."
+ncert: "Class 12, Part I — Unit 2, Section 2.4.2"
+---
+
+<Hook>
+Pour a little vinegar into a beaker of water and its conductivity falls: fewer ions now sit in each cubic centimetre, so less current gets through. Yet if you ask how hard each mole of acetic acid works, the answer goes the other way, and the more water you add, the harder every mole works. How can the same solution both conduct worse and work better?
+</Hook>
+
+## Two ways of measuring conduction
+
+The **conductivity**, $\kappa$, is the conductance of a cube of solution exactly $1\ \text{cm}$ on each side, held between two electrodes facing each other across it. Its unit is $\text{S cm}^{-1}$. Because it refers to a fixed volume, $\kappa$ reflects how many ions that volume holds, and it always falls when you dilute a solution, whether the electrolyte is strong or weak.
+
+The **molar conductivity**, $\Lambda_m$, takes a different view. It is the conductance of the volume $V$ that contains exactly one mole of electrolyte, with the electrodes kept one centimetre apart. Since the electrode separation is fixed, $\Lambda_m = \kappa V$. Dilution shrinks $\kappa$, but it stretches $V$, and the stretch wins. That is why $\Lambda_m$ rises as the concentration falls.
+
+## Strong electrolytes: a straight line against √c
+
+For a strong electrolyte, $\Lambda_m$ rises only gently on dilution, and it follows
+
+$$
+\Lambda_m = \Lambda^\circ_m - A\,c^{1/2}
+$$
+
+Here $\Lambda^\circ_m$ is the **limiting molar conductivity**, the value at infinite dilution, and $A$ is a constant for a given solvent and temperature. Plot $\Lambda_m$ against $c^{1/2}$ and you get a straight line: the intercept is $\Lambda^\circ_m$ and the slope is $-A$. The constant $A$ depends on the charge types of the ions. Electrolytes such as $\ce{NaCl}$ (1-1), $\ce{CaCl2}$ (2-1) and $\ce{MgSO4}$ (2-2) each share one value of $A$ within their own type.
+
+Four dilutions of potassium chloride at 298 K show the trend. A least-squares line through their $c^{1/2}$ values gives $\Lambda^\circ_m \approx 149.8\ \text{S cm}^2\ \text{mol}^{-1}$ and $A \approx 87.4\ \text{S cm}^2\ \text{mol}^{-1}\,(\text{mol L}^{-1})^{-1/2}$. Extrapolating the line to $c = 0$ is the only sensible way to reach the limiting value for a strong electrolyte, because a strong electrolyte is essentially fully dissociated at every concentration in the measured range.
+
+<Scrolly animation="dilution-conductivity">
+  <Step>
+    **Conductivity falls:** A cube of potassium chloride solution, $1\ \text{cm}$ on each side, sits between two electrodes. At $c = 0.000989\ \text{mol L}^{-1}$ its conductivity is $\kappa = 1.45 \times 10^{-4}\ \text{S cm}^{-1}$. Dilute the solution five-fold and the cube holds five times fewer ions, so the conductance bar drops to $\kappa = 2.94 \times 10^{-5}\ \text{S cm}^{-1}$.
+  </Step>
+  <Step>
+    **The mole grows:** Now draw the volume that holds one mole of salt between the same electrodes. At $0.000989\ \text{mol L}^{-1}$ it is $1011\ \text{L}$; at $0.000198\ \text{mol L}^{-1}$ it is $5050\ \text{L}$. Multiply by $V$ and $\Lambda_m = \kappa V$ barely moves, from $147.09$ to $148.61\ \text{S cm}^2\ \text{mol}^{-1}$, because the growing volume almost cancels the falling $\kappa$.
+  </Step>
+  <Step>
+    **Straight line for a strong electrolyte:** Each KCl point sits at its $c^{1/2}$ position on the horizontal axis, with $\Lambda_m$ on the vertical axis. The four points lie on a nearly straight line sloping gently down as $c^{1/2}$ grows. Extend the line to $c^{1/2} = 0$ and its intercept marks $\Lambda^\circ_m \approx 149.8\ \text{S cm}^2\ \text{mol}^{-1}$, the slope gives $A \approx 87.4$.
+  </Step>
+  <Step>
+    **Weak electrolyte bends away:** Acetic acid, drawn on the same axes, climbs steeply as the solution is diluted, and its curve gets steeper near the dilute end. Nothing on the plot lets you extend it to a clean intercept, so the limiting value for acetic acid cannot be read off the graph. The dashed strong-electrolyte line is shown for contrast.
+  </Step>
+  <Step>
+    **Ions as bars:** Each ion has its own limiting value from Table 2.4, shown as a bar. Stack the bars for the ions in one formula. Two chloride bars and one calcium bar give $\Lambda^\circ_m(\ce{CaCl2}) = 119.0 + 2 \times 76.3 = 271.6\ \text{S cm}^2\ \text{mol}^{-1}$. Each bar is independent of its partner ion, so the bars can be recombined for any salt.
+  </Step>
+  <Step>
+    **Degree of dissociation:** Suppose a measured $\Lambda_m$ of $16.5\ \text{S cm}^2\ \text{mol}^{-1}$ for acetic acid at $0.0100\ \text{mol L}^{-1}$. Take $\Lambda^\circ_m$ from the stacked bars, $349.6 + 40.9 = 390.5$. The ratio $\alpha = 16.5 / 390.5 = 0.0423$ is the fraction of molecules that have dissociated, and $K_a = c\alpha^2/(1-\alpha)$ then gives $1.86 \times 10^{-5}$.
+  </Step>
+</Scrolly>
+
+## Weak electrolytes: a steep curve with no intercept
+
+A weak electrolyte such as acetic acid is only partly dissociated at ordinary concentrations. When you dilute it, more molecules dissociate, so the number of ions in the mole-holding volume rises. This extra dissociation makes $\Lambda_m$ climb steeply, particularly at low concentrations, which is the opposite of the gentle rise seen for KCl.
+
+That steepness is the problem. A weak electrolyte's $\Lambda_m$ curve does not extend to a straight line with a convenient intercept, and at the very dilute concentrations where the dissociation is complete, the conductance is too small to measure accurately. The limiting value $\Lambda^\circ_m$ therefore cannot be found by extrapolation. You need a different route.
+
+## Kohlrausch's law of independent migration
+
+Friedrich Kohlrausch noticed that the limiting values of related salts differ by almost the same amount. For example, $\Lambda^\circ_m(\ce{KCl}) - \Lambda^\circ_m(\ce{NaCl})$ and $\Lambda^\circ_m(\ce{KBr}) - \Lambda^\circ_m(\ce{NaBr})$ both come to about $23\ \text{S cm}^2\ \text{mol}^{-1}$. From these regularities he proposed that each ion migrates independently of its partner, so a salt's limiting value is the sum of its ions' contributions:
+
+$$
+\Lambda^\circ_m = \nu_+\,\lambda^\circ_+ + \nu_-\,\lambda^\circ_-
+$$
+
+Here $\nu_+$ and $\nu_-$ count the cations and anions per formula unit, and $\lambda^\circ_+$ and $\lambda^\circ_-$ are their limiting ionic conductivities. Table 2.4 lists these for common ions. The difference between $\lambda^\circ(\ce{K+})$ and $\lambda^\circ(\ce{Na+})$ is $23.4$, and the difference between $\lambda^\circ(\ce{Br-})$ and $\lambda^\circ(\ce{Cl-})$ is $1.8$, both in $\text{S cm}^2\ \text{mol}^{-1}$.
+
+The same rule predicts salts that were never measured directly. Using the table, $\Lambda^\circ_m(\ce{MgSO4}) = 106.0 + 160.0 = 266.0\ \text{S cm}^2\ \text{mol}^{-1}$.
+
+<Check
+  n={1}
+  numeric
+  answer={149.8}
+  tolerance={0.5}
+  unit="S cm² mol⁻¹"
+  explanation="Fit Λm = Λ°m − A c^½ to the four KCl points by least squares. The fitted intercept, Λ°m, is about 149.8 S cm² mol⁻¹, and the slope gives A ≈ 87.4. A hand-drawn line through the same points can read about 150.0, so anything within half a unit of 149.8 is correct."
+>
+Using the four KCl data points at 298 K, extrapolate the straight line of $\Lambda_m$ against $c^{1/2}$ to zero concentration. What is $\Lambda^\circ_m$ in $\text{S cm}^2\ \text{mol}^{-1}$, to one decimal place?
+</Check>
+
+<Check
+  n={2}
+  options={[
+    "κ rises on dilution because the same ions now spread through more solution",
+    "Λm rises because the number of ions per unit volume grows on dilution",
+    "Λm rises because the volume holding one mole grows, which more than offsets the fall in κ",
+    "Both κ and Λm rise on dilution because the solution becomes more mobile"
+  ]}
+  answer={2}
+  explanation="κ counts ions in a fixed 1 cm cube, so it falls on dilution. Λm = κV multiplies that falling κ by a volume V that grows as the solution is diluted. The product can rise, as it does for both KCl and acetic acid. Choice A is wrong because κ falls on dilution; only the volume term pushes Λm up."
+>
+Diluting a solution makes κ smaller but Λm larger. Which statement explains why?
+</Check>
+
+## Using Λ°m to find the strength of a weak acid
+
+Once the limiting molar conductivity of a weak electrolyte is known from Kohlrausch's law, its degree of dissociation at any concentration is simply the ratio of the two values:
+
+$$
+\alpha = \frac{\Lambda_m}{\Lambda^\circ_m}
+$$
+
+For acetic acid, $\Lambda^\circ_m$ comes from two strong acids and salts that you can combine: $\Lambda^\circ_m(\ce{CH3COOH}) = \lambda^\circ(\ce{H+}) + \lambda^\circ(\ce{CH3COO-}) = 390.5\ \text{S cm}^2\ \text{mol}^{-1}$. Once $\alpha$ is known, the dissociation constant follows from the Ostwald dilution law $K_a = c\alpha^2/(1-\alpha)$. Measure $\Lambda_m$ at one concentration and you have both $\alpha$ and $K_a$.
+
+<Simulation name="kohlrausch-lab" title="Kohlrausch Lab" />
+
+<Check
+  n={3}
+  numeric
+  answer={0.0423}
+  tolerance={0.0005}
+  explanation="α = Λm / Λ°m = 16.5 / 390.5 = 0.0423. Λ°m for acetic acid is λ°(H⁺) + λ°(CH₃COO⁻) = 349.6 + 40.9 = 390.5 S cm² mol⁻¹, and the degree of dissociation is dimensionless."
+>
+A $0.0100\ \text{mol L}^{-1}$ acetic acid solution has $\Lambda_m = 16.5\ \text{S cm}^2\ \text{mol}^{-1}$. Using $\Lambda^\circ_m$ from Table 2.4 ions, find the degree of dissociation $\alpha$ to four decimal places.
+</Check>
+
+<KeyIdeas>
+- **Conductivity $\kappa$** (S cm⁻¹) counts the ions in a 1 cm cube, so it always falls on dilution, for weak and strong electrolytes alike.
+- **Molar conductivity** $\Lambda_m = \kappa V$ rises on dilution because the volume $V$ holding one mole grows faster than $\kappa$ falls.
+- **Strong electrolytes** give $\Lambda_m = \Lambda^\circ_m - A\,c^{1/2}$: a straight line whose intercept is the limiting value, and $A$ depends only on the charge types.
+- **Weak electrolytes** have no usable intercept, so $\Lambda^\circ_m$ comes from Kohlrausch's law: $\Lambda^\circ_m = \nu_+\lambda^\circ_+ + \nu_-\lambda^\circ_-$ (for example, $\Lambda^\circ_m(\ce{CaCl2}) = 271.6\ \text{S cm}^2\ \text{mol}^{-1}$).
+- **Degree of dissociation** $\alpha = \Lambda_m / \Lambda^\circ_m$ and $K_a = c\alpha^2/(1-\alpha)$ turn one measured $\Lambda_m$ into the strength of a weak acid.
+</KeyIdeas>
