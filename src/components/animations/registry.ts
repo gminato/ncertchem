@@ -131,6 +131,7 @@ import { RaoultSurface } from './c12-unit1/raoult/RaoultSurface'
 import { SolutionsNineTypes } from './c12-unit1/types/SolutionsNineTypes'
 import { OsmosisMembrane } from './c12-unit1/osmosis/OsmosisMembrane'
 import { CellRunsDown } from './c12-unit2/rundown/CellRunsDown'
+import { FuelRust } from './c12-unit2/fuelrust/FuelRust'
 import { VantHoffParticles } from './c12-unit1/vanthoff/VantHoffParticles'
 import { ConcentrationScales } from './c12-unit1/concentration/ConcentrationScales'
 import { RaoultDeviations } from './c12-unit1/deviations/RaoultDeviations'
@@ -284,6 +285,7 @@ export const animations = {
   'solutions-nine-types': SolutionsNineTypes,
   'osmosis-membrane': OsmosisMembrane,
   'cell-runs-down': CellRunsDown,
+  'fuel-cell-and-rust': FuelRust,
   'vant-hoff-particles': VantHoffParticles,
   'concentration-scales': ConcentrationScales,
   'raoult-deviations': RaoultDeviations,

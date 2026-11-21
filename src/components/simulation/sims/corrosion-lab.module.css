@@ -1,0 +1,267 @@
+.lab {
+  display: grid;
+  gap: var(--space-4);
+  min-width: 0;
+  font-family: var(--font-sans);
+  color: var(--fg);
+  font-size: 1rem;
+}
+
+.controls {
+  display: grid;
+  gap: var(--space-3);
+  min-width: 0;
+}
+
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.stage {
+  display: grid;
+  gap: var(--space-2);
+  min-width: 0;
+}
+
+.svg {
+  display: block;
+  width: 100%;
+  max-width: 460px;
+  height: auto;
+  justify-self: center;
+  overflow: visible;
+}
+
+.caption,
+.label {
+  font-size: 15px;
+  fill: var(--fg);
+  font-family: var(--font-sans);
+}
+
+.caption {
+  fill: var(--fg-muted);
+}
+
+.glass {
+  fill: var(--surface-raised);
+  stroke: var(--border);
+  stroke-width: 2;
+}
+
+.glassEdge {
+  fill: none;
+  stroke: var(--border);
+  stroke-width: 2;
+}
+
+.liquid {
+  fill: var(--accent);
+  fill-opacity: 0.16;
+}
+
+.liquid[data-env='salt-water'] {
+  fill: var(--ion-anion);
+  fill-opacity: 0.22;
+}
+
+.liquid[data-env='acid'] {
+  fill: var(--ion-cation);
+  fill-opacity: 0.14;
+}
+
+.iron {
+  fill: var(--metal-fe);
+}
+
+.paint {
+  fill: var(--accent);
+  fill-opacity: 0.55;
+  stroke: var(--border);
+  stroke-width: 1;
+}
+
+.zinc {
+  fill: var(--metal-zn);
+  stroke: var(--border);
+  stroke-width: 1;
+}
+
+.tin {
+  fill: var(--metal-pt);
+  stroke: var(--border);
+  stroke-width: 1;
+}
+
+.exposed {
+  fill: var(--metal-fe);
+}
+
+.scratch {
+  fill: none;
+  stroke: var(--fg);
+  stroke-width: 1.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.rust {
+  fill: var(--metal-cu);
+}
+
+.wire {
+  fill: none;
+  stroke: var(--fg-muted);
+  stroke-width: 2;
+}
+
+.mg {
+  fill: var(--metal-mg);
+  stroke: var(--border);
+  stroke-width: 1;
+}
+
+.electron {
+  fill: var(--current);
+}
+
+.leader {
+  fill: none;
+  stroke: var(--fg-muted);
+  stroke-width: 1.25;
+  stroke-dasharray: 3 3;
+}
+
+.note {
+  margin: 0;
+  font-size: 1rem;
+  color: var(--fg-muted);
+}
+
+.equations {
+  margin: 0;
+  display: grid;
+  gap: var(--space-3);
+}
+
+.equations > div {
+  display: grid;
+  gap: var(--space-1);
+  padding: var(--space-3);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  background: var(--surface-raised);
+}
+
+.equations dt {
+  font-size: 1rem;
+  color: var(--fg-muted);
+}
+
+.equations dd {
+  margin: 0;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--space-2) var(--space-4);
+}
+
+.eq {
+  font-family: var(--font-mono);
+  font-size: 1rem;
+  overflow-wrap: anywhere;
+}
+
+.e0 {
+  font-size: 1rem;
+  color: var(--fg-muted);
+}
+
+.compare {
+  display: grid;
+  gap: var(--space-2);
+  min-width: 0;
+}
+
+.compareTitle {
+  margin: 0;
+  font-size: 1.0625rem;
+  font-weight: 600;
+}
+
+.scaleNote {
+  margin: 0;
+  font-size: 1rem;
+  color: var(--fg-muted);
+}
+
+.list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: var(--space-2);
+}
+
+.list li {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: var(--space-1) var(--space-3);
+  align-items: center;
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius-md);
+}
+
+.current {
+  background: var(--accent-soft);
+}
+
+.rowName {
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.rowText {
+  font-size: 1rem;
+  color: var(--fg-muted);
+  grid-column: 1 / -1;
+}
+
+.bar {
+  display: block;
+  height: 10px;
+  border-radius: 999px;
+  background: var(--border);
+  overflow: hidden;
+  align-self: center;
+}
+
+.barFill {
+  display: block;
+  height: 100%;
+  background: var(--metal-cu);
+  border-radius: 999px;
+  transition: width 200ms ease;
+}
+
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+@media (min-width: 40rem) {
+  .list li {
+    grid-template-columns: 11rem minmax(0, 1fr) 15rem;
+  }
+
+  .rowText {
+    grid-column: auto;
+  }
+}

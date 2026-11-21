@@ -1,0 +1,158 @@
+---
+class: 12
+unit: 2
+section: "2.7"
+order: 10
+title: "Fuel Cells and Corrosion"
+slug: "12-2-7-fuel-cells-and-corrosion"
+access: free
+summary: "A hydrogen–oxygen cell turns fuel straight into electricity at about 70% efficiency, while a rusting iron nail is secretly a galvanic cell in its own right, with an anode and a cathode on one surface."
+ncert: "Class 12, Part I — Unit 2, Sections 2.7–2.8"
+---
+
+<Hook>
+Iron gates by the sea often show far more rust than identical gates inland, where the air is drier and less salty. Ships carry blocks of zinc bolted to their hulls, and the blocks disappear while the steel stays whole. Iron has no idea whether it is at the sea or in the desert, so what is really going on under the paint?
+</Hook>
+
+## Why burn fuel in two steps?
+
+Most of the electricity we use is made in thermal power plants. Coal, gas or oil is burnt to heat water into high-pressure steam, the steam drives a turbine, and the turbine spins a generator. Each of these steps wastes energy, and the plants also release a great deal of pollution. The chemical energy of the fuel is converted into electricity only in part.
+
+A galvanic cell takes a different route. It converts chemical energy directly into electrical energy, with no boiler and no turbine in between, so it can be far more efficient. The idea that follows is simple: if we could feed a fuel continuously to a galvanic cell and remove its products continuously, the cell would keep running for as long as the fuel lasted. Galvanic cells built this way are called **fuel cells**. The fuel need not be hydrogen: methane and methanol are also used, fed in the same manner.
+
+## The hydrogen–oxygen fuel cell
+
+One of the most successful fuel cells uses hydrogen and oxygen to make water. Hydrogen and oxygen are bubbled through porous carbon electrodes into concentrated aqueous sodium hydroxide. Tiny particles of platinum or palladium are embedded in the electrodes, where they quicken the reactions at both electrodes. This cell supplied electrical power during the Apollo space missions, and the water it made was condensed and added to the astronauts' drinking supply.
+
+At the anode, hydrogen reacts with hydroxide ions and releases electrons. At the cathode, oxygen, water and electrons combine to form hydroxide ions. Writing each electrode reaction on its own line:
+
+$$
+\ce{2H2(g) + 4OH^- -> 4H2O(l) + 4e^-}
+$$
+
+$$
+\ce{O2(g) + 2H2O(l) + 4e^- -> 4OH^-(aq)}
+$$
+
+Adding the two gives the overall reaction, in which hydrogen and oxygen form water:
+
+$$
+\ce{2H2(g) + O2(g) -> 2H2O(l)}
+$$
+
+Keep feeding in the gases and the cell keeps producing current. Only the fuel and the oxidant are consumed; the electrodes survive intact.
+
+## Why fuel cells are attractive
+
+A fuel cell converts about 70% of the fuel's energy into electricity, against roughly 40% for a thermal plant. At the point of use its only product is water, so it adds no pollution there. That pairing of high efficiency and clean output is why researchers keep improving electrodes, catalysts and electrolytes, and prototype fuel-cell cars have already been run.
+
+## Rusting as a corrosion cell
+
+Corrosion is the slow conversion of a metal's surface into oxides or other salts. Familiar cases include the rust on iron, the dulling of silver, and the green patina on copper and bronze. Such attack weakens buildings, bridges and ships, and it drains large sums of money every year.
+
+Rusting needs both water and air, and it is best understood as an electrochemical process. A single spot on an iron object acts as the **anode**, where iron is oxidised:
+
+$$
+\ce{Fe(s) -> Fe^{2+}(aq) + 2e^-}
+$$
+
+The electrons released at that spot travel through the metal to a second spot, which acts as the **cathode**. There, oxygen is reduced in the presence of hydrogen ions. Those hydrogen ions are thought to come from carbonic acid, formed when carbon dioxide from the air dissolves in water:
+
+$$
+\ce{O2(g) + 4H^+(aq) + 4e^- -> 2H2O(l)}
+$$
+
+Ferrous ions formed at the anode are then oxidised further by atmospheric oxygen. The product is rust, roughly $\ce{Fe2O3}\cdot x\ce{H2O}$, and the step releases more hydrogen ions:
+
+$$
+\ce{2Fe^{2+}(aq) + 2H2O(l) + 1/2O2(g) -> Fe2O3(s) + 4H^+(aq)}
+$$
+
+Doubling the anode reaction and adding the cathode reaction gives the overall change, before any rust forms:
+
+$$
+\ce{2Fe(s) + O2(g) + 4H^+(aq) -> 2Fe^{2+}(aq) + 2H2O(l)}
+$$
+
+Notice that the potential is worked out the same way as for any cell: the cathode potential of $+1.23$ V minus the anode potential of $-0.44$ V gives $E^\circ_{\text{cell}} = 1.67$ V for the overall reaction.
+
+## Stopping the cell
+
+Prevention pays for itself: it cuts costs and reduces the risk of failures, such as a collapsing bridge or a broken critical part. The most direct approach denies the metal both water and air. Paint does this, and so does a chemical coating such as bisphenol. Another approach covers the iron with a second metal, tin or zinc.
+
+These two coatings work differently. A tin coat is less reactive than iron, since $E^\circ(\text{Sn}^{2+}/\text{Sn}) = -0.14$ V lies above $E^\circ(\text{Fe}^{2+}/\text{Fe}) = -0.44$ V. Once the tin is scratched, iron becomes the anode and rusts. A zinc coat, with $E^\circ(\text{Zn}^{2+}/\text{Zn}) = -0.76$ V, is more reactive than iron, so zinc corrodes first and protects the iron even where it is exposed.
+
+The electrochemical method is a **sacrificial electrode**: a block of a more active metal such as magnesium or zinc is joined to the iron. The block corrodes itself, and the iron is saved.
+
+<Scrolly animation="fuel-cell-and-rust">
+  <Step>
+    **Porous electrodes in alkali:** Two porous carbon electrodes sit in concentrated aqueous NaOH inside one cell. Hydrogen gas bubbles into the left electrode, the anode, and oxygen into the right one, the cathode. Both electrodes glow with a thin catalyst dusting, and no current flows yet.
+  </Step>
+  <Step>
+    **Electrons travel the wire:** At the left electrode each hydrogen releases electrons, and they run along the external wire to the right electrode. Hydroxide ions drift through the NaOH from the cathode toward the anode. Water appears at the left and drips away from the cell, so the electrons and ions carry the current in the expected directions.
+  </Step>
+  <Step>
+    **Fuel cell versus power plant:** Two bars compare efficiency. The thermal plant bar fills to about 40% of the fuel energy and the fuel cell bar to about 70%. Between them a small fuel flow arrow shows that a thermal plant loses the energy at the boiler and the turbine, while a fuel cell has no such step.
+  </Step>
+  <Step>
+    **Water film on iron:** A droplet of water sits on an iron surface open to air. One spot becomes the anode: iron atoms leave as Fe²⁺ ions and release two electrons each. The electrons move through the metal to a cathode spot, where dissolved oxygen takes them up along with hydrogen ions from carbonic acid.
+  </Step>
+  <Step>
+    **Rust forms:** Fe²⁺ ions drifting out of the droplet meet air and oxidise further to ferric oxide. The result is a reddish-brown deposit of hydrated ferric oxide, Fe₂O₃·xH₂O, that grows over the anodic spot. Each reaction spot is labelled with its half-equation, and the rust layer thickens steadily as the ferrous ions keep oxidising, so the viewer can see the process has been running for some time.
+  </Step>
+  <Step>
+    **Three protections:** The same iron surface appears three times in turn: once under a continuous paint layer that keeps water and oxygen away, once under a zinc coat that corrodes in place of the iron, and once with a magnesium block bolted on. In the magnesium case, the block becomes the anode and corrodes while the iron stays the cathode and is spared.
+  </Step>
+</Scrolly>
+
+## Explore the corrosion lab
+
+Iron nails, tested under different conditions, show how much the surroundings matter. Pick dry air, water without air, water with air, salt water or an acidic solution, add a paint, zinc or tin coating or a magnesium block if you like, and then play time forward to watch rust build up. The lab shows the anode and cathode reactions for the case you chose.
+
+<Simulation name="corrosion-lab" title="Corrosion Lab" />
+
+## Check your understanding
+
+<Check
+  n={1}
+  numeric
+  answer={142.9}
+  tolerance={0.1}
+  unit="MJ"
+  explanation="Fuel needed = 100 MJ ÷ 0.70 = 142.9 MJ. A thermal plant at 40% would need 100 MJ ÷ 0.40 = 250 MJ for the same electrical output."
+>
+A hydrogen–oxygen fuel cell is about 70% efficient and a thermal plant about 40%. How many megajoules of fuel energy does a fuel cell need to deliver 100 MJ of electrical energy?
+</Check>
+
+<Check
+  n={2}
+  numeric
+  answer={26.80}
+  tolerance={0.05}
+  unit="A"
+  explanation="Each H₂ gives 2 electrons at the anode (2H₂ + 4OH⁻ → 4H₂O + 4e⁻). 0.50 mol H₂ per hour gives 1.00 mol e⁻ per hour. Charge per hour = 1.00 × 96487 C = 96487 C, and I = Q/t = 96487 C ÷ 3600 s = 26.80 A."
+>
+A hydrogen–oxygen fuel cell is fed 0.50 mol of H₂ per hour, and all of it is consumed at the anode. What steady current does the cell deliver? Use F = 96487 C mol⁻¹.
+</Check>
+
+<Check
+  n={3}
+  options={[
+    "Iron, which becomes the anode and rusts",
+    "Tin, which becomes the anode and dissolves",
+    "Both metals equally, since both are coated",
+    "Neither, because the tin coating prevents any cell from forming"
+  ]}
+  answer={0}
+  explanation="E°(Fe²⁺/Fe) = −0.44 V is more negative than E°(Sn²⁺/Sn) = −0.14 V, so iron is the more reactive metal. Once the tin is scratched, iron is oxidised at the anode while the tin acts as the cathode."
+>
+A tin-coated iron nail is scratched through the coating down to the bare iron, then left in damp air. Which metal corrodes?
+</Check>
+
+<KeyIdeas>
+- A **fuel cell** is a galvanic cell fed continuously with fuel and oxidant. The hydrogen–oxygen cell in NaOH gives an overall reaction $\ce{2H2 + O2 -> 2H2O}$ and runs as long as its reactants are supplied.
+- Fuel cells work at about 70% efficiency, against about 40% for thermal plants, because they convert chemical energy directly into electrical energy without a steam cycle.
+- **Rusting** is an electrochemical cell on the iron surface: iron oxidises at the anode, oxygen and H⁺ are reduced at the cathode, and the overall $E^\circ_{\text{cell}} = 1.67$ V.
+- Rust is hydrated ferric oxide, $\ce{Fe2O3}\cdot x\ce{H2O}$, formed after the ferrous ions are oxidised further by air.
+- Protection works by barriers (paint), by a more reactive coating (zinc) that corrodes first, or by a **sacrificial anode** (magnesium) that corrodes in place of the iron. A less reactive coating such as tin protects only while it stays intact.
+</KeyIdeas>
