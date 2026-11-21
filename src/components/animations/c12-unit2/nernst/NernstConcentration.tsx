@@ -34,7 +34,7 @@ export interface NernstConcentrationProps {
 
 const SVG_H = 560
 const SLOTS: readonly (readonly [number, number])[] = [
-  [0.1, 0.25], [0.3, 0.55], [0.12, 0.7], [0.7, 0.6], [0.18, 0.85], [0.32, 0.9], [0.68, 0.8],
+  [0.1, 0.25], [0.3, 0.55], [0.12, 0.7], [0.7, 0.6], [0.08, 0.86], [0.24, 0.93], [0.68, 0.8],
   [0.84, 0.3], [0.22, 0.45], [0.78, 0.62], [0.88, 0.5], [0.3, 0.2], [0.7, 0.2], [0.92, 0.85],
 ]
 
@@ -260,22 +260,22 @@ export function NernstConcentration({ step, reducedMotion }: NernstConcentration
     )
   } else {
     const barTop = 112
-    const barH = 300
+    const barH = 340
     const yOf = (pHv: number) => barTop + (pHv / 14) * barH
     scene = (
       <g>
-        <HydrogenElectrode x={36} y={60} width={250} height={330} t={t} label={`H⁺(aq), pH ${pH.toFixed(1)}`} gasLabel="H₂ (1 bar)" />
-        <text x={340} y={84} fontSize={16} fill="var(--fg)" fontFamily="var(--font-sans)">
+        <HydrogenElectrode x={36} y={60} width={330} height={360} t={t} label={`H⁺(aq), pH ${pH.toFixed(1)}`} gasLabel="H₂ (1 bar)" />
+        <text x={400} y={84} fontSize={16} fill="var(--fg)" fontFamily="var(--font-sans)">
           pH scale
         </text>
-        <rect x={360} y={barTop} width={26} height={barH} rx={6} fill="var(--surface-raised)" stroke="var(--fg-muted)" />
+        <rect x={420} y={barTop} width={26} height={barH} rx={6} fill="var(--surface-raised)" stroke="var(--fg-muted)" />
         {[0, 2, 4, 6, 8, 10, 12, 14].map((p) => (
           <g key={p}>
-            <line x1={386} x2={396} y1={yOf(p)} y2={yOf(p)} stroke="var(--fg-muted)" strokeWidth={2} />
-            <text x={404} y={yOf(p) + 5} fontSize={15} fill="var(--fg-muted)" fontFamily="var(--font-sans)">{p}</text>
+            <line x1={446} x2={456} y1={yOf(p)} y2={yOf(p)} stroke="var(--fg-muted)" strokeWidth={2} />
+            <text x={464} y={yOf(p) + 5} fontSize={15} fill="var(--fg-muted)" fontFamily="var(--font-sans)">{p}</text>
           </g>
         ))}
-        <circle cx={373} cy={yOf(pH)} r={10} fill="var(--accent)" />
+        <circle cx={433} cy={yOf(pH)} r={10} fill="var(--accent)" />
         <FormulaBand
           lines={[
             { text: <>2H⁺(aq) + 2e⁻ → H₂(g), E° = 0 V</> },

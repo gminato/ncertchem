@@ -1,6 +1,9 @@
+import { readFileSync } from 'node:fs'
+import { resolve } from 'node:path'
 import { describe, expect, it } from 'vitest'
 import {
   E0_DANIELL,
+  NERNST_CAPTION_VALUES,
   E0_NI_AG,
   NERNST_STEPS,
   NERNST_STEP_COUNT,
@@ -41,8 +44,50 @@ describe('Nernst animation steps', () => {
     expect(niAgPotential(-1, -2)).toBeCloseTo(1.05 - 0.0295 * 3, 6)
   })
 
-  it('gives the hydrogen electrode at pH 10 as −0.590 V', () => {
-    expect(hydrogenPotential(10)).toBeCloseTo(-0.59, 6)
+  it('gives the hydrogen electrode in acid rain (pH 5.6) as −0.330 V', () => {
+    expect(hydrogenPotential(5.6)).toBeCloseTo(-0.3304, 6)
+    expect(hydrogenPotential(0) - hydrogenPotential(14)).toBeCloseTo(0.826, 6)
+  })
+
+  it('computes every caption number from the libs', () => {
+    const v = NERNST_CAPTION_VALUES
+    expect(v.cuStandard).toBe('0.340')
+    expect(v.cuDilute).toBe('0.222')
+    expect(v.decadeShift).toBe('0.0295')
+    expect(v.daniellStandard).toBe('1.10')
+    expect(v.daniellQ).toBe('0.010')
+    expect(v.daniellPotentialAtQ).toBe('1.16')
+    expect(v.niAgStandard).toBe('1.05')
+    expect(v.niAgQ).toBe('1000')
+    expect(v.niAgShift).toBe('0.0885')
+    expect(v.niAgPotential).toBe('0.96')
+    expect(v.hydrogenAcidRain).toBe('\u2212' + (0.059 * 5.6).toFixed(3))
+    expect(v.hydrogenSwing).toBe('0.83')
+  })
+
+  it('writes each caption with the lib-computed number', () => {
+    const [one, slide, daniell, general, hydrogen] = NERNST_STEPS.map((s) => s.ariaLabel)
+    expect(one).toContain(`reads ${NERNST_CAPTION_VALUES.cuStandard} volts`)
+    expect(slide).toContain(`lowers the copper electrode potential by ${NERNST_CAPTION_VALUES.decadeShift} volts`)
+    expect(slide).toContain(`from ${NERNST_CAPTION_VALUES.cuStandard} V to ${NERNST_CAPTION_VALUES.cuDilute} V`)
+    expect(daniell).toContain(`to about ${NERNST_CAPTION_VALUES.daniellPotentialAtQ} volts`)
+    expect(general).toContain(`about ${NERNST_CAPTION_VALUES.niAgPotential} volts`)
+    expect(general).toContain(`Q of ${NERNST_CAPTION_VALUES.niAgQ}`)
+    expect(hydrogen).toContain(`${NERNST_CAPTION_VALUES.hydrogenAcidRain} volts`)
+    expect(hydrogen).not.toMatch(/standard hydrogen/i)
+  })
+
+  it('keeps the MDX worked numbers in step with the libs', () => {
+    const mdx = readFileSync(
+      resolve(__dirname, '../../../../../content/class-12/unit-2/12-2-3-nernst-equation.mdx'),
+      'utf8',
+    ).replace(/\u2212/g, '-')
+    const v = NERNST_CAPTION_VALUES
+    for (const value of [v.cuStandard, v.cuDilute, v.decadeShift, v.daniellPotentialAtQ, v.niAgPotential, v.niAgShift, v.hydrogenSwing]) {
+      expect(mdx).toContain(value)
+    }
+    expect(mdx).toContain(`${NERNST_CAPTION_VALUES.hydrogenAcidRain.replace('\u2212', '-')}`)
+    expect(mdx).not.toContain('pH 10')
   })
 
   it('clamps out-of-range step indices', () => {

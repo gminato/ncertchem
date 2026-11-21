@@ -1,4 +1,4 @@
-import { cellPotential, electrodePotential, hydrogenElectrodePotential, reactionQuotient } from '@/lib/chem/nernst'
+import { cellPotential, electrodePotential, hydrogenElectrodePotential, nernstLog10Slope, reactionQuotient } from '@/lib/chem/nernst'
 import { standardCellPotential } from '@/lib/chem/electrochemical-cell'
 import { NCERT_STANDARD_POTENTIALS } from '@/lib/chem/ncert-c12-unit2-tables'
 
@@ -67,6 +67,32 @@ export function hydrogenPotential(pH: number): number {
   return hydrogenElectrodePotential(pH)
 }
 
+/** Fixed-point text with a real minus sign (U+2212), as used in the UI. */
+export function fmtNum(x: number, digits: number): string {
+  return x.toFixed(digits).replace('-', '−')
+}
+
+/**
+ * Every number shown in the Scrolly captions and formula bands, computed from the libs.
+ * Strings are already formatted; the test checks each one against the lib value.
+ */
+export const NERNST_CAPTION_VALUES = {
+  cuStandard: fmtNum(cuElectrodePotential(0), 3), // 0.340
+  cuDilute: fmtNum(cuElectrodePotential(-4), 3), // 0.222
+  decadeShift: fmtNum(nernstLog10Slope(2), 4), // 0.0295
+  daniellStandard: fmtNum(E0_DANIELL, 2), // 1.10
+  daniellQ: fmtNum(10 ** (-2), 3), // 0.010
+  daniellPotentialAtQ: fmtNum(daniellPotential(-2, 0), 2), // 1.16
+  niAgStandard: fmtNum(E0_NI_AG, 2), // 1.05
+  niAgQ: fmtNum(niAgReactionQuotient(-1, -2), 0), // 1000
+  niAgShift: fmtNum(nernstLog10Slope(2) * 3, 4), // 0.0885
+  niAgPotential: fmtNum(niAgPotential(-1, -2), 2), // 0.96
+  hydrogenPh: fmtNum(5.6, 1), // 5.6 (acid rain)
+  hydrogenAcidRain: fmtNum(hydrogenPotential(5.6), 3), // −0.330
+  hydrogenSwing: fmtNum(hydrogenPotential(0) - hydrogenPotential(14), 2), // 0.83
+} as const
+
+const V = NERNST_CAPTION_VALUES
 const BASE: NernstTargets = { logCu: 0, logZn: 0, logNi: 0, logAg: 0, pH: 0 }
 
 export const NERNST_STEPS: readonly NernstStepState[] = [
@@ -75,8 +101,7 @@ export const NERNST_STEPS: readonly NernstStepState[] = [
     id: 'one-electrode',
     title: 'One electrode, one concentration',
     ...BASE,
-    ariaLabel:
-      'A copper electrode dips into copper(II) sulphate solution at 1 mol per litre. A log scale of Cu²⁺ concentration shows the marker at 1, and the electrode potential reads 0.340 volts, equal to E° because the concentration is unity.',
+    ariaLabel: `A copper electrode dips into copper(II) sulphate solution at 1 mol per litre. A log scale of Cu²⁺ concentration shows the marker at 1, and the electrode potential reads ${V.cuStandard} volts, equal to E° because the concentration is unity.`,
   },
   {
     index: 1,
@@ -84,8 +109,7 @@ export const NERNST_STEPS: readonly NernstStepState[] = [
     title: 'Concentration slides down the log scale',
     ...BASE,
     logCu: -4,
-    ariaLabel:
-      'The Cu²⁺ concentration slides from 1 to 10 to the minus 4 mol per litre on a logarithmic scale. Each tenfold drop lowers the copper electrode potential by 0.0295 volts, so the reading falls from 0.340 V to 0.222 V.',
+    ariaLabel: `The Cu²⁺ concentration slides from 1 to 10 to the minus 4 mol per litre on a logarithmic scale. Each tenfold drop lowers the copper electrode potential by ${V.decadeShift} volts, so the reading falls from ${V.cuStandard} V to ${V.cuDilute} V.`,
   },
   {
     index: 2,
@@ -93,8 +117,7 @@ export const NERNST_STEPS: readonly NernstStepState[] = [
     title: 'Daniell cell: the ratio [Zn²⁺]/[Cu²⁺]',
     ...BASE,
     logZn: -2,
-    ariaLabel:
-      'A Daniell cell with zinc sulphate at 0.010 mol per litre and copper sulphate at 1 mol per litre. The concentration ratio is 0.010, so the cell potential rises from 1.10 volts to about 1.16 volts.',
+    ariaLabel: `A Daniell cell with zinc sulphate at ${V.daniellQ} mol per litre and copper sulphate at 1 mol per litre. The concentration ratio is ${V.daniellQ}, so the cell potential rises from ${V.daniellStandard} volts to about ${V.daniellPotentialAtQ} volts.`,
   },
   {
     index: 3,
@@ -103,19 +126,15 @@ export const NERNST_STEPS: readonly NernstStepState[] = [
     ...BASE,
     logNi: -1,
     logAg: -2,
-    ariaLabel:
-      'A nickel and silver cell. Nickel ions at 0.10 mol per litre and silver ions at 0.010 mol per litre give a reaction quotient Q of 1000, so the cell potential is about 0.96 volts, below the standard value of 1.05 volts.',
+    ariaLabel: `A nickel and silver cell. Nickel ions at 0.10 mol per litre and silver ions at 0.010 mol per litre give a reaction quotient Q of ${V.niAgQ}, so the cell potential is about ${V.niAgPotential} volts, below the standard value of ${V.niAgStandard} volts.`,
   },
   {
     index: 4,
     id: 'hydrogen-ph',
     title: 'Hydrogen electrode and pH',
     ...BASE,
-    logNi: -1,
-    logAg: -2,
-    pH: 10,
-    ariaLabel:
-      'A standard hydrogen electrode in a solution whose pH is 10. Its potential is minus 0.059 volts multiplied by the pH, which gives minus 0.590 volts.',
+    pH: 5.6,
+    ariaLabel: `A hydrogen electrode in acid rain at pH ${V.hydrogenPh}, with hydrogen at 1 bar. Its potential is minus 0.059 volts multiplied by the pH, which gives ${V.hydrogenAcidRain} volts.`,
   },
 ]
 

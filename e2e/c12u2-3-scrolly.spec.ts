@@ -46,3 +46,14 @@ for (const scheme of ['light', 'dark'] as const) {
     })
   })
 }
+
+test.describe('Nernst Section at phone width', () => {
+  test.use({ viewport: { width: 390, height: 844 }, colorScheme: 'light' })
+
+  test('does not scroll sideways at 390 px', async ({ page }) => {
+    await page.goto(`/class-12/unit-2/${SLUG}`)
+    await expect(page.getByRole('heading', { level: 1 })).toHaveText('The Nernst Equation')
+    const scrollWidth = await page.evaluate(() => document.documentElement.scrollWidth)
+    expect(scrollWidth).toBeLessThanOrEqual(390)
+  })
+})
