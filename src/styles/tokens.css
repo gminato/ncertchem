@@ -65,6 +65,7 @@
   /* Vessels: glass walls, sheen and liquid */
   --glass-wall: rgba(31, 32, 35, 0.3);
   --glass-fill: rgba(255, 255, 255, 0.45);
+  --bubble-fill: rgba(255, 255, 255, 0.92);
   --glass-sheen: rgba(255, 255, 255, 0.95);
   --liquid: rgba(47, 111, 235, 0.2);
   --liquid-edge: rgba(47, 111, 235, 0.55);
@@ -212,6 +213,7 @@
 
   --glass-wall: rgba(240, 246, 252, 0.32);
   --glass-fill: rgba(255, 255, 255, 0.05);
+  --bubble-fill: rgba(226, 232, 240, 0.42);
   --glass-sheen: rgba(255, 255, 255, 0.24);
   --liquid: rgba(108, 182, 255, 0.4);
   --liquid-edge: rgba(150, 205, 255, 0.9);
@@ -333,6 +335,7 @@
 
     --glass-wall: rgba(240, 246, 252, 0.32);
     --glass-fill: rgba(255, 255, 255, 0.05);
+    --bubble-fill: rgba(226, 232, 240, 0.42);
     --glass-sheen: rgba(255, 255, 255, 0.24);
     --liquid: rgba(108, 182, 255, 0.4);
     --liquid-edge: rgba(150, 205, 255, 0.9);

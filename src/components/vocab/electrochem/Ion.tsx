@@ -73,7 +73,7 @@ export const GasBubbles = forwardRef<SVGGElement, GasBubblesProps>(function GasB
     <g ref={ref} className={className} aria-hidden="true" {...rest}>
       {bubbles.map((b, i) => (
         <g key={i} opacity={b.opacity}>
-          <circle cx={b.cx} cy={b.cy} r={b.r} fill="var(--glass-fill)" stroke="var(--fg-muted)" strokeWidth={1.2} />
+          <circle cx={b.cx} cy={b.cy} r={b.r} fill="var(--bubble-fill)" stroke="var(--fg-muted)" strokeWidth={1.2} />
           <circle cx={b.cx - b.r * 0.35} cy={b.cy - b.r * 0.35} r={b.r * 0.25} fill="var(--glass-sheen)" />
         </g>
       ))}
