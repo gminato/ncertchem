@@ -184,7 +184,7 @@ export const RUNDOWN_STEPS: readonly RundownStepState[] = [
     readout: '',
     deltaGKJ: DELTA_G_FE_NI_DOUBLED_KJ,
     ariaLabel:
-      'The reaction equation is doubled, so n rises from 2 to 4. The voltmeter still reads 0.19 volts, while the energy bar doubles to minus 73.33 kilojoules per mole.',
+      'The reaction equation is doubled, so n rises from 2 to 4. The cell potential stays at 0.19 volts, while the energy bar doubles to minus 73.33 kilojoules per mole.',
   },
 ]
 

@@ -43,7 +43,7 @@ test.describe('Class 12 Unit 2 Section 2.3.1 Scrolly', () => {
       const scale = el.getBoundingClientRect().width / el.viewBox.baseVal.width
       // Labels from the shared electrochem vocab (Electrode, Voltmeter, SaltBridge) are fixed at 14 to 17 units
       // and are excluded here; they need a vocab-level fix (see reports/R4.md Fixed section).
-      const VOCAB_LABELS = new Set(['KCl(aq) salt bridge', '−', '+', 'Anode', 'Cathode', '0', '1.2', 'Voltmeter', '1.10 V'])
+      const VOCAB_LABELS = new Set(['KCl in agar gel', '−', '+', 'Anode', 'Cathode', '0', '1.2', 'Voltmeter', '1.10 V'])
       const own = Array.from(el.querySelectorAll('text')).filter((t) => !VOCAB_LABELS.has((t.textContent ?? '').trim()))
       const sizes = own.map((t) => parseFloat(t.getAttribute('font-size') ?? '0'))
       return Math.min(...sizes) * scale
