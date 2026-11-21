@@ -113,6 +113,19 @@
   --metal-cu: #B45309;
   --metal-zn: #71717A;
   --metal-ag: #CBD5E1;
+  --metal-pb: #5E6370;
+  --metal-pbo2: #5C3B1E;
+  --metal-pt: #AEB7C2;
+  --metal-fe: #6B6F78;
+  --metal-mg: #A9B8A6;
+  --metal-ni: #8E9A93;
+  --metal-cd: #7D8BA3;
+  --metal-graphite: #2E3136;
+  /* Electrochemistry: ions, current and the salt-bridge gel */
+  --ion-cation: #D6336C;
+  --ion-anion: #0E7490;
+  --current: #7C3AED;
+  --salt-bridge: #E8DFC9;
 
   /* Spacing Scale */
   --space-1: 4px;
@@ -243,6 +256,19 @@
   --metal-cu: #E07A5F;
   --metal-zn: #A1A1AA;
   --metal-ag: #E2E8F0;
+  --metal-pb: #9AA0AE;
+  --metal-pbo2: #B07A4A;
+  --metal-pt: #E4E9F0;
+  --metal-fe: #8B9099;
+  --metal-mg: #C4D6BE;
+  --metal-ni: #AEBBB4;
+  --metal-cd: #A3B0C6;
+  --metal-graphite: #4B5058;
+  /* Electrochemistry: ions, current and the salt-bridge gel */
+  --ion-cation: #FF7A9C;
+  --ion-anion: #5CD0E8;
+  --current: #B39DFF;
+  --salt-bridge: #4A4F57;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -350,6 +376,19 @@
     --metal-cu: #E07A5F;
     --metal-zn: #A1A1AA;
     --metal-ag: #E2E8F0;
+    --metal-pb: #9AA0AE;
+    --metal-pbo2: #B07A4A;
+    --metal-pt: #E4E9F0;
+    --metal-fe: #8B9099;
+    --metal-mg: #C4D6BE;
+    --metal-ni: #AEBBB4;
+    --metal-cd: #A3B0C6;
+    --metal-graphite: #4B5058;
+    /* Electrochemistry: ions, current and the salt-bridge gel */
+    --ion-cation: #FF7A9C;
+    --ion-anion: #5CD0E8;
+    --current: #B39DFF;
+    --salt-bridge: #4A4F57;
   }
 }
 

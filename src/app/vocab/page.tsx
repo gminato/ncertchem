@@ -217,6 +217,21 @@ import {
   CARBIDE_GENERATOR_SIZE,
 } from '@/components/organic/lab'
 import styles from './vocab.module.css'
+import {
+  Beaker,
+  Electrode,
+  SaltBridge,
+  Voltmeter,
+  Galvanometer,
+  Wire,
+  DcSource,
+  Ion,
+  GasBubbles,
+  HydrogenElectrode,
+  ConductivityCell,
+  BatteryCutaway,
+  type ElectrodeMaterial,
+} from '@/components/vocab'
 
 export const metadata: Metadata = {
   title: pageTitle('Visual Vocabulary'),
@@ -3744,6 +3759,155 @@ export default function VocabPage() {
               </div>
               <p className={styles.cardDescription}>
                 Water is dripped onto calcium carbide, which gives ethyne and calcium hydroxide. The ethyne is collected over water.
+              </p>
+            </div>
+          </article>
+        </div>
+      </section>
+      <section className={styles.section} id="electrochem" aria-labelledby="electrochem-heading">
+        <h2 id="electrochem-heading" className={styles.sectionTitle}>
+          Electrochemistry
+        </h2>
+        <p className={styles.sectionSubtitle}>
+          The electrodes, half-cells, salt bridge, meters and wires of electrochemistry, drawn with the same parts everywhere: a Daniell cell
+          with its voltmeter and electron flow, an electrolytic cell, the standard hydrogen electrode, a conductivity cell, each electrode
+          material, and a battery cut open.
+        </p>
+
+        <div className={styles.grid}>
+          <article className={`${styles.card} ${styles.cardWide}`}>
+            <div className={styles.cardCanvas} style={{ height: 'auto', padding: 'var(--space-4)' }}>
+              <svg viewBox="0 0 600 400" style={{ width: '100%', maxWidth: 600, height: 'auto' }} role="img" aria-label="Daniell cell: zinc anode and copper cathode joined by a salt bridge, with a voltmeter reading 1.10 volts and electrons flowing from zinc to copper">
+                <Wire
+                  corners={[{ x: 125, y: 130 }, { x: 125, y: 44 }, { x: 475, y: 44 }, { x: 475, y: 130 }]}
+                  t={0.35}
+                  electrons
+                  dots={6}
+                  direction="forward"
+                />
+                <Voltmeter x={300} y={96} width={170} height={84} value={1.1} range={[0, 3]} caption="" decimals={2} unit="V" />
+                <Beaker x={40} y={200} width={170} height={160} level={0.72} tint="clear" label="ZnSO₄(aq)" />
+                <Beaker x={390} y={200} width={170} height={160} level={0.72} tint="blue" label="CuSO₄(aq)" />
+                <SaltBridge start={{ x: 150, y: 292 }} finish={{ x: 430, y: 292 }} apex={190} t={0.2} cationsTo="to" />
+                <Electrode x={125} top={130} length={170} material="zn" thinning={0.35} polarity={'−'} role="anode" />
+                <Electrode x={475} top={130} length={170} material="cu" plating={0.4} polarity="+" role="cathode" />
+              </svg>
+            </div>
+            <div className={styles.cardBody}>
+              <div className={styles.cardHeading}>
+                <span>Daniell cell</span>
+                <span className={styles.cardBadge}>1.10 V</span>
+              </div>
+              <p className={styles.cardDescription}>
+                Zinc dissolves at the anode and copper is plated at the cathode. Electrons pass through the wire from zinc to copper, and the
+                salt bridge keeps both solutions neutral. The voltmeter reads the cell potential as 1.10 V.
+              </p>
+            </div>
+          </article>
+
+          <article className={`${styles.card} ${styles.cardWide}`}>
+            <div className={styles.cardCanvas} style={{ height: 'auto', padding: 'var(--space-4)' }}>
+              <svg viewBox="0 0 600 400" style={{ width: '100%', maxWidth: 600, height: 'auto' }} role="img" aria-label="Electrolytic cell of copper sulphate with a DC supply: copper is deposited at the cathode and oxygen is evolved at the anode">
+                <Wire corners={[{ x: 45, y: 134 }, { x: 45, y: 100 }, { x: 345, y: 100 }, { x: 345, y: 150 }]} t={0.1} electrons dots={4} direction="reverse" />
+                <Wire corners={[{ x: 95, y: 134 }, { x: 240, y: 134 }, { x: 240, y: 150 }]} t={0.1} electrons dots={3} direction="forward" />
+                <DcSource x={20} y={150} width={100} height={64} voltage={6} label="DC supply" />
+                <Beaker x={150} y={190} width={260} height={170} level={0.72} tint="blue" label="CuSO₄(aq)" />
+                <Electrode x={240} top={150} length={190} material="pt" plating={0.6} depositMaterial="cu" polarity={'−'} role="cathode" />
+                <Electrode x={345} top={150} length={190} material="pt" polarity="+" role="anode" />
+                <GasBubbles x={345} y={330} width={20} height={150} count={4} t={0.3} formula="O2" />
+              </svg>
+            </div>
+            <div className={styles.cardBody}>
+              <div className={styles.cardHeading}>
+                <span>Electrolytic cell</span>
+                <span className={styles.cardBadge}>Driven by 6.0 V</span>
+              </div>
+              <p className={styles.cardDescription}>
+                The supply pushes electrons into the cathode, where copper ions are reduced, and draws them from the anode, where water is
+                oxidised to oxygen. The electron dots run in the direction the supply drives them.
+              </p>
+            </div>
+          </article>
+
+          <article className={styles.card}>
+            <div className={styles.cardCanvas} style={{ height: 'auto', padding: 'var(--space-4)' }}>
+              <svg viewBox="0 0 260 300" style={{ width: '100%', maxWidth: 300, height: 'auto' }} role="img" aria-label="Standard hydrogen electrode: platinised platinum foil in 1 molar hydrogen ions, with hydrogen gas at 1 bar">
+                <HydrogenElectrode x={40} y={70} width={180} height={200} t={0.4} label="1 M H⁺(aq)" gasLabel="H₂ (1 bar)" />
+              </svg>
+            </div>
+            <div className={styles.cardBody}>
+              <div className={styles.cardHeading}>
+                <span>Standard hydrogen electrode</span>
+                <span className={styles.cardBadge}>0.00 V</span>
+              </div>
+              <p className={styles.cardDescription}>
+                Platinised platinum sits in 1 M H⁺ with hydrogen at 1 bar. It is the zero of the electrode potential scale.
+              </p>
+            </div>
+          </article>
+
+          <article className={styles.card}>
+            <div className={styles.cardCanvas} style={{ height: 'auto', padding: 'var(--space-4)' }}>
+              <svg viewBox="0 0 260 240" style={{ width: '100%', maxWidth: 300, height: 'auto' }} role="img" aria-label="Conductivity cell: two parallel platinum plates of area A, a distance l apart">
+                <ConductivityCell x={20} y={50} width={220} height={150} tint="blue" />
+              </svg>
+            </div>
+            <div className={styles.cardBody}>
+              <div className={styles.cardHeading}>
+                <span>Conductivity cell</span>
+                <span className={styles.cardBadge}>Cell constant l/A</span>
+              </div>
+              <p className={styles.cardDescription}>
+                Two platinum plates of area A stand l apart in the solution. The cell constant l/A converts a measured resistance into conductivity.
+              </p>
+            </div>
+          </article>
+
+          <article className={`${styles.card} ${styles.cardWide}`}>
+            <div className={styles.cardCanvas} style={{ height: 'auto', padding: 'var(--space-4)' }}>
+              <svg viewBox="0 0 600 220" style={{ width: '100%', maxWidth: 600, height: 'auto' }} role="img" aria-label="Electrode materials: zinc, copper, silver, lead, lead dioxide, platinum, iron, magnesium, nickel, cadmium and graphite">
+                {[
+                  ['zn', 'Zn'], ['cu', 'Cu'], ['ag', 'Ag'], ['pb', 'Pb'], ['pbo2', 'PbO₂'], ['pt', 'Pt'],
+                  ['fe', 'Fe'], ['mg', 'Mg'], ['ni', 'Ni'], ['cd', 'Cd'], ['graphite', 'C'],
+                ].map(([m, label], i) => (
+                  <g key={m}>
+                    <Electrode x={28 + i * 53.6} top={40} length={120} width={18} material={m as ElectrodeMaterial} />
+                    <text x={28 + i * 53.6} y={196} textAnchor="middle" fontSize={15} fill="var(--fg-muted)">{label}</text>
+                  </g>
+                ))}
+              </svg>
+            </div>
+            <div className={styles.cardBody}>
+              <div className={styles.cardHeading}>
+                <span>Electrode materials</span>
+              </div>
+              <p className={styles.cardDescription}>
+                Each metal keeps its own colour everywhere it appears. Graphite is the inert electrode used where no metal is wanted.
+              </p>
+            </div>
+          </article>
+
+          <article className={`${styles.card} ${styles.cardWide}`}>
+            <div className={styles.cardCanvas} style={{ height: 'auto', padding: 'var(--space-4)' }}>
+              <svg viewBox="0 0 600 260" style={{ width: '100%', maxWidth: 600, height: 'auto' }} role="img" aria-label="Parts of a cell: a cut-open battery, an ion, a gas column, a galvanometer and a current arrow">
+                <BatteryCutaway x={40} y={30} width={140} height={200} shape="can">
+                  <Electrode x={110} top={70} length={150} width={16} material="graphite" />
+                  <rect x={70} y={150} width={80} height={60} fill="var(--precipitate)" />
+                </BatteryCutaway>
+                <Ion x={250} y={60} formula="Zn" charge="2+" kind="cation" />
+                <Ion x={250} y={110} formula="SO4" charge="2-" kind="anion" />
+                <Ion x={250} y={160} formula="K" charge="+" kind="cation" />
+                <Ion x={250} y={210} formula="Cl" charge="-" kind="anion" />
+                <GasBubbles x={330} y={230} width={50} height={160} count={5} t={0.5} formula="H2" />
+                <Galvanometer x={490} y={120} width={190} height={130} value={0.4} range={[-1, 1]} digital={false} />
+              </svg>
+            </div>
+            <div className={styles.cardBody}>
+              <div className={styles.cardHeading}>
+                <span>The parts</span>
+              </div>
+              <p className={styles.cardDescription}>
+                The same ions, gas bubbles, cut-away battery and zero-centred galvanometer used in every section above.
               </p>
             </div>
           </article>
