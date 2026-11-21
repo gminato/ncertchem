@@ -1,0 +1,184 @@
+---
+class: 12
+unit: 2
+section: "2.3.1"
+order: 4
+title: "Cell Potential, Equilibrium Constant and Gibbs Energy"
+slug: "12-2-3-1-equilibrium-constant-and-gibbs-energy"
+access: free
+summary: "A galvanic cell runs down to zero volts at equilibrium, and that zero links the cell potential to the equilibrium constant K and to the Gibbs energy of the reaction."
+ncert: "Class 12, Part I — Unit 2, Section 2.3.1–2.3.2"
+---
+
+<Hook>
+A teacher drops a strip of clean copper into a beaker of silver nitrate solution. Within minutes, feathery crystals of silver spread over the metal and the solution turns blue. Chemists say the reaction has gone to completion. But every reaction can run in both directions, so how complete is complete? Could a trace of copper still be dissolving, or would the last traces take forever to disappear? A voltage reading can answer that, once you know what the number on the voltmeter means.
+</Hook>
+
+## When a cell runs down
+
+In the Daniell cell, zinc dissolves into the zinc solution as $\ce{Zn^{2+}}$ ions, and copper ions leave the copper solution as copper metal. Charge keeps flowing through the external wire for as long as the two half-reactions can keep going. Each step makes the zinc side richer in $\ce{Zn^{2+}}$ and the copper side poorer in $\ce{Cu^{2+}}$, so the ratio of the two concentrations creeps upward. The voltmeter reading falls with it.
+
+Eventually the reading reaches zero. At that point the concentrations stop changing, because the cell is at equilibrium and no net reaction is left to drive a current. Written as a chemical equation, the cell reaction is
+
+$$
+\ce{Zn(s) + Cu^{2+}(aq) -> Zn^{2+}(aq) + Cu(s)}
+$$
+
+and the reaction quotient $Q$ for it is $[\ce{Zn^{2+}}]/[\ce{Cu^{2+}}]$. The cell potential depends on $Q$ and falls as $Q$ grows. When the cell reaches equilibrium, $Q$ has become $K_c$, the equilibrium constant, and the cell potential is zero.
+
+## Linking E° to K
+
+Set the cell potential to zero in the concentration relationship and you get a direct bridge between a measurable voltage and an equilibrium constant. The general result is
+
+$$
+E^\circ_{\text{cell}} = \frac{2.303\,RT}{nF}\,\log K_c
+$$
+
+At $298\ \text{K}$ the factor $\frac{2.303\,RT}{F}$ simplifies to $0.059\ \text{V}$, which gives
+
+$$
+E^\circ_{\text{cell}} = \frac{0.059\ \text{V}}{n}\,\log K_c
+$$
+
+For the Daniell cell, $E^\circ_{\text{cell}} = 1.10\ \text{V}$ and $n = 2$. Solving for the logarithm gives $\log K_c \approx 37.3$, so $K_c \approx 2 \times 10^{37}$. That number is so large that, at equilibrium, the ratio $[\ce{Cu^{2+}}]/[\ce{Zn^{2+}}]$ is about $5 \times 10^{-38}$. The copper ions are, for every practical purpose, gone. This is how you can answer the puzzle in the hook: the reaction is complete because its equilibrium lies so far to the right that the leftover amount of reactant is far below anything you could detect.
+
+Chemists rarely measure such constants directly, because the concentrations involved are impossibly small to track. The cell voltage gives you $K_c$ indirectly, which is why this relation is so useful.
+
+## A second example
+
+Iron metal placed in nickel(II) solution is a useful second check. The balanced reaction is
+
+$$
+\ce{Fe(s) + Ni^{2+}(aq) -> Fe^{2+}(aq) + Ni(s)}
+$$
+
+with $n = 2$. Taking the standard potentials from Table 2.1,
+
+$$
+E^\circ_{\text{cell}} = -0.25\ \text{V} - (-0.44\ \text{V})
+$$
+
+$$
+= 0.19\ \text{V}
+$$
+
+Then $\log K_c = 2 \times 0.19\ \text{V} / 0.059\ \text{V} \approx 6.4$, so $K_c \approx 2.8 \times 10^{6}$. The reaction favours products, but its constant is about thirty orders of magnitude smaller than the Daniell value, so far more nickel(II) ions survive at equilibrium.
+
+## Electrical work and Gibbs energy
+
+A galvanic cell turns chemical change into electricity. Every mole of reaction pushes $n$ moles of electrons around the external circuit, and each mole of electrons carries $F = 96487\ \text{C mol}^{-1}$, so the total charge moved is $nF$. Multiply that charge by the voltage that drives it and you have the electrical energy the cell delivers. A cell run reversibly delivers exactly the drop in Gibbs energy of the reaction, which gives
+
+$$
+\Delta_r G = -nFE_{\text{cell}}
+$$
+
+At standard conditions, where every reacting species is at unit concentration, $E_{\text{cell}}$ becomes $E^\circ_{\text{cell}}$ and
+
+$$
+\Delta_r G^\circ = -nFE^\circ_{\text{cell}}
+$$
+
+For the iron and nickel reaction above, with $n = 2$ and $E^\circ_{\text{cell}} = 0.19\ \text{V}$, the standard Gibbs energy change is
+
+$$
+\Delta_r G^\circ = -2 \times 96487\ \text{C mol}^{-1} \times 0.19\ \text{V}
+$$
+
+$$
+= -36\,665\ \text{J mol}^{-1} = -36.67\ \text{kJ mol}^{-1}
+$$
+
+The negative sign says the reaction is spontaneous as written under standard conditions. Combining this with $\Delta_r G^\circ = -RT\ln K_c$ ties the same reaction to its equilibrium constant, so $E^\circ$, $\Delta_r G^\circ$ and $K_c$ are three views of one reaction.
+
+## Intensive or extensive?
+
+Think of the cell potential as a property like temperature: split the beaker in two and the voltage stays put. The Gibbs energy change is different, because it scales with the number of electrons the balanced equation transfers. Double every coefficient in the iron and nickel reaction and $n$ rises from 2 to 4. The voltage still reads $0.19\ \text{V}$, but $\Delta_r G^\circ$ becomes $-73.33\ \text{kJ mol}^{-1}$. So before you compare two Gibbs energies, check that both equations are balanced the same way.
+
+<Scrolly animation="cell-runs-down">
+  <Step>
+    A freshly assembled Daniell cell. A zinc electrode dips into a colourless $\ce{ZnSO4}$ solution and a copper electrode into a blue $\ce{CuSO4}$ solution, joined by a salt bridge and an external wire with a voltmeter. Both solutions are at $1\ \text{mol L}^{-1}$, so $Q = 1$ and the voltmeter reads $1.10\ \text{V}$. Small electron dots travel through the wire from the zinc electrode to the copper electrode, and ions drift through the salt bridge.
+  </Step>
+  <Step>
+    The cell runs. Zinc atoms leave the electrode as $\ce{Zn^{2+}}$, so the zinc solution becomes richer in ions and its concentration label rises. Copper ions leave the blue solution and deposit as copper metal, so the blue fades. A readout shows $Q = [\ce{Zn^{2+}}]/[\ce{Cu^{2+}}] = 100$ and the voltmeter needle falls to $1.04\ \text{V}$.
+  </Step>
+  <Step>
+    Equilibrium. The solutions stop changing and the electron dots stop moving. The voltmeter reads zero, and the readout shows $E_{\text{cell}} = 0$ and $Q = K_c$. The blue copper solution is almost colourless, with copper ions far below what the eye can see. A note records $K_c \approx 2 \times 10^{37}$ for the Daniell reaction.
+  </Step>
+  <Step>
+    Linking the standard potential to the constant. A logarithmic scale runs from $0$ to $40$ for $\log K_c$. A marker sits at $37.3$ for the Daniell cell, where $E^\circ_{\text{cell}} = 1.10\ \text{V}$. A second marker sits at $6.4$ for the iron and nickel couple, where $E^\circ_{\text{cell}} = 0.19\ \text{V}$. A caption reads $\log K_c = nE^\circ_{\text{cell}}/0.059\ \text{V}$, so a larger standard potential means a larger constant.
+  </Step>
+  <Step>
+    The energy bar. A vertical bar is drawn from a zero line downward to show $\Delta_r G^\circ = -36.67\ \text{kJ mol}^{-1}$ for the iron and nickel reaction, which is a separate cell from the Daniell cell above. Beside it, a small label shows the charge carried per mole of reaction, $nF = 1.93 \times 10^{5}\ \text{C mol}^{-1}$, and the formula $\Delta_r G^\circ = -nFE^\circ_{\text{cell}}$ is written under the bar. The bar's length depends only on the reaction's standard Gibbs energy, not on how much zinc or copper is actually present.
+  </Step>
+  <Step>
+    Doubling the equation. Two copies of the cell reaction appear side by side, with coefficients doubled. The electron count $n$ moves from 2 to 4 and the energy bar doubles to $-73.33\ \text{kJ mol}^{-1}$. The voltmeter still reads $0.19\ \text{V}$, unchanged. A caption reads: the potential is intensive and stays the same, while the Gibbs energy is extensive and doubles.
+  </Step>
+</Scrolly>
+
+## Try it yourself
+
+The converter below links the three quantities for any reaction you choose. Set a standard cell potential, or pick a reaction from the table of standard electrode potentials, and watch $\Delta_r G^\circ$ and $K_c$ change together. Then move the Discharge slider and see how the cell voltage falls to zero as $Q$ approaches $K_c$.
+
+<Simulation name="e-g-k-converter" title="E°, ΔG° and K Converter" />
+
+## Check your understanding
+
+<Check
+  n={1}
+  numeric
+  answer={17.3}
+  tolerance={0.1}
+  explanation="For Zn(s) + Ni²⁺(aq) → Zn²⁺(aq) + Ni(s), E°cell = −0.25 V − (−0.76 V) = 0.51 V and n = 2. Then log Kc = nE°/0.059 V = (2 × 0.51) / 0.059 = 17.29, so log Kc is about 17.3 and Kc is about 1.9 × 10¹⁷."
+>
+For the reaction
+
+$$
+\ce{Zn(s) + Ni^{2+}(aq) -> Zn^{2+}(aq) + Ni(s)}
+$$
+
+the standard cell potential is $0.51\ \text{V}$ at $298\ \text{K}$. Calculate $\log K_c$ for this reaction to one decimal place.
+</Check>
+
+<Check
+  n={2}
+  options={[
+    "−36.67 kJ mol⁻¹, unchanged, because the reaction is the same",
+    "−73.33 kJ mol⁻¹, because n doubles from 2 to 4 while E°cell stays 0.19 V",
+    "−18.33 kJ mol⁻¹, because the energy is shared between the two copies",
+    "Zero, because the reaction is at equilibrium when the coefficients are doubled"
+  ]}
+  answer={1}
+  explanation="Doubling the equation doubles n, so ΔrG° = −nFE°cell doubles to −73.33 kJ mol⁻¹. The cell potential E°cell is intensive and stays at 0.19 V when the equation is doubled."
+>
+The iron and nickel reaction is written as
+
+$$
+2\ce{Fe(s)} + 2\ce{Ni^{2+}(aq)} -> 2\ce{Fe^{2+}(aq)} + 2\ce{Ni(s)}
+$$
+
+Which statement about the standard Gibbs energy change and the standard cell potential is correct?
+</Check>
+
+<Check
+  n={3}
+  options={[
+    "Equal concentrations of Zn²⁺ and Cu²⁺ remain, so the cell still has a driving force",
+    "The cell potential is zero, so the actual ΔᵣG is zero and neither direction is favoured",
+    "The standard Gibbs energy change is zero, which is why the voltmeter reads zero",
+    "The equilibrium constant is one, because the concentrations are unchanged"
+  ]}
+  answer={1}
+  explanation="At equilibrium Ecell = 0, so ΔᵣG = −nFEcell = 0 and the system has no net driving force. The standard value ΔᵣG° is a different quantity, for example −36.67 kJ mol⁻¹ for the iron and nickel reaction, and it is not zero."
+>
+A Daniell cell has run down and the voltmeter reads zero. Which statement is correct?
+</Check>
+
+## Key ideas
+
+<KeyIdeas>
+- **Equilibrium in a cell** is reached when the cell potential falls to zero and the reaction quotient $Q$ has become the equilibrium constant $K_c$.
+- **E° and K are linked** by $E^\circ_{\text{cell}} = \frac{2.303\,RT}{nF}\log K_c$, which at $298\ \text{K}$ is $E^\circ_{\text{cell}} = \frac{0.059\ \text{V}}{n}\log K_c$. A larger standard potential means a larger equilibrium constant.
+- **The Daniell reaction** has $K_c \approx 2 \times 10^{37}$ at $298\ \text{K}$, so the copper ions are almost entirely consumed at equilibrium.
+- **Electrical work and Gibbs energy** are connected by $\Delta_r G = -nFE_{\text{cell}}$, and at standard conditions $\Delta_r G^\circ = -nFE^\circ_{\text{cell}}$, which for the iron and nickel reaction is $-36.67\ \text{kJ mol}^{-1}$.
+- **Intensive and extensive:** $E_{\text{cell}}$ does not change when a reaction is doubled, while $\Delta_r G$ and $n$ do, so compare Gibbs energies only for equations written the same way.
+</KeyIdeas>
