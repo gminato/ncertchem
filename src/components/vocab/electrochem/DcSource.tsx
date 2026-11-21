@@ -26,7 +26,7 @@ export const DcSource = forwardRef<SVGGElement, DcSourceProps>(function DcSource
   ref
 ) {
   const t = dcTerminals(x, y, width)
-  const shown = display ?? `${voltage.toFixed(1)} V`
+  const shown = display ?? `${voltage.toFixed(1).replace('-', '\u2212')} V`
   return (
     <g ref={ref} className={className} aria-hidden="true" {...rest}>
       {[t.plus, t.minus].map((p, i) => (

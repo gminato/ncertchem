@@ -68,7 +68,7 @@ export const Meter = forwardRef<SVGGElement, MeterProps>(function Meter(
   const ticks = Array.from({ length: majors + 1 }, (_, i) => -span / 2 + (i / majors) * span)
   const labels = scaleLabels ?? [String(range[0]), String(range[1])]
   const t = terminals ? meterTerminals(x, y, height) : null
-  const shown = Number.isFinite(value) ? value.toFixed(decimals) : '—'
+  const shown = Number.isFinite(value) ? value.toFixed(decimals).replace('-', '\u2212') : '—'
   const arc = (a0: number, a1: number, r: number) => {
     const p0 = toXY(a0, r)
     const p1 = toXY(a1, r)
