@@ -19,6 +19,11 @@ export interface MeterProps extends React.SVGAttributes<SVGGElement> {
   decimals?: number
   /** Show the + and − terminals under the body. */
   terminals?: boolean
+  /**
+   * Which side the + terminal sits on. Cells are drawn anode-left, cathode-right, so a meter
+   * reading a positive cell potential wants `'right'` (its + lead goes to the cathode).
+   */
+  plusSide?: 'left' | 'right'
   /** Scale labels at the minimum, middle and maximum of the range. */
   scaleLabels?: readonly string[]
   /** Dial caption above the scale, e.g. "Voltmeter" or "Galvanometer". Pass it already formatted. */
@@ -26,9 +31,16 @@ export interface MeterProps extends React.SVGAttributes<SVGGElement> {
 }
 
 /** Positions of the + and − terminals for a meter centred on (x, y). */
-export function meterTerminals(x: number, y: number, height: number): { plus: Point; minus: Point } {
+export function meterTerminals(
+  x: number,
+  y: number,
+  height: number,
+  plusSide: 'left' | 'right' = 'left'
+): { plus: Point; minus: Point } {
   const yy = y + height / 2 + 22
-  return { plus: { x: x - 34, y: yy }, minus: { x: x + 34, y: yy } }
+  const left = { x: x - 34, y: yy }
+  const right = { x: x + 34, y: yy }
+  return plusSide === 'left' ? { plus: left, minus: right } : { plus: right, minus: left }
 }
 
 /**
@@ -49,6 +61,7 @@ export const Meter = forwardRef<SVGGElement, MeterProps>(function Meter(
     digital = true,
     decimals = 2,
     terminals = true,
+    plusSide = 'left',
     scaleLabels,
     caption,
     className,
@@ -67,7 +80,7 @@ export const Meter = forwardRef<SVGGElement, MeterProps>(function Meter(
   const majors = 4
   const ticks = Array.from({ length: majors + 1 }, (_, i) => -span / 2 + (i / majors) * span)
   const labels = scaleLabels ?? [String(range[0]), String(range[1])]
-  const t = terminals ? meterTerminals(x, y, height) : null
+  const t = terminals ? meterTerminals(x, y, height, plusSide) : null
   const shown = Number.isFinite(value) ? value.toFixed(decimals).replace('-', '\u2212') : '—'
   const arc = (a0: number, a1: number, r: number) => {
     const p0 = toXY(a0, r)
