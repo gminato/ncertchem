@@ -77,6 +77,7 @@ import { OpposingVoltageLab } from './sims/opposing-voltage-lab'
 import { HalfCellPairingBench } from './sims/half-cell-pairing'
 import { NernstLab } from './sims/nernst-lab'
 import { EGKConverter } from './sims/e-g-k-converter'
+import { ConductivityCellLab } from './sims/conductivity-cell-lab'
 
 export interface SimulationProps {
   /** True when the Learner has asked the OS for reduced motion. Skip tweens and loops when set. */
@@ -168,4 +169,5 @@ export const simulations: Record<string, ComponentType<SimulationProps>> = {
   'half-cell-pairing': HalfCellPairingBench,
   'nernst-lab': NernstLab,
   'e-g-k-converter': EGKConverter,
+  'conductivity-cell-lab': ConductivityCellLab,
 }

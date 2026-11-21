@@ -138,6 +138,7 @@ import { ColligativePhaseShift } from './c12-unit1/colligative/ColligativePhaseS
 import { DaniellOpposingVoltage } from './c12-unit2/daniell/DaniellOpposingVoltage'
 import { SheMeasurement } from './c12-unit2/she/SheMeasurement'
 import { NernstConcentration } from './c12-unit2/nernst/NernstConcentration'
+import { ConductivityMeasurement } from './c12-unit2/conductance/ConductivityMeasurement'
 
 /**
  * Animations available to a Scrolly Animation, keyed by the `animation` prop.
@@ -286,6 +287,7 @@ export const animations = {
   'daniell-opposing-voltage': DaniellOpposingVoltage,
   'she-measurement': SheMeasurement,
   'nernst-concentration': NernstConcentration,
+  'conductivity-measurement': ConductivityMeasurement,
 } as const
 
 export type AnimationName = keyof typeof animations
