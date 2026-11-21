@@ -73,6 +73,7 @@ import { VantHoffLab } from './sims/vant-hoff-lab'
 import { ConcentrationConverter } from './sims/concentration-converter'
 import { AzeotropeExplorer } from './sims/azeotrope-explorer'
 import { ColligativeThermalLab } from './sims/colligative-thermal-lab'
+import { OpposingVoltageLab } from './sims/opposing-voltage-lab'
 
 export interface SimulationProps {
   /** True when the Learner has asked the OS for reduced motion. Skip tweens and loops when set. */
@@ -160,4 +161,5 @@ export const simulations: Record<string, ComponentType<SimulationProps>> = {
   'concentration-converter': ConcentrationConverter,
   'azeotrope-explorer': AzeotropeExplorer,
   'colligative-thermal-lab': ColligativeThermalLab,
+  'opposing-voltage-lab': OpposingVoltageLab,
 }
