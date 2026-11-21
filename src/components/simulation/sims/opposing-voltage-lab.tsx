@@ -199,9 +199,9 @@ export function OpposingVoltageLab({ reducedMotion }: SimulationProps) {
         <svg viewBox="0 0 600 420" role="img" aria-label="Daniell cell wired against an opposing DC source, with a galvanometer in the external wire">
           <VocabDefs idPrefix="opvlab" />
 
-          <Wire corners={zincWire} t={phase} electrons={mode !== 'balanced'} dots={4} direction={wireDirection} currentArrow />
+          <Wire corners={zincWire} t={phase} electrons={mode !== 'balanced'} dots={4} direction={wireDirection} />
           <Wire corners={galvWire} t={phase} electrons={mode !== 'balanced'} dots={2} direction={wireDirection} />
-          <Wire corners={copperWire} t={phase} electrons={mode !== 'balanced'} dots={4} direction={wireDirection} />
+          <Wire corners={copperWire} t={phase} electrons={mode !== 'balanced'} dots={4} direction={wireDirection} currentArrow={mode !== 'balanced'} />
 
           <text x={300} y={30} textAnchor="middle" fontSize={16} className={styles.flowLabel}>
             {FLOW_TEXT[mode]}
