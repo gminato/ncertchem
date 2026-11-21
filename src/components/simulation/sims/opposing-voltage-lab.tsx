@@ -6,7 +6,6 @@ import { useIsActive } from '@/components/simulation/useIsActive'
 import type { SimulationProps } from '@/components/simulation/registry'
 import {
   Beaker,
-  DcSource,
   Electrode,
   Galvanometer,
   SaltBridge,
@@ -31,15 +30,17 @@ const MINUTES_PER_SECOND = 1.5
 const MASS_FULL_SCALE_G = 0.07
 const CURRENT_RANGE_MA = 120
 
-// Circuit geometry, in the viewBox (600 × 470)
-const CU_X = 130
-const ZN_X = 470
+// Circuit geometry, in the viewBox (600 × 470). Zinc is the anode, so it sits
+// on the left, as in the cell notation Zn | Zn²⁺ || Cu²⁺ | Cu.
+const ZN_X = 130
+const CU_X = 470
 const ELECTRODE_TOP = 150
 const ELECTRODE_LENGTH = 150
 const SOURCE = { x: 212.5, y: 100, width: 150, height: 84 }
 const BUS_Y = 66
-const PLUS: Point = { x: SOURCE.x + SOURCE.width * 0.25, y: SOURCE.y - 16 }
-const MINUS: Point = { x: SOURCE.x + SOURCE.width * 0.75, y: SOURCE.y - 16 }
+// The source's − terminal is on the zinc side and its + terminal on the copper side.
+const MINUS: Point = { x: SOURCE.x + SOURCE.width * 0.25, y: SOURCE.y - 16 }
+const PLUS: Point = { x: SOURCE.x + SOURCE.width * 0.75, y: SOURCE.y - 16 }
 
 const MODE_TEXT: Record<OpposingMode, string> = {
   galvanic: 'Galvanic: the cell pushes electrons through the wire',
@@ -57,6 +58,35 @@ function formatSigned(value: number, decimals: number): string {
   const body = Math.abs(value).toFixed(decimals)
   if (Number(body) === 0) return '0'
   return `${value < 0 ? '−' : '+'}${body}`
+}
+
+/** The opposing supply, with − on the zinc side (left post) and + on the copper side (right post). */
+function OpposingSource({ x, y, width, height, display, label }: { x: number; y: number; width: number; height: number; display: string; label: string }) {
+  const posts = [
+    { p: MINUS, sign: '−', fill: 'var(--fg)' },
+    { p: PLUS, sign: '+', fill: 'var(--proton)' },
+  ]
+  return (
+    <g aria-hidden="true">
+      {posts.map(({ p, sign, fill }) => (
+        <g key={sign}>
+          <line x1={p.x} x2={p.x} y1={p.y} y2={y} stroke="var(--glass-wall)" strokeWidth={3} />
+          <circle cx={p.x} cy={p.y} r={9} fill={fill} stroke="var(--glass-wall)" strokeWidth={1.2} />
+          <text x={p.x} y={p.y + 5} textAnchor="middle" fontSize={14} fontWeight={700} fill="var(--surface)">
+            {sign}
+          </text>
+        </g>
+      ))}
+      <rect x={x} y={y} width={width} height={height} rx={10} fill="var(--surface-raised)" stroke="var(--glass-wall)" strokeWidth={1.8} />
+      <rect x={x + 14} y={y + 12} width={width - 28} height={30} rx={5} fill="var(--surface)" stroke="var(--glass-wall)" strokeWidth={1} />
+      <text x={x + width / 2} y={y + 33} textAnchor="middle" fontSize={17} fontWeight={600} fill="var(--fg)" style={{ fontVariantNumeric: 'tabular-nums' }}>
+        {display}
+      </text>
+      <text x={x + width / 2} y={y + height - 14} textAnchor="middle" fontSize={14} fill="var(--fg-muted)">
+        {label}
+      </text>
+    </g>
+  )
 }
 
 export function OpposingVoltageLab({ reducedMotion }: SimulationProps) {
@@ -178,17 +208,17 @@ export function OpposingVoltageLab({ reducedMotion }: SimulationProps) {
             {FLOW_TEXT[mode]}
           </text>
 
-          <DcSource
+          <OpposingSource
             x={SOURCE.x}
             y={SOURCE.y}
             width={SOURCE.width}
             height={SOURCE.height}
-            voltage={eExt}
+            display={`${eExt.toFixed(2)} V`}
             label="Opposing source"
           />
 
-          <Beaker x={40} y={196} width={180} height={140} level={0.72} tint="blue" label="CuSO₄(aq)" />
-          <Beaker x={380} y={196} width={180} height={140} level={0.72} tint="clear" label="ZnSO₄(aq)" />
+          <Beaker x={40} y={196} width={180} height={140} level={0.72} tint="clear" label="ZnSO₄(aq)" />
+          <Beaker x={380} y={196} width={180} height={140} level={0.72} tint="blue" label="CuSO₄(aq)" />
 
           <Electrode
             x={CU_X}
@@ -221,21 +251,21 @@ export function OpposingVoltageLab({ reducedMotion }: SimulationProps) {
             t={phase}
             ions={mode !== 'balanced'}
             ionCount={3}
-            cationsTo={electrolytic ? 'to' : 'from'}
+            cationsTo={electrolytic ? 'from' : 'to'}
           />
           <text x={300} y={302} textAnchor="middle" fontSize={15} className={styles.flowLabel}>
-            KCl(aq) salt bridge
+            KCl in agar gel
           </text>
 
           <Galvanometer
             x={300}
-            y={402}
+            y={400}
             width={150}
-            height={90}
+            height={120}
             value={currentMa}
             range={[-CURRENT_RANGE_MA, CURRENT_RANGE_MA]}
             unit="mA"
-            scaleLabels={['−120', '0', '+120']}
+            scaleLabels={['−', '0', '+']}
             caption="Galvanometer"
             digital
             terminals={false}
@@ -243,7 +273,7 @@ export function OpposingVoltageLab({ reducedMotion }: SimulationProps) {
           />
         </svg>
         <p className={styles.note}>
-          Purple arrow: conventional current. Blue dots: electrons. Current is schematic: proportional to Ecell − Eext through a fixed internal resistance, and illustrative only.
+          Purple arrow: conventional current. Blue dots: electrons. The current and the mass changes are schematic, not measured: both are set by Ecell − Eext through a fixed internal resistance, so treat them as illustrative.
         </p>
       </div>
 
@@ -268,11 +298,11 @@ export function OpposingVoltageLab({ reducedMotion }: SimulationProps) {
             <span className={styles.metricValue}>{minutes.toFixed(1)} min</span>
           </div>
           <div className={styles.metric}>
-            <span className={styles.metricLabel}>Zn electrode Δm</span>
+            <span className={styles.metricLabel}>Zn electrode Δm (illustrative)</span>
             <span className={styles.metricValue}>{formatSigned(mass.zn * 1000, 1)} mg</span>
           </div>
           <div className={styles.metric}>
-            <span className={styles.metricLabel}>Cu electrode Δm</span>
+            <span className={styles.metricLabel}>Cu electrode Δm (illustrative)</span>
             <span className={styles.metricValue}>{formatSigned(mass.cu * 1000, 1)} mg</span>
           </div>
         </div>
