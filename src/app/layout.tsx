@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import { Newsreader, Inter, JetBrains_Mono } from 'next/font/google'
+import { Analytics } from '@vercel/analytics/next'
 import { AccountStart } from '@/components/account/AccountStart'
 import { ThemeScript } from '@/components/ui/ThemeScript'
 import { BRAND } from '@/lib/brand'
@@ -46,6 +47,7 @@ export default function RootLayout({
         <ThemeScript />
         <AccountStart />
         {children}
+        <Analytics />
       </body>
     </html>
   )
