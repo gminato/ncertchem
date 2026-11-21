@@ -44,6 +44,7 @@
     "vitest": "^5.1.0"
   },
   "overrides": {
-    "katex": "$katex"
+    "katex": "$katex",
+    "sharp": "^0.35.5"
   }
 }
