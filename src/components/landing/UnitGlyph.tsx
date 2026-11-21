@@ -207,6 +207,19 @@ const CLASS_12_GLYPHS: Readonly<Record<number, ReactNode>> = {
       <path d="M37.5 37L33 34.4V39.6Z" fill="var(--fwd)" />
     </>
   ),
+  // Class 12 Unit 2, Electrochemistry: a Daniell cell, two half-filled beakers with an arched salt bridge, electrodes and a small meter.
+  2: (
+    <>
+      <path d="M8 22V52H26V22" fill="none" stroke={NEUTRAL} strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" />
+      <path d="M38 22V52H56V22" fill="none" stroke={NEUTRAL} strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" />
+      <rect x="9" y="36" width="16" height="15" rx="1" fill="var(--liquid)" />
+      <rect x="39" y="36" width="16" height="15" rx="1" fill="var(--liquid)" />
+      <path d="M17 36C17 8 47 8 47 36" fill="none" stroke="var(--accent)" strokeWidth="2.2" strokeLinecap="round" />
+      <line x1="17" y1="16" x2="17" y2="44" stroke="var(--metal-zn)" strokeWidth="2.6" strokeLinecap="round" />
+      <line x1="47" y1="16" x2="47" y2="44" stroke="var(--metal-cu)" strokeWidth="2.6" strokeLinecap="round" />
+      <circle cx="32" cy="9" r="3.6" fill="none" stroke={NEUTRAL} strokeWidth="1.8" />
+    </>
+  ),
 }
 
 export interface UnitGlyphProps {
