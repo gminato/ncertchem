@@ -88,9 +88,29 @@ test.describe('Unit navigation', () => {
   })
 
   test('a Unit with no Sections yet shows a calm empty state', async ({ page }) => {
+    await page.goto('/class-12/unit-3')
+    await expect(page.getByRole('heading', { level: 1 })).toHaveText('Chemical Kinetics')
+    await expect(page.getByText('The Sections of this Unit are being written.')).toBeVisible()
+  })
+
+  test('Class 12 Unit 2 lists its ten Sections in order', async ({ page }) => {
     await page.goto('/class-12/unit-2')
     await expect(page.getByRole('heading', { level: 1 })).toHaveText('Electrochemistry')
-    await expect(page.getByText('The Sections of this Unit are being written.')).toBeVisible()
+    const links = page.locator('a[href^="/class-12/unit-2/"]')
+    await expect(links).toHaveCount(10)
+    const hrefs = await links.evaluateAll((els) => els.map((e) => e.getAttribute('href')))
+    expect(hrefs.map((h) => h?.split('/').pop())).toEqual([
+      '12-2-1-electrochemical-cells',
+      '12-2-2-galvanic-cells',
+      '12-2-3-nernst-equation',
+      '12-2-3-1-equilibrium-constant-and-gibbs-energy',
+      '12-2-4-conductance-of-electrolytic-solutions',
+      '12-2-4-2-variation-of-conductivity-with-concentration',
+      '12-2-5-electrolytic-cells-and-electrolysis',
+      '12-2-5-1-products-of-electrolysis',
+      '12-2-6-batteries',
+      '12-2-7-fuel-cells-and-corrosion',
+    ])
   })
 
   test('Class 12 Unit 1 lists its eight Sections in order', async ({ page }) => {
