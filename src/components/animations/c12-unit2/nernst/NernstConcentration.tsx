@@ -156,7 +156,8 @@ function TwoHalfCells({
   const rodW = 24
   const cx = 290
   const cy = 372
-  const meter = meterTerminals(cx, cy, 70)
+  // + terminal on the right (cathode side), − on the left (anode side): the leads do not cross.
+  const meter = meterTerminals(cx, cy, 70, 'right')
   const ax = anode.x + bw / 2
   const kx = cathode.x + bw / 2
   const anodeRod = rodRect(ax, top, length, rodW)
@@ -195,7 +196,7 @@ function TwoHalfCells({
         direction="reverse"
         strokeWidth={3}
       />
-      <Voltmeter x={cx} y={cy} width={150} height={70} value={emf} range={[0, 1.5]} unit="V" caption="Voltmeter" terminals />
+      <Voltmeter x={cx} y={cy} width={150} height={70} value={emf} range={[0, 1.5]} unit="V" caption="Voltmeter" terminals plusSide="right" />
     </g>
   )
 }

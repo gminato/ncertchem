@@ -60,16 +60,29 @@ const DRESSING = {
   },
 } as const
 
-/** Plot frame in SVG units, and the log Q window it shows. */
-const PLOT = { x0: 372, x1: 570, y0: 64, y1: 300 }
+/** Scene and plot frames in their own SVG units. The scene takes most of the stage width. */
+const SCENE = { w: 640, h: 420 }
+const PLOT_VIEW = { w: 320, h: 400 }
+/** Plot frame inside PLOT_VIEW, and the log Q window it shows. */
+const PLOT = { x0: 56, x1: 300, y0: 56, y1: 320 }
 
-const LEFT_BEAKER = { x: 18, y: 150, width: 130, height: 180 }
-const RIGHT_BEAKER = { x: 152, y: 150, width: 130, height: 180 }
-const LEFT_X = 83
-const RIGHT_X = 217
-const ELECTRODE_TOP = 176
-const ELECTRODE_LENGTH = 126
-const METER = { x: 150, y: 62, width: 170, height: 70 }
+/** Two separate beakers, anode left and cathode right, with the gap between them for the bridge. */
+const LEFT_BEAKER = { x: 24, y: 212, width: 210, height: 170 }
+const RIGHT_BEAKER = { x: 379, y: 212, width: 210, height: 170 }
+const LIQUID_LEVEL = 0.72
+const LEFT_X = LEFT_BEAKER.x + LEFT_BEAKER.width / 2
+const RIGHT_X = RIGHT_BEAKER.x + RIGHT_BEAKER.width / 2
+const ELECTRODE_TOP = 150
+const ELECTRODE_LENGTH = 190
+/** Top of the Pt wire in the hydrogen electrode (its jacket starts 44 above the rim, the wire 26 above that). */
+const PT_WIRE_TOP = RIGHT_BEAKER.y - 70
+/** The salt bridge dips into both beakers and arches over the gap. */
+const BRIDGE_Y = 300
+const BRIDGE_APEX = 160
+/** The voltmeter (x and y are its centre) sits above the bridge; its terminals are below the dial. */
+const METER = { x: (LEFT_BEAKER.x + LEFT_BEAKER.width + RIGHT_BEAKER.x) / 2, y: 62, width: 170, height: 70 }
+/** Both leads run along this height, under the meter and above the bridge, and never cross. */
+const LEAD_Y = 132
 
 /** Round a number to 3 decimals and write U+2212 for minus signs. */
 function signed(x: number, digits: number): string {
@@ -164,19 +177,18 @@ export function NernstLab({ reducedMotion }: SimulationProps) {
   const resultHtml = tex(resultEq, true)
 
   const meterValue = r.eCell
-  const terminals = meterTerminals(METER.x, METER.y, METER.height)
-  // The anode (left, −) goes to the meter's − terminal, the cathode (right, +) to its + terminal.
-  // Both leads leave the electrode badges upward and pass above the salt bridge.
+  // The + terminal is on the right (cathode side) and − on the left (anode side), so the leads do not cross.
+  const terminals = meterTerminals(METER.x, METER.y, METER.height, 'right')
   const anodeLead = [
-    { x: LEFT_X, y: ELECTRODE_TOP - 20 },
-    { x: LEFT_X, y: 131 },
-    { x: terminals.minus.x, y: 131 },
+    { x: LEFT_X, y: ELECTRODE_TOP },
+    { x: LEFT_X, y: LEAD_Y },
+    { x: terminals.minus.x, y: LEAD_Y },
     { x: terminals.minus.x, y: terminals.minus.y },
   ]
   const cathodeLead = [
-    { x: RIGHT_X, y: ELECTRODE_TOP - 20 },
-    { x: RIGHT_X, y: 143 },
-    { x: terminals.plus.x, y: 143 },
+    { x: RIGHT_X, y: dress.shE ? PT_WIRE_TOP : ELECTRODE_TOP },
+    { x: RIGHT_X, y: LEAD_Y },
+    { x: terminals.plus.x, y: LEAD_Y },
     { x: terminals.plus.x, y: terminals.plus.y },
   ]
 
@@ -225,7 +237,7 @@ export function NernstLab({ reducedMotion }: SimulationProps) {
       </div>
 
       <div className={styles.stage}>
-        <svg viewBox="0 0 600 400" role="img" aria-label={`${cell.label} with its voltmeter and the Nernst plot`}>
+        <svg className={styles.scene} viewBox={`0 0 ${SCENE.w} ${SCENE.h}`} role="img" aria-label={`${cell.label}: the two half-cells, the salt bridge and the voltmeter`}>
           <VocabDefs idPrefix="nernstlab" />
 
           <Voltmeter
@@ -238,11 +250,12 @@ export function NernstLab({ reducedMotion }: SimulationProps) {
             unit="V"
             decimals={2}
             caption="Voltmeter"
+            plusSide="right"
           />
           <Wire corners={anodeLead} />
           <Wire corners={cathodeLead} />
 
-          <Beaker {...LEFT_BEAKER} level={0.72} tint={dress.left.tint} label={dress.left.label} />
+          <Beaker {...LEFT_BEAKER} level={LIQUID_LEVEL} tint={dress.left.tint} label={dress.left.label} />
           {dress.shE ? (
             <HydrogenElectrode
               {...RIGHT_BEAKER}
@@ -251,7 +264,7 @@ export function NernstLab({ reducedMotion }: SimulationProps) {
               gasLabel="H₂ (1 bar)"
             />
           ) : (
-            <Beaker {...RIGHT_BEAKER} level={0.72} tint={dress.right.tint} label={dress.right.label} />
+            <Beaker {...RIGHT_BEAKER} level={LIQUID_LEVEL} tint={dress.right.tint} label={dress.right.label} />
           )}
 
           <Electrode
@@ -272,9 +285,9 @@ export function NernstLab({ reducedMotion }: SimulationProps) {
           )}
 
           <SaltBridge
-            start={{ x: 112, y: 300 }}
-            finish={{ x: 188, y: 300 }}
-            apex={170}
+            start={{ x: LEFT_BEAKER.x + LEFT_BEAKER.width, y: BRIDGE_Y }}
+            finish={{ x: RIGHT_BEAKER.x, y: BRIDGE_Y }}
+            apex={BRIDGE_APEX}
             plugs
             t={t}
             ions={!reducedMotion}
@@ -282,6 +295,9 @@ export function NernstLab({ reducedMotion }: SimulationProps) {
             cationsTo="to"
           />
 
+        </svg>
+
+        <svg className={styles.plot} viewBox={`0 0 ${PLOT_VIEW.w} ${PLOT_VIEW.h}`} role="img" aria-label="Nernst plot of cell potential against log Q">
           <g aria-hidden="true">
             <line
               x1={PLOT.x0}

@@ -1,7 +1,6 @@
 import { test, expect, type Page } from '@playwright/test'
 
 const SIM = 'nernst-lab'
-const VIEWBOX = { w: 600, h: 400 }
 
 function watchErrors(page: Page): string[] {
   const errors: string[] = []
@@ -36,27 +35,30 @@ async function smallTextLeaves(page: Page): Promise<string[]> {
   })
 }
 
-/** Drawn SVG leaves whose on-screen boxes fall outside the drawing's viewBox (in viewBox units). */
+/** Drawn SVG leaves whose on-screen boxes fall outside their drawing's viewBox (in viewBox units). */
 async function svgOutOfBounds(page: Page): Promise<string[]> {
-  return page.locator(`[data-simulation="${SIM}"] svg[role="img"]`).evaluate((svg, vb) => {
+  return page.locator(`[data-simulation="${SIM}"] svg[role="img"]`).evaluateAll((svgs) => {
     const out: string[] = []
-    const frame = svg.getBoundingClientRect()
-    const scale = vb.w / frame.width
-    const leaves = svg.querySelectorAll('text, circle, line, path, rect, ellipse, polygon, polyline')
-    leaves.forEach((el) => {
-      if (el.closest('defs, clipPath, mask, pattern, symbol, marker')) return
-      const r = el.getBoundingClientRect()
-      if (r.width === 0 && r.height === 0) return
-      const x0 = (r.left - frame.left) * scale
-      const y0 = (r.top - frame.top) * scale
-      const x1 = (r.right - frame.left) * scale
-      const y1 = (r.bottom - frame.top) * scale
-      if (x0 < -0.5 || y0 < -0.5 || x1 > vb.w + 0.5 || y1 > vb.h + 0.5) {
-        out.push(`${el.tagName} ${el.textContent?.trim().slice(0, 30) ?? ''} [${x0.toFixed(1)},${y0.toFixed(1)},${x1.toFixed(1)},${y1.toFixed(1)}]`)
-      }
+    svgs.forEach((svg) => {
+      const [, , vbW, vbH] = (svg.getAttribute('viewBox') ?? '0 0 0 0').split(/\s+/).map(Number)
+      const frame = svg.getBoundingClientRect()
+      const scale = vbW / frame.width
+      const leaves = svg.querySelectorAll('text, circle, line, path, rect, ellipse, polygon, polyline')
+      leaves.forEach((el) => {
+        if (el.closest('defs, clipPath, mask, pattern, symbol, marker')) return
+        const r = el.getBoundingClientRect()
+        if (r.width === 0 && r.height === 0) return
+        const x0 = (r.left - frame.left) * scale
+        const y0 = (r.top - frame.top) * scale
+        const x1 = (r.right - frame.left) * scale
+        const y1 = (r.bottom - frame.top) * scale
+        if (x0 < -0.5 || y0 < -0.5 || x1 > vbW + 0.5 || y1 > vbH + 0.5) {
+          out.push(`${el.tagName} ${el.textContent?.trim().slice(0, 30) ?? ''} [${x0.toFixed(1)},${y0.toFixed(1)},${x1.toFixed(1)},${y1.toFixed(1)}]`)
+        }
+      })
     })
     return out
-  }, VIEWBOX)
+  })
 }
 
 for (const scheme of ['light', 'dark'] as const) {
