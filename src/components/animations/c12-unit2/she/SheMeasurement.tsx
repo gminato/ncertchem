@@ -67,6 +67,19 @@ function PairHalf({ spec, x, role, t }: { spec: HalfSpec; x: number; role: 'anod
           label={spec.solution}
           gasLabel="H₂ (1 bar)"
         />
+        {/* The SHE has no Electrode badge, so name its role here: the anode's label sits above the
+            rim on the outer (left) side; the cathode's sits inside the beaker on the outer side,
+            clear of the H₂ inlet that leaves to the right. */}
+        <text
+          x={role === 'anode' ? x + 8 : x + BEAKER_W - 12}
+          y={role === 'anode' ? BEAKER_Y - 12 : BEAKER_Y + 30}
+          textAnchor={role === 'anode' ? 'start' : 'end'}
+          fontSize={14}
+          fontWeight={600}
+          fill={role === 'anode' ? 'var(--ox)' : 'var(--red)'}
+        >
+          {role === 'anode' ? 'Anode (−)' : 'Cathode (+)'}
+        </text>
       </g>
     )
   }
@@ -126,7 +139,7 @@ function Pair({ scene, meter, t }: { scene: Extract<SheScene, { kind: 'pair' }>;
         terminals
         plusSide="right"
       />
-      <SaltBridge start={{ x: LEFT_X + BEAKER_W - 4, y: 290 }} finish={{ x: RIGHT_X + 4, y: 290 }} apex={230} t={t} ions legend="KCl(aq)" />
+      <SaltBridge start={{ x: LEFT_X + BEAKER_W - 4, y: 290 }} finish={{ x: RIGHT_X + 4, y: 290 }} apex={230} t={t} ions legend="KCl gel" />
     </>
   )
 }
