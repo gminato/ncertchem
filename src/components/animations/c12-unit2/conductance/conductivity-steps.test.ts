@@ -44,3 +44,15 @@ describe('conductivity measurement steps', () => {
     expect(UNKNOWN_LAMBDA_SCM2).toBeCloseTo(117.5, 6)
   })
 })
+
+describe('conductivity measurement step captions', () => {
+  it('state the same numbers as the libs', () => {
+    const [wires, , , bridge, chain] = CONDUCTIVITY_STEPS
+    expect(wires.ariaLabel).toContain(`has resistance ${WIRE_R_BASE.toFixed(2)} ohm`)
+    expect(wires.ariaLabel).toContain(`has resistance ${WIRE_R_LONG.toFixed(2)} ohm`)
+    expect(wires.ariaLabel).toContain(`has resistance ${WIRE_R_THICK.toFixed(2)} ohm`)
+    expect(bridge.ariaLabel).toContain(`R2 equals ${UNKNOWN_R} ohm`)
+    expect(chain.ariaLabel).toContain(`molar conductivity is ${UNKNOWN_LAMBDA_SCM2.toFixed(1)} S cm²`)
+    expect(chain.ariaLabel).toContain('cell constant of 141 per metre')
+  })
+})

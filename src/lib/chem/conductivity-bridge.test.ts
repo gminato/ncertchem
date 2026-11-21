@@ -23,7 +23,7 @@ const GEOMETRIES = [
 
 describe('Table 2.3 solutions', () => {
   it('takes the three KCl rows of Table 2.3', () => {
-    expect(CONDUCTIVITY_SOLUTIONS.map((s) => s.molPerL)).toEqual([1, 0.1, 0.01])
+    expect(CONDUCTIVITY_SOLUTIONS.filter((s) => s.id.startsWith('kcl-')).map((s) => s.molPerL)).toEqual([1, 0.1, 0.01])
     expect(solutionById('kcl-0.1').kappaScmInv).toBe(0.0129)
   })
 })
@@ -83,7 +83,7 @@ describe('readouts at balance recover the Table 2.3 conductivity', () => {
 describe('bridge arithmetic', () => {
   it('spans the coarse range on a log scale and clamps the index', () => {
     expect(coarseResistance(0)).toBeCloseTo(0.1, 12)
-    expect(coarseResistance(COARSE_STEPS)).toBeCloseTo(1e5, 6)
+    expect(coarseResistance(COARSE_STEPS)).toBeCloseTo(1e6, 6)
     expect(coarseResistance(-5)).toBeCloseTo(0.1, 12)
   })
 
@@ -91,5 +91,26 @@ describe('bridge arithmetic', () => {
     const base = variableResistance(500, 0)
     expect(variableResistance(500, 1) / base).toBeCloseTo(1.0001, 12)
     expect(variableResistance(500, 10000) / base).toBeCloseTo(1.05, 12)
+  })
+})
+
+describe('aqueous solutions of Table 2.2', () => {
+  it('offers KCl and the four aqueous electrolytes, each with a label and a molar concentration', () => {
+    const ids = CONDUCTIVITY_SOLUTIONS.map((s) => s.id)
+    expect(ids).toEqual(expect.arrayContaining(['kcl-0.1', 'aq-0.1-HCl', 'aq-0.01-NaCl', 'aq-0.1-HAc', 'aq-0.01-HAc']))
+    expect(solutionById('aq-0.1-HCl').label).toBe('0.1 M HCl')
+    expect(solutionById('aq-0.1-HCl').molPerL).toBe(0.1)
+  })
+
+  it('converts the tabulated S m⁻¹ values to S cm⁻¹ and derives Λm from κ and c', () => {
+    expect(solutionById('aq-0.1-HCl').kappaScmInv).toBeCloseTo(0.0391, 9)
+    expect(solutionById('aq-0.01-NaCl').kappaScmInv).toBeCloseTo(0.0012, 9)
+    for (const [id, expected] of [['aq-0.1-HCl', 391], ['aq-0.01-NaCl', 120]] as const) {
+      const rx = 1 / solutionById(id).kappaScmInv
+      const setting = balanceSetting(rx, 1)
+      const m = measureCell({ solutionId: id, gapCm: 1, areaCm2: 1, ratio: 'unity', index: setting.index, trim: setting.trim })
+      expect(m.isNull).toBe(true)
+      expect(m.lambdaScm2).toBeCloseTo(expected, 0)
+    }
   })
 })

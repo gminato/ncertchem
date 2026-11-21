@@ -20,7 +20,7 @@ import styles from './conductivity-cell-lab.module.css'
 
 const SOLUTION_OPTIONS = CONDUCTIVITY_SOLUTIONS.map((s) => ({
   value: s.id,
-  label: String(s.molPerL),
+  label: s.label,
 }))
 
 const RATIO_OPTIONS = [
@@ -64,11 +64,11 @@ export function ConductivityCellLab(_props: SimulationProps) {
   const nudgeTrim = (delta: number) =>
     setTrim((t) => Math.min(FINE_LIMIT_STEPS, Math.max(-FINE_LIMIT_STEPS, t + delta)))
 
-  const status = m.isNull
-    ? 'Null: the bridge is balanced and the readouts are valid.'
-    : 'Not balanced: adjust the variable resistor until the detector reads null.'
+  const detectorText = `${detectorMilliVolts.toFixed(3).replace('-', 'minus ')} millivolts`
+  const liveSummary = m.isNull
+    ? `Null: the bridge is balanced and the readouts are valid. Variable resistor ${sig(m.rv)} ohms. Cell resistance R ${sig(m.resistanceOhm)} ohms. Cell constant ${sig(m.cellConstantPerCm)} per centimetre. Conductivity κ ${sig(m.kappaScmInv)} siemens per centimetre. Molar conductivity Λm ${sig(m.lambdaScm2)} siemens square centimetres per mole at ${solution.label}.`
+    : `Not balanced yet. Detector reads ${detectorText}. Variable resistor ${sig(m.rv)} ohms. Adjust it until the detector reads null. Conductivity and molar conductivity appear once the bridge is balanced.`
 
-  const liveSummary = `${status} Variable resistor ${sig(m.rv)} ohms. Cell resistance R ${sig(m.resistanceOhm)} ohms. Cell constant ${sig(m.cellConstantPerCm)} per centimetre. Conductivity κ ${sig(m.kappaScmInv)} siemens per centimetre. Molar conductivity Λm ${sig(m.lambdaScm2)} siemens square centimetres per mole at ${solution.molPerL} mol per litre.`
 
   return (
     <div className={styles.lab}>
@@ -76,25 +76,25 @@ export function ConductivityCellLab(_props: SimulationProps) {
         <svg
           viewBox="0 0 580 320"
           role="img"
-          aria-label="AC Wheatstone bridge: the conductivity cell is the top arm, the variable resistor the left arm, and a null detector sits across the other diagonal"
+          aria-label="AC Wheatstone bridge: the conductivity cell is the top arm, the variable resistor the left arm, the AC source sits across one diagonal and the null detector across the other"
           className={styles.svg}
         >
           <VocabDefs idPrefix="condlab" />
 
-          {/* Source loop: left side, then along the bottom to corner C. */}
+          {/* Source loop: corner A (top left) to corner C (bottom right), through the AC source inside the square. */}
           <path
-            d="M100 60 H56 V129 M56 161 V290 H260 V230"
+            d="M100 60 L172 136 M188 154 L260 230"
             fill="none"
             stroke="var(--fg-muted)"
             strokeWidth={2}
           />
-          <circle cx={56} cy={145} r={16} fill="var(--surface-raised)" stroke="var(--fg-muted)" strokeWidth={2} />
-          <path d="M48 145 Q52 137 56 145 T64 145" fill="none" stroke="var(--fg)" strokeWidth={1.6} />
-          <text x={56} y={40} fontSize={14} className={styles.label} textAnchor="middle">
+          <circle cx={180} cy={145} r={12} fill="var(--surface-raised)" stroke="var(--fg-muted)" strokeWidth={2} />
+          <path d="M173 145 Q176.5 139 180 145 T187 145" fill="none" stroke="var(--fg)" strokeWidth={1.6} />
+          <text x={158} y={186} fontSize={14} className={styles.label} textAnchor="end">
             AC {sig(BRIDGE_SOURCE_VOLTS)} V
           </text>
 
-          {/* Detector loop: right side, then back along the bottom to corner D. */}
+          {/* Detector loop: right side, then back along the bottom outside the square to corner D. */}
           <path
             d="M260 60 H330 V129 M330 161 V266 H100 V230"
             fill="none"
@@ -157,7 +157,7 @@ export function ConductivityCellLab(_props: SimulationProps) {
             dimensions
           />
           <text x={480} y={312} fontSize={14} textAnchor="middle" className={styles.label}>
-            {solution.molPerL} mol L⁻¹ KCl
+            {solution.label}
           </text>
         </svg>
         <p className={`${styles.status} ${m.isNull ? styles.statusNull : ''}`}>
@@ -170,7 +170,7 @@ export function ConductivityCellLab(_props: SimulationProps) {
 
       <div className={styles.controls}>
         <Segmented
-          label="KCl concentration, mol L⁻¹"
+          label="Solution and concentration"
           options={SOLUTION_OPTIONS}
           value={solutionId}
           onChange={setSolutionId}
@@ -255,7 +255,7 @@ export function ConductivityCellLab(_props: SimulationProps) {
           </dd>
         </div>
         <div className={styles.metric}>
-          <dt className={styles.metricLabel}>Table 2.3 κ for this solution</dt>
+          <dt className={styles.metricLabel}>Tabulated κ for this solution</dt>
           <dd className={styles.metricValue}>{sig(solution.kappaScmInv)} S cm⁻¹</dd>
         </div>
       </dl>

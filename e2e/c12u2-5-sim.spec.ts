@@ -55,6 +55,8 @@ for (const scheme of ['light', 'dark'] as const) {
 
     // Default state: unbalanced, so the readouts are provisional.
     await expect(page.locator('[aria-live="polite"]')).toContainText('Not balanced')
+    // Before balance the live region announces no κ or Λm as if measured.
+    await expect(page.locator('[aria-live="polite"]')).not.toContainText('Molar conductivity')
     await stage.screenshot({ path: `test-results/screens/c12u2-5-sim-default-${scheme}.png` })
 
     // Balanced state, reached by keyboard-reachable controls: coarse slider, then fine trim buttons.
@@ -75,7 +77,7 @@ for (const scheme of ['light', 'dark'] as const) {
     await stage.screenshot({ path: `test-results/screens/c12u2-5-sim-balanced-${scheme}.png` })
 
     // Changed state: the 0.01 mol L⁻¹ KCl solution in a longer, narrower cell, rebalanced.
-    await page.getByRole('radiogroup', { name: 'KCl concentration, mol L⁻¹' }).getByRole('radio', { name: '0.01', exact: true }).click()
+    await page.getByRole('radiogroup', { name: 'Solution and concentration' }).getByRole('radio', { name: '0.01 M KCl', exact: true }).click()
     await page.getByRole('slider', { name: 'Plate area A' }).fill('4')
     await page.getByRole('slider', { name: 'Plate separation l' }).fill('0.5')
     await page.getByRole('radiogroup', { name: 'Ratio arms R₄ / R₃' }).getByRole('radio', { name: '0.1', exact: true }).click()

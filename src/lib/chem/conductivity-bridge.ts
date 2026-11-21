@@ -12,9 +12,10 @@ import {
   molarConductivityScm2,
   molarScm2ToSm2,
   sPerCmToSPerM,
+  sPerMToSPerCm,
   unknownResistanceFromBridge,
 } from './conductance'
-import { NCERT_KCL_CONDUCTIVITY } from './ncert-c12-unit2-tables'
+import { NCERT_CONDUCTIVITY_MATERIALS, NCERT_KCL_CONDUCTIVITY } from './ncert-c12-unit2-tables'
 
 /** Source amplitude across the source diagonal, volts. */
 export const BRIDGE_SOURCE_VOLTS = 1
@@ -27,7 +28,7 @@ export const NULL_LIMIT_VOLTS = 5e-5
 
 /** Variable resistor coarse range, ohms (log scale). */
 export const RESISTOR_MIN_OHM = 0.1
-export const RESISTOR_MAX_OHM = 1e5
+export const RESISTOR_MAX_OHM = 1e6
 
 /** Coarse positions on the log scale. */
 export const COARSE_STEPS = 1000
@@ -47,15 +48,36 @@ export const RATIO_FACTOR: Readonly<Record<RatioId, number>> = {
 
 export interface ConductivitySolution {
   readonly id: string
+  /** Label shown to students, e.g. "0.1 M KCl". */
+  readonly label: string
   readonly molPerL: number
-  /** Table 2.3 conductivity κ, S cm⁻¹, at 298.15 K. */
+  /** Tabulated conductivity κ, S cm⁻¹, at 298.15 K (Table 2.3 for KCl, Table 2.2 for the others). */
   readonly kappaScmInv: number
 }
 
-/** The KCl solutions of Table 2.3, the only solutions in the libs with measured conductivity. */
-export const CONDUCTIVITY_SOLUTIONS: readonly ConductivitySolution[] = NCERT_KCL_CONDUCTIVITY.map(
-  (row) => ({ id: `kcl-${row.molPerL}`, molPerL: row.molPerL, kappaScmInv: row.kappaScmInv }),
-)
+const KCL_SOLUTIONS: readonly ConductivitySolution[] = NCERT_KCL_CONDUCTIVITY.map((row) => ({
+  id: `kcl-${row.molPerL}`,
+  label: `${row.molPerL} M KCl`,
+  molPerL: row.molPerL,
+  kappaScmInv: row.kappaScmInv,
+}))
+
+/** The aqueous electrolytes of Table 2.2 that have a molar concentration (pure water has none; KCl is above). */
+const TABLE_2_2_SOLUTIONS: readonly ConductivitySolution[] = NCERT_CONDUCTIVITY_MATERIALS.flatMap((row) => {
+  const match = /^([\d.]+) M (HCl|NaCl|HAc)$/.exec(row.material)
+  if (!match || row.displaySPerM === null) return []
+  return [
+    {
+      id: `aq-${match[1]}-${match[2]}`,
+      label: row.material,
+      molPerL: Number(match[1]),
+      kappaScmInv: sPerMToSPerCm(row.displaySPerM),
+    },
+  ]
+})
+
+/** The solutions the Simulation offers: KCl (Table 2.3) and the aqueous solutions of Table 2.2. */
+export const CONDUCTIVITY_SOLUTIONS: readonly ConductivitySolution[] = [...KCL_SOLUTIONS, ...TABLE_2_2_SOLUTIONS]
 
 export function solutionById(id: string): ConductivitySolution {
   const found = CONDUCTIVITY_SOLUTIONS.find((s) => s.id === id)

@@ -23,11 +23,6 @@
   margin: 0 auto;
 }
 
-/* Shared controls set 0.85rem; the Simulation rule is at least 14 px for every text element. */
-.controls :is(label, output, button, span, [role="radio"]) {
-  font-size: 14px;
-}
-
 .label {
   font-family: var(--font-sans);
   font-size: 14px;

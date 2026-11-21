@@ -11,7 +11,7 @@ ncert: "Class 12, Part I — Unit 2, Sections 2.4–2.4.1"
 ---
 
 <Hook>
-The little gadget that sits in a glass of purified water, with two metal probes and a small digital screen, shows a number in parts per million. Dip it into tap water and the figure is higher; dip it into the purifier's output and it drops. The gadget never tastes the water and never weighs the salt in it. So what is it actually measuring, and why should a lower reading mean purer water? The answer lies in how easily a solution lets electric current pass.
+The little gadget that sits in a glass of purified water, with two metal probes and a small digital screen, shows an estimated figure in parts per million. Dip it into tap water and the figure is higher; dip it into the purifier's output and it drops. The gadget never tastes the water and never weighs or identifies the salt in it. It measures how well the water conducts electricity and converts that reading into the ppm figure with a calibration factor. So what is it actually measuring, and why should a lower reading mean purer water? The answer lies in how easily a solution lets electric current pass.
 </Hook>
 
 ## Resistance, resistivity and conductivity
@@ -30,7 +30,13 @@ $$
 \kappa = \frac{1}{\rho} \qquad \text{in } \text{S m}^{-1}
 $$
 
-Chemists often quote conductivity in $\text{S cm}^{-1}$ instead, and $1\ \text{S cm}^{-1} = 100\ \text{S m}^{-1}$. Conductivities span an enormous range. Pure water sits near $3.5 \times 10^{-5}\ \text{S m}^{-1}$, a $0.1\ \text{mol L}^{-1}$ solution of $\ce{HCl}$ near $3.9\ \text{S m}^{-1}$, and glass near $10^{-16}\ \text{S m}^{-1}$. Where a material falls on this scale tells you whether it is a conductor, a semiconductor or an insulator.
+Combining $G = 1/R$ with $R = \rho l / A$ and $\kappa = 1/\rho$ gives the conductance of a uniform column of solution:
+
+$$
+G = \kappa\,\frac{A}{l}
+$$
+
+Chemists often quote conductivity in $\text{S cm}^{-1}$ instead, and $1\ \text{S cm}^{-1} = 100\ \text{S m}^{-1}$. Conductivities span an enormous range. Copper and silver conduct at about $6 \times 10^{7}\ \text{S m}^{-1}$, and graphite conducts too, although no value for it is quoted here. Pure water sits near $3.5 \times 10^{-5}\ \text{S m}^{-1}$, a $0.1\ \text{mol L}^{-1}$ solution of $\ce{HCl}$ near $3.9\ \text{S m}^{-1}$, and glass near $10^{-16}\ \text{S m}^{-1}$. Where a material falls on this scale tells you whether it is a conductor, a semiconductor or an insulator.
 
 ## Two ways charge moves
 
@@ -40,7 +46,7 @@ In an electrolytic solution, charge is carried by the ions that the dissolved so
 
 ## Measuring the resistance of a solution
 
-A solution cannot simply be clipped into a Wheatstone bridge the way a copper wire can, and sending a steady direct current through it causes electrolysis, which slowly changes the very composition you are trying to measure. Two changes solve both problems. The bridge is fed with alternating current from an audio-frequency oscillator, so the ions shuttle back and forth without any net chemical change. The solution sits in a **conductivity cell**: two platinum electrodes, coated with finely divided platinum black, held a fixed distance $l$ apart and having a fixed area $A$. The solution between them is a column of length $l$ and cross-section $A$, so its resistance obeys the same rule as a wire.
+A solution cannot simply be clipped into a Wheatstone bridge the way a copper wire can, and sending a steady direct current through it causes electrolysis, which slowly changes the very composition you are trying to measure. Two changes solve both problems. The bridge is driven by a low-frequency alternating supply, so the ions shuttle back and forth without any net chemical change. The solution sits in a **conductivity cell**: two platinum plates, each with a rough black platinum coating, fixed a known distance $l$ apart and with a known area $A$. The solution between them is a column of length $l$ and cross-section $A$, so its resistance obeys the same rule as a wire.
 
 Measuring $l$ and $A$ by ruler is unreliable, so the cell is calibrated instead. Fill it with potassium chloride solution, whose conductivity is tabulated at 298.15 K: $0.1113\ \text{S cm}^{-1}$ at $1.000\ \text{mol L}^{-1}$, $0.0129\ \text{S cm}^{-1}$ at $0.100\ \text{mol L}^{-1}$, and $0.00141\ \text{S cm}^{-1}$ at $0.010\ \text{mol L}^{-1}$. The cell constant is then
 
@@ -60,7 +66,7 @@ Modern conductivity meters do this balancing internally and display $\kappa$ dir
 
 <Scrolly animation="conductivity-measurement">
   <Step>
-    **A wire's resistance:** Picture a metal wire, 1.0 m long, with a cross-section of 1.0 mm² and resistivity $5.0 \times 10^{-7}\ \Omega\ \text{m}$. Its resistance is $R = 0.50\ \Omega$. Stretch it to 2.0 m and $R$ doubles to 1.0 Ω. Make it twice as thick and $R$ halves to 0.25 Ω. Length pushes resistance up; area pulls it down.
+    **A wire's resistance:** Picture a metal wire, 1.0 m long, with a cross-section of 1.0 mm² and resistivity $5.0 \times 10^{-7}\ \Omega\ \text{m}$. Its resistance is $R = 0.50\ \Omega$. Stretch it to 2.0 m and $R$ doubles to 1.0 Ω. Separately, make the original wire twice as thick and $R$ halves to 0.25 Ω. Each change is compared with the base wire, not with the one before it. Length pushes resistance up; area pulls it down.
   </Step>
   <Step>
     **The same geometry for a solution:** Replace the wire with a column of liquid between two plates, separated by a distance $l$ and covering an area $A$. Current now runs through the ions in the liquid. The rule is unchanged, and so the cell constant $G^* = l/A$ is the one number that describes the cell.
@@ -78,7 +84,7 @@ Modern conductivity meters do this balancing internally and display $\kappa$ dir
 
 ## From conductivity to molar conductivity
 
-Conductivity alone is a poor way to compare electrolytes. A solution with twice the concentration carries more ions per cubic centimetre and so has a higher $\kappa$, even if each ion is no better at carrying charge. To separate the two effects, chemists divide by the concentration and define the **molar conductivity**:
+Conductivity alone is a poor way to compare electrolytes, because it also depends on how many ions are packed into each cubic centimetre. To separate an ion's own contribution from the number of ions, chemists divide by the concentration and define the **molar conductivity**:
 
 $$
 \Lambda_m = \frac{\kappa}{c}

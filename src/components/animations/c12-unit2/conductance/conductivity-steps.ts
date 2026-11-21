@@ -44,14 +44,15 @@ export const UNKNOWN_LAMBDA_SCM2 = molarConductivityScm2(UNKNOWN_KAPPA_SCM, UNKN
 export const CELL_CONSTANT_CM = CELL_CONSTANT / 100 // 1.41 cm⁻¹
 export const WIRE_G_BASE = conductanceFromResistance(WIRE_R_BASE)
 
+const fmtOhm = (r: number): string => r.toFixed(2)
+
 export const CONDUCTIVITY_STEPS: readonly ConductivityStepState[] = [
   {
     index: 0,
     id: 'wire-resistance',
     scene: 'wire',
     caption: 'Length pushes resistance up; area pulls it down.',
-    ariaLabel:
-      'Three metal wires compared. The base wire, 1.0 m long with 1.0 mm² cross-section, has resistance 0.50 ohm. Stretched to 2.0 m, its resistance doubles to 1.00 ohm. The 1.0 m wire with twice the cross-section has resistance 0.25 ohm.',
+    ariaLabel: `Three metal wires, each compared with the base wire. The base wire, 1.0 m long with a 1.0 mm² cross-section, has resistance ${fmtOhm(WIRE_R_BASE)} ohm. Stretched to 2.0 m, it has resistance ${fmtOhm(WIRE_R_LONG)} ohm. With twice the cross-section, it has resistance ${fmtOhm(WIRE_R_THICK)} ohm.`,
   },
   {
     index: 1,
@@ -74,16 +75,14 @@ export const CONDUCTIVITY_STEPS: readonly ConductivityStepState[] = [
     id: 'bridge-null',
     scene: 'bridge',
     caption: 'When the detector is silent, R₂ = R₁R₄/R₃.',
-    ariaLabel:
-      'Wheatstone bridge drawn as a diamond. An oscillator feeds one diagonal and a detector sits across the other. The arms are R1 variable, R2 the cell, R3 and R4 fixed. The detector needle reads zero, so R2 equals 2400 ohm.',
+    ariaLabel: `Wheatstone bridge drawn as a diamond. An oscillator feeds one diagonal and a detector sits across the other. The arms are R1 variable, R2 the cell, R3 and R4 fixed. The detector needle reads zero, so R2 equals ${UNKNOWN_R} ohm.`,
   },
   {
     index: 4,
     id: 'r-to-lambda',
     scene: 'chain',
     caption: 'Calibrate once, measure many: R → κ → Λm.',
-    ariaLabel:
-      'Calibration chain. A KCl cell with κ 0.141 S per metre and R 1000 ohm gives a cell constant of 141 per metre. The unknown cell reads 2400 ohm, so κ is 0.05875 S per metre, or 5.875 times ten to the minus four S per cm. At 0.0050 mol per litre the molar conductivity is 117.5 S cm² per mol.',
+    ariaLabel: `Calibration chain. A KCl cell with κ ${KCL_KAPPA_REF} S per metre and R ${KCL_RESISTANCE_OHM} ohm gives a cell constant of ${CELL_CONSTANT.toFixed(0)} per metre. The unknown cell reads ${UNKNOWN_R} ohm, so κ is ${UNKNOWN_KAPPA_SM.toPrecision(4)} S per metre, or ${(UNKNOWN_KAPPA_SCM * 1e4).toPrecision(4)} times ten to the minus four S per cm. At ${UNKNOWN_CONCENTRATION.toFixed(4)} mol per litre the molar conductivity is ${UNKNOWN_LAMBDA_SCM2.toFixed(1)} S cm² per mol.`,
   },
 ]
 
