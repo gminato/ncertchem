@@ -1,0 +1,189 @@
+.root {
+  display: grid;
+  gap: var(--space-4);
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 340px), 1fr));
+  font-size: 15px;
+  color: var(--fg);
+  min-width: 0;
+}
+
+.panel {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  min-width: 0;
+  padding: var(--space-3);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  background: var(--surface-raised);
+}
+
+.panelTitle {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.subTitle {
+  margin: var(--space-2) 0 0;
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.controlRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+.plot {
+  display: block;
+  width: 100%;
+  max-width: 560px;
+  height: auto;
+  margin: 0 auto;
+}
+
+.frame {
+  fill: none;
+  stroke: var(--border);
+  stroke-width: 1;
+}
+
+.grid {
+  stroke: var(--border);
+  stroke-width: 0.6;
+  stroke-dasharray: 2 4;
+}
+
+.tick,
+.axisTitle,
+.label {
+  fill: var(--fg-muted);
+}
+
+.axisTitle {
+  fill: var(--fg);
+}
+
+.label {
+  fill: var(--fg);
+}
+
+.strongPoint {
+  fill: var(--accent);
+  stroke: var(--surface-raised);
+  stroke-width: 1.5;
+}
+
+.intercept {
+  fill: var(--surface-raised);
+  stroke: var(--accent);
+  stroke-width: 2;
+}
+
+.fitLine {
+  stroke: var(--accent);
+  stroke-width: 2;
+}
+
+.weakCurve {
+  fill: none;
+  stroke: var(--caution);
+  stroke-width: 2.5;
+  stroke-dasharray: 7 5;
+}
+
+.weakPoint {
+  fill: var(--surface-raised);
+  stroke: var(--caution);
+  stroke-width: 2;
+}
+
+.readout,
+.sum,
+.sumList {
+  margin: 0;
+  line-height: 1.5;
+}
+
+.sumList {
+  padding-left: var(--space-4);
+  display: grid;
+  gap: var(--space-1);
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  min-width: 0;
+}
+
+.fieldLabel {
+  font-size: 14px;
+  color: var(--fg-muted);
+}
+
+.result {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  padding: var(--space-3);
+  border-radius: var(--radius-md);
+  background: var(--accent-soft);
+}
+
+.formula {
+  margin: 0;
+  font-size: 22px;
+  font-weight: 600;
+}
+
+.muted {
+  font-size: 14px;
+  font-weight: 400;
+  color: var(--fg-muted);
+}
+
+.stack {
+  display: flex;
+  height: 18px;
+  overflow: hidden;
+  border-radius: 9px;
+  background: var(--border);
+}
+
+.segCation {
+  flex-grow: 0;
+  flex-shrink: 0;
+  background: var(--accent);
+  color: var(--surface);
+}
+
+.segAnion {
+  flex-grow: 0;
+  flex-shrink: 0;
+  background: var(--caution);
+  color: var(--surface);
+}
+
+.caution {
+  margin: 0;
+  color: var(--caution);
+  font-weight: 500;
+}
+
+/* The shared controls set 13.6 px; the Simulation's text floor is 14 px. */
+.field button,
+.field label,
+.field output {
+  font-size: 14px;
+}
+
+/* Readouts use the sans body face like the controls (one font across both panels). */
+.root .readout,
+.root .result p,
+.root .caution {
+  font-family: var(--font-sans);
+}

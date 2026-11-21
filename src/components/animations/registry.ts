@@ -139,6 +139,7 @@ import { DaniellOpposingVoltage } from './c12-unit2/daniell/DaniellOpposingVolta
 import { SheMeasurement } from './c12-unit2/she/SheMeasurement'
 import { NernstConcentration } from './c12-unit2/nernst/NernstConcentration'
 import { ConductivityMeasurement } from './c12-unit2/conductance/ConductivityMeasurement'
+import { DilutionConductivity } from './c12-unit2/dilution/DilutionConductivity'
 
 /**
  * Animations available to a Scrolly Animation, keyed by the `animation` prop.
@@ -288,6 +289,7 @@ export const animations = {
   'she-measurement': SheMeasurement,
   'nernst-concentration': NernstConcentration,
   'conductivity-measurement': ConductivityMeasurement,
+  'dilution-conductivity': DilutionConductivity,
 } as const
 
 export type AnimationName = keyof typeof animations
