@@ -9,6 +9,7 @@ import { Beaker, DcSource, Electrode, Ion, Wire, driftAlong, type ElectrodeMater
 import { FARADAY } from '@/lib/chem/ncert-c12-unit2-tables'
 import {
   PLATING_METALS,
+  formatHalfUp,
   electronsPerIon,
   platingMetal,
   platingReadout,
@@ -33,18 +34,14 @@ const SERIES_IDS: readonly [PlatingMetalId, PlatingMetalId] = ['Ag', 'Cu']
 const MATERIAL: Record<PlatingMetalId, ElectrodeMaterial> = { Ag: 'ag', Cu: 'cu', Ni: 'ni' }
 const OBJECT_MATERIAL: ElectrodeMaterial = 'fe'
 
-/** Anion that goes with each bath salt. */
-const ANION: Record<PlatingMetalId, { formula: string; charge: string }> = {
-  Ag: { formula: 'NO3', charge: '-' },
-  Cu: { formula: 'SO4', charge: '2-' },
-  Ni: { formula: 'SO4', charge: '2-' },
-}
+/** Solution tint for each bath: Cu²⁺ blue, Ni²⁺ green, Ag⁺ clear. */
+const SOLUTION_TINT: Record<PlatingMetalId, 'clear' | 'blue' | 'green'> = { Ag: 'clear', Cu: 'blue', Ni: 'green' }
 
-const CATION_LANE_Y = 280
-const ANION_LANE_Y = 312
+const CATION_LANE_Y = 300
+const ANION_LANE_Y = 332
 /** Ion labels at 20 px: their subscripts render at 0.72 of that, 14.4 px. */
 const ION_FONT = 20
-const ELECTRODE_TOP = 130
+const ELECTRODE_TOP = 150
 const ELECTRODE_LENGTH = 130
 const ELECTRODE_WIDTH = 18
 
@@ -136,10 +133,10 @@ export function ElectroplatingLab({ reducedMotion }: SimulationProps) {
 
   const cells =
     setup === 'single'
-      ? [{ metal, geom: SINGLE_GEOM, anion: ANION[metalId] }]
+      ? [{ metal, geom: SINGLE_GEOM }]
       : [
-          { metal: seriesMetals[0], geom: SERIES_GEOM[0], anion: ANION.Ag },
-          { metal: seriesMetals[1], geom: SERIES_GEOM[1], anion: ANION.Cu },
+          { metal: seriesMetals[0], geom: SERIES_GEOM[0] },
+          { metal: seriesMetals[1], geom: SERIES_GEOM[1] },
         ]
 
   const handlePlay = () => {
@@ -177,8 +174,8 @@ export function ElectroplatingLab({ reducedMotion }: SimulationProps) {
   ]
   const bridge: Point[] = [
     { x: cells[0].geom.cathodeX, y: ELECTRODE_TOP },
-    { x: cells[0].geom.cathodeX, y: 118 },
-    { x: cells[1]?.geom.anodeX ?? cells[0].geom.cathodeX, y: 118 },
+    { x: cells[0].geom.cathodeX, y: 142 },
+    { x: cells[1]?.geom.anodeX ?? cells[0].geom.cathodeX, y: 142 },
     { x: cells[1]?.geom.anodeX ?? cells[0].geom.cathodeX, y: ELECTRODE_TOP },
   ]
 
@@ -188,8 +185,25 @@ export function ElectroplatingLab({ reducedMotion }: SimulationProps) {
       ? `${current} for ${minutesText(elapsedS)} min: Q = ${NUM.format(single.charge)} C, ${sci(single.molesOfElectrons)} mol of electrons, ${NUM.format(single.massG)} g of ${metal.id} deposited.`
       : `Same charge through both cells: Q = ${NUM.format(series.charge)} C. Ag deposited ${NUM.format(series.masses[0])} g; Cu deposited ${NUM.format(series.masses[1])} g.`
 
+  // Announce on state changes, and at each whole minute or 10 % of the run, never per frame.
+  const runStep = `${Math.floor(elapsedS / 60)}-${Math.floor(progress * 10)}`
+  const announceKey = `${setup}|${metalId}|${running}|${runStep}`
+  const announced = useRef(false)
+  const [announcement, setAnnouncement] = useState('')
+  useEffect(() => {
+    if (!announced.current) {
+      announced.current = true
+      return
+    }
+    const state = progress >= 1 ? 'Run finished.' : running ? 'Run in progress.' : 'Run paused.'
+    setAnnouncement(`${state} ${summary}`)
+    // summary is read at the moment the key changes; the key alone decides when to speak.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [announceKey])
+
   return (
     <div className={styles.sim} ref={rootRef}>
+      <p role="status" aria-live="polite" className={styles.sr}>{announcement}</p>
       <div className={styles.controls}>
         <Segmented label="Setup" options={SETUP_OPTIONS} value={setup} onChange={setSetup} />
         {setup === 'single' && (
@@ -239,6 +253,7 @@ export function ElectroplatingLab({ reducedMotion }: SimulationProps) {
       </div>
 
       <div className={styles.stage}>
+        <div className={styles.scroller}>
         <svg
           viewBox="0 0 580 364"
           role="img"
@@ -261,11 +276,11 @@ export function ElectroplatingLab({ reducedMotion }: SimulationProps) {
           {cells.map((cell, i) => {
             const { geom } = cell
             const width = geom.bw
-            const tint = cell.metal.id === 'Cu' ? 'blue' : 'clear'
+            const tint = SOLUTION_TINT[cell.metal.id]
             const cathodeDeposit = MATERIAL[cell.metal.id]
             return (
               <g key={`${cell.metal.id}-${i}`}>
-                <Beaker x={geom.bx} y={150} width={width} height={180} level={0.82} tint={tint} />
+                <Beaker x={geom.bx} y={170} width={width} height={180} level={0.82} tint={tint} />
                 {driftAlong(
                   [
                     { x: geom.bx + 30, y: CATION_LANE_Y },
@@ -275,7 +290,7 @@ export function ElectroplatingLab({ reducedMotion }: SimulationProps) {
                   t,
                   true
                 ).map((p, k) => (
-                  <Ion key={`c${k}`} x={p.x} y={p.y} kind="cation" formula={cell.metal.id} charge={cell.metal.id === 'Ag' ? '+' : '2+'} fontSize={ION_FONT} />
+                  <Ion key={`c${k}`} x={p.x} y={p.y} kind="cation" formula={cell.metal.id} charge={cell.metal.charge} fontSize={ION_FONT} />
                 ))}
                 {driftAlong(
                   [
@@ -286,7 +301,7 @@ export function ElectroplatingLab({ reducedMotion }: SimulationProps) {
                   t,
                   false
                 ).map((p, k) => (
-                  <Ion key={`a${k}`} x={p.x} y={p.y} kind="anion" formula={cell.anion.formula} charge={cell.anion.charge} fontSize={ION_FONT} />
+                  <Ion key={`a${k}`} x={p.x} y={p.y} kind="anion" formula={cell.metal.anion.formula} charge={cell.metal.anion.charge} fontSize={ION_FONT} />
                 ))}
                 <Electrode
                   x={geom.anodeX}
@@ -313,9 +328,10 @@ export function ElectroplatingLab({ reducedMotion }: SimulationProps) {
             )
           })}
         </svg>
+        </div>
       </div>
 
-      <div className={styles.readouts} aria-live="polite">
+      <div className={styles.readouts} data-testid="sim-readout">
         <p className={styles.summary}>{summary}</p>
         {setup === 'single' ? (
           <dl className={styles.grid}>
@@ -340,7 +356,7 @@ export function ElectroplatingLab({ reducedMotion }: SimulationProps) {
             </div>
             {seriesMetals.map((m, i) => (
               <div className={styles.tile} key={m.id}>
-                <dt>{m.id} deposited (<span className="sym">M</span>/<span className="sym">n</span> = {(m.molarMass / electronsPerIon(m)).toFixed(2)})</dt>
+                <dt>{m.id} deposited (<span className="sym">M</span>/<span className="sym">n</span> = {formatHalfUp(m.molarMass / electronsPerIon(m), 2)})</dt>
                 <dd>{NUM.format(series.masses[i])} g</dd>
               </div>
             ))}

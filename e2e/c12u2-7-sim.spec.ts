@@ -69,8 +69,8 @@ for (const scheme of ['light', 'dark'] as const) {
     await expect(root.locator('svg').first()).toBeVisible()
 
     // Default state: a completed 10 min run at 0.50 A with silver.
-    await expect(root.locator('[aria-live="polite"]')).toContainText('Q = 300 C')
-    await expect(root.locator('[aria-live="polite"]')).toContainText('0.335 g')
+    await expect(root.getByTestId('sim-readout')).toContainText('Q = 300 C')
+    await expect(root.getByTestId('sim-readout')).toContainText('0.335 g')
     await expectGeometryRules(page)
     await root.screenshot({ path: `${SCREEN_DIR}/c12u2-7-sim-default-${scheme}.png` })
 
@@ -80,14 +80,14 @@ for (const scheme of ['light', 'dark'] as const) {
     await page.getByLabel('Time', { exact: true }).fill('30')
     await page.getByLabel('Run progress', { exact: true }).fill('50')
     // Run at 50%: 15 min elapsed, Q = 2 A × 900 s = 1800 C; m = (1800/96487) × (63.55/2) ≈ 0.593 g
-    await expect(root.locator('[aria-live="polite"]')).toContainText('Q = 1,800 C')
-    await expect(root.locator('[aria-live="polite"]')).toContainText('0.593 g')
+    await expect(root.getByTestId('sim-readout')).toContainText('Q = 1,800 C')
+    await expect(root.getByTestId('sim-readout')).toContainText('0.593 g')
     await expectGeometryRules(page)
     await root.screenshot({ path: `${SCREEN_DIR}/c12u2-7-sim-copper-half-${scheme}.png` })
 
     // Changed state 2: two cells in series, Ag⁺ and Cu²⁺ share one charge.
     await page.getByRole('radio', { name: 'Two cells in series' }).click()
-    await expect(root.locator('[aria-live="polite"]')).toContainText('Same charge through both cells')
+    await expect(root.getByTestId('sim-readout')).toContainText('Same charge through both cells')
     await expectGeometryRules(page)
     await root.screenshot({ path: `${SCREEN_DIR}/c12u2-7-sim-series-${scheme}.png` })
 
@@ -96,7 +96,10 @@ for (const scheme of ['light', 'dark'] as const) {
     await page.getByRole('button', { name: 'Play' }).click()
     // The run advances: the charge readout leaves zero and the button offers Pause.
     await expect(root.getByRole('button', { name: 'Pause' })).toBeVisible()
-    await expect(root.locator('[aria-live="polite"]')).not.toContainText('Q = 0 C', { timeout: 15_000 })
+    await expect(root.getByTestId('sim-readout')).not.toContainText('Q = 0 C', { timeout: 15_000 })
+    // The live status announces the start and the finish, not every frame.
+    const status = root.locator('[role="status"]')
+    await expect(status).toContainText('Run finished.', { timeout: 20_000 })
 
     expect(errors).toEqual([])
   })
@@ -108,6 +111,8 @@ test('electroplating lab does not scroll sideways on a phone', async ({ page }) 
   const errors = watchErrors(page)
   await page.goto(SIM)
   await expect(simRoot(page).locator('svg').first()).toBeVisible()
+  // Labels keep their 14 px size on a phone: the stage scrolls inside itself, the page does not.
+  await expectGeometryRules(page)
   const scrollWidth = await page.evaluate(() => document.documentElement.scrollWidth)
   expect(scrollWidth).toBeLessThanOrEqual(390)
   expect(errors).toEqual([])

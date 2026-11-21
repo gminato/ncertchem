@@ -21,11 +21,12 @@ export const METAL_FILL: Readonly<Record<ElectrodeMaterial, string>> = {
 }
 
 /** Solution tints. `clear` draws no colour, so the liquid reads as water. */
-export type SolutionTint = 'clear' | 'blue' | 'pink' | 'violet' | 'amber'
+export type SolutionTint = 'clear' | 'blue' | 'green' | 'pink' | 'violet' | 'amber'
 
 export const SOLUTION_FILL: Readonly<Record<SolutionTint, string | null>> = {
   clear: 'var(--sol-clear)',
   blue: 'var(--sol-cu)',
+  green: 'var(--sol-ni)',
   pink: 'var(--sol-pink)',
   violet: 'var(--sol-mno4)',
   amber: 'var(--ox)',

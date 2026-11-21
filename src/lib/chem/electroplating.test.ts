@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest'
 import { FARADAY } from './ncert-c12-unit2-tables'
-import { PLATING_METALS, electronsPerIon, platingMetal, platingReadout, seriesReadout } from './electroplating'
+import { PLATING_METALS, electronsPerIon, formatHalfUp, ionLabel, platingMetal, platingReadout, seriesReadout } from './electroplating'
+import { ELEMENTS } from './elements'
 
 describe('electroplating', () => {
   it('reads electron counts from Table 2.1', () => {
@@ -35,5 +36,27 @@ describe('electroplating', () => {
 
   it('rejects an unknown metal', () => {
     expect(() => platingMetal('Al' as 'Ag')).toThrow(RangeError)
+  })
+})
+
+describe('electroplating molar masses and rounding', () => {
+  it('takes molar masses from elements.ts', () => {
+    expect(platingMetal('Ag').molarMass).toBe(ELEMENTS.Ag.atomicMass)
+    expect(platingMetal('Cu').molarMass).toBe(ELEMENTS.Cu.atomicMass)
+    expect(platingMetal('Ni').molarMass).toBe(ELEMENTS.Ni.atomicMass)
+  })
+
+  it('derives ion labels and charges from the electron count', () => {
+    expect(ionLabel('Ag', 1)).toBe('Ag⁺')
+    expect(ionLabel('Cu', 2)).toBe('Cu²⁺')
+    expect(platingMetal('Ni').charge).toBe('2+')
+    expect(platingMetal('Ag').charge).toBe('+')
+  })
+
+  it('rounds the exact half 63.55 / 2 = 31.775 up to 31.78 (toFixed gives 31.77)', () => {
+    expect(formatHalfUp(31.775, 2)).toBe('31.78')
+    expect(formatHalfUp(63.55 / 2, 2)).toBe('31.78')
+    expect(formatHalfUp(2.345, 2)).toBe('2.35')
+    expect(formatHalfUp(107.87, 2)).toBe('107.87')
   })
 })
