@@ -16,9 +16,11 @@ Drop a copper spoon into silver nitrate solution and, within minutes, it wears a
 
 ## Two half-cells make one galvanic cell
 
-A galvanic cell turns the Gibbs energy of a spontaneous redox reaction into electrical work. Every such reaction splits into two halves: oxidation at one electrode and reduction at the other. Each half, a metal dipped in a solution of its own ions, is called a **half-cell**, or a **redox couple**. Join the two halves with an external wire that contains a voltmeter and a switch, and link the two solutions with a salt bridge to close the internal circuit.
+A galvanic cell turns the Gibbs energy of a spontaneous redox reaction into electrical work. Every such reaction splits into two halves: oxidation at one electrode and reduction at the other. Each half, a metal dipped in a solution of its own ions, is called a **half-cell**, or a **redox couple**. Join the two halves with an external wire that contains a voltmeter and a switch, and link the two solutions with a salt bridge to close the internal circuit. When both electrodes sit in one shared electrolyte, no salt bridge is needed, because the ions can move through the common liquid.
 
 Electrons leave the **anode**, where oxidation happens, and travel through the wire to the **cathode**, where reduction happens. Conventional current flows the other way. Inside the cell, the charge is carried by ions. That is why the anode is the negative terminal of a galvanic cell and the cathode the positive one.
+
+When no current is drawn, the potential difference between the two electrodes is the electromotive force (emf) of the cell. This is the value the standard potentials predict. Drawing a current lowers the reading, because the cell itself resists the flow of charge.
 
 ## Cell notation and the sign of the cell potential
 
@@ -52,7 +54,7 @@ $$
 \ce{2H+(aq, 1 M) + 2e- -> H2(g, 1 bar)} \qquad E^\circ = 0.00\ \text{V}
 $$
 
-Platinum is used because it is inert. It does not take part in the reaction. It only provides a surface where the hydrogen couple can reach equilibrium and carries electrons to the external circuit.
+Platinum is used because it is inert. It does not take part in the reaction. It only provides a surface where the hydrogen couple can reach equilibrium and carries electrons to the external circuit. The same inert platinum serves other gas electrodes, such as the bromine electrode, where the gas is bubbled over Pt in a solution of its ions.
 
 <Scrolly animation="she-measurement">
   <Step>
@@ -71,15 +73,25 @@ Platinum is used because it is inert. It does not take part in the reaction. It 
     **The electrochemical series:** Arrange the couples by standard electrode potential and a ladder appears. Fluorine sits at the top at $+2.87\ \text{V}$, the strongest oxidising agent in Table 2.1. Lithium sits at the bottom at $-3.05\ \text{V}$, the strongest reducing agent. Moving down the ladder, oxidising power falls and reducing power rises. Any metal whose couple lies below H⁺/H₂ can reduce hydrogen ions.
   </Step>
   <Step>
-    **Pairing any two couples:** Choose silver ($+0.80\ \text{V}$) and zinc ($-0.76\ \text{V}$). The couple with the higher $E^\circ$ is reduced, so silver is the cathode and zinc the anode. Then $E^\circ_{\text{cell}} = 0.80 - (-0.76) = 1.56\ \text{V}$. The cell is $\ce{Zn(s)|Zn^2+(aq)||Ag+(aq)|Ag(s)}$, and its overall reaction is $\ce{Zn(s) + 2Ag+(aq) -> Zn^2+(aq) + 2Ag(s)}$.
+    **Pairing any two couples:** Choose silver ($+0.80\ \text{V}$) and zinc ($-0.76\ \text{V}$). The couple with the higher $E^\circ$ is reduced, so silver is the cathode and zinc the anode. Then $E^\circ_{\text{cell}} = 0.80 - (-0.76) = 1.56\ \text{V}$. The cell is $\ce{Zn(s)|Zn^2+(aq)||Ag+(aq)|Ag(s)}$, and its overall reaction is
+
+$$
+\ce{Zn(s) + 2Ag+(aq) -> Zn^2+(aq) + 2Ag(s)}
+$$
   </Step>
 </Scrolly>
 
 ## Predicting reactions from the table
 
-Read the table as a list of who wins a contest for electrons. Copper sits above H⁺/H₂ at $+0.34\ \text{V}$, so hydrogen ions cannot oxidise copper under standard conditions. The reaction $\ce{Cu(s) + 2H+(aq) -> Cu^2+(aq) + H2(g)}$ would have $E^\circ_{\text{cell}} = 0 - 0.34 = -0.34\ \text{V}$, which is not spontaneous as written. Copper does dissolve in nitric acid, but there the oxidant is the nitrate ion, whose couple lies higher at $0.97\ \text{V}$.
+Read the table as a list of who wins a contest for electrons. Each entry is compared with the hydrogen couple. A positive $E^\circ$ means the reduced form, such as copper metal, is more stable than hydrogen gas, so it cannot reduce $\ce{H+}$. A negative $E^\circ$ means hydrogen gas is the more stable form, so the metal reduces $\ce{H+}$ readily. Copper sits above H⁺/H₂ at $+0.34\ \text{V}$, so hydrogen ions cannot oxidise copper under standard conditions. The reaction
 
-The same reasoning answers the spoon and the zinc pot from the opening. Silver ions are reduced more readily than copper ions, so $E^\circ_{\text{cell}} = 0.80 - 0.34 = +0.46\ \text{V}$ and copper plates out silver. Zinc and copper ions give $E^\circ_{\text{cell}} = 0.34 - (-0.76) = +1.10\ \text{V}$, so zinc is oxidised and a zinc pot holding copper sulphate would slowly dissolve.
+$$
+\ce{Cu(s) + 2H+(aq) -> Cu^2+(aq) + H2(g)}
+$$
+
+would have $E^\circ_{\text{cell}} = 0 - 0.34 = -0.34\ \text{V}$, which is not spontaneous as written. Copper does dissolve in nitric acid, but there the oxidant is the nitrate ion, whose couple lies higher at $0.97\ \text{V}$.
+
+The same reasoning explains the spoon from the opening. Silver ions have the higher $E^\circ$, so they are reduced and the copper is oxidised, which is why the silvery coat forms. For the zinc and copper pair, the copper couple sits higher in the table, so the cell potential is positive, $+1.10\ \text{V}$, and zinc is the metal that gets oxidised.
 
 Try any pair of couples on the bench below. It decides the anode and the cathode, writes the cell notation, balances the overall reaction and draws the ladder of both couples.
 
@@ -90,12 +102,12 @@ Try any pair of couples on the bench below. It decides the anode and the cathode
 <Check
   n={1}
   numeric
-  answer={0.46}
+  answer={0.91}
   tolerance={0.005}
   unit="V"
-  explanation="Ag⁺/Ag (E° = +0.80 V) is the cathode and Cu²⁺/Cu (E° = +0.34 V) is the anode, so E°cell = 0.80 − 0.34 = +0.46 V."
+  explanation="Fe³⁺/Fe²⁺ (E° = +0.77 V) is the cathode and Sn²⁺/Sn (E° = −0.14 V) is the anode, so E°cell = 0.77 − (−0.14) = +0.91 V."
 >
-Using Table 2.1, calculate the standard cell potential of a galvanic cell in which the cathode is $\ce{Ag+(aq)|Ag(s)}$ and the anode is $\ce{Cu(s)|Cu^2+(aq)}$.
+Using Table 2.1, calculate the standard cell potential of a galvanic cell in which the cathode is $\ce{Fe^3+(aq), Fe^2+(aq)|Pt(s)}$ and the anode is $\ce{Sn(s)|Sn^2+(aq)}$.
 </Check>
 
 <Check
@@ -115,15 +127,15 @@ Can dilute hydrochloric acid under standard conditions dissolve a copper rod by 
 <Check
   n={3}
   options={[
-    "Zinc is the anode and dissolves; copper deposits on the pot; E°cell = +1.10 V",
-    "Copper dissolves and zinc deposits; E°cell = −1.10 V",
-    "Nothing happens, because zinc is inert in every solution",
-    "Zinc is the cathode and copper is oxidised; E°cell = +1.10 V"
+    "Nickel is the anode and dissolves, and silver deposits; E°cell = +1.05 V",
+    "Silver dissolves and nickel deposits; E°cell = −1.05 V",
+    "Nothing happens, because nickel is inert in every solution",
+    "Nickel is the cathode and silver is oxidised; E°cell = +1.05 V"
   ]}
   answer={0}
-  explanation="E°(Cu²⁺/Cu) = +0.34 V and E°(Zn²⁺/Zn) = −0.76 V. Zinc is the anode with E°cell = 0.34 − (−0.76) = +1.10 V, so the zinc is oxidised while copper is reduced onto the surface."
+  explanation="E°(Ag⁺/Ag) = +0.80 V is higher than E°(Ni²⁺/Ni) = −0.25 V, so silver ions are reduced and nickel is oxidised at the anode. E°cell = 0.80 − (−0.25) = +1.05 V."
 >
-A zinc vessel is filled with copper sulphate solution and left for a day. Which description is correct under standard conditions?
+A nickel vessel is filled with silver nitrate solution and left for a day. Which description is correct under standard conditions?
 </Check>
 
 <KeyIdeas>

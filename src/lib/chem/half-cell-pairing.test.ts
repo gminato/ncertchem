@@ -5,6 +5,7 @@ import {
   balancedOverall,
   coupleById,
   pairCouples,
+  plainNotation,
   signed,
   unicodeLabel,
 } from './half-cell-pairing'
@@ -21,7 +22,8 @@ describe('couples from Table 2.1', () => {
     expect(coupleById('Cl2/Cl-')).toMatchObject({ kind: 'gas', electrode: 'pt', gasCe: 'Cl2' })
     expect(coupleById('H+/H2')).toMatchObject({ kind: 'gas', electrode: 'pt', gasCe: 'H2' })
     expect(coupleById('Fe3+/Fe2+')).toMatchObject({ kind: 'ion', electrode: 'pt' })
-    expect(coupleById('Au3+/Au').electrode).toBe('pt')
+    expect(coupleById('Au3+/Au').electrode).toBe('metal')
+    expect(coupleById('Li+/Li')).toMatchObject({ kind: 'metal', electrode: 'metal', electrodeLabel: 'Li' })
   })
 
   it('lists the charged solution species with their mhchem bodies', () => {
@@ -77,11 +79,35 @@ describe('pairCouples', () => {
     expect(p?.notation).toBe('Cu(s)|Cu^{2+}(aq)||Zn^{2+}(aq)|Zn(s)')
   })
 
-  it('writes a gas electrode as Pt with the gas in the notation', () => {
+  it('writes a gas anode with the inert Pt on the outer end', () => {
     const p = pairCouples(coupleById('H+/H2'), coupleById('Ag+/Ag'))
     expect(p?.cathode.id).toBe('Ag+/Ag')
     expect(p?.eCell).toBeCloseTo(0.8, 10)
-    expect(p?.notation).toBe('Pt|H2(g)|H^{+}(aq)||Ag^{+}(aq)|Ag(s)')
+    expect(p?.notation).toBe('Pt(s)|H2(g)|H^{+}(aq)||Ag^{+}(aq)|Ag(s)')
+  })
+
+  it('writes a gas cathode with the inert Pt on the outer end', () => {
+    const p = pairCouples(coupleById('H+/H2'), coupleById('Zn2+/Zn'))
+    expect(p?.cathode.id).toBe('H+/H2')
+    expect(p?.notation).toBe('Zn(s)|Zn^{2+}(aq)||H^{+}(aq)|H2(g)|Pt(s)')
+  })
+
+  it('writes a halogen cathode the same way', () => {
+    const p = pairCouples(coupleById('Cl2/Cl-'), coupleById('Zn2+/Zn'))
+    expect(p?.notation).toBe('Zn(s)|Zn^{2+}(aq)||Cl^{-}(aq)|Cl2(g)|Pt(s)')
+  })
+
+  it('writes an ion–ion cathode with Pt on the outer end and an ion–ion anode reduced form first', () => {
+    const cathode = pairCouples(coupleById('Fe3+/Fe2+'), coupleById('Zn2+/Zn'))
+    expect(cathode?.notation).toBe('Zn(s)|Zn^{2+}(aq)||Fe^{3+}(aq), Fe^{2+}(aq)|Pt(s)')
+    const anode = pairCouples(coupleById('Fe3+/Fe2+'), coupleById('Zn2+/Zn'), 'reversed')
+    expect(anode?.notation).toBe('Pt(s)|Fe^{2+}(aq), Fe^{3+}(aq)||Zn^{2+}(aq)|Zn(s)')
+  })
+
+  it('draws a metal with no vocabulary material with its own symbol, never Pt', () => {
+    const p = pairCouples(coupleById('Cu2+/Cu'), coupleById('Li+/Li'))
+    expect(p?.anode.electrode).toBe('metal')
+    expect(p?.notation).toBe('Li(s)|Li^{+}(aq)||Cu^{2+}(aq)|Cu(s)')
   })
 
   it('returns null for the same couple twice', () => {
@@ -92,6 +118,15 @@ describe('pairCouples', () => {
     const p = pairCouples(coupleById('O2/H2O'), coupleById('MnO2/Mn2+'))
     expect(p?.eCell).toBeCloseTo(0, 10)
     expect(p?.spontaneous).toBe(false)
+  })
+})
+
+describe('plainNotation', () => {
+  it('turns the mhchem notation into Unicode with a salt-bridge double bar', () => {
+    expect(plainNotation('Pt(s)|H2(g)|H^{+}(aq)||Ag^{+}(aq)|Ag(s)')).toBe('Pt(s) | H₂(g) | H⁺(aq) ‖ Ag⁺(aq) | Ag(s)')
+    expect(plainNotation('Zn(s)|Zn^{2+}(aq)||Fe^{3+}(aq), Fe^{2+}(aq)|Pt(s)')).toBe(
+      'Zn(s) | Zn²⁺(aq) ‖ Fe³⁺(aq), Fe²⁺(aq) | Pt(s)',
+    )
   })
 })
 

@@ -14,29 +14,17 @@ import {
   VocabDefs,
   Voltmeter,
   Wire,
-  type ElectrodeMaterial,
 } from '@/components/vocab'
 import {
   COUPLES,
   pairCouples,
+  plainNotation,
   signed,
   type CellPairing,
   type Couple,
   type CoupleKind,
 } from '@/lib/chem/half-cell-pairing'
 import styles from './half-cell-pairing.module.css'
-
-/** Metals the Visual Vocabulary has a material for. Any other metal is drawn in the neutral token. */
-const VOCAB_METAL: Readonly<Record<string, ElectrodeMaterial>> = {
-  Zn: 'zn',
-  Cu: 'cu',
-  Ag: 'ag',
-  Pb: 'pb',
-  Fe: 'fe',
-  Mg: 'mg',
-  Ni: 'ni',
-  Cd: 'cd',
-}
 
 /** Alkali and alkaline-earth metals react with water: their half-cells are drawn schematically. */
 const REACTS_WITH_WATER = new Set(['Li', 'Na', 'K', 'Ca', 'Mg', 'Ba', 'Sr'])
@@ -87,7 +75,6 @@ interface HalfProps {
 }
 
 function Half({ couple, cx, role, t }: HalfProps) {
-  const material: ElectrodeMaterial = VOCAB_METAL[couple.electrodeLabel] ?? 'pt'
   const roleColour = role === 'anode' ? 'var(--ox)' : 'var(--red)'
   const tagX = role === 'anode' ? cx - 16 : cx + 16
   return (
@@ -112,7 +99,7 @@ function Half({ couple, cx, role, t }: HalfProps) {
         width={16}
         height={170}
         rx={4}
-        fill={METAL_FILL[material]}
+        fill={METAL_FILL[couple.electrode]}
         stroke="var(--glass-wall)"
         strokeWidth={1.2}
       />
@@ -197,16 +184,23 @@ export function HalfCellPairingBench({ reducedMotion }: SimulationProps) {
             ))}
           </select>
         </label>
-        <Toggle
-          label="Swap the roles (show the reverse direction)"
-          checked={swapped}
-          onChange={setSwapped}
-        />
+        <div className={styles.toggleRow}>
+          <Toggle
+            label="Swap the roles (show the reverse direction)"
+            checked={swapped}
+            onChange={setSwapped}
+          />
+        </div>
       </div>
 
       {pairing && first && second ? (
         <>
-          <svg className={styles.stage} viewBox="0 0 600 490" role="img" aria-label={`Cell diagram: ${pairing.notation}`}>
+          <svg
+            className={styles.stage}
+            viewBox="0 0 600 490"
+            role="img"
+            aria-label={`Cell diagram: ${plainNotation(pairing.notation)}. Anode, oxidation: ${pairing.anode.label}. Cathode, reduction: ${pairing.cathode.label}.`}
+          >
             <VocabDefs idPrefix="hcp" />
             <Half couple={pairing.anode} cx={120} role="anode" t={t} />
             <Half couple={pairing.cathode} cx={480} role="cathode" t={t} />
@@ -235,8 +229,8 @@ export function HalfCellPairingBench({ reducedMotion }: SimulationProps) {
             <Wire
               corners={[
                 { x: 120, y: 150 },
-                { x: 120, y: 34 },
-                { x: 256, y: 34 },
+                { x: 120, y: 18 },
+                { x: 256, y: 18 },
                 { x: 256, y: 56 },
               ]}
               t={t}
@@ -246,8 +240,8 @@ export function HalfCellPairingBench({ reducedMotion }: SimulationProps) {
             <Wire
               corners={[
                 { x: 480, y: 150 },
-                { x: 480, y: 34 },
-                { x: 344, y: 34 },
+                { x: 480, y: 18 },
+                { x: 344, y: 18 },
                 { x: 344, y: 56 },
               ]}
               t={t}
@@ -261,6 +255,17 @@ export function HalfCellPairingBench({ reducedMotion }: SimulationProps) {
               Standard potentials E° / V (higher means a stronger oxidising agent)
             </text>
             <line x1={50} y1={440} x2={550} y2={440} stroke="var(--fg-muted)" strokeWidth={1.2} />
+            {COUPLES.map((c) => (
+              <line
+                key={c.id}
+                x1={ladderX(c.e0)}
+                x2={ladderX(c.e0)}
+                y1={434}
+                y2={446}
+                stroke="var(--fg-muted)"
+                strokeWidth={1}
+              />
+            ))}
             {[first, second].map((c) => {
               const role = c.id === pairing.cathode.id ? 'cathode' : 'anode'
               const x = ladderX(c.e0)

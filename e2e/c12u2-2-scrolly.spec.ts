@@ -61,6 +61,16 @@ test.describe('Class 12, Unit 2, Section 2.2: Galvanic cells and electrode poten
     expect(errors).toEqual([])
   })
 
+  test('the Section page does not scroll sideways at a 390 px phone width', async ({ browser }) => {
+    const context = await browser.newContext({ viewport: { width: 390, height: 844 } })
+    const page = await context.newPage()
+    await page.goto(`/class-12/unit-2/${SLUG}`)
+    await expect(page.getByRole('heading', { level: 1 })).toHaveText('Galvanic Cells and Electrode Potential')
+    const scrollWidth = await page.evaluate(() => document.documentElement.scrollWidth)
+    expect(scrollWidth, 'document scrollWidth at 390 px').toBeLessThanOrEqual(390)
+    await context.close()
+  })
+
   test('the Scrolly steps draw in light mode', async ({ browser }) => {
     await shotSteps(browser, 'light')
   })

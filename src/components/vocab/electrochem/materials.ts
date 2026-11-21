@@ -1,7 +1,7 @@
 /** Electrode materials and solution tints, each mapped to a token in tokens.css. */
 
 export const ELECTRODE_MATERIALS = [
-  'zn', 'cu', 'ag', 'pb', 'pbo2', 'pt', 'fe', 'mg', 'ni', 'cd', 'graphite',
+  'zn', 'cu', 'ag', 'pb', 'pbo2', 'pt', 'fe', 'mg', 'ni', 'cd', 'graphite', 'metal',
 ] as const
 
 export type ElectrodeMaterial = (typeof ELECTRODE_MATERIALS)[number]
@@ -18,6 +18,7 @@ export const METAL_FILL: Readonly<Record<ElectrodeMaterial, string>> = {
   ni: 'var(--metal-ni)',
   cd: 'var(--metal-cd)',
   graphite: 'var(--metal-graphite)',
+  metal: 'var(--metal-generic)',
 }
 
 /** Solution tints. `clear` draws no colour, so the liquid reads as water. */

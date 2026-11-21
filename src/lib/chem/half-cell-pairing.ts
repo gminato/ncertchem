@@ -2,7 +2,8 @@ import { standardCellPotential, cellNotation, type CellHalf } from './electroche
 import { NCERT_STANDARD_POTENTIALS, type StandardPotentialRow } from './ncert-c12-unit2-tables'
 
 /** Electrode materials the Visual Vocabulary can draw. */
-export type HalfMaterial = 'zn' | 'cu' | 'ag' | 'pb' | 'pt' | 'fe' | 'mg' | 'ni' | 'cd' | 'graphite'
+/** 'metal' is the neutral token for a metal the vocabulary has no material for (Li, Au, Sn...). */
+export type HalfMaterial = 'zn' | 'cu' | 'ag' | 'pb' | 'pt' | 'fe' | 'mg' | 'ni' | 'cd' | 'graphite' | 'metal'
 
 export type SolutionTint = 'clear' | 'blue' | 'pink' | 'violet' | 'amber'
 
@@ -29,7 +30,7 @@ export interface Couple {
   /** E° / V at 298 K. */
   readonly e0: number
   readonly kind: CoupleKind
-  /** Electrode material to draw. Metals not in the vocabulary fall back to 'pt'. */
+  /** Electrode material to draw. Metals not in the vocabulary use 'metal'; gas and ion couples use 'pt'. */
   readonly electrode: HalfMaterial
   /** Element symbol shown under the electrode, e.g. "Cu" or "Pt". */
   readonly electrodeLabel: string
@@ -144,7 +145,7 @@ function buildCouple(row: StandardPotentialRow): Couple {
   if (metalSymbol) kind = 'metal'
   else if (gas) kind = 'gas'
 
-  const electrode: HalfMaterial = metalSymbol ? (METAL_MATERIALS[metalSymbol] ?? 'pt') : 'pt'
+  const electrode: HalfMaterial = metalSymbol ? (METAL_MATERIALS[metalSymbol] ?? 'metal') : 'pt'
   const electrodeLabel = metalSymbol ?? 'Pt'
 
   const solution: SolutionIon[] = []
@@ -220,6 +221,21 @@ export function balancedOverall(cathode: Couple, anode: Couple): { ce: string; e
 }
 
 /**
+ * One half-cell for the notation. The inert Pt sits on the outer end: `Pt(s)|H₂(g)|H⁺(aq)`
+ * at the anode and `H⁺(aq)|H₂(g)|Pt(s)` at the cathode. Ion–ion couples reverse their
+ * solution order at the anode so the reduced form is written first, mirroring the cathode.
+ */
+function halfFor(couple: Couple, role: 'anode' | 'cathode'): CellHalf {
+  const species = couple.solution.map((ion) => ion.ce)
+  if (role === 'anode' && couple.kind === 'ion') species.reverse()
+  const solution = species.join(', ')
+  if (couple.kind === 'metal') return { electrode: `${couple.electrodeLabel}(s)`, solution }
+  if (couple.kind === 'ion') return { electrode: 'Pt(s)', solution }
+  const gas = `${couple.gasCe}(g)`
+  return { electrode: role === 'anode' ? `Pt(s)|${gas}` : `${gas}|Pt(s)`, solution }
+}
+
+/**
  * Pairs two couples. `spontaneous` puts the couple with the higher E° at the
  * cathode; `reversed` swaps the roles so the cell's E°cell is negative.
  * Returns null when both picks are the same couple.
@@ -237,17 +253,13 @@ export function pairCouples(
 
   const eCell = standardCellPotential(cathode.e0, anode.e0)
   const overall = balancedOverall(cathode, anode)
-  const halfOf = (c: Couple): CellHalf => ({
-    electrode: c.kind === 'metal' ? `${c.electrodeLabel}(s)` : c.kind === 'gas' ? `Pt|${c.gasCe}(g)` : 'Pt',
-    solution: c.solution.map((s) => s.ce).join(', '),
-  })
 
   return {
     cathode,
     anode,
     eCell,
     spontaneous: eCell > 0,
-    notation: cellNotation(halfOf(anode), halfOf(cathode)),
+    notation: cellNotation(halfFor(anode, 'anode'), halfFor(cathode, 'cathode')),
     overall: overall.ce,
     electrons: overall.electrons,
   }
@@ -257,4 +269,18 @@ export function pairCouples(
 export function signed(value: number, decimals = 2): string {
   const s = value.toFixed(decimals)
   return s.startsWith('-') ? `−${s.slice(1)}` : s
+}
+
+/**
+ * Turns a cell notation (mhchem body, as in `CellPairing.notation`) into Unicode for a
+ * screen reader or plain text: `Pt(s)|H2(g)|H^{+}(aq)||Ag^{+}(aq)|Ag(s)` becomes
+ * `Pt(s) | H₂(g) | H⁺(aq) ‖ Ag⁺(aq) | Ag(s)`.
+ */
+export function plainNotation(notation: string): string {
+  const sup = (text: string): string => [...text].map((ch) => SUPERSCRIPT[ch] ?? ch).join('')
+  return notation
+    .replace(/\^\{([^}]*)\}/g, (_m, body: string) => sup(body))
+    .replace(/\d+/g, (digits) => [...digits].map((d) => SUBSCRIPT[d]).join(''))
+    .replace(/\|\|/g, ' ‖ ')
+    .replace(/\|/g, ' | ')
 }
