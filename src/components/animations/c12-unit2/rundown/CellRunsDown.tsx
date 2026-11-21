@@ -4,12 +4,11 @@ import { useAmbientTime } from '@/components/animations/c12-unit1/ChemSvg'
 import { useTweenedNumber } from '@/components/animations/unit5/gibbs/useTweenedNumber'
 import { Beaker, Electrode, SaltBridge, Voltmeter, Wire } from '@/components/vocab'
 import {
-  DELTA_G_DANIELL_KJ,
-  E0_CU_AG,
   E0_DANIELL,
-  LOG_K_CU_AG,
+  E0_FE_NI,
   LOG_K_DANIELL,
-  N_F_DANIELL,
+  LOG_K_FE_NI,
+  N_F_TWO,
   clampRundownStep,
   getRundownStepState,
   sciText,
@@ -173,19 +172,19 @@ export function CellRunsDown({ step, reducedMotion }: CellRunsDownProps) {
           terminals={false}
         />
 
-        <text x={LEFT_X + BEAKER_W / 2} y={502} textAnchor="middle" fontSize={16} fill="var(--fg)">
+        <text x={LEFT_X + BEAKER_W / 2} y={502} textAnchor="middle" fontSize={23} fill="var(--fg)">
           ZnSO₄(aq)
         </text>
-        <text x={RIGHT_X + BEAKER_W / 2} y={502} textAnchor="middle" fontSize={16} fill="var(--fg)">
+        <text x={RIGHT_X + BEAKER_W / 2} y={502} textAnchor="middle" fontSize={23} fill="var(--fg)">
           CuSO₄(aq)
         </text>
-        <text x={LEFT_X + BEAKER_W / 2} y={524} textAnchor="middle" fontSize={15} fill="var(--fg-muted)">
+        <text x={LEFT_X + BEAKER_W / 2} y={524} textAnchor="middle" fontSize={23} fill="var(--fg-muted)">
           {state.zincNote}
         </text>
-        <text x={RIGHT_X + BEAKER_W / 2} y={524} textAnchor="middle" fontSize={15} fill="var(--fg-muted)">
+        <text x={RIGHT_X + BEAKER_W / 2} y={524} textAnchor="middle" fontSize={23} fill="var(--fg-muted)">
           {state.copperNote}
         </text>
-        <text x={290} y={552} textAnchor="middle" fontSize={17} fill="var(--accent)">
+        <text x={290} y={552} textAnchor="middle" fontSize={24} fill="var(--accent)">
           {state.readout}
         </text>
       </g>
@@ -196,51 +195,51 @@ export function CellRunsDown({ step, reducedMotion }: CellRunsDownProps) {
         {[0, 10, 20, 30, 40].map((v) => (
           <g key={v}>
             <line x1={logToX(v)} y1={AXIS_Y} x2={logToX(v)} y2={AXIS_Y + 7} stroke="var(--fg-muted)" strokeWidth={2} />
-            <text x={logToX(v)} y={AXIS_Y + 30} textAnchor="middle" fontSize={15} fill="var(--fg-muted)">
+            <text x={logToX(v)} y={AXIS_Y + 30} textAnchor="middle" fontSize={23} fill="var(--fg-muted)">
               {v}
             </text>
           </g>
         ))}
-        <text x={290} y={352} textAnchor="middle" fontSize={16} fill="var(--fg)">
+        <text x={290} y={352} textAnchor="middle" fontSize={23} fill="var(--fg)">
           log₁₀ K<tspan baselineShift="sub" fontSize="72%">c</tspan>
         </text>
 
-        <line x1={logToX(LOG_K_CU_AG)} y1={AXIS_Y} x2={logToX(LOG_K_CU_AG)} y2={232} stroke="var(--fg-muted)" strokeWidth={1.5} />
-        <circle cx={logToX(LOG_K_CU_AG)} cy={AXIS_Y} r={8} fill="var(--accent)" />
-        <text x={logToX(LOG_K_CU_AG)} y={200} textAnchor="middle" fontSize={16} fill="var(--fg)">
-          Cu–Ag couple
+        <line x1={logToX(LOG_K_FE_NI)} y1={AXIS_Y} x2={logToX(LOG_K_FE_NI)} y2={236} stroke="var(--fg-muted)" strokeWidth={1.5} />
+        <circle cx={logToX(LOG_K_FE_NI)} cy={AXIS_Y} r={8} fill="var(--accent)" />
+        <text x={logToX(LOG_K_FE_NI) - 4} y={206} textAnchor="start" fontSize={23} fill="var(--fg)">
+          Fe–Ni couple
         </text>
-        <text x={logToX(LOG_K_CU_AG)} y={222} textAnchor="middle" fontSize={15} fill="var(--fg-muted)">
-          {`E° = ${E0_CU_AG.toFixed(2)} V, log K = ${LOG_K_CU_AG.toFixed(1)}`}
+        <text x={logToX(LOG_K_FE_NI) - 4} y={230} textAnchor="start" fontSize={23} fill="var(--fg-muted)">
+          {`E° = ${E0_FE_NI.toFixed(2)} V, log K = ${LOG_K_FE_NI.toFixed(1)}`}
         </text>
 
         <line x1={logToX(LOG_K_DANIELL)} y1={AXIS_Y} x2={logToX(LOG_K_DANIELL)} y2={178} stroke="var(--fg-muted)" strokeWidth={1.5} />
         <circle cx={logToX(LOG_K_DANIELL)} cy={AXIS_Y} r={8} fill="var(--accent)" />
-        <text x={logToX(LOG_K_DANIELL) + 4} y={146} textAnchor="end" fontSize={16} fill="var(--fg)">
+        <text x={logToX(LOG_K_DANIELL) + 4} y={146} textAnchor="end" fontSize={23} fill="var(--fg)">
           Daniell cell
         </text>
-        <text x={logToX(LOG_K_DANIELL) + 4} y={168} textAnchor="end" fontSize={15} fill="var(--fg-muted)">
+        <text x={logToX(LOG_K_DANIELL) + 4} y={168} textAnchor="end" fontSize={23} fill="var(--fg-muted)">
           {`E° = ${E0_DANIELL.toFixed(2)} V, log K = ${LOG_K_DANIELL.toFixed(1)}`}
         </text>
 
-        <text x={290} y={410} textAnchor="middle" fontSize={17} fill="var(--fg)">
+        <text x={290} y={410} textAnchor="middle" fontSize={24} fill="var(--fg)">
           log₁₀ K = nE°cell / 0.059 V
         </text>
-        <text x={290} y={438} textAnchor="middle" fontSize={15} fill="var(--fg-muted)">
+        <text x={290} y={438} textAnchor="middle" fontSize={23} fill="var(--fg-muted)">
           A larger standard potential means a larger K
         </text>
       </g>
 
       {/* Energy bar: ΔrG° in kJ mol⁻¹, drawn downward from zero */}
       <g opacity={barTextOp} aria-hidden={state.scene !== 'bar'}>
-        <text x={290} y={70} textAnchor="middle" fontSize={24} fill="var(--fg)">
+        <text x={290} y={70} textAnchor="middle" fontSize={28} fill="var(--fg)">
           ΔrG° = −nFE°cell
         </text>
-        <text x={290} y={104} textAnchor="middle" fontSize={16} fill="var(--fg-muted)">
-          {`nF = ${sciText(N_F_DANIELL, 2)} C mol⁻¹ for n = 2`}
+        <text x={290} y={104} textAnchor="middle" fontSize={23} fill="var(--fg-muted)">
+          {`nF = ${sciText(N_F_TWO, 2)} C mol⁻¹ for n = 2`}
         </text>
-        <text x={290} y={128} textAnchor="middle" fontSize={16} fill="var(--fg-muted)">
-          {`E°cell = ${E0_DANIELL.toFixed(2)} V`}
+        <text x={290} y={128} textAnchor="middle" fontSize={23} fill="var(--fg-muted)">
+          {`E°cell = ${E0_FE_NI.toFixed(2)} V`}
         </text>
       </g>
 
@@ -248,18 +247,18 @@ export function CellRunsDown({ step, reducedMotion }: CellRunsDownProps) {
         {[0, -100, -200, -300, -400].map((kj) => (
           <g key={kj}>
             <line x1={68} y1={kjToY(kj)} x2={BAR_X + BAR_W + 40} y2={kjToY(kj)} stroke="var(--border)" strokeWidth={1} />
-            <text x={60} y={kjToY(kj) + 5} textAnchor="end" fontSize={15} fill="var(--fg-muted)">
+            <text x={58} y={kjToY(kj) + 7} textAnchor="end" fontSize={23} fill="var(--fg-muted)">
               {kj === 0 ? '0' : signed(kj, 0)}
             </text>
           </g>
         ))}
         <rect x={BAR_X} y={BAR_ZERO_Y} width={BAR_W} height={barHeight} rx={4} fill="var(--accent)" opacity={0.85} />
-        <text x={BAR_X + BAR_W + 14} y={barLabelY + 6} fontSize={18} fill="var(--fg)">
+        <text x={BAR_X + BAR_W + 14} y={barLabelY + 7} fontSize={24} fill="var(--fg)">
           {`${signed(deltaG, 2)} kJ mol⁻¹`}
         </text>
       </g>
 
-      {/* Doubled equation: two copies side by side, n goes 2 to 4, the voltmeter stays at 1.10 V */}
+      {/* Doubled equation: two copies side by side, n goes 2 to 4, the voltmeter stays at 0.19 V */}
       <g opacity={doubleOp} aria-hidden={state.scene !== 'double'}>
         <Voltmeter
           x={METER_X}
@@ -271,16 +270,22 @@ export function CellRunsDown({ step, reducedMotion }: CellRunsDownProps) {
           decimals={2}
           terminals={false}
         />
-        <text x={145} y={190} textAnchor="middle" fontSize={16} fill="var(--fg)">
-          Zn + Cu²⁺ → Zn²⁺ + Cu
+        <text x={100} y={176} textAnchor="middle" fontSize={23} fill="var(--fg)">
+          Fe + Ni²⁺
         </text>
-        <text x={145} y={214} textAnchor="middle" fontSize={16} fill="var(--accent)">
+        <text x={100} y={200} textAnchor="middle" fontSize={23} fill="var(--fg)">
+          → Fe²⁺ + Ni
+        </text>
+        <text x={100} y={230} textAnchor="middle" fontSize={23} fill="var(--accent)">
           n = 2
         </text>
-        <text x={435} y={190} textAnchor="middle" fontSize={16} fill="var(--fg)">
-          2Zn + 2Cu²⁺ → 2Zn²⁺ + 2Cu
+        <text x={480} y={176} textAnchor="middle" fontSize={23} fill="var(--fg)">
+          2Fe + 2Ni²⁺
         </text>
-        <text x={435} y={214} textAnchor="middle" fontSize={16} fill="var(--accent)">
+        <text x={480} y={200} textAnchor="middle" fontSize={23} fill="var(--fg)">
+          → 2Fe²⁺ + 2Ni
+        </text>
+        <text x={480} y={230} textAnchor="middle" fontSize={23} fill="var(--accent)">
           n = 4
         </text>
       </g>

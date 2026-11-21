@@ -44,14 +44,15 @@ function standardPotential(id: string): number {
 const N_DANIELL = 2
 /** Daniell cell: Zn(s) | Zn²⁺ || Cu²⁺ | Cu(s), E°cell from Table 2.1. */
 export const E0_DANIELL = standardCellPotential(standardPotential('Cu2+/Cu'), standardPotential('Zn2+/Zn'))
-/** Cu(s) + 2Ag⁺ → Cu²⁺ + 2Ag(s), used as the second example. */
-export const E0_CU_AG = standardCellPotential(standardPotential('Ag+/Ag'), standardPotential('Cu2+/Cu'))
+/** Fe(s) + Ni²⁺ → Fe²⁺ + Ni(s), the second example (n = 2). */
+export const E0_FE_NI = standardCellPotential(standardPotential('Ni2+/Ni'), standardPotential('Fe2+/Fe'))
 export const LOG_K_DANIELL = log10KFromE(N_DANIELL, E0_DANIELL)
-export const LOG_K_CU_AG = log10KFromE(N_DANIELL, E0_CU_AG)
+export const LOG_K_FE_NI = log10KFromE(N_DANIELL, E0_FE_NI)
 export const K_DANIELL = equilibriumConstantFromE(N_DANIELL, E0_DANIELL)
 export const DELTA_G_DANIELL_KJ = gibbsFromCellKJ(N_DANIELL, E0_DANIELL)
-export const DELTA_G_DANIELL_DOUBLED_KJ = gibbsFromCellKJ(2 * N_DANIELL, E0_DANIELL)
-export const N_F_DANIELL = N_DANIELL * FARADAY
+export const DELTA_G_FE_NI_KJ = gibbsFromCellKJ(N_DANIELL, E0_FE_NI)
+export const DELTA_G_FE_NI_DOUBLED_KJ = gibbsFromCellKJ(2 * N_DANIELL, E0_FE_NI)
+export const N_F_TWO = N_DANIELL * FARADAY
 
 /** Voltages closer to zero than this are reported as exactly zero (float noise at equilibrium). */
 function tidy(v: number): number {
@@ -149,14 +150,14 @@ export const RUNDOWN_STEPS: readonly RundownStepState[] = [
     readout: '',
     deltaGKJ: DELTA_G_DANIELL_KJ,
     ariaLabel:
-      'A logarithmic scale of log K from 0 to 40. The Daniell cell, with standard potential 1.10 volts, sits at log K of about 37.3. The copper and silver couple, with 0.46 volts, sits at about 15.6.',
+      'A logarithmic scale of log K from 0 to 40. The Daniell cell, with standard potential 1.10 volts, sits at log K of about 37.3. The iron and nickel couple, with 0.19 volts, sits at about 6.4.',
   },
   {
     index: 4,
     id: 'energy-bar',
     scene: 'bar',
     q: K_DANIELL,
-    cellV: E0_DANIELL,
+    cellV: E0_FE_NI,
     zincProgress: 1,
     copperProgress: 1,
     blueFraction: 0.06,
@@ -164,16 +165,16 @@ export const RUNDOWN_STEPS: readonly RundownStepState[] = [
     zincNote: '',
     copperNote: '',
     readout: '',
-    deltaGKJ: DELTA_G_DANIELL_KJ,
+    deltaGKJ: DELTA_G_FE_NI_KJ,
     ariaLabel:
-      'An energy bar drawn downward from zero to the standard Gibbs energy change of the Daniell reaction, minus 212.27 kilojoules per mole, with the formula delta G standard equals minus n F E standard.',
+      'An energy bar drawn downward from zero to the standard Gibbs energy change of the iron and nickel reaction, minus 36.67 kilojoules per mole, with the formula delta G standard equals minus n F E standard.',
   },
   {
     index: 5,
     id: 'doubled',
     scene: 'double',
     q: K_DANIELL,
-    cellV: E0_DANIELL,
+    cellV: E0_FE_NI,
     zincProgress: 1,
     copperProgress: 1,
     blueFraction: 0.06,
@@ -181,9 +182,9 @@ export const RUNDOWN_STEPS: readonly RundownStepState[] = [
     zincNote: '',
     copperNote: '',
     readout: '',
-    deltaGKJ: DELTA_G_DANIELL_DOUBLED_KJ,
+    deltaGKJ: DELTA_G_FE_NI_DOUBLED_KJ,
     ariaLabel:
-      'The reaction equation is doubled, so n rises from 2 to 4. The voltmeter still reads 1.10 volts, while the energy bar doubles to minus 424.5 kilojoules per mole.',
+      'The reaction equation is doubled, so n rises from 2 to 4. The voltmeter still reads 0.19 volts, while the energy bar doubles to minus 73.33 kilojoules per mole.',
   },
 ]
 

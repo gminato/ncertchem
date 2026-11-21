@@ -34,7 +34,7 @@ const VERDICT_TEXT: Record<Verdict, string> = {
 /** Formats a signed number with a true minus sign and no "−0". */
 function signed(value: number, decimals: number): string {
   const tiny = Math.abs(value) < 0.5 * 10 ** -decimals
-  return (tiny ? 0 : value).toFixed(decimals).replace('-', MINUS)
+  return (tiny ? 0 : value).toFixed(decimals).replace(/-/g, MINUS)
 }
 
 /** Clamps a label's x so a centred text never runs past the viewBox. */
@@ -69,7 +69,7 @@ function summaryText(preset: ConverterPreset, thermo: PresetThermo, progress: nu
   const status =
     progress >= 100
       ? 'Equilibrium reached: E = 0, ΔrG = 0, Q = K.'
-      : `Progress ${progress}%: E = ${signed(eNow, 3)} V.`
+      : `Discharge ${progress}%: E = ${signed(eNow, 3)} V.`
   return [
     `${preset.label}. n = ${thermo.n}. E°cell = ${signed(thermo.eCell, 2)} V.`,
     `ΔrG° = ${signed(thermo.gibbsKJ, 1)} kJ mol⁻¹. K = ${scale.mantissa} × 10^${signed(scale.exponent, 0)}, log K = ${signed(thermo.log10K, 2)}.`,
@@ -134,7 +134,7 @@ export function EGKConverter({ reducedMotion }: SimulationProps) {
             onChange={setTempK}
           />
           <Slider
-            label="Progress to equilibrium"
+            label="Discharge"
             value={progress}
             min={0}
             max={100}
@@ -144,6 +144,7 @@ export function EGKConverter({ reducedMotion }: SimulationProps) {
             onChange={setProgress}
           />
         </div>
+        <p className={styles.small}>ΔrG° is taken at 298 K and held fixed as T changes; only K moves with T, through RT.</p>
       </div>
 
       <div className={styles.equation} aria-label="Balanced cell reaction">
@@ -229,7 +230,7 @@ export function EGKConverter({ reducedMotion }: SimulationProps) {
           <h3 className={styles.cardTitle}>ΔrG°</h3>
           <p className={styles.big}>{signed(thermo.gibbsKJ, 1)} kJ mol⁻¹</p>
           <p className={styles.small}>
-            = −{thermo.n} × {FARADAY_TEXT} × {signed(thermo.eCell, 2)} J mol⁻¹
+            = {MINUS}{thermo.n} × {FARADAY_TEXT} × ({signed(thermo.eCell, 2)}) ÷ 1000 kJ mol⁻¹
           </p>
         </div>
         <div className={styles.card}>
