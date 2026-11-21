@@ -158,12 +158,14 @@
   flex-grow: 0;
   flex-shrink: 0;
   background: var(--accent);
+  color: var(--surface);
 }
 
 .segAnion {
   flex-grow: 0;
   flex-shrink: 0;
   background: var(--caution);
+  color: var(--surface);
 }
 
 .caution {

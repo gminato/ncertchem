@@ -42,7 +42,7 @@ export const ACETIC_LAMBDA0: number = lambda0Electrolyte([
 ])
 
 /** Illustrative measured molar conductivity of acetic acid. */
-export const ACETIC_MEASURED = { c: 0.02, lambdaScm2: 9.6 } as const
+export const ACETIC_MEASURED = { c: 0.02, lambdaScm2: 11.6 } as const
 /** α = Λm / Λ°m at the measured point. */
 export const ACETIC_ALPHA: number = degreeOfDissociation(ACETIC_MEASURED.lambdaScm2, ACETIC_LAMBDA0)
 /** Ka = cα² / (1 − α) at the measured point. */

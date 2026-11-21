@@ -40,7 +40,7 @@ describe('variation of conductivity values (Section 2.4.2)', () => {
 
   it('derives α and Ka from the illustrative measured point', () => {
     expect(ACETIC_MEASURED.c).toBe(0.02)
-    expect(ACETIC_ALPHA).toBeCloseTo(0.0246, 4)
-    expect(ACETIC_KA).toBeCloseTo(1.24e-5, 7)
+    expect(ACETIC_ALPHA).toBeCloseTo(0.0297, 4)
+    expect(ACETIC_KA).toBeCloseTo(1.82e-5, 7)
   })
 })

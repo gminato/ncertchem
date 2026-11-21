@@ -54,3 +54,33 @@ test('Section 2.4.2 page has display maths and does not scroll sideways at 390 Ã
   const scrollWidth = await page.evaluate(() => document.documentElement.scrollWidth)
   expect(scrollWidth).toBeLessThanOrEqual(390)
 })
+
+test('Scrolly SVG labels render at least 14 px on a 390 px phone, in every visible Step', async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 })
+  await page.goto(`/class-12/unit-2/${SLUG}`)
+  const scrolly = page.locator(`[data-animation="${ANIMATION}"]`)
+  const steps = scrolly.locator('[data-scrolly-step]')
+  await expect(steps).toHaveCount(STEP_COUNT)
+  const svg = scrolly.locator('svg').first()
+  for (let k = 0; k < STEP_COUNT; k++) {
+    await steps.nth(k).scrollIntoViewIfNeeded()
+    await page.waitForTimeout(1400)
+    const smallest = await svg.evaluate((el) => {
+      const svgEl = el as SVGSVGElement
+      const scale = svgEl.getBoundingClientRect().width / svgEl.viewBox.baseVal.width
+      let min = Number.POSITIVE_INFINITY
+      for (const node of Array.from(svgEl.querySelectorAll('text'))) {
+        // Skip text inside a hidden scene (its group fades to opacity 0).
+        let hidden = false
+        for (let p: Element | null = node; p && p !== svgEl; p = p.parentElement) {
+          const op = p.getAttribute('opacity')
+          if (op !== null && Number(op) < 0.05) hidden = true
+        }
+        if (hidden || !node.textContent?.trim()) continue
+        min = Math.min(min, parseFloat(getComputedStyle(node).fontSize) * scale)
+      }
+      return min
+    })
+    expect(smallest, `Step ${k + 1} smallest label in CSS px`).toBeGreaterThanOrEqual(14)
+  }
+})

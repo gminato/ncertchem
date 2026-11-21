@@ -2,27 +2,32 @@
 
 import { Sub, useAmbientTime } from '@/components/animations/c12-unit1/ChemSvg'
 import { useTweenedNumber } from '@/components/animations/unit5/gibbs/useTweenedNumber'
-import { Beaker, ConductivityCell, Ion } from '@/components/vocab'
+import { Beaker, ConductivityCell } from '@/components/vocab'
 import {
+  ACETATE_LAMBDA0,
+  ACETIC_ALPHA,
   ACETIC_C,
+  ACETIC_KA,
   ACETIC_LAMBDA0,
   ACETIC_LAMBDA_MEASURED,
-  ACETIC_ALPHA,
-  ACETIC_KA,
+  ACETIC_ONE_IN,
   C_CONC,
   C_DILUTE,
-  CACL2_BARS,
   DILUTION_STEPS,
+  H_PLUS_LAMBDA0,
   KAPPA_CONC,
   KAPPA_DILUTE,
-  KCL_FIT,
+  KCL_INTERCEPT,
   KCL_POINTS,
+  KCL_SLOPE_A,
   LAMBDA_CONC,
   LAMBDA_DILUTE,
-  MGSO4_BARS,
+  MGCL2_BARS,
+  VOLUME_CONC_CM3,
+  VOLUME_DILUTE_CM3,
   aceticMolarConductivity,
   clampDilutionStep,
-  litresPerMole,
+  groupThousands,
   sciNotation,
   signed,
   type ChartDomain,
@@ -34,39 +39,41 @@ export interface DilutionConductivityProps {
   reducedMotion: boolean
 }
 
-const VIEW_W = 580
-const VIEW_H = 520
+/* The SVG is 400 units wide and renders at 340 px on a 390 px phone, so every label is 17 units:
+ * 17 × 340 / 400 = 14.5 px. Keep every text element at this size (the e2e asserts it). */
+const VIEW_W = 400
+const VIEW_H = 440
+const LABEL = 17
 
 /* Chart frame, in viewBox units. */
-const PX0 = 96
-const PX1 = 548
-const PY0 = 50
-const PY1 = 430
+const PX0 = 66
+const PX1 = 384
+const PY0 = 36
+const PY1 = 372
 
 /** Domain of the last chart step; used to hold the axes steady while the chart fades out. */
-const HOLD_DOMAIN: ChartDomain = DILUTION_STEPS[2]?.chart ?? { xMax: 0.036, yMin: 140, yMax: 152 }
+const HOLD_DOMAIN: ChartDomain = DILUTION_STEPS[3]?.chart ?? { xMax: 0.36, yMin: 0, yMax: 400 }
 
-/** Ion positions inside the 1 cm cube (centres), ten in all. */
+/** Cell 1 cm × 1 cm: the drawn box and ion centres as fractions of its width and height. */
+const CELL = { x: 70, y: 30, w: 220, h: 170 }
 const CUBE_IONS: readonly (readonly [number, number])[] = [
-  [110, 182],
-  [215, 182],
-  [160, 226],
-  [265, 226],
-  [110, 270],
-  [215, 270],
-  [160, 314],
-  [265, 314],
-  [110, 340],
-  [215, 340],
+  [0.22, 0.22],
+  [0.5, 0.22],
+  [0.78, 0.22],
+  [0.36, 0.45],
+  [0.64, 0.45],
+  [0.22, 0.66],
+  [0.5, 0.66],
+  [0.78, 0.66],
+  [0.36, 0.86],
+  [0.64, 0.86],
 ]
 
 /** Solute units (one mole, twelve units) placed in each beaker. */
 const MOLE_UNITS = 12
 
-/** Maps the cube's ion layout (drawn for a 300-wide cell at x 40) onto the 260-wide cell at x 90. */
-function cubeX(x: number): number {
-  return 90 + (x - 40) * (260 / 300)
-}
+/** Molecules drawn in the acetic beaker: one ionised among ACETIC_ONE_IN. */
+const MOLECULE_COUNT = ACETIC_ONE_IN
 
 function unitPosition(i: number, cx: number, cy: number, sx: number, sy: number): readonly [number, number] {
   const r = Math.sqrt((i + 0.5) / MOLE_UNITS)
@@ -111,24 +118,25 @@ export function DilutionConductivity({ step, reducedMotion }: DilutionConductivi
   const xs = (x: number) => PX0 + (x / xMax) * (PX1 - PX0)
   const ys = (y: number) => PY1 - ((y - yMin) / (yMax - yMin)) * (PY1 - PY0)
 
-  /* ---- Scene 1: the 1 cm cube ---- */
+  /* ---- Scene 1: the 1 cm cube. The Before bar is full scale; the After bar shows the fall. ---- */
   const kappaLive = KAPPA_CONC + (KAPPA_DILUTE - KAPPA_CONC) * dilute
   const ionsAvailable = 10 - 8 * dilute
-  const barW = 170
+  const barX = 20
+  const barW = 340
   const barScale = (kappa: number) => (barW * kappa) / KAPPA_CONC
 
-  /* ---- Scene 2: the volume holding one mole ---- */
-  const beakerA = { x: 40, y: 130, w: 190, h: 230 }
-  const beakerB = { x: 330, y: 100, w: 220, h: 270 }
+  /* ---- Scene 2: the volume holding one mole (beakers not to scale) ---- */
+  const beakerA = { x: 30, y: 40, w: 150, h: 190 }
+  const beakerB = { x: 210, y: 22, w: 170, h: 208 }
   const unitsA = Array.from({ length: MOLE_UNITS }, (_, i) => unitPosition(i, 0.5, 0.62, 0.24, 0.2))
   const unitsB = Array.from({ length: MOLE_UNITS }, (_, i) => unitPosition(i, 0.5, 0.6, 0.42, 0.34))
 
-  /* ---- Scene 3: the chart ---- */
-  const xTickStep = xMax > 0.06 ? 0.04 : 0.01
+  /* ---- Scene 3 and 4: the chart ---- */
+  const xTickStep = xMax > 0.06 ? 0.1 : 0.01
   const yTickStep = yMax - yMin > 100 ? 100 : 4
   const xTicks = niceTicks(0, xMax, xTickStep)
   const yTicks = niceTicks(yMin, yMax, yTickStep)
-  const linePts = [0, xMax].map((x) => [xs(x), ys(KCL_FIT.lambda0Scm2 - KCL_FIT.A * x)] as const)
+  const linePts = [0, xMax].map((x) => [xs(x), ys(KCL_INTERCEPT - KCL_SLOPE_A * x)] as const)
   const aceticSamples = Array.from({ length: 70 }, (_, i) => {
     const x = 0.0032 + ((xMax - 0.0032) * i) / 69
     return [x, aceticMolarConductivity(x * x)] as const
@@ -139,20 +147,25 @@ export function DilutionConductivity({ step, reducedMotion }: DilutionConductivi
   const aceticLabelC = 0.0025
   const aceticLabelX = Math.sqrt(aceticLabelC)
   const aceticLabelY = aceticMolarConductivity(aceticLabelC)
+  const kclLabelX = 0.28
+  const kclLabelY = KCL_INTERCEPT - KCL_SLOPE_A * kclLabelX
 
-  /* ---- Scene 4: stacked ion bars ---- */
-  const k4 = 0.95
-  const X0 = 170
+  /* ---- Scene 4: stacked ion bars (MgCl₂ only) ---- */
+  const barRowX = 20
+  const barRowW = 340
+  const k4 = barRowW / MGCL2_BARS.total
+  const mgW = MGCL2_BARS.mg * k4
+  const clW = MGCL2_BARS.cl * k4
 
-  /* ---- Scene 5: degree of dissociation ---- */
-  const k5 = 0.717
-  const A0 = 250
-  const acidBarTotal = ACETIC_LAMBDA0 * k5
-  const fracPx = ACETIC_LAMBDA_MEASURED * k5
+  /* ---- Scene 5: degree of dissociation (illustrative point) ---- */
+  const k5 = 340 / ACETIC_LAMBDA0
+  const hW = H_PLUS_LAMBDA0 * k5
+  const acW = ACETATE_LAMBDA0 * k5
+  const alphaW = barRowW * ACETIC_ALPHA
   const dissociatedIndex = 7
-  const molecules = Array.from({ length: 24 }, (_, i) => ({
-    x: 62 + (i % 6) * 26,
-    y: 186 + Math.floor(i / 6) * 34,
+  const molecules = Array.from({ length: MOLECULE_COUNT }, (_, i) => ({
+    x: 40 + (i % 6) * 26,
+    y: 74 + Math.floor(i / 6) * 22,
   }))
 
   return (
@@ -161,60 +174,59 @@ export function DilutionConductivity({ step, reducedMotion }: DilutionConductivi
       role="img"
       aria-label={spec.ariaLabel}
       width="100%"
-      style={{ display: 'block', maxWidth: VIEW_W }}
+      style={{ display: 'block', maxWidth: 480 }}
       fontFamily="var(--font-sans)"
       fill="var(--fg)"
+      fontSize={LABEL}
     >
       {/* Scene 1: the cube */}
       <g opacity={cubeO} aria-hidden={cubeO < 0.05}>
-        <ConductivityCell
-          x={90}
-          y={120}
-          width={260}
-          height={250}
-          tint="clear"
-          lengthLabel="l = 1 cm"
-          areaLabel="A = 1 cm²"
-          dimensions
-        />
-        {CUBE_IONS.map(([x0, y], i) => {
-          const x = cubeX(x0)
+        <ConductivityCell x={CELL.x} y={CELL.y} width={CELL.w} height={CELL.h} tint="clear" dimensions={false} />
+        {CUBE_IONS.map(([fx, fy], i) => {
           const dx = reducedMotion ? 0 : 2.5 * Math.sin(t * 1.4 + i * 1.7)
           const dy = reducedMotion ? 0 : 2.5 * Math.cos(t * 1.1 + i)
           return (
             <g key={i} opacity={ionCountOpacity(ionsAvailable, i)}>
-              <Ion
-                x={x + dx}
-                y={y + dy}
-                kind={i % 2 === 0 ? 'cation' : 'anion'}
-                formula={i % 2 === 0 ? 'K' : 'Cl'}
-                charge={i % 2 === 0 ? '+' : '-'}
-                fontSize={14}
+              <circle
+                cx={CELL.x + fx * CELL.w + dx}
+                cy={CELL.y + fy * CELL.h + dy}
+                r={14}
+                fill={i % 2 === 0 ? 'var(--ion-cation)' : 'var(--ion-anion)'}
+                stroke="var(--surface)"
+                strokeWidth={1.5}
               />
+              <text
+                x={CELL.x + fx * CELL.w + dx}
+                y={CELL.y + fy * CELL.h + dy + 6}
+                textAnchor="middle"
+                fill="var(--surface)"
+                fontWeight={600}
+              >
+                {i % 2 === 0 ? 'K⁺' : 'Cl⁻'}
+              </text>
             </g>
           )
         })}
-        <text x={380} y={150} fontSize={15} fill="var(--fg-muted)">
-          Before: 0.000989 mol L⁻¹
+        <text x={200} y={230} textAnchor="middle" fill="var(--fg-muted)">
+          Cell: l = 1 cm, A = 1 cm²
         </text>
-        <rect x={380} y={162} width={barW} height={24} rx={4} fill="none" stroke="var(--fg-subtle)" strokeDasharray="5 4" />
-        <rect x={380} y={162} width={barScale(KAPPA_CONC)} height={24} rx={4} fill="var(--fg-subtle)" fillOpacity={0.35} />
-        <text x={380} y={206} fontSize={15}>
+        <text x={barX} y={266} fill="var(--fg-muted)">
+          Before: c = {C_CONC.toFixed(2)} mol L⁻¹
+        </text>
+        <rect x={barX} y={276} width={barW} height={22} rx={4} fill="var(--fg-subtle)" fillOpacity={0.35} stroke="var(--fg-subtle)" />
+        <text x={barX} y={318}>
           κ = {sciNotation(KAPPA_CONC)} S cm⁻¹
         </text>
-        <text x={380} y={262} fontSize={15} fill="var(--fg-muted)">
-          After five-fold dilution
+        <text x={barX} y={346} fill="var(--fg-muted)">
+          After: c = {C_DILUTE.toFixed(3)} mol L⁻¹
         </text>
-        <rect x={380} y={274} width={barW} height={24} rx={4} fill="none" stroke="var(--border)" />
-        <rect x={380} y={274} width={Math.max(2, barScale(kappaLive))} height={24} rx={4} fill="var(--current)" />
-        <text x={380} y={318} fontSize={15}>
+        <rect x={barX} y={356} width={barW} height={22} rx={4} fill="none" stroke="var(--border)" />
+        <rect x={barX} y={356} width={Math.max(2, barScale(kappaLive))} height={22} rx={4} fill="var(--current)" />
+        <text x={barX} y={398}>
           κ = {sciNotation(kappaLive)} S cm⁻¹
         </text>
-        <text x={380} y={354} fontSize={14} fill="var(--fg-muted)">
-          Fewer ions per cm³
-        </text>
-        <text x={190} y={404} textAnchor="middle" fontSize={15} fill="var(--fg-muted)">
-          KCl(aq) between two electrodes
+        <text x={barX} y={424} fill="var(--fg-subtle)">
+          Full bar = {sciNotation(KAPPA_CONC)} S cm⁻¹
         </text>
       </g>
 
@@ -240,23 +252,32 @@ export function DilutionConductivity({ step, reducedMotion }: DilutionConductivi
             fill="var(--ion-cation)"
           />
         ))}
-        <text x={135} y={398} textAnchor="middle" fontSize={15}>
-          V = {Math.floor(litresPerMole(C_CONC))} L
+        <text x={beakerA.x + beakerA.w / 2} y={262} textAnchor="middle">
+          c = {C_CONC.toFixed(2)}
         </text>
-        <text x={135} y={422} textAnchor="middle" fontSize={15}>
-          Λm = {LAMBDA_CONC.toFixed(2)}
+        <text x={beakerA.x + beakerA.w / 2} y={286} textAnchor="middle">
+          V = {groupThousands(VOLUME_CONC_CM3)}
         </text>
-        <text x={440} y={398} textAnchor="middle" fontSize={15}>
-          V = {Math.floor(litresPerMole(C_DILUTE))} L
+        <text x={beakerA.x + beakerA.w / 2} y={310} textAnchor="middle">
+          Λm = {LAMBDA_CONC.toFixed(1)}
         </text>
-        <text x={440} y={422} textAnchor="middle" fontSize={15}>
-          Λm = {LAMBDA_DILUTE.toFixed(2)}
+        <text x={beakerB.x + beakerB.w / 2} y={262} textAnchor="middle">
+          c = {C_DILUTE.toFixed(3)}
         </text>
-        <text x={290} y={466} textAnchor="middle" fontSize={15} fill="var(--fg-muted)">
-          One mole of solute in each beaker. Λm = κ × V, in S cm² mol⁻¹.
+        <text x={beakerB.x + beakerB.w / 2} y={286} textAnchor="middle">
+          V = {groupThousands(VOLUME_DILUTE_CM3)}
         </text>
-        <text x={290} y={492} textAnchor="middle" fontSize={14} fill="var(--fg-subtle)">
-          Beaker sizes are not to scale. κ falls while V grows.
+        <text x={beakerB.x + beakerB.w / 2} y={310} textAnchor="middle">
+          Λm = {LAMBDA_DILUTE.toFixed(1)}
+        </text>
+        <text x={200} y={352} textAnchor="middle" fill="var(--fg-muted)">
+          One mole of solute in each beaker.
+        </text>
+        <text x={200} y={378} textAnchor="middle" fill="var(--fg-muted)">
+          Λm = κV, in S cm² mol⁻¹.
+        </text>
+        <text x={200} y={404} textAnchor="middle" fill="var(--fg-subtle)">
+          Not to scale. κ falls as V grows.
         </text>
       </g>
 
@@ -265,26 +286,22 @@ export function DilutionConductivity({ step, reducedMotion }: DilutionConductivi
         {yTicks.map((v) => (
           <g key={`y${v}`}>
             <line x1={PX0} x2={PX1} y1={ys(v)} y2={ys(v)} stroke="var(--border)" strokeWidth={1} />
-            <text x={PX0 - 8} y={ys(v) + 5} textAnchor="end" fontSize={14} fill="var(--fg-muted)">
+            <text x={PX0 - 8} y={ys(v) + 6} textAnchor="end" fill="var(--fg-muted)">
               {v}
             </text>
           </g>
         ))}
         {xTicks.map((v) => (
-          <text key={`x${v}`} x={xs(v)} y={PY1 + 22} textAnchor="middle" fontSize={14} fill="var(--fg-muted)">
+          <text key={`x${v}`} x={xs(v)} y={PY1 + 24} textAnchor="middle" fill="var(--fg-muted)">
             {v}
           </text>
         ))}
         <line x1={PX0} x2={PX0} y1={PY0} y2={PY1} stroke="var(--fg-muted)" strokeWidth={1.5} />
         <line x1={PX0} x2={PX1} y1={PY1} y2={PY1} stroke="var(--fg-muted)" strokeWidth={1.5} />
-        <text x={(PX0 + PX1) / 2} y={PY1 + 48} textAnchor="middle" fontSize={15}>
-          √c, with c in mol L⁻¹ (square root axis)
+        <text x={(PX0 + PX1) / 2} y={PY1 + 50} textAnchor="middle">
+          √c (√(mol L⁻¹))
         </text>
-        <text
-          transform={`translate(30 ${(PY0 + PY1) / 2}) rotate(-90)`}
-          textAnchor="middle"
-          fontSize={15}
-        >
+        <text transform={`translate(24 ${(PY0 + PY1) / 2}) rotate(-90)`} textAnchor="middle">
           Λ<Sub>m</Sub> / S cm² mol⁻¹
         </text>
 
@@ -298,88 +315,85 @@ export function DilutionConductivity({ step, reducedMotion }: DilutionConductivi
           strokeWidth={2}
           strokeDasharray={spec.showAcetic ? '7 6' : undefined}
         />
-        {/* Intercept marker at c^1/2 = 0 */}
-        <circle cx={PX0} cy={ys(KCL_FIT.lambda0Scm2)} r={5} fill="var(--surface)" stroke="var(--ion-cation)" strokeWidth={2} />
+        {/* Intercept marker at √c = 0. The label sits right of the marker, clear of the acetic curve. */}
+        <circle cx={PX0} cy={ys(KCL_INTERCEPT)} r={5} fill="var(--surface)" stroke="var(--ion-cation)" strokeWidth={2} />
         <text
-          x={PX0 + 12}
-          y={ys(KCL_FIT.lambda0Scm2) - 12}
-          fontSize={15}
+          x={PX0 + 14}
+          y={ys(KCL_INTERCEPT) - 14}
           stroke="var(--surface)"
           strokeWidth={4}
           paintOrder="stroke"
         >
-          Λ°m ≈ {signed(KCL_FIT.lambda0Scm2, 1)}
+          Λ°m ≈ {signed(KCL_INTERCEPT, 1)}
         </text>
         {KCL_POINTS.map((p) => (
           <circle key={p.c} cx={xs(p.x)} cy={ys(p.lambdaScm2)} r={6} fill="var(--ion-cation)" stroke="var(--surface)" strokeWidth={1.5} />
         ))}
-        <text x={PX1 - 14} y={PY0 + 22} textAnchor="end" fontSize={15}>
+        <text x={PX1 - 8} y={PY0 + 22} textAnchor="end">
           Λm = Λ°m − A√c
         </text>
-        <text x={PX1 - 14} y={PY0 + 44} textAnchor="end" fontSize={15}>
-          A ≈ {KCL_FIT.A.toFixed(1)} (slope = −A)
+        <text x={PX1 - 8} y={PY0 + 46} textAnchor="end">
+          A ≈ {KCL_SLOPE_A.toFixed(1)} (slope = −A)
         </text>
 
         {/* Weak electrolyte curve (Step 4) */}
         <g opacity={acetic}>
           <path d={aceticPath} fill="none" stroke="var(--ion-anion)" strokeWidth={2.5} strokeLinejoin="round" />
-          <text x={xs(aceticLabelX) + 10} y={ys(aceticLabelY) - 10} fontSize={15} fill="var(--ion-anion)">
+          <text x={xs(aceticLabelX) + 10} y={ys(aceticLabelY) - 10} fill="var(--ion-anion)">
             CH₃COOH
           </text>
-          <text x={xs(0.1)} y={ys(139.5) - 12} textAnchor="middle" fontSize={15} fill="var(--ion-cation)">
+          <text x={xs(kclLabelX)} y={ys(kclLabelY) + 28} textAnchor="middle" fill="var(--ion-cation)">
             KCl (dashed)
           </text>
         </g>
       </g>
 
-      {/* Scene 4: ion bars */}
+      {/* Scene 4: ion bars for MgCl₂ */}
       <g opacity={barsO}>
-        {[
-          { label: 'CaCl₂', y: 130, parts: [{ name: 'Ca²⁺', v: CACL2_BARS.ca, fill: 'var(--ion-cation)' }, { name: 'Cl⁻', v: CACL2_BARS.cl, fill: 'var(--ion-anion)' }, { name: 'Cl⁻', v: CACL2_BARS.cl, fill: 'var(--ion-anion)' }], total: CACL2_BARS.total },
-          { label: 'MgSO₄', y: 280, parts: [{ name: 'Mg²⁺', v: MGSO4_BARS.mg, fill: 'var(--ion-cation)' }, { name: 'SO₄²⁻', v: MGSO4_BARS.so4, fill: 'var(--ion-anion)' }], total: MGSO4_BARS.total },
-        ].map((row) => {
-          let cursor = X0
+        <text x={barRowX} y={116} fontSize={LABEL + 2} fontWeight={600}>
+          MgCl₂
+        </text>
+        <rect x={barRowX} y={128} width={mgW} height={84} fill="var(--ion-cation)" stroke="var(--surface)" strokeWidth={1.5} />
+        <text x={barRowX + mgW / 2} y={162} textAnchor="middle" fill="var(--surface)">
+          Mg²⁺
+        </text>
+        <text x={barRowX + mgW / 2} y={188} textAnchor="middle" fill="var(--surface)">
+          {MGCL2_BARS.mg.toFixed(1)}
+        </text>
+        {[0, 1].map((k) => {
+          const x = barRowX + mgW + k * clW
           return (
-            <g key={row.label}>
-              <text x={40} y={row.y + 38} fontSize={18} fontWeight={600}>
-                {row.label}
+            <g key={k}>
+              <rect x={x} y={128} width={clW} height={84} fill="var(--ion-anion)" stroke="var(--surface)" strokeWidth={1.5} />
+              <text x={x + clW / 2} y={162} textAnchor="middle" fill="var(--surface)">
+                Cl⁻
               </text>
-              {row.parts.map((p, i) => {
-                const w = p.v * k4
-                const x = cursor
-                cursor += w
-                return (
-                  <g key={`${row.label}-${i}`}>
-                    <rect x={x} y={row.y} width={w} height={64} fill={p.fill} stroke="var(--surface)" strokeWidth={1.5} />
-                    <text x={x + w / 2} y={row.y + 38} textAnchor="middle" fontSize={14} fill="var(--surface)">
-                      {p.name} {p.v.toFixed(1)}
-                    </text>
-                  </g>
-                )
-              })}
-              <text x={X0 + row.total * k4 + 10} y={row.y + 38} fontSize={15}>
-                = {row.total.toFixed(1)}
+              <text x={x + clW / 2} y={188} textAnchor="middle" fill="var(--surface)">
+                {MGCL2_BARS.cl.toFixed(1)}
               </text>
             </g>
           )
         })}
-        <text x={40} y={400} fontSize={15}>
-          Λ°m(CaCl₂) = 119.0 + 2 × 76.3 = {CACL2_BARS.total.toFixed(1)}
+        <text x={barRowX} y={240}>
+          Λ°m(MgCl₂) = 106.0 + 2 × 76.3
         </text>
-        <text x={40} y={426} fontSize={15} fill="var(--fg-muted)">
-          Λ°m(MgSO₄) = 106.0 + 160.0 = {MGSO4_BARS.total.toFixed(1)}
+        <text x={barRowX} y={266}>
+          = {MGCL2_BARS.total.toFixed(1)} S cm² mol⁻¹
         </text>
-        <text x={40} y={460} fontSize={14} fill="var(--fg-subtle)">
-          Each ion bar is independent: the Cl⁻ bar is reused for any chloride.
+        <text x={barRowX} y={318} fill="var(--fg-subtle)">
+          Each ion bar stands alone.
         </text>
-        <text x={40} y={484} fontSize={14} fill="var(--fg-subtle)">
-          Bars in S cm² mol⁻¹ (Table 2.4 values).
+        <text x={barRowX} y={344} fill="var(--fg-subtle)">
+          The Cl⁻ bar serves any chloride.
+        </text>
+        <text x={barRowX} y={370} fill="var(--fg-subtle)">
+          Bars from Table 2.4.
         </text>
       </g>
 
       {/* Scene 5: degree of dissociation */}
       <g opacity={acidO}>
-        <Beaker x={30} y={120} width={190} height={250} level={0.82} tint="clear" />
+        <Beaker x={20} y={28} width={170} height={190} level={0.82} tint="clear" />
         {molecules.map((m, i) =>
           i === dissociatedIndex ? null : (
             <circle key={i} cx={m.x} cy={m.y} r={5} fill="var(--fg-subtle)" fillOpacity={0.75} />
@@ -387,39 +401,43 @@ export function DilutionConductivity({ step, reducedMotion }: DilutionConductivi
         )}
         <circle cx={molecules[dissociatedIndex]!.x - 6} cy={molecules[dissociatedIndex]!.y} r={5.5} fill="var(--ion-cation)" />
         <circle cx={molecules[dissociatedIndex]!.x + 6} cy={molecules[dissociatedIndex]!.y} r={5.5} fill="var(--ion-anion)" />
-        <text x={125} y={398} textAnchor="middle" fontSize={15} fill="var(--fg-muted)">
+        <text x={barRowX} y={240} fill="var(--fg-muted)">
           CH₃COOH(aq), {ACETIC_C.toFixed(4)} mol L⁻¹
         </text>
 
-        <text x={A0} y={150} fontSize={15}>
-          Measured Λm = {ACETIC_LAMBDA_MEASURED.toFixed(1)}
+        <text x={212} y={70}>
+          Λm = {ACETIC_LAMBDA_MEASURED.toFixed(1)}
         </text>
-        <text x={A0} y={212} fontSize={15} fill="var(--fg-muted)">
-          Λ°m = 349.6 + 40.9 = {ACETIC_LAMBDA0.toFixed(1)}
+        <text x={212} y={96} fill="var(--fg-muted)">
+          Λ°m = {ACETIC_LAMBDA0.toFixed(1)}
         </text>
-        <rect x={A0} y={224} width={349.6 * k5} height={40} fill="var(--ion-cation)" />
-        <text x={A0 + (349.6 * k5) / 2} y={250} textAnchor="middle" fontSize={14} fill="var(--surface)">
-          H⁺ 349.6
+        <text x={212} y={122}>
+          α = {ACETIC_ALPHA.toFixed(4)}
         </text>
-        <rect x={A0 + 349.6 * k5} y={224} width={40.9 * k5} height={40} fill="var(--ion-anion)" />
-        <text x={A0 + acidBarTotal} y={282} textAnchor="end" fontSize={14} fill="var(--ion-anion)">
-          CH₃COO⁻ 40.9
+        <text x={212} y={148} fill="var(--fg-muted)">
+          1 in {ACETIC_ONE_IN} ionised
         </text>
 
-        <text x={A0} y={326} fontSize={15} fill="var(--fg-muted)">
-          α = Λm / Λ°m = {ACETIC_ALPHA.toFixed(4)}
+        <rect x={barRowX} y={262} width={hW} height={36} fill="var(--ion-cation)" />
+        <text x={barRowX + hW / 2} y={286} textAnchor="middle" fill="var(--surface)">
+          H⁺ {H_PLUS_LAMBDA0.toFixed(1)}
         </text>
-        <rect x={A0} y={338} width={acidBarTotal} height={18} rx={4} fill="none" stroke="var(--border)" />
-        <rect x={A0} y={338} width={Math.max(2, fracPx)} height={18} rx={4} fill="var(--current)" />
-        <text x={A0 + acidBarTotal + 10} y={353} fontSize={14} fill="var(--fg-muted)">
-          1
+        <rect x={barRowX + hW} y={262} width={acW} height={36} fill="var(--ion-anion)" />
+        <text x={barRowX + barRowW} y={320} textAnchor="end" fill="var(--ion-anion)">
+          CH₃COO⁻ {ACETATE_LAMBDA0.toFixed(1)}
+        </text>
+        <text x={barRowX} y={320} fill="var(--fg-muted)">
+          Λ°m bar, S cm² mol⁻¹
         </text>
 
-        <text x={A0} y={400} fontSize={15}>
+        <rect x={barRowX} y={352} width={barRowW} height={18} rx={4} fill="none" stroke="var(--border)" />
+        <rect x={barRowX} y={352} width={Math.max(2, alphaW)} height={18} rx={4} fill="var(--current)" />
+        <text x={barRowX} y={392} fill="var(--fg-muted)">
+          Filled part: α = {ACETIC_ALPHA.toFixed(4)}
+        </text>
+
+        <text x={barRowX} y={424}>
           Ka = cα²/(1 − α) = {sciNotation(ACETIC_KA)}
-        </text>
-        <text x={A0} y={426} fontSize={14} fill="var(--fg-subtle)">
-          One ionised molecule in about 24.
         </text>
       </g>
     </svg>

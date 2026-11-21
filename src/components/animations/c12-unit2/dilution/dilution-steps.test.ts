@@ -3,19 +3,21 @@ import {
   ACETIC_ALPHA,
   ACETIC_KA,
   ACETIC_LAMBDA0,
-  CACL2_BARS,
+  ACETIC_ONE_IN,
   DILUTION_STEPS,
   KAPPA_CONC,
   KAPPA_DILUTE,
-  KCL_FIT,
+  KCL_INTERCEPT,
+  KCL_SLOPE_A,
   LAMBDA_CONC,
   LAMBDA_DILUTE,
-  MGSO4_BARS,
+  MGCL2_BARS,
+  VOLUME_CONC_CM3,
+  VOLUME_DILUTE_CM3,
   aceticMolarConductivity,
   clampDilutionStep,
-  litresPerMole,
+  groupThousands,
   sciNotation,
-  signed,
 } from './dilution-steps'
 
 describe('dilution-conductivity steps', () => {
@@ -32,33 +34,38 @@ describe('dilution-conductivity steps', () => {
     expect(clampDilutionStep(2.4)).toBe(2)
   })
 
-  it('reproduces the conductivities and volumes quoted in Steps 1 and 2', () => {
-    expect(sciNotation(KAPPA_CONC)).toBe('1.45 × 10⁻⁴')
-    expect(sciNotation(KAPPA_DILUTE)).toBe('2.94 × 10⁻⁵')
-    expect(Math.floor(litresPerMole(0.000989))).toBe(1011)
-    expect(Math.floor(litresPerMole(0.000198))).toBe(5050)
-    expect(LAMBDA_CONC).toBe(147.09)
-    expect(LAMBDA_DILUTE).toBe(148.61)
+  it('takes the conductivities and molar conductivities from Table 2.3 (0.10 and 0.010 mol L⁻¹)', () => {
+    expect(sciNotation(KAPPA_CONC)).toBe('1.29 × 10⁻²')
+    expect(sciNotation(KAPPA_DILUTE)).toBe('1.41 × 10⁻³')
+    expect(LAMBDA_CONC).toBeCloseTo(129.0, 6)
+    expect(LAMBDA_DILUTE).toBeCloseTo(141.0, 6)
   })
 
-  it('fits the KCl straight line with intercept near 149.8 and A near 87.4', () => {
-    expect(signed(KCL_FIT.lambda0Scm2, 1)).toBe('149.8')
-    expect(KCL_FIT.A.toFixed(1)).toBe('87.4')
+  it('gives the cell volumes per mole in cm³ (1000 / c) with thousands grouped', () => {
+    expect(VOLUME_CONC_CM3).toBeCloseTo(10000, 6)
+    expect(VOLUME_DILUTE_CM3).toBeCloseTo(100000, 6)
+    expect(groupThousands(VOLUME_CONC_CM3)).toBe('10 000')
+    expect(groupThousands(VOLUME_DILUTE_CM3)).toBe('100 000')
   })
 
-  it('gives the stacked ion totals of Step 5', () => {
-    expect(CACL2_BARS.total.toFixed(1)).toBe('271.6')
-    expect(MGSO4_BARS.total.toFixed(1)).toBe('266.0')
+  it('takes the two-point KCl line from the lib (intercept 146.5, A 55.5)', () => {
+    expect(KCL_INTERCEPT).toBeCloseTo(146.5, 1)
+    expect(KCL_SLOPE_A).toBeCloseTo(55.5, 1)
   })
 
-  it('gives alpha 0.0423 and Ka 1.86e-5 for acetic acid in Step 6', () => {
+  it('gives the MgCl₂ ion total of Step 5', () => {
+    expect(MGCL2_BARS.total.toFixed(1)).toBe('258.6')
+  })
+
+  it('gives alpha 0.0297, one ionised molecule in 34, and Ka 1.82e-5 for acetic acid in Step 6', () => {
     expect(ACETIC_LAMBDA0.toFixed(1)).toBe('390.5')
-    expect(ACETIC_ALPHA.toFixed(4)).toBe('0.0423')
-    expect(sciNotation(ACETIC_KA)).toBe('1.86 × 10⁻⁵')
+    expect(ACETIC_ALPHA.toFixed(4)).toBe('0.0297')
+    expect(ACETIC_ONE_IN).toBe(34)
+    expect(sciNotation(ACETIC_KA)).toBe('1.82 × 10⁻⁵')
   })
 
-  it('draws the acetic acid sketch consistent with the measured 16.5 at 0.0100 mol L⁻¹', () => {
-    expect(Math.abs(aceticMolarConductivity(0.01) - 16.5)).toBeLessThan(0.1)
+  it('draws the acetic acid sketch consistent with the measured 11.6 at 0.0200 mol L⁻¹', () => {
+    expect(Math.abs(aceticMolarConductivity(0.02) - 11.6)).toBeLessThan(0.05)
     expect(aceticMolarConductivity(0.0001)).toBeGreaterThan(aceticMolarConductivity(0.01))
   })
 })

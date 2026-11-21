@@ -60,14 +60,14 @@ for (const scheme of ['light', 'dark'] as const) {
     await page.getByRole('radio', { name: 'CH₃COO⁻', exact: true }).click()
     await expect(result).toContainText('weak electrolyte')
 
-    // Concentration slider: α and Ka change with c, and Ka stays 1.24 × 10⁻⁵ at every c.
+    // Concentration slider: α and Ka change with c, and Ka stays 1.82 × 10⁻⁵ at every c.
     const slider = root.getByRole('slider')
     await slider.focus()
     await page.keyboard.press('ArrowRight')
     await page.keyboard.press('ArrowRight')
     const acetic = root.locator('[aria-live="polite"]').last()
     await expect(acetic).toContainText('mol L⁻¹')
-    await expect(acetic).toContainText('1.24 × 10⁻⁵')
+    await expect(acetic).toContainText('1.82 × 10⁻⁵')
     await root.screenshot({ path: `test-results/screens/c12u2-6-sim-conc-${scheme}.png` })
 
     // Every text element is at least 14 px computed size.

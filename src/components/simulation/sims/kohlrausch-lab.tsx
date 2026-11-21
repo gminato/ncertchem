@@ -132,7 +132,7 @@ export function KohlrauschLab(_props: SimulationProps) {
             <circle key={`k${p.c}`} cx={sx(Math.sqrt(p.c))} cy={sy(p.lambdaScm2)} r={6} className={styles.strongPoint} />
           ))}
           <circle cx={X0} cy={fitY0} r={5} className={styles.intercept} />
-          <text x={X0 + 12} y={fitY0 + 22} className={styles.label} style={TEXT}>
+          <text x={X0 + 12} y={fitY0 - 10} className={styles.label} style={TEXT}>
             Λ°m = {fit.lambda0Scm2.toFixed(1)}
           </text>
 
