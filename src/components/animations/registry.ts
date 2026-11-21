@@ -142,6 +142,7 @@ import { ConductivityMeasurement } from './c12-unit2/conductance/ConductivityMea
 import { DilutionConductivity } from './c12-unit2/dilution/DilutionConductivity'
 import { ElectrolysisProducts } from './c12-unit2/products/ElectrolysisProducts'
 import { FaradayElectrolysis } from './c12-unit2/faraday/FaradayElectrolysis'
+import { BatteryCutaways } from './c12-unit2/batteries/BatteryCutaways'
 
 /**
  * Animations available to a Scrolly Animation, keyed by the `animation` prop.
@@ -294,6 +295,7 @@ export const animations = {
   'dilution-conductivity': DilutionConductivity,
   'electrolysis-products': ElectrolysisProducts,
   'faraday-electrolysis': FaradayElectrolysis,
+  'battery-cutaways': BatteryCutaways,
 } as const
 
 export type AnimationName = keyof typeof animations

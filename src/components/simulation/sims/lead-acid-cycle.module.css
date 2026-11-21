@@ -1,0 +1,136 @@
+.sim {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  min-width: 0;
+}
+
+.controls {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.stage {
+  background: var(--surface-raised);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: var(--space-3);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.svg {
+  display: block;
+  width: 100%;
+  max-width: 580px;
+  height: auto;
+  margin: 0 auto;
+}
+
+.label {
+  font-family: var(--font-sans);
+  font-size: 16px;
+  fill: var(--fg);
+}
+
+.small {
+  font-family: var(--font-sans);
+  font-size: 14px;
+  fill: var(--fg-muted);
+}
+
+.load {
+  fill: var(--surface-raised);
+  stroke: var(--border);
+  stroke-width: 1.5;
+}
+
+.crust {
+  fill: var(--pbso4);
+  fill-opacity: 0.9;
+  stroke: var(--fg-subtle);
+  stroke-width: 0.75;
+}
+
+.equation {
+  margin: 0;
+  font-size: 15px;
+  line-height: 1.5;
+  color: var(--fg);
+  overflow-wrap: anywhere;
+}
+
+.note {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--fg-muted);
+}
+
+.acid {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  align-items: center;
+  gap: var(--space-2) var(--space-3);
+}
+
+.acidLabel {
+  font-size: 15px;
+  color: var(--fg);
+}
+
+.acidTrack {
+  height: 14px;
+  border-radius: 999px;
+  background: var(--surface-raised);
+  border: 1px solid var(--border);
+  overflow: hidden;
+}
+
+.acidFill {
+  height: 100%;
+  background: var(--caution);
+  transition: width 0.2s ease-out;
+}
+
+.acid .note {
+  grid-column: 1 / -1;
+}
+
+.stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: var(--space-3);
+  margin: 0;
+}
+
+.stats > div {
+  background: var(--surface-raised);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: var(--space-3);
+}
+
+.stats dt {
+  font-size: 14px;
+  color: var(--fg-muted);
+}
+
+.stats dd {
+  margin: var(--space-1) 0 0;
+  font-size: 16px;
+  color: var(--fg);
+  font-variant-numeric: tabular-nums;
+  overflow-wrap: anywhere;
+}
+
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
