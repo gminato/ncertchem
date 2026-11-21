@@ -75,6 +75,7 @@ import { AzeotropeExplorer } from './sims/azeotrope-explorer'
 import { ColligativeThermalLab } from './sims/colligative-thermal-lab'
 import { OpposingVoltageLab } from './sims/opposing-voltage-lab'
 import { HalfCellPairingBench } from './sims/half-cell-pairing'
+import { NernstLab } from './sims/nernst-lab'
 
 export interface SimulationProps {
   /** True when the Learner has asked the OS for reduced motion. Skip tweens and loops when set. */
@@ -164,4 +165,5 @@ export const simulations: Record<string, ComponentType<SimulationProps>> = {
   'colligative-thermal-lab': ColligativeThermalLab,
   'opposing-voltage-lab': OpposingVoltageLab,
   'half-cell-pairing': HalfCellPairingBench,
+  'nernst-lab': NernstLab,
 }
