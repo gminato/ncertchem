@@ -29,14 +29,16 @@ describe('electrolysis product Steps', () => {
     expect(s.alkalineMode).toBe('none')
   })
 
-  it('shows water winning the cathode over Na⁺ by E°, with H2 and no sodium', () => {
+  it('shows H⁺ (0.00 V) winning the cathode over Na⁺ (−2.71 V), with H2 and no sodium', () => {
     const s = getElectrolysisStepState(1)
     expect(s.sodiumBeads).toBe(false)
     expect(s.cathodeGas).toBe('H₂')
     const win = s.cathodeCard?.rows.find((r) => r.tone === 'win')
-    expect(win?.label).toBe('H₂O / H₂')
-    expect(win?.value).toBe('−0.83 V')
+    expect(win?.label).toBe('H⁺ / H₂')
+    expect(win?.value).toBe('0.00 V')
     expect(s.cathodeCard?.rows.find((r) => r.label === 'Na⁺ / Na')?.value).toBe('−2.71 V')
+    // The −0.83 V water couple is not a competing or winning potential at the cathode.
+    expect(s.cathodeCard?.rows.some((r) => r.value === '−0.83 V')).toBe(false)
   })
 
   it('shows Cl⁻ winning the anode despite water having the lower E°', () => {
