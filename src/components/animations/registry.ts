@@ -134,6 +134,7 @@ import { VantHoffParticles } from './c12-unit1/vanthoff/VantHoffParticles'
 import { ConcentrationScales } from './c12-unit1/concentration/ConcentrationScales'
 import { RaoultDeviations } from './c12-unit1/deviations/RaoultDeviations'
 import { ColligativePhaseShift } from './c12-unit1/colligative/ColligativePhaseShift'
+import { ConductivityMeasurement } from './c12-unit2/conductance/ConductivityMeasurement'
 
 /**
  * Animations available to a Scrolly Animation, keyed by the `animation` prop.
@@ -278,6 +279,7 @@ export const animations = {
   'concentration-scales': ConcentrationScales,
   'raoult-deviations': RaoultDeviations,
   'colligative-phase-shift': ColligativePhaseShift,
+  'conductivity-measurement': ConductivityMeasurement,
 } as const
 
 export type AnimationName = keyof typeof animations

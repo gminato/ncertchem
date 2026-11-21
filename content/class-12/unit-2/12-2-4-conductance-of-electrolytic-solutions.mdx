@@ -1,0 +1,149 @@
+---
+class: 12
+unit: 2
+section: "2.4"
+order: 5
+title: "Conductance of Electrolytic Solutions"
+slug: "12-2-4-conductance-of-electrolytic-solutions"
+access: free
+summary: "Resistance, resistivity and conductivity are the same geometry seen through different lenses. Measure a solution with alternating current in a calibrated cell, and a bridge balance turns into conductivity and then molar conductivity."
+ncert: "Class 12, Part I — Unit 2, Sections 2.4–2.4.1"
+---
+
+<Hook>
+The little gadget that sits in a glass of purified water, with two metal probes and a small digital screen, shows a number in parts per million. Dip it into tap water and the figure is higher; dip it into the purifier's output and it drops. The gadget never tastes the water and never weighs the salt in it. So what is it actually measuring, and why should a lower reading mean purer water? The answer lies in how easily a solution lets electric current pass.
+</Hook>
+
+## Resistance, resistivity and conductivity
+
+Any piece of material resists the flow of current. For a uniform wire, the resistance $R$ grows in proportion to its length $l$ and shrinks in proportion to its cross-sectional area $A$. The constant of proportionality is $\rho$ (rho), the **resistivity**, a property of the material itself:
+
+$$
+R = \rho \frac{l}{A}
+$$
+
+Resistivity is measured in ohm metre ($\Omega\ \text{m}$). Its submultiple, ohm centimetre, is also common, and $1\ \Omega\ \text{m} = 100\ \Omega\ \text{cm}$.
+
+The reciprocal of resistance is the **conductance**, $G = 1/R$, measured in siemens ($\text{S}$), where $1\ \text{S} = 1\ \Omega^{-1}$. The reciprocal of resistivity is the **conductivity**, $\kappa$ (kappa):
+
+$$
+\kappa = \frac{1}{\rho} \qquad \text{in } \text{S m}^{-1}
+$$
+
+Chemists often quote conductivity in $\text{S cm}^{-1}$ instead, and $1\ \text{S cm}^{-1} = 100\ \text{S m}^{-1}$. Conductivities span an enormous range. Pure water sits near $3.5 \times 10^{-5}\ \text{S m}^{-1}$, a $0.1\ \text{mol L}^{-1}$ solution of $\ce{HCl}$ near $3.9\ \text{S m}^{-1}$, and glass near $10^{-16}\ \text{S m}^{-1}$. Where a material falls on this scale tells you whether it is a conductor, a semiconductor or an insulator.
+
+## Two ways charge moves
+
+In a metal, the valence electrons drift through a fixed lattice of positive ions, and the metal's composition never changes. Metallic conductance depends on the metal's structure and on how many valence electrons each atom contributes. It falls as temperature rises, because the vibrating lattice scatters the drifting electrons more often.
+
+In an electrolytic solution, charge is carried by the ions that the dissolved solute supplies. Conductivity depends on which electrolyte is dissolved, on the size of its ions and how strongly they are solvated, on the viscosity of the solvent, on the concentration, and on temperature. Here conductivity rises with temperature, because warmer, less viscous solvent lets the ions move more freely. Even very pure water conducts a little, since it contains about $10^{-7}\ \text{mol L}^{-1}$ each of $\ce{H+}$ and $\ce{OH-}$ ions.
+
+## Measuring the resistance of a solution
+
+A solution cannot simply be clipped into a Wheatstone bridge the way a copper wire can, and sending a steady direct current through it causes electrolysis, which slowly changes the very composition you are trying to measure. Two changes solve both problems. The bridge is fed with alternating current from an audio-frequency oscillator, so the ions shuttle back and forth without any net chemical change. The solution sits in a **conductivity cell**: two platinum electrodes, coated with finely divided platinum black, held a fixed distance $l$ apart and having a fixed area $A$. The solution between them is a column of length $l$ and cross-section $A$, so its resistance obeys the same rule as a wire.
+
+Measuring $l$ and $A$ by ruler is unreliable, so the cell is calibrated instead. Fill it with potassium chloride solution, whose conductivity is tabulated at 298.15 K: $0.1113\ \text{S cm}^{-1}$ at $1.000\ \text{mol L}^{-1}$, $0.0129\ \text{S cm}^{-1}$ at $0.100\ \text{mol L}^{-1}$, and $0.00141\ \text{S cm}^{-1}$ at $0.010\ \text{mol L}^{-1}$. The cell constant is then
+
+$$
+G^* = \frac{l}{A} = \kappa R_{\text{ref}}
+$$
+
+which has the dimension of length$^{-1}$. Once $G^*$ is known, any solution's conductivity follows from its measured resistance: $\kappa = G^*/R$.
+
+The resistance itself is read on a Wheatstone bridge with two fixed arms $R_3$ and $R_4$, a variable arm $R_1$, and the cell as the unknown $R_2$. An audio oscillator powers the bridge and a headphone or electronic null detector watches for current. When the detector falls silent, the bridge is balanced and
+
+$$
+R_2 = \frac{R_1 R_4}{R_3}
+$$
+
+Modern conductivity meters do this balancing internally and display $\kappa$ directly.
+
+<Scrolly animation="conductivity-measurement">
+  <Step>
+    **A wire's resistance:** Picture a metal wire, 1.0 m long, with a cross-section of 1.0 mm² and resistivity $5.0 \times 10^{-7}\ \Omega\ \text{m}$. Its resistance is $R = 0.50\ \Omega$. Stretch it to 2.0 m and $R$ doubles to 1.0 Ω. Make it twice as thick and $R$ halves to 0.25 Ω. Length pushes resistance up; area pulls it down.
+  </Step>
+  <Step>
+    **The same geometry for a solution:** Replace the wire with a column of liquid between two plates, separated by a distance $l$ and covering an area $A$. Current now runs through the ions in the liquid. The rule is unchanged, and so the cell constant $G^* = l/A$ is the one number that describes the cell.
+  </Step>
+  <Step>
+    **Why alternating current:** With direct current, ions drift to the plates, gas bubbles form and the composition near the electrodes changes. Switch to alternating current and the ions oscillate in place. The solution is measured as it was, with no net chemical change.
+  </Step>
+  <Step>
+    **The bridge balances:** Two fixed arms, $R_3$ and $R_4$, and one variable arm, $R_1$, form a bridge with the cell as the unknown $R_2$. An oscillator drives the bridge. When the detector is silent, $R_2 = R_1 R_4 / R_3$. With $R_3 = R_4 = 1000\ \Omega$ and $R_1 = 2400\ \Omega$, the cell reads 2400 Ω.
+  </Step>
+  <Step>
+    **From R to κ to Λm:** A cell calibrated with $0.010\ \text{mol L}^{-1}$ KCl ($\kappa = 0.141\ \text{S m}^{-1}$, measured $R = 1000\ \Omega$) has $G^* = 141\ \text{m}^{-1}$. Our unknown reads 2400 Ω, so $\kappa = G^*/R = 0.05875\ \text{S m}^{-1}$. At $0.0050\ \text{mol L}^{-1}$ this gives a molar conductivity of 117.5 S cm² mol⁻¹.
+  </Step>
+</Scrolly>
+
+## From conductivity to molar conductivity
+
+Conductivity alone is a poor way to compare electrolytes. A solution with twice the concentration carries more ions per cubic centimetre and so has a higher $\kappa$, even if each ion is no better at carrying charge. To separate the two effects, chemists divide by the concentration and define the **molar conductivity**:
+
+$$
+\Lambda_m = \frac{\kappa}{c}
+$$
+
+If $\kappa$ is in $\text{S m}^{-1}$ and $c$ is in $\text{mol m}^{-3}$, then $\Lambda_m$ is in $\text{S m}^2\ \text{mol}^{-1}$. If $\kappa$ is in $\text{S cm}^{-1}$ and $c$ in $\text{mol L}^{-1}$, then
+
+$$
+\Lambda_m = \frac{\kappa \times 1000}{c}\ \ \text{in S cm}^2\ \text{mol}^{-1}
+$$
+
+The two units differ by a factor of ten thousand: $1\ \text{S m}^2\ \text{mol}^{-1} = 10^4\ \text{S cm}^2\ \text{mol}^{-1}$. Work the chain from the bridge to $\Lambda_m$ once yourself, and you will have the logic of every conductivity measurement in the laboratory.
+
+Now try the cell yourself. The simulation below gives you a calibrated conductivity cell and an AC bridge. Choose the solution and its concentration, balance the bridge, and read off $R$, $G^*$, $\kappa$ and $\Lambda_m$.
+
+<Simulation name="conductivity-cell-lab" title="Conductivity Cell Lab" />
+
+## Check your understanding
+
+<Check
+  n={1}
+  numeric
+  answer={172}
+  tolerance={0.5}
+  unit="S cm² mol⁻¹"
+  explanation="The cell constant is G* = κR = 1.29 S m⁻¹ × 800 Ω = 1032 m⁻¹. The unknown has κ = G*/R = 1032 m⁻¹ / 3000 Ω = 0.344 S m⁻¹ = 3.44 × 10⁻³ S cm⁻¹. Then Λm = κ × 1000 / c = 3.44 × 10⁻³ × 1000 / 0.0200 = 172 S cm² mol⁻¹."
+>
+
+A cell is calibrated with $0.100\ \text{mol L}^{-1}$ KCl, whose conductivity is $1.29\ \text{S m}^{-1}$, and gives a resistance of 800 Ω. The same cell then reads 3000 Ω when filled with an electrolyte at $0.0200\ \text{mol L}^{-1}$. Calculate the molar conductivity of that electrolyte in $\text{S cm}^2\ \text{mol}^{-1}$.
+</Check>
+
+<Check
+  n={2}
+  options={[
+    "Both rise, because the lattice and the ions both move more freely",
+    "Metallic conductance falls and electrolytic conductance rises",
+    "Metallic conductance rises and electrolytic conductance falls",
+    "Both fall, because heat disrupts every conducting pathway"
+  ]}
+  answer={1}
+  explanation="In a metal, electrons are scattered more by the vibrating lattice as it warms, so conductance falls. In an electrolytic solution, the solvent becomes less viscous and the ions move faster, so conductivity rises."
+>
+
+Two samples are warmed from 298 K to 350 K: a copper wire, and a dilute solution of an electrolyte. Which statement describes their conductance correctly?
+</Check>
+
+<Check
+  n={3}
+  options={[
+    "Alternating current is cheaper, so it is used for every measurement",
+    "Direct current would electrolyse the solution and change its composition, so the measured resistance would drift",
+    "Direct current cannot pass through platinum electrodes at all",
+    "Alternating current raises the solution's temperature, which is needed for a steady reading"
+  ]}
+  answer={1}
+  explanation="A steady current drives ions to the electrodes and causes electrochemical reactions, changing the solution's composition over time. Alternating current reverses direction so quickly that the net chemical change is negligible."
+>
+
+Why does a conductivity measurement use an alternating-current bridge rather than a direct-current one?
+</Check>
+
+<KeyIdeas>
+- **Resistance and conductivity:** $R = \rho l / A$ with $\kappa = 1/\rho$, so conductivity is the reciprocal of resistivity and is reported in $\text{S m}^{-1}$ or $\text{S cm}^{-1}$.
+- **Cell constant:** $G^* = l/A$ is found once by calibrating with KCl of known conductivity, and then $\kappa = G^*/R$ for any solution.
+- **Bridge measurement:** Alternating current avoids electrolysis, and the bridge is balanced at null when $R_2 = R_1 R_4 / R_3$.
+- **Metals versus electrolytes:** Metallic conductance falls with temperature, while electrolytic conductance rises because ions move more freely in warmer solvent.
+- **Molar conductivity:** $\Lambda_m = \kappa / c$, which is $\kappa \times 1000 / c$ in $\text{S cm}^2\ \text{mol}^{-1}$ when $\kappa$ is in $\text{S cm}^{-1}$ and $c$ in $\text{mol L}^{-1}$.
+</KeyIdeas>
