@@ -2,34 +2,65 @@
   display: flex;
   flex-direction: column;
   gap: var(--space-4);
+  width: 100%;
   min-width: 0;
+  container-type: inline-size;
 }
 
+/* Wide: diagram and status on the left, the G reading dial on the right. */
 .stage {
   background: var(--surface-raised);
   border: 1px solid var(--border);
   border-radius: var(--radius-md);
   padding: var(--space-3);
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-2);
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 200px;
+  grid-template-areas:
+    "diagram meter"
+    "status meter";
+  align-items: center;
+  column-gap: var(--space-3);
+  row-gap: var(--space-2);
+}
+
+/* Narrow (container under 560 px): the G reading dial goes below the diamond. */
+@container (max-width: 559px) {
+  .stage {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-areas:
+      "diagram"
+      "status"
+      "meter";
+  }
 }
 
 .svg {
+  grid-area: diagram;
   display: block;
   width: 100%;
   height: auto;
-  max-width: 580px;
+  max-width: 490px;
   margin: 0 auto;
 }
 
+.meter {
+  grid-area: meter;
+  display: block;
+  width: 200px;
+  max-width: 100%;
+  height: auto;
+  justify-self: center;
+}
+
+/* Diagram labels: viewBox is 490 units wide, so 20 units is at least 14 px at 390 px wide. */
 .label {
   font-family: var(--font-sans);
-  font-size: 14px;
+  font-size: 20px;
   fill: var(--fg);
 }
 
 .status {
+  grid-area: status;
   margin: 0;
   display: flex;
   flex-wrap: wrap;

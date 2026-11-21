@@ -74,92 +74,83 @@ export function ConductivityCellLab(_props: SimulationProps) {
     <div className={styles.lab}>
       <div className={styles.stage}>
         <svg
-          viewBox="0 0 580 356"
+          viewBox="0 0 490 368"
           role="img"
-          aria-label="AC Wheatstone bridge drawn as a diamond. Nodes A left, B top, C right, D bottom. Arm AB is the variable resistor Rv, arm BC the conductivity cell, arm AD R3 and arm DC R4. The null detector runs vertically from B to D. The AC source sits in the outer loop from A under the diamond to C."
+          aria-label="AC Wheatstone bridge drawn as a diamond. Nodes A left, B top, C right, D bottom. Arm AB is the variable resistor Rv, arm BC the conductivity cell, arm AD R3 and arm DC R4. The null detector G runs vertically from B to D. The AC source sits in the outer loop from A under the diamond to C."
           className={styles.svg}
         >
           <VocabDefs idPrefix="condlab" />
 
           {/* Outer loop: A down, along the bottom under the diamond, up to C. The AC source sits on the bottom wire. */}
-          <path d="M95 170 V324 H395 V170" fill="none" stroke="var(--fg-muted)" strokeWidth={2} />
-          <circle cx={245} cy={324} r={13} fill="var(--surface-raised)" stroke="var(--fg-muted)" strokeWidth={2} />
-          <path d="M236 324 Q240.25 317 245 324 T254 324" fill="none" stroke="var(--fg)" strokeWidth={1.6} />
-          <text x={245} y={350} fontSize={14} textAnchor="middle" className={styles.label}>
+          <path d="M100 170 V326 H400 V170" fill="none" stroke="var(--fg-muted)" strokeWidth={2} />
+          <circle cx={250} cy={326} r={13} fill="var(--surface-raised)" stroke="var(--fg-muted)" strokeWidth={2} />
+          <path d="M241 326 Q245.25 319 250 326 T259 326" fill="none" stroke="var(--fg)" strokeWidth={1.6} />
+          <text x={250} y={360} textAnchor="middle" className={styles.label}>
             AC {sig(BRIDGE_SOURCE_VOLTS)} V
           </text>
 
           {/* Bridge diamond: arms AB, BC, CD, DA. */}
-          <path d="M95 170 L245 64 L395 170 L245 276 Z" fill="none" stroke="var(--fg-muted)" strokeWidth={2.5} />
+          <path d="M100 170 L250 64 L400 170 L250 276 Z" fill="none" stroke="var(--fg-muted)" strokeWidth={2.5} />
 
-          {/* Detector branch B to D through the centre, with its meter. */}
-          <path d="M245 64 V153 M245 187 V276" fill="none" stroke="var(--fg-muted)" strokeWidth={2} />
-          <circle cx={245} cy={170} r={17} fill="var(--surface-raised)" stroke="var(--fg-muted)" strokeWidth={2} />
-          <text x={245} y={176} fontSize={14} textAnchor="middle" className={styles.label}>
+          {/* Detector branch B to D through the centre, with the detector G. */}
+          <path d="M250 64 V153 M250 187 V276" fill="none" stroke="var(--fg-muted)" strokeWidth={2} />
+          <circle cx={250} cy={170} r={17} fill="var(--surface-raised)" stroke="var(--fg-muted)" strokeWidth={2} />
+          <text x={250} y={176} textAnchor="middle" className={styles.label}>
             G
           </text>
 
-          {/* Variable resistor Rv on arm AB (highlighted). */}
-          <g transform="translate(170 117) rotate(-35.25)">
+          {/* Variable resistor Rv on arm AB (highlighted), label outside the arm. */}
+          <g transform="translate(175 117) rotate(-35.25)">
             <rect x={-20} y={-8} width={40} height={16} rx={4} fill="var(--accent-soft)" stroke="var(--accent)" strokeWidth={2} />
           </g>
-          <text x={154} y={104} fontSize={14} textAnchor="end" className={styles.label}>
+          <text x={160} y={96} textAnchor="middle" className={styles.label}>
             Rᵥ
           </text>
 
-          {/* Fixed arm R3 on AD and R4 on DC, labels inside the diamond. */}
-          <g transform="translate(170 223) rotate(35.25)">
+          {/* Fixed arm R3 on AD, label outside the arm, parallel to it. */}
+          <g transform="translate(175 223) rotate(35.25)">
             <rect x={-20} y={-8} width={40} height={16} rx={4} fill="var(--surface-raised)" stroke="var(--fg-muted)" strokeWidth={2} />
           </g>
-          <text x={226} y={194} fontSize={14} textAnchor="end" className={styles.label}>
+          <text x={155.4} y={250.8} textAnchor="middle" transform="rotate(35.25 155.4 250.8)" className={styles.label}>
             R₃ {sig(FIXED_ARM_OHM)} Ω
           </text>
-          <g transform="translate(320 223) rotate(-35.25)">
+
+          {/* Ratio arm R4 on DC, label outside the arm, parallel to it. */}
+          <g transform="translate(325 223) rotate(-35.25)">
             <rect x={-20} y={-8} width={40} height={16} rx={4} fill="var(--surface-raised)" stroke="var(--fg-muted)" strokeWidth={2} />
           </g>
-          <text x={264} y={194} fontSize={14} textAnchor="start" className={styles.label}>
-            R₄
+          <text x={344.6} y={250.8} textAnchor="middle" transform="rotate(-35.25 344.6 250.8)" className={styles.label}>
+            R₄ {sig(ratioFactor * FIXED_ARM_OHM)} Ω
           </text>
 
           {/* The conductivity cell on arm BC: a solution container with two parallel plates across the arm. */}
-          <g transform="translate(320 117) rotate(35.25)">
+          <g transform="translate(325 117) rotate(35.25)">
             <rect x={-32} y={-18} width={64} height={36} rx={6} fill="var(--liquid)" stroke="var(--glass-wall)" strokeWidth={2} />
             <rect x={-26} y={-14} width={6} height={28} rx={1.5} fill="var(--fg-muted)" />
             <rect x={20} y={-14} width={6} height={28} rx={1.5} fill="var(--fg-muted)" />
           </g>
-          <text x={364} y={84} fontSize={14} textAnchor="start" className={styles.label}>
+          <text x={340} y={44} textAnchor="start" className={styles.label}>
             Rₓ (cell)
           </text>
-          <text x={364} y={102} fontSize={14} textAnchor="start" className={styles.label}>
+          <text x={340} y={62} textAnchor="start" className={styles.label}>
             {solution.label}
           </text>
-          <text x={364} y={120} fontSize={14} textAnchor="start" className={styles.label}>
-            l = {gap.toFixed(1)} cm, A = {area.toFixed(1)} cm
+          <text x={340} y={80} textAnchor="start" className={styles.label}>
+            l = {gap.toFixed(1)} cm
+          </text>
+          <text x={340} y={98} textAnchor="start" className={styles.label}>
+            A = {area.toFixed(1)} cm²
           </text>
 
           {/* Node junctions and their letters. */}
-          <circle cx={95} cy={170} r={5} fill="var(--fg)" />
-          <circle cx={245} cy={64} r={5} fill="var(--fg)" />
-          <circle cx={395} cy={170} r={5} fill="var(--fg)" />
-          <circle cx={245} cy={276} r={5} fill="var(--fg)" />
-          <text x={78} y={175} fontSize={14} textAnchor="end" className={styles.label}>A</text>
-          <text x={245} y={44} fontSize={14} textAnchor="middle" className={styles.label}>B</text>
-          <text x={412} y={175} fontSize={14} textAnchor="start" className={styles.label}>C</text>
-          <text x={256} y={296} fontSize={14} textAnchor="start" className={styles.label}>D</text>
-
-          <Galvanometer
-            x={500}
-            y={258}
-            width={136}
-            height={124}
-            value={detectorMilliVolts}
-            range={[-10, 10]}
-            unit="mV"
-            decimals={3}
-            caption="Null detector"
-            scaleLabels={['−10', '0', '10']}
-            terminals={false}
-          />
+          <circle cx={100} cy={170} r={5} fill="var(--fg)" />
+          <circle cx={250} cy={64} r={5} fill="var(--fg)" />
+          <circle cx={400} cy={170} r={5} fill="var(--fg)" />
+          <circle cx={250} cy={276} r={5} fill="var(--fg)" />
+          <text x={84} y={176} textAnchor="end" className={styles.label}>A</text>
+          <text x={250} y={36} textAnchor="middle" className={styles.label}>B</text>
+          <text x={416} y={176} textAnchor="start" className={styles.label}>C</text>
+          <text x={262} y={300} textAnchor="start" className={styles.label}>D</text>
         </svg>
         <p className={`${styles.status} ${m.isNull ? styles.statusNull : ''}`}>
           <span className={styles.badge}>{m.isNull ? 'Null' : 'Unbalanced'}</span>
@@ -167,6 +158,26 @@ export function ConductivityCellLab(_props: SimulationProps) {
             Detector {detectorMilliVolts.toFixed(3).replace('-', '−')} mV
           </span>
         </p>
+        <svg
+          viewBox="0 0 200 172"
+          role="img"
+          aria-label={`G reading: ${detectorText}`}
+          className={styles.meter}
+        >
+          <Galvanometer
+            x={100}
+            y={92}
+            width={136}
+            height={124}
+            value={detectorMilliVolts}
+            range={[-10, 10]}
+            unit="mV"
+            decimals={3}
+            caption="G reading"
+            scaleLabels={['−10', '0', '10']}
+            terminals={false}
+          />
+        </svg>
       </div>
 
       <div className={styles.controls}>

@@ -140,3 +140,44 @@ test('conductivity cell lab does not scroll sideways at 390 by 844', async ({ pa
   const scrollWidth = await page.evaluate(() => document.documentElement.scrollWidth)
   expect(scrollWidth).toBeLessThanOrEqual(390)
 })
+
+test('conductivity cell lab SVG text is at least 12 px tall at 390 by 844 and the G reading sits below the diamond', async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 })
+  await page.goto(SIM)
+  await expect(bridgeSvg(page)).toBeVisible()
+
+  const texts = await page.evaluate(() => {
+    const svgEl = document.querySelector<SVGSVGElement>('svg[role="img"][aria-label^="AC Wheatstone"]')
+    const root = svgEl?.parentElement?.parentElement
+    if (!svgEl || !root) return { error: 'sim root not found', items: [] as { text: string; h: number }[] }
+    const items: { text: string; h: number }[] = []
+    root.querySelectorAll<SVGTextElement>('svg text').forEach((el) => {
+      if (el.closest('[class*="srOnly"]')) return
+      const text = (el.textContent ?? '').trim()
+      if (!text) return
+      const h = el.getBoundingClientRect().height
+      items.push({ text: text.slice(0, 30), h })
+    })
+    return { error: null, items }
+  })
+  expect(texts.error).toBeNull()
+  expect(texts.items.length).toBeGreaterThan(10)
+  const tooShort = texts.items.filter((t) => t.h < 12)
+  expect(tooShort).toEqual([])
+
+  await expect(bridgeSvg(page)).toContainText('A = 1.0 cm²')
+  const boxes = await page.evaluate(() => {
+    const diamond = document.querySelector('svg[role="img"][aria-label^="AC Wheatstone"]')?.getBoundingClientRect()
+    const meter = document.querySelector('svg[role="img"][aria-label^="G reading"]')?.getBoundingClientRect()
+    return { diamondBottom: diamond?.bottom ?? 0, meterTop: meter?.top ?? 0 }
+  })
+  expect(boxes.meterTop).toBeGreaterThanOrEqual(boxes.diamondBottom)
+})
+
+test('conductivity cell lab phone layout screenshot in light', async ({ page }) => {
+  await page.emulateMedia({ colorScheme: 'light', reducedMotion: 'reduce' })
+  await page.setViewportSize({ width: 390, height: 844 })
+  await page.goto(SIM)
+  await expect(bridgeSvg(page)).toBeVisible()
+  await page.locator('[class*="stage"]').first().screenshot({ path: 'test-results/screens/c12u2-5-sim-phone-light.png' })
+})
