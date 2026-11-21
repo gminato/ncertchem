@@ -1,5 +1,6 @@
 'use client'
 
+import { Fragment } from 'react'
 import { useAmbientTime } from '@/components/animations/c12-unit1/ChemSvg'
 import { useTweenedNumber } from '@/components/animations/unit5/gibbs/useTweenedNumber'
 import {
@@ -34,6 +35,26 @@ const SALT_FINISH: Point = { x: 415, y: 330 }
 const SUPPLY = { x: 300, y: 28, w: 100, h: 100 } as const
 const SUPPLY_MINUS_X = 316
 const SUPPLY_PLUS_X = 384
+
+/** SVG caption text with every "Eext" written as italic E and a subscript ext. */
+function Caption({ text }: { text: string }) {
+  const parts = text.split('Eext')
+  return (
+    <>
+      {parts.map((part, i) => (
+        <Fragment key={i}>
+          {i > 0 && (
+            <>
+              <tspan className="sym" fontStyle="italic">E</tspan>
+              <tspan baselineShift="sub" fontSize="72%">ext</tspan>
+            </>
+          )}
+          {part}
+        </Fragment>
+      ))}
+    </>
+  )
+}
 
 export function DaniellOpposingVoltage({ step, reducedMotion }: DaniellOpposingVoltageProps) {
   const s = getDaniellStepState(step)
@@ -77,7 +98,7 @@ export function DaniellOpposingVoltage({ step, reducedMotion }: DaniellOpposingV
           Zn
         </text>
         <text x={290} y={466} textAnchor="middle" fontSize={15} fill="currentColor">
-          {s.caption}
+          <Caption text={s.caption} />
         </text>
       </svg>
     )
@@ -208,7 +229,7 @@ export function DaniellOpposingVoltage({ step, reducedMotion }: DaniellOpposingV
       )}
 
       <text x={290} y={466} textAnchor="middle" fontSize={14} fill="currentColor">
-        {s.caption}
+        <Caption text={s.caption} />
       </text>
     </svg>
   )

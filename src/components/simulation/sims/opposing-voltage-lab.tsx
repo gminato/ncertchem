@@ -30,17 +30,25 @@ const MINUTES_PER_SECOND = 1.5
 const MASS_FULL_SCALE_G = 0.07
 const CURRENT_RANGE_MA = 120
 
-// Circuit geometry, in the viewBox (600 × 470). Zinc is the anode, so it sits
-// on the left, as in the cell notation Zn | Zn²⁺ || Cu²⁺ | Cu.
+// Circuit geometry, in the viewBox (600 × 420). Zinc is the anode, so it sits
+// on the left, as in the cell notation Zn | Zn²⁺ || Cu²⁺ | Cu. One external
+// wire runs along the top (BUS_Y): Zn → galvanometer → opposing source → Cu.
 const ZN_X = 130
 const CU_X = 470
-const ELECTRODE_TOP = 150
+const BUS_Y = 64
+const ELECTRODE_TOP = 190
 const ELECTRODE_LENGTH = 150
-const SOURCE = { x: 212.5, y: 100, width: 150, height: 84 }
-const BUS_Y = 66
-// The source's − terminal is on the zinc side and its + terminal on the copper side.
-const MINUS: Point = { x: SOURCE.x + SOURCE.width * 0.25, y: SOURCE.y - 16 }
-const PLUS: Point = { x: SOURCE.x + SOURCE.width * 0.75, y: SOURCE.y - 16 }
+const BEAKER_Y = 236
+const BRIDGE_Y = 302
+const BRIDGE_APEX = 240
+// The galvanometer hangs from the bus by its two top corners (its terminals).
+const GAL = { x: 262, width: 110, top: BUS_Y + 22, height: 104 }
+const SOURCE = { x: 330, y: BUS_Y + 22, width: 120, height: 84 }
+// The source's − post is on the zinc side and its + post on the copper side. Both sit on the bus.
+const MINUS: Point = { x: SOURCE.x + SOURCE.width * 0.25, y: BUS_Y }
+const PLUS: Point = { x: SOURCE.x + SOURCE.width * 0.75, y: BUS_Y }
+const GAL_LEFT: Point = { x: GAL.x - GAL.width / 2, y: GAL.top }
+const GAL_RIGHT: Point = { x: GAL.x + GAL.width / 2, y: GAL.top }
 
 const MODE_TEXT: Record<OpposingMode, string> = {
   galvanic: 'Galvanic: the cell pushes electrons through the wire',
@@ -136,16 +144,19 @@ export function OpposingVoltageLab({ reducedMotion }: SimulationProps) {
   const galvanic = mode === 'galvanic'
   const electrolytic = mode === 'electrolytic'
 
-  // Electron wire points run from the zinc electrode to the source, then from
-  // the source to the copper electrode, in the galvanic direction.
+  // Electron wire points run Zn → galvanometer → source → Cu, in the galvanic direction.
   const zincWire: Point[] = [
     { x: ZN_X, y: ELECTRODE_TOP },
     { x: ZN_X, y: BUS_Y },
+    { x: GAL_LEFT.x, y: BUS_Y },
+    GAL_LEFT,
+  ]
+  const galvWire: Point[] = [
+    GAL_RIGHT,
+    { x: GAL_RIGHT.x, y: BUS_Y },
     { x: MINUS.x, y: BUS_Y },
-    { x: MINUS.x, y: MINUS.y },
   ]
   const copperWire: Point[] = [
-    { x: PLUS.x, y: PLUS.y },
     { x: PLUS.x, y: BUS_Y },
     { x: CU_X, y: BUS_Y },
     { x: CU_X, y: ELECTRODE_TOP },
@@ -185,26 +196,14 @@ export function OpposingVoltageLab({ reducedMotion }: SimulationProps) {
       </div>
 
       <div className={styles.stage}>
-        <svg viewBox="0 0 600 470" role="img" aria-label="Daniell cell wired against an opposing DC source">
+        <svg viewBox="0 0 600 420" role="img" aria-label="Daniell cell wired against an opposing DC source, with a galvanometer in the external wire">
           <VocabDefs idPrefix="opvlab" />
 
-          <Wire
-            corners={zincWire}
-            t={phase}
-            electrons={mode !== 'balanced'}
-            dots={4}
-            direction={wireDirection}
-          />
-          <Wire
-            corners={copperWire}
-            t={phase}
-            electrons={mode !== 'balanced'}
-            dots={4}
-            direction={wireDirection}
-            currentArrow
-          />
+          <Wire corners={zincWire} t={phase} electrons={mode !== 'balanced'} dots={4} direction={wireDirection} currentArrow />
+          <Wire corners={galvWire} t={phase} electrons={mode !== 'balanced'} dots={2} direction={wireDirection} />
+          <Wire corners={copperWire} t={phase} electrons={mode !== 'balanced'} dots={4} direction={wireDirection} />
 
-          <text x={300} y={28} textAnchor="middle" fontSize={16} className={styles.flowLabel}>
+          <text x={300} y={30} textAnchor="middle" fontSize={16} className={styles.flowLabel}>
             {FLOW_TEXT[mode]}
           </text>
 
@@ -217,8 +216,26 @@ export function OpposingVoltageLab({ reducedMotion }: SimulationProps) {
             label="Opposing source"
           />
 
-          <Beaker x={40} y={196} width={180} height={140} level={0.72} tint="clear" label="ZnSO₄(aq)" />
-          <Beaker x={380} y={196} width={180} height={140} level={0.72} tint="blue" label="CuSO₄(aq)" />
+          <Galvanometer
+            x={GAL.x}
+            y={GAL.top + GAL.height / 2}
+            width={GAL.width}
+            height={GAL.height}
+            value={currentMa}
+            range={[-CURRENT_RANGE_MA, CURRENT_RANGE_MA]}
+            unit="mA"
+            scaleLabels={['−', '0', '+']}
+            caption=""
+            digital
+            terminals={false}
+            decimals={0}
+          />
+          <text x={GAL.x} y={GAL.top + GAL.height + 18} textAnchor="middle" fontSize={15} fontWeight={600} fill="var(--fg)">
+            Galvanometer
+          </text>
+
+          <Beaker x={40} y={BEAKER_Y} width={180} height={140} level={0.72} tint="clear" label="ZnSO₄(aq)" />
+          <Beaker x={380} y={BEAKER_Y} width={180} height={140} level={0.72} tint="blue" label="CuSO₄(aq)" />
 
           <Electrode
             x={CU_X}
@@ -244,36 +261,22 @@ export function OpposingVoltageLab({ reducedMotion }: SimulationProps) {
           />
 
           <SaltBridge
-            start={{ x: 200, y: 262 }}
-            finish={{ x: 400, y: 262 }}
-            apex={200}
+            start={{ x: 200, y: BRIDGE_Y }}
+            finish={{ x: 400, y: BRIDGE_Y }}
+            apex={BRIDGE_APEX}
             plugs
             t={phase}
             ions={mode !== 'balanced'}
             ionCount={3}
             cationsTo={electrolytic ? 'from' : 'to'}
           />
-          <text x={300} y={302} textAnchor="middle" fontSize={15} className={styles.flowLabel}>
+          {/* Below the arch and its plugs, clear of every stroke. */}
+          <text x={300} y={334} textAnchor="middle" fontSize={15} className={styles.flowLabel}>
             KCl in agar gel
           </text>
-
-          <Galvanometer
-            x={300}
-            y={400}
-            width={150}
-            height={120}
-            value={currentMa}
-            range={[-CURRENT_RANGE_MA, CURRENT_RANGE_MA]}
-            unit="mA"
-            scaleLabels={['−', '0', '+']}
-            caption="Galvanometer"
-            digital
-            terminals={false}
-            decimals={0}
-          />
         </svg>
         <p className={styles.note}>
-          Purple arrow: conventional current. Blue dots: electrons. The current and the mass changes are schematic, not measured: both are set by Ecell − Eext through a fixed internal resistance, so treat them as illustrative.
+          Purple arrow: conventional current. Blue dots: electrons. Current and mass changes are schematic (set by Ecell − Eext), not measured.
         </p>
       </div>
 
