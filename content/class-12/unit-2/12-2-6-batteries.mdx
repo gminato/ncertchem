@@ -1,0 +1,122 @@
+---
+class: 12
+unit: 2
+section: "2.6"
+order: 9
+title: "Batteries"
+slug: "12-2-6-batteries"
+access: free
+summary: "A battery is a galvanic cell built for practical use: primary cells such as the dry and mercury cells run once, while the lead storage and nickel–cadmium cells are recharged by reversing their reactions."
+ncert: "Class 12, Part I — Unit 2, Section 2.6"
+---
+
+<Hook>
+An auto-rickshaw mechanic lifts the caps of an old lead–acid battery and dips a hydrometer into the acid to read its strength. Nobody does that to the sealed cell in a TV remote, yet both are batteries and both push electrons around a circuit. Why does one invite a fluid test while the other is thrown away when it dies? The answer lies in what the chemical reaction does to the electrolyte, and in whether that reaction can be run backwards.
+</Hook>
+
+## What makes a battery practical
+
+Every battery is a galvanic cell in disguise: a spontaneous redox reaction that turns chemical energy into electrical energy. A laboratory cell is fine for a demonstration, but a battery you carry in a torch or bolt into a car has to meet three tests. It should be light and compact, so it fits where it is needed. Its voltage should hold steady while it works, so the device it powers behaves predictably. And it should last long enough to be worth its cost.
+
+Batteries fall into two families. In a **primary battery** the reaction can happen only once: when the reactants are used up, the battery is dead and cannot be reused. In a **secondary battery** the reaction can be reversed by passing current through the cell in the opposite direction, so the same cell can be discharged and recharged many times.
+
+## Primary cells: used once
+
+The **dry cell**, also called the Leclanché cell after its discoverer, is the one in your torch and wall clock. Its zinc container doubles as the anode, so zinc atoms leave the metal as $\ce{Zn^2+}$ and release two electrons each. The cathode is a graphite rod sitting in a mixture of powdered manganese dioxide and carbon. Between the two lies a moist paste of ammonium chloride and zinc chloride. The electrode reactions are complicated in detail, but a useful summary is that manganese is reduced from the +4 to the +3 state, and the cell gives a potential of nearly 1.5 V.
+
+The **mercury cell** is built for steady, low-current work, such as hearing aids and watches. Its anode is zinc dissolved in mercury, an amalgam, and its cathode is a paste of mercury(II) oxide and carbon. The electrolyte is a paste of potassium hydroxide and zinc oxide. Its overall reaction is
+
+$$
+\ce{Zn(Hg) + HgO(s) -> ZnO(s) + Hg(l)}
+$$
+
+and the cell potential is about 1.35 V. The reason it stays put is the subject of the first Check below.
+
+<Check n={1}
+  options={[
+    "Mercury(II) oxide is a strong oxidant that stops reacting near the end of its life",
+    "The electrolyte is topped up by water from the paste as the cell ages",
+    "No ion whose concentration changes in solution takes part in the overall reaction, so the reaction quotient, and hence the potential, stays fixed",
+    "Zinc is in excess, so the anode never runs out during use"
+  ]}
+  answer={2}
+  explanation="The overall reaction Zn(Hg) + HgO(s) → ZnO(s) + Hg(l) involves no dissolved ion whose concentration can change during the cell's life. The reaction quotient therefore stays constant, so the potential stays at about 1.35 V until the reactants are exhausted."
+>
+Why does the mercury cell deliver a nearly constant potential of about 1.35 V through most of its life, unlike a battery whose electrolyte ions are steadily used up?
+</Check>
+
+## Secondary cells: recharged again and again
+
+The most important secondary cell is the **lead storage battery** that starts a car engine and runs the inverter in many homes. Its anode is lead, Pb, and its cathode is a grid of lead packed with lead dioxide, PbO₂. The electrolyte is 38% sulphuric acid. When the battery supplies current, both plates end up coated with lead sulphate:
+
+$$
+\begin{aligned}
+&\text{Anode:}\quad \ce{Pb(s) + SO4^2-(aq) -> PbSO4(s) + 2e-} \\
+&\text{Cathode:}\quad \ce{PbO2(s) + SO4^2-(aq) + 4H+(aq) + 2e- -> PbSO4(s) + 2H2O(l)}
+\end{aligned}
+$$
+
+Adding the two gives the overall discharge reaction, $\ce{Pb(s) + PbO2(s) + 2H2SO4(aq) -> 2PbSO4(s) + 2H2O(l)}$. Notice that the acid is consumed and water is produced, so the electrolyte gets weaker as the cell discharges. That is exactly what the hydrometer in the Hook measures.
+
+Charging reverses the process. Current pushed back through the cell turns the PbSO₄ on the anode back into lead and the PbSO₄ on the cathode back into PbO₂, regenerating the acid. The **nickel–cadmium cell** is a second rechargeable choice. It lasts longer than the lead storage cell but is more expensive to make. Its plates, separated by a layer, are rolled into a jelly-roll arrangement and soaked in moist sodium or potassium hydroxide. Its overall discharge reaction is
+
+$$
+\ce{Cd(s) + 2Ni(OH)3(s) -> CdO(s) + 2Ni(OH)2(s) + H2O(l)}
+$$
+
+<Scrolly animation="battery-cutaways">
+<Step>
+Start with the dry cell. Its zinc container is the anode, where $\ce{Zn -> Zn^2+ + 2e-}$ releases electrons into the external wire. The graphite rod at the centre is the cathode, sitting in powdered manganese dioxide and carbon. A moist paste of ammonium chloride and zinc chloride fills the gap, and the electrons travel from zinc to carbon through the circuit.
+</Step>
+<Step>
+Next, the mercury cell of a hearing aid. Zinc dissolved in mercury, the amalgam, is the anode, and the cathode is mercury(II) oxide with carbon in a paste of potassium hydroxide and zinc oxide. The overall change turns solid $\ce{HgO}$ into liquid mercury and zinc into zinc oxide. A voltmeter reads about 1.35 V and the reading stays flat for the whole life of the cell.
+</Step>
+<Step>
+Now the lead storage battery is discharging. The lead anode forms $\ce{PbSO4}$, and the $\ce{PbO2}$ cathode also turns into $\ce{PbSO4}$. Both plates grow a coating of lead sulphate while the sulphuric acid between them is used up and water appears. An acid-strength bar drops steadily, and the current runs out of the cell through the wire.
+</Step>
+<Step>
+Connect a charger and push current the other way. The reaction runs in reverse: lead sulphate on the lead plate is turned back into lead, and lead sulphate on the other plate into $\ce{PbO2}$. The plate that was the anode is now the site of reduction and so acts as the cathode during charging. The acid bar rises again as sulphuric acid is regenerated.
+</Step>
+<Step>
+Finally, the nickel–cadmium cell. Its positive plate, separator and negative plate are rolled in a jelly-roll stack and soaked in moist alkali. During discharge, cadmium and nickel(III) hydroxide give cadmium oxide and nickel(II) hydroxide, with water formed. The drawing shows this overall equation only, because the detailed electrode reactions are beyond what this Section needs.
+</Step>
+</Scrolly>
+
+## Using the battery model
+
+The **Lead–Acid Battery Cycle** simulation below lets you discharge and recharge a lead storage cell and watch both plates change. The acid-strength bar in it is illustrative, meant to show the direction of change rather than a measured concentration. Use it to check that the anode and cathode labels move with the reaction as the cell switches from discharge to charge.
+
+<Simulation name="lead-acid-cycle" title="Lead–Acid Battery Cycle" />
+
+## Check your understanding
+
+<Check n={2}
+  numeric
+  answer={23.19}
+  tolerance={0.1}
+  unit="g"
+  explanation="Q = 2.0 A × (3.0 × 3600 s) = 21 600 C. Moles of electrons = 21 600 ÷ 96 487 = 0.2239 mol. Each Pb → PbSO₄ takes 2 electrons, so moles of Pb = 0.1119 mol, and the mass is 0.1119 × 207.2 = 23.19 g."
+>
+A lead storage battery supplies a steady current of 2.0 A for 3.0 h during discharge. Taking F = 96 487 C mol⁻¹ and M(Pb) = 207.2 g mol⁻¹, what mass of lead is converted to lead sulphate at the anode?
+</Check>
+
+<Check n={3}
+  options={[
+    "The electrolyte becomes more concentrated, because water is consumed in the discharge",
+    "The H₂SO₄ concentration falls, because acid is consumed and water is formed",
+    "Both plates are coated with PbO₂ and the acid strength does not change",
+    "Lead is deposited on the anode, which grows thicker as the cell discharges"
+  ]}
+  answer={1}
+  explanation="The overall discharge reaction Pb + PbO₂ + 2H₂SO₄ → 2PbSO₄ + 2H₂O uses up sulphuric acid and makes water, so the electrolyte weakens. Recharging restores the acid."
+>
+Which statement about the lead storage battery during discharge is correct?
+</Check>
+
+<KeyIdeas>
+- **Primary batteries** such as the dry cell (about 1.5 V) and the mercury cell (about 1.35 V) are not designed to be recharged once their reactants are used up.
+- The **mercury cell's potential stays steady** because its overall reaction involves no dissolved ion whose concentration changes during its life.
+- In the **lead storage battery** both plates turn into PbSO₄ on discharge while the 38% H₂SO₄ electrolyte is consumed and water is formed; charging reverses the reactions.
+- The **nickel–cadmium cell** is a rechargeable alternative with a longer life and a higher manufacturing cost, with overall discharge reaction Cd + 2Ni(OH)₃ → CdO + 2Ni(OH)₂ + H₂O.
+- A **secondary battery** can be recharged because its discharge reaction can be reversed by passing current in the opposite direction.
+</KeyIdeas>
