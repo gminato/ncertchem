@@ -15,6 +15,10 @@ export interface FuelRustStepState {
   readonly ariaLabel: string
 }
 
+/** Fuel cell and thermal plant efficiencies (percent), from the NCERT lib. */
+export const EFF_FUEL_CELL = NCERT_FUEL_CELL.efficiencyPercent
+export const EFF_THERMAL = NCERT_FUEL_CELL.thermalPlantEfficiencyPercent
+
 export const FUEL_RUST_STEPS: readonly FuelRustStepState[] = [
   {
     index: 0,
@@ -35,7 +39,7 @@ export const FUEL_RUST_STEPS: readonly FuelRustStepState[] = [
     scene: 'bars',
     active: false,
     ariaLabel:
-      'Two efficiency bars. A thermal power plant converts about 40 percent of its fuel energy; a hydrogen-oxygen fuel cell about 70 percent.',
+      `Two efficiency bars. A thermal power plant converts about ${EFF_THERMAL} percent of its fuel energy; a hydrogen-oxygen fuel cell about ${EFF_FUEL_CELL} percent.`,
   },
   {
     index: 3,
@@ -80,10 +84,6 @@ export function standardE0(id: string): number {
 export const E0_FE_ANODE = NCERT_CORROSION.anodeE0
 export const E0_O2_CATHODE = NCERT_CORROSION.cathodeE0
 export const E_CELL_RUST = Math.round((E0_O2_CATHODE - E0_FE_ANODE) * 100) / 100
-
-/** Fuel cell and thermal plant efficiencies (percent), from the NCERT lib. */
-export const EFF_FUEL_CELL = NCERT_FUEL_CELL.efficiencyPercent
-export const EFF_THERMAL = NCERT_FUEL_CELL.thermalPlantEfficiencyPercent
 
 /** Signed volts with a real minus sign, e.g. −0.44 V and +1.23 V. */
 export function fmtSignedVolts(x: number): string {

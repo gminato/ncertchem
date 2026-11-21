@@ -168,7 +168,34 @@ function CorrosionSpot({ x, role }: { x: number; role: 'anode' | 'cathode' }) {
   return <circle cx={x} cy={IRON_Y} r={34} fill={colour} fillOpacity={0.18} stroke={colour} strokeWidth={2} strokeDasharray="6 4" />
 }
 
-function Corrosion({ t, moving, rust }: { t: number; moving: boolean; rust: boolean }) {
+/* Rust builds up in two stages: stage 1 is a few specks at the anodic spot; stage 2 adds the flakes and film. */
+const RUST_SPECKS = [
+  { x: 192, y: 316, rx: 4, ry: 3 },
+  { x: 208, y: 313, rx: 4, ry: 3 },
+]
+const RUST_FLAKES = [
+  { x: 178, y: 310, rx: 8, ry: 5 },
+  { x: 200, y: 302, rx: 11, ry: 6 },
+  { x: 224, y: 308, rx: 9, ry: 5 },
+  { x: 186, y: 324, rx: 6, ry: 4 },
+  { x: 216, y: 324, rx: 6, ry: 4 },
+  { x: 162, y: 322, rx: 5, ry: 3.5 },
+  { x: 242, y: 320, rx: 5, ry: 3.5 },
+]
+
+function RustLayer({ stage }: { stage: 0 | 1 | 2 }) {
+  const patches = stage === 2 ? [...RUST_SPECKS, ...RUST_FLAKES] : RUST_SPECKS
+  return (
+    <g data-scene="rust-layer" data-stage={stage}>
+      {stage === 2 && <path d="M160 318 Q200 309 244 318 L244 323 Q200 327 160 323 Z" fill="var(--heat)" fillOpacity={0.45} />}
+      {patches.map((p, i) => (
+        <ellipse key={i} cx={p.x} cy={p.y} rx={p.rx} ry={p.ry} fill="var(--heat)" stroke="var(--heat)" strokeOpacity={0.6} strokeWidth={1} />
+      ))}
+    </g>
+  )
+}
+
+function Corrosion({ t, moving, rust }: { t: number; moving: boolean; rust: 0 | 1 | 2 }) {
   const electronWire: Point[] = [
     { x: ANODIC_X, y: 372 },
     { x: CATHODIC_X, y: 372 },
@@ -199,13 +226,11 @@ function Corrosion({ t, moving, rust }: { t: number; moving: boolean; rust: bool
       <text x={290} y={394} textAnchor="middle" fontSize={15} fill="var(--fg)">
         2e⁻ move through the metal
       </text>
-      {rust && (
-        <g data-scene="rust-layer">
-          <rect x={ANODIC_X - 46} y={IRON_Y - 12} width={92} height={22} rx={10} fill="var(--heat)" />
-          <text x={40} y={446} fontSize={16} fontWeight={600} fill="var(--heat)">
-            Rust: Fe₂O₃·xH₂O
-          </text>
-        </g>
+      {rust > 0 && <RustLayer stage={rust} />}
+      {rust === 2 && (
+        <text x={40} y={446} fontSize={16} fontWeight={600} fill="var(--heat)">
+          Rust: Fe₂O₃·xH₂O
+        </text>
       )}
       {feIons.map((ion) => (
         <Ion key={`fe${ion.k}`} x={ion.x} y={ion.y} kind="cation" formula="Fe" charge="2+" fontSize={15} />
@@ -235,7 +260,7 @@ function Corrosion({ t, moving, rust }: { t: number; moving: boolean; rust: bool
         </text>
         <path d="M500 172 L400 286" fill="none" stroke="var(--red)" strokeWidth={1.5} />
       </g>
-      {!rust && (
+      {rust < 2 && (
         <text x={290} y={460} textAnchor="middle" fontSize={16} fill="var(--fg-muted)">
           E°cell = {E_CELL_RUST.toFixed(2)} V
         </text>
@@ -248,53 +273,49 @@ function Corrosion({ t, moving, rust }: { t: number; moving: boolean; rust: bool
 
 const PANEL_CENTRES = [105, 290, 475] as const
 
-function Panel({ cx, title, children }: { cx: number; title: string; children: ReactNode }) {
+const PANEL_TOP = 44
+const PANEL_H = 392
+const DOME_TOP = 170
+
+function Panel({ cx, title, lines, status, children }: { cx: number; title: string; lines: readonly [string, string]; status: string; children: ReactNode }) {
   return (
     <g>
-      <rect x={cx - 86} y={44} width={172} height={392} rx={12} fill="var(--surface)" stroke="var(--border)" />
-      <text x={cx} y={74} textAnchor="middle" fontSize={16} fontWeight={600} fill="var(--fg)">
+      <rect x={cx - 86} y={PANEL_TOP} width={172} height={PANEL_H} rx={12} fill="var(--surface)" stroke="var(--border)" />
+      <text x={cx} y={76} textAnchor="middle" fontSize={20} fontWeight={600} fill="var(--fg)">
         {title}
+      </text>
+      <text x={cx} y={104} textAnchor="middle" fontSize={15} fill="var(--fg)">
+        {lines[0]}
+      </text>
+      <text x={cx} y={124} textAnchor="middle" fontSize={15} fill="var(--fg)">
+        {lines[1]}
       </text>
       <rect x={cx - 80} y={IRON_Y} width={160} height={56} rx={4} fill="var(--metal-fe)" stroke="var(--border)" />
       {children}
+      <text x={cx} y={414} textAnchor="middle" fontSize={16} fontWeight={600} fill="var(--success)">
+        {status}
+      </text>
     </g>
   )
 }
 
 function Protection() {
   const [paint, zinc, magnesium] = PANEL_CENTRES
-  const dome = (cx: number) => `M${cx - 75} ${IRON_Y} C${cx - 75} 262 ${cx - 35} 240 ${cx} 240 C${cx + 35} 240 ${cx + 75} 262 ${cx + 75} ${IRON_Y} Z`
+  const dome = (cx: number) => `M${cx - 75} ${IRON_Y} C${cx - 75} 250 ${cx - 35} ${DOME_TOP} ${cx} ${DOME_TOP} C${cx + 35} ${DOME_TOP} ${cx + 75} 250 ${cx + 75} ${IRON_Y} Z`
   return (
     <g data-scene="protection">
-      <Panel cx={paint} title="1. Paint">
+      <Panel cx={paint} title="1. Paint" lines={['Paint keeps water', 'and O₂ off iron']} status="Iron spared">
         <path d={dome(paint)} fill="var(--liquid)" stroke="var(--liquid-edge)" strokeWidth={2} />
         <rect x={paint - 80} y={IRON_Y} width={160} height={14} rx={3} fill="var(--accent-soft)" stroke="var(--border)" />
-        <text x={paint} y={392} textAnchor="middle" fontSize={15} fill="var(--fg)">
-          Paint keeps water
-        </text>
-        <text x={paint} y={414} textAnchor="middle" fontSize={15} fill="var(--fg)">
-          and O₂ off the iron
-        </text>
       </Panel>
-      <Panel cx={zinc} title="2. Zinc coat">
+      <Panel cx={zinc} title="2. Zinc coat" lines={['Zn is the anode;', 'it corrodes first']} status="Iron spared">
         <path d={dome(zinc)} fill="var(--liquid)" stroke="var(--liquid-edge)" strokeWidth={2} />
         <rect x={zinc - 80} y={IRON_Y} width={160} height={14} rx={3} fill="var(--metal-zn)" />
-        <text x={zinc} y={392} textAnchor="middle" fontSize={15} fill="var(--fg)">
-          Zn corrodes
-        </text>
-        <text x={zinc} y={414} textAnchor="middle" fontSize={15} fill="var(--fg)">
-          instead of the Fe
-        </text>
       </Panel>
-      <Panel cx={magnesium} title="3. Magnesium block">
+      <Panel cx={magnesium} title="3. Magnesium" lines={['A bolted Mg block', 'is the anode']} status="Iron spared">
         <path d={dome(magnesium)} fill="var(--liquid)" stroke="var(--liquid-edge)" strokeWidth={2} />
-        <rect x={magnesium - 30} y={262} width={60} height={38} rx={4} fill="var(--metal-mg)" stroke="var(--border)" />
-        <text x={magnesium} y={392} textAnchor="middle" fontSize={15} fill="var(--ox)">
-          Mg is the anode
-        </text>
-        <text x={magnesium} y={414} textAnchor="middle" fontSize={15} fill="var(--fg)">
-          Mg corrodes, Fe spared
-        </text>
+        <rect x={magnesium - 26} y={IRON_Y + 56} width={52} height={24} rx={3} fill="var(--metal-mg)" stroke="var(--border)" />
+        <circle cx={magnesium} cy={IRON_Y + 56} r={4} fill="var(--surface-raised)" stroke="var(--border)" />
       </Panel>
     </g>
   )
@@ -316,7 +337,7 @@ export function FuelRust({ step, reducedMotion }: FuelRustProps) {
       {state.scene === 'cell' && <FuelCell active={state.active} t={t} />}
       {state.scene === 'bars' && <EfficiencyBars />}
       {(state.scene === 'corrosion' || state.scene === 'rust') && (
-        <Corrosion t={t} moving={moving && state.active} rust={state.scene === 'rust'} />
+        <Corrosion t={t} moving={moving && state.active} rust={state.scene === 'rust' ? 2 : state.index === 3 ? 1 : 0} />
       )}
       {state.scene === 'protection' && <Protection />}
     </svg>
