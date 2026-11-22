@@ -16,6 +16,8 @@ export const CAT_FIRST_HUMP_KJ = 30
 export const CAT_VALLEY_KJ = 15
 /** Uphill example: the products stand above the reactants (height only; no value is quoted). */
 export const UPHILL_PRODUCTS_KJ = 20
+/** Faint uncatalysed curve once the catalysed route is drawn (kept visible in both themes). */
+export const UNCAT_FAINT_OPACITY = 0.5
 
 export type CatalystScene = 'downhill' | 'uphill' | 'mb'
 
