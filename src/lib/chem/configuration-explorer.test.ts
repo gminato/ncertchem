@@ -102,6 +102,17 @@ describe('series helpers', () => {
     expect(D_BLOCK_SERIES['4d'][0]).toBe('Y')
   })
 
+  it('main line shows the outer configuration; the core is in display only (Pt)', () => {
+    expect(explorerState('Pt', 0).outer).toBe('5d⁹6s¹')
+    expect(explorerState('Cr', 0).outer).toBe('3d⁵4s¹')
+    expect(explorerState('Ti', 3).outer).toBe('3d¹')
+  })
+
+  it('an ion verdict names only the ion, not the atom reason', () => {
+    expect(explorerState('Cu', 2).verdictText).not.toContain('is a transition element')
+    expect(explorerState('Cu', 0).verdictText).toContain('is a transition element')
+  })
+
   it('summary text names the species and its verdict', () => {
     expect(explorerState('Ti', 3).summary.startsWith('Ti³⁺: [Ar] 3d¹.')).toBe(true)
   })

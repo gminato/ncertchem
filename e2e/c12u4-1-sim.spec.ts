@@ -97,11 +97,13 @@ for (const scheme of ['light', 'dark'] as const) {
     expect(await smallTextLeaves(page)).toEqual([])
     expect(await svgOutOfBounds(page)).toEqual([])
 
-    // State 3: platinum (Z = 78) in the 5d series: 5d⁹6s¹, group 10, with the 4f¹⁴ core written out.
+    // State 3: platinum (Z = 78) in the 5d series: 5d⁹6s¹, group 10, main line 5d⁹6s¹, full form with the core as a secondary line.
     await sim.getByRole('radio', { name: '5d' }).click()
     await sim.getByRole('radio', { name: '0', exact: true }).click()
     await sim.getByRole('button', { name: /atomic number 78$/ }).click()
     await expect(sim.locator('[aria-live="polite"]')).toContainText('Pt: [Xe] 4f¹⁴ 5d⁹6s¹')
+    await expect(sim.getByText('5d⁹6s¹', { exact: true })).toBeVisible()
+    await expect(sim.getByText('Full form: [Xe] 4f¹⁴ 5d⁹6s¹')).toBeVisible()
     await expect(sim.getByText('d + s = 9 + 1 = 10, the group number 10')).toBeVisible()
     await sim.screenshot({ path: `test-results/screens/c12u4-1-sim-pt-5d-${scheme}.png` })
     expect(await smallTextLeaves(page)).toEqual([])

@@ -48,7 +48,9 @@ export interface ExplorerState {
   readonly charge: number
   /** Symbol with the charge, e.g. "Fe²⁺" (the plain symbol for the atom). */
   readonly label: string
-  /** Configuration with the noble-gas core, e.g. "[Ar] 3d⁶". */
+  /** Outer configuration as Table 4.1 writes it, e.g. "3d⁵4s¹" or "5d⁹6s¹" (the main line). */
+  readonly outer: string
+  /** Configuration with the noble-gas core, e.g. "[Ar] 3d⁶" (the secondary line). */
   readonly display: string
   /** Subshells in Table 4.1 order: (n−1)d, then ns (a zero-electron ns, as in Pd, is kept). */
   readonly subshells: readonly ExplorerSubshell[]
@@ -81,6 +83,7 @@ export function explorerState(symbol: string, charge: number): ExplorerState {
   })
 
   const body = speciesTerms.map((t) => `${t.subshell}${superscript(String(t.electrons))}`).join('')
+  const outer = body === '' ? coreWithF(symbol, row.series) : body
   const display = body === '' ? coreWithF(symbol, row.series) : `${coreWithF(symbol, row.series)} ${body}`
 
   const atom = isTransitionElement(symbol)
@@ -99,7 +102,6 @@ export function explorerState(symbol: string, charge: number): ExplorerState {
     verdictText = incomplete
       ? `${label} is a transition ion: its d subshell holds ${dText}, so it is incomplete.`
       : `${label} is not a transition ion: its d subshell is ${dCount === 0 ? 'empty' : 'full'} (${dText}).`
-    verdictText += ` ${symbol} ${atom.verdict ? 'is' : 'is not'} a transition element: ${atom.reason}.`
   }
 
   const sElectrons = atomTerms.filter((t) => t.subshell.endsWith('s')).reduce((sum, t) => sum + t.electrons, 0)
@@ -113,6 +115,7 @@ export function explorerState(symbol: string, charge: number): ExplorerState {
     symbol,
     charge,
     label,
+    outer,
     display,
     subshells,
     dCount,

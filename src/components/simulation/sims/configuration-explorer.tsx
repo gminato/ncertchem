@@ -89,7 +89,7 @@ export function ConfigurationExplorer() {
           className={styles.scene}
           viewBox={`0 0 ${VIEW_W} ${configHeight + CONFIG_GAP}`}
           role="img"
-          aria-label={`Configuration boxes for ${state.label}: ${state.display}`}
+          aria-label={`Configuration boxes for ${state.label}: ${state.outer}`}
         >
           <ConfigurationBoxes config={state.subshells} x={MARGIN} y={CONFIG_GAP / 2} width={DBLOCK_STRIP_WIDTH} maxSize={BOX_MAX} />
         </svg>
@@ -98,8 +98,9 @@ export function ConfigurationExplorer() {
       <div className={styles.readout}>
         <p className={styles.species}>
           <span className={styles.name}>{state.label}</span>
-          <span className={styles.config}>{state.display}</span>
+          <span className={styles.config}>{state.outer}</span>
         </p>
+        {state.display !== state.outer ? <p className={styles.core}>Full form: {state.display}</p> : null}
 
         {state.charge === 0 ? (
           <p className={styles.sum}>
@@ -115,7 +116,7 @@ export function ConfigurationExplorer() {
 
         <p className={styles.note}>
           Configurations come from Table 4.1. An ion loses its ns electrons first, then its (n−1)d electrons. The same rule
-          applies to the 4d and 5d ions.
+          applies to the 4d, 5d and 6d ions.
         </p>
       </div>
 
