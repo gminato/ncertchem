@@ -370,7 +370,7 @@ export interface MagneticRow {
 export const NCERT_MAGNETIC_MOMENTS: readonly MagneticRow[] = [
   { ion: 'Sc³⁺', dCount: 0, unpaired: 0, calculatedBm: 0, observedBm: 0, observedAsPrinted: '0' },
   { ion: 'Ti³⁺', dCount: 1, unpaired: 1, calculatedBm: 1.73, observedBm: 1.75, observedAsPrinted: '1.75' },
-  { ion: 'V³⁺', dCount: 2, unpaired: 2, calculatedBm: 2.84, observedBm: 2.76, observedAsPrinted: '2.76' },
+  { ion: 'Ti²⁺', dCount: 2, unpaired: 2, calculatedBm: 2.84, observedBm: 2.76, observedAsPrinted: '2.76' },
   { ion: 'V²⁺', dCount: 3, unpaired: 3, calculatedBm: 3.87, observedBm: 3.86, observedAsPrinted: '3.86' },
   { ion: 'Cr²⁺', dCount: 4, unpaired: 4, calculatedBm: 4.9, observedBm: 4.8, observedAsPrinted: '4.80' },
   { ion: 'Mn²⁺', dCount: 5, unpaired: 5, calculatedBm: 5.92, observedBm: 5.96, observedAsPrinted: '5.96' },
@@ -683,24 +683,24 @@ export const NCERT_UNIT4_ERRATA: readonly UnitErrata[] = [
   },
   {
     id: 'table-4-7-v2-calculated',
-    where: 'Table 4.7 (p. 102), calculated moment for two unpaired electrons (V³⁺)',
+    where: 'Table 4.7 (p. 102), calculated moment for two unpaired electrons (Ti²⁺)',
     ncertSays: 'Calculated spin-only moment printed as 2.84 BM.',
     correct: '√(2 × 4) = √8 = 2.83 BM (2 d.p.). Kept as printed; use 2.83 in any calculation or display.',
     kind: 'slip',
   },
   {
-    id: 'table-4-7-v-symbol',
+    id: 'table-4-7-ti2-symbol',
     where: 'Table 4.7 (p. 102), row 3 of the ion column',
-    ncertSays: 'The ion symbol for the 3d² row is garbled in the text layer ("Tl³⁺" in the layout text).',
-    correct: 'Read as V³⁺ (3d², 2 unpaired): the row is the vanadium row between Ti³⁺ and V²⁺. Verified by the sequence of configurations, not by image.',
-    kind: 'doubt',
+    ncertSays: 'The 3d² row is printed "Tl²⁺" (checked by the lead on the page image at 300 dpi).',
+    correct: 'Ti²⁺ (3d², 2 unpaired): "Tl" is a misprint for Ti, and the charge is 2+ as printed. Show it as Ti²⁺.',
+    kind: 'slip',
   },
   {
     id: 'table-4-7-ni-range',
     where: 'Table 4.7 (p. 102), Ni²⁺ observed moment',
     ncertSays: 'Printed as "2.9 – 3, 4" BM.',
     correct:
-      'Read as 2.9–3.4 BM (the comma is a misprint for a decimal point). The observedBm field holds [2.9, 3.4]; observedAsPrinted keeps the printed text. Not verified against a page image.',
+      'Read as 2.9–3.4 BM (the comma is a misprint for a decimal point). The observedBm field holds [2.9, 3.4]; observedAsPrinted keeps the printed text. Checked by the lead on the page image.',
     kind: 'doubt',
   },
   {
