@@ -59,6 +59,7 @@ import { FormulaTranslator } from './sims/formula-translator'
 import { ArrowPusher } from './sims/arrow-pusher'
 import { AlkyneAcidTest } from './sims/alkyne-acid-test'
 import { HalogenationLab } from './sims/halogenation-lab'
+import { HaloalkanePrepBench } from './sims/haloalkane-prep-bench'
 import { OzonolysisDetective } from './sims/ozonolysis-detective'
 import { AlkaneSynthesisPlanner } from './sims/alkane-synthesis-planner'
 import { AlkeneMaker } from './sims/alkene-maker'
@@ -176,6 +177,7 @@ export const simulations: Record<string, ComponentType<SimulationProps>> = {
   'arrow-pusher': ArrowPusher,
   'alkyne-acid-test': AlkyneAcidTest,
   'halogenation-lab': HalogenationLab,
+  'haloalkane-prep-bench': HaloalkanePrepBench,
   'ozonolysis-detective': OzonolysisDetective,
   'alkane-synthesis-planner': AlkaneSynthesisPlanner,
   'alkene-maker': AlkeneMaker,
