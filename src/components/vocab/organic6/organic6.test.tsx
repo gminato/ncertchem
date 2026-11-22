@@ -9,7 +9,7 @@ import {
 } from './geometry'
 import { HALOGEN_TONE, halogenLabel } from './tones'
 import { StereoCentre, STEREO_SIZE } from './StereoCentre'
-import { PolarBond } from './PolarBond'
+import { PolarBond, POLAR_BOND_SIZE } from './PolarBond'
 import { Polarimeter } from './Polarimeter'
 import { MechanismProfile } from './MechanismProfile'
 import { PlanarCation } from './PlanarCation'
@@ -126,6 +126,26 @@ describe('renders', () => {
     )
     expect(svg).toContain('193 pm')
     expect(svg).toContain('var(--dipole)')
+  })
+
+  it('draws each dipole arrow parallel to the bond, proportional to its dipole and inside the box', () => {
+    const lengths: Record<string, number> = {}
+    for (const row of NCERT_TABLE_6_2) {
+      const svg = renderToStaticMarkup(
+        <svg>
+          <PolarBond halogen={row.halogen} dipole />
+        </svg>,
+      )
+      const tail = Number(/<line x1="([\d.]+)" y1="172"/.exec(svg)?.[1])
+      const tip = Number(/<path d="M([\d.]+) 172 L/.exec(svg)?.[1])
+      expect(Number.isFinite(tail) && Number.isFinite(tip)).toBe(true)
+      expect(tip).toBeLessThanOrEqual(POLAR_BOND_SIZE.width)
+      lengths[row.halogen] = tip - tail
+      expect(tip - tail).toBeCloseTo(row.dipoleDebye * 30, 1)
+    }
+    expect(lengths.Cl).toBeGreaterThan(lengths.F)
+    expect(lengths.F).toBeGreaterThan(lengths.Br)
+    expect(lengths.Br).toBeGreaterThan(lengths.I)
   })
 
   it('renders the polarimeter, profile and planar cation', () => {
