@@ -88,9 +88,30 @@ test.describe('Unit navigation', () => {
   })
 
   test('a Unit with no Sections yet shows a calm empty state', async ({ page }) => {
+    await page.goto('/class-12/unit-5')
+    await expect(page.getByRole('heading', { level: 1 })).toHaveText('Coordination Compounds')
+    await expect(page.getByText('The Sections of this Unit are being written.')).toBeVisible()
+  })
+
+  test('Class 12 Unit 4 lists its eleven Sections in order', async ({ page }) => {
     await page.goto('/class-12/unit-4')
     await expect(page.getByRole('heading', { level: 1 })).toHaveText('The d- and f-Block Elements')
-    await expect(page.getByText('The Sections of this Unit are being written.')).toBeVisible()
+    const links = page.locator('a[href^="/class-12/unit-4/"]')
+    await expect(links).toHaveCount(11)
+    const hrefs = await links.evaluateAll((els) => els.map((e) => e.getAttribute('href')))
+    expect(hrefs.map((h) => h?.split('/').pop())).toEqual([
+      '12-4-1-position-and-electronic-configurations',
+      '12-4-3-1-physical-properties-and-atomic-sizes',
+      '12-4-3-3-ionisation-enthalpies',
+      '12-4-3-4-oxidation-states',
+      '12-4-3-5-electrode-potentials-and-reactivity',
+      '12-4-3-9-magnetic-properties',
+      '12-4-3-10-colour-complexes-catalysis-and-alloys',
+      '12-4-4-potassium-dichromate-and-permanganate',
+      '12-4-5-the-lanthanoids',
+      '12-4-6-the-actinoids',
+      '12-4-7-applications-of-d-and-f-block-elements',
+    ])
   })
 
   test('Class 12 Unit 3 lists its ten Sections in order', async ({ page }) => {
