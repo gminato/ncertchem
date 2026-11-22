@@ -67,7 +67,8 @@ export interface StereoLayout {
 export function stereoLayout(o: StereoLayoutOptions): StereoLayout {
   const s = o.mirror ? -1 : 1
   const umbrella = umbrellaVectors(o.invert).map((v) => ({
-    tip: { x: o.cx + s * v.x * o.length + v.z * DEPTH_SHEAR * o.length, y: o.cy + v.y * o.length },
+    // The depth shear is mirrored too, so the mirror image is an exact left-right reflection of the drawing.
+    tip: { x: o.cx + s * (v.x + v.z * DEPTH_SHEAR) * o.length, y: o.cy + v.y * o.length },
     z: v.z,
   }))
   return {
