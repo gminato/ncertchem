@@ -3,6 +3,15 @@ import { parseSmiles, molecularFormula } from '@/lib/chem/molecule-parse'
 import { classifyHalide, classifyHalideSmiles, formulaUnicode, type HalideClass } from '@/lib/chem/haloalkanes'
 import { iupacNameFromSmiles } from '@/lib/chem/iupac-organic'
 
+/** Steps 1 and 2 draw this one 2-methylbutane frame; every panel uses the same atom positions. */
+export const FRAME_SMILES = 'CC(C)CC'
+
+/**
+ * The frame atom that carries the bromine in each panel of Steps 1 and 2: C1 (1°) in Step 1, then
+ * C3 (2°) and C2 (3°) in Step 2. Frame atoms follow the order of FRAME_SMILES.
+ */
+export const FRAME_ATTACH: readonly (readonly number[])[] = [[0], [3, 1]]
+
 /**
  * The molecules of each Step of the `halide-classes` Scrolly. Every molecule is the Section's own
  * (not an NCERT example). Names, formulas and classes are computed from the libs at render time.
@@ -31,7 +40,7 @@ export interface HalideDescription {
   formula: string
   /** Class of the molecule, e.g. "1° alkyl halide" or "vicinal dihalide". */
   classLabel: string
-  /** Atoms to wash: the halogen-bearing carbons and any deciding neighbour. */
+  /** Atoms to wash: the halogen-bearing carbons only (a wash on a neighbouring C=C would hide its stroke). */
   highlight: number[]
 }
 
@@ -71,7 +80,7 @@ export function describeHalide(smiles: string): HalideDescription {
   if (halogens.length === 1) {
     const c = classes[0]
     classLabel = monoLabel(c)
-    highlight = [c.carbon, c.decidingNeighbour].filter((x): x is number => x !== null)
+    highlight = [c.carbon]
   } else {
     classLabel = multiLabel(smiles)
     highlight = [...new Set(classes.map((c) => c.carbon))]
@@ -87,8 +96,12 @@ export function describeHalide(smiles: string): HalideDescription {
   }
 }
 
+/** A Step index clamped to the Step range. */
+export function clampStep(step: number): number {
+  return Math.min(Math.max(0, Math.floor(step)), HALIDE_STEPS.length - 1)
+}
+
 /** The molecules of a Step, clamped to the Step range. */
 export function describeStep(step: number): HalideDescription[] {
-  const index = Math.min(Math.max(0, Math.floor(step)), HALIDE_STEPS.length - 1)
-  return HALIDE_STEPS[index].map(describeHalide)
+  return HALIDE_STEPS[clampStep(step)].map(describeHalide)
 }
