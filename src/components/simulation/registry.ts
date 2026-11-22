@@ -106,6 +106,7 @@ import { LanthanoidExplorer } from './sims/lanthanoid-explorer'
 import { IndustrialCatalystExplorer } from './sims/industrial-catalyst-explorer'
 import { FBlockCompare } from './sims/f-block-compare'
 import { HalideClassifier } from './sims/halide-classifier'
+import { CXBondExplorer } from './sims/c-x-bond-explorer'
 
 export interface SimulationProps {
   /** True when the Learner has asked the OS for reduced motion. Skip tweens and loops when set. */
@@ -226,4 +227,5 @@ export const simulations: Record<string, ComponentType<SimulationProps>> = {
   'f-block-compare': FBlockCompare,
   'halide-classifier': HalideClassifier,
   'halide-namer': HalideNamer,
+  'c-x-bond-explorer': CXBondExplorer,
 }
