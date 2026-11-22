@@ -99,7 +99,7 @@ for (const scheme of ['light', 'dark'] as const) {
     await sim.getByRole('button', { name: 'More half-lives' }).click()
     await expect(sim.getByText('Half-lives counted')).toBeVisible()
     await expect(summary).toContainText('After 2 half-lives')
-    await expect(summary).toContainText('0.250 of its start left')
+    await expect(summary).toContainText('25.0 % of its start left')
     await sim.screenshot({ path: `test-results/screens/c12u3-7-sim-two-half-lives-${scheme}.png` })
 
     expect(await smallTextLeaves(page)).toEqual([])

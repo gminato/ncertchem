@@ -61,7 +61,7 @@ $$
 t_{1/2} = \frac{[\ce{R}]_0}{2k}
 $$
 
-A zero-order half-life is therefore proportional to the starting concentration and inversely proportional to the rate constant. Start with twice as much reactant and it takes twice as long to lose half of it.
+Here the starting amount sits on top of the fraction. Doubling $[\ce{R}]_0$ doubles the wait, while doubling $k$ halves it. Load the vessel with twice the reactant and the reaction needs twice as long to shed half of it.
 
 ## First-order half-life
 
@@ -71,7 +71,7 @@ $$
 t_{1/2} = \frac{2.303}{k}\log 2 = \frac{0.693}{k}
 $$
 
-Since $\log 2 = 0.301$, the factor $2.303 \times 0.301$ comes to 0.693. The result contains no $[\ce{R}]_0$. Each half-life halves whatever is left, so the time needed does not depend on how much you started with. That independence is the signature of a first-order reaction. You can also run the formula backwards, because $k = 0.693/t_{1/2}$. With $k = 0.0500\ \text{s}^{-1}$, the half-life is $0.693/0.0500 = 13.9\ \text{s}$, the same whether the sample began at 1.00 or at 2.00 mol L⁻¹.
+Since $\log 2 = 0.301$, the factor $2.303 \times 0.301$ comes to 0.693. The result contains no $[\ce{R}]_0$. Each half-life halves whatever is left, so the time needed does not depend on how much you started with. That independence is the signature of a first-order reaction. The same relation reads the other way: $k = 0.693/t_{1/2}$. With $k = 0.0500\ \text{s}^{-1}$, the half-life is $0.693/0.0500 = 13.9\ \text{s}$, the same whether the sample began at 1.00 or at 2.00 mol L⁻¹.
 
 This is why radioactive dating works. Radioactive decay is a first-order process, so the time for half of the carbon-14 in a sample to decay does not depend on how much carbon the sample holds.
 
@@ -88,19 +88,19 @@ A zero-order reaction has $k = 0.0500\ \text{mol L}^{-1}\ \text{s}^{-1}$ and sta
 
 ## Order can shift with conditions
 
-Many reactions obey a first-order law even though their true order is higher. Take the hydrolysis of ethyl acetate:
+Order is not a fixed label stamped on a reaction. It comes from measurement, and the conditions a reaction runs under can change which concentrations show up in its rate law. A common case is a reaction whose rate law looks first order even though both reactants are involved. Take the hydrolysis of ethyl acetate:
 
 $$
 \ce{CH3COOC2H5 + H2O -> CH3COOH + C2H5OH}
 $$
 
-It is second order in principle, because both reactants affect the rate. But water is present in large excess, so its concentration barely changes during the reaction. The rate then follows the ethyl acetate alone, and the reaction behaves as first order. Such a reaction is called **pseudo-first order**.
+The rate law here does contain both reactants, yet the measurements often hide that. When one partner is supplied in a huge surplus, its concentration hardly moves as the reaction proceeds, so for practical purposes it drops out of the rate law. Water plays that part in ethyl acetate hydrolysis: almost every molecule of it is untouched, and only the ester's concentration changes in any meaningful way. The measured rate therefore tracks the ester alone, and the reaction is classed as **pseudo-first order**.
 
-Inversion of cane sugar is another pseudo-first-order reaction. Water is again in excess, and the rate law is $\text{Rate} = k[\ce{C12H22O11}]$. The products are glucose and fructose, both $\ce{C6H12O6}$.
+Inversion of cane sugar follows the same pattern. Water is the surplus partner, so the rate law collapses to $\text{Rate} = k[\ce{C12H22O11}]$. Cane sugar splits into glucose and fructose, which are both $\ce{C6H12O6}$.
 
 <Simulation name="half-life-compare" title="Half-Life Comparison Lab" />
 
-The simulation puts a zero-order and a first-order curve side by side on a single k value of 0.0500, and one slider sets the starting concentration [R]₀ for both. Change [R]₀ and watch the zero-order half-life move while the first-order one stays put. Then step through the half-lives and see the remaining fraction halve each time.
+The simulation puts a zero-order and a first-order curve side by side on a single k value of 0.0500, and one slider sets the starting concentration $[\ce{R}]_0$ for both. Change [R]₀ and watch the zero-order half-life move while the first-order one stays put. Then step through the half-lives and see the remaining fraction halve each time.
 
 <Check
   n={3}
@@ -114,7 +114,7 @@ A first-order reaction has $k = 0.0500\ \text{s}^{-1}$. After how many seconds i
 </Check>
 
 <KeyIdeas>
-- **The half-life** is the time for a reactant's concentration to fall to half of its starting value.
+- **Half-life** is the wait for a reactant to be cut in two, measured from whatever amount it starts with.
 - **Zero order:** $t_{1/2} = [\ce{R}]_0/2k$. It is proportional to the starting concentration, so it changes when the start changes.
 - **First order:** $t_{1/2} = 0.693/k$. It does not depend on $[\ce{R}]_0$, and k can be found from the half-life.
 - **Table 3.4 in short:** zero order gives a straight line for $[\ce{R}]$ against $t$ with k in mol L⁻¹ s⁻¹; first order gives a straight line for $\ln[\ce{R}]$ against $t$ with k in s⁻¹.

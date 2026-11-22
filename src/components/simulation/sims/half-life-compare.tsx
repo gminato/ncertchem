@@ -4,6 +4,7 @@ import { useState } from 'react'
 import { Button, Slider } from '@/components/controls'
 import type { SimulationProps } from '@/components/simulation/registry'
 import { PlotCurve, PlotFrame, PlotGuide, PlotPoint } from '@/components/vocab'
+import { roundToSigFigs } from '@/lib/chem/sigfigs'
 import {
   firstOrderConc,
   firstOrderHalfLife,
@@ -38,7 +39,7 @@ const FRAME = { x: 66, y: 18, width: 370, height: 262 }
 const DOMAIN = { xMin: 0, xMax: T_MAX, yMin: 0, yMax: C_MAX }
 
 const num = (x: number) => formatSig(x, 3)
-const yTick = (v: number) => v.toFixed(1)
+const yTick = (v: number) => roundToSigFigs(v, 2)
 const xTick = (v: number) => String(v)
 
 export function HalfLifeCompare(_unused?: SimulationProps) {
@@ -65,7 +66,7 @@ export function HalfLifeCompare(_unused?: SimulationProps) {
     `k = ${num(k)}. [R]₀ = ${num(r0)} mol L⁻¹. Zero order: t½ = ${num(zeroHalf)} s, ` +
     `which moves with [R]₀. First order: t½ = ${num(firstHalf)} s for any [R]₀. ` +
     `After ${n} half-li${n === 1 ? 'fe' : 'ves'}: zero order has ${num(zeroAtN)} mol L⁻¹ left; ` +
-    `first order has ${num(firstFraction)} of its start left.`
+    `first order has ${roundToSigFigs(firstFraction * 100, 3)} % of its start left.`
 
   return (
     <div className={styles.root} data-half-life-compare>
