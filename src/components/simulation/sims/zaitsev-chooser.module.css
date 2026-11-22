@@ -1,0 +1,112 @@
+.sim {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.controls {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.stage {
+  background: var(--surface-raised);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: var(--space-3);
+}
+
+.scene {
+  display: block;
+  width: 100%;
+  max-width: 560px;
+  height: auto;
+  margin: 0 auto;
+}
+
+.substrateName {
+  fill: var(--fg);
+  font-size: 17px;
+  font-weight: 600;
+}
+
+.betaLabel {
+  fill: var(--success);
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.alphaLabel {
+  fill: var(--fg-muted);
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.arrow {
+  stroke: var(--fg-muted);
+  stroke-width: 2;
+}
+
+.arrowHead {
+  fill: var(--fg-muted);
+}
+
+.reagent {
+  fill: var(--fg-muted);
+  font-size: 15px;
+}
+
+.card {
+  fill: var(--surface);
+  stroke: var(--border);
+  stroke-width: 1;
+}
+
+.cardZaitsev {
+  fill: var(--surface);
+  stroke: var(--accent);
+  stroke-width: 2;
+}
+
+.tag {
+  fill: var(--fg-muted);
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.tagAccent {
+  fill: var(--accent);
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.productName {
+  fill: var(--fg);
+  font-size: 17px;
+  font-weight: 600;
+}
+
+.productFormula {
+  fill: var(--fg-muted);
+  font-size: 15px;
+}
+
+.barTrack {
+  fill: var(--bg);
+  stroke: var(--border);
+  stroke-width: 1;
+}
+
+.barFill {
+  fill: var(--accent);
+}
+
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
