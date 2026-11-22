@@ -44,13 +44,14 @@ describe('Section 3.1 rate steps', () => {
     expect(instantRate(250)).toBeGreaterThan(0)
   })
 
-  it('shares one reaction rate between the species of 3A → 2B', () => {
+  it('shares one reaction rate between the species of 3A → 2B, taken from the curve at 250 s', () => {
     const { reaction, dA, dB } = stoichiometryRates()
-    expect(reaction).toBeCloseTo(2.0e-4, 15)
-    expect(dA).toBeCloseTo(-6.0e-4, 15)
-    expect(dB).toBeCloseTo(4.0e-4, 15)
-    expect(READOUTS.dA).toBe('6.00 × 10⁻⁴')
-    expect(READOUTS.dB).toBe('4.00 × 10⁻⁴')
-    expect(READOUTS.reaction).toBe('2.00 × 10⁻⁴')
+    const minusDAdt = instantRate(250)
+    expect(reaction).toBeCloseTo(minusDAdt / 3, 15)
+    expect(dA).toBeCloseTo(-minusDAdt, 15)
+    expect(dB).toBeCloseTo((2 * minusDAdt) / 3, 15)
+    expect(READOUTS.dA).toBe('1.21 × 10⁻⁴')
+    expect(READOUTS.dB).toBe('8.09 × 10⁻⁵')
+    expect(READOUTS.reaction).toBe('4.04 × 10⁻⁵')
   })
 })
