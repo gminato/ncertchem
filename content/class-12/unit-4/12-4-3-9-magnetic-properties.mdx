@@ -1,0 +1,118 @@
+---
+class: 12
+unit: 4
+section: "4.3.9"
+order: 6
+title: "Magnetic Properties"
+slug: "12-4-3-9-magnetic-properties"
+access: free
+summary: "Unpaired electrons make an ion feel a pull in a magnetic field, and a square-root formula turns a count of those electrons into a moment you can predict and measure."
+ncert: "Class 12, Part I — Unit 4, Section 4.3.9"
+---
+
+<Hook>
+Set a pinch of green iron(II) sulphate on a sensitive balance beside a strong magnet, and the balance shows the powder is drawn gently toward it. Do the same with white zinc sulphate and the reading barely changes. Both salts contain a 2+ metal ion and a sulphate, so what does the magnet detect inside the iron ion that it cannot find in the zinc one?
+</Hook>
+
+## Three ways a substance answers a magnet
+
+Bring a sample near the poles of a strong magnet and it responds in one of three broad ways. Some samples are drawn into the field, some are pushed slightly out of it, and a few are pulled so hard that they cling to the magnet. These are the paramagnetic, diamagnetic and ferromagnetic responses. The difference lies in the electrons, not in the metal as a lump.
+
+Everything that matters comes from the arrangement of electrons inside each atom or ion. The next Scrolly follows the three responses, the origin of the pull, and the formula that links the pull to a count of electrons.
+
+<Scrolly animation="spin-only-moment">
+  <Step>
+    **A tube on a balance:** Hang a tube of green iron(II) sulphate between the poles of a strong magnet, on a sensitive balance. The tube is drawn gently toward the field, so its apparent weight rises. Now hang a tube of zinc sulphate in the same place. It barely moves, because a zinc(II) ion has no unpaired electrons and is only weakly pushed away from the field.
+  </Step>
+  <Step>
+    **Three responses:** A diamagnetic sample has all its electrons paired and is weakly pushed out of the field. A paramagnetic sample has unpaired electrons and is drawn into the field. A ferromagnetic sample is drawn in very strongly, and it is best thought of as an extreme case of paramagnetism. Many transition metal ions are paramagnetic.
+  </Step>
+  <Step>
+    **Why an electron acts as a magnet:** Every electron spins, and the spin makes it a tiny magnet. Where two electrons occupy one orbital, their spins point opposite ways and the two magnets null each other, so the ion keeps a net moment only from its unpaired electrons. Orbital motion is the other possible source of a moment, but in a compound it is largely switched off for these first-row 3d ions, which leaves the spins to decide the response.
+  </Step>
+  <Step>
+    **Counting into a number:** Take $\ce{Cr^3+}$, with configuration $[\ce{Ar}]\,3d^{3}$. Its three d electrons sit in three separate orbitals, so $n = 3$. The spin-only moment is $\mu = \sqrt{3 \times 5} = \sqrt{15} = 3.87\ \text{BM}$. A single unpaired electron gives $\sqrt{3} = 1.73\ \text{BM}$, so the moment grows as the count grows.
+  </Step>
+  <Step>
+    **The hill across d¹ to d¹⁰:** Plot the moment against the count for high-spin aqua ions. It climbs $1.73$, $2.83$, $3.87$, $4.90$ and $5.92\ \text{BM}$ as the count rises to five at d⁵, then falls back through $4.90$, $3.87$, $2.83$, $1.73$ to $0$ at d¹⁰. Measured values from Table 4.7 sit beside each point, so the formula is checked against the data.
+  </Step>
+</Scrolly>
+
+## Counting the unpaired electrons
+
+The spin-only formula is written
+
+$$
+\mu = \sqrt{n(n+2)}\ \text{BM}
+$$
+
+where $n$ is the number of unpaired electrons and $\mu$ is the moment in Bohr magnetons. The unit BM is a fixed unit of magnetic moment, so the number that comes out can be compared directly from one ion to another. The formula does not ask which metal the ion came from; it asks only how many electrons are unpaired.
+
+To use it, first write the configuration of the ion, remove the $4s$ electrons first when the ion is formed, and then fill the $3d$ orbitals one electron at a time, obeying Hund's rule. Count the singly occupied orbitals. That count is $n$.
+
+Try the count on a simple case. A $\ce{Ti^3+}$ ion has $3d^{1}$, with one unpaired electron, so $\mu = \sqrt{1 \times 3} = 1.73\ \text{BM}$.
+
+<Check
+  n={1}
+  options={[
+    "Cr²⁺, by two unpaired electrons",
+    "Ti²⁺, by one unpaired electron",
+    "Cr²⁺, by one unpaired electron",
+    "Neither: both are 3d ions, so their moments are equal"
+  ]}
+  answer={0}
+  explanation="Cr²⁺ is 3d⁴ with four unpaired electrons, and Ti²⁺ is 3d² with two. Cr²⁺ therefore leads by two unpaired electrons, which is √24 = 4.90 BM against √8 = 2.83 BM. Count the unpaired electrons first, then apply the formula."
+>
+Which ion has the larger spin-only moment, $\ce{Cr^2+}$ or $\ce{Ti^2+}$, and by how many unpaired electrons does it lead?
+</Check>
+
+## Reading the moment from the ion
+
+The count of unpaired electrons does not depend on the metal alone, but on how many d electrons the ion holds. For a 3d ion in water (a high spin aqua ion) the rule is simple. For $d^{n}$ with $n \le 5$ every electron enters its own orbital first, so the number of unpaired electrons equals $n$. For $d^{n}$ with $n \ge 5$ the orbitals fill up, and the number unpaired equals $10 - n$. The count therefore rises to five at $d^{5}$ and falls to zero at $d^{10}$, which gives the hill you saw in the Scrolly.
+
+This is why a zinc ion, with a full $3d^{10}$ shell, is diamagnetic, while iron(II) with $3d^{6}$ carries four unpaired electrons and is paramagnetic. The same count also explains why $\ce{Ni^2+}$ and $\ce{Cu^2+}$ sit near the bottom of the hill.
+
+<Check
+  n={2}
+  options={[
+    "Fe²⁺ and Cr²⁺ have the same spin-only moment, 4.90 BM, because each has four unpaired electrons",
+    "Ni²⁺ and Cu²⁺ have the same spin-only moment, because both are divalent 3d ions",
+    "Zn²⁺ is strongly paramagnetic, with a moment of 1.73 BM",
+    "The moment equals n in BM, so five unpaired electrons give 5.00 BM"
+  ]}
+  answer={0}
+  explanation="Fe²⁺ (3d⁶) and Cr²⁺ (3d⁴) are both high spin with n = 4, so μ = √24 = 4.90 BM. Ni²⁺ (n = 2, 2.83 BM) and Cu²⁺ (n = 1, 1.73 BM) differ. Zn²⁺ has no unpaired electrons and is diamagnetic. The moment is √(n(n + 2)), not n: five unpaired electrons give √35 = 5.92 BM."
+>
+Which statement about spin-only moments is correct?
+</Check>
+
+## Measured moments and the gap
+
+The moments in Table 4.7 are measured, mostly on hydrated ions in solution or in solid salts. For many 3d ions the measured value is close to the spin-only one. The titanium(III) value is 1.75 BM against 1.73 BM calculated, and the copper(II) range of 1.8 to 2.2 BM lies just above 1.73 BM. The nickel(II) range is 2.9 to 3.4 BM, which sits above the calculated 2.83 BM for two unpaired electrons.
+
+Some ions drift further away. The iron(II) range of 5.3 to 5.5 BM is well above the spin-only 4.90 BM. The formula is therefore a clear first estimate, and the gap tells you that it is not the whole story. Use the measured values to check your count, not to replace it.
+
+<Simulation name="magnetic-moment-lab" title="Magnetic Moment Lab" />
+
+Choose any 3d ion and the lab draws its d electrons in boxes, counts the unpaired ones and shows the spin-only moment from the formula. Where Table 4.7 gives a measured value, it appears beside the calculated one. The pull on the tube is drawn in proportion to the moment and is a schematic, not a measured force. Diamagnetic ions show a faint push outward.
+
+## Check your understanding
+
+<Check
+  n={3}
+  numeric
+  answer={2.83}
+  tolerance={0.005}
+  unit="BM"
+  explanation="With two unpaired electrons, μ = √(2 × 4) = √8 = 2.828…, which rounds to 2.83 BM. Do not round it up to 2.84."
+>
+An ion in aqueous solution has two unpaired electrons. Give its spin-only magnetic moment in Bohr magnetons to two decimal places.
+</Check>
+
+<KeyIdeas>
+- Diamagnetic substances have all electrons paired and are weakly pushed out of a field; paramagnetic substances have unpaired electrons and are drawn in; ferromagnetism is an extreme form of paramagnetism.
+- Each unpaired electron's spin gives a small magnetic moment, and paired electrons cancel one another out.
+- The spin-only formula $\mu = \sqrt{n(n+2)}\ \text{BM}$ turns the count $n$ into a moment: one unpaired electron gives $1.73\ \text{BM}$.
+- High spin 3d aqua ions have $n$ unpaired electrons for $d^{n}$ with $n \le 5$ and $10 - n$ for $n \ge 5$, so the moment rises to $5.92\ \text{BM}$ at $d^{5}$ and falls to zero at $d^{10}$.
+- Measured moments are close to the spin-only values for 3d ions, but not identical; the $\ce{Ni^2+}$ range of 2.9 to 3.4 BM sits above the calculated 2.83 BM.
+</KeyIdeas>

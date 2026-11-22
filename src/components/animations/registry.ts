@@ -159,6 +159,7 @@ import { ArrheniusEnergy } from './c12-unit3/arrhenius/ArrheniusEnergy'
 import { IonisationSteps } from './c12-unit4/ionisation/IonisationSteps'
 import { OxidationStateGrid } from './c12-unit4/oxstates/OxidationStateGrid'
 import { ElectrodePotentialCycle } from './c12-unit4/electrode/ElectrodePotentialCycle'
+import { SpinOnlyMoment } from './c12-unit4/magnetic/SpinOnlyMoment'
 
 /**
  * Animations available to a Scrolly Animation, keyed by the `animation` prop.
@@ -328,6 +329,7 @@ export const animations = {
   'ionisation-steps': IonisationSteps,
   'oxidation-state-grid': OxidationStateGrid,
   'electrode-potential-cycle': ElectrodePotentialCycle,
+  'spin-only-moment': SpinOnlyMoment,
 } as const
 
 export type AnimationName = keyof typeof animations

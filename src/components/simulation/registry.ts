@@ -98,6 +98,7 @@ import { ConfigurationExplorer } from './sims/configuration-explorer'
 import { DBlockTrendsLab } from './sims/dblock-trends-lab'
 import { IonisationExplorer } from './sims/ionisation-explorer'
 import { OxidationStateExplorer } from './sims/oxidation-state-explorer'
+import { MagneticMomentLab } from './sims/magnetic-moment-lab'
 
 export interface SimulationProps {
   /** True when the Learner has asked the OS for reduced motion. Skip tweens and loops when set. */
@@ -210,4 +211,5 @@ export const simulations: Record<string, ComponentType<SimulationProps>> = {
   'dblock-trends-lab': DBlockTrendsLab,
   'ionisation-explorer': IonisationExplorer,
   'oxidation-state-explorer': OxidationStateExplorer,
+  'magnetic-moment-lab': MagneticMomentLab,
 }

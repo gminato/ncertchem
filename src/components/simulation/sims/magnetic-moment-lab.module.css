@@ -1,0 +1,95 @@
+.sim {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.stage {
+  background: var(--surface-raised);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: var(--space-3);
+}
+
+.scene {
+  display: block;
+  width: 100%;
+  max-width: 560px;
+  height: auto;
+  margin: 0 auto;
+}
+
+.readout {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.results {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 200px), 1fr));
+  gap: var(--space-3);
+}
+
+.stat {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.statLabel {
+  font-size: 15px;
+  color: var(--fg-muted);
+}
+
+.statValue {
+  font-family: var(--font-mono);
+  font-size: 20px;
+  color: var(--fg);
+  overflow-wrap: anywhere;
+}
+
+.legend {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+  font-size: 15px;
+  color: var(--fg-muted);
+}
+
+.keyFilled,
+.keyRing {
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  margin-left: 8px;
+  box-sizing: border-box;
+}
+
+.keyFilled {
+  background: var(--db-3d);
+}
+
+.keyRing {
+  border: 2.5px solid var(--db-3d);
+  background: var(--surface);
+}
+
+.note {
+  margin: 0;
+  font-size: 15px;
+  color: var(--fg-muted);
+}
+
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
