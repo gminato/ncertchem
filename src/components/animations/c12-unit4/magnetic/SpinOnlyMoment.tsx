@@ -88,6 +88,9 @@ function BalanceScene() {
       <Label x={436} y={378} anchor="middle" muted>
         zinc(II) sulphate
       </Label>
+      <Label x={290} y={404} size={15} anchor="middle" muted>
+        Schematic, not to scale.
+      </Label>
       <Label x={290} y={450} size={18} anchor="middle">
         Same balance, same magnet, different electrons.
       </Label>
@@ -145,7 +148,7 @@ function ResponsesScene() {
               y2={y0 + 150}
               style={{ stroke: 'var(--fg-subtle)', strokeWidth: 1.5, strokeDasharray: '4 5' }}
             />
-            <rect x={446} y={y0 + 6} width={14} height={140} rx={4} style={{ fill: 'var(--spec-red)' }} />
+            <rect x={446} y={y0 + 14} width={14} height={140} rx={4} style={{ fill: 'var(--spec-red)' }} />
             <g transform={`translate(${cx - 11.2} ${y0 + 20}) scale(0.8)`}>
               <TestTube liquidLevel={0} precipitate={{ color: TONE, amount: 0.8, outline: true }} progress={1} />
             </g>
@@ -160,7 +163,7 @@ function ResponsesScene() {
           </g>
         )
       })}
-      <Label x={446} y={12} anchor="middle" size={15} muted>
+      <Label x={446} y={20} anchor="middle" size={15} muted>
         field
       </Label>
     </g>
@@ -235,6 +238,17 @@ function CountScene() {
   )
 }
 
+/** d6 to d9 fall away to the right, and their measured bars sit just right of each point, so their labels go left and below. */
+const FALLING_FROM = 6
+const FALLING_TO = 9
+
+/** Ti³⁺ (d1) rises to the right under its own measured point, so its label goes right and below the line. */
+function labelPlacement(d: number, px: number, py: number): { x: number; y: number; anchor: 'start' | 'middle' | 'end' } {
+  if (d >= FALLING_FROM && d <= FALLING_TO) return { x: px - 12, y: py + 10, anchor: 'end' }
+  if (d === 1) return { x: px + 10, y: py + 20, anchor: 'start' }
+  return { x: px, y: py - 13, anchor: 'middle' }
+}
+
 /** The points and bars drawn inside the PlotFrame, in data coordinates. */
 function Hill() {
   const s = usePlotScale()
@@ -246,9 +260,9 @@ function Hill() {
         <g key={p.d}>
           <circle cx={s.x(p.d)} cy={s.y(p.mu)} r={6} style={{ fill: TONE }} />
           <text
-            x={s.x(p.d)}
-            y={s.y(p.mu) - 13}
-            textAnchor="middle"
+            x={labelPlacement(p.d, s.x(p.d), s.y(p.mu)).x}
+            y={labelPlacement(p.d, s.x(p.d), s.y(p.mu)).y}
+            textAnchor={labelPlacement(p.d, s.x(p.d), s.y(p.mu)).anchor}
             style={{ fill: INK, fontFamily: 'var(--font-sans)', fontSize: 15, fontWeight: 600 }}
           >
             {p.label}
@@ -289,7 +303,7 @@ function HillScene() {
         y={24}
         width={470}
         height={330}
-        domain={{ xMin: 0.5, xMax: 10.5, yMin: 0, yMax: 6.5 }}
+        domain={{ xMin: 0.5, xMax: 10.6, yMin: 0, yMax: 6.5 }}
         xTicks={[1, 2, 3, 4, 5, 6, 7, 8, 9, 10]}
         yTicks={[0, 1, 2, 3, 4, 5, 6]}
         yTickFormat={(v) => String(v)}
