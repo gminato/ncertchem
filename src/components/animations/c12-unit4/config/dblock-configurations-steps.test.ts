@@ -5,6 +5,7 @@ import { outerConfig, ionConfig, dElectronCount, isTransitionElement } from '@/l
 import {
   CLOSING_SYMBOLS,
   FILL_ROWS,
+  fillRevealOpacity,
   boxesFor,
   getConfigStep,
   outerElectrons,
@@ -50,5 +51,13 @@ describe('d-block configuration Steps', () => {
 
   it('reads the outer configuration as NCERT prints it, (n−1)d before ns', () => {
     expect(outerConfig('Cu').config.terms.map((t) => t.subshell)).toEqual(['3d', '4s'])
+  })
+
+  it('fades the ten 3d cells in one after another, and shows all ten at the end', () => {
+    expect([0, 1, 2].map((i) => fillRevealOpacity(i, 0))).toEqual([0, 0, 0])
+    expect(fillRevealOpacity(0, 0.05)).toBeCloseTo(0.5)
+    expect(fillRevealOpacity(1, 0.1)).toBe(0)
+    expect(fillRevealOpacity(9, 1)).toBe(1)
+    expect(Array.from({ length: 10 }, (_, i) => fillRevealOpacity(i, 1))).toEqual(Array(10).fill(1))
   })
 })

@@ -59,3 +59,12 @@ export const SERIES_LEGEND: readonly { series: '3d' | '4d' | '5d' | '6d'; text: 
   { series: '5d', text: '5d: La, then Hf to Hg' },
   { series: '6d', text: '6d: Ac, then Rf to Cn' },
 ]
+
+/**
+ * Opacity of the 3d cell with this index (0 to 9, in FILL_ROWS order) at a tweened progress of
+ * 0 to 1. Each cell fades in over one tenth of the progress, so the ten cells appear one after
+ * another in a fixed order. Under reduced motion the progress is 1 and every cell is shown.
+ */
+export function fillRevealOpacity(index: number, progress: number, count = 10): number {
+  return Math.min(1, Math.max(0, progress * count - index))
+}
