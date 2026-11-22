@@ -1,6 +1,7 @@
 import React from 'react'
 import { describe, it, expect } from 'vitest'
 import { renderToStaticMarkup } from 'react-dom/server'
+import { tailFractions } from './MaxwellBoltzmann'
 import {
   EnergyProfile,
   MaxwellBoltzmannCurve,
@@ -174,5 +175,16 @@ describe('Maxwell–Boltzmann curves', () => {
   it('renders the same markup every time (deterministic)', () => {
     const el = <MaxwellBoltzmannCurve x={84} y={18} width={488} height={250} temperatures={[300, 310]} ea={2.2} labels={['300 K', '310 K']} />
     expect(renderToStaticMarkup(el)).toBe(renderToStaticMarkup(el))
+  })
+
+  it('a schematic spread gives a flatter, lower, rightward second curve with a larger tail', () => {
+    const [tail1, tail2] = tailFractions([300, 310], 2.2, 300, 2, 1.25)
+    expect(tail2).toBeGreaterThan(tail1)
+    const th = 2 * 1.25
+    expect(maxwellBoltzmann(th / 2, th)).toBeLessThan(maxwellBoltzmann(1, 2))
+    let area = 0
+    const h = 0.001
+    for (let E = h / 2; E < 80; E += h) area += maxwellBoltzmann(E, th) * h
+    expect(area).toBeCloseTo(1, 3)
   })
 })

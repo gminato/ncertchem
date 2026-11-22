@@ -352,16 +352,22 @@ export function PlotSlopeTriangle({ at, dx, slope, dxLabel, dyLabel, tone = 'neu
   const y2 = s.y(at.y + slope * dx)
   const stroke = TONE_VAR[tone]
   const midX = (x1 + x2) / 2
+  const midY = (y1 + y2) / 2
+  // The run leg always sits at the bottom of the triangle, so its label goes below it, away from the line.
+  // A falling line puts the rise leg on the left; a rising line puts it on the right. Both labels sit outside.
+  const falling = slope < 0
+  const d = falling ? `M${x1} ${y1} V${y2} H${x2}` : `M${x1} ${y1} H${x2} V${y2}`
+  const runY = Math.max(y1, y2)
   return (
     <g aria-hidden="true">
-      <path d={`M${x1} ${y1} H${x2} V${y2}`} fill="none" stroke={stroke} strokeWidth={2} strokeLinejoin="round" />
+      <path d={d} fill="none" stroke={stroke} strokeWidth={2} strokeLinejoin="round" />
       {dxLabel !== undefined && (
-        <text x={midX} y={y1 + 20} textAnchor="middle" fontSize={TICK_SIZE + 1} fill="var(--fg)" {...HALO}>
+        <text x={midX} y={runY + TICK_SIZE + 6} textAnchor="middle" fontSize={TICK_SIZE + 1} fill="var(--fg)" {...HALO}>
           {dxLabel}
         </text>
       )}
       {dyLabel !== undefined && (
-        <text x={x2 + 10} y={(y1 + y2) / 2 + 5} textAnchor="start" fontSize={TICK_SIZE + 1} fill="var(--fg)" {...HALO}>
+        <text x={falling ? x1 - 8 : x2 + 8} y={midY + 5} textAnchor={falling ? 'end' : 'start'} fontSize={TICK_SIZE + 1} fill="var(--fg)" {...HALO}>
           {dyLabel}
         </text>
       )}
