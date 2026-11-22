@@ -78,6 +78,7 @@ import { OpposingVoltageLab } from './sims/opposing-voltage-lab'
 import { HalfCellPairingBench } from './sims/half-cell-pairing'
 import { NernstLab } from './sims/nernst-lab'
 import { RateSlopeExplorer } from './sims/rate-slope-explorer'
+import { RateDeterminingStepLab } from './sims/rate-determining-step-lab'
 import { EGKConverter } from './sims/e-g-k-converter'
 import { OrderUnitsLab } from './sims/order-units-lab'
 import { ConductivityCellLab } from './sims/conductivity-cell-lab'
@@ -186,4 +187,5 @@ export const simulations: Record<string, ComponentType<SimulationProps>> = {
   'electroplating-lab': ElectroplatingLab,
   'lead-acid-cycle': LeadAcidCycle,
   'initial-rates-lab': InitialRatesLab,
+  'rate-determining-step-lab': RateDeterminingStepLab,
 }

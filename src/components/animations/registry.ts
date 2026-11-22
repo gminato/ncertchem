@@ -147,6 +147,7 @@ import { BatteryCutaways } from './c12-unit2/batteries/BatteryCutaways'
 import { RateTangent } from './c12-unit3/rate/RateTangent'
 import { RateLawInitialRates } from './c12-unit3/ratelaw/RateLawInitialRates'
 import { OrderCurves } from './c12-unit3/order/OrderCurves'
+import { MechanismSteps } from './c12-unit3/molecularity/MechanismSteps'
 
 /**
  * Animations available to a Scrolly Animation, keyed by the `animation` prop.
@@ -304,6 +305,7 @@ export const animations = {
   'rate-tangent': RateTangent,
   'initial-rates': RateLawInitialRates,
   'order-curves': OrderCurves,
+  'mechanism-steps': MechanismSteps,
 } as const
 
 export type AnimationName = keyof typeof animations
