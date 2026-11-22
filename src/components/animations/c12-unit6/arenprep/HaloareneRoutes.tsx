@@ -216,7 +216,8 @@ function TolueneDoors() {
 /** Step 3: the two isomers separated by cooling and filtering. */
 function Separation() {
   const lattice: Array<[number, number]> = []
-  for (let r = 0; r < 3; r++) for (let c = 0; c < 3; c++) lattice.push([118 + c * 14, 120 + r * 14])
+  // The solid lies on the flask base, below the liquid line (y 214).
+  for (let r = 0; r < 3; r++) for (let c = 0; c < 3; c++) lattice.push([124 + c * 14, 248 + r * 14])
   return (
     <g>
       <path
@@ -229,6 +230,9 @@ function Separation() {
       {lattice.map(([x, y]) => (
         <rect key={`${x}-${y}`} x={x} y={y} width={9} height={9} rx={1.5} fill="var(--accent)" />
       ))}
+      <Label x={212} y={284} size={16} anchor="start" fill="var(--fg)">
+        solid
+      </Label>
       <Label x={150} y={336} size={16} fill="var(--fg-muted)">
         cool the mixture, then filter
       </Label>
@@ -323,13 +327,16 @@ function FluorineCrossed() {
 
 /** Step 6: aniline to the diazonium salt, then three routes to the haloarene. */
 function SandmeyerChain() {
-  // The ipso carbon is atom 0 of benzene; the N2+ label sits just outside it.
+  // The ipso carbon is atom 0 of benzene. The N2+ group is bonded to it: a short bond, then the label.
   const ipso = drawingFrame(graphOf(BENZENE), 34).points[0]
   const diazonium = (
-    <text x={ipso.x * 1.7} y={ipso.y * 1.7 + 6} textAnchor="middle" fontSize={17} fill="var(--fg)">
-      N<Sub>2</Sub>
-      <Sup>+</Sup>
-    </text>
+    <g>
+      <line x1={ipso.x + 2} y1={ipso.y} x2={ipso.x + 16} y2={ipso.y} stroke="var(--bond)" strokeWidth={3} />
+      <text x={ipso.x + 18} y={ipso.y + 6} textAnchor="start" fontSize={17} fill="var(--fg)">
+        N<Sub>2</Sub>
+        <Sup>+</Sup>
+      </text>
+    </g>
   )
   const rows = [80, 190, 300]
   const tags: Array<[number, number]> = [
