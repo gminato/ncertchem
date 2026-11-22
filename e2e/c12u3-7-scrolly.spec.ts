@@ -38,6 +38,18 @@ for (const scheme of ['light', 'dark'] as const) {
         await page.waitForTimeout(900)
         const panel = scrolly.locator('svg').first()
         await expect(panel).toBeVisible()
+        // Rendered text size (R4): font-size x (SVG rendered width / viewBox width), in CSS px.
+        const minPx = await panel.evaluate((el) => {
+          const svg = el as unknown as SVGSVGElement
+          const scale = svg.getBoundingClientRect().width / svg.viewBox.baseVal.width
+          let min = Infinity
+          svg.querySelectorAll('text').forEach((t) => {
+            if (!t.textContent?.trim()) return
+            min = Math.min(min, parseFloat(getComputedStyle(t).fontSize) * scale)
+          })
+          return min
+        })
+        expect(minPx, `step ${k + 1} smallest rendered SVG text`).toBeGreaterThanOrEqual(13)
         await panel.screenshot({ path: `test-results/screens/c12u3-7-step${k + 1}-${scheme}.png` })
       }
 

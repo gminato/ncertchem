@@ -2,7 +2,7 @@
 
 import type { CSSProperties, ReactNode } from 'react'
 import { Sub, Sup } from '@/components/animations/c12-unit1/ChemSvg'
-import { PlotCurve, PlotFrame, PlotGuide, PlotLine, PlotPoint, PlotSlopeTriangle, usePlotScale } from '@/components/vocab'
+import { PlotCurve, PlotFrame, PlotLine, PlotPoint, usePlotScale } from '@/components/vocab'
 import { firstOrderConc, fractionRemainingAfterHalfLives } from '@/lib/chem/kinetics'
 import {
   HL_K,
@@ -42,6 +42,62 @@ function S({ children }: { children: ReactNode }) {
   return <tspan className="sym">{children}</tspan>
 }
 
+/** Text gets a halo the colour of the surface, as the vocab labels do. */
+const HALO = { stroke: 'var(--surface)', strokeWidth: 4, paintOrder: 'stroke' as const, strokeLinejoin: 'round' as const }
+
+/**
+ * Dashed drop-lines to both axes. The time label sits BESIDE its line (left or right), so no guide runs through it.
+ */
+function Guide({ at, xLabel, xSide = 'left', yLabel, stroke = 'var(--fg-muted)' }: { at: { x: number; y: number }; xLabel?: ReactNode; xSide?: 'left' | 'right'; yLabel?: ReactNode; stroke?: string }) {
+  const s = usePlotScale()
+  const px = s.x(at.x)
+  const py = s.y(at.y)
+  const { left, top, height } = s.box
+  const bottom = top + height
+  const toLeft = xSide === 'left'
+  return (
+    <g aria-hidden="true">
+      <line x1={px} x2={px} y1={py} y2={bottom} stroke={stroke} strokeWidth={1.6} strokeDasharray="5 5" />
+      <line x1={left} x2={px} y1={py} y2={py} stroke={stroke} strokeWidth={1.6} strokeDasharray="5 5" />
+      {xLabel !== undefined && (
+        <text x={toLeft ? px - 5 : px + 5} y={bottom - 8} textAnchor={toLeft ? 'end' : 'start'} fontSize={14} fill="var(--fg)" {...HALO}>
+          {xLabel}
+        </text>
+      )}
+      {yLabel !== undefined && (
+        <text x={left + 8} y={py - 7} textAnchor="start" fontSize={14} fill="var(--fg)" {...HALO}>
+          {yLabel}
+        </text>
+      )}
+    </g>
+  )
+}
+
+/**
+ * Slope triangle for the falling zero-order line. Its labels sit clear of the legs and of the guides:
+ * the Δ[R] drop beside the rise leg (two lines, unit under the number), the Δt run below the run leg.
+ */
+function ZeroSlope({ at, dx }: { at: { x: number; y: number }; dx: number }) {
+  const s = usePlotScale()
+  const x1 = s.x(at.x)
+  const y1 = s.y(at.y)
+  const x2 = s.x(at.x + dx)
+  const y2 = s.y(at.y - HL_K * dx)
+  const legX = x1 - 8
+  return (
+    <g aria-hidden="true">
+      <path d={`M${x1} ${y1} V${y2} H${x2}`} fill="none" stroke="var(--fg-muted)" strokeWidth={2} strokeLinejoin="round" />
+      <text x={(x1 + x2) / 2} y={Math.max(y1, y2) + 20} textAnchor="middle" fontSize={15} fill="var(--fg)" {...HALO}>
+        {fmtSig(dx)} s
+      </text>
+      <text x={legX} y={(y1 + y2) / 2 - 2} textAnchor="end" fontSize={15} fill="var(--fg)" {...HALO}>
+        <tspan x={legX}>−{fmtSig(HL_K * dx)}</tspan>
+        <tspan x={legX} dy="1.25em">mol L⁻¹</tspan>
+      </text>
+    </g>
+  )
+}
+
 /** Opacity with a CSS tween between Steps; reduced motion cuts. */
 function fade(opacity: number, reducedMotion: boolean): CSSProperties {
   return { opacity, transition: reducedMotion ? 'none' : 'opacity 600ms ease' }
@@ -72,9 +128,9 @@ function FirstMarkers({ R0, count, labelled, tone, guideLabels = true }: { R0: n
         return (
           <g key={n} style={{ opacity: count >= n ? 1 : 0, transition: 'opacity 600ms ease' }}>
             {labelled ? (
-              <PlotGuide at={{ x: t, y: r }} to="both" xLabel={guideLabels ? TIME_LABELS[n - 1] : undefined} yLabel={guideLabels ? fmtSig(r) : undefined} tone="neutral" />
+              <Guide at={{ x: t, y: r }} xLabel={guideLabels ? TIME_LABELS[n - 1] : undefined} yLabel={guideLabels ? `${MARKER_LABELS[n - 1]} · ${fmtSig(r)}` : undefined} />
             ) : null}
-            <PlotPoint at={{ x: t, y: r }} tone={tone} label={labelled ? MARKER_LABELS[n - 1] : undefined} side="ne" />
+            <PlotPoint at={{ x: t, y: r }} tone={tone} />
           </g>
         )
       })}
@@ -109,7 +165,12 @@ function PlotLayer({ step, reducedMotion }: { step: HalfLifeStepState; reducedMo
             <ConsumedBand key={n} n={n} opacity={step.bands > 0 ? 1 : 0} reducedMotion={reducedMotion} />
           ))}
           <FirstMarkers R0={HL_R0} count={step.markers} labelled tone="reactant" guideLabels={step.first2 === 0} />
-          <PlotPoint at={{ x: 5, y: firstOrderConc(HL_R0, HL_K, 5) }} tone="reactant" label={<><S>[R]</S><Sub>0</Sub> = 1.00</>} side="ne" />
+          <PlotPoint at={{ x: 5, y: firstOrderConc(HL_R0, HL_K, 5) }} tone="reactant" />
+          {/* Just above the dashed [R] = 1.00 reference (Step 3) and in clear space elsewhere. */}
+          <text x={250} y={210} fontSize={15} fill="var(--fg)" {...HALO}>
+            <S>[R]</S>
+            <Sub>0</Sub> = 1.00
+          </text>
         </g>
 
         {/* First order, [R]₀ = 2.00 mol L⁻¹: the same half-lives, a different starting height. */}
@@ -123,16 +184,22 @@ function PlotLayer({ step, reducedMotion }: { step: HalfLifeStepState; reducedMo
         {/* Zero order, [R]₀ = 1.00 mol L⁻¹: a straight line, reaching zero at 20.0 s. */}
         <g style={fade(step.zero1, reducedMotion)}>
           <PlotCurve fn={zeroCurve(HL_R0)} from={0} to={T_ZERO_END} tone="reactant" />
-          <PlotGuide at={{ x: T_HALF_ZERO, y: HL_R0 / 2 }} to="both" xLabel={`t½ = ${fmtSig(T_HALF_ZERO)} s`} yLabel={fmtSig(HL_R0 / 2)} tone="neutral" />
+          <Guide at={{ x: T_HALF_ZERO, y: HL_R0 / 2 }} xLabel={`t½ = ${fmtSig(T_HALF_ZERO)} s`} yLabel={fmtSig(HL_R0 / 2)} />
           <g style={fade(step.slope, reducedMotion)}>
-            <PlotSlopeTriangle at={{ x: 6, y: zeroCurve(HL_R0)(6) }} dx={10} slope={-HL_K} dxLabel={`${fmtSig(10)} s`} dyLabel={`−${fmtSig(HL_K * 10)}`} tone="neutral" />
+            <ZeroSlope at={{ x: 8, y: zeroCurve(HL_R0)(8) }} dx={10} />
           </g>
         </g>
 
         {/* Zero order, [R]₀ = 2.00 mol L⁻¹: the same slope, twice as long. */}
         <g style={fade(step.zero2, reducedMotion)}>
           <PlotCurve fn={zeroCurve(HL_R0_DOUBLE)} from={0} to={T_ZERO_END_DOUBLE} tone="product" />
-          <PlotGuide at={{ x: T_HALF_ZERO_DOUBLE, y: HL_R0_DOUBLE / 2 }} to="both" xLabel={`t½ = ${fmtSig(T_HALF_ZERO_DOUBLE)} s`} yLabel={fmtSig(HL_R0_DOUBLE / 2)} tone="product" />
+          <Guide
+            at={{ x: T_HALF_ZERO_DOUBLE, y: HL_R0_DOUBLE / 2 }}
+            xSide="right"
+            xLabel={`t½ = ${fmtSig(T_HALF_ZERO_DOUBLE)} s`}
+            yLabel={fmtSig(HL_R0_DOUBLE / 2)}
+            stroke="var(--kin-product)"
+          />
           <PlotPoint at={{ x: 4, y: zeroCurve(HL_R0_DOUBLE)(4) }} tone="product" label={<><S>[R]</S><Sub>0</Sub> = 2.00</>} side="ne" />
         </g>
       </PlotFrame>
@@ -151,7 +218,11 @@ function Caption({ step }: { step: HalfLifeStepState }) {
           </>
         )
       case 'each-interval':
-        return <>Each half-life halves what is left</>
+        return (
+          <>
+            Drop in <S>[R]</S> each half-life: {[1, 2, 3].map((n) => fmtSig(HL_R0 * (fractionRemainingAfterHalfLives(n - 1) - fractionRemainingAfterHalfLives(n)))).join(', ')} mol L⁻¹
+          </>
+        )
       case 'double-start':
         return (
           <>
