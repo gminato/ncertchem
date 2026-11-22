@@ -165,6 +165,8 @@ import { SpinOnlyMoment } from './c12-unit4/magnetic/SpinOnlyMoment'
 import { DdColourScrolly } from './c12-unit4/colour/DdColourScrolly'
 import { OxoanionChemistry } from './c12-unit4/oxoanions/OxoanionChemistry'
 import { LanthanoidContraction } from './c12-unit4/lanthanoids/LanthanoidContraction'
+import { LigandDenticityGallery } from './c12-unit5/denticity/LigandDenticityGallery'
+import { CoordinationPolyhedraGallery } from './c12-unit5/polyhedra/CoordinationPolyhedraGallery'
 
 /**
  * Animations available to a Scrolly Animation, keyed by the `animation` prop.
@@ -340,6 +342,8 @@ export const animations = {
   'lanthanoid-contraction': LanthanoidContraction,
   'dblock-applications': DBlockApplications,
   'actinoid-comparison': ActinoidComparison,
+  'ligand-denticity-gallery': LigandDenticityGallery,
+  'coordination-polyhedra-gallery': CoordinationPolyhedraGallery,
 } as const
 
 export type AnimationName = keyof typeof animations
