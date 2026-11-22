@@ -1,0 +1,72 @@
+.sim {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.controls {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.stage {
+  background: var(--surface-raised);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: var(--space-3);
+}
+
+.scene {
+  display: block;
+  width: 100%;
+  height: auto;
+  margin: 0 auto;
+}
+
+.head {
+  font-size: 16px;
+  font-weight: 600;
+  fill: var(--fg);
+}
+
+.label {
+  font-size: 15px;
+  fill: var(--fg);
+}
+
+.strong {
+  font-weight: 700;
+  fill: var(--fg);
+}
+
+.note {
+  font-size: 15px;
+  fill: var(--fg-muted);
+}
+
+.track {
+  fill: var(--surface-raised);
+  stroke: var(--border);
+  stroke-width: 1;
+}
+
+.bar {
+  stroke: none;
+}
+
+p.note {
+  margin: 0;
+  font-size: 15px;
+  line-height: 1.5;
+  color: var(--fg-muted);
+}
+
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
