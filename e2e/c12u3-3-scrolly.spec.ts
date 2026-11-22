@@ -38,6 +38,13 @@ for (const scheme of ['light', 'dark'] as const) {
         const panel = scrolly.locator('svg').first()
         await expect(panel).toBeVisible()
         await panel.screenshot({ path: `test-results/screens/c12u3-3-step${k + 1}-${scheme}.png` })
+        // Real superscripts only: no caret notation anywhere in the drawing's text.
+        const drawnText = (await scrolly.locator('svg text').allTextContents()).join(' ')
+        expect(drawnText).not.toContain('^')
+        if (k === STEP_COUNT - 1) {
+          // Step 5: each of the four cards states k = 0.200 with its units.
+          await expect(scrolly.locator('svg text', { hasText: /^k = 0\.200$/ })).toHaveCount(4)
+        }
       }
 
       await expect(page.locator('.katex-display').first()).toBeVisible()
