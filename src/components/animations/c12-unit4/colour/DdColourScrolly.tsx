@@ -208,7 +208,7 @@ function LatticeScene({ s }: { s: Extract<ColourStep, { kind: 'lattice' }> }) {
   return (
     <>
       <MetalLattice x={30} y={120} rows={5} cols={6} tone={host} interstitial={s.interstitial} />
-      <MetalLattice x={310} y={120} rows={5} cols={6} tone={host} alloy={{ symbol: s.alloySymbol, tone: 'var(--spec-orange)' }} />
+      <MetalLattice x={310} y={120} rows={5} cols={6} tone={host} alloy={{ symbol: s.alloySymbol, tone: 'var(--spec-blue)' }} />
       <text x={150} y={100} textAnchor="middle" fill={FG} fontSize={TEXT_SIZE}>
         {s.interstitialFormula}: C in the holes
       </text>
