@@ -1,0 +1,103 @@
+.sim {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  min-width: 0;
+}
+
+.controls {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.controlRow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: var(--space-3);
+}
+
+.sliderWrap {
+  flex: 1 1 260px;
+  min-width: 0;
+}
+
+.stage {
+  background: var(--surface-raised);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: var(--space-3);
+  min-width: 0;
+}
+
+.stage svg {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.readouts {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: var(--space-3);
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  min-width: 0;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: var(--space-3);
+}
+
+.optionLabel {
+  font-size: 15px;
+}
+
+.sup {
+  font-size: 15px;
+  vertical-align: 0.45em;
+}
+
+.cardLabel {
+  margin: 0;
+  font-size: 14px;
+  color: var(--fg-muted);
+}
+
+.math {
+  max-width: 100%;
+  overflow-x: auto;
+}
+
+.math :global(.katex-display) {
+  margin: 0.2em 0;
+}
+
+.value {
+  margin: 0;
+  font-size: 15px;
+  line-height: 1.5;
+  color: var(--fg);
+  overflow-wrap: anywhere;
+}
+
+.note {
+  margin: 0;
+  font-size: 15px;
+  line-height: 1.5;
+  color: var(--fg-muted);
+}
+
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
