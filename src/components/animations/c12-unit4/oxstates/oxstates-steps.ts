@@ -59,7 +59,7 @@ export function stateCounts(): number[] {
   return METALS.map((m) => oxidationStateCount(m))
 }
 
-/** Each Mn rung: the charge, its label and the ion's remaining configuration (lib). */
+/** Each Mn rung: the charge, its label and the ion's remaining configuration. */
 export function mnRungs(): { state: number; label: string; config: string; dCount: number }[] {
   return MN_RUNGS.map((state) => ({
     state,
@@ -86,17 +86,14 @@ export function endNotes(): { symbol: string; config: string; state: number }[] 
   }))
 }
 
-/** Tin's rungs (lib) and Mn's rungs for the unit-step comparison. */
+/** Tin's rungs (from the data) for the unit-step comparison with Mn. */
 export const TIN_RUNGS = P_BLOCK_STEP_OF_TWO_EXAMPLE.states
 
-/** Group 6 rung strength: Cr's +6 is drawn paler than Mo's and W's (more stable going down). */
-export const GROUP6_RUNG_STRENGTH: Readonly<Record<string, number>> = { Cr: 0.5, Mo: 1, W: 1 }
-
-export function group6Cells(): readonly { symbol: string; species: string; strongOxidant: boolean; strength: number }[] {
+/** Group 6: the +6 rung of each metal, with the species and oxidant label from the data (all rungs drawn alike). */
+export function group6Cells(): readonly { symbol: string; species: string; strongOxidant: boolean }[] {
   return GROUP_6_HIGHEST_STATE.map((c) => ({
     symbol: c.symbol,
     species: c.species,
     strongOxidant: c.strongOxidant,
-    strength: GROUP6_RUNG_STRENGTH[c.symbol] ?? 1,
   }))
 }
