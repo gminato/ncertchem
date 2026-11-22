@@ -1,14 +1,16 @@
 'use client'
 
-import { Sup } from '@/components/animations/c12-unit1/ChemSvg'
 import { HALOGEN_TONE } from '@/components/vocab/organic6/tones'
+import { PolarBond, POLAR_BOND_SIZE } from '@/components/vocab/organic6'
 import { formatDipole, type Halogen } from '@/lib/chem/ncert-c12-unit6-data'
 import { bondRow, enthalpyDifferenceFI, getCxBondStepState, type CxBondStepState } from './cxbond-steps'
 
 /** Drawing box: about the 570 px panel, so 16-unit labels render at ≥ 15 px. */
 const W = 580
-const H = 520
-const ROW_Y: Record<Halogen, number> = { F: 105, Cl: 205, Br: 305, I: 405 }
+const H = 600
+/** 130 units per row: room for each row's pm ruler and halogen label above the next row. */
+const ROW_Y: Record<Halogen, number> = { F: 90, Cl: 220, Br: 350, I: 480 }
+/** Every row's carbon sits on this x, so the four bonds share one carbon. */
 const CARBON_X = 150
 /** Drawn units per picometre (bond lengths stay to scale across the four rows). */
 const UNITS_PER_PM = 0.7
@@ -18,20 +20,20 @@ const UNITS_PER_KJ = 0.38
 const UNITS_PER_DEBYE = 95
 /** Step 1 zooms the single Cl row so it fills the panel: the row's centre maps to (290, 260). */
 const ZOOM_SCALE = 1.7
-const ZOOM_CENTRE = { x: 290, y: 260 }
+const ZOOM_CENTRE = { x: 290, y: 300 }
 const ZOOM_ROW_CENTRE = { x: CARBON_X + (bondRow('Cl').lengthPm * UNITS_PER_PM) / 2, y: ROW_Y.Cl }
+
+/** PolarBond's own row centre-line and label inset (its layout is private, so these mirror it). */
+const PB_CENTRE_Y = POLAR_BOND_SIZE.height / 2
+const PB_LABEL_LEFT = 44
+
+/** Carbon x inside a PolarBond row, as PolarBond lays it out (it centres the bond in its box). */
+function polarCarbonX(len: number, r: number): number {
+  return POLAR_BOND_SIZE.width / 2 - (len + r - PB_LABEL_LEFT) / 2
+}
 
 const MUTED = 'var(--fg-muted)'
 const FONT = 'var(--font-sans)'
-
-function Delta({ sign, x, y }: { sign: '+' | '−'; x: number; y: number }) {
-  const tone = sign === '+' ? 'var(--delta-plus)' : 'var(--delta-minus)'
-  return (
-    <text x={x} y={y} textAnchor="middle" dominantBaseline="central" fontSize={18} fontWeight={600} fontFamily={FONT} fill={tone}>
-      δ{sign === '+' ? <Sup>+</Sup> : <Sup>−</Sup>}
-    </text>
-  )
-}
 
 function CloudBehindBond() {
   const len = bondRow('Cl').lengthPm * UNITS_PER_PM
@@ -44,36 +46,20 @@ function CloudBehindBond() {
   )
 }
 
+/** One CH₃–X row, drawn by the same PolarBond component as the Simulation, placed so its carbon sits on CARBON_X. */
 function BondRow({ h, state }: { h: Halogen; state: CxBondStepState }) {
   const row = bondRow(h)
   const y = ROW_Y[h]
-  const r = SPHERE_R[h]
   const len = row.lengthPm * UNITS_PER_PM
-  const X = CARBON_X + len
-  const tone = HALOGEN_TONE[h]
-  const opacity = state.dim.includes(h) ? 0.3 : 1
+  const opacity = state.dim.includes(h) ? 0.35 : 1
+  const pbX = CARBON_X - polarCarbonX(len, SPHERE_R[h])
 
   return (
     <g opacity={opacity}>
       {state.focus === h && (
-        <circle cx={CARBON_X - 30} cy={y} r={32} fill="none" stroke="var(--delta-plus)" strokeWidth={2} strokeDasharray="5 5" />
+        <circle cx={CARBON_X - 12} cy={y - 8} r={44} fill="none" stroke="var(--delta-plus)" strokeWidth={2} strokeDasharray="5 5" />
       )}
-      <text x={CARBON_X - 12} y={y} textAnchor="end" dominantBaseline="central" fontSize={18} fontWeight={600} fontFamily={FONT} fill="var(--fg)">
-        CH₃
-      </text>
-      <Delta sign="+" x={CARBON_X - 4} y={y - 30} />
-      <line x1={CARBON_X + 4} y1={y} x2={X - r + 2} y2={y} stroke="var(--bond)" strokeWidth={3.2} strokeLinecap="round" />
-      <circle cx={X} cy={y} r={r} fill={tone} />
-      <circle cx={X - r * 0.35} cy={y - r * 0.35} r={r * 0.28} fill="var(--sphere-highlight)" />
-      <text x={X + r + 12} y={y} dominantBaseline="central" fontSize={17} fontWeight={600} fontFamily={FONT} fill="var(--fg)">
-        {h}
-      </text>
-      <Delta sign="−" x={X} y={y - r - 14} />
-      {state.showLength && (
-        <text x={CARBON_X + len / 2} y={y + 36} textAnchor="middle" fontSize={16} fontFamily={FONT} fill={MUTED}>
-          {row.lengthPm} pm
-        </text>
-      )}
+      <PolarBond halogen={h} lengthPm={row.lengthPm} unitsPerPm={UNITS_PER_PM} ruler={state.showLength} x={pbX} y={y - PB_CENTRE_Y} />
     </g>
   )
 }
@@ -109,7 +95,7 @@ function Readout({ h, kind }: { h: Halogen; kind: 'enthalpy' | 'dipole' }) {
 function LengthScale() {
   const x1 = CARBON_X
   const x2 = CARBON_X + 100 * UNITS_PER_PM
-  const y = 476
+  const y = 556
   return (
     <g stroke={MUTED} strokeWidth={1.4} fill="none">
       <line x1={x1} y1={y} x2={x2} y2={y} />
@@ -124,22 +110,25 @@ function LengthScale() {
 
 /** Dashed arrow from a lone-pair nucleophile to just below-right of the δ+ carbon. */
 function Approach() {
-  const tail = { x: CARBON_X - 14, y: 462 }
+  const tail = { x: CARBON_X - 14, y: ROW_Y.I + 57 }
   const head = { x: CARBON_X + 6, y: ROW_Y.I + 20 }
   const dx = head.x - tail.x
   const dy = head.y - tail.y
   const n = Math.hypot(dx, dy)
   const ux = dx / n
   const uy = dy / n
-  const barb = (sx: number, sy: number) => `${sx},${sy} ${sx - ux * 11 - uy * 6},${sy - uy * 11 + ux * 6} ${sx - ux * 11 + uy * 6},${sy - uy * 11 - ux * 6}`
+  const BARB_LEN = 15
+  const BARB_HALF = 8
+  const barb = (sx: number, sy: number) =>
+    `${sx},${sy} ${sx - ux * BARB_LEN - uy * BARB_HALF},${sy - uy * BARB_LEN + ux * BARB_HALF} ${sx - ux * BARB_LEN + uy * BARB_HALF},${sy - uy * BARB_LEN - ux * BARB_HALF}`
   return (
     <g>
-      <text x={CARBON_X - 36} y={470} textAnchor="middle" dominantBaseline="central" fontSize={18} fontWeight={600} fontFamily={FONT} fill="var(--lone-pair)">
+      <text x={CARBON_X - 36} y={ROW_Y.I + 65} textAnchor="middle" dominantBaseline="central" fontSize={18} fontWeight={600} fontFamily={FONT} fill="var(--lone-pair)">
         Nu⁻
       </text>
-      <circle cx={CARBON_X - 42} cy={450} r={2.8} fill="var(--lone-pair)" />
-      <circle cx={CARBON_X - 30} cy={450} r={2.8} fill="var(--lone-pair)" />
-      <line x1={tail.x} y1={tail.y} x2={head.x - ux * 12} y2={head.y - uy * 12} stroke="var(--lone-pair)" strokeWidth={2.4} strokeDasharray="6 6" />
+      <circle cx={CARBON_X - 42} cy={ROW_Y.I + 45} r={2.8} fill="var(--lone-pair)" />
+      <circle cx={CARBON_X - 30} cy={ROW_Y.I + 45} r={2.8} fill="var(--lone-pair)" />
+      <line x1={tail.x} y1={tail.y} x2={head.x - ux * 14} y2={head.y - uy * 14} stroke="var(--lone-pair)" strokeWidth={3} strokeDasharray="6 6" />
       <polygon points={barb(head.x, head.y)} fill="var(--lone-pair)" />
     </g>
   )
@@ -171,7 +160,7 @@ export function CarbonHalogenBond({ step }: CarbonHalogenBondProps) {
 
       {readout !== 'none' && (
         <g>
-          <text x={BAR_X} y={56} fontSize={16} fontFamily={FONT} fill={MUTED}>
+          <text x={BAR_X} y={40} fontSize={16} fontFamily={FONT} fill={MUTED}>
             {readout === 'enthalpy' ? 'bond enthalpy / kJ mol⁻¹' : 'dipole moment / D'}
           </text>
           {rows.map((h) => (
@@ -181,14 +170,15 @@ export function CarbonHalogenBond({ step }: CarbonHalogenBondProps) {
       )}
 
       {readout === 'enthalpy' && (
-        <text x={24} y={506} fontSize={16} fontWeight={600} fontFamily={FONT} fill="var(--accent)">
+        <text x={24} y={580} fontSize={16} fontWeight={600} fontFamily={FONT} fill="var(--accent)">
           Difference, C–F minus C–I: {enthalpyDifferenceFI()} kJ mol⁻¹
         </text>
       )}
       {readout === 'dipole' && (
-        <text x={24} y={470} fontSize={16} fontFamily={FONT} fill={MUTED}>
-          Not a steady trend: CH₃–Cl is largest, CH₃–I smallest.
-        </text>
+        <g fontSize={16} fontFamily={FONT} fill={MUTED}>
+          <text x={24} y={548}>Not a steady trend: CH₃–Cl is largest, CH₃–I smallest.</text>
+          <text x={24} y={572}>CH₃–F: most electronegative, not the largest.</text>
+        </g>
       )}
 
       {state.showLength && <LengthScale />}
@@ -202,6 +192,5 @@ function describe(state: CxBondStepState): string {
   if (state.approach) return 'CH₃–I: a lone-pair nucleophile approaches the δ⁺ carbon.'
   if (state.readout === 'enthalpy') return 'Bond enthalpy bars for CH₃–F, CH₃–Cl, CH₃–Br and CH₃–I: they shrink down the group.'
   if (state.readout === 'dipole') return 'Dipole moments of CH₃–F, CH₃–Cl, CH₃–Br and CH₃–I: CH₃–Cl is the largest.'
-  return 'CH₃–X bonds drawn to scale, F to I: the bond lengthens from 139 pm to 214 pm.'
+  return `CH₃–X bonds drawn to scale, F to I: the bond lengthens from ${bondRow('F').lengthPm} pm to ${bondRow('I').lengthPm} pm.`
 }
-
