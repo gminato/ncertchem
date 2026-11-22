@@ -16,7 +16,7 @@ A doctor once explained that a medicine's level in the blood falls by the same f
 
 ## Rate that follows what is left
 
-In a first order reaction the rate is proportional to the first power of the concentration of one reactant. Take the simplest case, $\ce{R -> P}$. Its rate law is
+Some reactions slow down in a very orderly way. The simplest pattern is one in which a single reactant is the only thing that sets the speed, with its concentration raised to the first power. Take $\ce{R -> P}$. Its rate law is
 
 $$
 \text{Rate} = -\frac{d[\ce{R}]}{dt} = k[\ce{R}]
@@ -46,17 +46,33 @@ $$
 k = \frac{2.303}{t}\log\frac{[\ce{R}]_0}{[\ce{R}]}
 $$
 
+If you have two readings instead, taken at times $t_1$ and $t_2$, the starting concentration drops out altogether:
+
+$$
+k = \frac{1}{t_2 - t_1}\ln\frac{[\ce{R}]_1}{[\ce{R}]_2}
+$$
+
 The exponential is a curve, but its logarithm is a straight line. Plot $\ln[\ce{R}]$ against $t$ and you get a line of slope $-k$ and intercept $\ln[\ce{R}]_0$. Plot $\log([\ce{R}]_0/[\ce{R}])$ against $t$ and you get a line through the origin with slope $k/2.303$. A straight line on either plot is the test for first order behaviour.
 
 ## A gas and its total pressure
 
-Many first order reactions take place in the gas phase. Then it is often easier to follow the total pressure in a sealed vessel of constant volume than to sample the concentration. Consider $\ce{A(g) -> B(g) + C(g)}$. Let $p_i$ be the starting pressure of A and $p_t$ the total pressure at time $t$. If the pressure of A falls by $x$, then B and C each gain $x$. The total pressure is therefore $p_t = p_i + x$, and the partial pressure of A is
+Gases make a convenient test bed, because a pressure gauge on a sealed vessel is easier to read than a sample taken out for analysis. Take $\ce{A(g) -> B(g) + C(g)}$ in a vessel of fixed volume, with $p_i$ the pressure of A at the start. Let $y$ stand for the pressure of A that has decomposed by time $t$. Each decomposed A leaves one B and one C behind, so the three partial pressures are
+
+$$
+\begin{aligned}
+p_A &= p_i - y \\
+p_B &= y \\
+p_C &= y
+\end{aligned}
+$$
+
+and the total pressure is their sum, $p_t = p_i + y$. Solving that for $y$ and putting it back into $p_A = p_i - y$ leaves only the measured total:
 
 $$
 p_A = 2p_i - p_t
 $$
 
-Substituting $p_A$ into the first order integrated law gives the rate constant from the total pressure alone:
+Feeding this $p_A$ into the first order integrated law gives the rate constant from the total pressure alone:
 
 $$
 k = \frac{2.303}{t}\log\frac{p_i}{2p_i - p_t}
@@ -75,7 +91,7 @@ So a gauge reading at one time is enough to find $k$, provided you know the star
     **Straightening with a logarithm:** Plot $\ln[\ce{R}]$ against time. The values are $-1.61$, $-2.11$, $-2.61$ and $-3.11$ at $0$, $20$, $40$ and $60\ \text{s}$, and they fall on a single straight line. Its slope is $-0.0250\ \text{s}^{-1}$, which is $-k$, and its intercept is $\ln[\ce{R}]_0 = -1.61$.
   </Step>
   <Step>
-    **Through the origin:** Now plot $\log([\ce{R}]_0/[\ce{R}])$ against time. The points are $0$, $0.217$, $0.434$ and $0.651$, and they lie on a line through the origin. Its slope is $k/2.303 = 0.0109\ \text{s}^{-1}$. Reading the slope back gives the rate constant, $k = 0.0250\ \text{s}^{-1}$, from either straight-line plot.
+    **Through the origin:** Now plot $\log([\ce{R}]_0/[\ce{R}])$ against time. The points are $0$, $0.217$, $0.434$ and $0.651$, and they lie on a line through the origin. Its slope is $k/2.303 = 0.01086\ \text{s}^{-1}$. Multiply that slope by $2.303$ and you recover the rate constant, $k = 0.0250\ \text{s}^{-1}$, from either straight-line plot.
   </Step>
   <Step>
     **A sealed flask:** Now let $\ce{A(g) -> B(g) + C(g)}$ react in a flask starting at $p_i = 0.400\ \text{atm}$. The gauge reads $p_t = 0.557\ \text{atm}$ at $20\ \text{s}$ and $0.711\ \text{atm}$ at $60\ \text{s}$. At that moment $p_A = 2p_i - p_t = 0.0893\ \text{atm}$, so less than a quarter of the A remains while the total pressure climbs toward $0.800\ \text{atm}$.

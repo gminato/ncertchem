@@ -1,4 +1,4 @@
-import { firstOrderConc, firstOrderK, firstOrderKFromPressure, firstOrderRate, firstOrderHalfLife } from '@/lib/chem/kinetics'
+import { firstOrderConc, firstOrderK, firstOrderKFromPressure, firstOrderRate } from '@/lib/chem/kinetics'
 
 /** Values shared by the Prose and the Simulation (see SCRATCH/u3/reports/P6.md). */
 export const DEFAULT_R0 = 0.2
@@ -20,8 +20,6 @@ export interface ConcentrationReading {
   rate: number
   /** k recovered from the reading, s⁻¹. */
   kFromReading: number
-  /** Half-life, s. */
-  halfLife: number
   /** Fraction of R₀ left. */
   fraction: number
 }
@@ -32,7 +30,6 @@ export function readConcentration(R0: number, k: number, t: number): Concentrati
     R,
     rate: firstOrderRate(R0, k, t),
     kFromReading: firstOrderK(R0, R, t),
-    halfLife: firstOrderHalfLife(k),
     fraction: R / R0,
   }
 }

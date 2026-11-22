@@ -7,7 +7,6 @@ describe('first-order lab readings', () => {
     expect(r.R).toBeCloseTo(0.0446, 4)
     expect(r.rate).toBeCloseTo(1.12e-3, 5)
     expect(r.kFromReading).toBeCloseTo(DEFAULT_K, 12)
-    expect(r.halfLife).toBeCloseTo(Math.LN2 / DEFAULT_K, 9)
   })
 
   it('recovers k from any [R] reading', () => {

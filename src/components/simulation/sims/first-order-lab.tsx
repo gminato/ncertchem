@@ -38,7 +38,7 @@ const MODE_OPTIONS = [
 
 const MODE_TITLE: Record<PlotMode, string> = {
   conc: '[R] / mol L⁻¹',
-  ln: 'ln [R]',
+  ln: 'ln([R] / mol L⁻¹)',
   log: 'log₁₀([R]₀/[R])',
 }
 
@@ -75,8 +75,8 @@ export function FirstOrderLab() {
   const cursorY = mode === 'conc' ? c.R : mode === 'ln' ? lnConc(c.R) : log10Ratio(R0, c.R)
 
   const liveSummary = pressure
-    ? `At ${t} s, total pressure pₜ = ${formatSig(p.pT, 3)} atm and p_A = ${formatSig(p.pA, 3)} atm, out of a ceiling of ${formatSig(p.pCeiling, 3)} atm. k from the readings is ${formatSig(p.kFromReading, 3)} s⁻¹.`
-    : `At ${t} s, [R] = ${formatSig(c.R, 3)} mol L⁻¹, rate = k[R] = ${sci(c.rate)} mol L⁻¹ s⁻¹. k from this reading is ${formatSig(c.kFromReading, 3)} s⁻¹, and t½ = ${formatSig(c.halfLife, 3)} s.`
+    ? `At ${t} s, total pressure pₜ = ${formatSig(p.pT, 3)} atm and partial pressure pₐ = ${formatSig(p.pA, 3)} atm, out of a ceiling of ${formatSig(p.pCeiling, 3)} atm. k from the readings is ${formatSig(p.kFromReading, 3)} s⁻¹.`
+    : `At ${t} s, [R] = ${formatSig(c.R, 3)} mol L⁻¹, rate = k[R] = ${sci(c.rate)} mol L⁻¹ s⁻¹. k from this reading is ${formatSig(c.kFromReading, 3)} s⁻¹.`
 
   return (
     <div className={styles.sim}>
@@ -94,7 +94,7 @@ export function FirstOrderLab() {
 
       <div className={styles.stage}>
         {pressure ? (
-          <svg className={styles.scene} viewBox="0 0 580 380" role="img" aria-label="Sealed vessel with A, B and C molecules, a stopwatch and pressure meters">
+          <svg className={styles.scene} viewBox="0 0 520 380" role="img" aria-label="Sealed vessel with A, B and C molecules, a stopwatch and pressure meters">
             <ReactionBox x={VESSEL.x} y={VESSEL.y} width={VESSEL.width} height={VESSEL.height} caption="Sealed vessel, constant volume">
               {Array.from({ length: counts.reactant }, (_, i) => (
                 <Particle key={`a${i}`} x={SITES[i].x} y={SITES[i].y} r={9} tone="reactant" />
@@ -104,16 +104,16 @@ export function FirstOrderLab() {
                 return <Particle key={`p${j}`} x={site.x} y={site.y} r={9} tone={j % 2 === 0 ? 'product' : 'accent'} />
               })}
             </ReactionBox>
-            <Stopwatch x={440} y={96} size={96} seconds={t} digits={0} />
-            <RateMeter x={332} y={214} width={220} height={26} value={p.pT} max={p.pCeiling} label="Total, pₜ" valueLabel={`${formatSig(p.pT, 3)} atm`} tone="accent" />
-            <RateMeter x={332} y={300} width={220} height={26} value={p.pA} max={p.pCeiling} label="Partial, p_A" valueLabel={`${formatSig(p.pA, 3)} atm`} tone="reactant" />
+            <Stopwatch x={372} y={40} size={96} seconds={t} digits={0} />
+            <RateMeter x={332} y={214} width={168} height={26} value={p.pT} max={p.pCeiling} label={<>Total, p<tspan dy="0.3em">t</tspan></>} valueLabel={`${formatSig(p.pT, 3)} atm`} tone="accent" />
+            <RateMeter x={332} y={300} width={168} height={26} value={p.pA} max={p.pCeiling} label={<>Partial, p<tspan dy="0.3em">A</tspan></>} valueLabel={`${formatSig(p.pA, 3)} atm`} tone="reactant" />
           </svg>
         ) : (
-          <svg className={styles.scene} viewBox="0 0 580 380" role="img" aria-label={`Plot of ${MODE_TITLE[mode]} against time with the cursor at ${t} seconds`}>
+          <svg className={styles.scene} viewBox="0 0 520 380" role="img" aria-label={`Plot of ${MODE_TITLE[mode]} against time with the cursor at ${t} seconds`}>
             <PlotFrame
               x={84}
               y={24}
-              width={468}
+              width={420}
               height={300}
               domain={{ xMin: 0, xMax: T_MAX, yMin: dom.yMin, yMax: dom.yMax }}
               xTicks={TIME_TICKS}
@@ -131,7 +131,7 @@ export function FirstOrderLab() {
               )}
               {mode === 'ln' && <PlotLine through={{ x: 0, y: Math.log(R0) }} slope={-k} tone="reactant" width={3} />}
               {mode === 'log' && <PlotLine through={{ x: 0, y: 0 }} slope={k / 2.303} tone="product" width={3} />}
-              <PlotPoint at={{ x: t, y: cursorY }} tone={mode === 'log' ? 'product' : 'reactant'} label={mode === 'conc' ? `[R] = ${formatSig(c.R, 3)}` : undefined} side="ne" />
+              <PlotPoint at={{ x: t, y: cursorY }} tone={mode === 'log' ? 'product' : 'reactant'} label={mode === 'conc' ? `[R] = ${formatSig(c.R, 3)}` : undefined} side={t > 80 ? 'nw' : 'ne'} />
             </PlotFrame>
           </svg>
         )}
@@ -144,7 +144,13 @@ export function FirstOrderLab() {
             <span className={styles.statValue}>{pressure ? `${formatSig(p.pT, 3)} atm` : `${formatSig(c.R, 3)} mol L⁻¹`}</span>
           </div>
           <div className={styles.stat}>
-            <span className={styles.statLabel}>{pressure ? 'Partial pressure p_A' : <>Rate = <span className="sym">k</span>[<span className="sym">R</span>]</>}</span>
+            <span className={styles.statLabel}>
+              {pressure ? (
+                <>Partial pressure p<span className={styles.sub}>A</span></>
+              ) : (
+                <>Rate = <span className="sym">k</span>[<span className="sym">R</span>]</>
+              )}
+            </span>
             <span className={styles.statValue}>{pressure ? `${formatSig(p.pA, 3)} atm` : `${sci(c.rate)} mol L⁻¹ s⁻¹`}</span>
           </div>
           <div className={styles.stat}>
@@ -152,12 +158,6 @@ export function FirstOrderLab() {
               <span className="sym">k</span> from this reading
             </span>
             <span className={styles.statValue}>{formatSig(pressure ? p.kFromReading : c.kFromReading, 3)} s⁻¹</span>
-          </div>
-          <div className={styles.stat}>
-            <span className={styles.statLabel}>
-              <span className="sym">t</span>½ = 0.693 / <span className="sym">k</span>
-            </span>
-            <span className={styles.statValue}>{formatSig(c.halfLife, 3)} s</span>
           </div>
         </div>
         <p className={styles.note}>

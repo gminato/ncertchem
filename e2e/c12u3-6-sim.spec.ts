@@ -16,7 +16,11 @@ function watchErrors(page: Page): string[] {
   return errors
 }
 
-/** Text leaves in the Simulation that render below 14 px (KaTeX internals and the SR-only line excluded). */
+/**
+ * Text leaves in the Simulation whose RENDERED size is below 14 px at this viewport (KaTeX internals and the
+ * SR-only line excluded). For SVG text, computed font-size is the viewBox value, so scale it by the SVG's
+ * on-screen width over its viewBox width.
+ */
 async function smallTextLeaves(page: Page): Promise<string[]> {
   return page.locator(`[data-simulation="${SIM}"]`).evaluate((root) => {
     const bad: string[] = []
@@ -26,8 +30,13 @@ async function smallTextLeaves(page: Page): Promise<string[]> {
       const text = (node.textContent ?? '').trim()
       const el = node.parentElement
       if (text && el && !el.closest('.katex') && !el.closest('[class*="srOnly"]') && !el.closest('[class*="eyebrow"]')) {
-        const size = parseFloat(getComputedStyle(el).fontSize)
-        if (size < 14) bad.push(`${size}px: ${text.slice(0, 40)}`)
+        let size = parseFloat(getComputedStyle(el).fontSize)
+        const svg = el.closest('svg')
+        if (svg) {
+          const viewBoxWidth = parseFloat((svg.getAttribute('viewBox') ?? '0 0 0 0').split(/\s+/)[2])
+          size *= svg.getBoundingClientRect().width / viewBoxWidth
+        }
+        if (size < 14) bad.push(`${size.toFixed(1)}px: ${text.slice(0, 40)}`)
       }
       node = walker.nextNode()
     }
@@ -76,12 +85,16 @@ for (const scheme of ['light', 'dark'] as const) {
     // State 1: the default, [R]₀ = 0.200 mol L⁻¹, k = 0.0250 s⁻¹, t = 60 s: [R] = 0.0446 mol L⁻¹.
     await expect(sim.locator('[aria-live="polite"]')).toContainText('[R] = 0.0446 mol L⁻¹')
     await sim.screenshot({ path: `test-results/screens/c12u3-6-sim-default-${scheme}.png` })
+    expect(await smallTextLeaves(page)).toEqual([])
+    expect(await svgOutOfBounds(page)).toEqual([])
 
     // State 2: the ln[R] plot, with a faster reaction (k = 0.0600 s⁻¹).
     await sim.getByRole('radio', { name: 'ln[R] vs t' }).click()
     await sim.getByRole('slider', { name: /Rate constant k/ }).fill('0.06')
     await expect(sim.locator('[aria-live="polite"]')).toContainText('k from this reading is 0.0600 s⁻¹')
     await sim.screenshot({ path: `test-results/screens/c12u3-6-sim-ln-plot-${scheme}.png` })
+    expect(await smallTextLeaves(page)).toEqual([])
+    expect(await svgOutOfBounds(page)).toEqual([])
 
     // State 3: the gas pressure mode for A(g) → B(g) + C(g), 60 s after the start.
     await sim.getByRole('switch', { name: /Pressure mode/ }).click()

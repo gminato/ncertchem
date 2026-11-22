@@ -33,7 +33,7 @@
 .scene {
   display: block;
   width: 100%;
-  max-width: 580px;
+  max-width: 560px;
   height: auto;
   margin: 0 auto;
 }
@@ -46,7 +46,7 @@
 
 .results {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr));
   gap: var(--space-3);
 }
 
@@ -66,7 +66,13 @@
   font-family: var(--font-mono);
   font-size: 20px;
   color: var(--fg);
-  overflow-wrap: anywhere;
+  white-space: nowrap;
+}
+
+/* Subscript drawn at full size and lowered, so the glyph never drops below the 14 px floor. */
+.sub {
+  position: relative;
+  top: 0.3em;
 }
 
 .note {
