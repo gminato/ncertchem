@@ -7,7 +7,19 @@
 .controls {
   display: flex;
   flex-direction: column;
-  gap: var(--space-3);
+  gap: var(--space-4);
+}
+
+.control {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.controlLabel {
+  color: var(--fg-muted);
+  font-size: 15px;
+  font-weight: 600;
 }
 
 .chips {
@@ -104,7 +116,7 @@
 
 .hollow {
   fill: var(--surface);
-  stroke-width: 3;
+  stroke-width: 2;
 }
 
 .frame {

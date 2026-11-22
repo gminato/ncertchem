@@ -57,20 +57,26 @@ export function OxidationStateExplorer() {
   return (
     <div className={styles.sim}>
       <div className={styles.controls}>
-        <div className={styles.chips} role="group" aria-label="First-row element">
-          {FIRST_ROW.map((symbol) => (
-            <button
-              key={symbol}
-              type="button"
-              className={styles.chip}
-              aria-pressed={symbol === element}
-              onClick={() => setElement(symbol)}
-            >
-              {symbol}
-            </button>
-          ))}
+        <div className={styles.control}>
+          <span className={styles.controlLabel}>First-row metal</span>
+          <div className={styles.chips} role="group" aria-label="First-row element">
+            {FIRST_ROW.map((symbol) => (
+              <button
+                key={symbol}
+                type="button"
+                className={styles.chip}
+                aria-pressed={symbol === element}
+                onClick={() => setElement(symbol)}
+              >
+                {symbol}
+              </button>
+            ))}
+          </div>
         </div>
-        <Segmented label="Group 6 metal" options={GROUP_OPTIONS} value={group} onChange={setGroup} />
+        <div className={styles.control}>
+          <span className={styles.controlLabel}>Group 6 metal</span>
+          <Segmented label="Group 6 metal" options={GROUP_OPTIONS} value={group} onChange={setGroup} />
+        </div>
       </div>
 
       <div className={styles.stage}>
@@ -89,7 +95,7 @@ export function OxidationStateExplorer() {
           </text>
           <circle cx={422} cy={30} r={8} className={styles.hollow} style={{ stroke: tone }} />
           <text x={438} y={37} className={styles.muted}>
-            also listed
+            listed, not bold
           </text>
 
           <line x1={X_FIRST - 40} y1={LINE_Y} x2={stateX(7) + 40} y2={LINE_Y} className={styles.axis} />
