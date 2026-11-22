@@ -80,13 +80,16 @@ function Caption({ children }: { children: string }) {
 
 function StepSubstrate() {
   const cx = 290
-  const cy = 190
-  const c = atomAt(SUB_GRAPH, 60, cx, cy, CARBON_ATOM)
+  const cy = 180
+  const br = atomAt(SUB_GRAPH, 80, cx, cy, HALOGEN_ATOM)
   return (
     <g>
+      <text x={br.x + 10} y={br.y - 28} fontSize={SECONDARY} fill={ROLE_TONE.leavingGroup}>
+        leaving group
+      </text>
       <SkeletalFormula
         graph={SUB_GRAPH}
-        scale={60}
+        scale={80}
         x={cx}
         y={cy}
         partialCharges={[
@@ -100,22 +103,25 @@ function StepSubstrate() {
 }
 
 function StepApproach() {
-  const cx = 340
-  const cy = 190
-  const c = atomAt(SUB_GRAPH, 56, cx, cy, CARBON_ATOM)
-  const nuX = 120
-  const nuY = 190
+  const cx = 360
+  const cy = 180
+  const c = atomAt(SUB_GRAPH, 76, cx, cy, CARBON_ATOM)
+  const nuX = 110
+  const nuY = 180
   return (
     <g>
       <text x={nuX} y={nuY + 6} textAnchor="middle" fontSize={MAIN + 2} fill={ROLE_TONE.nucleophile}>
         Nu⁻
+      </text>
+      <text x={nuX} y={nuY + 30} textAnchor="middle" fontSize={SECONDARY} fill={ROLE_TONE.nucleophile}>
+        nucleophile
       </text>
       <circle cx={nuX + 26} cy={nuY - 7} r={2.8} fill={ROLE_TONE.nucleophile} />
       <circle cx={nuX + 26} cy={nuY + 7} r={2.8} fill={ROLE_TONE.nucleophile} />
       <Arrow x1={nuX + 42} y1={nuY} x2={c.x - 26} y2={c.y} dashed />
       <SkeletalFormula
         graph={SUB_GRAPH}
-        scale={56}
+        scale={76}
         x={cx}
         y={cy}
         partialCharges={[
@@ -221,7 +227,7 @@ function StepIsocyanide() {
       <text x={290} y={320} textAnchor="middle" fontSize={SECONDARY} fill="var(--fg)">
         Same atoms, same formula, joined in a different way
       </text>
-      <Caption>AgCN is mainly covalent, so its nitrogen end is free to attack</Caption>
+      <Caption>With AgCN the nitrogen end attacks, giving an isocyanide.</Caption>
     </g>
   )
 }
