@@ -38,6 +38,14 @@ export const LINE = lnKLine(A_FACTOR, EA)
  * The Arrhenius fraction is printed beside it; the drawing is schematic.
  */
 export const EA_DRAWN = 2.2
+/**
+ * Energy-profile levels (schematic, 0 to 1 panel units). The products sit a little below the
+ * reactants: the drop is ΔrH / Eₐ of the barrier, with ΔrH ≈ −9.4 kJ mol⁻¹ for H₂ + I₂ → 2HI.
+ */
+export const REACTANT_LEVEL = 0.3
+export const PEAK_LEVEL = 0.85
+export const DH_KJ_DRAWN = -9.4
+export const PRODUCT_LEVEL = REACTANT_LEVEL + (PEAK_LEVEL - REACTANT_LEVEL) * (DH_KJ_DRAWN / EA_KJ)
 /** Width ratio between the drawn 298 K and 308 K curves (schematic, the true ratio is 1.03). */
 export const SPREAD = 1.25
 /** Dimensionless θ of the 298 K curve; its peak sits at θ/2 = 1. */

@@ -9,6 +9,9 @@ import {
   LABELS,
   LINE,
   LN_SLOPE_PLOT,
+  PEAK_LEVEL,
+  PRODUCT_LEVEL,
+  REACTANT_LEVEL,
   RATIO_RISE,
   getArrheniusStepState,
   lnKPoint,
@@ -50,5 +53,13 @@ describe('Arrhenius Scrolly steps', () => {
     expect(LINE.slope).toBeCloseTo(-6013.9, 0)
     expect(LABELS.slope).toBe('−6.01 × 10³')
     expect(LABELS.intercept).toBe('12.07')
+  })
+
+  it('draws the products slightly below the reactants, a drop much smaller than the barrier', () => {
+    const drop = REACTANT_LEVEL - PRODUCT_LEVEL
+    const barrier = PEAK_LEVEL - REACTANT_LEVEL
+    expect(drop).toBeGreaterThan(0)
+    expect(drop / barrier).toBeCloseTo(9.4 / 50, 6)
+    expect(drop / barrier).toBeLessThan(0.25)
   })
 })
