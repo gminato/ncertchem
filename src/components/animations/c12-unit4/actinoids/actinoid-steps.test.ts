@@ -55,11 +55,12 @@ describe('actinoid Scrolly data (Section 10)', () => {
     expect(cells.filter((c) => c.symbol === 'Th').map((c) => c.state)).toEqual([4])
   })
 
-  it('shows +4 only for the five lanthanoids printed with a Ln4+ configuration, and no hollow La', () => {
+  it('draws +4 only for Ce, Pr, Nd, Tb and Dy, +2 only for Sm, Eu and Yb, and +3 for all fifteen', () => {
     const cells = lanthanoidLadder()
-    const fourth = cells.filter((c) => c.state === 4).map((c) => c.symbol)
-    expect(fourth).toEqual(['Ce', 'Pr', 'Nd', 'Tb', 'Dy'])
-    expect(cells.some((c) => c.symbol === 'La' && c.hollow)).toBe(false)
+    expect(cells.filter((c) => c.state === 4).map((c) => c.symbol)).toEqual(['Ce', 'Pr', 'Nd', 'Tb', 'Dy'])
+    expect(cells.filter((c) => c.state === 2).map((c) => c.symbol)).toEqual(['Sm', 'Eu', 'Yb'])
     expect(cells.filter((c) => c.state === 3)).toHaveLength(15)
+    expect(cells.some((c) => c.symbol === 'Ce' && c.state === 2)).toBe(false)
+    expect(cells.some((c) => c.symbol === 'Lu' && c.state !== 3)).toBe(false)
   })
 })

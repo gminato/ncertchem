@@ -1,3 +1,4 @@
+import { namedLanthanoidStates } from '@/lib/chem/f-block-compare'
 import {
   NCERT_ACTINOIDS,
   NCERT_ACTINOID_OXIDATION_STATES,
@@ -28,8 +29,6 @@ export interface LadderCell {
   /** f-series position, 0 for La or Ac. */
   pos: number
   state: number
-  /** Hollow cells are Ln²⁺ configurations printed in Table 4.9 (La excluded, as NCERT's La(II) is a slip). */
-  hollow: boolean
 }
 
 /** Table 4.9 Ln³⁺ radii, La to Lu (Lu printed "–", so null). */
@@ -50,14 +49,15 @@ export function actinoidRadiusPoints(): RadiusPoint[] {
   }))
 }
 
-/** Ln and An oxidation-state dots: Table 4.9 (Ln) and Table 4.11 (An). */
+/**
+ * Ln oxidation-state dots: only the states NCERT names (see namedLanthanoidStates). Other Table 4.9
+ * Ln²⁺ and Ln⁴⁺ configurations are not drawn.
+ */
 export function lanthanoidLadder(): LadderCell[] {
   const cells: LadderCell[] = []
   for (const r of NCERT_LANTHANOIDS) {
     const pos = r.Z - LN_BASE_Z
-    if (r.ln3Plus) cells.push({ symbol: r.symbol, pos, state: 3, hollow: false })
-    if (r.ln4Plus) cells.push({ symbol: r.symbol, pos, state: 4, hollow: false })
-    if (r.ln2Plus && r.symbol !== 'La') cells.push({ symbol: r.symbol, pos, state: 2, hollow: true })
+    for (const state of namedLanthanoidStates(r.symbol)) cells.push({ symbol: r.symbol, pos, state })
   }
   return cells
 }
@@ -68,7 +68,7 @@ export function actinoidLadder(): LadderCell[] {
     if (r.Z < 90) continue // Th to Lr, as the Section's text covers
     const states = NCERT_ACTINOID_OXIDATION_STATES[r.symbol] ?? []
     for (const state of states) {
-      cells.push({ symbol: r.symbol, pos: r.Z - AN_BASE_Z, state, hollow: false })
+      cells.push({ symbol: r.symbol, pos: r.Z - AN_BASE_Z, state })
     }
   }
   return cells

@@ -56,11 +56,11 @@ function Note({ x, y, children, anchor = 'start', fill = FG, size = 15 }: {
   )
 }
 
-/** Step 1: every member is radioactive. Tiles are tinted with the actinoid tone; bars are schematic. */
+/** Step 1: every member is radioactive. Tiles are tinted with the actinoid tone; no half-life values or bars are drawn. */
 function RadioactivityStep() {
   const members = NCERT_ACTINOIDS.filter((r) => r.Z >= 90)
   const TILE_W = 72
-  const TILE_H = 120
+  const TILE_H = 110
   const GAP = 10
   const X0 = (W - (7 * TILE_W + 6 * GAP)) / 2
   return (
@@ -72,28 +72,24 @@ function RadioactivityStep() {
         const col = i % 7
         const row = Math.floor(i / 7)
         const x = X0 + col * (TILE_W + GAP)
-        const y = 110 + row * 190
-        const barW = TILE_W - 16
-        const frac = 1 - (0.8 * i) / (members.length - 1)
+        const y = 110 + row * 150
         return (
           <g key={r.symbol}>
             <rect x={x} y={y} width={TILE_W} height={TILE_H} rx={10} fill={AN} fillOpacity={0.14} stroke={AN} strokeWidth={1.6} />
-            <text x={x + TILE_W / 2} y={y + 46} textAnchor="middle" fontSize={26} fontWeight={600} fill={FG}>
+            <text x={x + TILE_W / 2} y={y + 58} textAnchor="middle" fontSize={26} fontWeight={600} fill={FG}>
               {r.symbol}
             </text>
-            <text x={x + TILE_W / 2} y={y + 70} textAnchor="middle" fontSize={14} fill={MUTED}>
+            <text x={x + TILE_W / 2} y={y + 84} textAnchor="middle" fontSize={14} fill={MUTED}>
               {`Z ${r.Z}`}
             </text>
-            <rect x={x + 8} y={y + 92} width={barW} height={8} rx={4} fill={MUTED} fillOpacity={0.2} />
-            <rect x={x + 8} y={y + 92} width={barW * frac} height={8} rx={4} fill={AN} />
           </g>
         )
       })}
-      <Note x={W / 2} y={500} anchor="middle">
-        Bar length is schematic: a longer bar means a longer-lived member.
+      <Note x={W / 2} y={440} anchor="middle">
+        All actinoids are radioactive, and the later members have very short
       </Note>
-      <Note x={W / 2} y={526} anchor="middle" fill={MUTED}>
-        No half-life values are shown.
+      <Note x={W / 2} y={466} anchor="middle">
+        half-lives (NCERT). No values are shown here.
       </Note>
     </>
   )
@@ -208,12 +204,9 @@ function StatesStep() {
   const lnX = (pos: number) => LN_X0 + pos * LN_COL + LN_COL / 2
   const anX = (pos: number) => AN_X0 + (pos - 1) * AN_COL + AN_COL / 2
 
-  const dot = (c: LadderCell, x: number, y: number, tone: string) =>
-    c.hollow ? (
-      <circle key={`${c.symbol}-${c.state}`} cx={x} cy={y} r={8} fill={SURFACE} stroke={tone} strokeWidth={2} />
-    ) : (
-      <circle key={`${c.symbol}-${c.state}`} cx={x} cy={y} r={8} fill={tone} />
-    )
+  const dot = (c: LadderCell, x: number, y: number, tone: string) => (
+    <circle key={`${c.symbol}-${c.state}`} cx={x} cy={y} r={8} fill={tone} />
+  )
 
   return (
     <>
@@ -234,7 +227,10 @@ function StatesStep() {
         return dot(c, cx, lnY(c.state), LN)
       })}
       <Note x={30} y={226} fill={MUTED}>
-        Hollow dots: Ln²⁺ configurations printed in Table 4.9.
+        Ln +2 is drawn only for Sm, Eu and Yb, the states NCERT names.
+      </Note>
+      <Note x={30} y={248} fill={MUTED}>
+        Other Table 4.9 Ln²⁺ and Ln⁴⁺ configurations are not drawn as states.
       </Note>
 
       <Note x={30} y={300} size={18}>Actinoids, Table 4.11</Note>

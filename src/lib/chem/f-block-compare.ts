@@ -36,13 +36,36 @@ export interface FBlockPosition {
   readonly summary: string
 }
 
+/**
+ * Lanthanoid oxidation states NCERT names (4.5.3): +3 for every lanthanoid, +4 for Ce, Pr, Nd, Tb, Dy,
+ * and +2 for Sm, Eu, Yb. Other Table 4.9 Ln²⁺ and Ln⁴⁺ configurations are printed but are not drawn as states.
+ */
+const NAMED_LANTHANOID_EXTRA_STATES: Readonly<Record<string, readonly number[]>> = {
+  Ce: [4],
+  Pr: [4],
+  Nd: [4],
+  Tb: [4],
+  Dy: [4],
+  Sm: [2],
+  Eu: [2],
+  Yb: [2],
+}
+
+/** The lanthanoid oxidation states NCERT names, ascending (La to Lu). */
+export function namedLanthanoidStates(symbol: string): readonly number[] {
+  if (!NCERT_LANTHANOIDS.some((r) => r.symbol === symbol)) throw new RangeError(`${symbol} is not a lanthanoid`)
+  return [...(NAMED_LANTHANOID_EXTRA_STATES[symbol] ?? []), 3].sort((a, b) => a - b)
+}
+
+/** True when NCERT names the lanthanoid ion M^(state)+ as an oxidation state (Ce²⁺ and Lu²⁺ are not named). */
+export function isNamedLanthanoidState(symbol: string, state: number): boolean {
+  return namedLanthanoidStates(symbol).includes(state)
+}
+
 function lanthanoidMember(symbol: string): FSeriesMember {
   const row = NCERT_LANTHANOIDS.find((r) => r.symbol === symbol)
   if (row === undefined || row.ln3Plus === null) throw new RangeError(`${symbol} has no Table 4.9 row`)
-  const states: number[] = []
-  if (row.ln2Plus !== null) states.push(2)
-  states.push(3)
-  if (row.ln4Plus !== null) states.push(4)
+  const states = [...namedLanthanoidStates(symbol)]
   return {
     symbol,
     name: row.name,

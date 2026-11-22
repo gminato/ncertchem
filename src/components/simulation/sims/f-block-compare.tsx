@@ -209,7 +209,7 @@ export function FBlockCompare() {
         </p>
         <p className={styles.note}>
           Dots mark only the radii NCERT prints. The actinoid top state first passes the lanthanoid one at position {FIRST_AHEAD ?? 'none'}{' '}
-          ({FIRST_AHEAD === null ? '' : `${LN_SYMBOLS[FIRST_AHEAD - 1]} and ${AN_SYMBOLS[FIRST_AHEAD - 1]}`}). Filled dots are the printed oxidation states; the larger dot is the highest.
+          ({FIRST_AHEAD === null ? '' : `${LN_SYMBOLS[FIRST_AHEAD - 1]} and ${AN_SYMBOLS[FIRST_AHEAD - 1]}`}). Filled dots are oxidation states NCERT names: lanthanoids are +3, Ce, Pr, Nd, Tb and Dy also reach +4, and Sm, Eu and Yb also reach +2. Other Table 4.9 Ln²⁺ and Ln⁴⁺ configurations are not drawn. The larger dot is the highest.
         </p>
       </div>
     </div>

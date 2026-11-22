@@ -1,5 +1,13 @@
 import { describe, expect, it } from 'vitest'
-import { F_SERIES_POSITIONS, actinoidSymbols, firstActinoidAhead, fBlockPosition, lanthanoidSymbols } from './f-block-compare'
+import {
+  F_SERIES_POSITIONS,
+  actinoidSymbols,
+  firstActinoidAhead,
+  fBlockPosition,
+  isNamedLanthanoidState,
+  lanthanoidSymbols,
+  namedLanthanoidStates,
+} from './f-block-compare'
 
 describe('f-block compare positions', () => {
   it('pairs Ce to Lu with Th to Lr at positions 1 to 14', () => {
@@ -16,11 +24,32 @@ describe('f-block compare positions', () => {
     expect(() => fBlockPosition(15)).toThrow(RangeError)
   })
 
-  it('reads Table 4.9 states, with Nd printed at +4 and most lanthanoids stopping at +3', () => {
+  it('draws only the lanthanoid states NCERT names: Nd at +3 and +4, Pm at +3 alone', () => {
     const nd = fBlockPosition(3).lanthanoid
     expect(nd.symbol).toBe('Nd')
-    expect(nd.states).toEqual([2, 3, 4])
-    expect(fBlockPosition(4).lanthanoid.states).toEqual([2, 3])
+    expect(nd.states).toEqual([3, 4])
+    expect(nd.maxState).toBe(4)
+    expect(fBlockPosition(4).lanthanoid.symbol).toBe('Pm')
+    expect(fBlockPosition(4).lanthanoid.states).toEqual([3])
+  })
+
+  it('names Ln²⁺ only for Sm, Eu and Yb, and Ln⁴⁺ only for Ce, Pr, Nd, Tb and Dy', () => {
+    expect(isNamedLanthanoidState('Sm', 2)).toBe(true)
+    expect(isNamedLanthanoidState('Eu', 2)).toBe(true)
+    expect(isNamedLanthanoidState('Yb', 2)).toBe(true)
+    expect(isNamedLanthanoidState('Ce', 2)).toBe(false)
+    expect(isNamedLanthanoidState('Lu', 2)).toBe(false)
+    expect(isNamedLanthanoidState('Ce', 4)).toBe(true)
+    expect(isNamedLanthanoidState('Lu', 4)).toBe(false)
+    expect(namedLanthanoidStates('Lu')).toEqual([3])
+    expect(namedLanthanoidStates('La')).toEqual([3])
+    expect(() => namedLanthanoidStates('Th')).toThrow(RangeError)
+  })
+
+  it('gives the top state from the named set: Ce +4, Lu +3', () => {
+    expect(fBlockPosition(1).lanthanoid.maxState).toBe(4)
+    expect(fBlockPosition(14).lanthanoid.maxState).toBe(3)
+    expect(fBlockPosition(14).lanthanoid.states).toEqual([3])
   })
 
   it('shows Table 4.11 maxima: Np and Pu both +7', () => {
