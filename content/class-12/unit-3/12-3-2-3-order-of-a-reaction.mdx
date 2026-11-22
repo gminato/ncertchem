@@ -1,0 +1,112 @@
+---
+class: 12
+unit: 3
+section: "3.2.3"
+order: 3
+title: "Order of a Reaction"
+slug: "12-3-2-3-order-of-a-reaction"
+access: free
+summary: "The order of a reaction is the sum of the powers in its rate law, found by experiment, and the units of k reveal it."
+ncert: "Class 12, Part I — Unit 3, Section 3.2.3"
+---
+
+<Hook>
+A lab notebook records a rate constant of $4.0 \times 10^{-3}$, but the units have been smudged away. Without them the number tells you almost nothing: will the reaction be half done in minutes or in days? Why would one number need different units for different reactions, and what do those units tell you about the way the concentrations matter?
+</Hook>
+
+## Order from the rate law
+
+In Section 3.2 the rate law took the form $\text{Rate} = k[\ce{A}]^x[\ce{B}]^y$. The exponents $x$ and $y$ measure how sensitive the rate is to each reactant. You find them by experiment, and they need not match the coefficients in the balanced equation. The exponent of each reactant is the **order with respect to** that reactant, and the **overall order** is their sum:
+
+$$
+n = x + y
+$$
+
+Order can be $0$, $1$, $2$, $3$ or even a fraction such as $\tfrac{1}{2}$. A **zero-order** reaction is one whose rate does not depend on the concentration of any reactant at all, because the factor $[\ce{A}]^0$ equals $1$. A reaction with $\text{Rate} = k[\ce{P}]^2[\ce{Q}]^{1/2}$ is of overall order $\tfrac{5}{2}$, even though it has only two reactants.
+
+## Elementary and complex reactions
+
+A balanced equation says what goes in and what comes out, but not how the change happens. A change that takes place in a single step is an **elementary reaction**. Most reactions take several steps. The sequence of elementary steps is the **mechanism**, and the overall change is a **complex reaction**.
+
+Complex reactions come in several forms. They may be consecutive: the oxidation of ethane to carbon dioxide and water passes through intermediate steps in which an alcohol, an aldehyde and an acid form. They may run in reverse, or compete with side reactions, as in the nitration of phenol, which gives both an ortho and a para product. The rate law of a complex reaction is always found by experiment, because the balanced equation does not fix it.
+
+## Units of the rate constant
+
+The rate constant $k$ is the rate when every concentration in the rate law equals $1\ \text{mol L}^{-1}$. Write the rate law for a general reaction, with $n = x + y$, and solve it for $k$. With concentrations in mol L⁻¹ and time in s:
+
+$$
+k = \frac{\text{Rate}}{[\ce{A}]^x[\ce{B}]^y} = \frac{\text{mol L}^{-1}\ \text{s}^{-1}}{(\text{mol L}^{-1})^{n}} = (\text{mol L}^{-1})^{1-n}\,\text{s}^{-1}
+$$
+
+The units of $k$ therefore follow the order. A zero-order $k$ has units $\text{mol L}^{-1}\ \text{s}^{-1}$, a first-order $k$ has units $\text{s}^{-1}$, and a second-order $k$ has units $\text{mol}^{-1}\ \text{L}\ \text{s}^{-1}$. Your smudged notebook entry is therefore not ambiguous once you know its units, and the same number $4.0 \times 10^{-3}$ would describe three different reactions.
+
+<Check
+  n={1}
+  options={[
+    "Zero order, because the number has no concentration in it",
+    "First order, because k in s⁻¹ is the usual unit",
+    "Second order, because the units are mol⁻¹ L s⁻¹",
+    "Half order, because the units are fractional"
+  ]}
+  answer={2}
+  explanation="With units mol⁻¹ L s⁻¹, the exponent of mol L⁻¹ in (mol L⁻¹)^(1−n) s⁻¹ is 1 − n = −1, so n = 2. The same number written as s⁻¹ would have meant first order, and as mol L⁻¹ s⁻¹ zero order."
+>
+A rate constant is recorded as $4.0 \times 10^{-3}$ with units mol⁻¹ L s⁻¹. What is the order of the reaction?
+</Check>
+
+## Reading the order from the units
+
+Each order produces a characteristic set of units, and the set can be decoded in reverse. Zero order gives mol L⁻¹ s⁻¹, first order gives s⁻¹, second order gives mol⁻¹ L s⁻¹, and a half order gives mol$^{1/2}$ L$^{-1/2}$ s⁻¹. In every case the power of mol L⁻¹ in the units is $1 - n$, so you can read $n$ directly from it. The units show the order they imply, but the rate law itself still has to come from experiment.
+
+<Scrolly animation="order-curves">
+  <Step>
+    **Zero order: the rate ignores the concentration.** On a plot of rate against $[\ce{A}]$, draw $\text{Rate} = k[\ce{A}]^0 = k$ with $k = 0.200\ \text{mol L}^{-1}\ \text{s}^{-1}$. The line is flat at $0.200\ \text{mol L}^{-1}\ \text{s}^{-1}$ whether $[\ce{A}]$ is $0.25$, $0.50$ or $1.00\ \text{mol L}^{-1}$. The rate is the same at every concentration, and the units of $k$ are those of the rate itself.
+  </Step>
+  <Step>
+    **First order: a straight line through the origin.** Now draw $\text{Rate} = k[\ce{A}]$ with $k = 0.200\ \text{s}^{-1}$. The rate rises in step with $[\ce{A}]$, reaching $0.0500$, $0.100$ and $0.200\ \text{mol L}^{-1}\ \text{s}^{-1}$ at $0.25$, $0.50$ and $1.00\ \text{mol L}^{-1}$. The slope of the line is $k$, and it passes through the zero-zero corner of the plot.
+  </Step>
+  <Step>
+    **Second order: a rising parabola.** Draw $\text{Rate} = k[\ce{A}]^2$ with $k = 0.200\ \text{mol}^{-1}\ \text{L s}^{-1}$. Doubling $[\ce{A}]$ quadruples the rate. The curve reaches $0.0125$, $0.0500$ and $0.200\ \text{mol L}^{-1}\ \text{s}^{-1}$ at the same three concentrations, so it bends upward. Notice that all three curves meet at the point $(1.00,\ 0.200)$, because $k$ is the rate when $[\ce{A}] = 1\ \text{mol L}^{-1}$.
+  </Step>
+  <Step>
+    **A fractional order: one-half.** Draw $\text{Rate} = k[\ce{A}]^{1/2}$ with $k = 0.200\ \text{mol}^{1/2}\ \text{L}^{-1/2}\ \text{s}^{-1}$. The curve climbs steeply at low concentration and flattens as $[\ce{A}]$ grows, reaching $0.100$, $0.141$ and $0.200\ \text{mol L}^{-1}\ \text{s}^{-1}$ at $0.25$, $0.50$ and $1.00\ \text{mol L}^{-1}$. It again passes through the point $(1.00,\ 0.200)$, and its units carry the half powers.
+  </Step>
+  <Step>
+    **The units give the order away.** Set the four curves side by side, each labelled with its value of $k$. The units decode the order: $\text{mol L}^{-1}\ \text{s}^{-1}$ means zero, $\text{s}^{-1}$ means first, $\text{mol}^{-1}\ \text{L s}^{-1}$ means second, and $\text{mol}^{1/2}\ \text{L}^{-1/2}\ \text{s}^{-1}$ means one-half. Each curve is the same $k$ with a different power of concentration in its rate law.
+  </Step>
+</Scrolly>
+
+Two runs at different concentrations also give the order directly, without any plot. If the rate changes by the same factor as the concentration, the order is 1. For a single reactant $\text{A}$ the order is $\log(\text{rate}_2/\text{rate}_1)/\log([\ce{A}]_2/[\ce{A}]_1)$.
+
+<Check
+  n={2}
+  numeric
+  answer={0.5}
+  tolerance={0.01}
+  explanation="order = log(0.0600/0.0300)/log(0.80/0.20) = log 2 / log 4 = 0.5. The rate doubles when [A] quadruples, so the order with respect to A is one-half, which lies between first and zero order."
+>
+In a reaction of one reactant A, the rate is 0.0300 mol L⁻¹ s⁻¹ when [A] = 0.20 mol L⁻¹, and 0.0600 mol L⁻¹ s⁻¹ when [A] = 0.80 mol L⁻¹. What is the order with respect to A?
+</Check>
+
+Now make the order yourself. Choose an order $n$ in the lab below and keep $k = 0.200$ in its own units. Watch the rate–concentration curve change shape as $n$ changes, and check the units that follow from each choice. Then press **Double [A]** to see the factor by which the rate grows, which is $2^n$. For $n = 0$ the rate does not change, for $n = 2$ it quadruples, and for $n = \tfrac{1}{2}$ it grows by about $1.41$.
+
+<Simulation name="order-units-lab" title="Order and Units Lab" />
+
+<Check
+  n={3}
+  numeric
+  answer={0.128}
+  tolerance={0.001}
+  unit="mol L⁻¹ s⁻¹"
+  explanation="For a second-order reaction with k = 0.200 mol⁻¹ L s⁻¹, the rate is k[A]² = 0.200 × (0.80)² = 0.200 × 0.640 = 0.128 mol L⁻¹ s⁻¹."
+>
+A second-order reaction has k = 0.200 mol⁻¹ L s⁻¹. What is its rate, in mol L⁻¹ s⁻¹, when [A] = 0.80 mol L⁻¹?
+</Check>
+
+<KeyIdeas>
+- The **overall order** is the sum of the exponents in the rate law, $n = x + y$. The exponents are found by experiment and need not equal the coefficients in the balanced equation.
+- Order can be zero, whole-number or fractional. A zero-order rate does not depend on the concentration of any reactant.
+- An **elementary reaction** takes place in one step. A **complex reaction** is a sequence of elementary steps called a mechanism, so its rate law must be found by experiment.
+- The units of $k$ are $(\text{mol L}^{-1})^{1-n}\ \text{s}^{-1}$: $\text{mol L}^{-1}\ \text{s}^{-1}$ for zero order, $\text{s}^{-1}$ for first order and $\text{mol}^{-1}\ \text{L s}^{-1}$ for second order. Reading the power of mol L⁻¹ in the units gives the order.
+- Doubling a concentration changes the rate by the factor $2^n$, so each order has its own signature on a rate–concentration plot.
+</KeyIdeas>
