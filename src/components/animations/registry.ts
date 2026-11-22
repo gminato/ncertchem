@@ -151,6 +151,7 @@ import { MechanismSteps } from './c12-unit3/molecularity/MechanismSteps'
 import { ZeroOrderSurface } from './c12-unit3/zeroorder/ZeroOrderSurface'
 import { FirstOrderPlots } from './c12-unit3/firstorder/FirstOrderPlots'
 import { HalfLifeLadder } from './c12-unit3/halflife/HalfLifeLadder'
+import { CatalystPathway } from './c12-unit3/catalyst/CatalystPathway'
 
 /**
  * Animations available to a Scrolly Animation, keyed by the `animation` prop.
@@ -312,6 +313,7 @@ export const animations = {
   'zero-order-surface': ZeroOrderSurface,
   'first-order-plots': FirstOrderPlots,
   'half-life-ladder': HalfLifeLadder,
+  'catalyst-pathway': CatalystPathway,
 } as const
 
 export type AnimationName = keyof typeof animations

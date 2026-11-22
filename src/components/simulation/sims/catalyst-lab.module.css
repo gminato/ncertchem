@@ -1,0 +1,75 @@
+.sim {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  /* Fill the parent so the plot keeps its width when the catalyst is switched off. */
+  width: 100%;
+  min-width: 0;
+}
+
+.controls {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.sliderGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: var(--space-3);
+}
+
+.stage {
+  background: var(--surface-raised);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: var(--space-3);
+}
+
+.scene {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.label {
+  font-family: var(--font-sans);
+  stroke: var(--surface);
+  stroke-width: 4;
+  paint-order: stroke;
+  stroke-linejoin: round;
+}
+
+.readout {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: var(--space-2) var(--space-4);
+  margin: 0;
+  font-family: var(--font-sans);
+  font-size: 16px;
+}
+
+.row {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: var(--space-2) 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.row dt {
+  color: var(--fg-muted);
+  font-size: 15px;
+}
+
+.row dd {
+  margin: 0;
+  color: var(--fg);
+}
+
+.live {
+  margin: 0;
+  font-family: var(--font-sans);
+  font-size: 16px;
+  color: var(--fg);
+}

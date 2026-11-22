@@ -79,6 +79,7 @@ import { HalfCellPairingBench } from './sims/half-cell-pairing'
 import { NernstLab } from './sims/nernst-lab'
 import { RateSlopeExplorer } from './sims/rate-slope-explorer'
 import { RateDeterminingStepLab } from './sims/rate-determining-step-lab'
+import { CatalystLab } from './sims/catalyst-lab'
 import { EGKConverter } from './sims/e-g-k-converter'
 import { OrderUnitsLab } from './sims/order-units-lab'
 import { ConductivityCellLab } from './sims/conductivity-cell-lab'
@@ -183,6 +184,7 @@ export const simulations: Record<string, ComponentType<SimulationProps>> = {
   'half-cell-pairing': HalfCellPairingBench,
   'nernst-lab': NernstLab,
   'rate-slope-explorer': RateSlopeExplorer,
+  'catalyst-lab': CatalystLab,
   'e-g-k-converter': EGKConverter,
   'order-units-lab': OrderUnitsLab,
   'conductivity-cell-lab': ConductivityCellLab,
