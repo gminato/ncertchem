@@ -1,13 +1,21 @@
 import { describe, expect, it } from 'vitest'
 import {
+  CHROMATE_CR_STATE,
+  DICHROMATE_CHANGE,
+  DICHROMATE_CR_STATE,
   FE2_PER_DICHROMATE,
   FE2_PER_PERMANGANATE,
+  NEUTRAL_CHANGE,
   OXO_STEP_COUNT,
-  eVoltOf,
+  PERMANGANATE_CHANGE,
+  countWord,
   electronVisible,
   equationText,
+  eVoltOf,
   getOxoStepState,
   halfEquationBalances,
+  metalStateOf,
+  signedState,
 } from './oxoanion-steps'
 
 describe('oxoanion Steps', () => {
@@ -57,5 +65,22 @@ describe('oxoanion Steps', () => {
 
   it('shows the first n electrons only', () => {
     expect([0, 1, 2, 3, 4, 5].filter((i) => electronVisible(i, 3))).toEqual([0, 1, 2])
+  })
+
+  it('derives the metal states and electron counts that the captions print', () => {
+    expect(DICHROMATE_CHANGE).toEqual({ metal: 'Cr', from: 6, to: 3, electronsPerMetal: 3 })
+    expect(PERMANGANATE_CHANGE).toEqual({ metal: 'Mn', from: 7, to: 2, electronsPerMetal: 5 })
+    expect(NEUTRAL_CHANGE).toEqual({ metal: 'Mn', from: 7, to: 4, electronsPerMetal: 3 })
+    expect(CHROMATE_CR_STATE).toBe(6)
+    expect(DICHROMATE_CR_STATE).toBe(CHROMATE_CR_STATE)
+    expect(metalStateOf('MnO4', -1)).toBe(7)
+  })
+
+  it('prints states with a true minus sign and count words', () => {
+    expect(signedState(3)).toBe('+3')
+    expect(signedState(-2)).toBe('\u22122')
+    expect(signedState(0)).toBe('0')
+    expect(countWord(5)).toBe('five')
+    expect(countWord(3)).toBe('three')
   })
 })
