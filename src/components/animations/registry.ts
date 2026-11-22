@@ -165,6 +165,10 @@ import { SpinOnlyMoment } from './c12-unit4/magnetic/SpinOnlyMoment'
 import { DdColourScrolly } from './c12-unit4/colour/DdColourScrolly'
 import { OxoanionChemistry } from './c12-unit4/oxoanions/OxoanionChemistry'
 import { LanthanoidContraction } from './c12-unit4/lanthanoids/LanthanoidContraction'
+import { IsomerFamilyTree } from './c12-unit5/isomerism/IsomerFamilyTree'
+import { GeometricalIsomerBuilder } from './c12-unit5/isomerism/GeometricalIsomerBuilder'
+import { ChiralityMirror } from './c12-unit5/isomerism/ChiralityMirror'
+import { StructuralIsomerSwaps } from './c12-unit5/isomerism/StructuralIsomerSwaps'
 
 /**
  * Animations available to a Scrolly Animation, keyed by the `animation` prop.
@@ -340,6 +344,10 @@ export const animations = {
   'lanthanoid-contraction': LanthanoidContraction,
   'dblock-applications': DBlockApplications,
   'actinoid-comparison': ActinoidComparison,
+  'isomer-family-tree': IsomerFamilyTree,
+  'geometrical-isomer-builder': GeometricalIsomerBuilder,
+  'chirality-mirror': ChiralityMirror,
+  'structural-isomer-swaps': StructuralIsomerSwaps,
 } as const
 
 export type AnimationName = keyof typeof animations
