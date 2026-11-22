@@ -1,0 +1,113 @@
+---
+class: 12
+unit: 6
+section: "6.2"
+order: 2
+title: "Nomenclature"
+slug: "12-6-2-nomenclature"
+access: free
+summary: "A halide can carry two names: a common name built from its alkyl group, and an IUPAC name that numbers the carbon chain so that every compound has one systematic label."
+ncert: "Class 12, Part II — Unit 6, Section 6.2"
+---
+
+<Hook>
+In the lab cupboard two bottles sit side by side. One is labelled chloroform and the other trichloromethane, and your friend insists the practical needs both. Do you? Before you reach for a second bottle, ask what a name is for: does it describe a different liquid, or the same liquid in another language?
+</Hook>
+
+## Two systems, one bottle
+
+Chemists use two naming systems for halides, and they answer different questions. The common system asks which alkyl group carries the halogen. You name the group first and then add the halide word, so the name tells you what the halogen is attached to. The IUPAC system asks where each atom sits on a carbon skeleton. It treats the halogen as a prefix on a hydrocarbon, and it numbers the skeleton so that the substituents take the smallest numbers possible.
+
+The walk-through below starts with a short molecule that carries both names, builds the systematic name of a branched one, and then handles the two special cases: a benzene ring with two halogens, and a chain with two halogens on it.
+
+<Scrolly animation="halide-naming">
+  <Step>
+  **Two names, one molecule:** Begin with $\ce{CH3CH2CH(Br)CH3}$, a four-carbon chain with the bromine on its second carbon. The common name starts with the group. The butyl group that carries the bromine is the sec-butyl group, so the compound is sec-butyl bromide. The IUPAC name, 2-bromobutane, puts the bromine on the chain as a prefix and numbers the chain. Both names stay beside the same drawing, so you can see which atom each word refers to.
+  </Step>
+  <Step>
+  **Find the longest chain:** Now move to a larger molecule, $\ce{CH3CH(Br)CH2CH(CH3)CH2CH3}$. The methyl group on the fourth carbon is a branch, not part of the chain. Trace the longest unbroken run of carbons. It has six, so the parent is hexane. The bromine and the methyl are substituents hanging off that hexane, and the rest of the name depends on where they sit.
+  </Step>
+  <Step>
+  **Number for the lowest locants:** Count from the left and the bromine lands on carbon 2 while the methyl lands on carbon 4, giving the set {2, 4}. Count from the right and the set becomes {3, 5}. The sets are compared number by number, and 2 is lower than 3, so the count from the left wins. Both counts describe the same molecule. Only the winning set goes into the name.
+  </Step>
+  <Step>
+  **Assemble the name:** Prefixes go in alphabetical order, so bromo comes before methyl. Each locant sits in front of its prefix, and the parent name closes the word. Put together, the name is 2-bromo-4-methylhexane. Read the numbers and letters from left to right and they follow the carbons of the skeleton in order, which is the quickest way to check a name by eye.
+  </Step>
+  <Step>
+  **A ring with two halogens:** Put two chlorines on a benzene ring and three arrangements are possible. Adjacent carbons give the ortho pattern, one carbon between them gives meta, and opposite carbons give para. The IUPAC system writes these as 1,2-, 1,3- and 1,4-dichlorobenzene, numbering the ring from carbon 1. A ring with a single halogen needs no number at all, because its common and IUPAC names are the same.
+  </Step>
+  <Step>
+  **Two halogens on one chain:** In $\ce{CH3CHCl2}$ both chlorines sit on the same carbon, so this is a gem dihalide. Its IUPAC name is 1,1-dichloroethane and its common name is ethylidene chloride. In $\ce{ClCH2CH2Cl}$ the chlorines sit on neighbouring carbons, a vic dihalide, named 1,2-dichloroethane or, commonly, ethylene dichloride. Three rows of Table 6.1 confirm the pattern: methylene chloride is dichloromethane, chloroform is trichloromethane, and allyl bromide is 3-bromoprop-1-ene.
+  </Step>
+</Scrolly>
+
+## Table 6.1 at a glance
+
+Table 6.1 in NCERT lists common and IUPAC names side by side. Read across any row and both names describe one structure. The selection below keeps the Unicode formulas used in the Simulation.
+
+| Structure | Common name | IUPAC name |
+| --- | --- | --- |
+| CH₃CH₂CH(Cl)CH₃ | sec-Butyl chloride | 2-Chlorobutane |
+| (CH₃)₃CCH₂Br | neo-Pentyl bromide | 1-Bromo-2,2-dimethylpropane |
+| (CH₃)₃CBr | tert-Butyl bromide | 2-Bromo-2-methylpropane |
+| CH₂=CHCl | Vinyl chloride | Chloroethene |
+| CH₂=CHCH₂Br | Allyl bromide | 3-Bromoprop-1-ene (NCERT prints 3-Bromopropene) |
+| CH₂Cl₂ | Methylene chloride | Dichloromethane |
+| CHCl₃ | Chloroform | Trichloromethane |
+
+## Build a name yourself
+
+The Halide Namer below lets you build a haloalkane or a haloarene. Choose the chain length, the halogen, its position or positions, and whether a methyl branch sits on the chain. The drawing and the IUPAC name change together, and the naming steps show the chain, the numbering and the alphabetical order as you go. Where a common name exists, it appears beside the IUPAC name. Start with 2-bromobutane, then try 2-bromo-4-methylhexane to see the lowest-locant rule at work.
+
+<Simulation name="halide-namer" title="Halide Namer" />
+
+## Check your understanding
+
+<Check
+  n={1}
+  options={[
+    "2-Bromo-4-methylpentane",
+    "4-Bromo-2-methylpentane",
+    "2-Methyl-4-bromopentane",
+    "1-Bromo-3-methylpentane"
+  ]}
+  answer={0}
+  explanation="Numbering from either end gives the set {2, 4}, so the tie goes to the prefixes. Bromo comes before methyl in the alphabet, so bromo takes the lower locant: 2-bromo-4-methylpentane. The other options either put the locants in the wrong place or break the alphabetical order of the prefixes."
+>
+Name the compound $\ce{(CH3)2CHCH2CH(Br)CH3}$ using the IUPAC system. Which name is correct?
+</Check>
+
+<Check
+  n={2}
+  options={[
+    "ethylidene chloride",
+    "ethylene dichloride",
+    "methylene chloride",
+    "chloroform"
+  ]}
+  answer={1}
+  explanation="Both chlorines sit on adjacent carbons, so the compound is a vic dihalide, and vic dihalides take the alkylene dihalide form: ethylene dichloride. Ethylidene chloride is the gem isomer, CH₃CHCl₂. Methylene chloride is CH₂Cl₂ and chloroform is CHCl₃."
+>
+Which common name belongs to the compound $\ce{ClCH2CH2Cl}$?
+</Check>
+
+<Check
+  n={3}
+  options={[
+    "o-dichlorobenzene",
+    "m-dichlorobenzene",
+    "p-dichlorobenzene"
+  ]}
+  answer={1}
+  explanation="Carbons 1 and 3 have one carbon between them, which is the meta pattern, 1,3-dichlorobenzene. Ortho is 1,2 and para is 1,4."
+>
+A benzene ring carries chlorine atoms on carbons 1 and 3. Which common name applies?
+</Check>
+
+<KeyIdeas>
+- The common name starts with the alkyl group, as in sec-butyl bromide. The IUPAC name treats the halogen as a prefix on the longest chain or on the ring, as in 2-bromobutane.
+- Number the chain so that the set of locants is as low as possible. When two numberings tie, the prefix that comes first in the alphabet takes the lower number.
+- For a benzene ring, the common prefixes ortho, meta and para become 1,2, 1,3 and 1,4 in the IUPAC system. A monohalobenzene needs no number.
+- Put two chlorines on one carbon, as in $\ce{CH3CHCl2}$, and you have a gem dihalide, which the common system calls ethylidene chloride. Put them on neighbouring carbons, as in $\ce{ClCH2CH2Cl}$, and you have a vic dihalide, commonly ethylene dichloride. IUPAC treats both as dihaloalkanes, and the prefix dihalo- or trihalo- gives the number of halogens.
+- Chloroform and trichloromethane name the same compound, so the second bottle is not needed. The same holds for 3-bromopropene and 3-bromoprop-1-ene.
+</KeyIdeas>

@@ -58,6 +58,7 @@ import { HuckelChecker } from './sims/huckel-checker'
 import { FormulaTranslator } from './sims/formula-translator'
 import { ArrowPusher } from './sims/arrow-pusher'
 import { AlkyneAcidTest } from './sims/alkyne-acid-test'
+import { HalideNamer } from './sims/halide-namer'
 import { HalogenationLab } from './sims/halogenation-lab'
 import { OzonolysisDetective } from './sims/ozonolysis-detective'
 import { AlkaneSynthesisPlanner } from './sims/alkane-synthesis-planner'
@@ -224,4 +225,5 @@ export const simulations: Record<string, ComponentType<SimulationProps>> = {
   'industrial-catalyst-explorer': IndustrialCatalystExplorer,
   'f-block-compare': FBlockCompare,
   'halide-classifier': HalideClassifier,
+  'halide-namer': HalideNamer,
 }

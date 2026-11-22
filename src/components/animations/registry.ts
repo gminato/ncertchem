@@ -166,6 +166,7 @@ import { DdColourScrolly } from './c12-unit4/colour/DdColourScrolly'
 import { OxoanionChemistry } from './c12-unit4/oxoanions/OxoanionChemistry'
 import { LanthanoidContraction } from './c12-unit4/lanthanoids/LanthanoidContraction'
 import { HalideClasses } from './c12-unit6/classes/HalideClasses'
+import { HalideNaming } from './c12-unit6/naming/HalideNaming'
 
 /**
  * Animations available to a Scrolly Animation, keyed by the `animation` prop.
@@ -342,6 +343,7 @@ export const animations = {
   'dblock-applications': DBlockApplications,
   'actinoid-comparison': ActinoidComparison,
   'halide-classes': HalideClasses,
+  'halide-naming': HalideNaming,
 } as const
 
 export type AnimationName = keyof typeof animations
