@@ -21,10 +21,13 @@ export const EXAMPLE_R0 = 0.1
 export const EXAMPLE_K = 2.0e-3
 export const EXAMPLE_T_MAX = 600
 
-/** The stoichiometry card: 3A → 2B at a reaction rate of 2.00 × 10⁻⁴ mol L⁻¹ s⁻¹. */
+/** The example reaction's tangent point (s). The stoichiometry card uses the same curve at this time. */
+export const TANGENT_T = 250
+
+/** The stoichiometry card: 3A → 2B. Its reaction rate is the lib's −d[A]/dt at 250 s divided by 3. */
 export const STOICH_A = 3
 export const STOICH_B = 2
-export const STOICH_RATE = 2.0e-4
+export const STOICH_RATE = firstOrderRate(EXAMPLE_R0, EXAMPLE_K, TANGENT_T) / STOICH_A
 
 export interface RateStepState {
   readonly index: number
@@ -62,17 +65,17 @@ export const RATE_STEPS: readonly RateStepState[] = [
     index: 2,
     id: 'tangent',
     ariaLabel: 'The tangent to the concentration curve at 250 s, whose slope is the instantaneous rate.',
-    t1: 250,
-    t2: 250,
+    t1: TANGENT_T,
+    t2: TANGENT_T,
     ghostChord: false,
     tangent: true,
   },
   {
     index: 3,
     id: 'stoichiometry',
-    ariaLabel: 'The reaction 3A → 2B at a reaction rate of 2.00 × 10⁻⁴ mol L⁻¹ s⁻¹, with the rate of disappearance of A and the rate of appearance of B shown as multiples of it.',
-    t1: 250,
-    t2: 250,
+    ariaLabel: 'The reaction 3A → 2B at the reaction rate at 250 s, with the rate of disappearance of A and the rate of appearance of B shown as multiples of it.',
+    t1: TANGENT_T,
+    t2: TANGENT_T,
     ghostChord: false,
     tangent: false,
   },
@@ -80,8 +83,8 @@ export const RATE_STEPS: readonly RateStepState[] = [
     index: 4,
     id: 'units',
     ariaLabel: 'The same reaction rates with their units: mol L⁻¹ s⁻¹ for molar concentrations and atm s⁻¹ for gases.',
-    t1: 250,
-    t2: 250,
+    t1: TANGENT_T,
+    t2: TANGENT_T,
     ghostChord: false,
     tangent: false,
   },
@@ -131,8 +134,8 @@ export const READOUTS = {
   avgFull: formatSci(windowAverage(0, 500), 3),
   avgShort: formatSci(windowAverage(200, 300), 3),
   avgNarrow: formatSci(windowAverage(240, 260), 3),
-  instant: formatSci(instantRate(250), 3),
-  tangentSlope: formatSci(tangentSlopeAt(250), 3),
+  instant: formatSci(instantRate(TANGENT_T), 3),
+  tangentSlope: formatSci(tangentSlopeAt(TANGENT_T), 3),
   concAt500: formatSig(concA(500), 3),
   concAt250: formatSig(concA(250), 3),
   concAt0: formatSig(concA(0), 3),
