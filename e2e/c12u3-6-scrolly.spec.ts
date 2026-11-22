@@ -40,6 +40,21 @@ for (const scheme of ['light', 'dark'] as const) {
         await panel.screenshot({ path: `test-results/screens/c12u3-6-step${k + 1}-${scheme}.png` })
       }
 
+      // R4 for Scrolly text: rendered size = font-size x (svg rendered width / viewBox width), minimum 13 px.
+      const small = await scrolly.locator('svg').first().evaluate((svg) => {
+        const vb = (svg as SVGSVGElement).viewBox.baseVal
+        const scale = svg.getBoundingClientRect().width / vb.width
+        const found: string[] = []
+        svg.querySelectorAll('text').forEach((t) => {
+          const label = t.textContent?.trim() ?? ''
+          if (!label) return
+          const rendered = parseFloat(getComputedStyle(t).fontSize) * scale
+          if (rendered < 13) found.push(`${rendered.toFixed(1)} px: ${label}`)
+        })
+        return found
+      })
+      expect(small).toEqual([])
+
       await expect(page.locator('.katex-display').first()).toBeAttached()
       await expect(page.locator('.katex-error')).toHaveCount(0)
       expect(errors).toEqual([])
