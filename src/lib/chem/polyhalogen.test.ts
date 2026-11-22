@@ -3,6 +3,7 @@ import { molecularFormula, parseSmiles } from './molecule-parse'
 import {
   POLYHALOGEN_COMPOUNDS,
   atmosphereSummary,
+  chloroformGuardNote,
   chloroformSummary,
   findPolyhalogen,
   ozoneThinned,
@@ -70,5 +71,14 @@ describe('freon and ozone model', () => {
     const freon = findPolyhalogen('freon-12')
     expect(atmosphereSummary(freon, 'troposphere')).toContain('not reached the ozone layer')
     expect(atmosphereSummary(freon, 'stratosphere')).toContain('ozone layer is thinner')
+  })
+})
+
+describe('chloroform protection note', () => {
+  it('names the protection that applies', () => {
+    expect(chloroformGuardNote({ light: false, bottle: 'clear', fill: 'half' })).toContain('dark')
+    expect(chloroformGuardNote({ light: true, bottle: 'brown', fill: 'half' })).toContain('brown glass')
+    expect(chloroformGuardNote({ light: true, bottle: 'clear', fill: 'full' })).toContain('filled to the top')
+    expect(chloroformSummary({ light: true, bottle: 'brown', fill: 'half' })).toContain('brown glass blocks the light')
   })
 })

@@ -123,13 +123,20 @@ export function phosgeneForms(s: ChloroformSetup): boolean {
   return s.light && s.bottle === 'clear' && s.fill === 'half'
 }
 
+/** The protection that stops phosgene forming, first one that holds: no light, then brown glass, then a full bottle. */
+export function chloroformGuardNote(s: ChloroformSetup): string {
+  if (!s.light) return 'kept in the dark, so no light reaches it'
+  if (s.bottle === 'brown') return 'brown glass blocks the light'
+  return 'filled to the top, so no air reaches it'
+}
+
 export function chloroformSummary(s: ChloroformSetup): string {
   const light = s.light ? 'in light' : 'in the dark'
   const bottle = s.bottle === 'brown' ? 'in a brown bottle' : 'in a clear bottle'
   const fill = s.fill === 'full' ? 'filled to the top' : 'half empty, with air above'
   return phosgeneForms(s)
     ? `Chloroform ${bottle}, ${fill}, ${light}: phosgene (COCl₂) forms, an extremely poisonous gas.`
-    : `Chloroform ${bottle}, ${fill}, ${light}: no phosgene forms.`
+    : `Chloroform ${bottle}, ${fill}, ${light}: no phosgene forms, because ${chloroformGuardNote(s)}.`
 }
 
 /** Freons in the atmosphere: the layer the molecule has reached. */

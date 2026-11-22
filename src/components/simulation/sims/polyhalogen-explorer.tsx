@@ -11,6 +11,7 @@ import {
   FOOD_CHAIN_LEVELS,
   POLYHALOGEN_COMPOUNDS,
   atmosphereSummary,
+  chloroformGuardNote,
   chloroformSummary,
   ddtSummary,
   findPolyhalogen,
@@ -50,7 +51,7 @@ const AIR_OPTIONS = [
   { value: 'high', label: 'Higher level' },
 ] as const
 
-const LAYER_Y: Record<AtmosphereLayer, number> = { ground: 384, troposphere: 318, stratosphere: 226 }
+const LAYER_Y: Record<AtmosphereLayer, number> = { ground: 384, troposphere: 318, stratosphere: 216 }
 const CHAIN_X = [110, 300, 490] as const
 const CHAIN_DOTS = [2, 6, 12] as const
 
@@ -76,7 +77,7 @@ function ChloroformScene({ light, bottle, fill }: Pick<SceneProps, 'light' | 'bo
   return (
     <g>
       <rect x={270} y={166} width={60} height={14} rx={4} fill="var(--fg-subtle)" />
-      <rect x={230} y={180} width={140} height={220} rx={18} fill={bottle === 'brown' ? 'var(--bromine)' : 'var(--glass-fill)'} stroke="var(--glass-wall)" strokeWidth={3} />
+      <rect x={230} y={180} width={140} height={220} rx={18} fill={bottle === 'brown' ? 'var(--glass-amber)' : 'var(--glass-fill)'} stroke="var(--glass-wall)" strokeWidth={3} />
       <rect x={236} y={liquidTop} width={128} height={396 - liquidTop} rx={12} fill="var(--liquid)" stroke="var(--liquid-edge)" strokeWidth={2} />
       {fill === 'half' && (
         <text x={300} y={318} textAnchor="middle" fontSize={16} fill="var(--fg-muted)">
@@ -115,7 +116,7 @@ function ChloroformScene({ light, bottle, fill }: Pick<SceneProps, 'light' | 'bo
         </g>
       )}
       <text x={300} y={432} textAnchor="middle" fontSize={16} fill="var(--fg-muted)">
-        {phosgene ? 'Air and light, clear glass, half empty: phosgene forms' : 'Phosgene does not form in this setup'}
+        {phosgene ? 'Air and light, clear glass, half empty: phosgene forms' : `Phosgene does not form: ${chloroformGuardNote({ light, bottle, fill })}`}
       </text>
     </g>
   )
@@ -126,8 +127,8 @@ function AtmosphereScene({ compound, layer }: { compound: PolyhalogenCompound; l
   const graph = parseSmiles(compound.smiles)
   return (
     <g>
-      <rect x={20} y={180} width={560} height={76} fill="var(--accent-soft)" />
-      <rect x={20} y={256} width={560} height={124} fill="var(--surface)" />
+      <rect x={20} y={170} width={560} height={92} fill="var(--accent-soft)" />
+      <rect x={20} y={262} width={560} height={118} fill="var(--surface)" />
       <rect x={20} y={380} width={560} height={40} fill="var(--border)" />
       <text x={580} y={200} textAnchor="end" fontSize={16} fill="var(--fg-muted)">
         stratosphere
@@ -183,7 +184,7 @@ function ChainScene({ level }: { level: FoodChainLevel }) {
       <line x1={186} y1={300} x2={214} y2={300} stroke="var(--fg-subtle)" strokeWidth={3} />
       <line x1={386} y1={300} x2={414} y2={300} stroke="var(--fg-subtle)" strokeWidth={3} />
       <text x={300} y={420} textAnchor="middle" fontSize={16} fill="var(--fg-muted)">
-        Each animal eats the one below. DDT is stored in fat.
+        Schematic, not to scale: DDT builds up in fatty tissue over time.
       </text>
     </g>
   )
