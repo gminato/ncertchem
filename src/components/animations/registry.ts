@@ -153,6 +153,7 @@ import { OrderCurves } from './c12-unit3/order/OrderCurves'
 import { MechanismSteps } from './c12-unit3/molecularity/MechanismSteps'
 import { ZeroOrderSurface } from './c12-unit3/zeroorder/ZeroOrderSurface'
 import { FirstOrderPlots } from './c12-unit3/firstorder/FirstOrderPlots'
+import { CarbonHalogenBond } from './c12-unit6/cxbond/CarbonHalogenBond'
 import { DblockConfigurations } from './c12-unit4/config/DblockConfigurations'
 import { PhysicalTrends } from './c12-unit4/physical/PhysicalTrends'
 import { HalfLifeLadder } from './c12-unit3/halflife/HalfLifeLadder'
@@ -325,6 +326,7 @@ export const animations = {
   'mechanism-steps': MechanismSteps,
   'zero-order-surface': ZeroOrderSurface,
   'first-order-plots': FirstOrderPlots,
+  'carbon-halogen-bond': CarbonHalogenBond,
   'half-life-ladder': HalfLifeLadder,
   'catalyst-pathway': CatalystPathway,
   'arrhenius-energy': ArrheniusEnergy,
