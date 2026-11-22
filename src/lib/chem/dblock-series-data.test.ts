@@ -44,7 +44,7 @@ describe('colourWheelSector', () => {
     const { aquaIonColour } = await import('./dblock')
     const { NCERT_AQUA_COLOURS } = await import('./ncert-c12-unit4-tables')
     for (const row of NCERT_AQUA_COLOURS) {
-      const c = aquaIonColour(row.ion).colour
+      const c = aquaIonColour(row.ion)?.colour ?? 'colourless'
       if (c === 'colourless') expect(colourWheelSector(c)).toBeNull()
       else expect(colourWheelSector(c)).not.toBeNull()
     }
