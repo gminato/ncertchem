@@ -1,9 +1,11 @@
 import { describe, expect, it } from 'vitest'
 import { classifyHalide } from '@/lib/chem/haloalkanes'
-import { parseSmiles } from '@/lib/chem/molecule-parse'
+import { molecularFormula, parseSmiles } from '@/lib/chem/molecule-parse'
 import { NCERT_FIG_6_3_SN2_RELATIVE_RATE } from '@/lib/chem/ncert-c12-unit6-data'
 import {
   ALLYL_BROMIDE_SMILES,
+  ALLYL_CATION_FORMS,
+  BENZYL_CATION_FORMS,
   BENZYL_CHLORIDE_SMILES,
   FORMULAS,
   NAMES,
@@ -51,5 +53,20 @@ describe('SN2 and SN1 Scrolly Steps', () => {
     const benzyl = parseSmiles(BENZYL_CHLORIDE_SMILES)
     expect(classifyHalide(allyl, allyl.atoms.length - 1).kind).toBe('allylic')
     expect(classifyHalide(benzyl, 0).kind).toBe('benzylic')
+  })
+
+  it('draws each cation resonance form as C7H7 (or C3H5) with the + on its own carbon', () => {
+    for (const form of BENZYL_CATION_FORMS) {
+      const g = parseSmiles(form.smiles)
+      expect(molecularFormula(g)).toBe('C7H7+')
+      expect(g.atoms[form.cation].charge).toBe(1)
+      expect(g.atoms.filter((a) => (a.charge ?? 0) !== 0)).toHaveLength(1)
+    }
+    for (const form of ALLYL_CATION_FORMS) {
+      const g = parseSmiles(form.smiles)
+      expect(molecularFormula(g)).toBe('C3H5+')
+      expect(g.atoms[form.cation].charge).toBe(1)
+    }
+    expect(BENZYL_CATION_FORMS.map((f) => f.cation)).toEqual([0, 2, 4])
   })
 })
