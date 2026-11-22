@@ -79,7 +79,9 @@ function Reactor({ process }: { process: CatalystProcess }) {
   const isOxidation = process.property === 'oxidation-state'
   const [oxA, oxB] = process.oxidationStates ?? ['', '']
   const productLabel = process.products.map((p) => p.label).join(' + ')
-  const captionLines = isOxidation ? ['Metal swaps', 'oxidation states'] : ['Surface weakens', 'the bonds']
+  const captionLines = process.property === null
+    ? ['NCERT does not', 'say how it works']
+    : isOxidation ? ['Metal swaps', 'oxidation states'] : ['Surface weakens', 'the bonds']
 
   return (
     <svg
@@ -201,7 +203,7 @@ export function IndustrialCatalystExplorer() {
         <p className={styles.note}>
           {current.equationKind === 'overall'
             ? `Overall equation (NCERT p. ${current.page})`
-            : `Representative equation, ${(current.equationNote ?? '').replace(/ \(representative\)$/, '')} (NCERT p. ${current.page})`}
+            : `Representative equation, ${(current.equationNote ?? '').replace(/ \(representative\)$/, '')}`}
         </p>
       </div>
 

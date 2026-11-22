@@ -22,7 +22,8 @@ export interface CatalystProcess {
   readonly id: CatalystProcessId
   readonly name: string
   readonly catalyst: string
-  readonly property: CatalystProperty
+  /** null when NCERT does not say which property is at work (Ziegler). */
+  readonly property: CatalystProperty | null
   /** Plain-language account of the property in this process (one or two sentences). */
   readonly propertyText: string
   /** Oxidation states of the catalyst metal shown on the chips (oxidation-state processes only). */
@@ -97,15 +98,15 @@ export const CATALYST_PROCESSES: readonly CatalystProcess[] = [
   ),
   overallProcess(
     'haber', 'Haber process', 'surface-adsorption',
-    'The iron surface holds N₂ and H₂ molecules and weakens their bonds, so the gases react on the surface. The iron itself does not change oxidation state.',
+    'Finely divided iron adsorbs N₂ and H₂ on its surface, and the bonds inside them weaken enough for the gases to react.',
     null,
   ),
   {
     id: 'ziegler',
     name: zieglerLib.process,
     catalyst: zieglerLib.catalyst,
-    property: 'surface-adsorption',
-    propertyText: 'A titanium site on the catalyst binds an ethene molecule and inserts it into a growing chain. Each step adds one more unit.',
+    property: null,
+    propertyText: 'TiCl₄ with Al(CH₃)₃ is the basis of the Ziegler catalysts used to make polythene. NCERT does not say which property is at work.',
     oxidationStates: null,
     equation: ziegler.equation,
     equationKind: 'representative',
@@ -124,7 +125,7 @@ export const CATALYST_PROCESSES: readonly CatalystProcess[] = [
     name: hydrogenationLib.process,
     catalyst: hydrogenationLib.catalyst,
     property: 'surface-adsorption',
-    propertyText: 'The nickel surface holds H₂ and the C=C bond of the fat. The bond weakens and hydrogen atoms add across it.',
+    propertyText: 'Nickel catalyses the addition of hydrogen to the fat, and the reaction takes place on the nickel surface.',
     oxidationStates: null,
     equation: hydrogenation.equation,
     equationKind: 'representative',
@@ -144,6 +145,7 @@ export function processById(id: CatalystProcessId): CatalystProcess {
   return hit
 }
 
-export function propertyLabel(property: CatalystProperty): string {
+export function propertyLabel(property: CatalystProperty | null): string {
+  if (property === null) return 'Not stated by NCERT'
   return property === 'oxidation-state' ? 'Variable oxidation state' : 'Surface adsorption'
 }

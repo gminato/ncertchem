@@ -40,7 +40,7 @@ describe('industrial catalyst processes', () => {
     expect(processById('contact').property).toBe('oxidation-state')
     expect(processById('wacker').property).toBe('oxidation-state')
     expect(processById('haber').property).toBe('surface-adsorption')
-    expect(processById('ziegler').property).toBe('surface-adsorption')
+    expect(processById('ziegler').property).toBeNull()
     expect(processById('hydrogenation').property).toBe('surface-adsorption')
     expect(propertyLabel('oxidation-state')).toBe('Variable oxidation state')
     expect(propertyLabel('surface-adsorption')).toBe('Surface adsorption')
