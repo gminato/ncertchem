@@ -112,13 +112,13 @@ function termolecular(q: number): MechanismFrame {
   const flash = smooth(0.46, 0.5, q) * (1 - smooth(0.6, 0.68, q))
   return {
     dots: [
-      dot('no-a', 'NO', 'reactant', lerp(60, 232, a), lerp(40, 88, a), 22, 1 - form),
-      dot('no-b', 'NO', 'reactant', lerp(60, 232, a), lerp(200, 152, a), 22, 1 - form),
+      dot('no-a', 'NO', 'reactant', lerp(60, 226, a), lerp(40, 70, a), 22, 1 - form),
+      dot('no-b', 'NO', 'reactant', lerp(60, 226, a), lerp(200, 170, a), 22, 1 - form),
       dot('o2', 'O₂', 'reactant', lerp(480, 288, a), 120, 22, 1 - form),
       dot('no2-a', 'NO₂', 'product', lerp(260, 200, form), lerp(120, 70, form), 22, form),
       dot('no2-b', 'NO₂', 'product', lerp(260, 320, form), lerp(120, 170, form), 22, form),
     ],
-    bursts: [{ x: 260, y: 120, size: 34, effective: true, opacity: flash }],
+    bursts: [{ x: 256, y: 120, size: 24, effective: true, opacity: flash }],
   }
 }
 
@@ -168,7 +168,7 @@ export const MECHANISM_STEPS: readonly MechanismStepState[] = [
     tag: 'Unimolecular: one molecule',
     tagAccent: false,
     period: 6,
-    restPhase: 0.3,
+    restPhase: 0.8,
     energy: false,
     formula: ['NH₄NO₂ → N₂ + 2H₂O', 'One molecule reacts on its own: molecularity = 1'],
     ariaLabel:
@@ -181,7 +181,7 @@ export const MECHANISM_STEPS: readonly MechanismStepState[] = [
     tag: 'Bimolecular: two particles',
     tagAccent: false,
     period: 4,
-    restPhase: 0.5,
+    restPhase: 0.8,
     energy: false,
     formula: ['2HI → H₂ + I₂', 'Two particles collide: molecularity = 2'],
     ariaLabel:
@@ -194,7 +194,7 @@ export const MECHANISM_STEPS: readonly MechanismStepState[] = [
     tag: 'Termolecular: three at once, rare',
     tagAccent: false,
     period: 6,
-    restPhase: 0.5,
+    restPhase: 0.8,
     energy: false,
     formula: ['2NO + O₂ → 2NO₂', 'Three particles meet at one instant: molecularity = 3'],
     ariaLabel:
@@ -220,7 +220,7 @@ export const MECHANISM_STEPS: readonly MechanismStepState[] = [
     tag: 'Step 2: fast',
     tagAccent: false,
     period: 4,
-    restPhase: 0.44,
+    restPhase: 0.7,
     energy: true,
     formula: ['Step 2 (fast): H₂O₂ + IO⁻ → H₂O + I⁻ + O₂', 'Overall: 2H₂O₂ → 2H₂O + O₂;  Rate = k[H₂O₂][I⁻]'],
     ariaLabel:

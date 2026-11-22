@@ -63,6 +63,16 @@ describe('molecularity Scrolly steps', () => {
     }
   })
 
+  it('draws each reduced-motion rest frame with its outcome shown and no ghosted or live bursts', () => {
+    for (const spec of MECHANISM_STEPS) {
+      const frame = mechanismFrame(spec.index, spec.restPhase)
+      for (const d of frame.dots) expect(d.opacity === 0 || d.opacity === 1).toBe(true)
+      for (const b of frame.bursts) expect(b.opacity).toBe(0)
+      const outcomes = frame.dots.filter((d) => d.opacity === 1 && (d.tone === 'product' || d.id.startsWith('io')))
+      expect(outcomes.length).toBeGreaterThan(0)
+    }
+  })
+
   it('draws the slow step 1 barrier taller than step 2, so step 1 is rate-determining', () => {
     const [, tsSlow, , tsFast] = ENERGY_PROFILE
     expect(tsSlow).toBeGreaterThan(tsFast)
