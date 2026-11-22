@@ -52,6 +52,29 @@ describe('catalystLab', () => {
   })
 })
 
+describe('catalysed route shape (Scrolly proportions)', () => {
+  it('default case: first hump 30, valley 15, second hump 50 kJ mol⁻¹', () => {
+    const c = catalysedKnots(DEFAULT)
+    expect(c.map(([, e]) => e)).toEqual([0, 30, 15, 50, -20])
+    expect(c.map(([x]) => x)).toEqual([0, 0.25, 0.5, 0.75, 1])
+  })
+
+  it('keeps the valley above both end levels and the first hump below the second, across the sliders', () => {
+    for (let eaUncatKJ = 60; eaUncatKJ <= 120; eaUncatKJ += 10) {
+      for (let loweringKJ = 0; loweringKJ <= 20; loweringKJ += 2) {
+        for (let dHKJ = -40; dHKJ <= 30; dHKJ += 5) {
+          const c = catalysedKnots({ eaUncatKJ, loweringKJ, dHKJ, tempK: 298 })
+          const [, first, valley, second] = c.map(([, e]) => e)
+          expect(valley).toBeGreaterThan(Math.max(0, dHKJ))
+          expect(first).toBeGreaterThan(valley)
+          expect(second).toBeGreaterThan(first)
+          expect(second).toBeCloseTo(eaUncatKJ - loweringKJ, 9)
+        }
+      }
+    }
+  })
+})
+
 describe('path knots and cosinePath', () => {
   it('the catalysed route starts and ends at the uncatalysed end levels', () => {
     const u = uncatalysedKnots(DEFAULT)

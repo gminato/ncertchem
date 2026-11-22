@@ -22,7 +22,7 @@ const VIEW_H = 380
 const FRAME = { x: 84, y: 22, width: 530, height: 300 }
 const DOMAIN = { xMin: 0, xMax: 1, yMin: -60, yMax: 140 }
 const Y_TICKS = [-40, 0, 40, 80, 120]
-const CATALYSED_ARROW_X = 0.25
+const CATALYSED_ARROW_X = 0.75
 const UNCATALYSED_ARROW_X = 0.5
 
 const DEFAULTS = { eaUncatKJ: 60, loweringKJ: 10, dHKJ: -20, tempK: 298 }
@@ -73,8 +73,8 @@ function Overlay({ r, input, catalysed }: OverlayProps) {
       </text>
       {catalysed && (
         <>
-          <VArrow x={s.x(CATALYSED_ARROW_X) - 10} y1={s.y(0)} y2={s.y(catPeak)} tone={catTone} />
-          <text x={s.x(CATALYSED_ARROW_X) - 18} y={s.y(catPeak) - 10} fontSize={15} fill={catTone} textAnchor="end" className={styles.label}>
+          <VArrow x={s.x(CATALYSED_ARROW_X) + 10} y1={s.y(0)} y2={s.y(catPeak)} tone={catTone} />
+          <text x={s.x(CATALYSED_ARROW_X) + 18} y={s.y(catPeak) - 10} fontSize={15} fill={catTone} className={styles.label}>
             Eₐ {formatSig(catPeak, 3)}
           </text>
         </>
@@ -162,11 +162,11 @@ export function CatalystLab(_props: SimulationProps) {
           <dd>{kJ(dHKJ)} (unchanged)</dd>
         </div>
         <div className={styles.row}>
-          <dt>K = k_f / k_b, without catalyst</dt>
+          <dt>K = k (forward) / k (backward), without catalyst</dt>
           <dd>{formatSci(r.kEqUncat, 3)}</dd>
         </div>
         <div className={styles.row}>
-          <dt>K = k_f / k_b, with catalyst</dt>
+          <dt>K = k (forward) / k (backward), with catalyst</dt>
           <dd>
             {formatSci(r.kEqCat, 3)} {unchanged ? '(K unchanged)' : '(K changed)'}
           </dd>

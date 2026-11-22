@@ -100,9 +100,6 @@ export function cosinePath(knots: ReadonlyArray<readonly [number, number]>, perS
   return out
 }
 
-/** Second hump of the catalysed route sits this far below the first (drawing only; not a quoted number). */
-export const SECOND_HUMP_DIP_KJ = 4
-
 /** Knots of the uncatalysed route: reactants, one activated complex, products. */
 export function uncatalysedKnots(input: CatalystLabInput): Array<[number, number]> {
   return [
@@ -112,14 +109,32 @@ export function uncatalysedKnots(input: CatalystLabInput): Array<[number, number
   ]
 }
 
-/** Knots of the catalysed route: two humps (the first is the catalysed Eₐ) with an intermediate valley. */
+/** Gap (kJ mol⁻¹) kept between neighbouring knots of the catalysed route (drawing only). */
+export const CAT_KNOT_GAP_KJ = 2
+
+/** Scrolly proportions of the catalysed route: first hump 30 and valley 15 for a 50 kJ mol⁻¹ barrier. */
+export const CAT_FIRST_HUMP_FRACTION = 0.6
+export const CAT_VALLEY_FRACTION = 0.3
+
+function clamp(x: number, lo: number, hi: number): number {
+  return Math.min(Math.max(x, lo), hi)
+}
+
+/**
+ * Knots of the catalysed route: a first, lower hump, a valley (the intermediate complex), then the second
+ * hump, which is the labelled catalysed barrier Eₐ − lowering. The valley stays above both end levels
+ * (reactant 0 and products ΔrH) and the first hump stays below the second, at every slider setting.
+ */
 export function catalysedKnots(input: CatalystLabInput): Array<[number, number]> {
-  const peak = input.eaUncatKJ - input.loweringKJ
+  const barrier = input.eaUncatKJ - input.loweringKJ
+  const floor = Math.max(0, input.dHKJ)
+  const valley = clamp(CAT_VALLEY_FRACTION * barrier, floor + CAT_KNOT_GAP_KJ, barrier - 2 * CAT_KNOT_GAP_KJ)
+  const firstHump = clamp(CAT_FIRST_HUMP_FRACTION * barrier, valley + CAT_KNOT_GAP_KJ, barrier - CAT_KNOT_GAP_KJ)
   return [
     [0, 0],
-    [0.25, peak],
-    [0.5, input.dHKJ / 2],
-    [0.75, peak - SECOND_HUMP_DIP_KJ],
+    [0.25, firstHump],
+    [0.5, valley],
+    [0.75, barrier],
     [1, input.dHKJ],
   ]
 }
