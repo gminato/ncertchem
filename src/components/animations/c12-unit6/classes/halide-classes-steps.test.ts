@@ -1,5 +1,7 @@
 import { describe, expect, it } from 'vitest'
-import { HALIDE_STEPS, describeHalide, describeStep } from './halide-classes-steps'
+import { parseSmiles } from '@/lib/chem/molecule-parse'
+import { classifyHalide } from '@/lib/chem/haloalkanes'
+import { FRAME_ATTACH, FRAME_SMILES, HALIDE_STEPS, describeHalide, describeStep } from './halide-classes-steps'
 
 /** Expected name, class and formula per molecule, from the Section's fact sheet (P1). */
 const EXPECTED: Record<string, [string, string, string]> = {
@@ -46,5 +48,24 @@ describe('halide classes Scrolly steps', () => {
   it('clamps out-of-range Steps', () => {
     expect(describeStep(-3).map((d) => d.smiles)).toEqual(['BrCC(C)CC'])
     expect(describeStep(99).map((d) => d.smiles)).toEqual(HALIDE_STEPS[5])
+  })
+
+  it('draws Steps 1 and 2 on one frame: the bromine on frame atom k gives the class of that step molecule', () => {
+    const expected = [
+      ['1°', 'BrCC(C)CC'],
+      ['2°', 'CC(C)C(Br)C'],
+      ['3°', 'CCC(C)(Br)C'],
+    ]
+    const placements = FRAME_ATTACH.flat()
+    expect(placements).toEqual([0, 3, 1])
+    placements.forEach((atom, i) => {
+      const g = parseSmiles(FRAME_SMILES)
+      g.atoms.push({ element: 'Br' })
+      g.bonds.push({ a: atom, b: g.atoms.length - 1, order: 1 })
+      const br = g.atoms.length - 1
+      const [degree, smiles] = expected[i]
+      expect(classifyHalide(g, br).degree).toBe(degree)
+      expect(describeHalide(smiles).classLabel).toBe(`${degree} alkyl halide`)
+    })
   })
 })
