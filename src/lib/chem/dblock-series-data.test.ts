@@ -37,3 +37,17 @@ describe('dblock series data', () => {
     expect(kelvinToCelsius(SERIES_MELTING_POINTS_K['5d'][9])).toBeLessThan(0)
   })
 })
+
+describe('colourWheelSector', () => {
+  it('maps every Table 4.8 colour to a sector, or null for colourless', async () => {
+    const { colourWheelSector } = await import('./dblock-series-data')
+    const { aquaIonColour } = await import('./dblock')
+    const { NCERT_AQUA_COLOURS } = await import('./ncert-c12-unit4-tables')
+    for (const row of NCERT_AQUA_COLOURS) {
+      const c = aquaIonColour(row.ion)?.colour ?? 'colourless'
+      if (c === 'colourless') expect(colourWheelSector(c)).toBeNull()
+      else expect(colourWheelSector(c)).not.toBeNull()
+    }
+    expect(colourWheelSector('pink')).toEqual({ sector: 'red', nearest: true })
+  })
+})
