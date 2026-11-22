@@ -64,7 +64,7 @@ const PLOT_FRAMES: Record<Exclude<FirstOrderMode, 'flask'>, {
   yTitle: string
 }> = {
   conc: { yMin: 0, yMax: R0, yTicks: [0, 0.05, 0.1, 0.15, 0.2], yTitle: '[R] / mol L⁻¹' },
-  ln: { yMin: -4.5, yMax: -1, yTicks: [-1, -2, -3, -4], yTitle: 'ln[R]' },
+  ln: { yMin: -4.5, yMax: -1, yTicks: [-1, -2, -3, -4], yTitle: 'ln([R] / mol L⁻¹)' },
   log: { yMin: 0, yMax: 1.1, yTicks: [0, 0.25, 0.5, 0.75, 1], yTitle: 'log([R]₀/[R])' },
 }
 
@@ -129,7 +129,7 @@ function ConcentrationPlot({ mode, tangents, guides }: { mode: Exclude<FirstOrde
           at={{ x: t, y: pointY(t) }}
           tone={mode === 'conc' ? 'reactant' : 'product'}
           label={mode !== 'ln' && t === 0 ? undefined : formatSig(pointY(t), 3)}
-          side={mode === 'log' ? 'se' : 'ne'}
+          side={mode === 'log' ? 'nw' : 'ne'}
         />
       ))}
       {mode !== 'conc' && (
@@ -186,7 +186,7 @@ function Readouts({ mode, tangents }: { mode: FirstOrderMode; tangents: boolean 
     lines.push(`Intercept = ln[R]₀ = ${formatSig(lnAt(0), 3)}`)
   }
   if (mode === 'log') {
-    lines.push(`Slope = k/2.303 = ${formatSig(K / Math.LN10, 3)} s⁻¹`)
+    lines.push(`Slope = k/2.303 = ${formatSig(K / Math.LN10, 4)} s⁻¹`)
     lines.push('A straight line through the origin')
   }
   return (
