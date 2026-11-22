@@ -82,7 +82,7 @@ function unimolecular(q: number): MechanismFrame {
     dots: [
       dot('nh4no2', 'NH₄NO₂', 'reactant', 150, 120, 36, 1 - s),
       // A second, intact NH₄NO₂ stays on the left, so every frame (rest included) shows reactant and products.
-      dot('nh4no2-spare', 'NH₄NO₂', 'reactant', 92, 170, 30, 1),
+      dot('nh4no2-spare', 'NH₄NO₂', 'reactant', 70, 150, 30, 1),
       dot('n2', 'N₂', 'product', lerp(150, 370, s), lerp(120, 80, s), 22, s),
       dot('h2o-a', 'H₂O', 'product', lerp(150, 430, s), lerp(120, 165, s), 18, s),
       dot('h2o-b', 'H₂O', 'product', lerp(150, 300, s), lerp(120, 190, s), 18, s),
