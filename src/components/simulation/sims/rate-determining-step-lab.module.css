@@ -1,0 +1,117 @@
+.sim {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  min-width: 0;
+}
+
+.controls {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.sliderGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: var(--space-3);
+}
+
+.presets {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+.svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  max-width: 620px;
+  margin: 0 auto;
+  overflow: visible;
+}
+
+.label {
+  font-size: 14px;
+  fill: var(--fg);
+  font-family: var(--font-sans, inherit);
+}
+
+.arrow line {
+  stroke: var(--fg-muted);
+  stroke-width: 2;
+}
+
+.arrow path {
+  fill: var(--fg-muted);
+}
+
+.legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2) var(--space-4);
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  font-size: 14px;
+  color: var(--fg-muted);
+}
+
+.legend li {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.swatchReactant,
+.swatchCatalyst,
+.swatchProduct {
+  display: inline-block;
+  width: 18px;
+  height: 4px;
+  border-radius: 2px;
+}
+
+.swatchReactant {
+  background: var(--kin-reactant);
+}
+
+.swatchCatalyst {
+  background: var(--kin-catalyst);
+}
+
+.swatchProduct {
+  background: var(--kin-product);
+}
+
+.readout {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: var(--space-3);
+  margin: 0;
+}
+
+.readout > div {
+  padding: var(--space-3);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md, 12px);
+  background: var(--glass-fill);
+}
+
+.readout dt {
+  font-size: 14px;
+  color: var(--fg-muted);
+}
+
+.readout dd {
+  margin: var(--space-1) 0 0;
+  font-size: 16px;
+  font-variant-numeric: tabular-nums;
+}
+
+.summary {
+  margin: 0;
+  font-size: 16px;
+  line-height: 1.5;
+}

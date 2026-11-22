@@ -77,6 +77,7 @@ import { ColligativeThermalLab } from './sims/colligative-thermal-lab'
 import { OpposingVoltageLab } from './sims/opposing-voltage-lab'
 import { HalfCellPairingBench } from './sims/half-cell-pairing'
 import { NernstLab } from './sims/nernst-lab'
+import { RateDeterminingStepLab } from './sims/rate-determining-step-lab'
 import { EGKConverter } from './sims/e-g-k-converter'
 import { ConductivityCellLab } from './sims/conductivity-cell-lab'
 import { KohlrauschLab } from './sims/kohlrausch-lab'
@@ -180,4 +181,5 @@ export const simulations: Record<string, ComponentType<SimulationProps>> = {
   'kohlrausch-lab': KohlrauschLab,
   'electroplating-lab': ElectroplatingLab,
   'lead-acid-cycle': LeadAcidCycle,
+  'rate-determining-step-lab': RateDeterminingStepLab,
 }
