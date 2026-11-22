@@ -1,6 +1,7 @@
 'use client'
 
 import { PlotCurve, PlotFrame, PlotPoint, PlotSlopeTriangle, TONE_VAR } from '@/components/vocab'
+import { Sup } from '@/components/animations/c12-unit1/ChemSvg'
 import {
   EXAMPLE_K,
   ORDER_SPECS,
@@ -12,10 +13,11 @@ import {
   rateAt,
   specFor,
   thumbnailPoints,
-  unitsOf,
+  unitRuns,
   type CurveTone,
   type CurveVisibility,
   type OrderId,
+  type Run,
 } from './order-steps'
 
 export interface OrderCurvesProps {
@@ -76,21 +78,33 @@ function Thumbnail({ x, y, w, h, order, tone }: { x: number; y: number; w: numbe
   )
 }
 
+/** Draws runs as text: `sup` runs become real superscripts (Sup tspans). */
+function RunText({ runs }: { runs: readonly Run[] }) {
+  return (
+    <>
+      {runs.map((r, i) => (r.sup ? <Sup key={i}>{r.text}</Sup> : <tspan key={i}>{r.text}</tspan>))}
+    </>
+  )
+}
+
 function UnitCard({ x, y, id }: { x: number; y: number; id: OrderId }) {
   const spec = specFor(id)
   return (
     <g>
       <rect x={x} y={y} width={CARD_W} height={CARD_H} rx={14} fill="var(--surface)" stroke="var(--border)" strokeWidth={1.5} />
-      <text x={x + 18} y={y + 32} fontSize={18} fontWeight={600} fill={TONE_VAR[spec.tone]} fontFamily="var(--font-sans)">
+      <text x={x + 18} y={y + 30} fontSize={18} fontWeight={600} fill={TONE_VAR[spec.tone]} fontFamily="var(--font-sans)">
         {spec.title}
       </text>
-      <text x={x + 18} y={y + 60} fontSize={16} fill="var(--fg)" fontFamily="var(--font-sans)">
-        {spec.rateLaw}
+      <text x={x + 18} y={y + 56} fontSize={18} fill="var(--fg)" fontFamily="var(--font-sans)">
+        <RunText runs={spec.rateLaw} />
       </text>
-      <text x={x + 18} y={y + 86} fontSize={15} fill="var(--fg-muted)" fontFamily="var(--font-sans)">
-        k: {unitsOf(spec.order)}
+      <text x={x + 18} y={y + 82} fontSize={18} fill="var(--fg-muted)" fontFamily="var(--font-sans)">
+        {`k = ${fmtRate(EXAMPLE_K)}`}
       </text>
-      <Thumbnail x={x + 18} y={y + 104} w={CARD_W - 36} h={70} order={spec.order} tone={spec.tone} />
+      <text x={x + 18} y={y + 106} fontSize={18} fill="var(--fg-muted)" fontFamily="var(--font-sans)">
+        <RunText runs={unitRuns(spec.order)} />
+      </text>
+      <Thumbnail x={x + 18} y={y + 120} w={CARD_W - 36} h={56} order={spec.order} tone={spec.tone} />
     </g>
   )
 }
@@ -108,10 +122,10 @@ export function OrderCurves({ step, reducedMotion }: OrderCurvesProps) {
       style={{ display: 'block', maxWidth: '100%', height: 'auto' }}
     >
       <text x={24} y={34} fontSize={22} fontWeight={600} fill="var(--fg)" fontFamily="var(--font-sans)">
-        {state.headerLaw}
+        <RunText runs={state.headerLaw} />
       </text>
-      <text x={24} y={62} fontSize={16} fill="var(--fg-muted)" fontFamily="var(--font-sans)">
-        {state.headerUnits}
+      <text x={24} y={62} fontSize={18} fill="var(--fg-muted)" fontFamily="var(--font-sans)">
+        <RunText runs={state.headerUnits} />
       </text>
 
       <g style={{ opacity: state.decoder ? 0 : 1, transition }} aria-hidden={state.decoder}>
