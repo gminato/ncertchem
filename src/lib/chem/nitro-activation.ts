@@ -1,0 +1,124 @@
+/**
+ * Carbanion contributors for nucleophilic attack on a nitro-substituted chlorobenzene (Class 12 Unit 6, 6.7.2).
+ * The ring is numbered from the carbon that bears Cl (C1). OH⁻ attacks C1; the negative charge then sits on
+ * C2, C4 or C6 (ortho and para to C1). A nitro group helps only when it sits on one of those carbons.
+ */
+import { nitroActivation } from './haloalkanes'
+import { NCERT_HALOARENE_HYDROLYSIS } from './ncert-c12-unit6-data'
+
+export type ChargeSite = 2 | 4 | 6
+export const CHARGE_SITES: readonly ChargeSite[] = [2, 4, 6]
+
+type Pair = readonly [number, number]
+
+/** Kekulé double bonds of the substrate ring (C1=C2, C3=C4, C5=C6). */
+const SUBSTRATE_DOUBLES: readonly Pair[] = [
+  [1, 2],
+  [3, 4],
+  [5, 6],
+]
+
+/** Double bonds of the cyclohexadienyl carbanion (C1 is sp³), for each charge site. */
+const CONTRIBUTOR_DOUBLES: Record<ChargeSite, readonly Pair[]> = {
+  2: [
+    [3, 4],
+    [5, 6],
+  ],
+  4: [
+    [2, 3],
+    [5, 6],
+  ],
+  6: [
+    [2, 3],
+    [4, 5],
+  ],
+}
+
+/** Shared SMILES writer: ring atoms C1 to C6, nitro groups on the positions given, Kekulé bonds. */
+function ringSmiles(
+  nitro: readonly number[],
+  doubles: readonly Pair[],
+  c1: { prefix: string; suffix: string },
+  anion?: ChargeSite,
+): string {
+  const has = (k: number, a: readonly Pair[]) => a.some(([x, y]) => (x === k && y === k + 1) || (x === k + 1 && y === k))
+  const tokens: string[] = []
+  for (let k = 1; k <= 6; k++) {
+    let tok: string
+    if (k === 1) {
+      tok = `${c1.prefix}C1${c1.suffix}`
+    } else {
+      const branch = nitro.includes(k) ? '([N+](=O)[O-])' : ''
+      if (k === anion) tok = branch ? `[C-]${branch}` : '[CH-]'
+      else tok = `C${branch}`
+    }
+    if (k === 6) tok += '1'
+    tokens.push(tok)
+  }
+  let out = tokens[0]
+  for (let k = 1; k <= 5; k++) {
+    out += (has(k, doubles) ? '=' : '') + tokens[k]
+  }
+  return out
+}
+
+function normalise(nitro: readonly number[]): readonly number[] {
+  nitroActivation([...nitro]) // throws for positions outside 2 to 6
+  return [...new Set(nitro)].sort((p, q) => p - q)
+}
+
+/** Kekulé SMILES of the substrate: chlorobenzene with nitro groups at the given ring positions (2 to 6). */
+export function nitroSubstrateSmiles(nitro: readonly number[]): string {
+  return ringSmiles(normalise(nitro), SUBSTRATE_DOUBLES, { prefix: 'Cl', suffix: '' })
+}
+
+/** Kekulé SMILES of the carbanion after OH⁻ adds at C1, with the negative charge on `chargeAt`. */
+export function carbanionContributorSmiles(nitro: readonly number[], chargeAt: ChargeSite): string {
+  return ringSmiles(normalise(nitro), CONTRIBUTOR_DOUBLES[chargeAt], { prefix: 'O', suffix: '(Cl)' }, chargeAt)
+}
+
+export interface CarbanionContributor {
+  chargeAt: ChargeSite
+  smiles: string
+  /** True when the negative charge sits on a carbon that bears NO₂. */
+  reachesNitro: boolean
+}
+
+/** The three carbanion contributors for the attack at C1, each marked for whether it reaches a nitro carbon. */
+export function carbanionContributors(nitro: readonly number[]): CarbanionContributor[] {
+  const set = normalise(nitro)
+  return CHARGE_SITES.map((chargeAt) => ({
+    chargeAt,
+    smiles: carbanionContributorSmiles(set, chargeAt),
+    reachesNitro: set.includes(chargeAt),
+  }))
+}
+
+export interface NitroVerdict {
+  activated: boolean
+  /** Charge sites that carry a nitro group (empty when not activated). */
+  reachingSites: ChargeSite[]
+  /** The nitro positions that are meta to C1 (no effect). */
+  metaPositions: number[]
+}
+
+export function nitroVerdict(nitro: readonly number[]): NitroVerdict {
+  const set = normalise(nitro)
+  const reachingSites = CHARGE_SITES.filter((c) => set.includes(c))
+  return {
+    activated: reachingSites.length > 0,
+    reachingSites,
+    metaPositions: set.filter((p) => p === 3 || p === 5),
+  }
+}
+
+/**
+ * NCERT's printed conditions for the three printed arrangements only (4-nitro, 2,4-dinitro, 2,4,6-trinitro).
+ * Every other pattern, including plain chlorobenzene in this view, gets null: no temperature is shown.
+ */
+export function printedHydrolysisCase(nitro: readonly number[]) {
+  const key = normalise(nitro).join(',')
+  const index: Record<string, number> = { '4': 1, '2,4': 2, '2,4,6': 3 }
+  const i = index[key]
+  return i === undefined ? null : NCERT_HALOARENE_HYDROLYSIS[i]
+}
