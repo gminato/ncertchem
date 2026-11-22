@@ -138,6 +138,20 @@ function FirstMarkers({ R0, count, labelled, tone, guideLabels = true }: { R0: n
   )
 }
 
+/**
+ * The [R]₀ = 1.00 label, just above its dashed reference line (Step 3). From t = 20 s on, the 2.00 curve
+ * has already dropped below the line, so the space above it is clear.
+ */
+function RefLabel() {
+  const s = usePlotScale()
+  return (
+    <text x={s.x(20)} y={s.y(HL_R0) - 10} fontSize={15} fill="var(--fg)" {...HALO}>
+      <S>[R]</S>
+      <Sub>0</Sub> = 1.00
+    </text>
+  )
+}
+
 function PlotLayer({ step, reducedMotion }: { step: HalfLifeStepState; reducedMotion: boolean }) {
   const yTicks = step.yMax > 1.5 ? [0, 0.5, 1, 1.5, 2] : [0, 0.5, 1]
   return (
@@ -166,11 +180,7 @@ function PlotLayer({ step, reducedMotion }: { step: HalfLifeStepState; reducedMo
           ))}
           <FirstMarkers R0={HL_R0} count={step.markers} labelled tone="reactant" guideLabels={step.first2 === 0} />
           <PlotPoint at={{ x: 5, y: firstOrderConc(HL_R0, HL_K, 5) }} tone="reactant" />
-          {/* Just above the dashed [R] = 1.00 reference (Step 3) and in clear space elsewhere. */}
-          <text x={250} y={210} fontSize={15} fill="var(--fg)" {...HALO}>
-            <S>[R]</S>
-            <Sub>0</Sub> = 1.00
-          </text>
+          <RefLabel />
         </g>
 
         {/* First order, [R]₀ = 2.00 mol L⁻¹: the same half-lives, a different starting height. */}

@@ -132,7 +132,7 @@ function EnergyScene({ step, products, reducedMotion }: { step: CatalystStep; pr
       {/* Eₐ of the catalysed route: the second hump, the labelled barrier that limits the rate */}
       <g style={fade(step.catalysed, reducedMotion)}>
         <Arrow x={270} y1={y0} y2={yCat} tone="var(--kin-catalyst)" />
-        <text x={278} y={yCat + 6} fontSize={15} fill="var(--kin-catalyst)" {...LABEL_HALO}>
+        <text x={250} y={yCat + 4} textAnchor="end" fontSize={15} fill="var(--kin-catalyst)" {...LABEL_HALO}>
           <Ea /> = {EA_CAT_KJ}
         </text>
       </g>
@@ -167,7 +167,8 @@ function EnergyScene({ step, products, reducedMotion }: { step: CatalystStep; pr
         </text>
       </g>
       <g style={fade(step.catalysed && !uphill, reducedMotion)}>
-        <text x={274} y={yOf(CAT_VALLEY_KJ) + 24} fontSize={15} fill="var(--kin-catalyst)" {...LABEL_HALO}>
+        {/* Centred under the catalysed route's valley, the intermediate complex. */}
+        <text x={226} y={yOf(CAT_VALLEY_KJ) + 18} textAnchor="middle" fontSize={14} fill="var(--kin-catalyst)" {...LABEL_HALO}>
           intermediate
         </text>
       </g>

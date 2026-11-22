@@ -184,11 +184,12 @@ export function ZeroOrderSurface({ step, reducedMotion }: ZeroOrderSurfaceProps)
           </>
         )}
         {state.guides && <PlotGuide at={{ x: 12, y: idealConc(12) }} to="y" yLabel="0.50" tone="neutral" />}
+        {/* The starting point shows from Step 1 on; the t = 12 s point joins it from Step 2. */}
+        {(state.index === 0 || state.firstPoints) && (
+          <PlotPoint at={{ x: 0, y: R0 }} tone="reactant" label="[R]₀ = 0.80" side="right" />
+        )}
         {state.firstPoints && (
-          <>
-            <PlotPoint at={{ x: 0, y: R0 }} tone="reactant" label="[R]₀ = 0.80" side="right" />
-            <PlotPoint at={{ x: 12, y: idealConc(12) }} tone="reactant" label={state.guides ? '12 s' : undefined} side="ne" />
-          </>
+          <PlotPoint at={{ x: 12, y: idealConc(12) }} tone="reactant" label={state.guides ? '12 s' : undefined} side="ne" />
         )}
         {state.id === 'sites-empty' && <PlotPoint at={{ x: T_ZERO, y: 0 }} tone="neutral" />}
       </PlotFrame>
