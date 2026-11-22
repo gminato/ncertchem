@@ -28,9 +28,24 @@ export const SN2_PRODUCT_SMILES = 'CO'
 export const SN1_PRODUCT_SMILES = 'CC(C)(C)O'
 export const ALLYL_BROMIDE_SMILES = 'C=CCBr'
 export const BENZYL_CHLORIDE_SMILES = 'ClCC1=CC=CC=C1'
-/** Allyl cation: the two contributors put the + on the other terminal carbon. */
-export const ALLYL_CATION_CONTRIBUTORS = ['C=C[CH2+]', '[CH2+]C=C'] as const
-export const BENZYL_CATION_SMILES = 'C1=CC=CC=C1[CH2+]'
+/**
+ * Resonance forms of the cations in Step 6. `cation` is the atom index that carries the +.
+ * Allyl: the two contributors put the + on the other terminal carbon.
+ * Benzyl: the + on CH2, then on the ring carbons ortho and para to the CH2 (Kekulé forms).
+ */
+export interface ChargedForm {
+  smiles: string
+  cation: number
+}
+export const ALLYL_CATION_FORMS: readonly ChargedForm[] = [
+  { smiles: 'C=C[CH2+]', cation: 2 },
+  { smiles: '[CH2+]C=C', cation: 0 },
+]
+export const BENZYL_CATION_FORMS: readonly ChargedForm[] = [
+  { smiles: '[CH2+]C1=CC=CC=C1', cation: 0 },
+  { smiles: 'C=C1[CH+]C=CC=C1', cation: 2 },
+  { smiles: 'C=C1C=C[CH+]C=C1', cation: 4 },
+]
 
 /** Fig. 6.3 rows with their SMILES, in NCERT's order. */
 export const SN2_STRIP = SN2_STRIP_SMILES.map((smiles, i) => ({ smiles, ...NCERT_FIG_6_3_SN2_RELATIVE_RATE[i] }))
