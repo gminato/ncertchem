@@ -1,0 +1,151 @@
+---
+class: 12
+unit: 3
+section: "3.3.2"
+order: 6
+title: "First Order Reactions"
+slug: "12-3-3-2-first-order-reactions"
+access: free
+summary: "In a first order reaction the rate follows what is left, so each equal stretch of time removes the same fraction, and a logarithm turns the falling curve into a straight line."
+ncert: "Class 12, Part I — Unit 3, Section 3.3.2"
+---
+
+<Hook>
+A doctor once explained that a medicine's level in the blood falls by the same fraction every few hours, not by the same amount. Why would the body clear a fixed share of what remains, rather than a fixed number of molecules? The answer is the signature of a first order reaction: the rate depends on how much is left, so every stretch of time strips off the same proportion of it.
+</Hook>
+
+## Rate that follows what is left
+
+Some reactions slow down in a very orderly way. The simplest pattern is one in which a single reactant is the only thing that sets the speed, with its concentration raised to the first power. Take $\ce{R -> P}$. Its rate law is
+
+$$
+\text{Rate} = -\frac{d[\ce{R}]}{dt} = k[\ce{R}]
+$$
+
+The rate constant $k$ has the unit $\text{s}^{-1}$ for a first order reaction, and it does not depend on the starting concentration. Halve $[\ce{R}]$ and the rate halves with it, so the reaction slows as it runs. The constant $k$ is the fraction of what remains that disappears in each second.
+
+Many familiar changes follow this law. NCERT's examples include the hydrogenation of ethene and the decomposition of $\ce{N2O5}$ and $\ce{N2O}$, along with natural and artificial radioactive decay, where each unstable nucleus decays at a fixed fraction per unit time.
+
+## Integrating the rate law
+
+Separate the variables and integrate from the start to a later time. The result is
+
+$$
+\ln[\ce{R}] = -kt + \ln[\ce{R}]_0
+$$
+
+where $[\ce{R}]_0$ is the concentration at $t = 0$. Taking antilogarithms gives the concentration form
+
+$$
+[\ce{R}] = [\ce{R}]_0\, e^{-kt}
+$$
+
+and rearranging gives the rate constant from a single pair of readings:
+
+$$
+k = \frac{2.303}{t}\log\frac{[\ce{R}]_0}{[\ce{R}]}
+$$
+
+If you have two readings instead, taken at times $t_1$ and $t_2$, the starting concentration drops out altogether:
+
+$$
+k = \frac{1}{t_2 - t_1}\ln\frac{[\ce{R}]_1}{[\ce{R}]_2}
+$$
+
+The exponential is a curve, but its logarithm is a straight line. Plot $\ln[\ce{R}]$ against $t$ and you get a line of slope $-k$ and intercept $\ln[\ce{R}]_0$. Plot $\log([\ce{R}]_0/[\ce{R}])$ against $t$ and you get a line through the origin with slope $k/2.303$. A straight line on either plot is the test for first order behaviour.
+
+## A gas and its total pressure
+
+Gases make a convenient test bed, because a pressure gauge on a sealed vessel is easier to read than a sample taken out for analysis. Take $\ce{A(g) -> B(g) + C(g)}$ in a vessel of fixed volume, with $p_i$ the pressure of A at the start. Let $y$ stand for the pressure of A that has decomposed by time $t$. Each decomposed A leaves one B and one C behind, so the three partial pressures are
+
+$$
+\begin{aligned}
+p_A &= p_i - y \\
+p_B &= y \\
+p_C &= y
+\end{aligned}
+$$
+
+and the total pressure is their sum, $p_t = p_i + y$. Solving that for $y$ and putting it back into $p_A = p_i - y$ leaves only the measured total:
+
+$$
+p_A = 2p_i - p_t
+$$
+
+Feeding this $p_A$ into the first order integrated law gives the rate constant from the total pressure alone:
+
+$$
+k = \frac{2.303}{t}\log\frac{p_i}{2p_i - p_t}
+$$
+
+So a gauge reading at one time is enough to find $k$, provided you know the starting pressure.
+
+<Scrolly animation="first-order-plots">
+  <Step>
+    **A falling curve:** Start with $0.200\ \text{mol L}^{-1}$ of $\ce{R}$ and a rate constant of $0.0250\ \text{s}^{-1}$. The concentration falls along an exponential. At the start the slope is the rate $k[\ce{R}]_0 = 5.00 \times 10^{-3}\ \text{mol L}^{-1}\text{s}^{-1}$. By $60\ \text{s}$, $[\ce{R}]$ has dropped to $0.0446\ \text{mol L}^{-1}$ and the curve is much flatter, with a rate of $1.12 \times 10^{-3}\ \text{mol L}^{-1}\text{s}^{-1}$.
+  </Step>
+  <Step>
+    **Equal steps, equal fractions:** Mark the curve at $0$, $20$, $40$ and $60\ \text{s}$. The concentrations are $0.200$, $0.121$, $0.0736$ and $0.0446\ \text{mol L}^{-1}$. Each bar in the strip is $0.607$ times the one before it. Every equal time step removes the same fraction of what is left, so the bars shrink in a steady ratio rather than by a fixed amount.
+  </Step>
+  <Step>
+    **Straightening with a logarithm:** Plot $\ln[\ce{R}]$ against time. The values are $-1.61$, $-2.11$, $-2.61$ and $-3.11$ at $0$, $20$, $40$ and $60\ \text{s}$, and they fall on a single straight line. Its slope is $-0.0250\ \text{s}^{-1}$, which is $-k$, and its intercept is $\ln[\ce{R}]_0 = -1.61$.
+  </Step>
+  <Step>
+    **Through the origin:** Now plot $\log([\ce{R}]_0/[\ce{R}])$ against time. The points are $0$, $0.217$, $0.434$ and $0.651$, and they lie on a line through the origin. Its slope is $k/2.303 = 0.01086\ \text{s}^{-1}$. Multiply that slope by $2.303$ and you recover the rate constant, $k = 0.0250\ \text{s}^{-1}$, from either straight-line plot.
+  </Step>
+  <Step>
+    **A sealed flask:** Now let $\ce{A(g) -> B(g) + C(g)}$ react in a flask starting at $p_i = 0.400\ \text{atm}$. The gauge reads $p_t = 0.557\ \text{atm}$ at $20\ \text{s}$ and $0.711\ \text{atm}$ at $60\ \text{s}$. At that moment $p_A = 2p_i - p_t = 0.0893\ \text{atm}$, so less than a quarter of the A remains while the total pressure climbs toward $0.800\ \text{atm}$.
+  </Step>
+</Scrolly>
+
+## Explore the first order plots
+
+Set the starting concentration and the rate constant with the sliders, then drag the time cursor along the curve. Read off $[\ce{R}]$ and the rate constant that your reading implies, and switch the plot between $[\ce{R}]$, $\ln[\ce{R}]$ and $\log([\ce{R}]_0/[\ce{R}])$ against time. Turn on pressure mode to follow $p_t$ for the gas example, which starts at $0.400\ \text{atm}$. The default values are the ones in the scrolly: $0.200\ \text{mol L}^{-1}$ and $0.0250\ \text{s}^{-1}$.
+
+<Simulation name="first-order-lab" title="First Order Lab" />
+
+## Check your understanding
+
+<Check
+  n={1}
+  numeric
+  answer={55.5}
+  tolerance={0.2}
+  unit="s"
+  explanation="ln[R]₀/[R] = ln(0.200/0.0500) = ln 4 = 1.386, so t = 1.386 / 0.0250 s⁻¹ = 55.5 s. The time does not depend on any other starting value, only on k and the ratio of the concentrations."
+>
+A first order reaction has $k = 0.0250\ \text{s}^{-1}$ and starts with $[\ce{R}]_0 = 0.200\ \text{mol L}^{-1}$. After how many seconds does $[\ce{R}]$ fall to $0.0500\ \text{mol L}^{-1}$?
+</Check>
+
+<Check
+  n={2}
+  options={[
+    "A plot of [R] against t is a straight line with slope −k",
+    "A plot of ln[R] against t is a straight line with slope −k",
+    "A plot of 1/[R] against t is a straight line for every first order reaction",
+    "A plot of log[R] against 1/t is a straight line through the origin"
+  ]}
+  answer={1}
+  explanation="The integrated law ln[R] = −kt + ln[R]₀ is linear in t with slope −k. A plot of [R] against t is an exponential curve, not a line, and a plot of 1/[R] against t tests second order behaviour. A plot of log[R] against 1/t is not a test for first order kinetics."
+>
+Which statement about a first order reaction is correct?
+</Check>
+
+<Check
+  n={3}
+  numeric
+  answer={0.711}
+  tolerance={0.002}
+  unit="atm"
+  explanation="For A(g) → B(g) + C(g) with pᵢ = 0.400 atm, pᴀ = pᵢe^(−kt) = 0.400 × e^(−1.50) = 0.0893 atm. Then pₜ = 2pᵢ − pᴀ = 0.800 − 0.0893 = 0.711 atm. The total pressure rises from pᵢ toward 2pᵢ as A is used up."
+>
+A gas A(g) decomposes by the first order change $\ce{A(g) -> B(g) + C(g)}$ in a sealed vessel of constant volume. It starts at $p_i = 0.400\ \text{atm}$ with $k = 0.0250\ \text{s}^{-1}$. What is the total pressure in atm after 60 s?
+</Check>
+
+<KeyIdeas>
+- A first order reaction has rate $= k[\ce{R}]$, so the rate depends on the concentration that is left and falls as the reaction runs.
+- The integrated law $\ln[\ce{R}] = -kt + \ln[\ce{R}]_0$ gives $[\ce{R}] = [\ce{R}]_0 e^{-kt}$: equal time steps remove equal fractions, not equal amounts.
+- $\ln[\ce{R}]$ against $t$ is a straight line of slope $-k$; $\log([\ce{R}]_0/[\ce{R}])$ against $t$ is a line through the origin of slope $k/2.303$.
+- The rate constant of a first order reaction is in $\text{s}^{-1}$ and is found from $k = \dfrac{2.303}{t}\log\dfrac{[\ce{R}]_0}{[\ce{R}]}$.
+- For a gas $\ce{A(g) -> B(g) + C(g)}$ at constant volume, $p_A = 2p_i - p_t$, so the total pressure alone gives $k = \dfrac{2.303}{t}\log\dfrac{p_i}{2p_i - p_t}$.
+</KeyIdeas>

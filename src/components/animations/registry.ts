@@ -149,6 +149,7 @@ import { RateLawInitialRates } from './c12-unit3/ratelaw/RateLawInitialRates'
 import { OrderCurves } from './c12-unit3/order/OrderCurves'
 import { MechanismSteps } from './c12-unit3/molecularity/MechanismSteps'
 import { ZeroOrderSurface } from './c12-unit3/zeroorder/ZeroOrderSurface'
+import { FirstOrderPlots } from './c12-unit3/firstorder/FirstOrderPlots'
 
 /**
  * Animations available to a Scrolly Animation, keyed by the `animation` prop.
@@ -308,6 +309,7 @@ export const animations = {
   'order-curves': OrderCurves,
   'mechanism-steps': MechanismSteps,
   'zero-order-surface': ZeroOrderSurface,
+  'first-order-plots': FirstOrderPlots,
 } as const
 
 export type AnimationName = keyof typeof animations

@@ -1,0 +1,91 @@
+.sim {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.controls {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.sliderGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: var(--space-3);
+}
+
+.choices {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.stage {
+  background: var(--surface-raised);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: var(--space-3);
+}
+
+.scene {
+  display: block;
+  width: 100%;
+  max-width: 560px;
+  height: auto;
+  margin: 0 auto;
+}
+
+.readout {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.results {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr));
+  gap: var(--space-3);
+}
+
+.stat {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.statLabel {
+  font-size: 14px;
+  color: var(--fg-muted);
+}
+
+.statValue {
+  font-family: var(--font-mono);
+  font-size: 20px;
+  color: var(--fg);
+  white-space: nowrap;
+}
+
+/* Subscript drawn at full size and lowered, so the glyph never drops below the 14 px floor. */
+.sub {
+  position: relative;
+  top: 0.3em;
+}
+
+.note {
+  margin: 0;
+  font-size: 14px;
+  color: var(--fg-muted);
+}
+
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
