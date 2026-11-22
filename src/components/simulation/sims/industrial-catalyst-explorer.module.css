@@ -1,0 +1,175 @@
+.sim {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+.choice {
+  flex: 1 1 auto;
+}
+
+.stage {
+  background: var(--surface-raised);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: var(--space-3);
+}
+
+.scene {
+  display: block;
+  width: 100%;
+  max-width: 560px;
+  height: auto;
+  margin: 0 auto;
+}
+
+/* SVG text: every label is 15 units, so it renders at 15 px at 1440 px wide. */
+.label {
+  font-family: var(--font-sans);
+  font-size: 15px;
+  fill: var(--fg);
+}
+
+.caption {
+  font-family: var(--font-sans);
+  font-size: 14px;
+  fill: var(--fg-muted);
+}
+
+.chipText {
+  font-family: var(--font-sans);
+  font-size: 15px;
+  font-weight: 600;
+  fill: var(--fg);
+}
+
+.pipe {
+  stroke: var(--fg-muted);
+  stroke-width: 6;
+  stroke-linecap: round;
+}
+
+.vessel {
+  fill: var(--glass-fill);
+  stroke: var(--glass-wall);
+  stroke-width: 2;
+}
+
+.bed {
+  fill: var(--db-3d);
+  fill-opacity: 0.22;
+}
+
+.pellet {
+  fill: var(--db-3d);
+  stroke: var(--fg-muted);
+  stroke-width: 0.8;
+}
+
+.molecule {
+  fill: var(--kin-reactant);
+}
+
+.moleculeAlt {
+  fill: var(--kin-reactant);
+  fill-opacity: 0.5;
+}
+
+.product {
+  fill: var(--kin-product);
+}
+
+.bond {
+  stroke: var(--kin-reactant);
+  stroke-width: 2;
+  stroke-dasharray: 2 2;
+}
+
+.chainFeed,
+.chainProduct {
+  fill: none;
+  stroke-width: 4;
+  stroke-linejoin: round;
+}
+
+.chainFeed {
+  stroke: var(--kin-reactant);
+}
+
+.chainProduct {
+  stroke: var(--kin-product);
+}
+
+.chip {
+  fill: var(--surface);
+  stroke: var(--db-3d);
+  stroke-width: 1.5;
+}
+
+.arrow {
+  stroke: var(--fg-muted);
+  stroke-width: 1.5;
+}
+
+.arrowHead {
+  fill: var(--fg-muted);
+}
+
+.equation {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-2);
+  overflow-x: auto;
+}
+
+.note {
+  margin: 0;
+  font-size: 14px;
+  color: var(--fg-muted);
+}
+
+.properties {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-2);
+}
+
+.property,
+.propertyOn {
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: var(--space-2) var(--space-3);
+  font-size: 15px;
+  color: var(--fg-muted);
+  text-align: center;
+}
+
+.propertyOn {
+  border-color: var(--accent);
+  background: var(--accent-soft);
+  color: var(--fg);
+  font-weight: 600;
+}
+
+.propertyText {
+  margin: 0;
+  font-size: 15px;
+  line-height: 1.5;
+  color: var(--fg);
+}
+
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
