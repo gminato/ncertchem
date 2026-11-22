@@ -58,43 +58,42 @@ function ladderY(state: number): number {
   return AXIS_BOTTOM - state * UNIT
 }
 
-function Grid({ fill, ends }: { fill: boolean; ends: boolean }) {
+function Grid({ fill }: { fill: boolean }) {
   const counts = stateCounts()
   const tone = SERIES_TONE['3d']
   return (
     <g>
       {METALS.map((metal, i) => {
         const cx = colX(i)
-        const dim = ends && metal !== 'Sc' && metal !== 'Zn'
         const cells = gridCells(metal)
         const common = new Set(cells.filter((c) => c.common).map((c) => c.state))
         const filled = new Set(cells.map((c) => c.state))
         return (
-          <g key={metal} opacity={dim ? 0.3 : 1}>
+          <g key={metal}>
             <text x={cx} y={ROW_TOP - 12} textAnchor="middle" {...TEXT} fontWeight={600}>
               {metal}
             </text>
-            {STATE_ROWS.map((state) => {
-              const y = rowY(state)
-              const isFilled = fill && filled.has(state)
-              const isCommon = common.has(state)
-              return (
-                <rect
-                  key={state}
-                  x={cx - CELL_W / 2}
-                  y={y}
-                  width={CELL_W}
-                  height={CELL_H}
-                  rx={6}
-                  fill={isFilled ? tone : 'none'}
-                  fillOpacity={isFilled ? (isCommon ? 0.9 : 0.3) : undefined}
-                  stroke={isFilled && isCommon ? tone : 'var(--border)'}
-                  strokeWidth={isCommon ? 2 : 1}
-                />
-              )
-            })}
-            {counts && (
-              <g>
+            <g>
+              {STATE_ROWS.map((state) => {
+                const y = rowY(state)
+                const isFilled = fill && filled.has(state)
+                const isCommon = common.has(state)
+                // Table 4.3 bold (common) states get a heavier dark outline; the others are plain.
+                return (
+                  <rect
+                    key={state}
+                    x={cx - CELL_W / 2}
+                    y={y}
+                    width={CELL_W}
+                    height={CELL_H}
+                    rx={6}
+                    fill={isFilled ? tone : 'none'}
+                    stroke={isFilled && isCommon ? 'var(--fg)' : isFilled ? tone : 'var(--border)'}
+                    strokeWidth={isFilled && isCommon ? 3 : 1}
+                  />
+                )
+              })}
+              {counts && (
                 <rect
                   x={cx - BAR_W / 2}
                   y={BAR_BASE - counts[i]! * BAR_UNIT}
@@ -104,10 +103,12 @@ function Grid({ fill, ends }: { fill: boolean; ends: boolean }) {
                   fill={tone}
                   fillOpacity={0.55}
                 />
-                <text x={cx} y={BAR_BASE - counts[i]! * BAR_UNIT - 6} textAnchor="middle" {...TEXT}>
-                  {counts[i]}
-                </text>
-              </g>
+              )}
+            </g>
+            {counts && (
+              <text x={cx} y={BAR_BASE - counts[i]! * BAR_UNIT - 6} textAnchor="middle" {...TEXT}>
+                {counts[i]}
+              </text>
             )}
           </g>
         )
@@ -271,7 +272,6 @@ function TinLadder() {
 
 function Group6() {
   const cells = group6Cells()
-  const tones: Record<string, string> = { Cr: SERIES_TONE['3d'], Mo: SERIES_TONE['4d'], W: SERIES_TONE['5d'] }
   return (
     <g>
       <Axis />
@@ -288,10 +288,9 @@ function Group6() {
               x2={cx + 45}
               y1={y}
               y2={y}
-              stroke={tones[cell.symbol]}
+              stroke={SERIES_TONE['3d']}
               strokeWidth={6}
               strokeLinecap="round"
-              opacity={cell.strength}
             />
             <text x={cx} y={y - 12} textAnchor="middle" {...TEXT}>
               +6
@@ -324,7 +323,7 @@ export function OxidationStateGrid({ step }: OxidationStateGridProps) {
         <Group6 />
       ) : (
         <g>
-          <Grid fill={s.fill} ends={s.ends} />
+          <Grid fill={s.fill} />
           {s.ends && <EndsFrame />}
         </g>
       )}

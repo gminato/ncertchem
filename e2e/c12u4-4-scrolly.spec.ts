@@ -55,6 +55,34 @@ for (const scheme of ['light', 'dark'] as const) {
       })
       expect(small).toEqual([])
 
+      // R4 A1: the three +6 rungs of Step 6 are drawn alike (no stability shading).
+      await steps.nth(5).scrollIntoViewIfNeeded()
+      await page.waitForTimeout(1500)
+      const rungs = await scrolly.locator('svg').first().evaluate((svg) =>
+        Array.from(svg.querySelectorAll('line[stroke-width="6"]')).map((l) => `${l.getAttribute('stroke-width')}|${l.getAttribute('opacity') ?? '1'}`),
+      )
+      expect(rungs).toHaveLength(3)
+      expect(new Set(rungs).size).toBe(1)
+
+      // R4 A3: in Step 3 the metal names stay at full strength; only the cells dim.
+      await steps.nth(2).scrollIntoViewIfNeeded()
+      await page.waitForTimeout(1500)
+      const names = await scrolly.locator('svg').first().evaluate((svg) => {
+        const metals = ['Sc', 'Ti', 'V', 'Cr', 'Mn', 'Fe', 'Co', 'Ni', 'Cu', 'Zn']
+        return Array.from(svg.querySelectorAll('text'))
+          .filter((t) => metals.includes(t.textContent?.trim() ?? ''))
+          .map((t) => {
+            let alpha = 1
+            for (let el: Element | null = t; el && el !== svg; el = el.parentElement) {
+              const o = el.getAttribute('opacity')
+              if (o) alpha *= parseFloat(o)
+            }
+            return alpha
+          })
+      })
+      expect(names).toHaveLength(10)
+      expect(names.every((a) => a === 1)).toBe(true)
+
       await expect(page.locator('.katex-display').first()).toBeAttached()
       await expect(page.locator('.katex-error')).toHaveCount(0)
       expect(errors).toEqual([])

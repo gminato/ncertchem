@@ -51,10 +51,10 @@ describe('oxidation-state Steps', () => {
     expect([2, 3, 4, 5, 6, 7].map(mnRemovedTokens)).toEqual([2, 3, 4, 5, 6, 7])
   })
 
-  it('draws group 6 with only the +6 state, Cr as a strong oxidant only', () => {
+  it('draws group 6 with only the +6 state, Cr as a strong oxidant only, all rungs alike', () => {
     const cells = group6Cells()
     expect(cells.map((c) => c.symbol)).toEqual(['Cr', 'Mo', 'W'])
     expect(cells.map((c) => c.strongOxidant)).toEqual([true, false, false])
-    expect(cells[0]!.strength).toBeLessThan(cells[1]!.strength)
+    expect(Object.keys(cells[0]!).sort()).toEqual(Object.keys(cells[1]!).sort())
   })
 })
