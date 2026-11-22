@@ -90,3 +90,26 @@ export const NCERT_UNIT4_FIGURE_NOTES = [
     note: 'NCERT prints Sc 3.43 and Ti 4.1 g cm⁻³; PubChem gives 2.99 and 4.5. Quote densities only from V to Zn, or describe the Ti → Cu rise qualitatively.',
   },
 ] as const
+
+/** The six colour-wheel sectors used by the vocab ColourWheel and dblock.complementaryColour. */
+export type WheelSector = 'red' | 'orange' | 'yellow' | 'green' | 'blue' | 'violet'
+
+/**
+ * Maps a Table 4.8 colour name to the colour-wheel sector a Section draws as "seen". Purple and violet
+ * use the violet sector; pink is not a spectral colour (a pink solution absorbs green light), so it uses
+ * the red sector. `nearest` is true when the sector is an approximation the UI should say so about
+ * ("nearest sector"). Colourless returns null.
+ */
+export function colourWheelSector(colour: string): { sector: WheelSector; nearest: boolean } | null {
+  const map: Record<string, { sector: WheelSector; nearest: boolean }> = {
+    red: { sector: 'red', nearest: false },
+    orange: { sector: 'orange', nearest: false },
+    yellow: { sector: 'yellow', nearest: false },
+    green: { sector: 'green', nearest: false },
+    blue: { sector: 'blue', nearest: false },
+    violet: { sector: 'violet', nearest: false },
+    purple: { sector: 'violet', nearest: true },
+    pink: { sector: 'red', nearest: true },
+  }
+  return map[colour] ?? null
+}
