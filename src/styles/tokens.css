@@ -49,6 +49,7 @@
   --el-Xe: #4F9AB8;
   --el-Br: #8B3A2B;
   --el-I: #6B4FBB;
+  --glass-amber: #7A4A1E;
   --lone-pair: #5B8DEF;
   --lone-pair-edge: #2F6FEB;
   --dipole: #B4532A;
@@ -202,6 +203,7 @@
   --el-Xe: #8FD3F0;
   --el-Br: #D98A6C;
   --el-I: #B49BF2;
+  --glass-amber: #8A5A2E;
   --lone-pair: #8EC3FF;
   --lone-pair-edge: #6CB6FF;
   --dipole: #FF9B7E;
@@ -328,6 +330,7 @@
     --el-Xe: #8FD3F0;
     --el-Br: #D98A6C;
     --el-I: #B49BF2;
+    --glass-amber: #8A5A2E;
     --lone-pair: #8EC3FF;
     --lone-pair-edge: #6CB6FF;
     --dipole: #FF9B7E;
