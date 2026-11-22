@@ -46,6 +46,8 @@ const W = 580
 const H = 540
 const FRAME = { x: 78, y: 24, width: 470, height: 300 }
 const T_MAX = 100
+/** Times at which the Step 1 tangents touch the curve (s). */
+const TANGENT_TIMES = [0, 40, 60] as const
 const X_TICKS = [0, 20, 40, 60, 80, 100]
 
 const BOX = { x: 40, y: 24, width: 330, height: 300 }
@@ -109,18 +111,24 @@ function ConcentrationPlot({ mode, tangents, guides }: { mode: Exclude<FirstOrde
       {mode === 'log' && (
         <PlotLine from={{ x: 0, y: 0 }} to={{ x: T_MAX, y: (K / Math.LN10) * T_MAX }} tone="product" width={2.6} />
       )}
-      {tangents && (
-        <>
-          <PlotLine from={{ x: 0, y: R0 }} to={{ x: 1 / K, y: 0 }} tone="accent" width={2} dashed />
-          <PlotLine
-            from={{ x: 45, y: concAt(60) + firstOrderTangentSlope(R0, K, 60) * -15 }}
-            to={{ x: 75, y: concAt(60) + firstOrderTangentSlope(R0, K, 60) * 15 }}
-            tone="accent"
-            width={2}
-            dashed
-          />
-        </>
-      )}
+      {tangents &&
+        TANGENT_TIMES.map((t) => {
+          // All three tangents share one style and length (20 s either side of the point), clipped at t = 0.
+          const half = 20
+          const slope = firstOrderTangentSlope(R0, K, t)
+          const x0 = Math.max(0, t - half)
+          const x1 = t + half
+          return (
+            <PlotLine
+              key={`tan${t}`}
+              from={{ x: x0, y: concAt(t) + slope * (x0 - t) }}
+              to={{ x: x1, y: concAt(t) + slope * (x1 - t) }}
+              tone="accent"
+              width={2.6}
+              dashed
+            />
+          )
+        })}
       {guides &&
         MARK_TIMES.map((t) => <PlotGuide key={`g${t}`} at={{ x: t, y: pointY(t) }} to="x" tone="neutral" />)}
       {MARK_TIMES.map((t) => (

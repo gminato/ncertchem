@@ -75,12 +75,14 @@ function dot(id: string, label: string, tone: PlotTone, x: number, y: number, r:
   return { id, label, tone, x, y, r, opacity }
 }
 
-/** Step 1: NH₄NO₂ splits on its own into N₂ and two H₂O. */
+/** Step 1: NH₄NO₂ splits on its own into N₂ and two H₂O. A spare NH₄NO₂ on the left shows the reactant at rest. */
 function unimolecular(q: number): MechanismFrame {
   const s = smooth(0.42, 0.6, q)
   return {
     dots: [
       dot('nh4no2', 'NH₄NO₂', 'reactant', 150, 120, 36, 1 - s),
+      // A second, intact NH₄NO₂ stays on the left, so every frame (rest included) shows reactant and products.
+      dot('nh4no2-spare', 'NH₄NO₂', 'reactant', 92, 170, 30, 1),
       dot('n2', 'N₂', 'product', lerp(150, 370, s), lerp(120, 80, s), 22, s),
       dot('h2o-a', 'H₂O', 'product', lerp(150, 430, s), lerp(120, 165, s), 18, s),
       dot('h2o-b', 'H₂O', 'product', lerp(150, 300, s), lerp(120, 190, s), 18, s),

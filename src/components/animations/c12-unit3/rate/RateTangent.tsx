@@ -6,7 +6,6 @@ import {
   PlotFrame,
   PlotLine,
   PlotPoint,
-  RateMeter,
   VocabDefs,
   makePlotScale,
 } from '@/components/vocab'
@@ -120,6 +119,50 @@ function PlotReadouts({ step }: { step: number }) {
   )
 }
 
+const METER_TONE = {
+  reactant: 'var(--kin-reactant)',
+  product: 'var(--kin-product)',
+  accent: 'var(--accent)',
+} as const
+
+/** One bar on the card's shared scale. It draws no ticks: the scale is drawn once under the stack. */
+function CardBar({
+  x,
+  y,
+  width,
+  height,
+  value,
+  max,
+  label,
+  valueText,
+  tone,
+}: {
+  x: number
+  y: number
+  width: number
+  height: number
+  value: number
+  max: number
+  label: ReactNode
+  valueText: string
+  tone: keyof typeof METER_TONE
+}) {
+  const frac = Math.min(1, Math.max(0, value / max))
+  const barY = y + 30
+  return (
+    <g aria-hidden="true">
+      <text x={x} y={y + 18} fontSize={15} fill="var(--fg)">
+        {label}
+      </text>
+      <text x={x + width} y={y + 18} textAnchor="end" fontSize={15} fill="var(--fg)" style={{ fontVariantNumeric: 'tabular-nums' }}>
+        {valueText}
+      </text>
+      <rect x={x} y={barY} width={width} height={height} rx={height / 2} fill="var(--surface-raised)" stroke="var(--kin-grid)" />
+      <rect x={x} y={barY} width={Math.max(height, frac * width)} height={height} rx={height / 2} fill={METER_TONE[tone]} fillOpacity={0.9} />
+    </g>
+  )
+}
+
 /** The stoichiometry card for 3A → 2B (Steps 4–5). Its rates come from the lib at 250 s. */
 function StoichiometryCard({ units }: { units: boolean }) {
   const rates = stoichiometryRates()
@@ -137,7 +180,7 @@ function StoichiometryCard({ units }: { units: boolean }) {
         One reaction rate sits behind every species
       </text>
       {meters.map((m) => (
-        <RateMeter
+        <CardBar
           key={m.text}
           x={110}
           y={m.y}
@@ -146,13 +189,15 @@ function StoichiometryCard({ units }: { units: boolean }) {
           value={m.speciesRate / CARD_UNIT}
           max={CARD_MAX}
           label={m.label}
-          valueLabel={`${m.text} mol L⁻¹ s⁻¹`}
+          valueText={`${m.text} mol L⁻¹ s⁻¹`}
           tone={m.tone}
         />
       ))}
-      <text x={290} y={352} textAnchor="middle" fontSize={15} fill="var(--fg-muted)" style={TEXT}>
-        Bars share one scale, 0 to {CARD_MAX} × 10⁻⁴ mol L⁻¹ s⁻¹
-      </text>
+      <g style={TEXT} fill="var(--fg-muted)" fontSize={14}>
+        <text x={110} y={336}>0</text>
+        <text x={290} y={336} textAnchor="middle">Bars share one scale</text>
+        <text x={470} y={336} textAnchor="end">{CARD_MAX} × 10⁻⁴</text>
+      </g>
       <text x={290} y={382} textAnchor="middle" fontSize={17} fill="var(--fg)" style={TEXT}>
         Rate = −(1/3) d<Sym>[A]</Sym>/dt = (1/2) d<Sym>[B]</Sym>/dt
       </text>
