@@ -125,9 +125,11 @@ describe('nitro-activation nitro-O contributor', () => {
     expect(() => nitroOxygenContributorSmiles([4], 2)).toThrow()
   })
 
-  it('keeps nitro charges only on the nitro-O contributor', () => {
+  it('draws the resonant nitro group in full and condenses the others to NO₂', () => {
     const carbanion = withResonantNitroChargesOnly(parseSmiles(carbanionContributorSmiles([4], 6)))
     expect(carbanion.atoms.filter((a) => a.element === 'O' && (a.charge ?? 0) !== 0)).toHaveLength(0)
+    expect(carbanion.atoms.filter((a) => a.element === 'NO₂')).toHaveLength(1)
+    expect(carbanion.atoms.filter((a) => a.element === 'N')).toHaveLength(0)
     const para = withResonantNitroChargesOnly(parseSmiles(nitroOxygenContributorSmiles([4], 4)))
     expect(para.atoms.filter((a) => a.element === 'O' && a.charge === -1)).toHaveLength(2)
   })

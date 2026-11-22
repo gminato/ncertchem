@@ -11,10 +11,10 @@ import {
   CHARGE_SITES,
   carbanionContributors,
   nitroOxygenContributorSmiles,
+  withResonantNitroChargesOnly,
   nitroSubstrateSmiles,
   nitroVerdict,
   printedHydrolysisCase,
-  withResonantNitroChargesOnly,
 } from '@/lib/chem/nitro-activation'
 import styles from './nitro-activation.module.css'
 

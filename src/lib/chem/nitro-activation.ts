@@ -98,21 +98,31 @@ export function nitroOxygenContributorSmiles(nitro: readonly number[], site: Cha
 }
 
 /**
- * Drawing copy of a contributor: a nitro group keeps its ⊕ and ⊖ only when its N is double bonded to a ring
- * carbon (the nitro-O contributor). Every other nitro group is drawn without charge marks.
+ * Drawing copy of a contributor: a nitro group whose N is double bonded to a ring carbon (the nitro-O
+ * contributor) is drawn in full, with its ⊕ and ⊖. Every other nitro group is condensed to one "NO₂"
+ * label, as textbooks draw it, so its formal charges are implied rather than drawn as an uncharged N.
  */
 export function withResonantNitroChargesOnly(g: MolGraph): MolGraph {
+  const drop = new Set<number>()
   const atoms = g.atoms.map((a) => ({ ...a }))
   g.atoms.forEach((a, n) => {
     if (a.element !== 'N' || (a.charge ?? 0) <= 0) return
     const ringDouble = g.atoms.some((b, c) => b.element === 'C' && bondOrderBetween(g, n, c) === 2)
     if (ringDouble) return
-    atoms[n] = { ...atoms[n], charge: 0 }
     g.atoms.forEach((o, j) => {
-      if (o.element === 'O' && (o.charge ?? 0) < 0 && bondOrderBetween(g, n, j) > 0) atoms[j] = { ...atoms[j], charge: 0 }
+      if (o.element === 'O' && bondOrderBetween(g, n, j) > 0) drop.add(j)
     })
+    atoms[n] = { ...atoms[n], element: 'NO₂', charge: 0, hCount: 0 }
   })
-  return { ...g, atoms }
+  const index = new Map<number, number>()
+  const kept = atoms.filter((_, i) => !drop.has(i))
+  atoms.forEach((_, i) => {
+    if (!drop.has(i)) index.set(i, index.size)
+  })
+  const bonds = g.bonds
+    .filter((b) => !drop.has(b.a) && !drop.has(b.b))
+    .map((b) => ({ ...b, a: index.get(b.a)!, b: index.get(b.b)! }))
+  return { ...g, atoms: kept, bonds }
 }
 
 export interface CarbanionContributor {
