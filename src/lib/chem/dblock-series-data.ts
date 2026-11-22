@@ -89,6 +89,31 @@ export const NCERT_UNIT4_FIGURE_NOTES = [
     where: 'Table 4.2, p. 94, density row',
     note: 'NCERT prints Sc 3.43 and Ti 4.1 g cm⁻³; PubChem gives 2.99 and 4.5. Quote densities only from V to Zn, or describe the Ti → Cu rise qualitatively.',
   },
+  {
+    id: 'la-ii-for-la-iii',
+    where: '4.5.3, p. 109',
+    note: 'NCERT prints "La(II) and Ln(III) compounds are predominant species"; La(II) is a slip for La(III). Say +3 is the characteristic state of La and the lanthanoids.',
+  },
+  {
+    id: 'sm-melting-point',
+    where: '4.5, p. 110',
+    note: 'NCERT says samarium melts at 1623 K; PubChem gives 1347 K. Do not quote a samarium melting point; the general 1000–1200 K range may be described.',
+  },
+] as const
+
+/**
+ * Reactions of the lanthanoids as NCERT Fig. 4.7 and the text beside it give them (p. 110). `Ln` stands
+ * for any lanthanoid. Conditions are NCERT's; products are generic formulas.
+ */
+export const LANTHANOID_REACTIONS = [
+  { reagent: 'O₂', condition: 'burns in oxygen', products: ['Ln₂O₃'] },
+  { reagent: 'S', condition: 'heated with sulphur', products: ['Ln₂S₃'] },
+  { reagent: 'N₂', condition: 'heated with nitrogen', products: ['LnN'] },
+  { reagent: 'C', condition: 'heated with carbon (2773 K)', products: ['LnC₂', 'Ln₂C₃', 'Ln₃C'] },
+  { reagent: 'X₂', condition: 'burns in halogens', products: ['LnX₃'] },
+  { reagent: 'H₂O', condition: 'with water', products: ['Ln(OH)₃', 'H₂'] },
+  { reagent: 'dilute acid', condition: 'with dilute acids', products: ['Ln³⁺ salt', 'H₂'] },
+  { reagent: 'H₂', condition: 'gently heated in hydrogen', products: ['hydride (NCERT gives no formula)'] },
 ] as const
 
 /** The six colour-wheel sectors used by the vocab ColourWheel and dblock.complementaryColour. */
