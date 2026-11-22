@@ -154,6 +154,7 @@ import { FirstOrderPlots } from './c12-unit3/firstorder/FirstOrderPlots'
 import { HalfLifeLadder } from './c12-unit3/halflife/HalfLifeLadder'
 import { CatalystPathway } from './c12-unit3/catalyst/CatalystPathway'
 import { ArrheniusEnergy } from './c12-unit3/arrhenius/ArrheniusEnergy'
+import { OxidationStateGrid } from './c12-unit4/oxstates/OxidationStateGrid'
 
 /**
  * Animations available to a Scrolly Animation, keyed by the `animation` prop.
@@ -318,6 +319,7 @@ export const animations = {
   'catalyst-pathway': CatalystPathway,
   'arrhenius-energy': ArrheniusEnergy,
   'collision-orientation': CollisionOrientation,
+  'oxidation-state-grid': OxidationStateGrid,
 } as const
 
 export type AnimationName = keyof typeof animations
