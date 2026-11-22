@@ -136,6 +136,7 @@ import { VantHoffParticles } from './c12-unit1/vanthoff/VantHoffParticles'
 import { ConcentrationScales } from './c12-unit1/concentration/ConcentrationScales'
 import { RaoultDeviations } from './c12-unit1/deviations/RaoultDeviations'
 import { ColligativePhaseShift } from './c12-unit1/colligative/ColligativePhaseShift'
+import { DBlockApplications } from './c12-unit4/applications/DBlockApplications'
 import { DaniellOpposingVoltage } from './c12-unit2/daniell/DaniellOpposingVoltage'
 import { SheMeasurement } from './c12-unit2/she/SheMeasurement'
 import { NernstConcentration } from './c12-unit2/nernst/NernstConcentration'
@@ -318,6 +319,7 @@ export const animations = {
   'catalyst-pathway': CatalystPathway,
   'arrhenius-energy': ArrheniusEnergy,
   'collision-orientation': CollisionOrientation,
+  'dblock-applications': DBlockApplications,
 } as const
 
 export type AnimationName = keyof typeof animations
