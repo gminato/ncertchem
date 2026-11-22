@@ -15,7 +15,7 @@ import {
 import styles from './zero-order-lab.module.css'
 
 const VB_W = 580
-const VB_H = 350
+const VB_H = 386
 const VESSEL = { x: 0, y: 30, width: 240, height: 262 }
 const SURFACE = { x: 0, y: 304, width: 240, height: 22 }
 const PLOT = { x: 312, y: 30, width: 252, height: 262 }
@@ -91,7 +91,13 @@ export function ZeroOrderLab() {
           </ReactionBox>
           <CatalystSurface x={SURFACE.x} y={SURFACE.y} width={SURFACE.width} height={SURFACE.height} occupied={surface} />
           <text x={120} y={345} textAnchor="middle" className={styles.caption}>
-            Surface sites: all busy while [R] &gt; 0
+            Ideal zero-order model:
+          </text>
+          <text x={120} y={362} textAnchor="middle" className={styles.caption}>
+            sites stay saturated
+          </text>
+          <text x={120} y={379} textAnchor="middle" className={styles.caption}>
+            until the gas runs out
           </text>
 
           <PlotFrame
@@ -168,7 +174,7 @@ export function ZeroOrderLab() {
 
       <p className={styles.note}>
         Every point of this line has the same slope, so the rate is k at every time. The line is ideal: it stops at [R] = 0 at t = [R]₀/k.
-        Real curves bend before that once the surface stops being saturated.
+        Real curves flatten before that once the surface stops being saturated.
       </p>
 
       <p className={styles.srOnly} aria-live="polite">
