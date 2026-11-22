@@ -4,6 +4,7 @@ import {
   electronsTransferred,
   parseEquation,
   titrationRatio,
+  type StructuredEquation,
 } from '@/lib/chem/dblock'
 
 /** Which picture a Step shows. */
@@ -22,7 +23,72 @@ export const OXO_STEP_COUNT = 5
 /** Electrons per Cr₂O₇²⁻ and per MnO₄⁻ in acid, and per MnO₄⁻ in neutral solution, from the libs. */
 const DICHROMATE_E = OXIDANT_HALF_EQUATIONS.dichromateAcid.electrons
 const PERMANGANATE_E = OXIDANT_HALF_EQUATIONS.permanganateAcid.electrons
-const NEUTRAL_E = electronsTransferred(equationText('permanganate-to-dioxide-half'))
+const NEUTRAL_EQUATION = parseEquation(equationText('permanganate-to-dioxide-half'))
+const NEUTRAL_E = electronsTransferred(NEUTRAL_EQUATION)
+
+/** Atoms of each element in a formula such as 'Cr2O7' (a missing count is 1). */
+function atomCounts(formula: string): Map<string, number> {
+  const counts = new Map<string, number>()
+  for (const m of formula.matchAll(/([A-Z][a-z]?)(\d*)/g)) {
+    counts.set(m[1], (counts.get(m[1]) ?? 0) + Number(m[2] || 1))
+  }
+  return counts
+}
+
+/** Oxidation state of the metal in an oxoanion or simple ion, from its charge and formula (O taken as −2). */
+export function metalStateOf(formula: string, charge: number): number {
+  const counts = atomCounts(formula)
+  const metal = /^[A-Z][a-z]?/.exec(formula)?.[0] ?? ''
+  const metalAtoms = counts.get(metal) ?? 1
+  return (charge + 2 * (counts.get('O') ?? 0)) / metalAtoms
+}
+
+export interface MetalChange {
+  /** The metal whose state changes (Cr, Mn). */
+  readonly metal: string
+  /** Oxidation state of that metal in the oxidant. */
+  readonly from: number
+  /** Oxidation state of that metal in the printed product. */
+  readonly to: number
+  /** Electrons gained per metal atom in the oxidant. */
+  readonly electronsPerMetal: number
+}
+
+/** Metal state change in a printed reduction, read from the oxidant and product formulas and the electron count. */
+export function reductionChange(equation: StructuredEquation): MetalChange {
+  const oxidant = equation.reactants[0]
+  const metal = /^[A-Z][a-z]?/.exec(oxidant.formula)?.[0] ?? ''
+  const product = equation.products.find((t) => atomCounts(t.formula).has(metal))
+  if (product === undefined) throw new RangeError(`no ${metal} product in ${oxidant.formula}`)
+  const metalAtoms = atomCounts(oxidant.formula).get(metal) ?? 1
+  return {
+    metal,
+    from: metalStateOf(oxidant.formula, oxidant.charge),
+    to: metalStateOf(product.formula, product.charge),
+    electronsPerMetal: electronsTransferred(equation) / metalAtoms,
+  }
+}
+
+export const DICHROMATE_CHANGE = reductionChange(OXIDANT_HALF_EQUATIONS.dichromateAcid.structured)
+export const PERMANGANATE_CHANGE = reductionChange(OXIDANT_HALF_EQUATIONS.permanganateAcid.structured)
+export const NEUTRAL_CHANGE = reductionChange(NEUTRAL_EQUATION)
+/** Chromium state in chromate and in dichromate (the captions say it is the same in both). */
+export const CHROMATE_CR_STATE = metalStateOf('CrO4', -2)
+export const DICHROMATE_CR_STATE = metalStateOf('Cr2O7', -2)
+
+/** An oxidation state as printed: +6, 0 or −3 (U+2212). */
+export function signedState(n: number): string {
+  if (n > 0) return `+${n}`
+  if (n < 0) return `\u2212${-n}`
+  return '0'
+}
+
+const COUNT_WORDS = ['zero', 'one', 'two', 'three', 'four', 'five', 'six', 'seven'] as const
+
+/** A small count as a word, as the captions write it ('five electrons'). */
+export function countWord(n: number): string {
+  return COUNT_WORDS[n] ?? String(n)
+}
 
 export const OXO_STEPS: readonly OxoStepState[] = [
   { scene: 'ph', electrons: 0, done: false },

@@ -9,11 +9,17 @@ import {
   type OxoanionKind,
 } from '@/components/vocab/dblock'
 import {
+  CHROMATE_CR_STATE,
+  DICHROMATE_CHANGE,
+  NEUTRAL_CHANGE,
   OXO_STEP_COUNT,
-  eVoltOf,
+  PERMANGANATE_CHANGE,
+  countWord,
   electronVisible,
   equationText,
+  eVoltOf,
   getOxoStepState,
+  signedState,
 } from './oxoanion-steps'
 
 export interface OxoanionChemistryProps {
@@ -166,7 +172,7 @@ function Scene({
         <Caption x={130} y={390}>chromate: yellow</Caption>
         <Caption x={450} y={390}>dichromate: orange</Caption>
         <Caption x={290} y={430} muted>Two tetrahedra share one oxygen (the bridge).</Caption>
-        <Caption x={290} y={454} muted>Chromium is +6 in both forms.</Caption>
+        <Caption x={290} y={454} muted>{`Chromium is ${signedState(CHROMATE_CR_STATE)} in both forms.`}</Caption>
       </>
     )
   }
@@ -184,11 +190,13 @@ function Scene({
         <Caption x={290} y={58} muted>{`E° = +${eVoltOf('dichromate-acid-half').toFixed(2)} V`}</Caption>
         <Oxoanion kind="cr2o7" x={d.x} y={d.y} tint="cr2o7" />
         <Electrons points={dots} count={electrons} reducedMotion={reducedMotion} />
-        <Caption x={290} y={206} muted>6e⁻ in</Caption>
+        <Caption x={290} y={206} muted>{`${electrons}e⁻ in`}</Caption>
         <Beaker base={ION_COLOUR_TOKEN.cr2o7} overlay={SPECTRAL_TOKEN.green} overlayOn={done} reducedMotion={reducedMotion} />
         <Caption x={445} y={326}>orange → green</Caption>
         <Caption x={445} y={350} muted>chromium(III) species form</Caption>
-        <Caption x={445} y={372} muted>{done ? 'Cr +6 → +3 in each ion' : 'Cr +6'}</Caption>
+        <Caption x={445} y={372} muted>{done
+          ? `Cr ${signedState(DICHROMATE_CHANGE.from)} → ${signedState(DICHROMATE_CHANGE.to)} in each ion`
+          : `Cr ${signedState(DICHROMATE_CHANGE.from)}`}</Caption>
         <Caption x={190} y={296} muted>14H⁺</Caption>
         {hPoints.map(([x, y], i) => (
           <g key={i}>
@@ -216,11 +224,11 @@ function Scene({
         <Caption x={290} y={58} muted>{`E° = +${eVoltOf('permanganate-to-mn2plus-half').toFixed(2)} V`}</Caption>
         <Oxoanion kind="mno4" x={m.x} y={m.y} tint="mno4" />
         <Electrons points={dots} count={electrons} reducedMotion={reducedMotion} />
-        <Caption x={290} y={206} muted>5e⁻ in</Caption>
+        <Caption x={290} y={206} muted>{`${electrons}e⁻ in`}</Caption>
         <Beaker base={ION_COLOUR_TOKEN.mno4} overlay={ION_COLOUR_TOKEN.mn2} overlayOn={done} reducedMotion={reducedMotion} />
         <Caption x={445} y={326}>purple → pale pink</Caption>
-        <Caption x={445} y={350} muted>Mn +7 → Mn²⁺ (+2)</Caption>
-        <Caption x={290} y={430} muted>Mn goes from +7 to +2: five electrons per MnO₄⁻.</Caption>
+        <Caption x={445} y={350} muted>{`Mn ${signedState(PERMANGANATE_CHANGE.from)} → Mn²⁺ (${signedState(PERMANGANATE_CHANGE.to)})`}</Caption>
+        <Caption x={290} y={430} muted>{`Mn goes from ${signedState(PERMANGANATE_CHANGE.from)} to ${signedState(PERMANGANATE_CHANGE.to)}: ${countWord(PERMANGANATE_CHANGE.electronsPerMetal)} electrons per MnO₄⁻.`}</Caption>
       </>
     )
   }
@@ -231,10 +239,10 @@ function Scene({
     return (
       <>
         <Caption x={290} y={34}>{equationText('permanganate-iodide-neutral')}</Caption>
-        <Caption x={290} y={58} muted>Neutral solution: Mn +7 → +4, three electrons per MnO₄⁻</Caption>
+        <Caption x={290} y={58} muted>{`Neutral solution: Mn ${signedState(NEUTRAL_CHANGE.from)} → ${signedState(NEUTRAL_CHANGE.to)}, ${countWord(NEUTRAL_CHANGE.electronsPerMetal)} electrons per MnO₄⁻`}</Caption>
         <Oxoanion kind="mno4" x={m.x} y={m.y} tint="mno4" />
         <Electrons points={dots} count={electrons} reducedMotion={reducedMotion} />
-        <Caption x={290} y={206} muted>3e⁻ in</Caption>
+        <Caption x={290} y={206} muted>{`${electrons}e⁻ in`}</Caption>
         <Beaker
           base={ION_COLOUR_TOKEN.mno4}
           overlay={ION_COLOUR_TOKEN.mno4}
