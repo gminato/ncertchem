@@ -92,9 +92,16 @@ test('Section 5.2 desktop: Scrolly animations and Coordination Dissector', async
     expect(await svgOutOfBounds(panel1)).toEqual([])
   }
 
-  // Test ambidentate toggle in Step 5
-  await panel1.getByText('nitrito-O').click()
-  await panel1.getByText('thiocyanato-N').click()
+  // Test ambidentate toggle in Step 5 via keyboard (Enter and Space)
+  const nitritoOBtn = panel1.getByRole('button', { name: 'nitrito-O' })
+  await nitritoOBtn.focus()
+  await nitritoOBtn.press('Enter')
+  await expect(nitritoOBtn).toHaveAttribute('aria-pressed', 'true')
+
+  const thioNBtn = panel1.getByRole('button', { name: 'thiocyanato-N' })
+  await thioNBtn.focus()
+  await thioNBtn.press(' ')
+  await expect(thioNBtn).toHaveAttribute('aria-pressed', 'true')
   await page.waitForTimeout(150)
   await panel1.screenshot({ path: `test-results/screens/c12u5-s2-denticity-step5-toggled-desktop.png` })
 
@@ -118,12 +125,18 @@ test('Section 5.2 desktop: Scrolly animations and Coordination Dissector', async
   await sim.scrollIntoViewIfNeeded()
   await expect(sim).toBeVisible()
   await expect(sim.locator('[aria-live="polite"]')).toContainText('[Co(en)₃]³⁺')
+  // Before oxidation number is revealed, the metal row and liveSummary must not give away Co³⁺
+  await expect(sim).toContainText('Co (Lewis acid)')
+  await expect(sim).not.toContainText('Co³⁺')
+  await expect(sim.locator('[aria-live="polite"]')).not.toContainText('Co³⁺')
   await sim.screenshot({ path: 'test-results/screens/c12u5-s2-sim-default-desktop.png' })
   expect(await smallTextLeaves(sim)).toEqual([])
   expect(await svgOutOfBounds(sim)).toEqual([])
 
   // Reveal all terms on default complex
   await sim.getByRole('button', { name: 'Reveal all' }).click()
+  await expect(sim).toContainText('Co³⁺ (Lewis acid)')
+  await expect(sim.locator('[aria-live="polite"]')).toContainText('Central atom or ion Co³⁺')
   await expect(sim.locator('[aria-live="polite"]')).toContainText('coordination number 6')
   await expect(sim.locator('[aria-live="polite"]')).toContainText('oxidation number Co(III)')
   await sim.screenshot({ path: 'test-results/screens/c12u5-s2-sim-revealed-desktop.png' })

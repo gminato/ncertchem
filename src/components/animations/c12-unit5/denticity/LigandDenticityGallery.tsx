@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, type KeyboardEvent } from 'react'
 import {
   COUNTER_VALUES,
   denticityStepInfo,
@@ -470,6 +470,13 @@ function AmbidentateScene({
   const isNitritoN = no2Mode === 'nitrito-N'
   const isThioS = scnMode === 'thiocyanato-S'
 
+  const onActivate = (action: () => void) => (e: KeyboardEvent<SVGGElement>) => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault()
+      action()
+    }
+  }
+
   return (
     <g>
       <text x={20} y={38} fontSize={16} fontWeight={700} fill={FG}>
@@ -484,7 +491,13 @@ function AmbidentateScene({
 
       {/* Toggle pills for NO2- */}
       <g style={{ pointerEvents: 'auto', cursor: 'pointer' }} role="group" aria-label="Nitrite donor mode">
-        <g onClick={() => setNo2Mode('nitrito-N')} role="button" tabIndex={0} aria-pressed={isNitritoN}>
+        <g
+          onClick={() => setNo2Mode('nitrito-N')}
+          onKeyDown={onActivate(() => setNo2Mode('nitrito-N'))}
+          role="button"
+          tabIndex={0}
+          aria-pressed={isNitritoN}
+        >
           <rect
             x={256}
             y={84}
@@ -499,7 +512,13 @@ function AmbidentateScene({
             nitrito-N
           </text>
         </g>
-        <g onClick={() => setNo2Mode('nitrito-O')} role="button" tabIndex={0} aria-pressed={!isNitritoN}>
+        <g
+          onClick={() => setNo2Mode('nitrito-O')}
+          onKeyDown={onActivate(() => setNo2Mode('nitrito-O'))}
+          role="button"
+          tabIndex={0}
+          aria-pressed={!isNitritoN}
+        >
           <rect
             x={384}
             y={84}
@@ -554,7 +573,13 @@ function AmbidentateScene({
 
       {/* Toggle pills for SCN- */}
       <g style={{ pointerEvents: 'auto', cursor: 'pointer' }} role="group" aria-label="Thiocyanate donor mode">
-        <g onClick={() => setScnMode('thiocyanato-S')} role="button" tabIndex={0} aria-pressed={isThioS}>
+        <g
+          onClick={() => setScnMode('thiocyanato-S')}
+          onKeyDown={onActivate(() => setScnMode('thiocyanato-S'))}
+          role="button"
+          tabIndex={0}
+          aria-pressed={isThioS}
+        >
           <rect
             x={216}
             y={242}
@@ -569,7 +594,13 @@ function AmbidentateScene({
             thiocyanato-S
           </text>
         </g>
-        <g onClick={() => setScnMode('thiocyanato-N')} role="button" tabIndex={0} aria-pressed={!isThioS}>
+        <g
+          onClick={() => setScnMode('thiocyanato-N')}
+          onKeyDown={onActivate(() => setScnMode('thiocyanato-N'))}
+          role="button"
+          tabIndex={0}
+          aria-pressed={!isThioS}
+        >
           <rect
             x={364}
             y={242}

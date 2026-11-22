@@ -231,11 +231,13 @@ export function CoordinationDissector() {
     setRevealed(INITIAL_REVEALED)
   }
 
+  const metalDisplay = revealed.ox ? data.metalIonDisplay : data.entity.metal
+
   const terms: Array<{ key: TermKey; label: string; value: string; hint: string }> = [
     {
       key: 'metal',
       label: 'Central atom or ion',
-      value: `${data.metalIonDisplay} (Lewis acid)`,
+      value: `${metalDisplay} (Lewis acid)`,
       hint: 'Predict the central metal ion',
     },
     {
@@ -284,7 +286,7 @@ export function CoordinationDissector() {
   ]
 
   const liveSummary =
-    `Selected ${data.displayFormula}. Central ion ${data.metalIonDisplay}, ` +
+    `Selected ${data.displayFormula}. Central atom or ion ${metalDisplay}, ` +
     `coordination number ${revealed.cn ? data.cn : 'hidden'}, ` +
     `oxidation number ${revealed.ox ? data.romanLabel : 'hidden'}.`
 
