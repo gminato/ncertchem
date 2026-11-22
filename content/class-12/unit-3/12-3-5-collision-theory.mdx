@@ -16,28 +16,28 @@ Passengers in a crowded Mumbai local bump into one another again and again on ev
 
 ## Counting collisions
 
-Arrhenius's equation tells you how the rate constant depends on temperature, but it says little about what happens when two molecules meet. Collision theory, developed by Max Trautz and William Lewis between 1916 and 1918, fills that gap. It starts from the kinetic theory of gases and treats the reacting molecules as hard spheres. A reaction is supposed to happen only when two molecules collide.
+Arrhenius's equation shows how temperature moves a rate constant, yet it is silent on the molecular encounter itself. Max Trautz and William Lewis, working between 1916 and 1918, supplied that missing picture. Their collision theory draws on the kinetic theory of gases: the reactants are idealised as rigid balls, and in this picture a reaction can happen only at the moment two of them come together.
 
-The collision frequency $Z$ is the number of collisions per second in each unit volume of the mixture. For a bimolecular elementary reaction $\ce{A + B -> Products}$, collision theory writes the rate as
+The collision frequency $Z$ expresses how often encounters happen: collisions per second, in a unit of volume of the mixture. For a bimolecular elementary reaction $\ce{A + B -> Products}$, collision theory writes the rate as
 
 $$
 \text{Rate} = Z_{\text{AB}}\, e^{-E_\text{a}/RT}
 $$
 
-Here $Z_{\text{AB}}$ is the collision frequency between $\ce{A}$ and $\ce{B}$, and $e^{-E_\text{a}/RT}$ is the fraction of molecules whose energy is at or above $E_\text{a}$. Set this beside the Arrhenius form $k = A\,e^{-E_\text{a}/RT}$ and the exponential factors match. The pre-exponential factor $A$ is therefore tied to the collision frequency.
+Here $Z_{\text{AB}}$ is the collision frequency between $\ce{A}$ and $\ce{B}$, and $e^{-E_\text{a}/RT}$ is the fraction of molecules whose energy is at or above $E_\text{a}$. Compare this with the Arrhenius form $k = A\,e^{-E_\text{a}/RT}$. The exponential parts are identical, and the prefactor is handled in the steric factor section below.
 
-The model predicts rate constants quite well for reactions between atoms or simple molecules. For complex molecules the predictions can be far off, and the reason is that not every collision leads to a product.
+Rate constants come out reasonably accurate when the reactants are single atoms or small molecules. With large molecules the agreement can break down badly. A likely cause is that many collisions, some of them energetic, never produce a product.
 
 ## Effective collisions
 
-An effective collision needs two things at the same moment. The pair must carry enough energy, at least the threshold energy, to stretch and break the bonds that have to go. And the molecules must meet with the right orientation, so that the new bonds form where they should. Follow one reaction, the attack of hydroxide ion on bromomethane, to see both conditions at work.
+Two conditions must hold together before a collision yields product. The first is energy. The pair has to reach the threshold energy, which is the energy the reacting species already possess plus $E_\text{a}$. Put another way, a collision counts as energetic when it brings at least $E_\text{a}$ more than the molecules already carry, enough to stretch and break the bonds that must go. The second is orientation: the molecules must approach so that the new bonds form where they should. Follow one reaction, the attack of hydroxide ion on bromomethane, to see both conditions at work.
 
 <Scrolly animation="collision-orientation">
   <Step>
-    **A crowded box:** Hard spheres of two kinds, A and B, drift and collide at random. Each collision flashes for an instant, so the number of flashes per second is the collision frequency $Z$. Most flashes are gentle bounces that leave the box unchanged. Only a small share of these collisions can lead anywhere.
+    **A crowded box:** Hard spheres of two kinds, A and B, drift and collide at random. Each collision flashes for an instant. $Z$ gives the collisions per second in each unit volume; multiply by the box's volume to get the collisions per second in the box, $Z \times \text{volume}$. Most flashes are gentle bounces that leave the box unchanged. Only a small share of these collisions can lead anywhere.
   </Step>
   <Step>
-    **Too gentle to react:** A pair that meets with less than the threshold energy bounces apart, even when the molecules are lined up well. Only the fraction $e^{-E_\text{a}/RT}$ of collisions carries enough energy. At $300\ \text{K}$ and $E_\text{a} = 10\ \text{kJ mol}^{-1}$ that fraction is $1.81 \times 10^{-2}$, about one collision in 55. At $50\ \text{kJ mol}^{-1}$ the same temperature leaves only $1.97 \times 10^{-9}$.
+    **Too gentle to react:** A pair that falls short of the threshold bounces apart, even when the molecules are lined up well. The energetic fraction is $e^{-E_\text{a}/RT}$, the share of collisions that bring at least $E_\text{a}$ above what the reactants already carry. At $300\ \text{K}$ and $E_\text{a} = 10\ \text{kJ mol}^{-1}$ that fraction is $1.81 \times 10^{-2}$, about one collision in 55. At $50\ \text{kJ mol}^{-1}$ the same temperature leaves only $1.97 \times 10^{-9}$.
   </Step>
   <Step>
     **Energy enough, wrong end:** Now an energetic $\ce{OH-}$ ion meets $\ce{CH3Br}$ at the bromine end of the molecule. The ion cannot reach the carbon atom from that side, so the pair bounces back and no $\ce{CH3OH}$ forms. The energy is right, but the orientation is wrong.
@@ -46,23 +46,23 @@ An effective collision needs two things at the same moment. The pair must carry 
     **Energy enough, right end:** The same ion, with the same energy, now approaches the carbon atom from the side opposite the bromine. The new $\ce{C-O}$ bond forms as the $\ce{C-Br}$ bond stretches and breaks, and $\ce{CH3OH}$ and $\ce{Br-}$ separate. This collision is effective, because it has both enough energy and the proper orientation.
   </Step>
   <Step>
-    **Building the rate factor by factor:** Start from the total collision frequency $Z_{\text{AB}}$. Multiply by $e^{-E_\text{a}/RT}$ to keep only the energetic collisions. Multiply by $P$ to keep only the well-aimed share, where $P$ is usually less than one. The product $P\,Z_{\text{AB}}\,e^{-E_\text{a}/RT}$ counts the effective collisions per second.
+    **Building the rate factor by factor:** Start from the total collision frequency $Z_{\text{AB}}$. Multiply by $e^{-E_\text{a}/RT}$ to keep only the energetic collisions. Multiply by $P$ to keep only the well-aimed share, where $P$ is usually less than one. The product $P\,Z_{\text{AB}}\,e^{-E_\text{a}/RT}$ gives the effective collisions per second in each unit volume.
   </Step>
 </Scrolly>
 
 ## The steric factor
 
-Collision theory gathers the orientation requirement into one number, the probability or steric factor $P$. It is the share of energetic collisions that meet with the right orientation, and it brings the rate to
+Orientation is folded into a single quantity, the steric factor $P$, also called the probability factor. It is the fraction of energetic collisions that arrive in a useful orientation, and the rate becomes
 
 $$
 \text{Rate} = P\,Z_{\text{AB}}\,e^{-E_\text{a}/RT}
 $$
 
-Activation energy and orientation together decide which collisions are effective, and so how fast a reaction runs. Large, complex molecules usually have a small reactive end that is hard to hit, so their $P$ is small. In practice $P$ is found by comparing the model with experiment.
+With this factor in place, collision theory identifies the Arrhenius factor $A$ with $P\,Z_{\text{AB}}$. Energy and orientation jointly settle which collisions succeed, and therefore how fast a reaction runs. As an illustration only: a large molecule whose reactive site is a small patch that is hard to aim at often has a small $P$. In practice $P$ is found by comparing the model with experiment.
 
 NCERT's orientation example names the reactant "bromoethane". The reactant that forms methanol is bromomethane, $\ce{CH3Br}$, and its carbon atom carries the bromine.
 
-The model's main drawback follows from its starting point. It treats molecules as hard spheres and ignores their shape and internal structure, which is why $P$ has to be measured rather than calculated.
+The model's main weakness comes straight from its premise. Because molecules are idealised as spheres, their shape and internal structure drop out of the picture, which is why $P$ has to be determined experimentally rather than calculated.
 
 ## Explore collision theory
 
@@ -110,6 +110,6 @@ A reaction has $E_\text{a} = 10\ \text{kJ mol}^{-1}$. With the steric factor and
 - Collision theory writes the rate of a bimolecular elementary reaction as $Z_{\text{AB}}\,e^{-E_\text{a}/RT}$, where $Z_{\text{AB}}$ counts collisions per second per unit volume and the exponential gives the energetic fraction.
 - Only energetic collisions count: at $300\ \text{K}$ and $E_\text{a} = 10\ \text{kJ mol}^{-1}$ the energetic fraction is $1.81 \times 10^{-2}$, and a $50\ \text{kJ mol}^{-1}$ barrier cuts it to $1.97 \times 10^{-9}$.
 - Orientation is a second condition, held in the steric factor $P$. The rate becomes $P\,Z_{\text{AB}}\,e^{-E_\text{a}/RT}$, and an effective collision needs both energy and the right orientation.
-- The pre-exponential factor $A$ of the Arrhenius equation corresponds to the collision frequency, scaled by $P$.
+- In collision theory the Arrhenius factor $A$ corresponds to $P\,Z_{\text{AB}}$.
 - The hard-sphere picture ignores molecular shape, so it predicts complex reactions poorly and $P$ must be measured against experiment.
 </KeyIdeas>

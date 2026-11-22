@@ -14,7 +14,7 @@ import {
   stepCollisionBox,
   type CollisionBox,
 } from '@/lib/chem/collision-box'
-import { GAS_CONSTANT_J, fractionAboveEa, formatSci, formatSig } from '@/lib/chem/kinetics'
+import { GAS_CONSTANT_J, fractionAboveEa, formatSci } from '@/lib/chem/kinetics'
 import styles from './collision-lab.module.css'
 
 /** The box and the plot, in their own SVG units. The box fills the stage; labels sit outside it. */
@@ -58,7 +58,8 @@ function count(n: number): string {
 }
 
 function fractionText(n: number, d: number): string {
-  return d > 0 ? formatSig(n / d, 3) : '—'
+  if (d <= 0) return '—'
+  return n === 0 ? '0' : formatSci(n / d, 3)
 }
 
 export function CollisionLab({ reducedMotion }: SimulationProps) {
@@ -136,6 +137,15 @@ export function CollisionLab({ reducedMotion }: SimulationProps) {
   const live =
     `At ${tempK} K with Eₐ = ${eaKJ} kJ mol⁻¹ and P = ${P.toFixed(3)}, the predicted effective fraction is ${formatSci(predictedEffective, 3)}. ` +
     `So far, ${liveAb} A–B collisions: ${count(box.energetic)} energetic and ${count(box.effective)} effective.`
+  // Screen readers hear the summary only when the box is paused (or moves are off), not on every collision.
+  const [announced, setAnnounced] = useState(live)
+  if (!moving && announced !== live) setAnnounced(live)
+
+  const scatterPct = box.effective > 0 ? Math.round(100 / Math.sqrt(box.effective)) : null
+  const caveat =
+    scatterPct === null
+      ? `From ${count(box.ab)} A–B collisions. Small counts are noisy, and no effective collision has happened yet.`
+      : `From ${count(box.ab)} A–B collisions. Small counts are noisy: the effective count alone is uncertain by about ±${scatterPct} % (one standard deviation).`
 
   const particles = box.particles
   const flashes = box.flashes.filter((f) => box.time - f.t < 0.3)
@@ -171,9 +181,9 @@ export function CollisionLab({ reducedMotion }: SimulationProps) {
             {particles.map((p, i) => (
               <g key={i}>
                 {p.species === 'A' && P < 1 && (
-                  <path d={reactiveArc(p.x, p.y, PARTICLE_R + 4, p.axis, P)} fill="none" stroke="var(--accent)" strokeWidth={2.4} strokeLinecap="round" />
+                  <path d={reactiveArc(p.x, p.y, PARTICLE_R + 4, p.axis, P)} fill="none" stroke="var(--fg)" strokeWidth={2.4} strokeLinecap="round" />
                 )}
-                {p.species === 'A' && P >= 1 && <circle cx={p.x} cy={p.y} r={PARTICLE_R + 4} fill="none" stroke="var(--accent)" strokeWidth={2.4} />}
+                {p.species === 'A' && P >= 1 && <circle cx={p.x} cy={p.y} r={PARTICLE_R + 4} fill="none" stroke="var(--fg)" strokeWidth={2.4} />}
                 <Particle x={p.x} y={p.y} r={PARTICLE_R} tone={p.species === 'A' ? 'reactant' : 'product'} />
               </g>
             ))}
@@ -201,7 +211,7 @@ export function CollisionLab({ reducedMotion }: SimulationProps) {
             yTicks={[0, 0.25, 0.5, 0.75, 1]}
             yTickFormat={(v) => v.toFixed(2)}
             xTitle="E / RT, energy along the line of centres"
-            yTitle="density"
+            yTitle="fraction per unit E/RT"
           >
             <PlotCurve fn={expCurve} from={0} to={X_MAX} tone="neutral" />
             <PlotCurve fn={(x) => P * Math.exp(-x)} from={0} to={X_MAX} tone="catalyst" dashed />
@@ -242,6 +252,7 @@ export function CollisionLab({ reducedMotion }: SimulationProps) {
           Effective fraction: measured <strong>{fractionText(box.effective, box.ab)}</strong>, predicted P·e<sup>−Eₐ/RT</sup> ={' '}
           <strong>{formatSci(predictedEffective, 3)}</strong>.
         </p>
+        <p className={styles.note}>{caveat}</p>
         <p className={styles.note}>
           The toy draws orientation at random with chance P and does not model the molecular shape, so it only approximates the model.
           At 50 kJ mol⁻¹ and 300 K almost no collision is energetic, so the counts stay at zero; that is the point, not a fault.
@@ -253,7 +264,7 @@ export function CollisionLab({ reducedMotion }: SimulationProps) {
         <div dangerouslySetInnerHTML={{ __html: EQUATIONS.fraction }} />
       </div>
       <p className={styles.live} aria-live="polite">
-        {live}
+        {announced}
       </p>
     </div>
   )
