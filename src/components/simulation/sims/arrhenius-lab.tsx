@@ -17,30 +17,54 @@ import {
 import {
   ARRHENIUS_DEFAULT_EA_KJ,
   ARRHENIUS_DEFAULT_T_K,
+  ARRHENIUS_DH_KJ,
   ARRHENIUS_EA_MAX_KJ,
   ARRHENIUS_EA_MIN_KJ,
   ARRHENIUS_TEMP_MAX_K,
   ARRHENIUS_TEMP_MIN_K,
   deriveArrhenius,
   drawnTailArea,
+  lnKExtent,
 } from '@/lib/chem/arrhenius-lab'
 import { formatSci, formatSig } from '@/lib/chem/kinetics'
 import styles from './arrhenius-lab.module.css'
 
 /** Schematic Maxwell–Boltzmann axes: E in arbitrary units, θ = 2 at 298 K. */
 const MB_X_MAX = 6
-const MB_Y_MAX = 0.3
+/** Tall enough for the enlarged tail at the slider extremes (about 0.43 at Eₐ 100 kJ mol⁻¹, 350 K). */
+const MB_Y_MAX = 0.45
 const MB_THETA_REF = 2
 /** Schematic position of the Eₐ marker at 50 kJ mol⁻¹. */
 const MB_EA_AT_DEFAULT = 2.2
 
-/** The ln k plot: x = 1/T (10⁻³ K⁻¹ scale), y = ln(k / s⁻¹). Fixed so the frame does not jump. */
+/** The ln k plot: x = 1/T (10⁻³ K⁻¹ scale), y = ln(k / s⁻¹). Y-range comes from the slider box. */
 const LNK_X = { min: 2.9e-3, max: 3.6e-3 }
-const LNK_Y = { min: -14, max: -4 }
+const LNK_Y = lnKExtent()
+const LNK_TICKS = Array.from({ length: LNK_Y.max - LNK_Y.min + 1 }, (_, i) => LNK_Y.min + i)
 
 /** Shared frame geometry for the two plots (viewBox units). */
-const FRAME = { x: 64, y: 18, width: 430, height: 220 }
-const PANEL = { w: 520, h: 300 }
+const FRAME = { x: 72, y: 18, width: 388, height: 220 }
+/** Narrow viewBox so that a half-width panel renders the 14-unit tick labels at 14 px or more. */
+const PANEL = { w: 480, h: 300 }
+
+/** Energy profile: heights are proportional to energy, 0.01 units per kJ mol⁻¹. */
+const ENERGY_UNITS_PER_KJ = 0.01
+/** Plot box of the energy profile inside its SVG (viewBox units). */
+const EP = { x: 72, y: 16, w: PANEL.w - 96, h: PANEL.h - 72 }
+/** Fraction of the x-range where the single activated complex sits (EnergyProfile's middle station). */
+const EP_PEAK_FRACTION = 0.45
+
+/**
+ * Maps an energy level to a y position in the energy profile. It mirrors EnergyProfile's
+ * vertical fit (levels span the box, with a margin above the highest), so the Eₐ arrow
+ * and its label line up with the drawn curve.
+ */
+function energyY(e: number, lo: number, hi: number): number {
+  const bottom = EP.y + EP.h - 28
+  const top = EP.y + 8
+  const eMax = hi + 0.16 * (hi - lo || 1)
+  return bottom + ((e - lo) * (top - bottom)) / (eMax - lo)
+}
 
 function thetaAt(tempK: number): number {
   return (MB_THETA_REF * tempK) / ARRHENIUS_DEFAULT_T_K
@@ -71,8 +95,14 @@ export function ArrheniusLab(_: SimulationProps) {
   const thetaNext = thetaAt(tempK + 10)
   const eaLabel = `Eₐ = ${eaKj.toFixed(1)} kJ mol⁻¹`
 
-  // Energy profile: the barrier height is proportional to Eₐ; the end levels match.
-  const peak = 0.3 + (0.7 * (eaKj - ARRHENIUS_EA_MIN_KJ)) / (ARRHENIUS_EA_MAX_KJ - ARRHENIUS_EA_MIN_KJ)
+  // Energy profile: the barrier and the ΔrH drop are both proportional to energy, so the
+  // products sit slightly below the reactants (ΔrH ≈ −9.4 kJ mol⁻¹), much less than Eₐ.
+  const peakUnits = eaKj * ENERGY_UNITS_PER_KJ
+  const productUnits = ARRHENIUS_DH_KJ * ENERGY_UNITS_PER_KJ
+  const profileLo = Math.min(0, productUnits)
+  const yRef = energyY(0, profileLo, peakUnits)
+  const yPeak = energyY(peakUnits, profileLo, peakUnits)
+  const arrowX = EP.x + EP_PEAK_FRACTION * EP.w
 
   const raise = () => setTempK((t) => Math.min(ARRHENIUS_TEMP_MAX_K, t + 10))
 
@@ -119,22 +149,32 @@ export function ArrheniusLab(_: SimulationProps) {
         <figure className={styles.panel}>
           <svg className={styles.svg} viewBox={`0 0 ${PANEL.w} ${PANEL.h}`} role="img" aria-label={`Energy profile with the activation energy ${eaKj.toFixed(1)} kJ mol⁻¹`}>
             <EnergyProfile
-              x={70}
-              y={16}
-              width={PANEL.w - 96}
-              height={PANEL.h - 72}
+              x={EP.x}
+              y={EP.y}
+              width={EP.w}
+              height={EP.h}
               reactant={0}
-              product={0}
-              peak={peak}
+              product={productUnits}
+              peak={peakUnits}
               reactantsLabel="reactants"
               productsLabel="products"
-              peakLabel="activated complex"
-              eaLabel={eaLabel}
               xTitle="Reaction coordinate"
               yTitle="Potential energy"
             />
+            {/* Eₐ arrow from the reactant level to the peak. The two labels sit above the peak, where no curve can reach. */}
+            <g stroke="var(--fg)" fill="var(--fg)" strokeWidth={2}>
+              <line x1={arrowX} x2={arrowX} y1={yRef} y2={yPeak} strokeLinecap="round" />
+              <path d={`M${arrowX - 4.2} ${yPeak + 6} L${arrowX} ${yPeak} L${arrowX + 4.2} ${yPeak + 6} Z`} stroke="none" />
+              <path d={`M${arrowX - 4.2} ${yRef - 6} L${arrowX} ${yRef} L${arrowX + 4.2} ${yRef - 6} Z`} stroke="none" />
+            </g>
+            <text x={arrowX} y={yPeak - 30} textAnchor="middle" fontSize={15} fill="var(--fg)" stroke="var(--surface)" strokeWidth={4} paintOrder="stroke">
+              activated complex
+            </text>
+            <text x={arrowX + 9} y={yPeak - 6} textAnchor="start" fontSize={15} fill="var(--fg)" stroke="var(--surface)" strokeWidth={4} paintOrder="stroke">
+              {eaLabel}
+            </text>
           </svg>
-          <figcaption className={styles.caption}>Energy barrier: the peak sits Eₐ above the reactants.</figcaption>
+          <figcaption className={styles.caption}>Energy barrier: the peak sits Eₐ above the reactants, and the products lie a little lower.</figcaption>
         </figure>
 
         <figure className={styles.panel}>
@@ -146,7 +186,7 @@ export function ArrheniusLab(_: SimulationProps) {
               height={FRAME.height}
               domain={{ xMin: 0, xMax: MB_X_MAX, yMin: 0, yMax: MB_Y_MAX }}
               xTicks={[0, 2, 4, 6]}
-              yTicks={[0, 0.1, 0.2, 0.3]}
+              yTicks={[0, 0.1, 0.2, 0.3, 0.4]}
               yTickFormat={(v) => v.toFixed(1)}
               xTitle="Kinetic energy, E (schematic)"
               yTitle="Fraction f(E)"
@@ -168,7 +208,7 @@ export function ArrheniusLab(_: SimulationProps) {
             </text>
           </svg>
           <figcaption className={styles.caption}>
-            Tails drawn enlarged: the true share beyond Eₐ is {formatSci(s.fraction, 3)} at {tempK} K.
+            Tails enlarged, not to scale. The true share beyond Eₐ is {formatSci(s.fraction, 3)} at {tempK} K.
           </figcaption>
         </figure>
 
@@ -181,7 +221,7 @@ export function ArrheniusLab(_: SimulationProps) {
               height={FRAME.height}
               domain={{ xMin: LNK_X.min, xMax: LNK_X.max, yMin: LNK_Y.min, yMax: LNK_Y.max }}
               xTicks={[3.0e-3, 3.2e-3, 3.4e-3, 3.6e-3]}
-              yTicks={[-14, -12, -10, -8, -6, -4]}
+              yTicks={LNK_TICKS}
               xTickFormat={(v) => (v * 1000).toFixed(1)}
               yTickFormat={(v) => v.toFixed(0)}
               xTitle="1/T, in 10⁻³ K⁻¹"
@@ -220,7 +260,7 @@ export function ArrheniusLab(_: SimulationProps) {
             <span className={styles.statValue}>{formatSci(s.fraction, 3)}</span>
           </div>
           <p className={styles.note}>
-            The shaded tails are drawn enlarged, with the drawn area proportional to e<span className={styles.exp}>−Eₐ/RT</span>. Only the numbers above are to scale.
+            The shaded tails are enlarged and not to scale: they show the direction of change, not the size. The true fraction with energy at or above Eₐ is the number above.
           </p>
           <p className={styles.srOnly} aria-live="polite">
             {summary}

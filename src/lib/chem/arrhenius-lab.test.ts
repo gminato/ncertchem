@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import { GAS_CONSTANT_J, arrheniusK } from './kinetics'
-import { ARRHENIUS_K_REF, deriveArrhenius, drawnTailArea } from './arrhenius-lab'
+import { ARRHENIUS_K_REF, deriveArrhenius, drawnTailArea, lnKExtent } from './arrhenius-lab'
 
 describe('deriveArrhenius', () => {
   const s = deriveArrhenius(298, 50.0)
@@ -35,7 +35,8 @@ describe('drawnTailArea', () => {
   it('is 0.15 at 298 K and grows with temperature', () => {
     expect(drawnTailArea(298, 50)).toBeCloseTo(0.15, 9)
     expect(drawnTailArea(308, 50)).toBeGreaterThan(drawnTailArea(298, 50))
-    expect(drawnTailArea(308, 50) / drawnTailArea(298, 50)).toBeCloseTo(1.93, 1)
+    expect(drawnTailArea(318, 80)).toBeGreaterThan(drawnTailArea(308, 80))
+    expect(drawnTailArea(340, 100)).toBeGreaterThan(drawnTailArea(330, 100))
   })
 
   it('stays within the drawing limits at the slider extremes', () => {
@@ -43,7 +44,20 @@ describe('drawnTailArea', () => {
       for (const Ea of [20, 100]) {
         const a = drawnTailArea(T, Ea)
         expect(a).toBeGreaterThanOrEqual(0.02)
-        expect(a).toBeLessThanOrEqual(0.6)
+        expect(a).toBeLessThanOrEqual(1.3)
+      }
+    }
+  })
+})
+
+describe('lnKExtent', () => {
+  it('contains the ln k point at every slider setting', () => {
+    const { min, max } = lnKExtent()
+    for (const T of [280, 298, 320, 340]) {
+      for (const Ea of [20, 50, 80, 100]) {
+        const lnK = deriveArrhenius(T, Ea).lnK
+        expect(lnK).toBeGreaterThanOrEqual(min)
+        expect(lnK).toBeLessThanOrEqual(max)
       }
     }
   })

@@ -17,10 +17,14 @@ export const ARRHENIUS_DEFAULT_EA_KJ = 50.0
 export const ARRHENIUS_K_REF = 3.0e-4
 export const ARRHENIUS_REF_T_K = 298
 
+/** Enthalpy change of H₂ + I₂ → 2HI (gaseous I₂), kJ mol⁻¹. Drawn to scale against Eₐ, never labelled. */
+export const ARRHENIUS_DH_KJ = -9.4
+
 /** Drawn tail area at the reference temperature (schematic, not to scale). */
 const DRAWN_TAIL_AT_REF = 0.15
 const DRAWN_TAIL_MIN = 0.02
-const DRAWN_TAIL_MAX = 0.6
+/** Power applied to the true ratio, so the drawn tail keeps growing across the slider range. */
+const DRAWN_TAIL_EXPONENT = 0.35
 
 export interface ArrheniusState {
   /** Activation energy, J mol⁻¹. */
@@ -65,12 +69,28 @@ export function deriveArrhenius(tempK: number, eaKj: number): ArrheniusState {
 }
 
 /**
- * Area of the drawn (schematic, enlarged) tail beyond Eₐ at a temperature. It is
- * proportional to e^(−Eₐ/RT) relative to 298 K, so the drawn tail doubles roughly
- * with each 10 K, clamped so that it stays on the plot. The true tail is far smaller.
+ * Area of the drawn tail beyond Eₐ at a temperature. It is schematic and enlarged, not to
+ * scale: the true ratio e^(−Eₐ/RT) / e^(−Eₐ/R·298) is compressed by a power, so the drawn
+ * tail grows with T across the whole slider range without saturating. Not proportional to
+ * the true fraction; the true fraction is shown in the readout.
  */
 export function drawnTailArea(tempK: number, eaKj: number): number {
   const eaJ = eaKj * 1000
   const ratio = fractionAboveEa(eaJ, tempK) / fractionAboveEa(eaJ, ARRHENIUS_REF_T_K)
-  return Math.min(DRAWN_TAIL_MAX, Math.max(DRAWN_TAIL_MIN, DRAWN_TAIL_AT_REF * ratio))
+  return Math.max(DRAWN_TAIL_MIN, DRAWN_TAIL_AT_REF * Math.pow(ratio, DRAWN_TAIL_EXPONENT))
+}
+
+/**
+ * Range of ln k over the whole slider box (Eₐ and T), rounded out to whole numbers, so the
+ * ln k plot's y-axis always contains the point. ln k is monotone in each slider, so the corners
+ * give the extremes.
+ */
+export function lnKExtent(): { min: number; max: number } {
+  const values: number[] = []
+  for (const T of [ARRHENIUS_TEMP_MIN_K, ARRHENIUS_TEMP_MAX_K]) {
+    for (const Ea of [ARRHENIUS_EA_MIN_KJ, ARRHENIUS_EA_MAX_KJ]) {
+      values.push(deriveArrhenius(T, Ea).lnK)
+    }
+  }
+  return { min: Math.floor(Math.min(...values)), max: Math.ceil(Math.max(...values)) }
 }
