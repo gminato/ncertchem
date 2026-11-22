@@ -72,6 +72,7 @@ describe('mirror image', () => {
       expect(mirrored.right.x).toBeCloseTo(2 * CX - plain.right.x)
       expect(mirrored.left.x).toBeCloseTo(2 * CX - plain.left.x)
       plain.umbrella.forEach((u, i) => {
+        expect(mirrored.umbrella[i].tip.x).toBeCloseTo(2 * CX - u.tip.x)
         expect(mirrored.umbrella[i].tip.y).toBeCloseTo(u.tip.y)
         expect(mirrored.umbrella[i].z).toBeCloseTo(u.z)
       })
