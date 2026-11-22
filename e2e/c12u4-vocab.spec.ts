@@ -51,7 +51,11 @@ for (const scheme of ['light', 'dark'] as const) {
     await page.goto('/vocab#dblock')
     const section = page.locator('#dblock')
     await expect(section).toBeVisible()
-    await expect(section.locator('svg')).toHaveCount(6)
+    await expect(section.locator('svg')).toHaveCount(10)
+    await expect(section.locator('[data-oxoanion]')).toHaveCount(4)
+    await expect(section.locator('[data-lattice="metal"]')).toHaveCount(2)
+    await expect(section.locator('[data-energy-cycle]')).toHaveCount(2)
+    await expect(section.locator('[data-magnet-pull]')).toHaveCount(2)
     await section.scrollIntoViewIfNeeded()
     await section.screenshot({ path: `test-results/screens/c12u4-vocab-${scheme}.png` })
 
