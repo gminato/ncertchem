@@ -1,0 +1,115 @@
+---
+class: 12
+unit: 3
+section: "3.5"
+order: 10
+title: "Collision Theory of Chemical Reactions"
+slug: "12-3-5-collision-theory"
+access: free
+summary: "Molecules must meet with enough energy and the right orientation, and collision theory counts both conditions to predict how fast a reaction runs."
+ncert: "Class 12, Part I — Unit 3, Section 3.5"
+---
+
+<Hook>
+Passengers in a crowded Mumbai local bump into one another again and again on every journey, yet almost nobody ends up swapping seats. Molecules are far busier. A molecule in a gas collides billions of times each second. If every collision counted, every mixture would react at once. So which collisions actually produce products, and what sets them apart from the rest?
+</Hook>
+
+## Counting collisions
+
+Arrhenius's equation tells you how the rate constant depends on temperature, but it says little about what happens when two molecules meet. Collision theory, developed by Max Trautz and William Lewis between 1916 and 1918, fills that gap. It starts from the kinetic theory of gases and treats the reacting molecules as hard spheres. A reaction is supposed to happen only when two molecules collide.
+
+The collision frequency $Z$ is the number of collisions per second in each unit volume of the mixture. For a bimolecular elementary reaction $\ce{A + B -> Products}$, collision theory writes the rate as
+
+$$
+\text{Rate} = Z_{\text{AB}}\, e^{-E_\text{a}/RT}
+$$
+
+Here $Z_{\text{AB}}$ is the collision frequency between $\ce{A}$ and $\ce{B}$, and $e^{-E_\text{a}/RT}$ is the fraction of molecules whose energy is at or above $E_\text{a}$. Set this beside the Arrhenius form $k = A\,e^{-E_\text{a}/RT}$ and the exponential factors match. The pre-exponential factor $A$ is therefore tied to the collision frequency.
+
+The model predicts rate constants quite well for reactions between atoms or simple molecules. For complex molecules the predictions can be far off, and the reason is that not every collision leads to a product.
+
+## Effective collisions
+
+An effective collision needs two things at the same moment. The pair must carry enough energy, at least the threshold energy, to stretch and break the bonds that have to go. And the molecules must meet with the right orientation, so that the new bonds form where they should. Follow one reaction, the attack of hydroxide ion on bromomethane, to see both conditions at work.
+
+<Scrolly animation="collision-orientation">
+  <Step>
+    **A crowded box:** Hard spheres of two kinds, A and B, drift and collide at random. Each collision flashes for an instant, so the number of flashes per second is the collision frequency $Z$. Most flashes are gentle bounces that leave the box unchanged. Only a small share of these collisions can lead anywhere.
+  </Step>
+  <Step>
+    **Too gentle to react:** A pair that meets with less than the threshold energy bounces apart, even when the molecules are lined up well. Only the fraction $e^{-E_\text{a}/RT}$ of collisions carries enough energy. At $300\ \text{K}$ and $E_\text{a} = 10\ \text{kJ mol}^{-1}$ that fraction is $1.81 \times 10^{-2}$, about one collision in 55. At $50\ \text{kJ mol}^{-1}$ the same temperature leaves only $1.97 \times 10^{-9}$.
+  </Step>
+  <Step>
+    **Energy enough, wrong end:** Now an energetic $\ce{OH-}$ ion meets $\ce{CH3Br}$ at the bromine end of the molecule. The ion cannot reach the carbon atom from that side, so the pair bounces back and no $\ce{CH3OH}$ forms. The energy is right, but the orientation is wrong.
+  </Step>
+  <Step>
+    **Energy enough, right end:** The same ion, with the same energy, now approaches the carbon atom from the side opposite the bromine. The new $\ce{C-O}$ bond forms as the $\ce{C-Br}$ bond stretches and breaks, and $\ce{CH3OH}$ and $\ce{Br-}$ separate. This collision is effective, because it has both enough energy and the proper orientation.
+  </Step>
+  <Step>
+    **Building the rate factor by factor:** Start from the total collision frequency $Z_{\text{AB}}$. Multiply by $e^{-E_\text{a}/RT}$ to keep only the energetic collisions. Multiply by $P$ to keep only the well-aimed share, where $P$ is usually less than one. The product $P\,Z_{\text{AB}}\,e^{-E_\text{a}/RT}$ counts the effective collisions per second.
+  </Step>
+</Scrolly>
+
+## The steric factor
+
+Collision theory gathers the orientation requirement into one number, the probability or steric factor $P$. It is the share of energetic collisions that meet with the right orientation, and it brings the rate to
+
+$$
+\text{Rate} = P\,Z_{\text{AB}}\,e^{-E_\text{a}/RT}
+$$
+
+Activation energy and orientation together decide which collisions are effective, and so how fast a reaction runs. Large, complex molecules usually have a small reactive end that is hard to hit, so their $P$ is small. In practice $P$ is found by comparing the model with experiment.
+
+NCERT's orientation example names the reactant "bromoethane". The reactant that forms methanol is bromomethane, $\ce{CH3Br}$, and its carbon atom carries the bromine.
+
+The model's main drawback follows from its starting point. It treats molecules as hard spheres and ignores their shape and internal structure, which is why $P$ has to be measured rather than calculated.
+
+## Explore collision theory
+
+Start with the box at $300\ \text{K}$, $E_\text{a} = 10\ \text{kJ mol}^{-1}$ and $P = 0.25$. Raise the temperature, then the barrier, then lower $P$. The counters track every collision, the energetic ones and the effective ones, and compare the measured fraction with $P\,e^{-E_\text{a}/RT}$, which at the starting settings is $4.54 \times 10^{-3}$. The two-dimensional toy only approximates the three-dimensional model, so expect the measured fraction to scatter around the prediction rather than match it exactly.
+
+<Simulation name="collision-lab" title="Collision Lab" />
+
+## Check your understanding
+
+<Check
+  n={1}
+  numeric
+  answer={0.00454}
+  tolerance={0.00002}
+  explanation="Effective fraction = P e^(−Eₐ/RT) = 0.25 × e^(−10000/(8.314 × 300)) = 0.25 × 0.01815 = 0.00454, or 4.54 × 10⁻³. About 1 collision in 220 is effective under these settings."
+>
+A gas-phase bimolecular elementary reaction has $E_\text{a} = 10\ \text{kJ mol}^{-1}$ and steric factor $P = 0.25$ at $300\ \text{K}$. What fraction of all collisions between $\ce{A}$ and $\ce{B}$ are effective? Give three significant figures.
+</Check>
+
+<Check
+  n={2}
+  options={[
+    "X is about 1000 times faster than Y",
+    "Y is about 1000 times faster than X",
+    "X and Y are equally fast, because they have the same Eₐ",
+    "X is only about 0.1 % faster than Y"
+  ]}
+  answer={0}
+  explanation="With Eₐ and Z_AB equal, the rates differ only through P. The ratio of the rates is P_X / P_Y = 1 / 0.001 = 1000, so X is about 1000 times faster. Equal Eₐ does not make the rates equal, because orientation is a separate condition."
+>
+Two reactions have the same activation energy and the same collision frequency at a given temperature. Reaction X has a steric factor $P = 1$ and reaction Y has $P = 0.001$. Which statement is correct?
+</Check>
+
+<Check
+  n={3}
+  numeric
+  answer={1.14}
+  tolerance={0.005}
+  explanation="With P and Z_AB fixed, the ratio is Rate(310 K)/Rate(300 K) = exp[(10000/8.314)(1/300 − 1/310)] = exp(0.129) = 1.14. The rate rises by about 14 % for this 10 K step. That is far less than the usual doubling, because a 10 kJ mol⁻¹ barrier is low, so the temperature rise changes the energetic fraction only slightly."
+>
+A reaction has $E_\text{a} = 10\ \text{kJ mol}^{-1}$. With the steric factor and collision frequency held fixed, by what factor does its rate change when the temperature rises from $300\ \text{K}$ to $310\ \text{K}$? Give two decimal places.
+</Check>
+
+<KeyIdeas>
+- Collision theory writes the rate of a bimolecular elementary reaction as $Z_{\text{AB}}\,e^{-E_\text{a}/RT}$, where $Z_{\text{AB}}$ counts collisions per second per unit volume and the exponential gives the energetic fraction.
+- Only energetic collisions count: at $300\ \text{K}$ and $E_\text{a} = 10\ \text{kJ mol}^{-1}$ the energetic fraction is $1.81 \times 10^{-2}$, and a $50\ \text{kJ mol}^{-1}$ barrier cuts it to $1.97 \times 10^{-9}$.
+- Orientation is a second condition, held in the steric factor $P$. The rate becomes $P\,Z_{\text{AB}}\,e^{-E_\text{a}/RT}$, and an effective collision needs both energy and the right orientation.
+- The pre-exponential factor $A$ of the Arrhenius equation corresponds to the collision frequency, scaled by $P$.
+- The hard-sphere picture ignores molecular shape, so it predicts complex reactions poorly and $P$ must be measured against experiment.
+</KeyIdeas>
