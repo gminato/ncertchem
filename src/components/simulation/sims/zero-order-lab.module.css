@@ -1,0 +1,111 @@
+.sim {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.sliderGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: var(--space-3);
+}
+
+.stage {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  background: var(--surface-raised);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: var(--space-3);
+}
+
+.stage svg {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.caption {
+  font-size: 14px;
+  fill: var(--fg-muted);
+}
+
+.legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2) var(--space-4);
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  font-size: 14px;
+  color: var(--fg-muted);
+}
+
+.legend li {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.swatchReactant,
+.swatchProduct,
+.swatchSurface {
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+}
+
+.swatchReactant {
+  background: var(--kin-reactant);
+}
+
+.swatchProduct {
+  background: var(--kin-product);
+}
+
+.swatchSurface {
+  background: var(--kin-catalyst);
+  border-radius: 3px;
+}
+
+.stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: var(--space-3);
+  margin: 0;
+}
+
+.stats div {
+  background: var(--surface-raised);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: var(--space-3);
+}
+
+.stats dt {
+  font-size: 14px;
+  color: var(--fg-muted);
+}
+
+.stats dd {
+  margin: var(--space-1) 0 0;
+  font-size: 18px;
+  font-variant-numeric: tabular-nums;
+}
+
+.note {
+  margin: 0;
+  font-size: 14px;
+  color: var(--fg-muted);
+}
+
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}

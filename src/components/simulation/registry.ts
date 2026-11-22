@@ -87,6 +87,7 @@ import { ElectrolysisProductPredictor } from './sims/electrolysis-product-predic
 import { ElectroplatingLab } from './sims/electroplating-lab'
 import { LeadAcidCycle } from './sims/lead-acid-cycle'
 import { InitialRatesLab } from './sims/initial-rates-lab'
+import { ZeroOrderLab } from './sims/zero-order-lab'
 
 export interface SimulationProps {
   /** True when the Learner has asked the OS for reduced motion. Skip tweens and loops when set. */
@@ -188,4 +189,5 @@ export const simulations: Record<string, ComponentType<SimulationProps>> = {
   'lead-acid-cycle': LeadAcidCycle,
   'initial-rates-lab': InitialRatesLab,
   'rate-determining-step-lab': RateDeterminingStepLab,
+  'zero-order-lab': ZeroOrderLab,
 }
