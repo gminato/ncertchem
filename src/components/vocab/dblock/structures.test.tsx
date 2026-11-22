@@ -221,7 +221,7 @@ describe('gallery with the structure drawings', () => {
     expect(html).toContain('Oxoanions: four ions, four shapes')
     expect(html).toContain('Energy cycles on one scale')
     expect(html).toContain('Magnetic balance: the sign of the pull')
-    expect(html).toContain('example values')
+    expect(html).toContain('NCERT Table 4.4')
     expect(html).toContain('data-energy-cycle')
     expect(html).toContain('data-magnet-pull="0.8"')
   })

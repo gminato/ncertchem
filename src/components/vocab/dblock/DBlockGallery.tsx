@@ -10,6 +10,7 @@ import { EnergyCycle, energyDomain, type EnergyStep } from './EnergyCycle'
 import { MagnetBalance } from './MagnetBalance'
 import { SERIES_TONE } from './tones'
 import { Sub } from '@/components/animations/c12-unit1/ChemSvg'
+import { electrodeCycle } from '@/lib/chem/dblock'
 
 /** Electron configurations as NCERT's Table 4.1 gives them for these atoms and ions. */
 const CR: SubshellConfig[] = [
@@ -38,12 +39,17 @@ const LU: SubshellConfig[] = [
   { subshell: '6s', electrons: 2 },
 ]
 
-const ZN_KJ = [130, 2640, -2050]
-const CU_KJ = [340, 2750, -2110]
-const SUBLIMATION = <>Δ<Sub>a</Sub>H</>
+/** Table 4.4 data (NCERT p. 99) via the lib: [ΔaH, IE₁ + IE₂, ΔhydH], kJ mol⁻¹. */
+function cycleOf(symbol: string): number[] {
+  const c = electrodeCycle(symbol)
+  return [c.atomisation, c.ie1PlusIe2, c.hydration]
+}
+const ZN_KJ = cycleOf('Zn')
+const CU_KJ = cycleOf('Cu')
+const ATOMISATION = <>Δ<Sub>a</Sub>H</>
 const HYDRATION = <>Δ<Sub>hyd</Sub>H</>
 
-/** Signed number with a true minus sign and thin grouping, for the example values. */
+/** Signed number with a true minus sign and thin grouping. */
 function signed(v: number): string {
   const digits = String(Math.abs(v)).replace(/\B(?=(\d{3})+(?!\d))/g, ' ')
   return `${v > 0 ? '+' : v < 0 ? '\u2212' : ''}${digits}`
@@ -53,12 +59,12 @@ function sumOf(values: number[]): number {
 }
 const cycleDomain = energyDomain(ZN_KJ, CU_KJ)
 const znSteps: EnergyStep[] = [
-  { name: SUBLIMATION, value: ZN_KJ[0], text: signed(ZN_KJ[0]) },
+  { name: ATOMISATION, value: ZN_KJ[0], text: signed(ZN_KJ[0]) },
   { name: 'IE₁ + IE₂', value: ZN_KJ[1], text: signed(ZN_KJ[1]) },
   { name: HYDRATION, value: ZN_KJ[2], text: signed(ZN_KJ[2]) },
 ]
 const cuSteps: EnergyStep[] = [
-  { name: SUBLIMATION, value: CU_KJ[0], text: signed(CU_KJ[0]) },
+  { name: ATOMISATION, value: CU_KJ[0], text: signed(CU_KJ[0]) },
   { name: 'IE₁ + IE₂', value: CU_KJ[1], text: signed(CU_KJ[1]) },
   { name: HYDRATION, value: CU_KJ[2], text: signed(CU_KJ[2]) },
 ]
@@ -173,11 +179,11 @@ export function DBlockGallery() {
       <Card
         heading="Oxoanions: four ions, four shapes"
         description="Chromate is tetrahedral. Dichromate is two tetrahedra sharing one bridging oxygen, so the Cr–O–Cr angle is bent. Permanganate is tetrahedral and purple; manganate, with one more electron, is green. The solution tint is the ion's colour."
-        viewBox="0 0 600 316"
+        viewBox="0 0 600 384"
       >
         {OXOANION_KINDS.map((kind, i) => {
           const cx = i % 2 === 0 ? 150 : 450
-          const cy = i < 2 ? 88 : 236
+          const cy = i < 2 ? 92 : 276
           const b = oxoanionBounds(kind)
           const originY = cy - (b.minY + b.maxY + 30) / 2
           return <Oxoanion key={kind} kind={kind} x={cx} y={originY} tint={kind} showOxidationState />
@@ -186,7 +192,7 @@ export function DBlockGallery() {
 
       <Card
         heading="Energy cycles on one scale"
-        description="Each step is an arrow up for an endothermic change and down for an exothermic one. The two cycles share a single vertical scale, so the levels can be compared directly. All values are example values, not data."
+        description="Each step is an arrow up for an endothermic change and down for an exothermic one. The two cycles share a single vertical scale, so the levels can be compared directly. Values for zinc and copper from NCERT Table 4.4: copper ends higher, which is why its electrode potential is positive."
         viewBox="0 0 600 250"
       >
         <EnergyCycle

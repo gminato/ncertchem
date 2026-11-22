@@ -91,7 +91,7 @@ export const EnergyCycle = forwardRef<SVGGElement, EnergyCycleProps>(function En
             <text x={ax} y={keyTop} textAnchor="middle" fontSize={14} style={labelStyle}>
               {s.name}
             </text>
-            <text x={ax} y={keyTop + 18} textAnchor="middle" fontSize={14} style={{ ...labelStyle, fontWeight: 600 }}>
+            <text x={ax} y={keyTop + 24} textAnchor="middle" fontSize={14} style={{ ...labelStyle, fontWeight: 600 }}>
               {s.text}
             </text>
           </g>

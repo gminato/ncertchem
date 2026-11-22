@@ -237,7 +237,7 @@ export const Oxoanion = forwardRef<SVGGElement, OxoanionProps>(function Oxoanion
       {showLabel && (
         <text
           x={0}
-          y={b.maxY + 22}
+          y={b.maxY + (tint ? 34 : 22)}
           textAnchor="middle"
           fontSize={16}
           style={{ fill: 'var(--fg)', fontFamily: 'var(--font-sans)' }}
