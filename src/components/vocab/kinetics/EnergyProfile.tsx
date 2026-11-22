@@ -38,9 +38,10 @@ export interface EnergyProfileProps extends Omit<SVGAttributes<SVGGElement>, 'ch
 
 const LEFT_PAD = 0.02
 const RIGHT_PAD = 0.86
-const STATION_FROM = 0.14
+const STATION_FROM = 0.2
 const STATION_TO = 0.7
-const EA_OFFSET = 0.06
+const PAD_BOTTOM = 28
+const PAD_TOP = 8
 const DH_FRACTION = 0.94
 
 /** Draws a vertical double-headed arrow between two pixel heights. */
@@ -88,10 +89,10 @@ export const EnergyProfile = forwardRef<SVGGElement, EnergyProfileProps>(functio
   const lo = Math.min(...all)
   const hi = Math.max(...all)
   const span = hi - lo || 1
-  const eMin = lo - 0.08 * span
   const eMax = hi + 0.16 * span
   const bottom = y + height
-  const toY = linear([eMin, eMax], [bottom, y]).to
+  // The lowest level sits PAD_BOTTOM units above the x-axis, so no level is drawn on the axis.
+  const toY = linear([lo, eMax], [bottom - PAD_BOTTOM, y + PAD_TOP]).to
   const toX = (f: number) => x + f * width
 
   const n = levels.length
@@ -110,11 +111,10 @@ export const EnergyProfile = forwardRef<SVGGElement, EnergyProfileProps>(functio
   const peaks = levels.map((e, i) => ({ e, i })).filter((p) => p.i % 2 === 1)
   const valleys = levels.map((e, i) => ({ e, i })).filter((p) => p.i % 2 === 0 && p.i !== 0 && p.i !== n - 1)
   const firstPeak = peaks[0]
-  // The Eₐ arrow sits just after the reactant plateau, where the curve has not yet risen.
-  const eaArrowX = toX(fractions[0] + EA_OFFSET)
+  // The Eₐ arrow stands directly under the first peak, so it meets the curve only at the top.
+  const eaArrowX = firstPeak ? stationary(levels)[firstPeak.i].x : toX(0.5)
   const dhX = toX(DH_FRACTION)
   const titleX = x - 44
-  const xStart = x - 2
 
   return (
     <g ref={ref} aria-hidden="true" {...rest}>
@@ -147,7 +147,7 @@ export const EnergyProfile = forwardRef<SVGGElement, EnergyProfileProps>(functio
       {firstPeak && eaLabel !== undefined && (
         <>
           <VArrow x={eaArrowX} y1={reactantY} y2={toY(firstPeak.e)} tone="var(--fg)" />
-          <text x={eaArrowX - 9} y={(reactantY + toY(firstPeak.e)) / 2 + 5} textAnchor="end" fontSize={15} fill="var(--fg)" stroke="var(--surface)" strokeWidth={4} paintOrder="stroke">
+          <text x={eaArrowX - 8} y={(reactantY + toY(firstPeak.e)) / 2 + 5} textAnchor="end" fontSize={15} fill="var(--fg)" stroke="var(--surface)" strokeWidth={4} paintOrder="stroke">
             {eaLabel}
           </text>
         </>
@@ -164,12 +164,12 @@ export const EnergyProfile = forwardRef<SVGGElement, EnergyProfileProps>(functio
       )}
 
       {reactantsLabel !== undefined && (
-        <text x={xStart + 6} y={reactantY - 10} textAnchor="start" fontSize={15} fill="var(--fg)" stroke="var(--surface)" strokeWidth={4} paintOrder="stroke">
+        <text x={toX(LEFT_PAD) + 6} y={reactantY - 8} textAnchor="start" fontSize={15} fill="var(--fg)" stroke="var(--surface)" strokeWidth={4} paintOrder="stroke">
           {reactantsLabel}
         </text>
       )}
       {productsLabel !== undefined && (
-        <text x={toX(RIGHT_PAD - 0.02)} y={productY + 22} textAnchor="end" fontSize={15} fill="var(--fg)" stroke="var(--surface)" strokeWidth={4} paintOrder="stroke">
+        <text x={toX(RIGHT_PAD - 0.02)} y={productY - 8} textAnchor="end" fontSize={15} fill="var(--fg)" stroke="var(--surface)" strokeWidth={4} paintOrder="stroke">
           {productsLabel}
         </text>
       )}
@@ -185,7 +185,8 @@ export const EnergyProfile = forwardRef<SVGGElement, EnergyProfileProps>(functio
           </text>
         ))}
       {cat && catalysedLabel !== undefined && catLevels && (
-        <text x={stationary(catLevels)[1].x} y={toY(catLevels[1]) - 12} textAnchor="middle" fontSize={15} fill="var(--kin-catalyst)" stroke="var(--surface)" strokeWidth={4} paintOrder="stroke">
+        // Sits under the catalysed hump's descent, clear of both curves and of the product level.
+        <text x={toX(0.4)} y={productY - 8} textAnchor="start" fontSize={15} fill="var(--kin-catalyst)" stroke="var(--surface)" strokeWidth={4} paintOrder="stroke">
           {catalysedLabel}
         </text>
       )}

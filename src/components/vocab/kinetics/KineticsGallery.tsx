@@ -7,7 +7,7 @@ import { CollisionFlash, CatalystSurface, EnergyProfile, MaxwellBoltzmannCurve, 
 /** The kinetics figures, in the order the Visual Vocabulary shows them. Client-side because the plot frame uses context and function props. */
 export function KineticsGallery() {
   const r = (t: number) => Math.exp(-0.02 * t)
-  const tangentSlope = -0.02 * r(40)
+  const tangentSlope = -0.02 * r(50)
   return (
     <div className={styles.grid}>
       <article className={`${styles.card} ${styles.cardWide}`}>
@@ -15,12 +15,13 @@ export function KineticsGallery() {
           <svg viewBox="0 0 600 330" style={{ width: '100%', maxWidth: 600, height: 'auto' }} role="img" aria-label="Concentration of reactant falling against time, with an average-rate secant between two times, an instantaneous-rate tangent and its slope triangle">
             <PlotFrame x={84} y={18} width={488} height={250} domain={{ xMin: 0, xMax: 100, yMin: 0, yMax: 1 }} xTicks={[0, 25, 50, 75, 100]} yTicks={[0, 0.25, 0.5, 0.75, 1]} yTickFormat={(v) => v.toFixed(2)} xTitle="t / s" yTitle="[R] / mol L⁻¹">
               <PlotCurve points={Array.from({ length: 101 }, (_, i) => [i, r(i)] as [number, number])} tone="reactant" />
-              <PlotLine from={{ x: 20, y: r(20) }} to={{ x: 60, y: r(60) }} tone="accent" width={2.4} />
-              <PlotPoint at={{ x: 20, y: r(20) }} tone="accent" label="average rate" side="ne" />
-              <PlotPoint at={{ x: 60, y: r(60) }} tone="accent" />
-              <PlotLine through={{ x: 40, y: r(40) }} slope={tangentSlope} tone="product" dashed />
-              <PlotPoint at={{ x: 40, y: r(40) }} tone="product" label="instantaneous rate" side="sw" />
-              <PlotSlopeTriangle at={{ x: 54, y: r(40) + tangentSlope * 14 }} dx={14} slope={tangentSlope} dxLabel="Δt" dyLabel="Δ[R]" tone="product" />
+              <PlotLine from={{ x: 10, y: r(10) }} to={{ x: 70, y: r(70) }} extend tone="neutral" width={1.2} opacity={0.45} dashed />
+              <PlotLine from={{ x: 10, y: r(10) }} to={{ x: 70, y: r(70) }} tone="neutral" width={2.4} />
+              <PlotPoint at={{ x: 10, y: r(10) }} tone="neutral" label="secant: average rate" side="ne" />
+              <PlotPoint at={{ x: 70, y: r(70) }} tone="neutral" />
+              <PlotLine through={{ x: 50, y: r(50) }} slope={tangentSlope} tone="product" dashed />
+              <PlotPoint at={{ x: 50, y: r(50) }} tone="product" label="tangent: instantaneous rate" side="sw" />
+              <PlotSlopeTriangle at={{ x: 56, y: r(50) + tangentSlope * 6 }} dx={12} slope={tangentSlope} dxLabel="Δt" dyLabel="Δ[R]" tone="product" />
             </PlotFrame>
           </svg>
         </div>
@@ -122,7 +123,7 @@ export function KineticsGallery() {
       <article className={`${styles.card} ${styles.cardWide}`}>
         <div className={styles.cardCanvas} style={{ height: 'auto', padding: 'var(--space-4)' }}>
           <svg viewBox="0 0 600 330" style={{ width: '100%', maxWidth: 600, height: 'auto' }} role="img" aria-label="Maxwell-Boltzmann distributions at 300 K and 310 K with the fraction of molecules above the activation energy shaded">
-            <MaxwellBoltzmannCurve x={84} y={18} width={488} height={250} temperatures={[300, 310]} ea={2.2} labels={['300 K', '310 K']} eaLabel="Eₐ" />
+            <MaxwellBoltzmannCurve x={84} y={18} width={488} height={250} temperatures={[300, 310]} spread={1.25} tones={['reactant', 'product']} ea={2.2} labels={['T₁', 'T₂ > T₁']} eaLabel="Eₐ" />
           </svg>
         </div>
         <div className={styles.cardBody}>
@@ -140,17 +141,17 @@ export function KineticsGallery() {
           <svg viewBox="0 0 600 300" style={{ width: '100%', maxWidth: 600, height: 'auto' }} role="img" aria-label="Molecules in a sealed vessel, with one effective collision flashing amber and one ineffective collision drawn faint">
             <ReactionBox x={120} y={20} width={360} height={230} caption="Sealed vessel">
               <Particle x={40} y={40} tone="reactant" r={13} />
-              <Particle x={92} y={64} tone="reactant" r={13} />
+              <Particle x={92} y={64} tone="product" r={13} />
               <Particle x={200} y={48} tone="reactant" r={13} />
-              <Particle x={320} y={40} tone="reactant" r={13} />
+              <Particle x={320} y={40} tone="product" r={13} />
               <Particle x={60} y={150} tone="reactant" r={13} />
-              <Particle x={230} y={170} tone="reactant" r={13} />
+              <Particle x={230} y={170} tone="product" r={13} />
               <Particle x={320} y={160} tone="reactant" r={13} />
               <Particle x={140} y={96} tone="reactant" r={13} />
-              <Particle x={166} y={104} tone="reactant" r={13} />
+              <Particle x={166} y={104} tone="product" r={13} />
               <CollisionFlash x={153} y={100} size={22} effective />
-              <Particle x={262} y={106} tone="neutral" r={13} />
-              <Particle x={282} y={122} tone="neutral" r={13} />
+              <Particle x={262} y={106} tone="reactant" r={13} />
+              <Particle x={282} y={122} tone="product" r={13} />
               <CollisionFlash x={272} y={114} size={16} effective={false} />
             </ReactionBox>
           </svg>
