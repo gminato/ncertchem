@@ -12,6 +12,13 @@ const SPHERE_R: Record<Halogen, number> = { F: 12, Cl: 15, Br: 17, I: 20 }
 /** Carbon sits this far left of the bond centre-line so the alkyl label fits. */
 const LABEL_LEFT = 44
 const BOND_START = 4
+/** Dipole arrow length: drawn units per debye, so the arrow is proportional to the dipole moment. */
+const DIPOLE_UNITS_PER_D = 30
+
+/** Length in drawn units of the dipole arrow for a dipole moment in debye. */
+export function dipoleArrowUnits(dipoleDebye: number): number {
+  return dipoleDebye * DIPOLE_UNITS_PER_D
+}
 
 export interface PolarBondProps extends Omit<SVGAttributes<SVGGElement>, 'children'> {
   halogen: Halogen
@@ -23,7 +30,7 @@ export interface PolarBondProps extends Omit<SVGAttributes<SVGGElement>, 'childr
   unitsPerPm?: number
   /** δ+ on carbon and δ− on the halogen. Default true. */
   deltas?: boolean
-  /** Crossed-tail dipole arrow pointing to the halogen. Default false. */
+  /** Crossed-tail dipole arrow below the bond, pointing to the halogen, length proportional to the dipole. Default false. */
   dipole?: boolean
   /** Dimension line with the bond length in pm. Default false. */
   ruler?: boolean
@@ -62,7 +69,8 @@ export function PolarBond({
   const c = carbonX(len, r)
   const X = c + len
   const tail = c + 10
-  const headAt = X - r - 6
+  const dipoleD = NCERT_TABLE_6_2.find((row) => row.halogen === halogen)?.dipoleDebye ?? 0
+  const arrowEnd = tail + dipoleArrowUnits(dipoleD)
 
   return (
     <g transform={`translate(${x} ${y})`} {...rest}>
@@ -96,8 +104,8 @@ export function PolarBond({
 
       {dipole && (
         <g stroke="var(--dipole)" strokeWidth={2.4} strokeLinecap="round" fill="var(--dipole)">
-          <line x1={tail} y1={CY + 42} x2={headAt} y2={CY + 42} />
-          <path d={`M${headAt} ${CY + 42} L${headAt - 10} ${CY + 36} L${headAt - 10} ${CY + 48} Z`} stroke="none" />
+          <line x1={tail} y1={CY + 42} x2={arrowEnd - 8} y2={CY + 42} />
+          <path d={`M${arrowEnd} ${CY + 42} L${arrowEnd - 10} ${CY + 36} L${arrowEnd - 10} ${CY + 48} Z`} stroke="none" />
           <line x1={tail - 5} y1={CY + 42} x2={tail + 5} y2={CY + 42} strokeWidth={1.6} />
           <line x1={tail} y1={CY + 37} x2={tail} y2={CY + 47} strokeWidth={1.6} />
         </g>
