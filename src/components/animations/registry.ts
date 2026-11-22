@@ -169,6 +169,7 @@ import { OxoanionChemistry } from './c12-unit4/oxoanions/OxoanionChemistry'
 import { LanthanoidContraction } from './c12-unit4/lanthanoids/LanthanoidContraction'
 import { HalideClasses } from './c12-unit6/classes/HalideClasses'
 import { HalideNaming } from './c12-unit6/naming/HalideNaming'
+import { HaloareneRoutes } from './c12-unit6/arenprep/HaloareneRoutes'
 
 /**
  * Animations available to a Scrolly Animation, keyed by the `animation` prop.
@@ -348,6 +349,7 @@ export const animations = {
   'halide-classes': HalideClasses,
   'halide-naming': HalideNaming,
   'haloalkane-routes': HaloprepRoutes,
+  'haloarene-routes': HaloareneRoutes,
 } as const
 
 export type AnimationName = keyof typeof animations
