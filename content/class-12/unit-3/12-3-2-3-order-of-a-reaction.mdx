@@ -22,13 +22,13 @@ $$
 n = x + y
 $$
 
-Order can be $0$, $1$, $2$, $3$ or even a fraction such as $\tfrac{1}{2}$. A **zero-order** reaction is one whose rate does not depend on the concentration of any reactant at all, because the factor $[\ce{A}]^0$ equals $1$. A reaction with $\text{Rate} = k[\ce{P}]^2[\ce{Q}]^{1/2}$ is of overall order $\tfrac{5}{2}$, even though it has only two reactants.
+Experiments turn up whole-number orders such as zero, one or two, and fractional ones such as $\tfrac{1}{2}$. An exponent can even be negative: in $\text{Rate} = k[\ce{P}]^2[\ce{Q}]^{-1}$ the rate falls as $[\ce{Q}]$ rises, because $\ce{Q}$ slows the reaction down. Negative orders are rare and are found only by measurement. The overall order is still just the sum of the exponents, here $2 + (-1) = 1$. A **zero-order** reaction is one whose rate does not depend on the concentration of any reactant at all, because the factor $[\ce{A}]^0$ equals $1$. A reaction with $\text{Rate} = k[\ce{P}]^2[\ce{Q}]^{1/2}$ is of overall order $\tfrac{5}{2}$, even though it has only two reactants.
 
 ## Elementary and complex reactions
 
 A balanced equation says what goes in and what comes out, but not how the change happens. A change that takes place in a single step is an **elementary reaction**. Most reactions take several steps. The sequence of elementary steps is the **mechanism**, and the overall change is a **complex reaction**.
 
-Complex reactions come in several forms. They may be consecutive: the oxidation of ethane to carbon dioxide and water passes through intermediate steps in which an alcohol, an aldehyde and an acid form. They may run in reverse, or compete with side reactions, as in the nitration of phenol, which gives both an ortho and a para product. The rate law of a complex reaction is always found by experiment, because the balanced equation does not fix it.
+Not every reaction is a single leap. Some run as a relay: ethanol is first converted to acetaldehyde, which is then converted to acetic acid, and each handover is a separate step. Others are reversible, so the products can turn back into reactants. Still others split the reactant between rival paths, as chlorination of toluene does when it gives ortho- and para-chlorotoluene at the same time. The rate law of a complex reaction is always found by experiment, because the balanced equation does not fix it.
 
 ## Units of the rate constant
 
@@ -43,15 +43,15 @@ The units of $k$ therefore follow the order. A zero-order $k$ has units $\text{m
 <Check
   n={1}
   options={[
-    "Zero order, because the number has no concentration in it",
-    "First order, because k in s⁻¹ is the usual unit",
-    "Second order, because the units are mol⁻¹ L s⁻¹",
-    "Half order, because the units are fractional"
+    "One-half",
+    "First",
+    "Three-halves",
+    "Second"
   ]}
   answer={2}
-  explanation="With units mol⁻¹ L s⁻¹, the exponent of mol L⁻¹ in (mol L⁻¹)^(1−n) s⁻¹ is 1 − n = −1, so n = 2. The same number written as s⁻¹ would have meant first order, and as mol L⁻¹ s⁻¹ zero order."
+  explanation="The units (mol L⁻¹)^(1−n) s⁻¹ give the power of mol L⁻¹ as 1 − n. Here that power is −1/2, so n = 3/2. Units with the power −1 would have meant second order, and the half-power pattern here shows a fractional order."
 >
-A rate constant is recorded as $4.0 \times 10^{-3}$ with units mol⁻¹ L s⁻¹. What is the order of the reaction?
+A rate constant has units $\text{mol}^{-1/2}\,\text{L}^{1/2}\,\text{s}^{-1}$. What is the overall order of the reaction?
 </Check>
 
 ## Reading the order from the units
@@ -108,5 +108,5 @@ A second-order reaction has k = 0.200 mol⁻¹ L s⁻¹. What is its rate, in mo
 - Order can be zero, whole-number or fractional. A zero-order rate does not depend on the concentration of any reactant.
 - An **elementary reaction** takes place in one step. A **complex reaction** is a sequence of elementary steps called a mechanism, so its rate law must be found by experiment.
 - The units of $k$ are $(\text{mol L}^{-1})^{1-n}\ \text{s}^{-1}$: $\text{mol L}^{-1}\ \text{s}^{-1}$ for zero order, $\text{s}^{-1}$ for first order and $\text{mol}^{-1}\ \text{L s}^{-1}$ for second order. Reading the power of mol L⁻¹ in the units gives the order.
-- Doubling a concentration changes the rate by the factor $2^n$, so each order has its own signature on a rate–concentration plot.
+- For a single reactant, or when only one concentration changes, doubling that concentration changes the rate by the factor $2^n$, so each order has its own signature on a rate–concentration plot.
 </KeyIdeas>

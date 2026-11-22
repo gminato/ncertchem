@@ -83,7 +83,9 @@ export function OrderUnitsLab() {
   const units = rateConstantUnits(n)
 
   const rateLawTex = tex(`\\text{Rate} = k[\\mathrm{A}]^{${order.tex}}`)
-  const builtTex = tex(`k = ${K.toFixed(3)}\\ (\\text{mol L}^{-1})^{${order.oneMinusTex}}\\,\\text{s}^{-1}`)
+  // First order has no concentration factor to build, so its built form is the bare s⁻¹ (no zero-power term).
+  const builtFactor = order.key === '1' ? '' : `(\\text{mol L}^{-1})^{${order.oneMinusTex}}\\,`
+  const builtTex = tex(`k = ${K.toFixed(3)}\\ ${builtFactor}\\text{s}^{-1}`)
   const simplifiedHtml = tex(`k = ${K.toFixed(3)}\\ ${simplifiedTex(units.parts)}`)
 
   const summary =
