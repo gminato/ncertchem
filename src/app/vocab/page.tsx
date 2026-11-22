@@ -232,6 +232,7 @@ import {
   BatteryCutaway,
   type ElectrodeMaterial,
 } from '@/components/vocab'
+import { KineticsGallery } from '@/components/vocab/kinetics/KineticsGallery'
 
 export const metadata: Metadata = {
   title: pageTitle('Visual Vocabulary'),
@@ -3912,6 +3913,18 @@ export default function VocabPage() {
             </div>
           </article>
         </div>
+      </section>
+
+      <section className={styles.section} id="kinetics" aria-labelledby="kinetics-heading">
+        <h2 id="kinetics-heading" className={styles.sectionTitle}>
+          Chemical kinetics
+        </h2>
+        <p className={styles.sectionSubtitle}>
+          The plots, energy profiles, molecules and instruments of chemical kinetics, drawn with one set of parts: the same concentration
+          axes, energy levels, distribution curves, particles and meters in every section.
+        </p>
+
+        <KineticsGallery />
       </section>
     </div>
   )
