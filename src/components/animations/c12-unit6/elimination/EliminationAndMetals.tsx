@@ -163,7 +163,7 @@ function StepNameCarbons() {
         items={[
           { tone: HALOGEN_TONE.Br, text: 'α-carbon: C2, which bears the bromine' },
           { tone: ROLE_TONE.betaHydrogen, text: 'β-carbons: C1 (3 H) and C3 (2 H)' },
-          { tone: MUTED, text: 'C4 and C5: no hydrogen on them can leave' },
+          { tone: MUTED, text: 'C4 and C5 are not β-carbons, so their H stays' },
         ]}
       />
     </g>
@@ -295,7 +295,7 @@ function StepMagnesium() {
       <line x1={ch3.x} y1={ch3.y} x2={cPt.x} y2={cPt.y} stroke={BOND} strokeWidth={3.5} strokeLinecap="round" />
       <line x1={cPt.x} y1={cPt.y} x2={brEnd.x} y2={brEnd.y} stroke={BOND} strokeWidth={3} strokeDasharray="7 6" />
       <line x1={cPt.x} y1={cPt.y} x2={mg.x} y2={mg.y} stroke={BOND} strokeWidth={3.5} strokeLinecap="round" />
-      <line x1={mg.x} y1={mg.y} x2={brPt.x} y2={brPt.y - 16} stroke={MG} strokeWidth={2.5} strokeDasharray="3 5" strokeLinecap="round" />
+      <line x1={mg.x} y1={mg.y} x2={brPt.x} y2={brPt.y - 16} stroke={BOND} strokeWidth={3} strokeLinecap="round" />
       <Label x={brPt.x} y={brPt.y + 6} size={18} fill={HALOGEN_TONE.Br} weight={600}>
         Br
       </Label>
@@ -310,7 +310,7 @@ function StepMagnesium() {
         δ⁻
       </Label>
       <Label x={brPt.x + 2} y={brPt.y + 44} size={15} fill={MUTED}>
-        Mg–Br ion pair
+        Mg goes in between C and Br
       </Label>
       <Label x={W / 2} y={392} size={18} weight={600}>
         CH₃CH₂MgBr: a Grignard reagent
@@ -347,7 +347,7 @@ function StepWater() {
       <Label x={mgX} y={row + 6} size={17} weight={600}>
         Mg
       </Label>
-      <line x1={mgX + 28} y1={row} x2={344} y2={row} stroke={MG} strokeWidth={2.5} strokeDasharray="3 5" strokeLinecap="round" />
+      <line x1={mgX + 28} y1={row} x2={344} y2={row} stroke={BOND} strokeWidth={3} strokeLinecap="round" />
       <Label x={366} y={row + 6} size={17} fill={HALOGEN_TONE.Br} weight={600}>
         Br
       </Label>
@@ -355,7 +355,8 @@ function StepWater() {
       <Label x={250} y={296} size={18} weight={600}>
         H₂O
       </Label>
-      <CurvedArrow from={{ x: 232, y: 268 }} to={{ x: 152, y: row + 16 }} bend={0.3} />
+      {/* Electron-pushing: the C–Mg bond pair takes a proton from water. */}
+      <CurvedArrow from={{ x: (184 + mgX - 26) / 2, y: row + 6 }} to={{ x: 236, y: 264 }} bend={-0.3} />
       <Label x={170} y={350} size={26} weight={600}>
         CH₃–CH₃
       </Label>
@@ -389,11 +390,8 @@ function StepWurtz() {
       <Label x={W / 2} y={136} size={26} weight={600}>
         +
       </Label>
-      <Label x={137} y={218} size={18} fill={NA} weight={600}>
-        2 Na
-      </Label>
-      <Label x={443} y={218} size={18} fill={NA} weight={600}>
-        2 Na
+      <Label x={392} y={256} size={18} fill={NA} weight={600}>
+        2 Na, dry ether
       </Label>
       <line x1={290} y1={230} x2={290} y2={246} stroke={MUTED} strokeWidth={2.5} />
       <polygon points="282,244 298,244 290,256" fill={MUTED} />

@@ -4,6 +4,7 @@ import { useState } from 'react'
 import { Segmented, Toggle } from '@/components/controls'
 import { SkeletalFormula, skeletalFrame, type Frame } from '@/components/organic'
 import type { MolGraph } from '@/lib/chem/molecule-graph'
+import { formulaUnicode } from '@/lib/chem/haloalkanes'
 import { iupacNameFromSmiles } from '@/lib/chem/iupac-organic'
 import {
   CHOOSER_SUBSTRATES,
@@ -99,7 +100,7 @@ function ProductCard({ product, x, flag, count }: { product: ChooserProduct; x: 
         {product.name}
       </text>
       <text x={x + CARD_W / 2} y={y + 184} textAnchor="middle" className={styles.productFormula}>
-        {product.formula}
+        {formulaUnicode(product.formula)}
       </text>
       <text x={x + CARD_W / 2} y={y + 204} textAnchor="middle" className={styles.productFormula}>
         {alkylWord(product.alkylGroups)}
