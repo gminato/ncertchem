@@ -1,9 +1,9 @@
 'use client'
 
 import type { CSSProperties } from 'react'
-import { Sub } from '@/components/animations/c12-unit1/ChemSvg'
+import { Sub, Sup } from '@/components/animations/c12-unit1/ChemSvg'
 import { PlotFrame, PlotLine, PlotCurve, PlotPoint, PlotShade, maxwellBoltzmann, smoothThrough } from '@/components/vocab'
-import { DH_KJ, EA_CAT_KJ, EA_UNCAT_KJ, CAT_FIRST_HUMP_KJ, CAT_VALLEY_KJ, T_K, UPHILL_PRODUCTS_KJ, catalystNumbers, catalystStep, type CatalystStep } from './catalyst-steps'
+import { DH_KJ, EA_CAT_KJ, EA_UNCAT_KJ, CAT_FIRST_HUMP_KJ, CAT_VALLEY_KJ, T_K, UNCAT_FAINT_OPACITY, UPHILL_PRODUCTS_KJ, catalystNumbers, catalystStep, type CatalystStep } from './catalyst-steps'
 
 export interface CatalystPathwayProps {
   /** 0-based Step index from Scrolly. */
@@ -54,7 +54,7 @@ function Arrow({ x, y1, y2, tone }: { x: number; y1: number; y2: number; tone: s
   )
 }
 
-function EnergyAxes() {
+function EnergyAxes({ yTitle }: { yTitle: string }) {
   return (
     <g stroke="var(--kin-axis)" fill="var(--kin-axis)" strokeWidth={1.6}>
       <line x1={AXIS_X} x2={AXIS_X} y1={28} y2={AXIS_Y} />
@@ -62,7 +62,7 @@ function EnergyAxes() {
       <line x1={AXIS_X} x2={560} y1={AXIS_Y} y2={AXIS_Y} />
       <path d={`M552 ${AXIS_Y - 4} L560 ${AXIS_Y} L552 ${AXIS_Y + 4} Z`} stroke="none" />
       <text transform={`translate(24 186) rotate(-90)`} textAnchor="middle" fontSize={15} fill="var(--fg)" stroke="none">
-        potential energy / kJ mol⁻¹
+        {yTitle}
       </text>
       <text x={315} y={378} textAnchor="middle" fontSize={15} fill="var(--fg)" stroke="none">
         reaction coordinate
@@ -102,7 +102,8 @@ function EnergyScene({ step, products, reducedMotion }: { step: CatalystStep; pr
 
   return (
     <g>
-      <EnergyAxes />
+      {/* The uphill Step is a Gibbs energy profile: ΔrG is positive there. */}
+      <EnergyAxes yTitle={uphill ? 'Gibbs energy / kJ mol⁻¹' : 'potential energy / kJ mol⁻¹'} />
 
       {/* Reactant and product level guides */}
       <g stroke="var(--kin-axis)" strokeWidth={1} strokeDasharray="3 4" opacity={0.7}>
@@ -116,7 +117,7 @@ function EnergyScene({ step, products, reducedMotion }: { step: CatalystStep; pr
       </g>
 
       {/* Uncatalysed route: one hump, faint once the catalysed route is drawn */}
-      <g style={fade(true, reducedMotion, step.uncatFaint ? 0.3 : 1)}>
+      <g style={fade(true, reducedMotion, step.uncatFaint ? UNCAT_FAINT_OPACITY : 1)}>
         <path d={smoothThrough(uncat)} fill="none" stroke="var(--accent)" strokeWidth={3.2} strokeLinecap="round" />
       </g>
 
@@ -128,11 +129,19 @@ function EnergyScene({ step, products, reducedMotion }: { step: CatalystStep; pr
         </text>
       </g>
 
+      {/* Eₐ of the catalysed route: the second hump, the labelled barrier that limits the rate */}
+      <g style={fade(step.catalysed, reducedMotion)}>
+        <Arrow x={270} y1={y0} y2={yCat} tone="var(--kin-catalyst)" />
+        <text x={278} y={yCat + 6} fontSize={15} fill="var(--kin-catalyst)" {...LABEL_HALO}>
+          <Ea /> = {EA_CAT_KJ}
+        </text>
+      </g>
+
       {/* Backward barriers, from the product level up to each peak */}
       <g style={fade(step.showBackward, reducedMotion)}>
         <Arrow x={470} y1={yP} y2={backwardUncatTop} tone="var(--fg)" />
-        <text x={470} y={backwardUncatTop - 10} textAnchor="middle" fontSize={15} fill="var(--fg)" {...LABEL_HALO}>
-          {numbers.backwardUncatKJ}
+        <text x={476} y={backwardUncatTop - 10} textAnchor="end" fontSize={15} fill="var(--fg)" {...LABEL_HALO}>
+          {numbers.backwardUncatKJ} kJ mol⁻¹
         </text>
         <Arrow x={510} y1={yP} y2={backwardCatTop} tone="var(--kin-catalyst)" />
         <text x={510} y={backwardCatTop - 10} textAnchor="middle" fontSize={15} fill="var(--kin-catalyst)" {...LABEL_HALO}>
@@ -158,7 +167,7 @@ function EnergyScene({ step, products, reducedMotion }: { step: CatalystStep; pr
         </text>
       </g>
       <g style={fade(step.catalysed && !uphill, reducedMotion)}>
-        <text x={236} y={yOf(CAT_VALLEY_KJ) + 40} fontSize={15} fill="var(--kin-catalyst)" {...LABEL_HALO}>
+        <text x={274} y={yOf(CAT_VALLEY_KJ) + 24} fontSize={15} fill="var(--kin-catalyst)" {...LABEL_HALO}>
           intermediate
         </text>
       </g>
@@ -170,16 +179,16 @@ function EnergyScene({ step, products, reducedMotion }: { step: CatalystStep; pr
 
       {/* Legend, top right: the Eₐ values of each route and the rate factor */}
       <g fontSize={15} textAnchor="end" strokeWidth={0}>
-        <text x={560} y={24} fill="var(--accent)">
+        <text x={560} y={22} fill="var(--accent)">
           uncatalysed: <Ea /> = {EA_UNCAT_KJ} kJ mol⁻¹
         </text>
         <g style={fade(step.catalysed, reducedMotion)}>
-          <text x={560} y={42} fill="var(--kin-catalyst)">
+          <text x={560} y={38} fill="var(--kin-catalyst)">
             catalysed: <Ea /> = {EA_CAT_KJ} kJ mol⁻¹
           </text>
         </g>
         <g style={fade(step.showBackward, reducedMotion)}>
-          <text x={560} y={60} fill="var(--fg)">
+          <text x={560} y={54} fill="var(--fg)">
             both directions ×{numbers.rateFactor}
           </text>
         </g>
@@ -216,7 +225,11 @@ function BoltzmannScene({ on, reducedMotion }: { on: boolean; reducedMotion: boo
         <PlotPoint at={{ x: tailUncat, y: mb(tailUncat) }} tone="accent" side="ne" label={`${EA_UNCAT_KJ} kJ mol⁻¹: ${numbers.fractionUncat}`} />
       </PlotFrame>
       <text x={AXIS_X} y={393} fontSize={14} fill="var(--fg)" opacity={0.85}>
-        Schematic: the shaded tails are enlarged. The labels give e^(−Eₐ/RT) at 298 K.
+        Tails enlarged for display. Labels: e
+        <Sup>
+          −<Ea />/<tspan className="sym">RT</tspan>
+        </Sup>{' '}
+        at {T_K} K
       </text>
     </g>
   )
