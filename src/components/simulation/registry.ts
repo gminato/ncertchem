@@ -18,6 +18,7 @@ import { DipoleLab } from './sims/dipole-lab'
 import { MOBuilder } from './sims/mo-builder'
 import { HybridExplorer } from './sims/hybrid-explorer'
 import { PVWorkLab } from './sims/pv-work-lab'
+import { StereoOutcomes } from './sims/stereo-outcomes'
 import { BondEnergyLedger } from './sims/bond-energy-ledger'
 import { GibbsExplorer } from './sims/gibbs-explorer'
 import { FirstLawLab } from './sims/first-law-lab'
@@ -222,4 +223,5 @@ export const simulations: Record<string, ComponentType<SimulationProps>> = {
   'lanthanoid-explorer': LanthanoidExplorer,
   'industrial-catalyst-explorer': IndustrialCatalystExplorer,
   'f-block-compare': FBlockCompare,
+  'stereo-outcomes': StereoOutcomes,
 }
