@@ -8,10 +8,13 @@ import { iupacNameFromSmiles } from '@/lib/chem/iupac-organic'
 import { molecularFormula, parseSmiles } from '@/lib/chem/molecule-parse'
 import type { MolGraph } from '@/lib/chem/molecule-graph'
 import {
+  CHARGE_SITES,
   carbanionContributors,
+  nitroOxygenContributorSmiles,
   nitroSubstrateSmiles,
   nitroVerdict,
   printedHydrolysisCase,
+  withResonantNitroChargesOnly,
 } from '@/lib/chem/nitro-activation'
 import styles from './nitro-activation.module.css'
 
@@ -53,8 +56,14 @@ function verdictSentence(positions: Pattern): string {
 
 function conditionSentence(positions: Pattern): string {
   const entry = printedHydrolysisCase(positions)
-  if (!entry) return 'No temperature is shown: NCERT prints conditions only for 4-nitro, 2,4-dinitro and 2,4,6-trinitro.'
+  if (!entry) return 'NCERT prints no conditions for this arrangement.'
   return `NCERT conditions for this case: ${entry.conditions.replace(/ {2}/g, ' ')}.`
+}
+
+function nitroFormHeading(positions: Pattern): string {
+  if (nitroVerdict(positions).activated) return 'Resonance onto NO₂: the nitro O takes the charge'
+  if (positions.length === 0) return 'No NO₂ group, so no nitro-O form'
+  return 'No nitro-O form: the charge never reaches NO₂'
 }
 
 export function NitroActivation() {
@@ -65,8 +74,17 @@ export function NitroActivation() {
   const substrateName = iupacNameFromSmiles(substrateSmiles)
   const formula = molecularFormula(substrate)
   const contributors = useMemo(() => carbanionContributors(positions), [positions])
-  const graphs = useMemo(() => contributors.map((c) => parseSmiles(c.smiles)), [contributors])
+  const graphs = useMemo(() => contributors.map((c) => withResonantNitroChargesOnly(parseSmiles(c.smiles))), [contributors])
   const verdict = nitroVerdict(positions)
+  const nitroForms = useMemo(
+    () =>
+      CHARGE_SITES.map((site) =>
+        verdict.reachingSites.includes(site)
+          ? withResonantNitroChargesOnly(parseSmiles(nitroOxygenContributorSmiles(positions, site)))
+          : null,
+      ),
+    [positions, verdict.reachingSites],
+  )
   const sentence = verdictSentence(positions)
   const conditions = conditionSentence(positions)
   const verdictLine = verdict.activated ? 'Activated' : 'Not activated'
@@ -77,7 +95,7 @@ export function NitroActivation() {
     <div className={styles.root} data-testid="nitro-activation">
       <div className={styles.layout}>
         <figure className={styles.stage}>
-          <svg viewBox="0 0 560 566" role="img" aria-label={`${substrateName}. ${sentence}`} className={styles.drawing} data-testid="nitro-drawing">
+          <svg viewBox="0 0 560 870" role="img" aria-label={`${substrateName}. ${sentence}`} className={styles.drawing} data-testid="nitro-drawing">
             <SkeletalFormula graph={substrate} scale={SUBSTRATE_SCALE} x={110} y={118} highlightAtoms={[1]} />
             <text x={200} y={92} fontSize={18} fontWeight={600} fontFamily="var(--font-sans)" fill="var(--fg)">
               {substrateName}
@@ -102,6 +120,30 @@ export function NitroActivation() {
                 </g>
               )
             })}
+            {CHARGE_SITES.map((site, i) => {
+              const g = nitroForms[i]
+              if (!g) {
+                return verdict.activated ? (
+                  <text key={`none-${site}`} x={cellX[i]} y={716} textAnchor="middle" fontSize={16} fontFamily="var(--font-sans)" fill="var(--fg-muted)">
+                    {`No NO₂ at C${site}`}
+                  </text>
+                ) : null
+              }
+              return (
+                <g key={`nitro-${site}`}>
+                  <SkeletalFormula graph={g} scale={DRAW_SCALE} x={cellX[i]} y={716} highlightAtoms={g.atoms.flatMap((a, k) => ((a.charge ?? 0) < 0 ? [k] : []))} />
+                  <text x={cellX[i]} y={836} textAnchor="middle" fontSize={17} fontWeight={600} fontFamily="var(--font-sans)" fill="var(--fg)">
+                    {`Nitro form from C${site}`}
+                  </text>
+                  <text x={cellX[i]} y={858} textAnchor="middle" fontSize={16} fontFamily="var(--font-sans)" fill="var(--fg)">
+                    NO₂ takes the charge
+                  </text>
+                </g>
+              )
+            })}
+            <text x={280} y={604} textAnchor="middle" fontSize={16} fontFamily="var(--font-sans)" fill="var(--fg-muted)">
+              {nitroFormHeading(positions)}
+            </text>
             <text x={188} y={372} textAnchor="middle" fontSize={28} fill="var(--fg-muted)">↔</text>
             <text x={372} y={372} textAnchor="middle" fontSize={28} fill="var(--fg-muted)">↔</text>
             <text x={280} y={246} textAnchor="middle" fontSize={16} fontFamily="var(--font-sans)" fill="var(--fg-muted)">

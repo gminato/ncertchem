@@ -4,6 +4,8 @@
  * C2, C4 or C6 (ortho and para to C1). A nitro group helps only when it sits on one of those carbons.
  */
 import { nitroActivation } from './haloalkanes'
+import type { MolGraph } from './molecule-graph'
+import { bondOrderBetween } from './molecule-parse'
 import { NCERT_HALOARENE_HYDROLYSIS } from './ncert-c12-unit6-data'
 
 export type ChargeSite = 2 | 4 | 6
@@ -34,12 +36,16 @@ const CONTRIBUTOR_DOUBLES: Record<ChargeSite, readonly Pair[]> = {
   ],
 }
 
-/** Shared SMILES writer: ring atoms C1 to C6, nitro groups on the positions given, Kekulé bonds. */
+/**
+ * Shared SMILES writer: ring atoms C1 to C6, nitro groups on the positions given, Kekulé bonds.
+ * `nitroForm` is the carbon whose NO₂ takes the charge: its N is double bonded to the ring carbon.
+ */
 function ringSmiles(
   nitro: readonly number[],
   doubles: readonly Pair[],
   c1: { prefix: string; suffix: string },
   anion?: ChargeSite,
+  nitroForm?: ChargeSite,
 ): string {
   const has = (k: number, a: readonly Pair[]) => a.some(([x, y]) => (x === k && y === k + 1) || (x === k + 1 && y === k))
   const tokens: string[] = []
@@ -49,7 +55,8 @@ function ringSmiles(
       tok = `${c1.prefix}C1${c1.suffix}`
     } else {
       const branch = nitro.includes(k) ? '([N+](=O)[O-])' : ''
-      if (k === anion) tok = branch ? `[C-]${branch}` : '[CH-]'
+      if (k === nitroForm) tok = 'C(=[N+]([O-])[O-])'
+      else if (k === anion) tok = branch ? `[C-]${branch}` : '[CH-]'
       else tok = `C${branch}`
     }
     if (k === 6) tok += '1'
@@ -72,9 +79,40 @@ export function nitroSubstrateSmiles(nitro: readonly number[]): string {
   return ringSmiles(normalise(nitro), SUBSTRATE_DOUBLES, { prefix: 'Cl', suffix: '' })
 }
 
-/** Kekulé SMILES of the carbanion after OH⁻ adds at C1, with the negative charge on `chargeAt`. */
+/**
+ * Kekulé SMILES of the carbanion after OH⁻ adds at C1, with the negative charge on `chargeAt`.
+ * Cl is written first so that the layout puts it on C1's outward bond, not in the ring.
+ */
 export function carbanionContributorSmiles(nitro: readonly number[], chargeAt: ChargeSite): string {
-  return ringSmiles(normalise(nitro), CONTRIBUTOR_DOUBLES[chargeAt], { prefix: 'O', suffix: '(Cl)' }, chargeAt)
+  return ringSmiles(normalise(nitro), CONTRIBUTOR_DOUBLES[chargeAt], { prefix: 'Cl', suffix: '(O)' }, chargeAt)
+}
+
+/**
+ * Kekulé SMILES of the nitro-O contributor for a carbon that carries NO₂: the ring C=N is a double bond and the
+ * negative charge sits on a nitro oxygen. Only the NO₂ carbon gets this form; other nitro groups stay uncharged.
+ */
+export function nitroOxygenContributorSmiles(nitro: readonly number[], site: ChargeSite): string {
+  const set = normalise(nitro)
+  if (!set.includes(site)) throw new Error(`No nitro group at C${site}, so no nitro-O contributor`)
+  return ringSmiles(set, CONTRIBUTOR_DOUBLES[site], { prefix: 'Cl', suffix: '(O)' }, undefined, site)
+}
+
+/**
+ * Drawing copy of a contributor: a nitro group keeps its ⊕ and ⊖ only when its N is double bonded to a ring
+ * carbon (the nitro-O contributor). Every other nitro group is drawn without charge marks.
+ */
+export function withResonantNitroChargesOnly(g: MolGraph): MolGraph {
+  const atoms = g.atoms.map((a) => ({ ...a }))
+  g.atoms.forEach((a, n) => {
+    if (a.element !== 'N' || (a.charge ?? 0) <= 0) return
+    const ringDouble = g.atoms.some((b, c) => b.element === 'C' && bondOrderBetween(g, n, c) === 2)
+    if (ringDouble) return
+    atoms[n] = { ...atoms[n], charge: 0 }
+    g.atoms.forEach((o, j) => {
+      if (o.element === 'O' && (o.charge ?? 0) < 0 && bondOrderBetween(g, n, j) > 0) atoms[j] = { ...atoms[j], charge: 0 }
+    })
+  })
+  return { ...g, atoms }
 }
 
 export interface CarbanionContributor {
@@ -113,12 +151,12 @@ export function nitroVerdict(nitro: readonly number[]): NitroVerdict {
 }
 
 /**
- * NCERT's printed conditions for the three printed arrangements only (4-nitro, 2,4-dinitro, 2,4,6-trinitro).
- * Every other pattern, including plain chlorobenzene in this view, gets null: no temperature is shown.
+ * NCERT's printed conditions: chlorobenzene (623 K, 300 atm) and the three nitro arrangements it prints
+ * (4-nitro, 2,4-dinitro, 2,4,6-trinitro). Every other pattern gets null: NCERT prints no conditions for it.
  */
 export function printedHydrolysisCase(nitro: readonly number[]) {
   const key = normalise(nitro).join(',')
-  const index: Record<string, number> = { '4': 1, '2,4': 2, '2,4,6': 3 }
+  const index: Record<string, number> = { '': 0, '4': 1, '2,4': 2, '2,4,6': 3 }
   const i = index[key]
   return i === undefined ? null : NCERT_HALOARENE_HYDROLYSIS[i]
 }

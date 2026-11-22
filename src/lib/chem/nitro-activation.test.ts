@@ -8,7 +8,9 @@ import {
   carbanionContributorSmiles,
   nitroSubstrateSmiles,
   nitroVerdict,
+  nitroOxygenContributorSmiles,
   printedHydrolysisCase,
+  withResonantNitroChargesOnly,
 } from './nitro-activation'
 
 describe('nitro-activation substrate', () => {
@@ -65,7 +67,7 @@ describe('carbanion contributors', () => {
   })
 
   it('the contributor for C4 has the anion on C4 and the nitro group on it', () => {
-    expect(carbanionContributorSmiles([4], 4)).toBe('OC1(Cl)C=C[C-]([N+](=O)[O-])C=C1')
+    expect(carbanionContributorSmiles([4], 4)).toBe('ClC1(O)C=C[C-]([N+](=O)[O-])C=C1')
   })
 })
 
@@ -81,7 +83,7 @@ describe('verdicts and printed conditions', () => {
     expect(printedHydrolysisCase([4])?.temperatureK).toBe(443)
     expect(printedHydrolysisCase([2, 4])?.temperatureK).toBe(368)
     expect(printedHydrolysisCase([2, 4, 6])?.temperatureK).toBeNull()
-    expect(printedHydrolysisCase([])).toBeNull()
+    expect(printedHydrolysisCase([])?.temperatureK).toBe(623)
     expect(printedHydrolysisCase([3])).toBeNull()
     expect(printedHydrolysisCase([2])).toBeNull()
   })
@@ -101,3 +103,32 @@ function elementCounts(smiles: string): Record<string, number> {
   }
   return counts
 }
+
+describe('nitro-activation nitro-O contributor', () => {
+  it('writes the para and ortho nitro-O forms and keeps the formula C6H5ClNO3 with one negative charge', () => {
+    expect(nitroOxygenContributorSmiles([4], 4)).toBe('ClC1(O)C=CC(=[N+]([O-])[O-])C=C1')
+    expect(nitroOxygenContributorSmiles([2], 2)).toBe('ClC1(O)C(=[N+]([O-])[O-])C=CC=C1')
+    const cases = [
+      { nitro: [4], site: 4 as const, formula: 'C6H5ClNO3' },
+      { nitro: [2], site: 2 as const, formula: 'C6H5ClNO3' },
+      { nitro: [2, 4], site: 2 as const, formula: 'C6H4ClN2O5' },
+      { nitro: [2, 4, 6], site: 6 as const, formula: 'C6H3ClN3O7' },
+    ]
+    for (const { nitro, site, formula } of cases) {
+      const g = parseSmiles(nitroOxygenContributorSmiles(nitro, site))
+      expect(molecularFormula(g).replace(/[+-]$/, '')).toBe(formula)
+      expect(g.atoms.reduce((sum, a) => sum + (a.charge ?? 0), 0)).toBe(-1)
+    }
+  })
+
+  it('refuses a site that carries no NO₂', () => {
+    expect(() => nitroOxygenContributorSmiles([4], 2)).toThrow()
+  })
+
+  it('keeps nitro charges only on the nitro-O contributor', () => {
+    const carbanion = withResonantNitroChargesOnly(parseSmiles(carbanionContributorSmiles([4], 6)))
+    expect(carbanion.atoms.filter((a) => a.element === 'O' && (a.charge ?? 0) !== 0)).toHaveLength(0)
+    const para = withResonantNitroChargesOnly(parseSmiles(nitroOxygenContributorSmiles([4], 4)))
+    expect(para.atoms.filter((a) => a.element === 'O' && a.charge === -1)).toHaveLength(2)
+  })
+})
