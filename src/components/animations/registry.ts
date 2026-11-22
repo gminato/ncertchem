@@ -145,6 +145,7 @@ import { ElectrolysisProducts } from './c12-unit2/products/ElectrolysisProducts'
 import { FaradayElectrolysis } from './c12-unit2/faraday/FaradayElectrolysis'
 import { BatteryCutaways } from './c12-unit2/batteries/BatteryCutaways'
 import { RateTangent } from './c12-unit3/rate/RateTangent'
+import { RateLawInitialRates } from './c12-unit3/ratelaw/RateLawInitialRates'
 
 /**
  * Animations available to a Scrolly Animation, keyed by the `animation` prop.
@@ -300,6 +301,7 @@ export const animations = {
   'faraday-electrolysis': FaradayElectrolysis,
   'battery-cutaways': BatteryCutaways,
   'rate-tangent': RateTangent,
+  'initial-rates': RateLawInitialRates,
 } as const
 
 export type AnimationName = keyof typeof animations
