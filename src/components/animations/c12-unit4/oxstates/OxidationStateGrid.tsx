@@ -302,7 +302,7 @@ function Group6() {
               {cell.species}
             </text>
             <text x={cx} y={458} textAnchor="middle" {...MUTED}>
-              {cell.strongOxidant ? 'strong oxidant' : 'not an oxidant'}
+              {cell.strongOxidant ? 'strong oxidant' : 'not a strong oxidant'}
             </text>
           </g>
         )

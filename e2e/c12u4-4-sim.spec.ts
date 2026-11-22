@@ -100,7 +100,7 @@ for (const scheme of ['light', 'dark'] as const) {
     await sim.getByRole('button', { name: 'Fe', exact: true }).click()
     await sim.getByRole('radio', { name: 'Mo' }).click()
     await expect(sim.locator('[aria-live="polite"]')).toContainText('The count rule stops at Mn')
-    await expect(sim.locator('[aria-live="polite"]')).toContainText('MoO₃ is not an oxidant')
+    await expect(sim.locator('[aria-live="polite"]')).toContainText('MoO₃ is not a strong oxidant')
     await sim.screenshot({ path: `test-results/screens/c12u4-4-sim-fe-group-mo-${scheme}.png` })
     expect(await smallTextLeaves(page)).toEqual([])
     expect(await svgOutOfBounds(page)).toEqual([])

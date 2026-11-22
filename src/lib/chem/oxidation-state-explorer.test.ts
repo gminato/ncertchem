@@ -68,6 +68,6 @@ describe('oxidation state explorer', () => {
     expect(group6Entry('Cr')).toEqual({ symbol: 'Cr', state: 6, species: 'Cr₂O₇²⁻', strongOxidant: true })
     expect(group6Entry('Mo').strongOxidant).toBe(false)
     expect(group6Summary('W')).toContain('WO₃ is')
-    expect(group6Summary('W')).toContain('not an oxidant')
+    expect(group6Summary('W')).toContain('not a strong oxidant')
   })
 })

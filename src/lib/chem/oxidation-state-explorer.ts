@@ -120,6 +120,6 @@ export function group6Entry(symbol: string): Group6Entry {
 /** The group 6 sentence for the selected metal; the group trend line is the same for all three. */
 export function group6Summary(symbol: string): string {
   const entry = group6Entry(symbol)
-  const verdict = entry.strongOxidant ? 'a strong oxidant in acid' : 'not an oxidant'
+  const verdict = entry.strongOxidant ? 'a strong oxidant in acid' : 'not a strong oxidant'
   return `${symbol}: +${entry.state} as ${entry.species} is ${verdict}. Going down group 6 the +6 state becomes more stable.`
 }

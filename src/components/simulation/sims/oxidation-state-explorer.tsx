@@ -149,7 +149,7 @@ export function OxidationStateExplorer() {
                   {entry.species}
                 </text>
                 <text x={cx} y={382} textAnchor="middle" className={styles.muted}>
-                  {entry.strongOxidant ? 'strong oxidant' : 'not an oxidant'}
+                  {entry.strongOxidant ? 'strong oxidant' : 'not a strong oxidant'}
                 </text>
               </g>
             )
@@ -161,7 +161,7 @@ export function OxidationStateExplorer() {
         <p className={styles.lead}>{readout.lead}</p>
         {readout.halideKey ? <p className={styles.note}>In a halide formula, X stands for {readout.halideKey}.</p> : null}
         <p className={styles.note}>
-          {groupEntry.symbol}: +{groupEntry.state} as {groupEntry.species}, {groupEntry.strongOxidant ? 'a strong oxidant in acid' : 'not an oxidant'}.
+          {groupEntry.symbol}: +{groupEntry.state} as {groupEntry.species}, {groupEntry.strongOxidant ? 'a strong oxidant in acid' : 'not a strong oxidant'}.
           Going down group 6 the +6 state becomes more stable.
         </p>
       </div>
