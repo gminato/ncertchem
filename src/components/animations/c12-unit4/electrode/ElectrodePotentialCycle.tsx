@@ -153,9 +153,11 @@ function CopperStep() {
   return (
     <>
       <EnergyCycle x={0} y={20} width={296} height={420} domain={shared} species={ZN_SPECIES} steps={cycleSteps('Zn')} />
-      <EnergyCycle x={284} y={20} width={296} height={420} domain={shared} species={CU_SPECIES} steps={cycleSteps('Cu')} net={netOf('Cu')} />
+      <text x={6} y={14} fontSize={14} style={{ fill: 'var(--accent)', fontWeight: 600 }}>Net</text>
+      <text x={6} y={30} fontSize={14} style={{ fill: 'var(--accent)', fontWeight: 600 }}>{signedKj(netOf('Zn').value)}</text>
+      <EnergyCycle x={272} y={20} width={300} height={420} domain={shared} species={CU_SPECIES} steps={cycleSteps('Cu')} net={netOf('Cu')} />
       <text x={W / 2} y={478} textAnchor="middle" fontSize={15} style={{ fill: INK }}>
-        Both totals are positive: Zn +711, Cu +921 kJ mol⁻¹.
+        Both totals are positive: Zn {signedKj(netOf('Zn').value)}, Cu {signedKj(netOf('Cu').value)} kJ mol⁻¹.
       </text>
       <text x={W / 2} y={504} textAnchor="middle" fontSize={15} style={{ fill: INK }}>
         Compare metals, not signs. Cu and Ni share ΔhydH {signedKj(ni)} kJ mol⁻¹.
@@ -187,7 +189,8 @@ function CurveStep() {
         yTitle="E°(M²⁺/M) / V"
       >
         <PlotLine from={{ x: 0.5, y: 0 }} to={{ x: 10.5, y: 0 }} tone="accent" width={2} dashed />
-        <DataText x={0.62} y={0.05} anchor="start">H⁺/H₂ = 0 V</DataText>
+        <DataText x={0.62} y={0} dy={18} anchor="start">H⁺/H₂ = 0 V</DataText>
+        <DataText x={plotX('Sc')} y={0}>–</DataText>
         <DataText x={1.2} y={0.5} anchor="start">Ring: below the trend (Mn, Ni, Zn)</DataText>
         {plotted.slice(1).map((p, i) => (
           <Segment key={`seg${p.symbol}`} from={[plotted[i].x, plotted[i].e]} to={[p.x, p.e]} />
@@ -272,12 +275,17 @@ function StatesStep() {
           <g key={h.metal}>
             <text x={14} y={y + 4} fontSize={18} style={{ fill: INK, fontWeight: 600 }}>{h.metal}</text>
             <rect x={80} y={y - 12} width={bar} height={20} rx={4} style={{ fill: TONE }} />
-            <text x={h.metal === 'Mn' ? 80 + 7 * BAR_UNIT + 10 : 80 + bar + 8} y={y + 4} fontSize={16} style={{ fill: INK, fontWeight: 600 }}>{`+${h.state}`}</text>
+            {h.metal === 'Mn' ? (
+              <text x={80 + bar} y={y - 16} textAnchor="end" fontSize={16} style={{ fill: INK, fontWeight: 600 }}>{`+${h.state}`}</text>
+            ) : (
+              <text x={80 + bar + 8} y={y + 4} fontSize={16} style={{ fill: INK, fontWeight: 600 }}>{`+${h.state}`}</text>
+            )}
             <text x={14} y={y + 26} fontSize={14} style={{ fill: MUTED }}>{note}</text>
             {h.metal === 'Mn' && (
               <>
                 <rect x={80 + 4 * BAR_UNIT} y={y - 12} width={3 * BAR_UNIT} height={20} rx={4} style={{ fill: 'none', stroke: TONE, strokeWidth: 2, strokeDasharray: '4 3' }} />
-                <text x={14} y={y + 46} fontSize={14} style={{ fill: MUTED }}>Stops at +4; +7 only in Mn₂O₇</text>
+                <text x={80 + 7 * BAR_UNIT} y={y + 26} textAnchor="end" fontSize={14} style={{ fill: INK, fontWeight: 600 }}>+7 in Mn₂O₇</text>
+                <text x={14} y={y + 46} fontSize={14} style={{ fill: MUTED }}>No simple halide above +4 (MnF₄)</text>
               </>
             )}
           </g>
