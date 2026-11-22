@@ -151,6 +151,7 @@ import { OrderCurves } from './c12-unit3/order/OrderCurves'
 import { MechanismSteps } from './c12-unit3/molecularity/MechanismSteps'
 import { ZeroOrderSurface } from './c12-unit3/zeroorder/ZeroOrderSurface'
 import { FirstOrderPlots } from './c12-unit3/firstorder/FirstOrderPlots'
+import { DblockConfigurations } from './c12-unit4/config/DblockConfigurations'
 import { HalfLifeLadder } from './c12-unit3/halflife/HalfLifeLadder'
 import { CatalystPathway } from './c12-unit3/catalyst/CatalystPathway'
 import { ArrheniusEnergy } from './c12-unit3/arrhenius/ArrheniusEnergy'
@@ -318,6 +319,7 @@ export const animations = {
   'catalyst-pathway': CatalystPathway,
   'arrhenius-energy': ArrheniusEnergy,
   'collision-orientation': CollisionOrientation,
+  'dblock-configurations': DblockConfigurations,
 } as const
 
 export type AnimationName = keyof typeof animations
