@@ -1,6 +1,7 @@
 import { titrationMoles, titrationRatio, unknownFe2Molarity, type OxidantKey } from './dblock'
+import { formatHalfUp } from './electroplating'
 
-/** One burette step in the Oxidant Titration Lab (0.01 mL, a fine drop). */
+/** One burette step in the Oxidant Titration Lab (0.01 mL, one increment). */
 export const DROP_ML = 0.01
 
 /** Burette capacity in mL (the drawn scale runs 0 to 25). */
@@ -59,14 +60,14 @@ export function reactedMoles(args: {
 export function formatMoles(mol: number): string {
   if (mol === 0) return '0 mol'
   let exp = Math.floor(Math.log10(Math.abs(mol)))
-  let mantissa = Math.round((mol / 10 ** exp) * 100) / 100
-  if (Math.abs(mantissa) >= 10) {
+  let mantissa = formatHalfUp(mol / 10 ** exp, 2)
+  if (Math.abs(Number(mantissa)) >= 10) {
     exp += 1
-    mantissa = Math.round((mol / 10 ** exp) * 100) / 100
+    mantissa = formatHalfUp(mol / 10 ** exp, 2)
   }
   const expText = String(exp)
     .split('')
     .map((ch) => SUPERSCRIPT[ch] ?? ch)
     .join('')
-  return `${mantissa.toFixed(2)} × 10${expText} mol`
+  return `${mantissa} × 10${expText} mol`
 }

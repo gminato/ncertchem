@@ -5,6 +5,7 @@ import { Button, Segmented, Slider } from '@/components/controls'
 import { SimulationControls } from '@/components/simulation/Simulation'
 import { ION_COLOUR_TOKEN } from '@/components/vocab/dblock/tones'
 import { titrationRatio, type OxidantKey } from '@/lib/chem/dblock'
+import { formatHalfUp } from '@/lib/chem/electroplating'
 import {
   BURETTE_CAPACITY_ML,
   DROP_ML,
@@ -76,16 +77,16 @@ export function OxidantTitrationLab() {
   let status: string
   if (!reached) {
     status = isPermanganate
-      ? 'Before the end point. Each purple drop is decolourised as it lands, because Fe²⁺ reduces it at once.'
-      : 'Before the end point. Each orange drop is reduced, and chromium(III) forms in the flask.'
+      ? 'Before the end point. Each purple increment is decolourised as it lands, because Fe²⁺ reduces it at once.'
+      : 'Before the end point. Each orange increment is reduced, and chromium(III) forms in the flask.'
   } else if (isPermanganate) {
-    status = `End point: the flask stays pale pink at ${titreMl.toFixed(2)} mL, so the last drop was not decolourised.`
+    status = `End point: the flask stays pale pink at ${formatHalfUp(titreMl, 2)} mL, so the last increment was not decolourised.`
   } else {
-    status = `End point by calculation at ${titreMl.toFixed(2)} mL. Dichromate gives no colour change of its own here, so a bench would need an indicator.`
+    status = `End point by calculation at ${formatHalfUp(titreMl, 2)} mL. Dichromate gives no colour change of its own here, so a bench would need an indicator.`
   }
 
   const colourWord = showPink ? 'pale pink' : fraction > 0 ? 'yellow-green' : 'pale green'
-  const ariaLabel = `Burette at ${reading.toFixed(2)} mL, flask ${colourWord}`
+  const ariaLabel = `Burette at ${formatHalfUp(reading, 2)} mL, flask ${colourWord}`
   const meniscusY = TOP + (reading / BURETTE_CAPACITY_ML) * (BOTTOM - TOP)
 
   return (
@@ -107,7 +108,7 @@ export function OxidantTitrationLab() {
               max={40}
               step={0.5}
               onChange={setFe2VolumeMl}
-              format={(v) => v.toFixed(2)}
+              format={(v) => `${formatHalfUp(v, 2)} mL`}
             />
             <Slider
               label="Fe²⁺ concentration"
@@ -117,7 +118,7 @@ export function OxidantTitrationLab() {
               max={0.06}
               step={0.001}
               onChange={setFe2Molarity}
-              format={(v) => v.toFixed(4)}
+              format={(v) => `${formatHalfUp(v, 4)} mol dm⁻³`}
             />
             <Slider
               label="Burette reading"
@@ -127,15 +128,15 @@ export function OxidantTitrationLab() {
               max={BURETTE_CAPACITY_ML}
               step={DROP_ML}
               onChange={(v) => setDrops(Math.min(MAX_DROPS, Math.max(0, Math.round(v * 100))))}
-              format={(v) => v.toFixed(2)}
+              format={(v) => `${formatHalfUp(v, 2)} mL`}
             />
           </div>
           <div className={styles.choices}>
             <Button variant="primary" onClick={() => setDrops((d) => Math.min(MAX_DROPS, d + 1))}>
-              Add one drop (0.01 mL)
+              Add 0.01 mL
             </Button>
             <Button variant="secondary" onClick={() => setDrops((d) => Math.min(MAX_DROPS, d + 10))}>
-              Add 10 drops
+              Add 0.10 mL
             </Button>
             <Button variant="secondary" onClick={() => setDrops(0)}>
               Reset burette
@@ -157,7 +158,7 @@ export function OxidantTitrationLab() {
             </defs>
 
             <text x={12} y={30} fontSize={15} fill="var(--fg)" fontFamily="var(--font-sans)">
-              {`Burette (mL): ${OXIDANT_NAME[oxidantChoice]} ${OXIDANT_MOLARITY.toFixed(4)} M`}
+              {`Burette: ${OXIDANT_NAME[oxidantChoice]} ${formatHalfUp(OXIDANT_MOLARITY, 4)} mol dm⁻³`}
             </text>
 
             {/* Burette: liquid column falls from the meniscus to the tip */}
@@ -194,10 +195,10 @@ export function OxidantTitrationLab() {
             <circle cx={150} cy={366} r={6} fill={oxidantToken} opacity={flashOpacity} />
 
             <text x={150} y={440} textAnchor="middle" fontSize={15} fill="var(--fg)" fontFamily="var(--font-sans)">
-              {`Fe²⁺ ${fe2VolumeMl.toFixed(2)} mL, dilute H₂SO₄`}
+              {`Fe²⁺ ${formatHalfUp(fe2VolumeMl, 2)} mL, dilute H₂SO₄`}
             </text>
             <text x={150} y={460} textAnchor="middle" fontSize={15} fill="var(--fg-muted)" fontFamily="var(--font-sans)">
-              {`${fe2Molarity.toFixed(4)} mol dm⁻³`}
+              {`${formatHalfUp(fe2Molarity, 4)} mol dm⁻³`}
             </text>
 
             {/* Fe²⁺ oxidised: a bar that fills to 100 % at the end point */}
@@ -221,7 +222,7 @@ export function OxidantTitrationLab() {
         <div className={styles.readout}>
           <p className={styles.reading}>
             <span>Burette reading</span>
-            <strong>{`${reading.toFixed(2)} mL`}</strong>
+            <strong>{`${formatHalfUp(reading, 2)} mL`}</strong>
           </p>
           <p className={styles.status} aria-live="polite">
             {status}
@@ -239,10 +240,10 @@ export function OxidantTitrationLab() {
           {calc !== null ? (
             <p className={styles.calc}>
               <span>
-                Calculated c(Fe²⁺) = {calc.toFixed(4)} mol dm⁻³ from a titre of {titreMl.toFixed(2)} mL.
+                Calculated c(Fe²⁺) = {formatHalfUp(calc, 4)} mol dm⁻³ from a titre of {formatHalfUp(titreMl, 2)} mL.
               </span>{' '}
               <span>
-                {matches ? 'It matches the set value' : 'It differs from the set value by the drop size'} ({fe2Molarity.toFixed(4)} mol dm⁻³).
+                {matches ? 'It matches the set value' : 'It differs from the set value by the size of one increment'} ({formatHalfUp(fe2Molarity, 4)} mol dm⁻³).
               </span>
             </p>
           ) : (

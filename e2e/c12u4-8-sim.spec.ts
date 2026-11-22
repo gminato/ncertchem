@@ -82,12 +82,13 @@ for (const scheme of ['light', 'dark'] as const) {
 
     // State 1: the default, 25.00 mL of 0.0500 mol dm⁻³ Fe²⁺, burette at 0.00 mL.
     await expect(sim.locator('[aria-live="polite"]')).toContainText('Before the end point')
+    await expect(sim).toContainText('0.0500 mol dm⁻³')
     await sim.screenshot({ path: `test-results/screens/c12u4-8-sim-default-${scheme}.png` })
     expect(await smallTextLeaves(page)).toEqual([])
     expect(await svgOutOfBounds(page)).toEqual([])
 
     // State 2: permanganate at the end point: 12.50 mL, 2.50 × 10⁻⁴ mol MnO₄⁻, calculated 0.0500 mol dm⁻³.
-    await sim.getByRole('button', { name: 'Add 10 drops' }).click()
+    await sim.getByRole('button', { name: 'Add 0.10 mL' }).click()
     await sim.getByRole('slider', { name: /Burette reading/ }).fill('12.5')
     await expect(sim.locator('[aria-live="polite"]')).toContainText('pale pink at 12.50 mL')
     await expect(sim).toContainText('2.50 × 10⁻⁴ mol')
