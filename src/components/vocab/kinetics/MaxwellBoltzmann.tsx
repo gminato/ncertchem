@@ -17,6 +17,12 @@ export interface MaxwellBoltzmannCurveProps extends Omit<SVGAttributes<SVGGEleme
   thetaRef?: number
   /** Activation energy, in the same dimensionless units as the x axis. */
   ea?: number
+  /**
+   * Schematic width ratio between successive temperatures. When set, curve i uses
+   * θ = thetaRef × spread^i instead of the temperature ratio, so a 10 K step can be
+   * drawn clearly. Each curve still has unit area. Default: from the temperatures.
+   */
+  spread?: number
   /** Right end of the energy axis. Default 6. */
   xMax?: number
   /** Stroke tone per temperature. Default neutral, reactant, product. */
@@ -31,6 +37,12 @@ export interface MaxwellBoltzmannCurveProps extends Omit<SVGAttributes<SVGGEleme
 }
 
 const DEFAULT_TONES: PlotTone[] = ['neutral', 'reactant', 'product']
+
+/** The dimensionless θ of each curve: from the temperatures, or the schematic spread when one is given. */
+function thetasFor(temperatures: number[], Tref: number, thetaRef: number, spread?: number): number[] {
+  if (spread !== undefined) return temperatures.map((_, i) => thetaRef * spread ** i)
+  return temperatures.map((T) => thetaFor(T, Tref, thetaRef))
+}
 
 function EaMarker({ ea, label, ymax }: { ea: number; label?: ReactNode; ymax: number }) {
   const s = usePlotScale()
@@ -82,6 +94,7 @@ export const MaxwellBoltzmannCurve = forwardRef<SVGGElement, MaxwellBoltzmannCur
     temperatures,
     referenceT,
     thetaRef = 2,
+    spread,
     ea = 2.2,
     xMax = 6,
     tones = DEFAULT_TONES,
@@ -95,7 +108,9 @@ export const MaxwellBoltzmannCurve = forwardRef<SVGGElement, MaxwellBoltzmannCur
   ref
 ) {
   const Tref = referenceT ?? temperatures[0]
-  const thetas = temperatures.map((T) => thetaFor(T, Tref, thetaRef))
+  const thetas = thetasFor(temperatures, Tref, thetaRef, spread)
+  // Hotter curves (larger θ) are drawn last, so their semi-transparent tails sit on top.
+  const tailOrder = thetas.map((_, i) => i).sort((a, b) => thetas[a] - thetas[b])
   const peakHeights = thetas.map((th) => maxwellBoltzmann(th / 2, th))
   const yMax = Math.max(...peakHeights) * 1.14
   const f = (th: number) => (E: number) => maxwellBoltzmann(E, th)
@@ -113,8 +128,8 @@ export const MaxwellBoltzmannCurve = forwardRef<SVGGElement, MaxwellBoltzmannCur
         yTitle={yTitle}
       >
         {shadeTails &&
-          thetas.map((th, i) => (
-            <PlotShade key={`tail${i}`} fn={f(th)} from={ea} to={xMax} tone={tones[i % tones.length]} opacity={0.2} />
+          tailOrder.map((i) => (
+            <PlotShade key={`tail${i}`} fn={f(thetas[i])} from={ea} to={xMax} tone={tones[i % tones.length]} opacity={0.32} />
           ))}
         <EaMarker ea={ea} label={eaLabel} ymax={yMax} />
         {thetas.map((th, i) => (
@@ -127,7 +142,7 @@ export const MaxwellBoltzmannCurve = forwardRef<SVGGElement, MaxwellBoltzmannCur
 })
 
 /** The fraction of molecules above Eₐ at each temperature, for captions and tests. */
-export function tailFractions(temperatures: number[], ea: number, referenceT?: number, thetaRef = 2): number[] {
+export function tailFractions(temperatures: number[], ea: number, referenceT?: number, thetaRef = 2, spread?: number): number[] {
   const Tref = referenceT ?? temperatures[0]
-  return temperatures.map((T) => fractionAbove(ea, thetaFor(T, Tref, thetaRef)))
+  return thetasFor(temperatures, Tref, thetaRef, spread).map((th) => fractionAbove(ea, th))
 }
