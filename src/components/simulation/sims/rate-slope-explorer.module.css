@@ -1,0 +1,122 @@
+.root {
+  display: grid;
+  gap: var(--space-3);
+  width: 100%;
+  max-width: 960px;
+  margin-inline: auto;
+  min-width: 0;
+}
+
+.equation {
+  font-size: 1.1rem;
+  text-align: center;
+}
+
+.stage {
+  width: 100%;
+  max-width: 640px;
+  margin-inline: auto;
+}
+
+.svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  touch-action: none;
+  user-select: none;
+}
+
+.handle {
+  fill: transparent;
+  cursor: grab;
+}
+
+.handle:active {
+  cursor: grabbing;
+}
+
+.legend {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--space-2) var(--space-4);
+  color: var(--fg-muted);
+  font-size: 0.95rem;
+}
+
+.swatchReactant,
+.swatchProduct {
+  display: inline-block;
+  width: 1.1em;
+  height: 0.22em;
+  margin-right: 0.35em;
+  vertical-align: middle;
+  border-radius: 2px;
+}
+
+.swatchReactant {
+  background: var(--kin-reactant);
+}
+
+.swatchProduct {
+  background: var(--kin-product);
+}
+
+.controls {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: var(--space-3);
+  align-items: start;
+}
+
+.readouts {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: var(--space-3);
+}
+
+.card {
+  margin: 0;
+  padding: var(--space-3);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  background: var(--surface-raised);
+  min-width: 0;
+}
+
+.cardHeading {
+  margin: 0 0 var(--space-2);
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.rows {
+  margin: 0;
+  display: grid;
+  gap: var(--space-2);
+}
+
+.rows > div {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.rows dt {
+  color: var(--fg-muted);
+}
+
+.rows dd {
+  margin: 0;
+  font-family: var(--font-mono);
+  overflow-wrap: anywhere;
+}
+
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
