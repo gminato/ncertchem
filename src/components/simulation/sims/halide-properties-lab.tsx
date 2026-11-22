@@ -6,11 +6,18 @@ import { HALOGEN_TONE, halogenLabel } from '@/components/vocab/organic6/tones'
 import {
   ALKYL_GROUPS,
   HALIDE_HALOGENS,
+  TABLE_6_3_LIQUIDS,
   halideProperties,
+  table63Liquid,
   type HalideProperties,
 } from '@/lib/chem/halide-properties'
-import { ROOM_TEMPERATURE_K, WATER_DENSITY_G_PER_ML, type AlkylGroup, type Halogen } from '@/lib/chem/ncert-c12-unit6-data'
+import { NCERT_TABLE_6_3, ROOM_TEMPERATURE_K, WATER_DENSITY_G_PER_ML, type AlkylGroup, type Halogen } from '@/lib/chem/ncert-c12-unit6-data'
 import styles from './halide-properties-lab.module.css'
+
+const SOURCE_OPTIONS = [
+  { value: 'alkyl', label: 'Alkyl halide, R–X' },
+  { value: 'liquid', label: 'Liquid from Table 6.3' },
+] as const satisfies readonly { value: string; label: string }[]
 
 const ALKYL_OPTIONS = [
   { value: 'methyl', label: 'methyl, CH₃–X' },
@@ -20,25 +27,34 @@ const ALKYL_OPTIONS = [
 
 const HALOGEN_OPTIONS = HALIDE_HALOGENS.map((h) => ({ value: h, label: halogenLabel(h) }))
 
+const LIQUID_OPTIONS = NCERT_TABLE_6_3.map((r) => ({ value: r.ce, label: r.unicode }))
+
+type Source = (typeof SOURCE_OPTIONS)[number]['value']
+
 /** Thermometer scale: 100 K at the bulb (y 340), 400 K at the top (y 40). One drawn unit per kelvin. */
 const yOf = (kelvin: number) => 340 - (kelvin - 100)
 const TUBE_TOP = 40
 const WATER_TOP = 68
 const WATER_BOTTOM = 312
 const WATER_MID = (WATER_TOP + WATER_BOTTOM) / 2
+const NO_BP = "not in this lab's data"
 
 function summary(p: HalideProperties): string {
-  const room = `${p.phase === 'gas' ? 'a gas' : 'a liquid'} at ${ROOM_TEMPERATURE_K} K`
-  const boil = `${p.unicode} boils at ${p.bpK} K (standard data), so it is ${room}.`
+  const boil =
+    p.bpK === null || p.phase === null
+      ? `${p.unicode} has no boiling point in this lab's data.`
+      : `${p.unicode} boils at ${p.bpK} K (standard data), so it is ${p.phase === 'gas' ? 'a gas' : 'a liquid'} at ${ROOM_TEMPERATURE_K} K.`
   if (!p.density || !p.layer) return `${boil} Table 6.3 has no density for this compound.`
   return `${boil} Its density is ${p.density.printed} g mL⁻¹, so it ${p.layer} in water (water is ${WATER_DENSITY_G_PER_ML.toFixed(2)} g mL⁻¹).`
 }
 
 export function HalidePropertiesLab() {
+  const [source, setSource] = useState<Source>('alkyl')
   const [alkyl, setAlkyl] = useState<AlkylGroup>('n-propyl')
   const [halogen, setHalogen] = useState<Halogen>('Br')
-  const p = halideProperties(alkyl, halogen)
-  const tone = HALOGEN_TONE[halogen]
+  const [liquid, setLiquid] = useState<string>(TABLE_6_3_LIQUIDS[0])
+  const p = source === 'alkyl' ? halideProperties(alkyl, halogen) : table63Liquid(liquid)
+  const tone = HALOGEN_TONE[p.halogen]
   const phaseClass = p.phase === 'gas' ? styles.gas : styles.liquid
   const halideMid = p.layer === 'sinks' ? (WATER_MID + WATER_BOTTOM) / 2 : (WATER_TOP + WATER_MID) / 2
   const waterMid = p.layer === 'sinks' ? (WATER_TOP + WATER_MID) / 2 : (WATER_MID + WATER_BOTTOM) / 2
@@ -46,26 +62,49 @@ export function HalidePropertiesLab() {
   return (
     <div className={styles.sim}>
       <div className={styles.controls}>
-        <Segmented label="Alkyl group" options={ALKYL_OPTIONS} value={alkyl} onChange={setAlkyl} />
-        <Segmented label="Halogen" options={HALOGEN_OPTIONS} value={halogen} onChange={setHalogen} />
+        <Segmented label="Compounds" options={SOURCE_OPTIONS} value={source} onChange={setSource} />
+        {source === 'alkyl' ? (
+          <>
+            <Segmented label="Alkyl group" options={ALKYL_OPTIONS} value={alkyl} onChange={setAlkyl} />
+            <Segmented label="Halogen" options={HALOGEN_OPTIONS} value={halogen} onChange={setHalogen} />
+          </>
+        ) : (
+          <Segmented label="Liquid" options={LIQUID_OPTIONS} value={liquid} onChange={setLiquid} />
+        )}
       </div>
 
       <div className={styles.stage}>
-        <svg className={styles.scene} viewBox="0 0 520 380" role="img" aria-label={`Thermometer at ${p.bpK} K beside a test tube of water, with ${p.unicode} shown against room temperature`}>
+        <svg className={styles.scene} viewBox="0 0 520 380" role="img" aria-label={`Thermometer and test tube for ${p.unicode}: boiling point ${p.bpK === null ? NO_BP : `${p.bpK} K`}, density ${p.density ? `${p.density.printed} g mL⁻¹` : 'not in Table 6.3'}`}>
           {/* Thermometer: boiling point against the room-temperature line */}
           <text x={160} y={28} textAnchor="middle" className={styles.title}>boiling point / K</text>
           <line x1={20} x2={146} y1={yOf(ROOM_TEMPERATURE_K)} y2={yOf(ROOM_TEMPERATURE_K)} className={styles.roomLine} />
           <text x={20} y={yOf(ROOM_TEMPERATURE_K) - 8} className={styles.muted}>room 298 K</text>
           <rect x={150} y={TUBE_TOP} width={20} height={300} rx={10} className={styles.glass} />
-          <rect x={154} y={yOf(p.bpK)} width={12} height={350 - yOf(p.bpK)} className={phaseClass} />
+          {p.bpK !== null ? (
+            <rect x={154} y={yOf(p.bpK)} width={12} height={350 - yOf(p.bpK)} className={phaseClass} />
+          ) : null}
           <circle cx={160} cy={350} r={17} className={styles.glass} />
-          <circle cx={160} cy={350} r={13} className={phaseClass} />
-          <line x1={140} x2={150} y1={yOf(p.parent.bpK)} y2={yOf(p.parent.bpK)} className={styles.parentTick} />
-          <text x={134} y={yOf(p.parent.bpK) + 5} textAnchor="end" className={styles.label}>
-            {p.parent.unicode} {p.parent.bpK} K
-          </text>
-          <text x={172} y={yOf(p.bpK) + 5} className={styles.value}>{p.bpK} K</text>
-          <text x={172} y={yOf(p.bpK) + 23} className={styles.phase}>{p.phase}</text>
+          {p.bpK !== null ? <circle cx={160} cy={350} r={13} className={phaseClass} /> : null}
+          {p.parent ? (
+            <>
+              <line x1={140} x2={150} y1={yOf(p.parent.bpK)} y2={yOf(p.parent.bpK)} className={styles.parentTick} />
+              <text x={134} y={yOf(p.parent.bpK) + 5} textAnchor="end" className={styles.label}>
+                {p.parent.unicode} {p.parent.bpK} K
+              </text>
+            </>
+          ) : null}
+          {p.bpK !== null && p.phase !== null ? (
+            <>
+              <text x={172} y={yOf(p.bpK) + 5} className={styles.value}>{p.bpK} K</text>
+              <text x={172} y={yOf(p.bpK) + 23} className={styles.phase}>{p.phase}</text>
+            </>
+          ) : (
+            <>
+              <text x={20} y={200} className={styles.muted}>boiling point</text>
+              <text x={20} y={218} className={styles.muted}>not in this</text>
+              <text x={20} y={236} className={styles.muted}>lab&apos;s data</text>
+            </>
+          )}
 
           {/* Test tube: where the liquid settles against water */}
           <text x={360} y={28} textAnchor="middle" className={styles.title}>density / g mL⁻¹</text>
@@ -93,17 +132,19 @@ export function HalidePropertiesLab() {
 
       <div className={styles.readout}>
         <div className={styles.stat}>
-          <span className={styles.statLabel}>{p.unicode}, boiling point (standard data)</span>
-          <span className={styles.statValue}>{p.bpK} K</span>
+          <span className={styles.statLabel}>{p.unicode}, boiling point{p.bpK === null ? '' : ' (standard data)'}</span>
+          <span className={styles.statValue}>{p.bpK === null ? NO_BP : `${p.bpK} K`}</span>
         </div>
         <div className={styles.stat}>
           <span className={styles.statLabel}>At {ROOM_TEMPERATURE_K} K</span>
-          <span className={styles.statValue}>{p.phase === 'gas' ? 'gas' : 'liquid'}</span>
+          <span className={styles.statValue}>{p.phase === null ? NO_BP : p.phase === 'gas' ? 'gas' : 'liquid'}</span>
         </div>
-        <div className={styles.stat}>
-          <span className={styles.statLabel}>Parent alkane</span>
-          <span className={styles.statValue}>{p.parent.unicode}: {p.parent.bpK} K</span>
-        </div>
+        {p.parent ? (
+          <div className={styles.stat}>
+            <span className={styles.statLabel}>Parent alkane</span>
+            <span className={styles.statValue}>{p.parent.unicode}: {p.parent.bpK} K</span>
+          </div>
+        ) : null}
         <div className={styles.stat}>
           <span className={styles.statLabel}>Density (Table 6.3)</span>
           <span className={styles.statValue}>{p.density ? `${p.density.printed} g mL⁻¹` : 'not in Table 6.3'}</span>

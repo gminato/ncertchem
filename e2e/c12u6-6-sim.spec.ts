@@ -105,6 +105,15 @@ for (const scheme of ['light', 'dark'] as const) {
     await sim.screenshot({ path: `test-results/screens/c12u6-6-sim-propyl-chloride-${scheme}.png` })
     expect(await smallTextLeaves(page)).toEqual([])
     expect(await svgOutOfBounds(page)).toEqual([])
+
+    // State 4: CHCl₃, a Table 6.3 liquid. It has a density (1.489, sinks) but no boiling point in this lab's data.
+    await sim.getByRole('radio', { name: /^Liquid from Table 6.3/ }).click()
+    await sim.getByRole('radio', { name: 'CHCl₃', exact: true }).click()
+    await expect(sim.locator('[aria-live="polite"]')).toContainText("CHCl₃ has no boiling point in this lab's data")
+    await expect(sim.locator('[aria-live="polite"]')).toContainText('so it sinks in water')
+    await sim.screenshot({ path: `test-results/screens/c12u6-6-sim-chloroform-${scheme}.png` })
+    expect(await smallTextLeaves(page)).toEqual([])
+    expect(await svgOutOfBounds(page)).toEqual([])
     expect(errors).toEqual([])
   })
 }

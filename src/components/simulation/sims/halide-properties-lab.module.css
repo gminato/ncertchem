@@ -73,6 +73,8 @@
 
 .liquid {
   fill: var(--liquid);
+  stroke: var(--liquid-edge);
+  stroke-width: 1.5;
 }
 
 .water {
