@@ -20,13 +20,26 @@ function angleAt(layout: MoleculeLayout, b: number, a: number, c: number): numbe
 
 describe('MOLECULE_LAYOUTS', () => {
   it('defines every formula the vocabulary page uses', () => {
-    for (const f of ['H2', 'O2', 'N2', 'Cl2', 'H2O', 'CO2', 'CH4', 'NH3', 'HCl', 'NaCl']) {
+    for (const f of ['H2', 'O2', 'N2', 'NO', 'Cl2', 'H2O', 'H2O2', 'CO2', 'CH4', 'NH3', 'HCl', 'NaCl', 'I⁻', 'IO⁻']) {
       expect(MOLECULE_LAYOUTS).toHaveProperty(f)
     }
   })
 
   it('draws water bent at 104.5 degrees', () => {
     expect(angleAt(MOLECULE_LAYOUTS.H2O, 0, 1, 2)).toBeCloseTo(104.5, 1)
+  })
+
+  it('draws hydrogen peroxide with an O-O-H angle of 95 degrees', () => {
+    expect(angleAt(MOLECULE_LAYOUTS.H2O2, 0, 1, 2)).toBeCloseTo(95, 0)
+    expect(MOLECULE_LAYOUTS.H2O2.atoms).toHaveLength(4)
+    expect(MOLECULE_LAYOUTS.H2O2.bonds).toHaveLength(3)
+  })
+
+  it('draws nitric oxide as one double bond and iodide as a bare atom', () => {
+    expect(MOLECULE_LAYOUTS.NO.bonds).toEqual([{ a: 0, b: 1, order: 2 }])
+    expect(MOLECULE_LAYOUTS['I⁻'].atoms).toHaveLength(1)
+    expect(MOLECULE_LAYOUTS['I⁻'].bonds).toHaveLength(0)
+    expect(MOLECULE_LAYOUTS['IO⁻'].bonds).toHaveLength(1)
   })
 
   it('draws carbon dioxide linear', () => {
