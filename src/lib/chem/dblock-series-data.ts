@@ -138,3 +138,22 @@ export function colourWheelSector(colour: string): { sector: WheelSector; neares
   }
   return map[colour] ?? null
 }
+
+/**
+ * Representative equations for the two INDUSTRIAL_CATALYSTS entries whose overall equation is null
+ * (no fixed stoichiometry). A Section must label these "representative": the Ziegler form is per repeat
+ * unit of polythene; the hydrogenation form is per C=C double bond of an unsaturated fat or oil
+ * (R, R′ = the rest of the fat molecule). Written in mhchem for KaTeX and as Unicode for SVG.
+ */
+export const CATALYST_REPRESENTATIVE_EQUATIONS = {
+  'Ziegler catalysts (polyethylene)': {
+    mhchem: 'n\\,CH2=CH2 -> (-CH2-CH2-)_{n}',
+    unicode: 'n CH₂=CH₂ → (–CH₂–CH₂–)ₙ',
+    note: 'per repeat unit of polythene (representative)',
+  },
+  'Hydrogenation of fats': {
+    mhchem: "R-CH=CH-R' + H2 -> R-CH2-CH2-R'",
+    unicode: 'R–CH=CH–R′ + H₂ → R–CH₂–CH₂–R′',
+    note: 'per C=C double bond of the oil (representative)',
+  },
+} as const
