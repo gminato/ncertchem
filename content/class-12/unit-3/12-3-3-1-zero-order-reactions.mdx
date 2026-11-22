@@ -1,0 +1,128 @@
+---
+class: 12
+unit: 3
+section: "3.3.1"
+order: 5
+title: "Integrated Rate Equations: Zero Order"
+slug: "12-3-3-1-zero-order-reactions"
+access: free
+summary: "A zero-order reaction runs at a steady rate, so its concentration falls in a straight line, and the line gives the rate constant directly."
+ncert: "Class 12, Part I — Unit 3, Section 3.3.1"
+---
+
+<Hook>
+A chaiwala with one kettle serves the same number of cups a minute whether five customers are waiting or fifty. The queue grows, but the cups per minute do not budge. Some chemical reactions behave the same way: the rate holds steady while the reactant runs down. Why would a reaction ignore how much of its reactant is left?
+</Hook>
+
+## Why integrate the rate law?
+
+The rate at any instant is the slope of the tangent to a concentration–time curve. Drawing tangents is fiddly, and a small error in one slope can make the order of the reaction hard to pin down. Measuring concentrations at a few clock times is far easier. An **integrated rate equation** links those measured concentrations directly to the rate constant. Each order has its own integrated form, and here we work through the simplest case, the zero-order reaction.
+
+## The zero-order rate law
+
+Take a reaction $\ce{R -> P}$ whose rate does not depend on the concentration of $\ce{R}$ at all. Its rate is
+
+$$
+\text{Rate} = -\dfrac{d[\ce{R}]}{dt} = k[\ce{R}]^{0} = k
+$$
+
+Any quantity raised to the power zero is 1, so the rate is simply $k$ and stays the same for the whole run. Because the rate is measured in mol L⁻¹ s⁻¹, the rate constant of a zero-order reaction carries the same units.
+
+To turn this into a relation between concentration and time, separate the variables, $d[\ce{R}] = -k\,dt$, and integrate. Starting from $[\ce{R}]_0$ at $t = 0$ gives
+
+$$
+[\ce{R}] = -kt + [\ce{R}]_0
+$$
+
+Solving the same equation for the rate constant gives a direct recipe from two measured concentrations:
+
+$$
+k = \dfrac{[\ce{R}]_0 - [\ce{R}]}{t}
+$$
+
+## Reading the straight line
+
+Compare $[\ce{R}] = -kt + [\ce{R}]_0$ with the equation of a straight line, $y = mx + c$. A plot of $[\ce{R}]$ against $t$ is therefore a straight line with slope $-k$ and intercept $[\ce{R}]_0$. The concentration falls by the same amount every second.
+
+Take $[\ce{R}]_0 = 0.80\ \text{mol L}^{-1}$ and $k = 0.025\ \text{mol L}^{-1}\text{s}^{-1}$. The reactant falls by 0.025 mol L⁻¹ each second, so after 10 s the concentration is 0.55 mol L⁻¹. The line is ideal: it reaches zero at $t = [\ce{R}]_0/k$, which here is 32 s.
+
+<Check
+  n={1}
+  options={[
+    "A curve that falls faster and faster as time passes",
+    "A straight line through the origin with slope +0.025 mol L⁻¹ s⁻¹",
+    "A straight line with slope −0.025 mol L⁻¹ s⁻¹ and intercept 0.80 mol L⁻¹",
+    "A curve that rises towards 0.80 mol L⁻¹"
+  ]}
+  answer={2}
+  explanation="Comparing [R] = −kt + [R]₀ with y = mx + c gives slope −k = −0.025 mol L⁻¹ s⁻¹ and intercept [R]₀ = 0.80 mol L⁻¹. The concentration falls, so the slope is negative."
+>
+For a zero-order reaction with $[\ce{R}]_0 = 0.80\ \text{mol L}^{-1}$ and $k = 0.025\ \text{mol L}^{-1}\text{s}^{-1}$, which plot of $[\ce{R}]$ against $t$ is correct?
+</Check>
+
+## Zero order on surfaces
+
+Zero-order reactions are uncommon, but they turn up under special conditions. Some enzyme-catalysed reactions are zero order, and so are many reactions that take place on the surface of a metal. The decomposition of gaseous ammonia on a hot platinum surface is the standard case. At high pressure the platinum surface becomes saturated with ammonia molecules. Once every site is covered, pushing in more gas cannot speed the reaction up, so the rate stops depending on the ammonia concentration. Thermal decomposition of hydrogen iodide on a gold surface behaves in the same way.
+
+The picture below follows that surface, with the matching concentration–time line beside it.
+
+<Scrolly animation="zero-order-surface">
+  <Step>
+    **A crowded surface:** A hot platinum strip has a fixed row of sites, and ammonia is fed in at high pressure. A molecule waits above nearly every site, so the sites are full. Each busy site turns its ammonia into nitrogen and hydrogen at the same steady pace. The rate is set by the sites, not by how many molecules wait in the gas above them.
+  </Step>
+  <Step>
+    **The gas thins, the rate does not:** As the reaction goes on, ammonia is used up and fewer molecules hover over the surface. The sites stay covered, because there is still more than enough gas to fill them. The rate arrow keeps the same length, and each second removes the same amount of reactant from the vessel.
+  </Step>
+  <Step>
+    **The straight-line plot:** A panel shows time on the horizontal axis and the concentration of ammonia on the vertical axis. Each measured point lies on one straight line that starts at $[\ce{R}]_0 = 0.80\ \text{mol L}^{-1}$ and falls steadily. A slope triangle on the line marks the fall per second, which is $-k$.
+  </Step>
+  <Step>
+    **Two points give k:** Pick two times on the line, $t = 0$ and $t = 12\ \text{s}$. At 12 s the concentration has fallen to 0.50 mol L⁻¹. The fall of 0.30 mol L⁻¹ over 12 s gives $k = 0.025\ \text{mol L}^{-1}\text{s}^{-1}$. Any two points on the line give the same value, because the line never bends.
+  </Step>
+  <Step>
+    **When the sites empty:** Near the end, the gas is scarce and some sites are left bare. Fewer molecules now reach the sites, so the rate starts to depend on the concentration again. The real curve leaves the ideal line and bends towards zero. The ideal line would reach zero at 32 s, but the true curve leaves it before that.
+  </Step>
+</Scrolly>
+
+## When the straight line bends
+
+The straight line is an idealisation, and it holds only while the surface stays saturated. A zero-order rate is therefore a rate that is fixed by something other than the reactant's concentration, usually the catalyst surface. Remember that the constant rate has nothing to do with the reactant running low. Only when the surface itself runs short does the concentration matter again.
+
+<Check
+  n={2}
+  options={[
+    "The initial rate doubles, because the rate depends on [R]₀",
+    "The initial rate halves, because more reactant slows the surface",
+    "The initial rate stays the same, because Rate = k[R]⁰ = k",
+    "The initial rate quadruples, because the order is two"
+  ]}
+  answer={2}
+  explanation="Any concentration raised to the power zero is 1, so the rate depends on k alone. Doubling [R]₀ changes how long the reaction takes to finish, not its initial rate."
+>
+A zero-order reaction is run under saturated conditions with $[\ce{R}]_0 = 0.80\ \text{mol L}^{-1}$. The starting concentration is then doubled to 1.60 mol L⁻¹, and $k$ is unchanged. What happens to the initial rate?
+</Check>
+
+## Explore the straight line
+
+The simulation below starts from $[\ce{R}]_0 = 0.80\ \text{mol L}^{-1}$ and $k = 0.025\ \text{mol L}^{-1}\text{s}^{-1}$, the same values as above. Moving the sliders changes the intercept, which follows $[\ce{R}]_0$, and the slope, which follows $k$. Pick any two times on the line and the readout returns $k$ from them. The line stops where $[\ce{R}]$ reaches zero, at $t = [\ce{R}]_0/k$, which is 32 s for these values.
+
+<Simulation name="zero-order-lab" title="Zero-Order Lab" />
+
+<Check
+  n={3}
+  numeric
+  answer={24}
+  tolerance={0.1}
+  unit="s"
+  explanation="From [R] = −kt + [R]₀, the time to reach [R] = 0.20 mol L⁻¹ is t = ([R]₀ − [R])/k = (0.80 − 0.20)/0.025 = 24 s."
+>
+Using the values from the simulation, how many seconds does the reaction take to bring $[\ce{R}]$ down to 0.20 mol L⁻¹?
+</Check>
+
+<KeyIdeas>
+- **Integrated rate equations** connect measured concentrations and times directly to the rate constant, which is easier than measuring tangent slopes.
+- **Zero order** means Rate = k. The rate is constant and independent of the reactant's concentration, and k has units of mol L⁻¹ s⁻¹.
+- **The straight line** is $[\ce{R}] = -kt + [\ce{R}]_0$: slope −k, intercept $[\ce{R}]_0$, and $k = ([\ce{R}]_0 - [\ce{R}])/t$.
+- **Surface saturation** and some enzyme-catalysed reactions give zero order, because the catalyst's sites, not the reactant, set the pace.
+- **The line has limits.** It holds only while the surface stays saturated. Near the end of the reaction, the curve bends towards zero.
+</KeyIdeas>
