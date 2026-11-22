@@ -2,6 +2,7 @@
   display: flex;
   flex-direction: column;
   gap: var(--space-4);
+  width: 100%;
 }
 
 .equation {
@@ -150,10 +151,146 @@
   padding: var(--space-3);
 }
 
+/* Drawing: the reaction box (40 % of the width) and the bars (55 %) side by side; stacked below 720 px. */
 .drawing {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-4);
+  align-items: start;
+}
+
+.boxCol {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  min-width: 0;
+}
+
+.box {
   display: block;
   width: 100%;
+  max-width: 360px;
   height: auto;
-  max-width: 640px;
-  margin: 0 auto;
+}
+
+.legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-1) var(--space-3);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-size: 15px;
+  color: var(--fg);
+}
+
+.legendItem {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.legendNote {
+  color: var(--fg-muted);
+  width: 100%;
+}
+
+.swatch {
+  flex-shrink: 0;
+  width: 1.1rem;
+  height: 1.1rem;
+}
+
+.meters {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  min-width: 0;
+}
+
+.meterTitle {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--fg);
+}
+
+.meterRow,
+.axis {
+  display: grid;
+  grid-template-columns: 4.5rem minmax(0, 1fr) 5.5rem;
+  align-items: center;
+  gap: var(--space-2);
+  font-size: 15px;
+}
+
+.meterLabel {
+  color: var(--fg);
+  white-space: nowrap;
+}
+
+.meterTrack {
+  position: relative;
+  height: 0.9rem;
+  border-radius: 999px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  overflow: hidden;
+}
+
+.meterFill {
+  display: block;
+  height: 100%;
+  border-radius: 999px;
+  background: var(--kin-product);
+  transition: width 320ms ease;
+}
+
+.meterValue {
+  text-align: right;
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  color: var(--fg);
+  white-space: nowrap;
+}
+
+.axis {
+  margin-top: var(--space-1);
+  color: var(--fg-muted);
+}
+
+.axisTrack {
+  position: relative;
+  display: block;
+  height: 1.6rem;
+  border-top: 1px solid var(--border);
+}
+
+.tick {
+  position: absolute;
+  top: 0.3rem;
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+
+.axisUnit {
+  text-align: right;
+  white-space: nowrap;
+}
+
+@media (min-width: 720px) {
+  .drawing {
+    grid-template-columns: 40% 1fr;
+    column-gap: 5%;
+  }
+
+  .box {
+    max-width: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .meterFill {
+    transition: none;
+  }
 }

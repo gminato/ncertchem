@@ -101,6 +101,12 @@ for (const scheme of ['light', 'dark'] as const) {
     await expect(drawing).toBeVisible()
     expect(await drawing.locator('rect, circle').count(), 'drawn spheres and bars').toBeGreaterThan(0)
     expect(await drawingOutsideViewBox(page), 'drawing outside its viewBox').toEqual([])
+    // NO and O2 spheres use different tones (Scrolly: NO blue, O2 neutral grey), and the bars share one axis.
+    const tones = await drawing.evaluate((svg) =>
+      [...new Set([...svg.querySelectorAll('stop')].filter((s) => s.getAttribute('offset') === '38%').map((s) => s.getAttribute('stop-color')))].sort()
+    )
+    expect(tones, 'species tones').toEqual(['var(--fg-muted)', 'var(--kin-reactant)'])
+    expect(await sim.locator('[class*="axisUnit"]').count(), 'one shared axis').toBe(1)
     expect(await smallTextLeaves(page), 'text below 14 px').toEqual([])
     expect(errors, 'console errors').toEqual([])
   })

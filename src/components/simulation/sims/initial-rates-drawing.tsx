@@ -1,4 +1,4 @@
-import { Particle, ReactionBox, RateMeter } from '@/components/vocab'
+import { Particle, ReactionBox } from '@/components/vocab'
 import { formatSig } from '@/lib/chem/kinetics'
 import styles from './initial-rates-lab.module.css'
 
@@ -9,15 +9,14 @@ const SPHERE_MOL = 1 / SPHERES_PER_MOL
 const BOX = 300
 const GRID = 8
 const SPHERE_R = 11
-const VIEW_W = 600
-const VIEW_H = 540
-const METER_X = 336
-const METER_W = 246
-const METER_TOP = 40
-const METER_STEP = 62
 const PAD = 16
+const TICKS = [0, 1 / 2, 1] as const
 
-const TONES = ['reactant', 'accent'] as const
+/**
+ * Species tones match the Scrolly ratelaw animation: the first species is blue (reactant, as NO there),
+ * the second neutral grey (as O2 there). Bars use the product green, so no bar matches a sphere.
+ */
+const TONES = ['reactant', 'neutral', 'product', 'catalyst'] as const
 
 interface Slot {
   readonly x: number
@@ -59,76 +58,89 @@ export interface InitialRatesDrawingProps {
   readonly species: readonly DrawnSpecies[]
   readonly concs: Readonly<Record<string, number>>
   readonly runs: readonly { readonly rate: number }[]
-  /** Shared full scale for every meter, in mol L⁻¹ s⁻¹. */
+  /** Shared full scale for every bar, in mol L⁻¹ s⁻¹. */
   readonly scale: number
 }
 
-/** The reaction box holds one sphere per 0.05 mol L⁻¹ of each species; a bar per run shares one scale. */
+/** Tick position as a CSS transform: the first label hangs right of its mark, the last hangs left of it. */
+function tickShift(t: number): string {
+  if (t === 0) return 'translateX(0)'
+  if (t === 1) return 'translateX(-100%)'
+  return 'translateX(-50%)'
+}
+
+/** The reaction box holds one sphere per 0.05 mol L⁻¹ of each species; the bars share one axis below. */
 export function InitialRatesDrawing({ species, concs, runs, scale }: InitialRatesDrawingProps) {
-  let cursor = 0
-  const counts = species.map((s) => {
-    const n = Math.round(concs[s.key] * SPHERES_PER_MOL)
-    const from = cursor
-    cursor += n
-    return { ...s, n, from }
-  })
+  const sizes = species.map((s) => Math.round(concs[s.key] * SPHERES_PER_MOL))
+  const counts = species.map((s, i) => ({
+    ...s,
+    n: sizes[i],
+    from: sizes.slice(0, i).reduce((sum, n) => sum + n, 0),
+    tone: TONES[i % TONES.length],
+  }))
   const summary = counts.map((c) => `${c.symbol} ${c.n} spheres`).join(', ')
 
   return (
-    <svg
-      className={styles.drawing}
-      viewBox={`0 0 ${VIEW_W} ${VIEW_H}`}
-      role="img"
-      aria-label={`Reaction box with ${summary}. Initial-rate bars for ${runs.length} runs on one scale.`}
-      data-drawing="initial-rates"
-    >
-      <ReactionBox x={0} y={0} width={BOX} height={BOX} radius={16}>
-        {counts.map((c, i) =>
-          SLOTS.slice(c.from, c.from + c.n).map((p, k) => (
-            <Particle key={`${c.key}-${k}`} x={p.x} y={p.y} r={SPHERE_R} tone={TONES[i % TONES.length]} />
+    <div className={styles.drawing}>
+      <div className={styles.boxCol}>
+        <svg
+          className={styles.box}
+          viewBox={`0 0 ${BOX} ${BOX}`}
+          role="img"
+          aria-label={`Reaction box with ${summary}.`}
+          data-drawing="initial-rates"
+        >
+          <ReactionBox x={0} y={0} width={BOX} height={BOX} radius={16}>
+            {counts.map((c) =>
+              SLOTS.slice(c.from, c.from + c.n).map((p, k) => (
+                <Particle key={`${c.key}-${k}`} x={p.x} y={p.y} r={SPHERE_R} tone={c.tone} />
+              ))
+            )}
+          </ReactionBox>
+        </svg>
+        <ul className={styles.legend}>
+          {counts.map((c) => (
+            <li key={c.key} className={styles.legendItem}>
+              <svg className={styles.swatch} viewBox="-10 -10 20 20" aria-hidden="true" focusable="false">
+                <Particle x={0} y={0} r={8} tone={c.tone} />
+              </svg>
+              <span>
+                <span className="sym">[{c.symbol}]</span>
+                {`: ${c.n} spheres`}
+              </span>
+            </li>
+          ))}
+          <li className={styles.legendNote}>{`1 sphere = ${formatSig(SPHERE_MOL, 2)} mol L⁻¹`}</li>
+        </ul>
+      </div>
+
+      <div className={styles.meters}>
+        <p className={styles.meterTitle}>Initial rate, one shared scale</p>
+        {runs.length === 0 ? (
+          <p className={styles.note}>Each Run adds a bar here.</p>
+        ) : (
+          runs.map((r, i) => (
+            <div key={i} className={styles.meterRow}>
+              <span className={styles.meterLabel}>{`Run ${i + 1}`}</span>
+              <span className={styles.meterTrack}>
+                <span className={styles.meterFill} style={{ width: `${Math.min(1, Math.max(0, r.rate / scale)) * 100}%` }} />
+              </span>
+              <span className={styles.meterValue}>{formatSig(r.rate, 3)}</span>
+            </div>
           ))
         )}
-      </ReactionBox>
-
-      {counts.map((c, i) => {
-        const y = BOX + 34 + i * 26
-        return (
-          <g key={c.key}>
-            <Particle x={9} y={y - 6} r={8} tone={TONES[i % TONES.length]} />
-            <text x={26} y={y} fontSize={15} fill="var(--fg)">
-              <tspan className="sym">[{c.symbol}]</tspan>
-              {`: ${c.n} spheres`}
-            </text>
-          </g>
-        )
-      })}
-      <text x={0} y={BOX + 34 + counts.length * 26 + 14} fontSize={15} fill="var(--fg-muted)">
-        {`1 sphere = ${formatSig(SPHERE_MOL, 2)} mol L⁻¹`}
-      </text>
-
-      <text x={METER_X} y={18} fontSize={15} fill="var(--fg)">
-        Initial rate (mol L⁻¹ s⁻¹)
-      </text>
-      {runs.length === 0 ? (
-        <text x={METER_X} y={METER_TOP + 30} fontSize={15} fill="var(--fg-muted)">
-          Each Run adds a bar here, on one shared scale.
-        </text>
-      ) : (
-        runs.map((r, i) => (
-          <RateMeter
-            key={i}
-            x={METER_X}
-            y={METER_TOP + i * METER_STEP}
-            width={METER_W}
-            height={18}
-            value={r.rate}
-            max={scale}
-            label={`Run ${i + 1}`}
-            valueLabel={formatSig(r.rate, 3)}
-            tone="accent"
-          />
-        ))
-      )}
-    </svg>
+        <div className={styles.axis} aria-hidden="true">
+          <span />
+          <span className={styles.axisTrack}>
+            {TICKS.map((t) => (
+              <span key={t} className={styles.tick} style={{ left: `${t * 100}%`, transform: tickShift(t) }}>
+                {formatSig(scale * t, 3)}
+              </span>
+            ))}
+          </span>
+          <span className={styles.axisUnit}>mol L⁻¹ s⁻¹</span>
+        </div>
+      </div>
+    </div>
   )
 }
