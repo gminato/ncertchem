@@ -1,0 +1,108 @@
+/* Half-life comparison. Colours come only from design tokens. */
+
+.root {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.controls {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.sliders {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: var(--space-3);
+}
+
+.stepper {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.count {
+  color: var(--fg-muted);
+  font-size: 15px;
+  padding: 0 var(--space-2);
+}
+
+.count strong {
+  color: var(--fg);
+  font-variant-numeric: tabular-nums;
+}
+
+.plots {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 440px), 1fr));
+  gap: var(--space-3);
+}
+
+.plotCard {
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  min-width: 0;
+  background: var(--surface-raised);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: var(--space-3);
+}
+
+.svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  max-width: 100%;
+}
+
+.readout {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  color: var(--fg);
+  font-size: 15px;
+  line-height: 1.5;
+}
+
+.readout p {
+  margin: 0;
+}
+
+.heading {
+  margin: 0 0 var(--space-1);
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--accent);
+}
+
+.sym {
+  font-style: italic;
+  font-family: var(--font-serif, Georgia, serif);
+}
+
+.summary {
+  margin: 0;
+  color: var(--fg-muted);
+  font-size: 15px;
+  line-height: 1.5;
+}
+
+/* Keep exponents at the body size (the browser's default sup shrinks them below 14 px). */
+.readout sup {
+  font-size: 1em;
+  line-height: 0;
+  vertical-align: 0.45em;
+}
+
+.note {
+  margin: 0;
+  color: var(--fg-muted);
+  font-size: 15px;
+  line-height: 1.5;
+}
