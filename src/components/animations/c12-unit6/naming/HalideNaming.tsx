@@ -97,14 +97,14 @@ function StepThree() {
   const setText = (set: number[]) => `{${set.join(', ')}}`
   return (
     <>
-      <Text x={145} y={40} size={18} fill={MUTED}>count from the left</Text>
-      <Text x={435} y={40} size={18} fill={MUTED}>count from the right</Text>
-      <SkeletalFormula graph={LONG} scale={50} x={145} y={150} locants={leftMarks} highlightAtoms={[LONG_BR_CARBON, LONG_METHYL_CARBON]} />
-      <SkeletalFormula graph={LONG} scale={50} x={435} y={150} locants={rightMarks} highlightAtoms={[LONG_BR_CARBON, LONG_METHYL_CARBON]} />
-      <Text x={145} y={280} size={26} weight={700} fill={LEFT_WINS ? ACCENT : MUTED}>{setText(LOCANTS.left)}</Text>
-      <Text x={435} y={280} size={26} weight={700} fill={LEFT_WINS ? MUTED : ACCENT}>{setText(LOCANTS.right)}</Text>
-      <Text x={145} y={318} size={16} fill={LEFT_WINS ? ACCENT : MUTED}>{LEFT_WINS ? 'lower set: this one wins' : 'higher set: dropped'}</Text>
-      <Text x={435} y={318} size={16} fill={LEFT_WINS ? MUTED : ACCENT}>{LEFT_WINS ? 'higher set: dropped' : 'lower set: this one wins'}</Text>
+      <Text x={150} y={40} size={18} fill={MUTED}>count from the left</Text>
+      <Text x={430} y={40} size={18} fill={MUTED}>count from the right</Text>
+      <SkeletalFormula graph={LONG} scale={46} x={150} y={150} locants={leftMarks} highlightAtoms={[LONG_BR_CARBON, LONG_METHYL_CARBON]} />
+      <SkeletalFormula graph={LONG} scale={46} x={430} y={150} locants={rightMarks} highlightAtoms={[LONG_BR_CARBON, LONG_METHYL_CARBON]} />
+      <Text x={150} y={280} size={26} weight={700} fill={LEFT_WINS ? ACCENT : MUTED}>{setText(LOCANTS.left)}</Text>
+      <Text x={430} y={280} size={26} weight={700} fill={LEFT_WINS ? MUTED : ACCENT}>{setText(LOCANTS.right)}</Text>
+      <Text x={150} y={318} size={16} fill={LEFT_WINS ? ACCENT : MUTED}>{LEFT_WINS ? 'lower set: this one wins' : 'higher set: dropped'}</Text>
+      <Text x={430} y={318} size={16} fill={LEFT_WINS ? MUTED : ACCENT}>{LEFT_WINS ? 'higher set: dropped' : 'lower set: this one wins'}</Text>
       <Text x={290} y={372} size={16} fill={MUTED}>Compare the sets number by number; the first difference decides.</Text>
     </>
   )

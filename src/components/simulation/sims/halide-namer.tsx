@@ -47,10 +47,13 @@ const STEP_LABEL: Record<NameStep['kind'], string> = {
   name: 'Name',
 }
 
-/** Scale that fits the drawing in the stage: bonds up to 70 units, and the molecule within the frame. */
+/** Largest bond length in units, so a short molecule still fills the stage. */
+const MAX_FIT_SCALE = 110
+
+/** Scale that fits the drawing in the stage: about 70 % of the width at most, and the molecule within the frame. */
 function fitScale(graph: MolGraph): number {
   const f = drawingFrame(graph, 1)
-  return Math.min(70, 500 / f.bounds.width, 290 / f.bounds.height)
+  return Math.min(MAX_FIT_SCALE, (0.7 * 560) / f.bounds.width, 290 / f.bounds.height)
 }
 
 /** Index of the halogen atom in the parsed graph, to wash behind it. */
