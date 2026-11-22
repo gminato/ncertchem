@@ -4,6 +4,8 @@ import { PlotCurve, PlotFrame, usePlotScale } from '@/components/vocab'
 import { SERIES_TONE } from '@/components/vocab/dblock'
 import {
   CE_IV_E_VOLT,
+  FALL_BOTTOM_PM,
+  FALL_TOP_PM,
   HF_RADIUS_PM,
   LN_COLUMNS,
   RADIUS_POINTS,
@@ -15,10 +17,10 @@ import {
   type LnColumn,
 } from './lanthanoid-steps'
 
+/** Steps are cut, not tweened, so there is no motion to reduce: reducedMotion is not needed. */
 export interface LanthanoidContractionProps {
   /** 0-based Step index from Scrolly. */
   step: number
-  reducedMotion: boolean
 }
 
 const W = 580
@@ -47,6 +49,7 @@ const COL_DX = 37
 const BOX = 24
 const BOX_PITCH = 27
 const BOX_TOP = 92
+const ATOM_Y = 328
 
 function Column({ col, index }: { col: LnColumn; index: number }) {
   const x = COL_X0 + index * COL_DX
@@ -81,10 +84,22 @@ function Column({ col, index }: { col: LnColumn; index: number }) {
       <text x={cx} y={306} textAnchor="middle" fontSize={14} fill={MUTED}>
         f{sup(col.f)}
       </text>
+    </g>
+  )
+}
+
+/** The atom under each ion column: its symbol, and the 5d¹ tag where the atom has one. */
+function AtomRow({ col, index }: { col: LnColumn; index: number }) {
+  const cx = COL_X0 + index * COL_DX + BOX / 2
+  return (
+    <g>
+      <text x={cx} y={ATOM_Y} textAnchor="middle" fontSize={14} fill={TEXT}>
+        {col.symbol}
+      </text>
       {col.atomHas5d && (
         <g>
-          <rect x={cx - 17} y={322} width={34} height={20} rx={10} fill={LN} fillOpacity={0.25} stroke={LN} strokeWidth={1} />
-          <text x={cx} y={337} textAnchor="middle" fontSize={14} fill={TEXT}>
+          <rect x={cx - 17} y={ATOM_Y + 8} width={34} height={20} rx={10} fill={LN} fillOpacity={0.25} stroke={LN} strokeWidth={1} />
+          <text x={cx} y={ATOM_Y + 23} textAnchor="middle" fontSize={14} fill={TEXT}>
             5d¹
           </text>
         </g>
@@ -114,11 +129,17 @@ function FillStep() {
       {LN_COLUMNS.map((col, i) => (
         <Column key={col.symbol} col={col} index={i} />
       ))}
+      {LN_COLUMNS.map((col, i) => (
+        <AtomRow key={`atom-${col.symbol}`} col={col} index={i} />
+      ))}
       <text x={W / 2} y={372} textAnchor="middle" fontSize={14} fill={TEXT}>
-        Each column is one Ln³⁺ ion: its seven 4f boxes, filled by Hund’s rule.
+        Top: one Ln³⁺ ion per column, its seven 4f boxes filled by Hund’s rule.
       </text>
-      <text x={W / 2} y={394} textAnchor="middle" fontSize={14} fill={MUTED}>
-        The 5d¹ tag marks the atoms La, Ce, Gd and Lu. Lu³⁺ has all fourteen.
+      <text x={W / 2} y={392} textAnchor="middle" fontSize={14} fill={MUTED}>
+        Bottom: the atom. The 5d¹ tag marks La, Ce, Gd and Lu.
+      </text>
+      <text x={W / 2} y={412} textAnchor="middle" fontSize={14} fill={MUTED}>
+        No Ln³⁺ ion has a 5d electron. Lu³⁺ has all fourteen 4f.
       </text>
     </g>
   )
@@ -139,8 +160,8 @@ function LnPoints() {
 
 function RadiusNotes() {
   const s = usePlotScale()
-  const top = 106
-  const bottom = 86
+  const top = FALL_TOP_PM
+  const bottom = FALL_BOTTOM_PM
   const bx = 71.4
   const xTop = s.x(bx)
   return (
@@ -340,7 +361,7 @@ function SpecialStep() {
               {c.symbol}
             </text>
             <text x={cx} y={CELL_Y + 52} textAnchor="middle" fontSize={14} fill={MUTED}>
-              {`f${sup(c.f)}`}
+              {`f${sup(special ? special.fCount : c.f)}`}
             </text>
             {special && (
               <g>
@@ -356,7 +377,7 @@ function SpecialStep() {
         )
       })}
       <text x={20} y={250} fontSize={14} fill={MUTED}>
-        Cells show each Ln³⁺ f count. Outlined cells are the special ions.
+        Grey cells: the Ln³⁺ f count. Outlined: the special ion’s f count.
       </text>
       {SPECIAL_STATES.map((s, i) => (
         <text key={s.ion} x={20} y={288 + i * 26} fontSize={14} fill={TEXT}>

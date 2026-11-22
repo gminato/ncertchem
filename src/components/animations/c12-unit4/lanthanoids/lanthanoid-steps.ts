@@ -11,7 +11,7 @@ export interface LnColumn {
   ion: string
   /** f electrons in Ln³⁺ (fCount). */
   f: number
-  /** The atom configuration carries one 5d electron (La, Ce, Gd, Lu in NCERT's Table 4.9). */
+  /** The ATOM configuration carries one 5d electron (La, Ce, Gd, Lu in NCERT's Table 4.9). Ln³⁺ ions never do. */
   atomHas5d: boolean
   /** Ln³⁺ radius in pm; null where NCERT prints "–" (Lu). */
   radiusPm: number | null
@@ -26,6 +26,9 @@ export const LN_COLUMNS: readonly LnColumn[] = NCERT_LANTHANOIDS.map((row) => ({
   radiusPm: row.radiusLn3PlusPm,
 }))
 
+/** The atoms that carry a drawn 5d¹ tag, in Z order. */
+export const ATOMS_WITH_5D: readonly string[] = LN_COLUMNS.filter((c) => c.atomHas5d).map((c) => c.symbol)
+
 /** Ln³⁺ radii as (Z, pm) pairs for the plot. Lu is not printed, so it is absent. */
 export const RADIUS_POINTS: ReadonlyArray<readonly [number, number]> = LN_COLUMNS.flatMap((c) =>
   c.radiusPm === null ? [] : [[c.Z, c.radiusPm] as const]
@@ -37,9 +40,13 @@ function radiusOf(symbol: string): number {
   return col.radiusPm
 }
 
+/** Ends of the Ln³⁺ radius fall drawn in Step 2 (pm), read from the lib: La 106, Yb 86. */
+export const FALL_TOP_PM = radiusOf('La')
+export const FALL_BOTTOM_PM = radiusOf('Yb')
+
 /** Fall in Ln³⁺ radius from La to Yb (pm): 106 − 86 = 20. */
 export function radiusFallPm(): number {
-  return radiusOf('La') - radiusOf('Yb')
+  return FALL_TOP_PM - FALL_BOTTOM_PM
 }
 
 /** Average fall per element between La and Yb (13 steps). */
