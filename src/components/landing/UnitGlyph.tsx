@@ -220,6 +220,23 @@ const CLASS_12_GLYPHS: Readonly<Record<number, ReactNode>> = {
       <circle cx="32" cy="9" r="3.6" fill="none" stroke={NEUTRAL} strokeWidth="1.8" />
     </>
   ),
+  // Class 12 Unit 3, Chemical Kinetics: a concentration falling against time, with a small stopwatch.
+  3: (
+    <>
+      <path d="M10 14V52H54" fill="none" stroke={NEUTRAL} strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" />
+      <path
+        d="M14 20C22 20 26 40 34 44S46 49 52 50"
+        fill="none"
+        stroke="var(--kin-reactant)"
+        strokeWidth="2.6"
+        strokeLinecap="round"
+      />
+      <circle cx="44" cy="30" r="7" fill="var(--surface)" stroke={NEUTRAL} strokeWidth="2" />
+      <line x1="44" y1="30" x2="44" y2="25.5" stroke="var(--accent)" strokeWidth="1.8" strokeLinecap="round" />
+      <line x1="44" y1="30" x2="47.5" y2="30" stroke="var(--accent)" strokeWidth="1.8" strokeLinecap="round" />
+      <line x1="44" y1="20" x2="44" y2="17" stroke={NEUTRAL} strokeWidth="2" strokeLinecap="round" />
+    </>
+  ),
 }
 
 export interface UnitGlyphProps {
