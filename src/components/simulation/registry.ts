@@ -115,6 +115,7 @@ import { HaloareneMaker } from './sims/haloarene-maker'
 import { HalidePropertiesLab } from './sims/halide-properties-lab'
 import { ZaitsevChooser } from './sims/zaitsev-chooser'
 import { NitroActivation } from './sims/nitro-activation'
+import { PolyhalogenExplorer } from './sims/polyhalogen-explorer'
 
 export interface SimulationProps {
   /** True when the Learner has asked the OS for reduced motion. Skip tweens and loops when set. */
@@ -244,4 +245,5 @@ export const simulations: Record<string, ComponentType<SimulationProps>> = {
   'stereo-outcomes': StereoOutcomes,
   'zaitsev-chooser': ZaitsevChooser,
   'nitro-activation': NitroActivation,
+  'polyhalogen-explorer': PolyhalogenExplorer,
 }

@@ -158,6 +158,7 @@ import { CarbonHalogenBond } from './c12-unit6/cxbond/CarbonHalogenBond'
 import { DblockConfigurations } from './c12-unit4/config/DblockConfigurations'
 import { PhysicalTrends } from './c12-unit4/physical/PhysicalTrends'
 import { HalfLifeLadder } from './c12-unit3/halflife/HalfLifeLadder'
+import { PolyhaloGallery } from './c12-unit6/polyhalo/PolyhaloGallery'
 import { CatalystPathway } from './c12-unit3/catalyst/CatalystPathway'
 import { ArrheniusEnergy } from './c12-unit3/arrhenius/ArrheniusEnergy'
 import { Sn2Sn1Scrolly } from './c12-unit6/mechanisms/Sn2Sn1Scrolly'
@@ -362,6 +363,7 @@ export const animations = {
   'chirality-and-substitution': ChiralitySubstitution,
   'elimination-and-metals': EliminationAndMetals,
   'haloarene-reactivity': HaloareneReactivity,
+  'polyhalo-gallery': PolyhaloGallery,
 } as const
 
 export type AnimationName = keyof typeof animations
