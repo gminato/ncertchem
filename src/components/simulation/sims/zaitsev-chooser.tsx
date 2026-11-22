@@ -2,7 +2,8 @@
 
 import { useState } from 'react'
 import { Segmented, Toggle } from '@/components/controls'
-import { SkeletalFormula, skeletalFrame } from '@/components/organic'
+import { SkeletalFormula, skeletalFrame, type Frame } from '@/components/organic'
+import type { MolGraph } from '@/lib/chem/molecule-graph'
 import { iupacNameFromSmiles } from '@/lib/chem/iupac-organic'
 import {
   CHOOSER_SUBSTRATES,
@@ -21,8 +22,11 @@ const SUBSTRATE_OPTIONS = CHOOSER_SUBSTRATES.map((smiles) => ({
 const VB_W = 560
 const VB_H = 580
 const SUB_CX = 280
-const SUB_CY = 128
-const SUB_SCALE = 50
+const SUB_CY = 130
+/** Every substrate is scaled to fit this box, so all of them read at a similar size. */
+const SUB_BOX_W = 300
+const SUB_BOX_H = 142
+const SUB_MAX_SCALE = 64
 const CARD_Y = 296
 const CARD_H = 270
 const CARD_W = 250
@@ -33,29 +37,32 @@ interface Point {
   y: number
 }
 
-/** Label position just outside an atom, pushed away from the centre of the drawing. */
-function outside(points: readonly Point[], index: number, reach: number): Point {
-  const centre = points.reduce(
-    (acc, p) => ({ x: acc.x + p.x / points.length, y: acc.y + p.y / points.length }),
-    { x: 0, y: 0 },
-  )
-  const p = points[index]
-  const dx = p.x - centre.x
-  const dy = p.y - centre.y
-  const length = Math.hypot(dx, dy)
-  const ux = length < 1e-6 ? 0 : dx / length
-  const uy = length < 1e-6 ? -1 : dy / length
-  return { x: p.x + ux * reach, y: p.y + uy * reach + 5 }
+/**
+ * Label position just outside an atom, in the free direction: the bisector of the
+ * largest angular gap between the atom's bonds, so no bond runs through the label.
+ */
+function freeSpot(frame: Frame, index: number, reach: number): Point {
+  const p = frame.points[index]
+  const angles = frame.adj[index]
+    .map((j) => Math.atan2(frame.points[j].y - p.y, frame.points[j].x - p.x))
+    .sort((a, b) => a - b)
+  if (angles.length === 0) return { x: p.x, y: p.y - reach }
+  let best = -1
+  let mid = 0
+  angles.forEach((a, i) => {
+    const next = i + 1 < angles.length ? angles[i + 1] : angles[0] + 2 * Math.PI
+    if (next - a > best) {
+      best = next - a
+      mid = a + best / 2
+    }
+  })
+  return { x: p.x + Math.cos(mid) * reach, y: p.y + Math.sin(mid) * reach + 5 }
 }
 
-/** Label position just outside an atom, pushed directly away from one of its neighbours. */
-function awayFrom(points: readonly Point[], index: number, neighbour: number, reach: number): Point {
-  const p = points[index]
-  const q = points[neighbour]
-  const dx = p.x - q.x
-  const dy = p.y - q.y
-  const length = Math.hypot(dx, dy) || 1
-  return { x: p.x + (dx / length) * reach, y: p.y + (dy / length) * reach + 5 }
+/** The largest scale at which a substrate still fits the shared box. */
+function fitScale(graph: MolGraph): number {
+  const unit = skeletalFrame(graph, 1).bounds
+  return Math.min(SUB_MAX_SCALE, SUB_BOX_W / unit.width, SUB_BOX_H / unit.height)
 }
 
 function cardX(count: number, i: number): number {
@@ -122,7 +129,8 @@ export function ZaitsevChooser() {
   const [flag, setFlag] = useState(true)
 
   const view = chooserView(substrate)
-  const frame = skeletalFrame(view.graph, SUB_SCALE)
+  const scale = fitScale(view.graph)
+  const frame = skeletalFrame(view.graph, scale)
   const count = view.products.length
   const betaSet = view.betaCarbons.map((beta) => beta.index)
 
@@ -142,13 +150,13 @@ export function ZaitsevChooser() {
         >
           <SkeletalFormula
             graph={view.graph}
-            scale={SUB_SCALE}
+            scale={scale}
             x={SUB_CX}
             y={SUB_CY}
             highlightAtoms={betaSet}
           />
           {view.betaCarbons.map((beta) => {
-            const p = outside(frame.points, beta.index, 44)
+            const p = freeSpot(frame, beta.index, 38)
             return (
               <text key={beta.index} x={SUB_CX + p.x} y={SUB_CY + p.y} textAnchor="middle" className={styles.betaLabel}>
                 {`β · ${beta.hydrogens} H`}
@@ -156,14 +164,14 @@ export function ZaitsevChooser() {
             )
           })}
           <text
-            x={SUB_CX + awayFrom(frame.points, view.alphaIndex, view.halogenIndex, 30).x}
-            y={SUB_CY + awayFrom(frame.points, view.alphaIndex, view.halogenIndex, 30).y}
+            x={SUB_CX + freeSpot(frame, view.alphaIndex, 26).x}
+            y={SUB_CY + freeSpot(frame, view.alphaIndex, 26).y}
             textAnchor="middle"
             className={styles.alphaLabel}
           >
             α
           </text>
-          <text x={SUB_CX} y={34} textAnchor="middle" className={styles.substrateName}>
+          <text x={SUB_CX} y={20} textAnchor="middle" className={styles.substrateName}>
             {`${view.name}, ${view.formula}`}
           </text>
 
