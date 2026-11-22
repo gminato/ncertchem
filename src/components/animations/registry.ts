@@ -170,6 +170,7 @@ import { LanthanoidContraction } from './c12-unit4/lanthanoids/LanthanoidContrac
 import { HalideClasses } from './c12-unit6/classes/HalideClasses'
 import { HalideNaming } from './c12-unit6/naming/HalideNaming'
 import { HaloareneRoutes } from './c12-unit6/arenprep/HaloareneRoutes'
+import { HalidePhysical } from './c12-unit6/physical/HalidePhysical'
 
 /**
  * Animations available to a Scrolly Animation, keyed by the `animation` prop.
@@ -350,6 +351,7 @@ export const animations = {
   'halide-naming': HalideNaming,
   'haloalkane-routes': HaloprepRoutes,
   'haloarene-routes': HaloareneRoutes,
+  'halide-physical': HalidePhysical,
 } as const
 
 export type AnimationName = keyof typeof animations
