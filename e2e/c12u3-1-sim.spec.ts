@@ -16,7 +16,11 @@ function watchErrors(page: Page): string[] {
   return errors
 }
 
-/** Text leaves in the Simulation that render below 14 px (KaTeX internals and the SR-only line excluded). */
+/**
+ * Text leaves in the Simulation whose RENDERED size is below 14 px at this viewport (KaTeX internals and the
+ * SR-only line excluded). For SVG text, computed font-size is the viewBox value, so scale it by the SVG's
+ * on-screen width over its viewBox width.
+ */
 async function smallTextLeaves(page: Page): Promise<string[]> {
   return page.locator(`[data-simulation="${SIM}"]`).evaluate((root) => {
     const bad: string[] = []
@@ -26,8 +30,13 @@ async function smallTextLeaves(page: Page): Promise<string[]> {
       const text = (node.textContent ?? '').trim()
       const el = node.parentElement
       if (text && el && !el.closest('.katex') && !el.closest('[class*="srOnly"]') && !el.closest('[class*="eyebrow"]')) {
-        const size = parseFloat(getComputedStyle(el).fontSize)
-        if (size < 14) bad.push(`${size}px: ${text.slice(0, 40)}`)
+        let size = parseFloat(getComputedStyle(el).fontSize)
+        const svg = el.closest('svg')
+        if (svg) {
+          const viewBoxWidth = parseFloat((svg.getAttribute('viewBox') ?? '0 0 0 0').split(/\s+/)[2])
+          size *= svg.getBoundingClientRect().width / viewBoxWidth
+        }
+        if (size < 14) bad.push(`${size.toFixed(1)}px: ${text.slice(0, 40)}`)
       }
       node = walker.nextNode()
     }

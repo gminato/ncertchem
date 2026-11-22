@@ -21,7 +21,7 @@ export function KineticsGallery() {
               <PlotPoint at={{ x: 70, y: r(70) }} tone="neutral" />
               <PlotLine through={{ x: 50, y: r(50) }} slope={tangentSlope} tone="product" dashed />
               <PlotPoint at={{ x: 50, y: r(50) }} tone="product" label="tangent: instantaneous rate" side="sw" />
-              <PlotSlopeTriangle at={{ x: 56, y: r(50) + tangentSlope * 6 }} dx={12} slope={tangentSlope} dxLabel="Δt" dyLabel="Δ[R]" tone="product" />
+              <PlotSlopeTriangle at={{ x: 62, y: r(50) + tangentSlope * 12 }} dx={14} slope={tangentSlope} dxLabel="Δt" dyLabel="Δ[R]" tone="product" />
             </PlotFrame>
           </svg>
         </div>
