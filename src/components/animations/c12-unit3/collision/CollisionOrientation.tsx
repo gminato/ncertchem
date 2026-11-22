@@ -82,7 +82,7 @@ function CrowdedBox({ t }: { t: number }) {
       <Label x={290} y={354}>
         <tspan>Z</tspan>
         <Sub>AB</Sub>
-        <tspan> = collisions per second in this box</tspan>
+        <tspan> = collisions per second per unit volume</tspan>
       </Label>
       <g>
         <Particle x={150} y={386} r={8} tone="reactant" />
@@ -131,27 +131,27 @@ function GentleBox({ t }: { t: number }) {
       <Label x={165} y={352}>
         a gentle pair bounces apart
       </Label>
-      <Label x={330} y={40} anchor="start" size={17}>
+      <Label x={330} y={34} anchor="start" size={17}>
         fraction with E ≥ <tspan fontStyle="italic">E</tspan>ₐ, 300 K
       </Label>
-      <MaxwellBoltzmannCurve x={352} y={56} width={200} height={170} temperatures={[300]} ea={2.2} shadeTails eaLabel="Eₐ" xTitle="kinetic energy" yTitle="fraction" />
-      <Label x={330} y={300} anchor="start">
+      <MaxwellBoltzmannCurve x={352} y={50} width={200} height={150} temperatures={[300]} ea={2.2} shadeTails eaLabel="Eₐ" xTitle="E / RT" yTitle="fraction of molecules" />
+      <Label x={330} y={276} anchor="start">
         <tspan fontStyle="italic">E</tspan>
         <tspan>ₐ = 10 kJ mol</tspan>
         <Sup>−1</Sup>
       </Label>
-      <Label x={330} y={326} anchor="start">
+      <Label x={330} y={300} anchor="start">
         <tspan>{TEXT_LOW}</tspan>
       </Label>
-      <Label x={330} y={354} anchor="start">
+      <Label x={330} y={326} anchor="start">
         <tspan fontStyle="italic">E</tspan>
         <tspan>ₐ = 50 kJ mol</tspan>
         <Sup>−1</Sup>
       </Label>
-      <Label x={330} y={380} anchor="start">
+      <Label x={330} y={350} anchor="start">
         <tspan>{TEXT_HIGH}</tspan>
       </Label>
-      <Label x={330} y={398} anchor="start" size={NOTE} fill="var(--fg-muted)">
+      <Label x={330} y={380} anchor="start" size={NOTE} fill="var(--fg-muted)">
         tail shading is schematic
       </Label>
     </g>
