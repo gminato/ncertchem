@@ -9,7 +9,6 @@ import {
   AGNO2_ROW,
   CARBON_ATOM,
   CAROUSEL,
-  CYANIDE_FORMS,
   ETHYL_NITRITE,
   HALOGEN_ATOM,
   ISOCYANIDE,
@@ -173,11 +172,16 @@ function StepCyanide() {
       <text x={W / 2} y={34} textAnchor="middle" fontSize={MAIN} fill="var(--fg)">
         Cyanide: two contributing structures
       </text>
-      <SkeletalFormula graph={parseSmiles(CYANIDE_FORMS[0])} scale={38} x={150} y={top} showLonePairs />
+      {/* Written out in full: a skeletal drawing hides the lone C atom. Negative end in the nucleophile tone. */}
+      <text x={150} y={top + 8} textAnchor="middle" fontSize={MAIN + 8} fill="var(--fg)">
+        <tspan fill={ROLE_TONE.nucleophile}>⁻:C</tspan>≡N:
+      </text>
       <text x={290} y={top + 6} textAnchor="middle" fontSize={MAIN + 4} fill="var(--fg-muted)">
         ↔
       </text>
-      <SkeletalFormula graph={parseSmiles(CYANIDE_FORMS[1])} scale={38} x={430} y={top} showLonePairs />
+      <text x={430} y={top + 8} textAnchor="middle" fontSize={MAIN + 8} fill="var(--fg)">
+        :C=<tspan fill={ROLE_TONE.nucleophile}>N:⁻</tspan>
+      </text>
       <text x={150} y={top + 62} textAnchor="middle" fontSize={SECONDARY} fill="var(--fg-muted)">
         lone pair on C
       </text>
@@ -196,7 +200,7 @@ function StepCyanide() {
       <text x={380} y={342} textAnchor="middle" fontSize={SECONDARY} fill="var(--fg-muted)">
         {`${formulaUnicode(NITRILE.formula)} · ${KCN_ROW.productClass.toLowerCase()}`}
       </text>
-      <Caption>The free cyanide ion attacks through carbon</Caption>
+      <Caption>With KCN the carbon end attacks, giving a nitrile.</Caption>
     </g>
   )
 }
