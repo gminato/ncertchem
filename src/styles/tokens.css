@@ -606,3 +606,117 @@
     --kin-flash: #FBBF24;
   }
 }
+
+/* Visual vocabulary for Class 12 Unit 4 (d- and f-block): series tones, aqua and oxoanion
+   colours (dilute solutions, alpha baked in so beakers read as liquid) and spectral sectors.
+   Same names in every block; the forced-dark block mirrors [data-theme="dark"]. */
+:root,
+[data-theme="light"] {
+  --db-beam: #94A3B8;
+  --db-3d: #D97706;
+  --db-4d: #7C3AED;
+  --db-5d: #DC2626;
+  --db-6d: #65A30D;
+  --db-ln: #0891B2;
+  --db-an: #BE185D;
+  --ion-ti3: rgba(168, 85, 247, 0.55);
+  --ion-v4: rgba(37, 99, 235, 0.5);
+  --ion-v3: rgba(22, 163, 74, 0.5);
+  --ion-v2: rgba(109, 40, 217, 0.45);
+  --ion-cr3: rgba(124, 58, 237, 0.42);
+  --ion-cr2: rgba(59, 130, 246, 0.5);
+  --ion-mn3: rgba(126, 34, 206, 0.5);
+  --ion-mn2: rgba(244, 114, 182, 0.2);
+  --ion-fe3: rgba(234, 179, 8, 0.42);
+  --ion-fe2: rgba(134, 239, 172, 0.5);
+  --ion-co3: rgba(29, 78, 216, 0.55);
+  --ion-co2: rgba(236, 72, 153, 0.4);
+  --ion-ni2: rgba(34, 197, 94, 0.45);
+  --ion-cu2: rgba(14, 165, 233, 0.42);
+  --ion-colourless: rgba(148, 163, 184, 0.14);
+  --ion-cro4: rgba(250, 204, 21, 0.55);
+  --ion-cr2o7: rgba(249, 115, 22, 0.6);
+  --ion-mno4: rgba(136, 19, 155, 0.6);
+  --ion-mno4-2: rgba(21, 128, 61, 0.6);
+  --ion-mno2: #92400E;
+  --spec-red: #E11D48;
+  --spec-orange: #F97316;
+  --spec-yellow: #FACC15;
+  --spec-green: #16A34A;
+  --spec-blue: #2563EB;
+  --spec-violet: #7C3AED;
+}
+
+[data-theme="dark"] {
+  --db-beam: #E2E8F0;
+  --db-3d: #FBBF24;
+  --db-4d: #A78BFA;
+  --db-5d: #F87171;
+  --db-6d: #A3E635;
+  --db-ln: #22D3EE;
+  --db-an: #F472B6;
+  --ion-ti3: rgba(216, 180, 254, 0.6);
+  --ion-v4: rgba(96, 165, 250, 0.6);
+  --ion-v3: rgba(74, 222, 128, 0.6);
+  --ion-v2: rgba(167, 139, 250, 0.55);
+  --ion-cr3: rgba(196, 181, 253, 0.5);
+  --ion-cr2: rgba(96, 165, 250, 0.6);
+  --ion-mn3: rgba(232, 121, 249, 0.55);
+  --ion-mn2: rgba(249, 168, 212, 0.26);
+  --ion-fe3: rgba(253, 224, 71, 0.5);
+  --ion-fe2: rgba(187, 247, 208, 0.5);
+  --ion-co3: rgba(96, 165, 250, 0.6);
+  --ion-co2: rgba(244, 114, 182, 0.5);
+  --ion-ni2: rgba(74, 222, 128, 0.55);
+  --ion-cu2: rgba(56, 189, 248, 0.5);
+  --ion-colourless: rgba(203, 213, 225, 0.18);
+  --ion-cro4: rgba(253, 224, 71, 0.6);
+  --ion-cr2o7: rgba(251, 146, 60, 0.65);
+  --ion-mno4: rgba(217, 70, 239, 0.6);
+  --ion-mno4-2: rgba(74, 222, 128, 0.6);
+  --ion-mno2: #B45309;
+  --spec-red: #FB7185;
+  --spec-orange: #FB923C;
+  --spec-yellow: #FDE047;
+  --spec-green: #4ADE80;
+  --spec-blue: #60A5FA;
+  --spec-violet: #A78BFA;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --db-beam: #E2E8F0;
+    --db-3d: #FBBF24;
+    --db-4d: #A78BFA;
+    --db-5d: #F87171;
+    --db-6d: #A3E635;
+    --db-ln: #22D3EE;
+    --db-an: #F472B6;
+    --ion-ti3: rgba(216, 180, 254, 0.6);
+    --ion-v4: rgba(96, 165, 250, 0.6);
+    --ion-v3: rgba(74, 222, 128, 0.6);
+    --ion-v2: rgba(167, 139, 250, 0.55);
+    --ion-cr3: rgba(196, 181, 253, 0.5);
+    --ion-cr2: rgba(96, 165, 250, 0.6);
+    --ion-mn3: rgba(232, 121, 249, 0.55);
+    --ion-mn2: rgba(249, 168, 212, 0.26);
+    --ion-fe3: rgba(253, 224, 71, 0.5);
+    --ion-fe2: rgba(187, 247, 208, 0.5);
+    --ion-co3: rgba(96, 165, 250, 0.6);
+    --ion-co2: rgba(244, 114, 182, 0.5);
+    --ion-ni2: rgba(74, 222, 128, 0.55);
+    --ion-cu2: rgba(56, 189, 248, 0.5);
+    --ion-colourless: rgba(203, 213, 225, 0.18);
+    --ion-cro4: rgba(253, 224, 71, 0.6);
+    --ion-cr2o7: rgba(251, 146, 60, 0.65);
+    --ion-mno4: rgba(217, 70, 239, 0.6);
+    --ion-mno4-2: rgba(74, 222, 128, 0.6);
+    --ion-mno2: #B45309;
+    --spec-red: #FB7185;
+    --spec-orange: #FB923C;
+    --spec-yellow: #FDE047;
+    --spec-green: #4ADE80;
+    --spec-blue: #60A5FA;
+    --spec-violet: #A78BFA;
+  }
+}
