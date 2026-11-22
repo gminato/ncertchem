@@ -100,8 +100,8 @@ function StepBrownBottle() {
   return (
     <g>
       <rect x={122} y={62} width={56} height={22} rx={4} fill={MUTED} />
-      <rect x={122} y={84} width={56} height={34} rx={6} fill="var(--bromine)" />
-      <rect x={74} y={118} width={152} height={226} rx={18} fill="var(--bromine)" />
+      <rect x={122} y={84} width={56} height={34} rx={6} fill="var(--glass-amber)" />
+      <rect x={74} y={118} width={152} height={226} rx={18} fill="var(--glass-amber)" />
       <rect x={88} y={136} width={124} height={112} rx={8} fill="var(--surface)" />
       <Mol g={G.chcl3} x={150} y={192} scale={s} />
       {POLYHALO_TAGS[1].map((t, i) => (
@@ -116,7 +116,7 @@ function StepClearBottle() {
   const s = LABEL_SCALE
   return (
     <g>
-      <path d="M 10 60 L 96 170" stroke="var(--spec-yellow)" strokeWidth={18} strokeLinecap="round" opacity={0.25} />
+      <path d="M 10 60 L 96 170" stroke="var(--glass-amber)" strokeWidth={18} strokeLinecap="round" opacity={0.6} />
       <text x={16} y={44} fontSize={15} fill={MUTED}>
         light
       </text>
