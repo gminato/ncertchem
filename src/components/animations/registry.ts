@@ -144,6 +144,7 @@ import { DilutionConductivity } from './c12-unit2/dilution/DilutionConductivity'
 import { ElectrolysisProducts } from './c12-unit2/products/ElectrolysisProducts'
 import { FaradayElectrolysis } from './c12-unit2/faraday/FaradayElectrolysis'
 import { BatteryCutaways } from './c12-unit2/batteries/BatteryCutaways'
+import { OrderCurves } from './c12-unit3/order/OrderCurves'
 
 /**
  * Animations available to a Scrolly Animation, keyed by the `animation` prop.
@@ -298,6 +299,7 @@ export const animations = {
   'electrolysis-products': ElectrolysisProducts,
   'faraday-electrolysis': FaradayElectrolysis,
   'battery-cutaways': BatteryCutaways,
+  'order-curves': OrderCurves,
 } as const
 
 export type AnimationName = keyof typeof animations
