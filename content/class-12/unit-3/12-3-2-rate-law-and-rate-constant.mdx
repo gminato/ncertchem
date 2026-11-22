@@ -26,6 +26,12 @@ $$
 
 Here $k$ is the **rate constant**, and the exponents $x$ and $y$ describe how strongly each reactant matters. Do not assume that $x$ and $y$ equal the coefficients $a$ and $b$. They may match, or they may not, and only experiment can tell you which.
 
+The same law can be written as a differential rate equation, which links the rate at an instant to the concentrations at that instant. "Differential" here means that the rate is built from $\frac{d[\ce{A}]}{dt}$, the slope of the concentration curve at one moment, and the factor $-\frac{1}{a}$ turns that slope into the rate of reaction:
+
+$$
+-\frac{1}{a}\frac{d[\ce{A}]}{dt} = k\,[\ce{A}]^{x}[\ce{B}]^{y}
+$$
+
 ## Finding the exponents from initial rates
 
 Chemists often start each experiment afresh and measure the **initial rate**, the rate in the first moments before the reactants have changed much. Changing one concentration at a time shows how each reactant matters. For nitric oxide and oxygen, $\ce{2NO(g) + O2(g) -> 2NO2(g)}$, Table 3.2 lists the initial rate of NO₂ formation for four mixtures:
@@ -49,7 +55,7 @@ $$
 \text{Rate} = k\,[\ce{NO}]^{2}[\ce{O2}]
 $$
 
-Here the rate is the rate of formation of NO₂, the quantity Table 3.2 measures, so $k$ belongs to that rate. Substituting experiment 1 gives the rate constant:
+Table 3.2 measures the rate of formation of NO₂, and that rate is twice the rate of reaction, because two NO₂ form each time the reaction occurs once. So this $k$ is the **k for NO₂ formation**. Substituting experiment 1 gives the rate constant:
 
 $$
 k = \frac{0.096\ \text{mol L}^{-1}\,\text{s}^{-1}}{(0.30\ \text{mol L}^{-1})^{2}\,(0.30\ \text{mol L}^{-1})} = 3.56\ \text{mol}^{-2}\,\text{L}^{2}\,\text{s}^{-1}

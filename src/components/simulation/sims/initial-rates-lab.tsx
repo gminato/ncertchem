@@ -17,6 +17,7 @@ import {
   type RunComparison,
 } from '@/lib/chem/initial-rates-lab'
 import { formatSig, rateConstantUnits, rationalFromNumber } from '@/lib/chem/kinetics'
+import { InitialRatesDrawing } from './initial-rates-drawing'
 import styles from './initial-rates-lab.module.css'
 
 const MAX_RUNS = 8
@@ -79,6 +80,8 @@ export function InitialRatesLab({ reducedMotion }: SimulationProps) {
   const [revealed, setRevealed] = useState(false)
 
   const maxRate = runs.reduce((m, r) => Math.max(m, r.rate), 0)
+  // One scale for every meter: the largest run, rounded up to 3 decimals (1 when there are no runs).
+  const meterScale = runs.length > 0 ? Math.ceil(maxRate * 1000 - 1e-9) / 1000 : 1
   const lastRun = runs[runs.length - 1]
   const runA = runs[Math.min(pickA, runs.length - 1)]
   const runB = runs[Math.min(pickB, runs.length - 1)]
@@ -154,6 +157,15 @@ export function InitialRatesLab({ reducedMotion }: SimulationProps) {
         </Button>
         {runs.length >= MAX_RUNS && <span className={styles.note}>The table is full. Clear it to run more.</span>}
       </div>
+
+      <figure className={styles.stage}>
+        <InitialRatesDrawing
+          species={reaction.species.map((s) => ({ key: s.key, symbol: pretty(s.ce) }))}
+          concs={concs}
+          runs={runs}
+          scale={meterScale}
+        />
+      </figure>
 
       <div className={styles.tableWrap}>
         {runs.length === 0 ? (

@@ -35,6 +35,26 @@ async function smallTextLeaves(page: Page): Promise<string[]> {
   })
 }
 
+/** Drawn shapes of the Simulation's SVG drawing that fall outside its viewBox (getBBox, in user units). */
+async function drawingOutsideViewBox(page: Page): Promise<string[]> {
+  return page.locator('svg[data-drawing="initial-rates"]').evaluate((svg) => {
+    const vb = (svg as SVGSVGElement).viewBox.baseVal
+    const tol = 0.5
+    const bad: string[] = []
+    svg.querySelectorAll('text, rect, circle, path, line').forEach((el) => {
+      if (el.closest('defs, clipPath')) return
+      const box = (el as SVGGraphicsElement).getBBox()
+      const inside =
+        box.x >= vb.x - tol &&
+        box.y >= vb.y - tol &&
+        box.x + box.width <= vb.x + vb.width + tol &&
+        box.y + box.height <= vb.y + vb.height + tol
+      if (!inside) bad.push(`${el.tagName} "${(el.textContent ?? '').slice(0, 30)}" at ${box.x.toFixed(1)},${box.y.toFixed(1)}`)
+    })
+    return bad
+  })
+}
+
 for (const scheme of ['light', 'dark'] as const) {
   test(`Initial-rates Lab renders and is accessible in ${scheme}`, async ({ page }) => {
     test.setTimeout(180_000)
@@ -77,6 +97,10 @@ for (const scheme of ['light', 'dark'] as const) {
     await sim.screenshot({ path: `test-results/screens/c12u3-2-sim-revealed-${scheme}.png` })
 
     await expect(sim.locator('.katex-error')).toHaveCount(0)
+    const drawing = sim.locator('svg[data-drawing="initial-rates"]')
+    await expect(drawing).toBeVisible()
+    expect(await drawing.locator('rect, circle').count(), 'drawn spheres and bars').toBeGreaterThan(0)
+    expect(await drawingOutsideViewBox(page), 'drawing outside its viewBox').toEqual([])
     expect(await smallTextLeaves(page), 'text below 14 px').toEqual([])
     expect(errors, 'console errors').toEqual([])
   })
