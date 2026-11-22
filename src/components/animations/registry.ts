@@ -158,6 +158,7 @@ import { CatalystPathway } from './c12-unit3/catalyst/CatalystPathway'
 import { ArrheniusEnergy } from './c12-unit3/arrhenius/ArrheniusEnergy'
 import { IonisationSteps } from './c12-unit4/ionisation/IonisationSteps'
 import { OxidationStateGrid } from './c12-unit4/oxstates/OxidationStateGrid'
+import { ElectrodePotentialCycle } from './c12-unit4/electrode/ElectrodePotentialCycle'
 
 /**
  * Animations available to a Scrolly Animation, keyed by the `animation` prop.
@@ -326,6 +327,7 @@ export const animations = {
   'dblock-melting-radii': PhysicalTrends,
   'ionisation-steps': IonisationSteps,
   'oxidation-state-grid': OxidationStateGrid,
+  'electrode-potential-cycle': ElectrodePotentialCycle,
 } as const
 
 export type AnimationName = keyof typeof animations

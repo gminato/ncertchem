@@ -1,0 +1,98 @@
+---
+class: 12
+unit: 4
+section: "4.3.5"
+order: 5
+title: "Electrode Potentials and Reactivity"
+slug: "12-4-3-5-electrode-potentials-and-reactivity"
+access: free
+summary: "Copper does not fizz in dilute acid, and the energy cycle for its ion explains why: it is the only Ti to Zn metal with a positive E°."
+ncert: "Class 12, Part I — Unit 4, Section 4.3.5–4.3.8"
+---
+
+<Hook>
+Drop an iron nail into dilute acid and it starts fizzing almost at once. Leave a copper lota of tamarind water for hours and nothing bubbles. Both metals sit in the same row of the periodic table, so what in their numbers makes copper hold back?
+</Hook>
+
+Every metal in water is in a tug-of-war with the hydrogen ion. Its standard electrode potential, $E^\ominus_{\ce{M^2+}/\ce{M}}$, measures how readily the solid metal gives up two electrons to become $\ce{M^2+}(aq)$. The reference point is the hydrogen electrode, which is set at $0\ \text{V}$. A large negative value means the metal gives up electrons easily, so in principle it can push hydrogen out of a dilute acid. A positive value means it cannot.
+
+The potential is tied to an energy cycle. Turning a solid metal into aqueous ions means vaporising the atoms, removing the first two electrons, and then letting water surround the ion, which releases energy. Adding those terms gives a useful guide to the trend, but the cycle is an enthalpy story while the potential is a free-energy one. Read the totals as a guide, not as an exact prediction. Moving across the row, the sum of the first two ionisation enthalpies rises, and the potentials become less negative as it does. Checking the cycle totals against the observed potentials shows where this simple guide holds and where it breaks down.
+
+Across the first row the potentials climb from strongly negative towards zero, and copper is the one metal whose value crosses into positive territory. That is why copper cannot fizz in dilute acid at all. Titanium and vanadium also stay quiet in practice, but for a different reason: they are passive, protected by a thin oxide film. Ordinary acids cannot touch copper, but an oxidising acid can: nitric acid and hot concentrated sulphuric acid take electrons from the metal, and they manage it only because they are reduced themselves.
+
+A second couple matters too. Metals can also form $\ce{M^3+}$ ions, and the potential for $\ce{M^3+}/\ce{M^2+}$ tells you whether the 2+ ion is happy to be oxidised further. The answer depends on the d electrons that are left, and it is not a simple slope down the row.
+
+<Scrolly animation="electrode-potential-cycle">
+  <Step>
+    **Zinc, the reference case:** Start with a zinc atom in solid zinc. Three stages turn it into $\ce{Zn^2+}(aq)$. Vaporising the atom costs $130\ \text{kJ mol}^{-1}$, removing two electrons costs $906 + 1734 = 2640\ \text{kJ mol}^{-1}$, and hydration returns $-2059\ \text{kJ mol}^{-1}$. The net $711\ \text{kJ mol}^{-1}$ appears as a total bar, and the potential sits at $-0.76\ \text{V}$, below zero.
+  </Step>
+  <Step>
+    **Copper, the odd one out:** Place copper's cycle beside zinc's. Its atomisation and two ionisations need $3042\ \text{kJ mol}^{-1}$, the largest figure in the row. Hydration returns $-2121\ \text{kJ mol}^{-1}$, the same as nickel's and not enough to close the gap. The net $921\ \text{kJ mol}^{-1}$ is the highest total in the row, and the potential is $+0.34\ \text{V}$, the only positive value.
+  </Step>
+  <Step>
+    **The 3d potential curve:** Plot $E^\ominus_{\ce{M^2+}/\ce{M}}$ from titanium to zinc, with a zero line for hydrogen. Titanium starts at $-1.63\ \text{V}$ and the points climb towards copper. Manganese ($-1.18\ \text{V}$), nickel ($-0.25\ \text{V}$) and zinc ($-0.76\ \text{V}$) sit more negative than the trend predicts. Manganese and zinc keep their stable d⁵ and d¹⁰ shells as $\ce{Mn^2+}$ and $\ce{Zn^2+}$, and nickel's very negative hydration pulls it down. Only copper rises above zero.
+  </Step>
+  <Step>
+    **A second couple:** Move to $\ce{M^3+}/\ce{M^2+}$, using the values in Table 4.2. Cobalt reads $+1.97\ \text{V}$ and manganese $+1.57\ \text{V}$, so $\ce{Co^3+}$ and $\ce{Mn^3+}$ are strong oxidants. Iron reads $+0.77\ \text{V}$. Titanium, vanadium and chromium read $-0.37$, $-0.26$ and $-0.41\ \text{V}$, so their 2+ ions are reducing agents. The pattern follows the configurations: $\ce{Mn^2+}$ is a stable d⁵ ion, so $\ce{Mn^3+}$ readily takes an electron to reach it, while $\ce{Cr^3+}$ with its stable d³ set makes $\ce{Cr^2+}$ willing to give one up. Scandium, nickel, copper and zinc have no entry, so their bars stay blank.
+  </Step>
+  <Step>
+    **Who reaches the top?** Fluorine and oxygen hold the highest states. Titanium reaches $+4$ in its halides, vanadium $+5$ in $\ce{VF5}$ and chromium $+6$ in $\ce{CrF6}$. Manganese stops at $\ce{MnF4}$ among simple fluorides. Its highest oxide, $\ce{Mn2O7}$, is covalent: each manganese sits in a tetrahedron of oxygens, with an oxygen bridge between neighbours. Oxygen's extra power comes from forming multiple bonds to the metal.
+  </Step>
+</Scrolly>
+
+Copper is the sharpest case, so it is worth one more look at the cycle. The atomisation and ionisation terms for copper total $3042\ \text{kJ mol}^{-1}$, but hydration does not match them. The same imbalance makes copper(I) awkward in water. Two $\ce{Cu^+}$ ions can change places: one is oxidised to $\ce{Cu^2+}$ and the other is reduced to metal, and the large hydration energy of $\ce{Cu^2+}$ is what makes that exchange favourable.
+
+$$
+\ce{2Cu+(aq) -> Cu^2+(aq) + Cu(s)}
+$$
+
+The simulation below rebuilds the cycle for any metal from titanium to zinc, using the thermochemical values of Table 4.4. It places the potential on a scale with the hydrogen zero line, and it bubbles hydrogen out of the beaker only when the potential is negative and the metal is not passive. Titanium and vanadium show a note in the lab, because their negative potentials do not produce visible bubbles in practice.
+
+<Simulation name="electrode-potential-lab" title="Electrode Potential Lab" />
+
+<Check
+  n={1}
+  numeric
+  answer={798}
+  tolerance={1}
+  unit="kJ mol⁻¹"
+  explanation="431 + 736 + 1752 − 2121 = 798 kJ mol⁻¹, using the atomisation enthalpy, the first two ionisation enthalpies and the hydration enthalpy of nickel from Table 4.4. Nickel's total is positive like the rest of the row, but copper's 921 kJ mol⁻¹ is larger still."
+>
+Using Table 4.4, find the net cycle total for nickel: atomisation enthalpy plus the first two ionisation enthalpies plus the hydration enthalpy, in kJ mol⁻¹.
+</Check>
+
+<Check
+  n={2}
+  options={[
+    "Ti³⁺",
+    "Cr³⁺",
+    "Mn³⁺",
+    "Co³⁺"
+  ]}
+  answer={3}
+  explanation="Co³⁺/Co²⁺ is +1.97 V and Mn³⁺/Mn²⁺ is +1.57 V, so both 3+ ions gain an electron readily. Ti³⁺/Ti²⁺ (−0.37 V) and Cr³⁺/Cr²⁺ (−0.41 V) are negative, which makes their 2+ ions the reducing partners."
+>
+Using the M³⁺/M²⁺ couples in Table 4.2, which of these ions is the strongest oxidant?
+</Check>
+
+<Check
+  n={3}
+  options={[
+    "+7",
+    "+4",
+    "+3",
+    "+2"
+  ]}
+  answer={1}
+  explanation="MnF₄ is the highest simple manganese fluoride. Manganese reaches +7 in the oxide Mn₂O₇ and in MnO₃F, but not in a simple halide."
+>
+What is the highest oxidation state of manganese in a simple fluoride?
+</Check>
+
+<KeyIdeas>
+- $E^\ominus_{\ce{M^2+}/\ce{M}}$ compares a metal with hydrogen (0 V). A negative value means the metal can, in principle, push hydrogen out of dilute acid; a positive value means it cannot.
+- The cycle adds atomisation and the first two ionisation enthalpies, then subtracts hydration. Copper's total of $921\ \text{kJ mol}^{-1}$ is the highest in the row, and its potential is the only positive one.
+- $\ce{Mn^2+}$ (d⁵) and $\ce{Zn^2+}$ (d¹⁰) are stable, and $\ce{Ni^2+}$ has a very negative hydration enthalpy; these pull their potentials below the trend.
+- Starting from the 2+ ions, $\ce{Ti^2+}$, $\ce{V^2+}$ and $\ce{Cr^2+}$ readily give up an electron, whereas $\ce{Mn^3+}$ and $\ce{Co^3+}$ strongly grab one.
+- The highest oxidation state in oxides follows the group number up to $\ce{Mn2O7}$, because oxygen forms multiple bonds to the metal. Fluorine's highest manganese state is only $+4$.
+</KeyIdeas>
