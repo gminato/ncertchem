@@ -1,0 +1,116 @@
+---
+class: 12
+unit: 3
+section: "3.3.3"
+order: 7
+title: "Half-Life of a Reaction"
+slug: "12-3-3-3-half-life"
+access: free
+summary: "A half-life is the time for half of a reactant to disappear. A first-order half-life stays fixed, while a zero-order one grows with the starting amount."
+ncert: "Class 12, Part I — Unit 3, Section 3.3.3"
+---
+
+<Hook>
+Charcoal from an old hearth can be dated by measuring how much of its carbon-14 has decayed. A large lump and a tiny splinter both give a reliable date, yet the time for half of the carbon-14 to decay is the same for each. Why should the amount of carbon make no difference to the clock?
+</Hook>
+
+## What a half-life measures
+
+Pick any reactant and ask how long it takes to lose half of its starting concentration. That time is the **half-life**, written $t_{1/2}$. It is one number, but its value depends on the order of the reaction, so the two simplest orders need separate treatment.
+
+<Scrolly animation="half-life-ladder">
+  <Step>
+    **One half-life, drawn:** A reactant starts at 1.00 mol L⁻¹ and decays by a first-order law with $k = 0.0500\ \text{s}^{-1}$. The curve falls steeply at first and then flattens. A dashed guide drops from the point where $[\ce{R}]$ reaches 0.500 mol L⁻¹, at $t = 13.9\ \text{s}$. That is the first half-life.
+  </Step>
+  <Step>
+    **Each interval halves the rest:** Markers appear at 13.9 s, 27.7 s and 41.6 s, spaced equally in time. The curve is left with 1/2, then 1/4, then 1/8 of its starting amount, which reads 0.500, 0.250 and 0.125 mol L⁻¹. Shading shows the part consumed in each interval, and each shaded piece is smaller than the one before.
+  </Step>
+  <Step>
+    **Double the start, same half-life:** A second curve begins at 2.00 mol L⁻¹, twice as high. Its markers sit at the same times, 13.9 s, 27.7 s and 41.6 s. It reaches 1.00 mol L⁻¹ at exactly 13.9 s, so both curves have halved at the same instant. Only the height of the starting point changes, not the timing.
+  </Step>
+  <Step>
+    **A straight line that runs out:** Now a zero-order reaction with the same numerical k, 0.0500 mol L⁻¹ s⁻¹, starts at 1.00 mol L⁻¹. Its concentration falls along a straight line with slope $-k$. The half-life, 10.0 s, is where the line crosses 0.500 mol L⁻¹, and the line reaches zero at 20.0 s.
+  </Step>
+  <Step>
+    **Double the start, double the half-life:** A zero-order run beginning at 2.00 mol L⁻¹ has the same slope, but its line is twice as long. It crosses 1.00 mol L⁻¹ at 20.0 s, which is twice the 10.0 s half-life of the first run. The half-life grows as the starting amount grows.
+  </Step>
+  <Step>
+    **The two orders side by side:** A compact card summarises the comparison. Zero order has rate $= k$, a straight-line plot of $[\ce{R}]$ against $t$, half-life $[\ce{R}]_0/2k$ and k in mol L⁻¹ s⁻¹. First order has rate $= k[\ce{R}]$, a straight-line plot of $\ln[\ce{R}]$ against $t$, half-life $0.693/k$ and k in s⁻¹.
+  </Step>
+</Scrolly>
+
+<Check
+  n={1}
+  options={[
+    "Doubling [R]₀ leaves a first-order half-life unchanged but doubles a zero-order half-life",
+    "Doubling [R]₀ doubles both the first-order and the zero-order half-life",
+    "Doubling [R]₀ halves a first-order half-life and leaves a zero-order one unchanged",
+    "Doubling [R]₀ leaves both half-lives unchanged"
+  ]}
+  answer={0}
+  explanation="The zero-order half-life is [R]₀/2k, so it doubles when [R]₀ doubles. The first-order half-life is 0.693/k, which has no [R]₀ in it, so it stays the same."
+>
+A reaction is run with twice the starting concentration. Which statement about the half-lives is correct?
+</Check>
+
+## Zero-order half-life
+
+For a zero-order reaction the integrated rate law gives $k = \dfrac{[\ce{R}]_0 - [\ce{R}]}{t}$. Put $t = t_{1/2}$ and $[\ce{R}] = \tfrac{1}{2}[\ce{R}]_0$ into it, and the algebra gives
+
+$$
+t_{1/2} = \frac{[\ce{R}]_0}{2k}
+$$
+
+A zero-order half-life is therefore proportional to the starting concentration and inversely proportional to the rate constant. Start with twice as much reactant and it takes twice as long to lose half of it.
+
+## First-order half-life
+
+For a first-order reaction, $k = \dfrac{2.303}{t}\log\dfrac{[\ce{R}]_0}{[\ce{R}]}$. At the half-life the ratio $[\ce{R}]_0/[\ce{R}]$ is exactly 2, so
+
+$$
+t_{1/2} = \frac{2.303}{k}\log 2 = \frac{0.693}{k}
+$$
+
+Since $\log 2 = 0.301$, the factor $2.303 \times 0.301$ comes to 0.693. The result contains no $[\ce{R}]_0$. Each half-life halves whatever is left, so the time needed does not depend on how much you started with. That independence is the signature of a first-order reaction. You can also run the formula backwards, because $k = 0.693/t_{1/2}$. With $k = 0.0500\ \text{s}^{-1}$, the half-life is $0.693/0.0500 = 13.9\ \text{s}$, the same whether the sample began at 1.00 or at 2.00 mol L⁻¹.
+
+This is why radioactive dating works. Radioactive decay is a first-order process, so the time for half of the carbon-14 in a sample to decay does not depend on how much carbon the sample holds.
+
+<Check
+  n={2}
+  numeric
+  answer={20}
+  tolerance={0.05}
+  unit="s"
+  explanation="For a zero-order reaction t½ = [R]₀/2k = 2.00 / (2 × 0.0500) = 20.0 s. The first-order half-life at the same k would be 13.9 s, but a zero-order reaction is the one asked about here."
+>
+A zero-order reaction has $k = 0.0500\ \text{mol L}^{-1}\ \text{s}^{-1}$ and starts at $[\ce{R}]_0 = 2.00\ \text{mol L}^{-1}$. What is its half-life, in seconds?
+</Check>
+
+## Order can shift with conditions
+
+Many reactions obey a first-order law even though their true order is higher. The hydrolysis of ethyl acetate, $\ce{CH3COOC2H5 + H2O -> CH3COOH + C2H5OH}$, is second order in principle, because both reactants affect the rate. But water is present in large excess, so its concentration barely changes during the reaction. The rate then follows the ethyl acetate alone, and the reaction behaves as first order. Such a reaction is called **pseudo-first order**.
+
+Inversion of cane sugar is another pseudo-first-order reaction. Water is again in excess, and the rate law is $\text{Rate} = k[\ce{C12H22O11}]$. The products are glucose and fructose, both $\ce{C6H12O6}$.
+
+<Simulation name="half-life-compare" title="Half-Life Comparison Lab" />
+
+The simulation puts a zero-order and a first-order curve side by side on a single k value of 0.0500, and one slider sets the starting concentration [R]₀ for both. Change [R]₀ and watch the zero-order half-life move while the first-order one stays put. Then step through the half-lives and see the remaining fraction halve each time.
+
+<Check
+  n={3}
+  numeric
+  answer={41.6}
+  tolerance={0.1}
+  unit="s"
+  explanation="Three half-lives leave one eighth of the reactant, so t = 3 × 13.9 s = 41.6 s. Exactly, t = ln 8 / k = 2.079 / 0.0500 = 41.6 s."
+>
+A first-order reaction has $k = 0.0500\ \text{s}^{-1}$. After how many seconds is only one eighth of the starting amount left?
+</Check>
+
+<KeyIdeas>
+- **The half-life** is the time for a reactant's concentration to fall to half of its starting value.
+- **Zero order:** $t_{1/2} = [\ce{R}]_0/2k$. It is proportional to the starting concentration, so it changes when the start changes.
+- **First order:** $t_{1/2} = 0.693/k$. It does not depend on $[\ce{R}]_0$, and k can be found from the half-life.
+- **Table 3.4 in short:** zero order gives a straight line for $[\ce{R}]$ against $t$ with k in mol L⁻¹ s⁻¹; first order gives a straight line for $\ln[\ce{R}]$ against $t$ with k in s⁻¹.
+- **Pseudo-first order:** a reaction with one reactant in large excess, such as hydrolysis in water, behaves as first order.
+</KeyIdeas>
