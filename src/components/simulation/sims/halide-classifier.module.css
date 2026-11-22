@@ -1,0 +1,165 @@
+.classifier {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  font-family: var(--font-sans);
+  color: var(--fg);
+}
+
+.modeRow {
+  display: flex;
+  justify-content: flex-start;
+}
+
+.layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--space-4);
+  align-items: start;
+}
+
+@media (min-width: 960px) {
+  .layout {
+    grid-template-columns: minmax(0, 1.25fr) minmax(0, 0.75fr);
+  }
+}
+
+.stage {
+  margin: 0;
+  background: var(--surface-raised);
+  border-radius: var(--radius-md, 10px);
+  padding: var(--space-3);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  min-width: 0;
+}
+
+.drawing {
+  width: 100%;
+  height: auto;
+  display: block;
+  aspect-ratio: 560 / 340;
+}
+
+.caption {
+  font-size: 0.95rem;
+  color: var(--fg-muted);
+  text-align: center;
+}
+
+.panel {
+  background: var(--surface-raised);
+  border-radius: var(--radius-md, 10px);
+  padding: var(--space-4);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  min-width: 0;
+}
+
+.name {
+  margin: 0;
+  font-size: 1.35rem;
+  font-weight: 600;
+  overflow-wrap: anywhere;
+}
+
+.formula {
+  margin: 0;
+  font-size: 1rem;
+  color: var(--fg-muted);
+}
+
+.verdict {
+  margin: 0;
+  font-size: 1.15rem;
+  font-weight: 600;
+  color: var(--accent);
+  overflow-wrap: anywhere;
+}
+
+.details {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.detail {
+  display: flex;
+  gap: var(--space-2);
+  align-items: flex-start;
+  line-height: 1.5;
+  font-size: 1rem;
+}
+
+.legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+  font-size: 0.95rem;
+  color: var(--fg-muted);
+}
+
+.legendItem {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.swatchX,
+.swatchNeighbour {
+  flex: 0 0 auto;
+  width: 0.9rem;
+  height: 0.9rem;
+  margin-top: 0.2rem;
+  border-radius: 50%;
+  box-sizing: border-box;
+  background: transparent;
+}
+
+.swatchX {
+  border: 3px solid var(--accent);
+}
+
+.swatchNeighbour {
+  border: 2px dashed var(--orbital-neg);
+}
+
+.controls {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  font-family: var(--font-sans);
+  color: var(--fg);
+}
+
+.fieldRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-4);
+  align-items: flex-end;
+}
+
+.gallery {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+.galleryButton {
+  font-size: 0.9rem;
+}
+
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
