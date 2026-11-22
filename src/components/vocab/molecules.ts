@@ -115,6 +115,14 @@ export const MOLECULE_LAYOUTS: Record<string, MoleculeLayout> = {
     ],
     [[0, 1, 3]]
   ),
+  // Nitric oxide has one unpaired electron, which is not drawn: the bond is shown as double.
+  NO: projectAndCentre(
+    [
+      ['N', [-0.5, 0, 0]],
+      ['O', [0.5, 0, 0]],
+    ],
+    [[0, 1, 2]]
+  ),
   Cl2: projectAndCentre(
     [
       ['Cl', [-0.5, 0, 0]],
@@ -146,6 +154,20 @@ export const MOLECULE_LAYOUTS: Record<string, MoleculeLayout> = {
     [
       [0, 1, 1],
       [0, 2, 1],
+    ]
+  ),
+  // Hydrogen peroxide: the H-O-O-H skeleton is skewed, with an O-O-H angle of about 95 degrees.
+  H2O2: projectAndCentre(
+    [
+      ['O', [-0.5, 0, 0]],
+      ['O', [0.5, 0, 0]],
+      ['H', [-0.587, 0.996, 0]],
+      ['H', [0.587, -0.366, 0.926]],
+    ],
+    [
+      [0, 1, 1],
+      [0, 2, 1],
+      [1, 3, 1],
     ]
   ),
   CO2: projectAndCentre(
@@ -186,5 +208,14 @@ export const MOLECULE_LAYOUTS: Record<string, MoleculeLayout> = {
       [0, 2, 1],
       [0, 3, 1],
     ]
+  ),
+  // Ions: the charge is not drawn, so label the particle with its charge.
+  'I⁻': projectAndCentre([['I', [0, 0, 0]]], []),
+  'IO⁻': projectAndCentre(
+    [
+      ['I', [-0.5, 0, 0]],
+      ['O', [0.5, 0, 0]],
+    ],
+    [[0, 1, 1]]
   ),
 }
