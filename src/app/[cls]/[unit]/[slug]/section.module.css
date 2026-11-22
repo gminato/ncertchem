@@ -174,3 +174,11 @@
   overflow-x: auto;
   overflow-y: hidden;
 }
+
+/* Tables in Prose: scroll inside their own box on narrow screens instead of widening the page. */
+.body :global(table) {
+  display: block;
+  max-width: 100%;
+  overflow-x: auto;
+  border-collapse: collapse;
+}
