@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { LAB_LIGANDS, computeCftLabSnapshot } from './cft-lab'
+import { LAB_LIGANDS, MIN_PAIRING_ENERGY, computeCftLabSnapshot } from './cft-lab'
 
 describe('cft-lab model', () => {
   it('lists all 15 NCERT spectrochemical ligands with strictly rising illustrative Δo', () => {
@@ -43,5 +43,14 @@ describe('cft-lab model', () => {
     expect(tet.upperElectrons).toBe(3)
     expect(tet.unpaired).toBe(4)
     expect(tet.spinSummary).toContain('low spin rarely observed')
+  })
+
+  it('keeps Δt < P and cheaperRoute === "gap" for all ligands at MIN_PAIRING_ENERGY in tetrahedral geometry', () => {
+    for (let i = 0; i < LAB_LIGANDS.length; i++) {
+      const tet = computeCftLabSnapshot(4, 'tetrahedral', i, MIN_PAIRING_ENERGY)
+      expect(tet.deltaActive).toBeLessThan(tet.pairingEnergy)
+      expect(tet.cheaperRoute).toBe('gap')
+      expect(tet.field).toBe('weak')
+    }
   })
 })

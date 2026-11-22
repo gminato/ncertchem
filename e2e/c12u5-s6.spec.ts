@@ -156,6 +156,13 @@ test('Section 5.5.4 Scrolly animations and Simulation pass desktop checks and ca
   expect(await smallTextLeaves(sim), 'sim tetrahedral small text').toEqual([])
   expect(await svgOutOfBounds(sim), 'sim tetrahedral svg bounds').toEqual([])
 
+  // State 5: weakest ligand I- (index 0) in Tetrahedral geometry -> tightest gap, no label overlap
+  await sim.getByRole('combobox', { name: 'Ligand from spectrochemical series' }).selectOption('0')
+  await expect(sim.locator('[aria-live="polite"]')).toContainText('with ligand I⁻')
+  await sim.screenshot({ path: 'test-results/screens/c12u5-s6-sim-tetrahedral-iodide-desktop.png' })
+  expect(await smallTextLeaves(sim), 'sim tetrahedral iodide small text').toEqual([])
+  expect(await svgOutOfBounds(sim), 'sim tetrahedral iodide svg bounds').toEqual([])
+
   expect(errors).toEqual([])
 })
 

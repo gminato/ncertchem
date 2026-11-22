@@ -42,8 +42,9 @@ export function CrystalFieldSplittingLab({ reducedMotion }: SimulationProps) {
 
   // Energy diagram layout on left side (x: 20..405)
   const baryY = 192
+  const minGapPx = 68
   const maxGapPx = 220
-  const gapPx = Math.max(46, Math.round((snap.deltaActive / MAX_ENERGY_SCALE) * maxGapPx))
+  const gapPx = Math.round(minGapPx + (snap.deltaActive / MAX_ENERGY_SCALE) * (maxGapPx - minGapPx))
   const upperY = Math.round(baryY - snap.upperShiftFraction * gapPx)
   const lowerY = Math.round(baryY - snap.lowerShiftFraction * gapPx)
   const diagCx = 216
@@ -195,7 +196,17 @@ export function CrystalFieldSplittingLab({ reducedMotion }: SimulationProps) {
 
           {/* Dashed barycentre line */}
           <line x1={54} y1={baryY} x2={396} y2={baryY} stroke={CFT_COLOR.subtle} strokeWidth={1.5} strokeDasharray="6 5" />
-          <text x={394} y={baryY - 8} textAnchor="end" fontSize={15} fill={CFT_COLOR.muted}>
+          <text
+            x={diagCx}
+            y={baryY + 5}
+            textAnchor="middle"
+            fontSize={15}
+            fill={CFT_COLOR.muted}
+            stroke={CFT_COLOR.surface}
+            strokeWidth={5}
+            strokeLinejoin="round"
+            paintOrder="stroke"
+          >
             Barycentre
           </text>
 

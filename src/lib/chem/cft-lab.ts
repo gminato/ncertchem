@@ -49,7 +49,7 @@ export const LAB_LIGANDS: readonly LabLigand[] = NCERT_SPECTROCHEMICAL_SERIES.ma
 export const DEFAULT_D_COUNT = 4
 export const DEFAULT_LIGAND_INDEX = 8 // H₂O (middle of series)
 export const DEFAULT_PAIRING_ENERGY = 210 // illustrative kJ/mol
-export const MIN_PAIRING_ENERGY = 120
+export const MIN_PAIRING_ENERGY = 165
 export const MAX_PAIRING_ENERGY = 320
 export const MAX_ENERGY_SCALE = 380
 
