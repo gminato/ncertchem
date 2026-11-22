@@ -1,0 +1,121 @@
+---
+class: 12
+unit: 3
+section: "3.1"
+order: 1
+title: "Rate of a Chemical Reaction"
+slug: "12-3-1-rate-of-a-chemical-reaction"
+access: free
+summary: "Kinetics asks how fast a reaction runs: the rate is the change in concentration per unit time, read as the slope of a concentration–time curve, and its sign and units depend on which species you watch."
+ncert: "Class 12, Part I — Unit 3, Section 3.1"
+---
+
+<Hook>
+Dahi set overnight in a Delhi May, yet the same starter takes far longer in a Shimla December. A cracker is over in a blink, while the grille on a balcony rusts for years. Both are chemistry, and both are measured by the same question: how fast does the change happen? To answer it you need a number for "how fast", and that number has to be defined carefully.
+</Hook>
+
+## Three questions about a reaction
+
+Chemists ask three things about any reaction. Thermodynamics tells you whether it is feasible, which is the case when its free energy change is negative at constant temperature and pressure. Chemical equilibrium tells you how far it proceeds. Kinetics tells you how quickly it gets there. A diamond could in principle become graphite, and thermodynamics says so, yet the change is far too slow to notice. Kinetics explains that gap, and it shows how concentration, temperature, pressure and a catalyst can alter the pace.
+
+## Rate as change per unit time
+
+The speed of a reaction is the change in the concentration of a species in unit time. You can follow either a reactant, whose concentration falls, or a product, whose concentration rises. Take a reaction in which one reactant $\ce{R}$ turns into a product $\ce{P}$ in a vessel of constant volume. Between two instants $t_1$ and $t_2$ the reactant's concentration changes by $\Delta[\ce{R}] = [\ce{R}]_2 - [\ce{R}]_1$, which is a negative number. The minus sign in front of the definition turns it positive:
+
+$$
+\text{Rate} = -\frac{\Delta[\ce{R}]}{\Delta t} = +\frac{\Delta[\ce{P}]}{\Delta t}
+$$
+
+Both expressions give the same positive number, because every reactant lost is a product gained in this simple case. The rate is never negative. For a gas-phase reaction at constant temperature, concentration is proportional to partial pressure, so the rate can instead be written as the change in a gas's partial pressure, and its unit becomes $\text{atm s}^{-1}$. For concentrations in molar units the rate is in $\text{mol L}^{-1}\text{s}^{-1}$.
+
+## Average rate and the tangent
+
+The change over a finite interval gives the **average rate**. Graphically, it is the slope of the chord that joins two points on the concentration–time curve. The hydrolysis of butyl chloride, $\ce{C4H9Cl + H2O -> C4H9OH + HCl}$, shows the idea well in NCERT's Table 3.1 data. Over the first 50 seconds the average rate is $1.90 \times 10^{-4}\ \text{mol L}^{-1}\text{s}^{-1}$. Over the 700 to 800 second interval it has fallen to $0.40 \times 10^{-4}\ \text{mol L}^{-1}\text{s}^{-1}$. The rate drops because the concentrations drop.
+
+An average taken over one interval cannot tell you the rate at one moment, since it is the same for the whole interval. The **instantaneous rate** comes from letting the interval shrink to zero. Graphically it is the slope of the tangent at that instant, the line that just touches the curve there:
+
+$$
+r_{\text{inst}} = \lim_{\Delta t \to 0}\left(-\frac{\Delta[\ce{R}]}{\Delta t}\right) = -\frac{d[\ce{R}]}{dt}
+$$
+
+The minus sign in the last form is the same reversal as before, so the instantaneous rate is positive when the tangent slopes downward.
+
+## One coefficient, one species
+
+When every stoichiometric coefficient is one, the rate of disappearance of any reactant equals the rate of appearance of any product. When a coefficient is larger, the change in that species moves faster or slower, so each rate is divided by its coefficient. For $a\,\ce{A} + b\,\ce{B} \rightarrow c\,\ce{C} + d\,\ce{D}$ the rate of the reaction is
+
+$$
+\text{Rate} = -\frac{1}{a}\frac{d[\ce{A}]}{dt} = -\frac{1}{b}\frac{d[\ce{B}]}{dt} = \frac{1}{c}\frac{d[\ce{C}]}{dt} = \frac{1}{d}\frac{d[\ce{D}]}{dt}
+$$
+
+For $\ce{2NO2 -> 2NO + O2}$ the nitrogen dioxide falls twice as fast as the oxygen appears, because $-\tfrac{1}{2}\,d[\ce{NO2}]/dt = d[\ce{O2}]/dt$. The coefficients fix the relation between the rates, not the rate of the reaction itself.
+
+<Scrolly animation="rate-tangent">
+  <Step>
+    **A falling curve:** The plot shows the concentration of reactant $\ce{A}$ against time for our example reaction, which starts at $0.100\ \text{mol L}^{-1}$. A product curve for $\ce{B}$ rises from zero as $\ce{A}$ falls. A straight chord joins the points at $0\ \text{s}$ and $500\ \text{s}$, where $[\ce{A}]$ has dropped to $0.0368\ \text{mol L}^{-1}$. Its slope gives the average rate, $1.26 \times 10^{-4}\ \text{mol L}^{-1}\text{s}^{-1}$.
+  </Step>
+  <Step>
+    **Shrinking the interval:** The chord now joins $200\ \text{s}$ and $300\ \text{s}$, a shorter window in the middle of the curve. Its average rate is $1.22 \times 10^{-4}\ \text{mol L}^{-1}\text{s}^{-1}$. Moving the two ends closer, to $240\ \text{s}$ and $260\ \text{s}$, the chord tightens around the point at $250\ \text{s}$, and its slope reads $1.21 \times 10^{-4}\ \text{mol L}^{-1}\text{s}^{-1}$.
+  </Step>
+  <Step>
+    **The tangent at one instant:** The two ends of the chord meet at $250\ \text{s}$. The chord becomes a tangent that just touches the curve there, and its slope gives the instantaneous rate, $1.21 \times 10^{-4}\ \text{mol L}^{-1}\text{s}^{-1}$. The sign flips when the slope is reversed, so the rate is reported as a positive number.
+  </Step>
+  <Step>
+    **Sharing one rate among species:** Choose a reaction $3\ce{A} \rightarrow 2\ce{B}$ and keep the rate of the reaction at $2.00 \times 10^{-4}\ \text{mol L}^{-1}\text{s}^{-1}$. Two readouts appear: the $\ce{A}$ readout shows $-d[\ce{A}]/dt = 6.00 \times 10^{-4}\ \text{mol L}^{-1}\text{s}^{-1}$, and the $\ce{B}$ readout shows $d[\ce{B}]/dt = 4.00 \times 10^{-4}\ \text{mol L}^{-1}\text{s}^{-1}$. One reaction rate sits behind all three readouts, and each coefficient scales it for its own species.
+  </Step>
+  <Step>
+    **Units and sign:** The same panel now lists the units of the reaction rate: $\text{mol L}^{-1}\text{s}^{-1}$ for molar concentrations, and $\text{atm s}^{-1}$ for a gas followed through its partial pressure. A minus sign sits in front of each reactant term, so every rate reads positive. Whichever amount is tracked, the unit is always a concentration or pressure divided by a time.
+  </Step>
+</Scrolly>
+
+## Explore the slope
+
+Drag the two ends of the chord along the curve of $[\ce{A}]$ and watch the average rate change with the window. Then move the tangent point and see the instantaneous rate follow the slope. Finally, switch the stoichiometry to see how one reaction rate reads out differently for each species.
+
+<Simulation name="rate-slope-explorer" title="Rate Slope Explorer" />
+
+## Check your understanding
+
+<Check
+  n={1}
+  numeric
+  answer={0.000110}
+  tolerance={0.000002}
+  unit="mol L⁻¹ s⁻¹"
+  explanation="Using the Table 3.1 data, the concentration falls from 0.0549 mol L⁻¹ at 300 s to 0.0439 mol L⁻¹ at 400 s. The average rate is (0.0549 − 0.0439)/100 s = 1.10 × 10⁻⁴ mol L⁻¹ s⁻¹ (the minus sign turns the falling concentration into a positive rate)."
+>
+Using the butyl chloride concentrations of Table 3.1, what is the average rate of hydrolysis in mol L⁻¹ s⁻¹ between 300 s and 400 s? Use $[\ce{C4H9Cl}] = 0.0549\ \text{mol L}^{-1}$ at 300 s and $0.0439\ \text{mol L}^{-1}$ at 400 s.
+</Check>
+
+<Check
+  n={2}
+  options={[
+    "The average rate over an interval is the slope of the tangent at one instant inside that interval",
+    "The instantaneous rate is the slope of the tangent to the concentration–time curve at that instant, with its sign reversed for a reactant",
+    "The rate of a reaction is negative while a reactant is being used up",
+    "The rate of a reaction is measured in seconds, whatever the concentration unit"
+  ]}
+  answer={1}
+  explanation="The average rate is the slope of a chord over a finite interval, not a tangent. The rate of a reaction is positive by definition, so a falling reactant curve gives a negative slope that is reversed. The unit of rate is concentration divided by time, so it is never just seconds."
+>
+Which statement about rates of reaction is correct?
+</Check>
+
+<Check
+  n={3}
+  numeric
+  answer={0.00007}
+  tolerance={0.000001}
+  unit="mol L⁻¹ s⁻¹"
+  explanation="For 2NO₂ → 2NO + O₂, the rate is Rate = −½ d[NO₂]/dt = d[O₂]/dt. If the oxygen rate is 3.5 × 10⁻⁵ mol L⁻¹ s⁻¹, then d[NO₂]/dt = −7.0 × 10⁻⁵ mol L⁻¹ s⁻¹, so NO₂ disappears at 7.0 × 10⁻⁵ mol L⁻¹ s⁻¹."
+>
+For $\ce{2NO2 -> 2NO + O2}$, oxygen appears at a rate of $3.5 \times 10^{-5}\ \text{mol L}^{-1}\text{s}^{-1}$. At what rate, in mol L⁻¹ s⁻¹, does nitrogen dioxide disappear?
+</Check>
+
+<KeyIdeas>
+- The **rate of a reaction** is the change in concentration of a reactant or product per unit time. Written as $-\Delta[\ce{R}]/\Delta t$ for a reactant, it is always positive.
+- The **average rate** is the slope of the chord over a finite interval. The **instantaneous rate** is the slope of the tangent at one instant, found as the interval shrinks to zero.
+- The units of rate are concentration per unit time, $\text{mol L}^{-1}\text{s}^{-1}$, or $\text{atm s}^{-1}$ for gases followed through partial pressure.
+- For $a\,\ce{A} + b\,\ce{B} \rightarrow c\,\ce{C} + d\,\ce{D}$, each species rate is divided by its coefficient, so every species reports the same rate of reaction.
+- Kinetics asks how fast a reaction runs, which feasibility from thermodynamics and equilibrium from chemical equilibrium cannot answer.
+</KeyIdeas>
