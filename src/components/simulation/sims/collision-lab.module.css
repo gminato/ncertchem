@@ -1,0 +1,77 @@
+.sim {
+  display: grid;
+  gap: var(--space-4, 1rem);
+  width: 100%;
+  min-width: 0;
+}
+
+.controls {
+  display: grid;
+  gap: var(--space-3, 0.75rem);
+  grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
+  align-items: end;
+}
+
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3, 0.75rem);
+  align-items: center;
+  grid-column: 1 / -1;
+}
+
+.stage {
+  min-width: 0;
+}
+
+.scene,
+.plot {
+  display: block;
+  width: 100%;
+  height: auto;
+  max-width: 100%;
+}
+
+.counts {
+  display: grid;
+  gap: var(--space-2, 0.5rem);
+  grid-template-columns: repeat(auto-fit, minmax(10rem, 1fr));
+  margin: 0;
+}
+
+.counts div {
+  padding: var(--space-2, 0.5rem) var(--space-3, 0.75rem);
+  border: 1px solid var(--border, currentColor);
+  border-radius: var(--radius-md, 8px);
+}
+
+.counts dt {
+  font-size: 0.9rem;
+  color: var(--fg-muted);
+}
+
+.counts dd {
+  margin: 0;
+  font-size: 1.25rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.compare p {
+  margin: 0.25rem 0;
+  overflow-wrap: anywhere;
+}
+
+.note {
+  color: var(--fg-muted);
+  font-size: 0.95rem;
+}
+
+.eqs {
+  overflow-x: auto;
+  max-width: 100%;
+}
+
+.live {
+  margin: 0;
+  color: var(--fg-muted);
+}
