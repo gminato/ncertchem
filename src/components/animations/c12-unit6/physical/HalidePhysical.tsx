@@ -223,7 +223,7 @@ const BROMOBUTANE_NAMES: readonly (readonly string[])[] = [
 ]
 const CARD_X = [98, 290, 482] as const
 /** Step 3 cards sit further from the y-axis so the leftmost bar label clears it. */
-const DCB_CARD_X = [164, 306, 448] as const
+const DCB_CARD_X = [140, 312, 484] as const
 
 /** Step 2: three C₄H₉Br isomers, the bars falling as the shape gets more compact. */
 function ShapeBars() {
