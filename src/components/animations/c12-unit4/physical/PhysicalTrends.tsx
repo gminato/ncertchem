@@ -4,7 +4,7 @@ import type { ReactElement } from 'react'
 import { OrbitalBox, PlotFrame } from '@/components/vocab'
 import { SERIES_TONE, fillSubshell } from '@/components/vocab/dblock'
 import { makePlotScale, type Box, type Domain, type PlotScale } from '@/components/vocab/kinetics/geometry'
-import { SERIES_MEMBERS } from '@/lib/chem/dblock-series-data'
+import { FIG_4_2_READING_UNCERTAINTY_KJ, SERIES_MEMBERS } from '@/lib/chem/dblock-series-data'
 import {
   HF_RADIUS_PM,
   TI_RADIUS_PM,
@@ -16,6 +16,7 @@ import {
   meltingPointsC,
   metallicRadius3d,
   physicalViewForStep,
+  pointFor,
   unpaired3d,
   type PhysicalView,
   type TrendPoint,
@@ -30,7 +31,8 @@ export interface PhysicalTrendsProps {
 const W = 580
 const H = 440
 /** The data window of every trend plot: x = position in the row, labels sit in the right margin. */
-const BOX: Box = { left: 66, top: 44, width: 400, height: 300 }
+const BOX: Box = { left: 66, top: 44, width: 400, height: 276 }
+const BOTTOM = BOX.top + BOX.height
 const LABEL_X = 478
 
 const ALL_POSITIONS = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
@@ -39,6 +41,15 @@ const TONE_3D = SERIES_TONE['3d']
 const TONE_4D = SERIES_TONE['4d']
 const TONE_5D = SERIES_TONE['5d']
 
+/** Scale for the x positions of the row (only x is used, by the symbol rows under the ticks). */
+const ROW_X = makePlotScale({ xMin: 0.5, xMax: 10.5, yMin: 0, yMax: 1 }, BOX)
+/** Element symbols under each group tick, one line per series, in the series tone. */
+const SYMBOL_ROWS: readonly { tone: string; symbols: readonly string[] }[] = [
+  { tone: TONE_3D, symbols: SERIES_MEMBERS['3d'] },
+  { tone: TONE_4D, symbols: SERIES_MEMBERS['4d'] },
+  { tone: TONE_5D, symbols: SERIES_MEMBERS['5d'] },
+]
+
 const ARIA: Record<PhysicalView, string> = {
   melting: 'Melting points of the 3d, 4d and 5d series across groups 3 to 12, each series in its own tone',
   configs: 'Ten 3d configuration rows from Sc to Zn with the number of unpaired electrons under each',
@@ -46,6 +57,12 @@ const ARIA: Record<PhysicalView, string> = {
   radii3d: 'Metallic radii and M³⁺ radii of the 3d series, falling across the row',
   sizes: 'Circles to scale for Ti, Zr and Hf: Zr and Hf almost the same size',
   density: 'Densities of V to Zn, rising to Ni and Cu and falling at Zn',
+}
+
+/** A value as label text: whole numbers with a true minus sign, "≈" when approximate. */
+function valueText(p: TrendPoint, approx = false): string {
+  const digits = String(Math.round(p.y)).replace('-', '−')
+  return `${p.symbol} ${approx ? '≈' : ''}${digits}`
 }
 
 /** Stacks labels so none overlap; keeps each label within `gap` of the one above it. */
@@ -65,6 +82,11 @@ interface EdgeItem {
   key: string
   pointY: number
   text: string
+}
+
+/** A right-margin label for one point. */
+function edgeItem(p: TrendPoint, scale: PlotScale, approx = false): EdgeItem {
+  return { key: p.symbol, pointY: scale.y(p.y), text: valueText(p, approx) }
 }
 
 /** Labels in the right margin, joined to their points by thin leaders. */
@@ -138,24 +160,64 @@ function Legend({ items }: { items: readonly { label: string; tone: string; dash
   )
 }
 
+/** Element symbols under the group ticks, one line per series, in the series tone. */
+function SymbolRows() {
+  return (
+    <g>
+      {SYMBOL_ROWS.map((row, r) =>
+        row.symbols.map((symbol, i) => (
+          <text
+            key={`${r}-${symbol}`}
+            x={ROW_X.x(i + 1)}
+            y={BOTTOM + 38 + 16 * r}
+            textAnchor="middle"
+            fontSize={14}
+            fill={row.tone}
+          >
+            {symbol}
+          </text>
+        ))
+      )}
+    </g>
+  )
+}
+
+/** Axis title placed below the symbol rows (PlotFrame's own title would sit on them). */
+function RowAxisTitle({ text }: { text: string }) {
+  return (
+    <text x={BOX.left + BOX.width / 2} y={BOTTOM + 88} textAnchor="middle" fontSize={15} fill="var(--fg)">
+      {text}
+    </text>
+  )
+}
+
+/** Solid faint gridlines at the given values (PlotFrame's grid is off where a dashed guide replaces one). */
+function Gridlines({ scale, xs, ys }: { scale: PlotScale; xs: readonly number[]; ys: readonly number[] }) {
+  return (
+    <g>
+      {xs.map((v) => (
+        <line key={`gx${v}`} x1={scale.x(v)} x2={scale.x(v)} y1={BOX.top} y2={BOTTOM} stroke="var(--kin-grid)" strokeWidth={1} />
+      ))}
+      {ys.map((v) => (
+        <line key={`gy${v}`} x1={BOX.left} x2={BOX.left + BOX.width} y1={scale.y(v)} y2={scale.y(v)} stroke="var(--kin-grid)" strokeWidth={1} />
+      ))}
+    </g>
+  )
+}
+
 function MeltingView() {
   const domain: Domain = { xMin: 0.5, xMax: 10.5, yMin: -100, yMax: 3900 }
   const scale = makePlotScale(domain, BOX)
+  const pts3 = meltingPointsC('3d')
+  const pts4 = meltingPointsC('4d')
+  const pts5 = meltingPointsC('5d')
+  const peaks = [pointFor(pts3, 'V'), pointFor(pts4, 'Mo'), pointFor(pts5, 'W')]
+  const lows = [pointFor(pts3, 'Zn'), pointFor(pts4, 'Cd'), pointFor(pts5, 'Hg')]
   const series = [
-    { key: '3d', tone: TONE_3D, pts: meltingPointsC('3d') },
-    { key: '4d', tone: TONE_4D, pts: meltingPointsC('4d') },
-    { key: '5d', tone: TONE_5D, pts: meltingPointsC('5d') },
+    { key: '3d', tone: TONE_3D, pts: pts3 },
+    { key: '4d', tone: TONE_4D, pts: pts4 },
+    { key: '5d', tone: TONE_5D, pts: pts5 },
   ] as const
-  const peaks = [
-    { sym: 'V', x: 3, y: 1910, tone: TONE_3D },
-    { sym: 'Mo', x: 4, y: 2623, tone: TONE_4D },
-    { sym: 'W', x: 4, y: 3422, tone: TONE_5D },
-  ]
-  const lows = [
-    { key: 'Zn', pointY: scale.y(420), text: 'Zn 420' },
-    { key: 'Cd', pointY: scale.y(321), text: 'Cd 321' },
-    { key: 'Hg', pointY: scale.y(-39), text: 'Hg −39' },
-  ]
   return (
     <g>
       <Legend items={[{ label: '3d', tone: TONE_3D }, { label: '4d', tone: TONE_4D }, { label: '5d', tone: TONE_5D }]} />
@@ -165,22 +227,35 @@ function MeltingView() {
         width={BOX.width}
         height={BOX.height}
         domain={domain}
+        grid={false}
         xTicks={ALL_POSITIONS}
         yTicks={[0, 1000, 2000, 3000]}
         xTickFormat={groupTick}
-        xTitle="group, 3 to 12"
         yTitle="melting point / °C"
       >
+        <Gridlines scale={scale} xs={ALL_POSITIONS} ys={[1000, 2000, 3000]} />
+        {/* 0 °C as a faint dashed guide; the x-axis itself sits at the bottom of the window (−100 °C) */}
+        <line
+          x1={BOX.left}
+          x2={BOX.left + BOX.width}
+          y1={scale.y(0)}
+          y2={scale.y(0)}
+          stroke="var(--kin-axis)"
+          strokeWidth={1}
+          strokeDasharray="4 4"
+        />
         {series.map((s) => (
           <Trend key={s.key} pts={s.pts} scale={scale} tone={s.tone} />
         ))}
         {peaks.map((p) => (
-          <text key={p.sym} x={scale.x(p.x)} y={scale.y(p.y) - 12} textAnchor="middle" fontSize={14} fill="var(--fg)">
-            {`${p.sym} ${p.y}`}
+          <text key={p.symbol} x={scale.x(p.x)} y={scale.y(p.y) - 12} textAnchor="middle" fontSize={14} fill="var(--fg)">
+            {valueText(p)}
           </text>
         ))}
       </PlotFrame>
-      <EdgeLabels items={lows} pointX={scale.x(10)} />
+      <SymbolRows />
+      <RowAxisTitle text="group, 3 to 12" />
+      <EdgeLabels items={lows.map((p) => edgeItem(p, scale))} pointX={scale.x(10)} />
     </g>
   )
 }
@@ -220,11 +295,13 @@ function EnthalpyView() {
   const solid = atomisation3d()
   const d4 = atomisationApprox('4d')
   const d5 = atomisationApprox('5d')
-  const lows = [
-    { key: 'Zn', pointY: scale.y(126), text: 'Zn 126' },
-    { key: 'Cd', pointY: scale.y(110), text: 'Cd ≈110' },
-    { key: 'Hg', pointY: scale.y(60), text: 'Hg ≈60' },
-  ]
+  const v = pointFor(solid, 'V')
+  const mn = pointFor(solid, 'Mn')
+  const zn = pointFor(solid, 'Zn')
+  const nb = pointFor(d4, 'Nb')
+  const cd = pointFor(d4, 'Cd')
+  const w = pointFor(d5, 'W')
+  const hg = pointFor(d5, 'Hg')
   return (
     <g>
       <Legend
@@ -243,28 +320,29 @@ function EnthalpyView() {
         xTicks={ALL_POSITIONS}
         yTicks={[0, 200, 400, 600, 800]}
         xTickFormat={groupTick}
-        xTitle="group, 3 to 12"
         yTitle="ΔaH / kJ mol⁻¹"
       >
         <Trend pts={solid} scale={scale} tone={TONE_3D} />
         <Trend pts={d4} scale={scale} tone={TONE_4D} dashed />
         <Trend pts={d5} scale={scale} tone={TONE_5D} dashed />
-        <text x={scale.x(3)} y={scale.y(515) - 12} textAnchor="middle" fontSize={14} fill="var(--fg)">
-          V 515
+        <text x={scale.x(v.x)} y={scale.y(v.y) - 12} textAnchor="middle" fontSize={14} fill="var(--fg)">
+          {valueText(v)}
         </text>
-        <text x={scale.x(5)} y={scale.y(281) + 22} textAnchor="middle" fontSize={14} fill="var(--fg)">
-          Mn 281
+        <text x={scale.x(mn.x)} y={scale.y(mn.y) + 22} textAnchor="middle" fontSize={14} fill="var(--fg)">
+          {valueText(mn)}
         </text>
-        <text x={scale.x(3) + 8} y={scale.y(720) - 6} fontSize={14} fill="var(--fg)">
-          Nb ≈720
+        <text x={scale.x(nb.x) + 8} y={scale.y(nb.y) - 6} fontSize={14} fill="var(--fg)">
+          {valueText(nb, true)}
         </text>
-        <text x={scale.x(4) - 8} y={scale.y(845) - 6} textAnchor="end" fontSize={14} fill="var(--fg)">
-          W ≈845
+        <text x={scale.x(w.x) - 8} y={scale.y(w.y) - 6} textAnchor="end" fontSize={14} fill="var(--fg)">
+          {valueText(w, true)}
         </text>
       </PlotFrame>
-      <EdgeLabels items={lows} pointX={scale.x(10)} />
+      <SymbolRows />
+      <RowAxisTitle text="group, 3 to 12" />
+      <EdgeLabels items={[edgeItem(zn, scale), edgeItem(cd, scale, true), edgeItem(hg, scale, true)]} pointX={scale.x(10)} />
       <text x={W / 2} y={H - 14} textAnchor="middle" fontSize={14} fill="var(--fg-muted)">
-        ≈ 4d and 5d values are read off NCERT Fig. 4.2 (±10 kJ mol⁻¹).
+        {`≈ 4d and 5d values are read off NCERT Fig. 4.2 (±${FIG_4_2_READING_UNCERTAINTY_KJ} kJ mol⁻¹).`}
       </text>
     </g>
   )
@@ -275,7 +353,11 @@ function RadiiView() {
   const scale = makePlotScale(domain, BOX)
   const metal = metallicRadius3d()
   const m3 = m3PlusRadius3d()
-  const zn = metal.find((p) => p.symbol === 'Zn')
+  const sc = pointFor(metal, 'Sc')
+  const sc3 = pointFor(m3, 'Sc')
+  const co = pointFor(metal, 'Co')
+  const mn3 = pointFor(m3, 'Mn')
+  const zn = pointFor(metal, 'Zn')
   return (
     <g>
       <Legend items={[{ label: 'metal atom', tone: TONE_3D }, { label: 'M³⁺ ion', tone: TONE_3D, dashed: true, hollow: true }]} />
@@ -293,20 +375,22 @@ function RadiiView() {
       >
         <Trend pts={metal} scale={scale} tone={TONE_3D} />
         <Trend pts={m3} scale={scale} tone={TONE_3D} dashed hollow />
-        <text x={scale.x(1) + 6} y={scale.y(164) - 12} fontSize={14} fill="var(--fg)">
-          Sc 164
+        <text x={scale.x(sc.x) + 6} y={scale.y(sc.y) - 12} fontSize={14} fill="var(--fg)">
+          {`Sc ${sc.y}`}
         </text>
-        <text x={scale.x(1) + 6} y={scale.y(73) - 12} fontSize={14} fill="var(--fg)">
-          Sc³⁺ 73
+        <text x={scale.x(sc3.x) + 6} y={scale.y(sc3.y) - 12} fontSize={14} fill="var(--fg)">
+          {`Sc³⁺ ${sc3.y}`}
         </text>
-        <text x={scale.x(7.5)} y={scale.y(125) - 12} textAnchor="middle" fontSize={14} fill="var(--fg)">
-          Co, Ni 125
+        {/* Co and Ni share the same metallic radius in Table 4.2 */}
+        <text x={scale.x(7.5)} y={scale.y(co.y) - 12} textAnchor="middle" fontSize={14} fill="var(--fg)">
+          {`Co, Ni ${co.y}`}
         </text>
-        <text x={scale.x(5.5)} y={scale.y(65) + 22} textAnchor="middle" fontSize={14} fill="var(--fg)">
-          Mn, Fe 65
+        {/* Mn and Fe share the same M³⁺ radius in Table 4.2 */}
+        <text x={scale.x(5.5)} y={scale.y(mn3.y) + 22} textAnchor="middle" fontSize={14} fill="var(--fg)">
+          {`Mn, Fe ${mn3.y}`}
         </text>
       </PlotFrame>
-      {zn ? <EdgeLabels items={[{ key: 'Zn', pointY: scale.y(zn.y), text: `Zn ${zn.y}` }]} pointX={scale.x(10)} /> : null}
+      <EdgeLabels items={[edgeItem(zn, scale)]} pointX={scale.x(10)} />
     </g>
   )
 }
@@ -353,6 +437,7 @@ function DensityView() {
   const domain: Domain = { xMin: 0.5, xMax: 8.5, yMin: 0, yMax: 11.5 }
   const scale = makePlotScale(domain, BOX)
   const bars = density3dVtoZn()
+  const ni = pointFor(bars, 'Ni')
   const symbolTick = (v: number) => symbols[Math.round(v) + 1] ?? ''
   return (
     <g>
@@ -384,7 +469,7 @@ function DensityView() {
           </g>
         ))}
         <text x={scale.x(6.2)} y={scale.y(10.9)} textAnchor="middle" fontSize={14} fill="var(--fg)">
-          Ni and Cu tie at 8.9; Zn falls back
+          {`Ni and Cu tie at ${ni.y}; Zn falls back`}
         </text>
       </PlotFrame>
     </g>

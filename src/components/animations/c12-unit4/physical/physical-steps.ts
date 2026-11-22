@@ -90,6 +90,13 @@ export function density3dVtoZn(): TrendPoint[] {
   }))
 }
 
+/** The point for one symbol in a series; throws if the symbol is not in it. */
+export function pointFor(points: readonly TrendPoint[], symbol: string): TrendPoint {
+  const found = points.find((p) => p.symbol === symbol)
+  if (!found) throw new Error(`No point for ${symbol}`)
+  return found
+}
+
 /** Ti 147 pm (Table 4.2), Zr 160 pm and Hf 159 pm (4d and 5d metallic radii). */
 export const TI_RADIUS_PM = row('Ti').radiusMetalPm
 export const ZR_RADIUS_PM = heavyRadiusPm('4d', 'Zr')
