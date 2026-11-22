@@ -1,0 +1,134 @@
+---
+class: 12
+unit: 3
+section: "3.4"
+order: 8
+title: "Temperature Dependence and the Arrhenius Equation"
+slug: "12-3-4-temperature-and-arrhenius"
+access: free
+summary: "A small rise in temperature lets many more molecules clear an energy barrier, so the rate constant climbs steeply; the Arrhenius equation turns that into a straight line."
+ncert: "Class 12, Part I — Unit 3, Section 3.4"
+---
+
+<Hook>
+A pressure cooker gets dal soft in a fraction of the time an open pot needs, yet the steam inside runs only about 20 °C hotter. How can such a small change in temperature make such a large difference to how fast the cooking happens?
+</Hook>
+
+## Speed climbs faster than you expect
+
+Warm a reaction and it almost always goes faster. A useful rule of thumb is that, for many reactions, a rise of just 10 K nearly doubles the rate constant. That is a change of only about three per cent on the kelvin scale near room temperature, yet it can double the speed.
+
+The dependence is steep, not gentle, and it is the reason a kitchen or a lab bench needs careful temperature control. To describe it accurately we need an equation that treats temperature as an exponent, not as a slow multiplier.
+
+## The Arrhenius equation
+
+Credit for spotting the temperature dependence goes to the Dutch chemist J. H. van 't Hoff. A Swedish chemist, Svante Arrhenius, then explained why it happens, and his relation is the **Arrhenius equation**:
+
+$$
+k = A\,e^{-E_\text{a}/RT}
+$$
+
+Here $A$ is the pre-exponential or frequency factor, a constant specific to the reaction. $E_\text{a}$ is the activation energy, always positive and measured in J mol⁻¹, $R = 8.314\ \text{J K}^{-1}\ \text{mol}^{-1}$, and $T$ is the temperature in kelvin. The minus sign sits in the exponent, so a bigger $E_\text{a}$ or a lower $T$ makes the exponential smaller.
+
+Take a first-order reaction with $E_\text{a} = 50.0\ \text{kJ mol}^{-1}$ and $k = 3.00 \times 10^{-4}\ \text{s}^{-1}$ at $298\ \text{K}$. Solving the equation gives $A = 1.74 \times 10^{5}\ \text{s}^{-1}$. Move the same reaction to $308\ \text{K}$ and the rate constant becomes $5.78 \times 10^{-4}\ \text{s}^{-1}$, a factor of $1.93$ for that 10 K rise. This is the doubling rule, worked out from the equation.
+
+## An energy barrier and an activated complex
+
+Arrhenius pictured the reaction $\ce{H2(g) + I2(g) -> 2HI(g)}$ this way. Picture an H₂ and an I₂ molecule meeting head on. When they collide, they can briefly fuse into a fragile species, the **activated complex**, and that species falls apart into two HI molecules. Reaching the complex takes an energy input, and that input is $E_\text{a}$.
+
+A potential-energy diagram, drawn against the reaction coordinate, shows the whole path. The reactants sit on the left at one level, the activated complex forms the peak, and the products end on the right at a level set by the reaction's enthalpy change, $\Delta_\text{r}H$. The barrier $E_\text{a}$ is always measured up from the reactants to the peak, not from the products.
+
+## Molecules do not share one energy
+
+A single molecule's energy cannot be predicted precisely, so Boltzmann and Maxwell used statistics on large numbers of molecules. Their distribution plots the fraction of molecules against kinetic energy. The curve has a peak at the most probable energy, which for molar energies is $RT/2$, about $1.24\ \text{kJ mol}^{-1}$ at $298\ \text{K}$.
+
+Heat the gas and two things happen. Warming a gas reshapes its energy distribution in a predictable way. The top of the curve slides toward higher energy and lowers, and the whole shape widens toward the right, leaving a larger share of molecules with very high energy. The enclosed area cannot change, since each molecule has to sit somewhere under the curve. The part that does grow is the tail past $E_\text{a}$, meaning the fraction able to clear the barrier.
+
+For our reaction that fraction is $e^{-E_\text{a}/RT}$, about $1.72 \times 10^{-9}$ at $298\ \text{K}$ and $3.31 \times 10^{-9}$ at $308\ \text{K}$. A 10 K rise multiplies it by about $1.9$, which is exactly why the rate nearly doubles. The tail is a sliver, so the figures draw it enlarged.
+
+## A straight line for the data
+
+Put the Arrhenius equation through a logarithm and you get
+
+$$
+\ln k = -\frac{E_\text{a}}{RT} + \ln A
+$$
+
+Because this has the form of a straight line in $1/T$, a graph of $\ln k$ against $1/T$ is linear. Its slope gives $-E_\text{a}/R$ and its intercept gives $\ln A$, so the graph returns both quantities. For our reaction the slope is $-6.01 \times 10^{3}\ \text{K}$ and the intercept is $12.07$.
+
+With just two rate constants in hand, write one logarithmic expression per temperature and take the difference. The factor $A$ drops out of that difference:
+
+$$
+\log\frac{k_2}{k_1} = \frac{E_\text{a}}{2.303\,R}\left(\frac{1}{T_1} - \frac{1}{T_2}\right)
+$$
+
+A higher temperature or a smaller $E_\text{a}$ both speed things up. Temperature enters through an exponential, so $k$ climbs exponentially as $1/T$ shrinks.
+
+<Scrolly animation="arrhenius-energy">
+  <Step>
+    **Molecules meet:** A hydrogen molecule and an iodine molecule drift toward each other in a sealed box. Most of their collisions bounce them apart unchanged. One energetic collision holds for an instant as a short-lived intermediate, then separates into two molecules of hydrogen iodide. Only the energetic meetings lead to product.
+  </Step>
+  <Step>
+    **The energy barrier:** The potential-energy diagram now replaces the box. The reactants sit on the left at one level. A double-headed arrow marks $E_\text{a}$ from that level up to the peak, which is the activated complex. The products end lower on the right, and an arrow labelled $\Delta_\text{r}H$ joins the reactant and product levels.
+  </Step>
+  <Step>
+    **The distribution at 298 K:** The Maxwell–Boltzmann curve appears at 298 K, with the peak at $RT/2$ and $E_\text{a} = 50.0\ \text{kJ mol}^{-1}$ marked on the axis. The tail beyond $E_\text{a}$ is shaded and labelled $1.72 \times 10^{-9}$. The tail is enlarged in the drawing so it can be seen, and a note says so.
+  </Step>
+  <Step>
+    **Warm it by 10 K:** A second curve, at 308 K, is drawn over the first. It is flatter, its peak sits further right and lower, and the total area under both is the same. The shaded tail beyond $E_\text{a}$ is larger, and a label reads $\times 1.9$ beside it.
+  </Step>
+  <Step>
+    **The straight line:** Three points, at $298$, $308$ and $318\ \text{K}$, are plotted as $\ln(k/\text{s}^{-1})$ against $1/T$. They fall on one straight line with slope $-6.01 \times 10^{3}\ \text{K}$. The intercept $12.07$ gives $A = 1.74 \times 10^{5}\ \text{s}^{-1}$, and the slope gives back $E_\text{a}$ in kilojoules.
+  </Step>
+</Scrolly>
+
+## Explore temperature and the barrier
+
+Move the temperature and the activation energy and watch four things change together: the energy diagram, the shaded tail, the ratio $k(T + 10\ \text{K})/k(T)$, and the straight line on the $\ln k$ plot. Try a high barrier and a low one, and see how the tilt of the line answers the question of which reaction is more sensitive to heat.
+
+<Simulation name="arrhenius-lab" title="Arrhenius Lab" />
+
+## Check your understanding
+
+<Check
+  n={1}
+  numeric
+  answer={1.93}
+  tolerance={0.02}
+  explanation="With Eₐ = 50.0 kJ mol⁻¹, k(308 K)/k(298 K) = exp[(Eₐ/R)(1/298 − 1/308)] = exp(0.6553) = 1.93. The frequency factor A cancels, so the answer needs only Eₐ and the two temperatures."
+>
+A first-order reaction has $E_\text{a} = 50.0\ \text{kJ mol}^{-1}$. By what factor does its rate constant increase when the temperature goes from 298 K to 308 K? Use $R = 8.314\ \text{J K}^{-1}\ \text{mol}^{-1}$ and give your answer to three significant figures.
+</Check>
+
+<Check
+  n={2}
+  numeric
+  answer={55.3}
+  tolerance={0.2}
+  unit="kJ mol⁻¹"
+  explanation="ln(k₂/k₁) = (Eₐ/R)(1/T₁ − 1/T₂), so Eₐ = R ln(k₂/k₁)/(1/T₁ − 1/T₂) = 8.314 × ln 4 / (1/300 − 1/320) = 8.314 × 1.3863 / 2.0833 × 10⁻⁴ ≈ 5.53 × 10⁴ J mol⁻¹ = 55.3 kJ mol⁻¹."
+>
+A reaction has $k = 2.00 \times 10^{-4}\ \text{s}^{-1}$ at 300 K and $k = 8.00 \times 10^{-4}\ \text{s}^{-1}$ at 320 K. What is its activation energy in kJ mol⁻¹? Use $R = 8.314\ \text{J K}^{-1}\ \text{mol}^{-1}$.
+</Check>
+
+<Check
+  n={3}
+  options={[
+    "Lowering the temperature moves the Maxwell–Boltzmann peak to higher energy and raises it",
+    "Changing the frequency factor A moves the peak of the Maxwell–Boltzmann curve to the right",
+    "Raising the temperature moves the peak to higher energy and lowers it, while the total area stays the same",
+    "Raising the temperature increases the total area under the Maxwell–Boltzmann curve"
+  ]}
+  answer={2}
+  explanation="The Maxwell–Boltzmann curve depends on temperature alone, so A does not move it. Lowering T moves the peak left and raises it. The area under the curve is fixed at one (every molecule is somewhere on it), so raising T cannot increase it. Raising T does move the peak right and lower, and the tail beyond Eₐ grows."
+>
+Which statement about the Maxwell–Boltzmann curve and the Arrhenius equation is correct?
+</Check>
+
+<KeyIdeas>
+- The **Arrhenius equation** $k = A\,e^{-E_\text{a}/RT}$ makes the rate constant depend exponentially on temperature. The frequency factor $A$ and the activation energy $E_\text{a}$ are both specific to the reaction.
+- For many reactions a rise of 10 K nearly doubles $k$. For $E_\text{a} = 50.0\ \text{kJ mol}^{-1}$ near 300 K, the factor is about $1.9$.
+- The activated complex sits at the top of the barrier. $E_\text{a}$ is measured from the reactant level to that peak, whatever the overall enthalpy change.
+- Raising the temperature moves the Maxwell–Boltzmann peak right and lowers it, while the area stays fixed. The shaded fraction of molecules with energy at or above $E_\text{a}$ grows.
+- $\ln k$ against $1/T$ is a straight line with slope $-E_\text{a}/R$ and intercept $\ln A$, and two rate constants give $\log(k_2/k_1) = \dfrac{E_\text{a}}{2.303\,R}\left(\dfrac{1}{T_1} - \dfrac{1}{T_2}\right)$.
+</KeyIdeas>

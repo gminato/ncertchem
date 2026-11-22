@@ -1,0 +1,146 @@
+.sim {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  width: 100%;
+  min-width: 0;
+}
+
+.controls {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.sliderGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: var(--space-3);
+}
+
+.ratioRow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-3);
+  font-size: 16px;
+  color: var(--fg);
+}
+
+.ratioText strong {
+  font-variant-numeric: tabular-nums;
+  color: var(--accent);
+}
+
+/* Two plots and the energy profile share a row on wide screens; the readout takes the last cell. */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 420px), 1fr));
+  gap: var(--space-3);
+  align-items: start;
+}
+
+.panel {
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  background: var(--surface-raised);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: var(--space-3);
+  min-width: 0;
+}
+
+.svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  max-width: 100%;
+  overflow: visible;
+}
+
+.caption {
+  font-size: 14px;
+  line-height: 1.45;
+  color: var(--fg-muted);
+}
+
+.label {
+  font-family: var(--font-sans);
+  fill: var(--fg);
+}
+
+.toneReactant {
+  fill: var(--kin-reactant);
+  font-family: var(--font-sans);
+}
+
+.toneProduct {
+  fill: var(--kin-product);
+  font-family: var(--font-sans);
+}
+
+.readout {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  background: var(--surface-raised);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: var(--space-3);
+  min-width: 0;
+}
+
+.stat {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: var(--space-2) 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.statLabel {
+  font-size: 15px;
+  color: var(--fg-muted);
+}
+
+.statValue {
+  font-size: 22px;
+  font-variant-numeric: tabular-nums;
+  color: var(--fg);
+}
+
+.sym {
+  font-family: var(--font-serif);
+  font-style: italic;
+}
+
+.sup {
+  font-size: 1em;
+  vertical-align: 0.45em;
+  line-height: 0;
+}
+
+.note {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.45;
+  color: var(--fg-muted);
+}
+
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+/* An exponent kept at full text size: the default superscript falls below 14 px. */
+.exp {
+  font-size: 16px;
+  vertical-align: 0.4em;
+  line-height: 0;
+}
