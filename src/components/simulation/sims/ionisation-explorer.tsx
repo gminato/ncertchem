@@ -154,7 +154,7 @@ export function IonisationExplorer() {
             yTicks={[0, 1000, 2000, 3000, 4000]}
             xTickFormat={(v) => FIRST_SERIES_SYMBOLS[v] ?? ''}
             yTickFormat={(v) => String(v)}
-            xTitle="element"
+            xTitle="Element, 3d row"
             yTitle="IE / kJ mol⁻¹"
           >
             {IE_TONES.map((tone, k) => (
