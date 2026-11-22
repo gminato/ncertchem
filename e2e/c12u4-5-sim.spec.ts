@@ -19,7 +19,8 @@ function watchErrors(page: Page): string[] {
 /**
  * Text leaves in the Simulation whose RENDERED size is below 14 px at this viewport (KaTeX internals and the
  * SR-only line excluded). For SVG text, computed font-size is the viewBox value, so scale it by the SVG's
- * on-screen width over its viewBox width.
+ * on-screen width over its viewBox width. Sub/Sup tspans (baseline-shift, 72 %) are exempt per R12: their parent
+ * label is measured instead.
  */
 async function smallTextLeaves(page: Page): Promise<string[]> {
   return page.locator(`[data-simulation="${SIM}"]`).evaluate((root) => {
@@ -29,7 +30,8 @@ async function smallTextLeaves(page: Page): Promise<string[]> {
     while (node) {
       const text = (node.textContent ?? '').trim()
       const el = node.parentElement
-      if (text && el && !el.closest('.katex') && !el.closest('[class*="srOnly"]') && !el.closest('[class*="eyebrow"]')) {
+      const isScript = el?.closest('[baseline-shift]') != null
+      if (text && el && !isScript && !el.closest('.katex') && !el.closest('[class*="srOnly"]') && !el.closest('[class*="eyebrow"]')) {
         let size = parseFloat(getComputedStyle(el).fontSize)
         const svg = el.closest('svg')
         if (svg) {

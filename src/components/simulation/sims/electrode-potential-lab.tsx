@@ -1,7 +1,8 @@
 'use client'
 
-import { useRef, useState, type ReactNode } from 'react'
+import { useRef, useState } from 'react'
 import { Button } from '@/components/controls'
+import { Sub } from '@/components/animations/c12-unit1/ChemSvg'
 import { PlotFrame, usePlotScale } from '@/components/vocab'
 import { EnergyCycle, energyDomain, SERIES_TONE, type EnergyStep } from '@/components/vocab/dblock'
 import { Beaker, beakerGeometry } from '@/components/vocab/electrochem'
@@ -24,15 +25,13 @@ const E_DOMAIN = { xMin: 0, xMax: 1, yMin: -2, yMax: 0.6 }
 const E_TICKS = [-1.5, -1, -0.5, 0, 0.5]
 const TONE_3D = SERIES_TONE['3d']
 
-/** A subscript at the label's own size (14 px rendered), so the 14 px text floor holds. */
-function LowSub({ children }: { children: ReactNode }) {
-  return <tspan baselineShift="sub">{children}</tspan>
-}
-
-/** Fixed bubble offsets (deterministic; no randomness in render). */
+/**
+ * Fixed bubble offsets (deterministic; no randomness in render). Origins sit in the liquid just below the strip
+ * and beside it (|dx| clears the strip's half-width of 9), so they rise past the metal, not stuck to it.
+ */
 const BUBBLES = Array.from({ length: 8 }, (_, i) => ({
-  dx: ((i * 7) % 9 - 4) * 4,
-  rise: (i * 19) % 36,
+  dx: (i % 2 === 0 ? -1 : 1) * (13 + (i % 4) * 3),
+  below: 6 + (i % 3) * 5,
   r: 2.5 + (i % 3) * 0.8,
   delay: i * 0.3,
 }))
@@ -107,9 +106,9 @@ export function ElectrodePotentialLab({ reducedMotion }: SimulationProps) {
   const r = labReadout(metal)
   const cycleSpecies = [`${metal}(s)`, `${metal}(g)`, `${metal}²⁺(g)`, `${metal}²⁺(aq)`]
   const steps: EnergyStep[] = [
-    { name: <>Δ<LowSub>a</LowSub>H</>, value: r.atomisation, text: signedKj(r.atomisation) },
+    { name: <>Δ<Sub>a</Sub>H</>, value: r.atomisation, text: signedKj(r.atomisation) },
     { name: 'IE₁+IE₂', value: r.ionisation, text: signedKj(r.ionisation) },
-    { name: <>Δ<LowSub>hyd</LowSub>H</>, value: r.hydration, text: signedKj(r.hydration) },
+    { name: <>Δ<Sub>hyd</Sub>H</>, value: r.hydration, text: signedKj(r.hydration) },
   ]
   const status = statusText(r)
   const geo = beakerGeometry({ x: 20, y: 30, width: 160, height: 150, level: 0.78 })
@@ -194,7 +193,7 @@ export function ElectrodePotentialLab({ reducedMotion }: SimulationProps) {
                 key={i}
                 className={reducedMotion ? undefined : styles.bubble}
                 cx={geo.centreX + b.dx}
-                cy={rodBottom - 8 - b.rise}
+                cy={rodBottom + b.below}
                 r={b.r}
                 style={{
                   fill: 'var(--fg-muted)',
@@ -232,7 +231,7 @@ export function ElectrodePotentialLab({ reducedMotion }: SimulationProps) {
       </div>
 
       <p className={styles.note}>
-        Every cycle total is positive, because each metal needs energy to reach M²⁺(aq). Compare metals by their totals and by E°, not by the sign of the total: only the sign of E° decides the bubbles. The cycle uses one scale for all nine metals.
+        Every cycle total is positive, because the atomisation and ionisation terms outweigh hydration for every metal in the row. Compare metals by their totals and by E°, not by the sign of the total: only the sign of E° decides the bubbles. The cycle uses one scale for all nine metals.
       </p>
 
       <p className={styles.srOnly} aria-live="polite">

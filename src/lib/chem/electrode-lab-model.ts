@@ -1,8 +1,9 @@
 /**
  * Model for the Section 4.3.5 Electrode Potential Lab. Every number comes from the d-block lib:
- * the energy cycle uses Table 4.4 (electrodeCycle, ruling R7); the hydrogen rule uses E°(M²⁺/M).
+ * the cycle bars use Table 4.4 (electrodeCycle, ruling R7); E°(M²⁺/M), the readout and the hydrogen rule
+ * use Table 4.2 (eStandardM2).
  */
-import { electrodeCycle, liberatesH2FromDiluteAcid } from './dblock'
+import { eStandardM2, electrodeCycle, liberatesH2FromDiluteAcid } from './dblock'
 
 /** The 3d metals the lab can show, in NCERT order. */
 export const LAB_METALS = ['Ti', 'V', 'Cr', 'Mn', 'Fe', 'Co', 'Ni', 'Cu', 'Zn'] as const
@@ -31,6 +32,8 @@ export interface LabMetalReadout {
 
 export function labReadout(symbol: LabMetal): LabMetalReadout {
   const c = electrodeCycle(symbol)
+  const eStandard = eStandardM2(symbol)
+  if (eStandard === null) throw new RangeError(`${symbol} has no E°(M²⁺/M) in Table 4.2`)
   let gas: GasState = 'none-positive'
   if (liberatesH2FromDiluteAcid(symbol) === true) {
     gas = PASSIVE_METALS.includes(symbol) ? 'passive' : 'bubbles'
@@ -41,7 +44,7 @@ export function labReadout(symbol: LabMetal): LabMetalReadout {
     ionisation: c.ie1PlusIe2,
     hydration: c.hydration,
     sum: c.sum,
-    eStandard: c.eStandard,
+    eStandard,
     gas,
   }
 }
