@@ -1,0 +1,119 @@
+---
+class: 12
+unit: 3
+section: "3.2.4"
+order: 4
+title: "Molecularity of a Reaction"
+slug: "12-3-2-4-molecularity"
+access: free
+summary: "Molecularity counts the molecules that must collide in one elementary step, and a multi-step reaction runs at the pace of its slowest step."
+ncert: "Class 12, Part I — Unit 3, Section 3.2.4"
+---
+
+<Hook>
+On a highway toll plaza, two booths sit one behind the other. One is a quick FASTag lane and the other a slow manual counter. However fast the first booth clears a car, the queue leaves only as fast as the slower booth lets it through. Could a chemical reaction with several stages work the same way? If so, which stage sets the pace, and can you tell it from the equation alone?
+</Hook>
+
+## Counting the molecules in one step
+
+Molecularity is the number of reacting species, whether atoms, ions or molecules, that must collide at the same instant for the reaction to occur. It applies to an **elementary reaction**, a single act of collision with no hidden stages inside it. The count sorts elementary reactions into three families:
+
+- **Unimolecular:** one species reacts on its own, as when ammonium nitrite falls apart: $\ce{NH4NO2 -> N2 + 2H2O}$.
+- **Bimolecular:** two species meet, as when hydrogen iodide breaks down: $\ce{2HI -> H2 + I2}$.
+- **Termolecular:** three species meet together, as in $\ce{2NO + O2 -> 2NO2}$.
+
+Because molecularity is a head count of the particles in one collision, it is always a positive whole number.
+
+<Scrolly animation="mechanism-steps">
+  <Step>
+    **One species, no partner:** Start with a single ammonium nitrite molecule, $\ce{NH4NO2}$. It breaks apart on its own into one nitrogen molecule and two water molecules. No second particle has to arrive, and nothing else in the vessel is needed. This unimolecular step depends only on the one molecule that reacts.
+  </Step>
+  <Step>
+    **Two particles must meet:** Two hydrogen iodide molecules drift about in the vessel. The reaction happens only when two of them collide, and their atoms regroup into hydrogen and iodine: $\ce{2HI -> H2 + I2}$. The rate now depends on how often two particles meet, so the step is bimolecular.
+  </Step>
+  <Step>
+    **Three at one instant:** Two nitric oxide molecules and one oxygen molecule must come together at the same moment: $\ce{2NO + O2 -> 2NO2}$. The three converge on one spot and a burst marks the collision. Because all three must meet at once, such events are uncommon, and this termolecular reaction is slow.
+  </Step>
+  <Step>
+    **The slow first step:** In the two-step peroxide route, a hydrogen peroxide molecule meets an iodide ion and forms water and the hypoiodite ion $\ce{IO-}$. This is step 1, and it is slow, so only a few $\ce{IO-}$ ions appear each second. Step 1 is drawn in the slow tone and marked as the rate-determining step.
+  </Step>
+  <Step>
+    **The intermediate is used up:** Each $\ce{IO-}$ meets a hydrogen peroxide molecule almost at once and gives water, iodide ion and oxygen: $\ce{H2O2 + IO- -> H2O + I- + O2}$. The iodide ion returns unchanged and the intermediate's level stays low. Adding both steps gives the overall equation $\ce{2H2O2 -> 2H2O + O2}$.
+  </Step>
+</Scrolly>
+
+<Check
+  n={1}
+  options={[
+    "NH₄NO₂ → N₂ + 2H₂O, as a single elementary step",
+    "2HI → H₂ + I₂, as a single elementary step",
+    "2NO + O₂ → 2NO₂, as a single elementary step",
+    "2H₂O₂ → 2H₂O + O₂, the overall equation of the peroxide reaction"
+  ]}
+  answer={2}
+  explanation="Only the nitric oxide step needs three species to collide at once, so its molecularity is three. The ammonium nitrite step is unimolecular and the hydrogen iodide step is bimolecular. The overall peroxide equation describes a complex reaction, and molecularity does not apply to that as a whole."
+>
+Which of these equations describes a termolecular elementary step?
+</Check>
+
+## Why three is the practical ceiling
+
+The chance that four or more molecules meet at one point at one instant is very small. A termolecular step is already rare and slow, and steps with higher molecularity are hardly ever seen. So a reaction whose balanced equation contains many molecules almost always runs in several steps.
+
+The reaction $\ce{KClO3 + 6FeSO4 + 3H2SO4 -> KCl + 3Fe2(SO4)3 + 3H2O}$ is a good case. Its equation has ten reactant molecules, which suggests an order of ten. Measurements show a second-order rate law, which tells you that the reaction is really a chain of simpler steps.
+
+## Complex reactions and the slow step
+
+A **complex reaction** is a sequence of elementary steps, called its mechanism. The overall pace is set by the slowest of those steps, the **rate-determining step**. Think of a factory line: however fast the other machines run, the line's output is that of its slowest machine.
+
+Take the decomposition of hydrogen peroxide, catalysed by iodide ions in an alkaline medium. The overall equation is $\ce{2H2O2 -> 2H2O + O2}$, but experiment gives the rate law $\text{Rate} = k[\ce{H2O2}][\ce{I-}]$, first order in each of the two reactants. Two elementary steps fit that law:
+
+$$
+\begin{aligned}
+\text{Step 1 (slow):}\quad & \ce{H2O2 + I- -> H2O + IO-} \\
+\text{Step 2 (fast):}\quad & \ce{H2O2 + IO- -> H2O + I- + O2}
+\end{aligned}
+$$
+
+Both steps are bimolecular. The species $\ce{IO-}$ is an **intermediate**: step 1 makes it and step 2 uses it up, so it never shows in the overall equation. The iodide ion enters at step 1 and leaves unchanged at step 2, which is why it acts as a catalyst and still appears in the rate law.
+
+Step 1 is the slow one, so it is the rate-determining step. The rate at which $\ce{IO-}$ forms controls the whole reaction. The exponents in the rate law match the reactants of that slow step, and the overall order, 2, equals its molecularity.
+
+<Check
+  n={2}
+  numeric
+  answer={1.5}
+  tolerance={0.01}
+  explanation="The rate law is Rate = k[H₂O₂][I⁻]. Tripling [H₂O₂] multiplies the rate by 3, and halving [I⁻] multiplies it by ½, so the rate changes by 3 × ½ = 1.5. The intermediate IO⁻ does not appear in the rate law and has no effect on this factor."
+>
+In the hydrogen peroxide mechanism, $[\ce{H2O2}]$ is tripled while $[\ce{I-}]$ is halved. By what factor does the rate change?
+</Check>
+
+## Order and molecularity compared
+
+Order is found from experiment. It can be zero or a fraction, and it applies to elementary and complex reactions alike. Molecularity is a count for a single elementary step, always a positive whole number, and it means nothing for a complex reaction taken as a whole. In the peroxide case both numbers happen to be two, but they are different quantities, and they need not agree in general.
+
+## Two steps in a row
+
+The simulation below follows a species A that turns into an intermediate I in step 1, and I turns into product P in step 2. It starts with $[\ce{A}]_0 = 1.00\ \text{mol L}^{-1}$, $k_1 = 0.10\ \text{s}^{-1}$ for the slow first step and $k_2 = 1.00\ \text{s}^{-1}$ for the fast second step. With those values the intermediate peaks at about 2.56 s, at roughly $0.0774\ \text{mol L}^{-1}$. Lower $k_2$ until step 2 becomes the slow one and watch the intermediate pile up instead. Each curve shows one species, and the readout names the rate-determining step.
+
+<Simulation name="rate-determining-step-lab" title="Rate-Determining Step Lab" />
+
+<Check
+  n={3}
+  numeric
+  answer={0.591}
+  tolerance={0.002}
+  unit="mol L⁻¹"
+  explanation="For A → I → P with [A]₀ = 1.00 mol L⁻¹, k₁ = 0.10 s⁻¹ and k₂ = 1.00 s⁻¹, [P] = [A]₀[1 − (k₂e^(−k₁t) − k₁e^(−k₂t))/(k₂ − k₁)]. At t = 10 s, e^(−k₁t) = 0.368 and e^(−k₂t) is negligible, so [P] = 1 − 0.368/0.9 ≈ 0.591 mol L⁻¹."
+>
+The simulation starts with $[\ce{A}]_0 = 1.00\ \text{mol L}^{-1}$, $k_1 = 0.10\ \text{s}^{-1}$ and $k_2 = 1.00\ \text{s}^{-1}$. What is the concentration of product P after 10 s, in mol L⁻¹?
+</Check>
+
+<KeyIdeas>
+- **Molecularity** counts the species that must collide in one elementary step: unimolecular, bimolecular or termolecular. It is a positive whole number and applies only to elementary steps.
+- **Order** is measured from experiment, may be zero or a fraction, and applies to any reaction, simple or complex.
+- **Three is the practical ceiling.** Steps needing four or more molecules to meet at once are so improbable that complex reactions break into smaller steps.
+- **The slowest step sets the pace.** It is the rate-determining step, and its reactants appear in the rate law.
+- **Intermediates** form in one step and are used up in another, so they never appear in the overall equation.
+</KeyIdeas>
