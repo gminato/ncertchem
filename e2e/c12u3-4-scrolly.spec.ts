@@ -38,6 +38,17 @@ for (const scheme of ['light', 'dark'] as const) {
         await page.waitForTimeout(1500)
         const panel = scrolly.locator('svg').first()
         await expect(panel).toBeVisible()
+        // Rendered size (R4): computed font-size scaled by the SVG's on-screen width over its viewBox width.
+        const labels = await panel.evaluate((svg) => {
+          const el = svg as SVGSVGElement
+          const scale = el.getBoundingClientRect().width / el.viewBox.baseVal.width
+          return Array.from(el.querySelectorAll('text')).map((t) => ({
+            text: t.textContent ?? '',
+            px: parseFloat(getComputedStyle(t).fontSize) * scale,
+          }))
+        })
+        expect(labels.length).toBeGreaterThan(0)
+        for (const label of labels) expect(label.px, `Step ${k + 1} label "${label.text}"`).toBeGreaterThanOrEqual(13)
         await panel.screenshot({ path: `test-results/screens/c12u3-4-step${k + 1}-${scheme}.png` })
       }
 

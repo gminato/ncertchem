@@ -78,9 +78,11 @@ export function MechanismSteps({ step, reducedMotion }: MechanismStepsProps) {
           {frame.bursts.map((b, i) => (
             <CollisionFlash key={`burst-${i}`} x={b.x} y={b.y} size={b.size} effective={b.effective} opacity={b.opacity} />
           ))}
-          {frame.dots.map((d) => (
-            <Particle key={d.id} x={d.x} y={d.y} r={d.r} tone={d.tone} label={d.label} opacity={d.opacity} />
-          ))}
+          <g fontFamily="var(--font-sans)">
+            {frame.dots.map((d) => (
+              <Particle key={d.id} x={d.x} y={d.y} r={d.r} tone={d.tone} label={d.label} opacity={d.opacity} />
+            ))}
+          </g>
         </ReactionBox>
         <Tag text={spec.tag} accent={spec.tagAccent} />
       </g>
