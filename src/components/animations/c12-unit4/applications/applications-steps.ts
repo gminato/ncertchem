@@ -53,6 +53,6 @@ export const APPLICATION_STEPS: readonly ApplicationStep[] = [
   { highlight: ['Zn', 'Cu', 'Ag', 'Au'], property: 'Cu has a positive E°, so dilute acid does not release H₂' },
   { highlight: ['Ti', 'Mn'], property: 'Variable oxidation state (Mn); d⁰ Ti⁴⁺ has no d–d colour' },
   { highlight: ['V', 'Pd'], property: 'Variable oxidation state: V(V)/V(IV) and Pd(II)/Pd(0)' },
-  { highlight: ['Fe', 'Ni', 'Ti'], property: 'Surface adsorption: the metal surface weakens reactant bonds' },
+  { highlight: ['Fe', 'Ni', 'Ti'], property: 'Fe, Ni: surface adsorption. Ti: NCERT does not say which property' },
   { highlight: ['Ag'], property: 'Light changes AgBr itself, so it is not a catalyst' },
 ]
