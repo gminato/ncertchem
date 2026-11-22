@@ -101,6 +101,7 @@ import { IonisationExplorer } from './sims/ionisation-explorer'
 import { OxidationStateExplorer } from './sims/oxidation-state-explorer'
 import { MagneticMomentLab } from './sims/magnetic-moment-lab'
 import { AquaIonColourLab } from './sims/aqua-ion-colour-lab'
+import { LanthanoidExplorer } from './sims/lanthanoid-explorer'
 
 export interface SimulationProps {
   /** True when the Learner has asked the OS for reduced motion. Skip tweens and loops when set. */
@@ -216,4 +217,5 @@ export const simulations: Record<string, ComponentType<SimulationProps>> = {
   'ionisation-explorer': IonisationExplorer,
   'oxidation-state-explorer': OxidationStateExplorer,
   'magnetic-moment-lab': MagneticMomentLab,
+  'lanthanoid-explorer': LanthanoidExplorer,
 }

@@ -162,6 +162,7 @@ import { ElectrodePotentialCycle } from './c12-unit4/electrode/ElectrodePotentia
 import { SpinOnlyMoment } from './c12-unit4/magnetic/SpinOnlyMoment'
 import { DdColourScrolly } from './c12-unit4/colour/DdColourScrolly'
 import { OxoanionChemistry } from './c12-unit4/oxoanions/OxoanionChemistry'
+import { LanthanoidContraction } from './c12-unit4/lanthanoids/LanthanoidContraction'
 
 /**
  * Animations available to a Scrolly Animation, keyed by the `animation` prop.
@@ -334,6 +335,7 @@ export const animations = {
   'spin-only-moment': SpinOnlyMoment,
   'dd-colour': DdColourScrolly,
   'oxoanion-chemistry': OxoanionChemistry,
+  'lanthanoid-contraction': LanthanoidContraction,
 } as const
 
 export type AnimationName = keyof typeof animations
