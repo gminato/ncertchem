@@ -39,6 +39,15 @@ for (const scheme of ['light', 'dark'] as const) {
         const panel = scrolly.locator('svg').first()
         await expect(panel).toBeVisible()
         await panel.screenshot({ path: `${SCRATCH_SHOTS}/c12u3-8-step${k + 1}-${scheme}.png` })
+        // Rendered size: computed font-size × (svg width / viewBox width), not the font-size attribute.
+        const small = await panel.evaluate((el: SVGSVGElement) => {
+          const scale = el.getBoundingClientRect().width / el.viewBox.baseVal.width
+          return Array.from(el.querySelectorAll('text'))
+            .filter((t) => (t.textContent ?? '').trim() !== '')
+            .map((t) => ({ text: (t.textContent ?? '').trim(), px: parseFloat(getComputedStyle(t).fontSize) * scale }))
+            .filter((r) => r.px < 13)
+        })
+        expect(small, `Step ${k + 1} text under 13 px`).toEqual([])
       }
 
       await expect(page.locator('.katex-display').first()).toBeVisible()

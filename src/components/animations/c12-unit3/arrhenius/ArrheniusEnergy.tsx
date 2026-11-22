@@ -23,6 +23,9 @@ import {
   LABELS,
   LN_DOMAIN,
   LN_SLOPE_PLOT,
+  PEAK_LEVEL,
+  PRODUCT_LEVEL,
+  REACTANT_LEVEL,
   SPREAD,
   THETA_REF,
   getArrheniusStepState,
@@ -35,7 +38,7 @@ export interface ArrheniusEnergyProps {
 }
 
 const W = 580
-const H = 510
+const H = 528
 const MB_X_MAX = 6
 const THETA_2 = THETA_REF * SPREAD
 
@@ -70,6 +73,27 @@ function minusFormat(v: number, digits: number): string {
 /** Peak height of the dimensionless distribution with parameter θ (the peak sits at θ/2). */
 function peakOf(theta: number): number {
   return maxwellBoltzmann(theta / 2, theta)
+}
+
+/** Area under a curve from Eₐ to the axis, filled with a diagonal hatch so it never blends with the 298 K tail. */
+function HatchTail({ fn, from, to, id }: { fn: (E: number) => number; from: number; to: number; id: string }) {
+  const s = usePlotScale()
+  const base = s.domain.yMin
+  const n = 120
+  const xs = Array.from({ length: n + 1 }, (_, i) => from + ((to - from) * i) / n)
+  const top = xs.map((v, i) => `${i === 0 ? 'M' : 'L'}${s.x(v).toFixed(2)} ${s.y(fn(v)).toFixed(2)}`).join(' ')
+  const d = `${top} L${s.x(to).toFixed(2)} ${s.y(base).toFixed(2)} L${s.x(from).toFixed(2)} ${s.y(base).toFixed(2)} Z`
+  return (
+    <>
+      <defs>
+        <pattern id={id} patternUnits="userSpaceOnUse" width={7} height={7} patternTransform="rotate(45)">
+          <rect width={7} height={7} fill="var(--kin-product)" fillOpacity={0.14} />
+          <line x1={0} y1={0} x2={0} y2={7} stroke="var(--kin-product)" strokeWidth={2.6} />
+        </pattern>
+      </defs>
+      <path d={d} fill={`url(#${id})`} stroke="none" />
+    </>
+  )
 }
 
 /** Scene 1: H₂ and I₂ drift in a sealed box; one collision holds as the complex and HI forms. */
@@ -110,9 +134,9 @@ function ProfileScene({ on, reducedMotion }: { on: 0 | 1; reducedMotion: boolean
         y={30}
         width={520}
         height={400}
-        reactant={0.3}
-        product={0.12}
-        peak={0.85}
+        reactant={REACTANT_LEVEL}
+        product={PRODUCT_LEVEL}
+        peak={PEAK_LEVEL}
         reactantsLabel="H₂ + I₂"
         peakLabel="activated complex"
         productsLabel="2HI"
@@ -161,7 +185,7 @@ function DistributionScene({ on, reducedMotion, second }: { on: 0 | 1; reducedMo
           = {LABELS.fractionRef}
         </PlotText>
         <g style={{ opacity: second, transition: reducedMotion ? 'none' : 'opacity 600ms ease' }}>
-          <PlotShade fn={f2} from={EA_DRAWN} to={MB_X_MAX} tone="product" opacity={0.32} />
+          <HatchTail fn={f2} from={EA_DRAWN} to={MB_X_MAX} id="arr-hatch-308" />
           <PlotCurve fn={f2} from={0} to={MB_X_MAX} samples={240} tone="product" width={3} />
           <PlotText at={{ x: THETA_2 / 2, y: peakOf(THETA_2) * 1.05 }} anchor="middle">
             308 K
@@ -170,7 +194,10 @@ function DistributionScene({ on, reducedMotion, second }: { on: 0 | 1; reducedMo
         </g>
       </PlotFrame>
       <text x={60} y={500} fontSize={14} fill="var(--fg-muted)" fontFamily="var(--font-sans)">
-        Tails drawn enlarged for clarity. Printed values are the Arrhenius fractions.
+        Schematic: the tails are drawn enlarged, not to scale.
+      </text>
+      <text x={60} y={520} fontSize={14} fill="var(--fg-muted)" fontFamily="var(--font-sans)">
+        The printed values are the Arrhenius fractions.
       </text>
     </Scene>
   )
