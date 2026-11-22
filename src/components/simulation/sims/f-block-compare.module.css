@@ -1,0 +1,46 @@
+.sim {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.controls {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.stage {
+  background: var(--surface-raised);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: var(--space-3);
+}
+
+.scene {
+  display: block;
+  width: 100%;
+  max-width: 600px;
+  height: auto;
+  margin: 0 auto;
+}
+
+.readout {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.summary {
+  margin: 0;
+  font-size: 17px;
+  line-height: 1.5;
+  color: var(--fg);
+}
+
+.note {
+  margin: 0;
+  font-size: 15px;
+  line-height: 1.5;
+  color: var(--fg-muted);
+}

@@ -93,6 +93,7 @@ import { ZeroOrderLab } from './sims/zero-order-lab'
 import { FirstOrderLab } from './sims/first-order-lab'
 import { HalfLifeCompare } from './sims/half-life-compare'
 import { ArrheniusLab } from './sims/arrhenius-lab'
+import { FBlockCompare } from './sims/f-block-compare'
 
 export interface SimulationProps {
   /** True when the Learner has asked the OS for reduced motion. Skip tweens and loops when set. */
@@ -200,4 +201,5 @@ export const simulations: Record<string, ComponentType<SimulationProps>> = {
   'first-order-lab': FirstOrderLab,
   'half-life-compare': HalfLifeCompare,
   'arrhenius-lab': ArrheniusLab,
+  'f-block-compare': FBlockCompare,
 }
