@@ -4,7 +4,7 @@ import { useRef, useState, type PointerEvent as ReactPointerEvent } from 'react'
 import katex from 'katex'
 import 'katex/contrib/mhchem'
 import { Segmented, Slider } from '@/components/controls'
-import { PlotCurve, PlotFrame, PlotLine, PlotPoint } from '@/components/vocab'
+import { PlotCurve, PlotFrame, PlotLine, PlotPoint, usePlotScale, type PlotTone } from '@/components/vocab'
 import { formatSci, formatSig } from '@/lib/chem/kinetics'
 import {
   RATE_SLOPE_MIN_SPAN,
@@ -35,6 +35,35 @@ function px(t: number): number {
 
 function py(c: number): number {
   return FRAME.y + FRAME.height * (1 - c / C_MAX)
+}
+
+/**
+ * A marker with a 16-unit label. The shared PlotPoint sets its label at 15, so the marker
+ * comes from PlotPoint and the label is drawn here, at the same offsets, with the frame halo.
+ */
+function LabelledPoint({ at, tone, label, side }: { at: { x: number; y: number }; tone: PlotTone; label: string; side: 'ne' | 'sw' }) {
+  const s = usePlotScale()
+  const off = 14
+  const dx = side === 'ne' ? off : -off
+  const dy = side === 'ne' ? -off + 2 : off + 10
+  return (
+    <>
+      <PlotPoint at={at} tone={tone} />
+      <text
+        x={s.x(at.x) + dx}
+        y={s.y(at.y) + dy}
+        textAnchor={side === 'ne' ? 'start' : 'end'}
+        fontSize={16}
+        fill="var(--fg)"
+        stroke="var(--surface)"
+        strokeWidth={4}
+        paintOrder="stroke"
+        strokeLinejoin="round"
+      >
+        {label}
+      </text>
+    </>
+  )
 }
 
 function tex(source: string): string {
@@ -125,9 +154,9 @@ export function RateSlopeExplorer() {
             <PlotCurve fn={(t) => concB(s, t)} from={0} to={RATE_SLOPE_T_MAX} samples={180} tone="product" />
             <PlotLine from={{ x: t1, y: chordStartY }} to={{ x: t2, y: chordEndY }} tone="accent" width={2.4} />
             <PlotLine through={{ x: tt, y: tan.cA }} slope={tan.slopeA} tone="neutral" dashed />
-            <PlotPoint at={{ x: t1, y: chordStartY }} tone="accent" label="t₁" side="ne" />
-            <PlotPoint at={{ x: t2, y: chordEndY }} tone="accent" label="t₂" side="ne" />
-            <PlotPoint at={{ x: tt, y: tan.cA }} tone="product" label="t" side="sw" />
+            <LabelledPoint at={{ x: t1, y: chordStartY }} tone="accent" label="t₁" side="ne" />
+            <LabelledPoint at={{ x: t2, y: chordEndY }} tone="accent" label="t₂" side="ne" />
+            <LabelledPoint at={{ x: tt, y: tan.cA }} tone="product" label="t" side="sw" />
           </PlotFrame>
 
           {/* Drag handles sit over the markers: wide, transparent targets on the same points. */}

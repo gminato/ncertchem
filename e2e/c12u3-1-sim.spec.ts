@@ -100,6 +100,41 @@ for (const scheme of ['light', 'dark'] as const) {
   })
 }
 
+test('Rate Slope Explorer: 3A → 2B at the 250 s tangent shows the Prose values', async ({ page }) => {
+  await page.setViewportSize({ width: 1440, height: 900 })
+  await page.goto(`/dev/sim/${SIM}`)
+  const sim = page.locator(`[data-simulation="${SIM}"]`)
+  await expect(sim).toBeVisible()
+  await sim.getByRole('radio', { name: '3A → 2B' }).click()
+  await expect(sim.locator('[aria-live="polite"]')).toContainText('instantaneous rate of reaction 4.04 × 10⁻⁵ mol L⁻¹ s⁻¹')
+  const card = sim.locator('section[aria-label="Instantaneous rate at the tangent"]')
+  await expect(card).toContainText('1.21 × 10⁻⁴ mol L⁻¹ s⁻¹')
+  await expect(card).toContainText('8.09 × 10⁻⁵ mol L⁻¹ s⁻¹')
+})
+
+test('Rate Slope Explorer: dragging the tangent point moves the tangent time', async ({ page }) => {
+  await page.setViewportSize({ width: 1440, height: 900 })
+  await page.goto(`/dev/sim/${SIM}`)
+  const sim = page.locator(`[data-simulation="${SIM}"]`)
+  await expect(sim).toBeVisible()
+  await sim.scrollIntoViewIfNeeded()
+  const live = sim.locator('[aria-live="polite"]')
+  await expect(live).toContainText('Tangent at 250 s')
+  // Handles are drawn in order: chord start, chord end, tangent point.
+  const handle = sim.locator('svg[role="img"] circle[r="16"]').nth(2)
+  const box = await handle.boundingBox()
+  if (box === null) throw new Error('tangent handle is not visible')
+  const x0 = box.x + box.width / 2
+  const y0 = box.y + box.height / 2
+  await page.mouse.move(x0, y0)
+  await page.mouse.down()
+  await page.mouse.move(x0 + 40, y0, { steps: 8 })
+  await page.mouse.up()
+  await expect(live).not.toContainText('Tangent at 250 s')
+  const moved = Number(await sim.getByRole('slider', { name: /Tangent time/ }).inputValue())
+  expect(moved).toBeGreaterThan(250)
+})
+
 test('Rate Slope Explorer has no sideways scroll at 390 px', async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 })
   await page.goto(`/dev/sim/${SIM}`)
