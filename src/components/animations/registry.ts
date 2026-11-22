@@ -140,6 +140,7 @@ import { DaniellOpposingVoltage } from './c12-unit2/daniell/DaniellOpposingVolta
 import { SheMeasurement } from './c12-unit2/she/SheMeasurement'
 import { NernstConcentration } from './c12-unit2/nernst/NernstConcentration'
 import { CollisionOrientation } from './c12-unit3/collision/CollisionOrientation'
+import { ActinoidComparison } from './c12-unit4/actinoids/ActinoidComparison'
 import { ConductivityMeasurement } from './c12-unit2/conductance/ConductivityMeasurement'
 import { DilutionConductivity } from './c12-unit2/dilution/DilutionConductivity'
 import { ElectrolysisProducts } from './c12-unit2/products/ElectrolysisProducts'
@@ -318,6 +319,7 @@ export const animations = {
   'catalyst-pathway': CatalystPathway,
   'arrhenius-energy': ArrheniusEnergy,
   'collision-orientation': CollisionOrientation,
+  'actinoid-comparison': ActinoidComparison,
 } as const
 
 export type AnimationName = keyof typeof animations
