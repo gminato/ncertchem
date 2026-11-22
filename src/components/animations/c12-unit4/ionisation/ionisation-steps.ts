@@ -143,7 +143,7 @@ const STATES: readonly IonisationStepState[] = [
     layout: 'split',
     lit: [3],
     marks: [
-      { element: 'Mn', level: 3, label: 'value', side: 'left' },
+      { element: 'Mn', level: 3, label: 'value', side: 'below' },
       { element: 'Fe', level: 3, label: 'value', side: 'below' },
     ],
     bracket: ['Mn', 'Fe'],

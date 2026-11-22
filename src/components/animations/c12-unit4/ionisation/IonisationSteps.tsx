@@ -15,12 +15,11 @@ import {
 export interface IonisationStepsProps {
   /** 0-based Step index from Scrolly. */
   step: number
-  reducedMotion: boolean
 }
 
 const W = 580
 const H = 580
-const TONE: Record<IeLevel, PlotTone> = { 1: 'product', 2: 'accent', 3: 'reactant' }
+const TONE: Record<IeLevel, PlotTone> = { 1: 'reactant', 2: 'product', 3: 'catalyst' }
 const LEVEL_LABEL: Record<IeLevel, string> = { 1: 'IE₁', 2: 'IE₂', 3: 'IE₃' }
 const DIMMED = 0.16
 const DOMAIN = { xMin: -0.5, xMax: 9.5, yMin: 0, yMax: 4000 }
@@ -34,11 +33,11 @@ const RIGHT_X = 276
 const ARROW_X = 264
 const VALUE_X = 506
 const CFG_W = 216
-const CFG_MAX = 26
+const CFG_MAX = 36
 const ROWS_TOP = 300
 const ROW_GAP = 58
 /** With only two rows, space them out so the block fills the panel. */
-const ROW_GAP_TWO = 96
+const ROW_GAP_TWO = 120
 
 function levelOpacity(lit: readonly IeLevel[], level: IeLevel): number {
   return lit.includes(level) ? 1 : DIMMED
@@ -111,10 +110,8 @@ function Legend({ lit }: { lit: readonly IeLevel[] }) {
 }
 
 /** One row of the configuration block: left configuration, arrow, right configuration, and the value. */
-function RowBlock({ row, top }: { row: RowSpec; top: number }) {
-  const left = configurationLayout(row.left, CFG_W, CFG_MAX)
-  const right = configurationLayout(row.right, CFG_W, CFG_MAX)
-  const h = Math.max(left.height, right.height)
+function RowBlock({ row, top, size }: { row: RowSpec; top: number; size: number }) {
+  const h = size
   const mid = top + h / 2
   return (
     <g>
@@ -124,11 +121,11 @@ function RowBlock({ row, top }: { row: RowSpec; top: number }) {
       <text x={RIGHT_X} y={top - 8} fontSize={15} fill="var(--fg)">
         {row.captionRight}
       </text>
-      <ConfigurationBoxes config={row.left} x={LEFT_X} y={top} width={CFG_W} maxSize={CFG_MAX} />
+      <ConfigurationBoxes config={row.left} x={LEFT_X} y={top} width={CFG_W} maxSize={size} />
       <text x={ARROW_X} y={mid} fontSize={20} fill="var(--fg-muted)" textAnchor="middle" dominantBaseline="middle">
         →
       </text>
-      <ConfigurationBoxes config={row.right} x={RIGHT_X} y={top} width={CFG_W} maxSize={CFG_MAX} />
+      <ConfigurationBoxes config={row.right} x={RIGHT_X} y={top} width={CFG_W} maxSize={size} />
       <text x={LEFT_X} y={top + h + 18} fontSize={14} fill="var(--fg-muted)">
         {`${row.pairsLeft} parallel pairs`}
       </text>
@@ -145,17 +142,16 @@ function RowBlock({ row, top }: { row: RowSpec; top: number }) {
   )
 }
 
-/** Top edge of each row: rows stack down from ROWS_TOP, each taking its tallest configuration plus a fixed gap. */
-function rowTops(rows: readonly RowSpec[]): { row: RowSpec; top: number }[] {
-  const gap = rows.length <= 2 ? ROW_GAP_TWO : ROW_GAP
-  return rows.reduce<{ row: RowSpec; top: number }[]>((acc, row) => {
-    const top = acc.length === 0 ? ROWS_TOP : acc[acc.length - 1].top + rowHeight(acc[acc.length - 1].row) + gap
-    return [...acc, { row, top }]
-  }, [])
+/** One box size for every configuration in a Step: the smallest that fits any of them, so the rows match. */
+function stepBoxSize(rows: readonly RowSpec[]): number {
+  const fits = rows.flatMap((row) => [configurationLayout(row.left, CFG_W, CFG_MAX).size, configurationLayout(row.right, CFG_W, CFG_MAX).size])
+  return Math.min(CFG_MAX, ...fits)
 }
 
-function rowHeight(row: RowSpec): number {
-  return Math.max(configurationLayout(row.left, CFG_W, CFG_MAX).height, configurationLayout(row.right, CFG_W, CFG_MAX).height)
+/** Top edge of each row: rows stack down from ROWS_TOP, each taking the Step's box height plus a fixed gap. */
+function rowTops(rows: readonly RowSpec[], size: number): { row: RowSpec; top: number }[] {
+  const gap = rows.length <= 2 ? ROW_GAP_TWO : ROW_GAP
+  return rows.map((row, i) => ({ row, top: ROWS_TOP + i * (size + gap) }))
 }
 
 export function IonisationSteps({ step }: IonisationStepsProps) {
@@ -163,8 +159,9 @@ export function IonisationSteps({ step }: IonisationStepsProps) {
   const frame = state.layout === 'full' ? FULL : SPLIT
   const levels: IeLevel[] = [1, 2, 3]
 
-  const rowNodes = rowTops(state.rows).map(({ row, top }) => (
-    <RowBlock key={`${row.element}-${row.level}`} row={row} top={top} />
+  const size = stepBoxSize(state.rows)
+  const rowNodes = rowTops(state.rows, size).map(({ row, top }) => (
+    <RowBlock key={`${row.element}-${row.level}`} row={row} top={top} size={size} />
   ))
 
   return (
