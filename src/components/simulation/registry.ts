@@ -80,6 +80,7 @@ import { AzeotropeExplorer } from './sims/azeotrope-explorer'
 import { ColligativeThermalLab } from './sims/colligative-thermal-lab'
 import { OpposingVoltageLab } from './sims/opposing-voltage-lab'
 import { HalfCellPairingBench } from './sims/half-cell-pairing'
+import { NucleophilePicker } from './sims/nucleophile-picker'
 import { NernstLab } from './sims/nernst-lab'
 import { RateSlopeExplorer } from './sims/rate-slope-explorer'
 import { RateDeterminingStepLab } from './sims/rate-determining-step-lab'
@@ -234,4 +235,5 @@ export const simulations: Record<string, ComponentType<SimulationProps>> = {
   'c-x-bond-explorer': CXBondExplorer,
   'haloarene-maker': HaloareneMaker,
   'halide-properties-lab': HalidePropertiesLab,
+  'nucleophile-picker': NucleophilePicker,
 }
