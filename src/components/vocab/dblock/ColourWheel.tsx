@@ -53,7 +53,11 @@ export const ColourWheel = forwardRef<SVGGElement, ColourWheelProps>(function Co
             key={key}
             d={d}
             data-sector={key}
-            style={{ fill: SPECTRAL_TOKEN[key], fillOpacity: absorbed === key ? 0.45 : 0.9, stroke: 'var(--surface)', strokeWidth: 2 }}
+            style={
+              absorbed === key
+                ? { fill: SPECTRAL_TOKEN[key], fillOpacity: 0.9, stroke: 'var(--fg)', strokeWidth: 2.5, strokeDasharray: '6 4' }
+                : { fill: SPECTRAL_TOKEN[key], fillOpacity: 0.9, stroke: 'var(--surface)', strokeWidth: 2 }
+            }
           />
         )
       })}

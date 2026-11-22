@@ -46,8 +46,8 @@ export const SolutionColour = forwardRef<SVGGElement, SolutionColourProps>(funct
     <g ref={ref} transform={`translate(${x}, ${y})`} aria-hidden="true" data-ion={ion} {...rest}>
       {light && (
         <>
-          <line x1={0} y1={beamY} x2={g.left} y2={beamY} style={{ stroke: 'var(--db-beam)', strokeWidth: 4, strokeLinecap: 'round' }} />
-          <line x1={g.right} y1={beamY} x2={width} y2={beamY} style={{ stroke: colour, strokeWidth: 6, strokeLinecap: 'round' }} data-testid="transmitted-beam" />
+          <line x1={width * 0.1} y1={beamY} x2={g.left} y2={beamY} style={{ stroke: 'var(--db-beam)', strokeWidth: 4, strokeLinecap: 'round' }} />
+          <line x1={g.right} y1={beamY} x2={width * 0.9} y2={beamY} style={{ stroke: colour, strokeWidth: 6, strokeLinecap: 'round' }} data-testid="transmitted-beam" />
         </>
       )}
       <path d={liquid} style={{ fill: colour }} />

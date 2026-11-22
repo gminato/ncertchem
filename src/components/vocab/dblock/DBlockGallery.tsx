@@ -4,7 +4,6 @@ import { ColourWheel } from './ColourWheel'
 import { ConfigurationBoxes, type SubshellConfig } from './ConfigurationBoxes'
 import { DBlockStrip, dBlockStripHeight } from './DBlockStrip'
 import { SolutionColour, SOLUTION_COLOUR_HEIGHT } from './SolutionColour'
-import { LabelSup, LabelSub } from '../Label'
 
 /** Electron configurations as NCERT's Table 4.1 gives them for these atoms and ions. */
 const CR: SubshellConfig[] = [
@@ -112,14 +111,14 @@ export function DBlockGallery() {
         description="Dilute aqua ions take their colours from Table 4.8. A solution absorbs part of the white light, and the light that gets through is the colour you see. Solid MnO₂ can settle out of permanganate solution as a brown deposit."
         viewBox={`0 0 600 ${SOLUTION_COLOUR_HEIGHT}`}
       >
-        <SolutionColour x={8} y={0} width={190} ion="ti3" light label={<>Ti<LabelSup>3+</LabelSup>(aq)</>} />
-        <SolutionColour x={202} y={0} width={190} ion="cu2" light label={<>Cu<LabelSup>2+</LabelSup>(aq)</>} />
-        <SolutionColour x={396} y={0} width={190} ion="mno4" precipitate="mno2" label={<>MnO<LabelSub>4</LabelSub><LabelSup>−</LabelSup> + MnO₂</>} />
+        <SolutionColour x={8} y={0} width={190} ion="ti3" light label="Ti³⁺(aq)" />
+        <SolutionColour x={202} y={0} width={190} ion="cu2" light label="Cu²⁺(aq)" />
+        <SolutionColour x={396} y={0} width={190} ion="mno4" precipitate="mno2" label="MnO₄⁻ + MnO₂(s)" />
       </Card>
 
       <Card
         heading="Colour wheel: absorbed light and the colour seen"
-        description="The absorbed sector is faded. The colour you see is the one directly opposite it on the wheel. An orange-absorbing solution looks blue."
+        description="The absorbed sector has a dashed outline. The colour you see is the one directly opposite it on the wheel. An orange-absorbing solution looks blue."
         viewBox="0 0 600 220"
       >
         <ColourWheel cx={300} cy={110} radius={74} absorbed="orange" seen="blue" />
