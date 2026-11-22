@@ -130,7 +130,7 @@ export const CatalystSurface = forwardRef<SVGGElement, CatalystSurfaceProps>(fun
   const r = Math.min(slot * 0.3, 16)
   return (
     <g ref={ref} aria-hidden="true" {...rest}>
-      <rect x={x} y={topY} width={width} height={y + height - topY} rx={6} fill="var(--metal-pt)" stroke="var(--bond)" strokeWidth={1.6} />
+      <rect x={x} y={topY} width={width} height={y + height - topY} rx={6} fill="var(--surface-raised)" stroke="var(--bond)" strokeWidth={1.6} />
       <line x1={x} x2={x + width} y1={topY} y2={topY} stroke="var(--glass-sheen)" strokeWidth={2} />
       {occupied.map((on, i) => {
         const cx = x + slot * (i + 0.5)
