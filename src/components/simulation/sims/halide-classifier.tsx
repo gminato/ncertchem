@@ -176,8 +176,9 @@ export function HalideClassifier(_props: SimulationProps) {
         </figure>
 
         <div className={styles.panel}>
-          <p className={styles.name} data-testid="halide-name">{name ?? 'Name not covered by the namer'}</p>
-          <p className={styles.formula}>{formula}</p>
+          {/* name is null only if safeName fails, which the builder cannot reach; show the formula then */}
+          <p className={styles.name} data-testid="halide-name">{name ?? formula}</p>
+          {name !== null && <p className={styles.formula}>{formula}</p>}
           <p className={styles.verdict} data-testid="halide-verdict">{verdict}</p>
 
           <ul className={styles.details}>
