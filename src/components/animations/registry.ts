@@ -156,6 +156,7 @@ import { PhysicalTrends } from './c12-unit4/physical/PhysicalTrends'
 import { HalfLifeLadder } from './c12-unit3/halflife/HalfLifeLadder'
 import { CatalystPathway } from './c12-unit3/catalyst/CatalystPathway'
 import { ArrheniusEnergy } from './c12-unit3/arrhenius/ArrheniusEnergy'
+import { IonisationSteps } from './c12-unit4/ionisation/IonisationSteps'
 
 /**
  * Animations available to a Scrolly Animation, keyed by the `animation` prop.
@@ -322,6 +323,7 @@ export const animations = {
   'collision-orientation': CollisionOrientation,
   'dblock-configurations': DblockConfigurations,
   'dblock-melting-radii': PhysicalTrends,
+  'ionisation-steps': IonisationSteps,
 } as const
 
 export type AnimationName = keyof typeof animations
