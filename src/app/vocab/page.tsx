@@ -233,6 +233,7 @@ import {
   type ElectrodeMaterial,
 } from '@/components/vocab'
 import { KineticsGallery } from '@/components/vocab/kinetics/KineticsGallery'
+import { DBlockGallery } from '@/components/vocab/dblock/DBlockGallery'
 
 export const metadata: Metadata = {
   title: pageTitle('Visual Vocabulary'),
@@ -3925,6 +3926,18 @@ export default function VocabPage() {
         </p>
 
         <KineticsGallery />
+      </section>
+
+      <section className={styles.section} id="dblock" aria-labelledby="dblock-heading">
+        <h2 id="dblock-heading" className={styles.sectionTitle}>
+          d- and f-block elements
+        </h2>
+        <p className={styles.sectionSubtitle}>
+          Configurations, the periodic strip, coloured solutions and the colour wheel, drawn with one set of parts: the same orbital boxes,
+          series tones and ion colours in every section.
+        </p>
+
+        <DBlockGallery />
       </section>
     </div>
   )
