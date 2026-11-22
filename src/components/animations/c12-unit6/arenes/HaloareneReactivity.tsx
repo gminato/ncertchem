@@ -13,6 +13,7 @@ import {
   formulaOf,
   ladderCards,
   nitroVerdict,
+  PARA_CARBANION_CONTRIBUTORS,
 } from './haloarene-steps'
 
 export interface HaloareneReactivityProps {
@@ -36,6 +37,7 @@ interface MolProps {
   highlightAtoms?: number[]
   partialBonds?: number[]
   partialCharges?: SkeletalMark[]
+  overlay?: ReactNode
 }
 
 /** A structure drawn by the shared organic component, centred on (x, y). */
@@ -52,6 +54,27 @@ function atomAt(smiles: string, scale: number, x: number, y: number, i: number):
 function ringCentreAt(smiles: string, scale: number, x: number, y: number): Point {
   const frame = drawingFrame(parseSmiles(smiles), scale)
   return { x: x + frame.ringCentres[0].x, y: y + frame.ringCentres[0].y }
+}
+
+/**
+ * Charge marks just outside each listed ring atom, pushed straight out from the ring centre so they
+ * sit beside their carbon and clear of its bonds. Drawn in the structure's own frame (use as overlay).
+ */
+function outwardCharges(smiles: string, scale: number, atoms: number[], label: string): ReactNode {
+  const frame = drawingFrame(parseSmiles(smiles), scale)
+  const c = frame.ringCentres[0]
+  return atoms.map((a) => {
+    const p = frame.points[a]
+    const dx = p.x - c.x
+    const dy = p.y - c.y
+    const len = Math.hypot(dx, dy) || 1
+    const q = { x: p.x + (dx / len) * 0.32 * scale, y: p.y + (dy / len) * 0.32 * scale }
+    return (
+      <text key={a} x={q.x} y={q.y} textAnchor="middle" dominantBaseline="central" fontSize={16} fontWeight={600} fontFamily="var(--font-sans)" style={{ fill: 'var(--delta-minus)' }}>
+        {label}
+      </text>
+    )
+  })
 }
 
 /** Text label at the 14-unit minimum (rendered size ≥ 13 px at the 570 px panel). */
@@ -160,8 +183,9 @@ function Step2() {
               </>
             ) : (
               <>
-                <Label x={p.x + 14} y={p.y + 22} anchor="start">{nitroText(c.nitroGroups)}</Label>
-                <Label x={p.x + 14} y={p.y + 42} anchor="start">{c.conditions}</Label>
+                {/* Labels sit along the bottom edge: the top-left nitro O lone pairs would sit under a top caption. */}
+                <Label x={p.x + 14} y={base - 34} anchor="start">{nitroText(c.nitroGroups)}</Label>
+                <Label x={p.x + 14} y={base - 12} anchor="start">{c.conditions}</Label>
               </>
             )}
           </g>
@@ -171,38 +195,51 @@ function Step2() {
   )
 }
 
+/** Caption lines under a card: the charge either reaches the NO₂ carbon or never does. */
+function verdictLines(v: { chargeReachesNitroCarbon: boolean }): string[] {
+  return v.chargeReachesNitroCarbon ? [`${MINUS} reaches this carbon`] : ['The charge never reaches', 'the NO₂ carbon']
+}
+
 function Step3() {
   const sites = carbanionSites()
-  const left = { position: 4, x: 145, label: 'NO₂ at C4, para to Cl' }
-  const right = { position: 3, x: 415, label: 'NO₂ at C3, meta to Cl' }
-  const cards = [
-    { ...left, smiles: ARENE_SMILES.para4Nitro },
-    { ...right, smiles: ARENE_SMILES.meta3Nitro },
+  const scale = 38
+  // Para card: a ring-carbon form and the nitro-O form (scale 38 keeps atom labels at 14 px).
+  const paraCells = [
+    { smiles: PARA_CARBANION_CONTRIBUTORS.c2, caption: `${MINUS} on C2`, y: 118 },
+    { smiles: PARA_CARBANION_CONTRIBUTORS.nitroO, caption: `${MINUS} on a nitro O, via C4`, y: 268 },
   ]
+  const para = verdictLines(nitroVerdict(4))
+  const meta = verdictLines(nitroVerdict(3))
   return (
     <>
       <Label x={W / 2} y={28}>{`OH⁻ attacks C1. The ring then carries ${MINUS} on C${sites.join(', C')}.`}</Label>
-      {cards.map((c) => {
-        const verdict = nitroVerdict(c.position)
-        const marks: SkeletalMark[] = sites.map((s) => ({ atom: s, label: MINUS }))
-        return (
-          <g key={c.position}>
-            <Card x={c.x - 135} y={50} w={270} h={380} />
-            <Mol
-              smiles={c.smiles}
-              x={c.x}
-              y={190}
-              scale={44}
-              showLonePairs
-              highlightAtoms={[c.position]}
-              partialCharges={marks}
-            />
-            <Label x={c.x} y={318}>{c.label}</Label>
-            <Label x={c.x} y={352}>{verdict.chargeReachesNitroCarbon ? `${MINUS} reaches this carbon` : `no ${MINUS} on this carbon`}</Label>
-            <Label x={c.x} y={380}>{verdict.activated ? 'activated' : 'not activated'}</Label>
-          </g>
-        )
-      })}
+      <Card x={10} y={50} w={270} h={390} />
+      {paraCells.map((c) => (
+        <g key={c.caption}>
+          <Mol smiles={c.smiles} x={145} y={c.y} scale={scale} showLonePairs />
+          <Label x={145} y={c.y + 76}>{c.caption}</Label>
+        </g>
+      ))}
+      <Label x={145} y={374}>NO₂ at C4, para to Cl</Label>
+      {para.map((t, i) => (
+        <Label key={`p${i}`} x={145} y={398 + i * 18}>{t}</Label>
+      ))}
+      <Label x={145} y={436}>{nitroVerdict(4).activated ? 'activated' : 'not activated'}</Label>
+
+      <Card x={340} y={50} w={230} h={390} />
+      <Mol
+        smiles={ARENE_SMILES.meta3Nitro}
+        x={455}
+        y={190}
+        scale={40}
+        showLonePairs
+        overlay={outwardCharges(ARENE_SMILES.meta3Nitro, 40, sites, MINUS)}
+      />
+      <Label x={455} y={374}>NO₂ at C3, meta to Cl</Label>
+      {meta.map((t, i) => (
+        <Label key={`m${i}`} x={455} y={398 + i * 18}>{t}</Label>
+      ))}
+      <Label x={455} y={436}>{nitroVerdict(3).activated ? 'activated' : 'not activated'}</Label>
       <Label x={W / 2} y={462}>Charge on the nitro carbon is stabilised; a meta nitro never gets it.</Label>
     </>
   )
