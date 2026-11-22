@@ -1,0 +1,95 @@
+.sim {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  font-family: var(--font-sans);
+  color: var(--fg);
+  font-size: 16px;
+}
+
+.select {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  font-size: 16px;
+}
+
+.select select {
+  font: inherit;
+  font-size: 16px;
+  color: var(--fg);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: var(--space-2) var(--space-3);
+  min-height: 44px;
+  max-width: 100%;
+}
+
+.stage {
+  background: var(--surface-raised);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: var(--space-3);
+}
+
+.scene {
+  display: block;
+  width: 100%;
+  height: auto;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.info {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.name {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 600;
+}
+
+.formula {
+  margin: 0;
+  font-size: 16px;
+  color: var(--fg-muted);
+}
+
+.columns {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--space-4);
+}
+
+@media (min-width: 720px) {
+  .columns {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  }
+}
+
+.heading {
+  margin: 0 0 var(--space-1);
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.list {
+  margin: 0;
+  padding-left: var(--space-4);
+  font-size: 16px;
+  line-height: 1.5;
+}
+
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
