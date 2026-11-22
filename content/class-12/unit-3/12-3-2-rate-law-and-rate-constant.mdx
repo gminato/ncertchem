@@ -1,0 +1,155 @@
+---
+class: 12
+unit: 3
+section: "3.2"
+order: 2
+title: "Factors and the Rate Law"
+slug: "12-3-2-rate-law-and-rate-constant"
+access: free
+summary: "Concentration sets a reaction's pace through a rate law, whose exponents come from experiment rather than the balanced equation, and a rate constant ties the law together."
+ncert: "Class 12, Part I — Unit 3, Section 3.2–3.2.2"
+---
+
+<Hook>
+On a winter morning in Delhi, nitric oxide from car exhaust meets the oxygen in the air and the haze takes on a faint brown tint. Double the nitric oxide and the brown gas forms four times as fast. Double the oxygen instead and it only doubles. Why would two reactants that meet in the same air count so differently?
+</Hook>
+
+## Rate depends on the mixture
+
+Section 3.1 followed one reaction as its reactants ran down. Now compare different starting mixtures of the same reaction. The rate depends on the concentrations of the reactants (pressures, for gases), and also on temperature and on any catalyst present. This Section keeps temperature and catalyst fixed and asks how the rate depends on concentration alone.
+
+The relation between rate and concentration is called the **rate law**, also known as the rate equation or rate expression. For a general reaction $a\,\ce{A} + b\,\ce{B} \rightarrow c\,\ce{C} + d\,\ce{D}$, the rate law reads
+
+$$
+\text{Rate} = k\,[\ce{A}]^{x}[\ce{B}]^{y}
+$$
+
+Here $k$ is the **rate constant**, and the exponents $x$ and $y$ describe how strongly each reactant matters. Do not assume that $x$ and $y$ equal the coefficients $a$ and $b$. They may match, or they may not, and only experiment can tell you which.
+
+## Finding the exponents from initial rates
+
+Chemists often start each experiment afresh and measure the **initial rate**, the rate in the first moments before the reactants have changed much. Changing one concentration at a time shows how each reactant matters. For nitric oxide and oxygen, $\ce{2NO(g) + O2(g) -> 2NO2(g)}$, Table 3.2 lists the initial rate of NO₂ formation for four mixtures:
+
+| Experiment | $[\ce{NO}]$ / mol L⁻¹ | $[\ce{O2}]$ / mol L⁻¹ | Initial rate / mol L⁻¹ s⁻¹ |
+| --- | --- | --- | --- |
+| 1 | 0.30 | 0.30 | 0.096 |
+| 2 | 0.60 | 0.30 | 0.384 |
+| 3 | 0.30 | 0.60 | 0.192 |
+| 4 | 0.60 | 0.60 | 0.768 |
+
+Compare experiments 1 and 2. Doubling $[\ce{NO}]$ while $[\ce{O2}]$ stays at 0.30 mol L⁻¹ multiplies the rate by four. The exponent follows from the ratio of the two rates and the ratio of the two concentrations:
+
+$$
+x = \frac{\log(r_2/r_1)}{\log(c_2/c_1)} = \frac{\log 4}{\log 2} = 2
+$$
+
+Now compare experiments 1 and 3. Doubling $[\ce{O2}]$ only doubles the rate, so its exponent is 1. Experiment 4 doubles both, and the rate rises by eight, which is exactly $2^2 \times 2$. The factors multiply, so the law is
+
+$$
+\text{Rate} = k\,[\ce{NO}]^{2}[\ce{O2}]
+$$
+
+Here the rate is the rate of formation of NO₂, the quantity Table 3.2 measures, so $k$ belongs to that rate. Substituting experiment 1 gives the rate constant:
+
+$$
+k = \frac{0.096\ \text{mol L}^{-1}\,\text{s}^{-1}}{(0.30\ \text{mol L}^{-1})^{2}\,(0.30\ \text{mol L}^{-1})} = 3.56\ \text{mol}^{-2}\,\text{L}^{2}\,\text{s}^{-1}
+$$
+
+Every one of the four experiments gives this same value, which is what makes the law trustworthy.
+
+<Scrolly animation="initial-rates">
+  <Step>
+    **Baseline mixture:** A sealed reaction box holds nitric oxide and oxygen, each at $0.30\ \text{mol L}^{-1}$. A stopwatch starts as the box is closed, and the rate meter settles at $0.096\ \text{mol L}^{-1}\,\text{s}^{-1}$ for the initial rate of NO₂ formation. This is experiment 1, the reference point for every comparison that follows.
+  </Step>
+  <Step>
+    **Double the nitric oxide:** Keep oxygen at $0.30\ \text{mol L}^{-1}$ and raise $[\ce{NO}]$ to $0.60\ \text{mol L}^{-1}$. The box now holds twice as many NO particles, and the meter jumps to $0.384\ \text{mol L}^{-1}\,\text{s}^{-1}$, tagged ×4. A doubling that gives a fourfold rise points to an exponent of 2 on NO.
+  </Step>
+  <Step>
+    **Double the oxygen instead:** Return nitric oxide to $0.30\ \text{mol L}^{-1}$ and raise $[\ce{O2}]$ to $0.60\ \text{mol L}^{-1}$. The meter climbs only to $0.192\ \text{mol L}^{-1}\,\text{s}^{-1}$, tagged ×2. The same doubling counts for less when it applies to oxygen, so the exponent of O₂ is 1.
+  </Step>
+  <Step>
+    **Both doubled:** Both concentrations now sit at $0.60\ \text{mol L}^{-1}$. The meter reads $0.768\ \text{mol L}^{-1}\,\text{s}^{-1}$, tagged ×8, which is $2 \times 2 \times 2$ at work. Each concentration multiplies the rate on its own, so the two effects combine. The rate law $\text{Rate} = k[\ce{NO}]^{2}[\ce{O2}]$ with $k = 3.56\ \text{mol}^{-2}\,\text{L}^{2}\,\text{s}^{-1}$ appears beside the box.
+  </Step>
+  <Step>
+    **Exponents, not coefficients:** The balanced equation $2\ce{NO} + \ce{O2} \rightarrow 2\ce{NO2}$ sits on one side with its coefficients 2 and 1 highlighted, and the rate law sits on the other with its exponents 2 and 1 highlighted. For this reaction they agree. The particles are only a picture of the reactants; the rate law came from the four measurements.
+  </Step>
+</Scrolly>
+
+## The exponents need not match the equation
+
+The coefficients in $2\ce{NO} + \ce{O2} \rightarrow 2\ce{NO2}$ are 2 and 1, and the exponents agree. That is a feature of this reaction, not a rule. Two other examples show the gap. In $\ce{CHCl3 + Cl2 -> CCl4 + HCl}$, the rate law is $\text{Rate} = k[\ce{CHCl3}][\ce{Cl2}]^{1/2}$, so chlorine enters to the half power. In the hydrolysis of ethyl acetate, $\text{Rate} = k[\ce{CH3COOC2H5}][\ce{H2O}]^{0}$: water carries exponent zero, so $[\ce{H2O}]^{0} = 1$ and water drops out of the law. The balanced equation cannot predict a rate law. It has to be measured.
+
+## The rate constant and its units
+
+The rate constant $k$ is the rate when every concentration term in the rate law equals $1\ \text{mol L}^{-1}$. Its units depend on the overall order $n$, the sum of all the exponents. The units follow from the rate law:
+
+$$
+\text{units of } k = (\text{mol L}^{-1})^{1-n}\,\text{s}^{-1}
+$$
+
+So a zero-order rate constant is in $\text{mol L}^{-1}\,\text{s}^{-1}$, a first-order one is in $\text{s}^{-1}$, and a second-order one is in $\text{mol}^{-1}\,\text{L}\,\text{s}^{-1}$. The chlorine example above has overall order $1 + \tfrac12 = \tfrac32$, so its $k$ carries the fractional units $\text{mol}^{-1/2}\,\text{L}^{1/2}\,\text{s}^{-1}$. The nitric oxide law has overall order $2 + 1 = 3$, which gives $\text{mol}^{-2}\,\text{L}^{2}\,\text{s}^{-1}$.
+
+## Predicting a rate from the law
+
+Once the exponents and $k$ are known, the law predicts the rate for any mixture. Take $[\ce{NO}] = 0.90\ \text{mol L}^{-1}$ and $[\ce{O2}] = 0.30\ \text{mol L}^{-1}$:
+
+$$
+\text{Rate} = 3.56 \times (0.90)^{2} \times 0.30 \approx 0.864\ \text{mol L}^{-1}\,\text{s}^{-1}
+$$
+
+Here $k$ is carried unrounded, which is why the product is 0.864 and not 0.865.
+
+## Explore the rate law
+
+The lab below offers three reactions: the nitric oxide reaction from Table 3.2 and two invented ones. Set starting concentrations with the sliders, run an experiment, and compare two runs the way Table 3.2 does. The orders stay hidden until your ratios reveal them, and then the rate law and its $k$ appear with the units you have just met.
+
+<Simulation name="initial-rates-lab" title="Initial Rates Lab" />
+
+## Check your understanding
+
+<Check
+  n={1}
+  numeric
+  answer={0.0711}
+  tolerance={0.0005}
+  unit="mol L⁻¹ s⁻¹"
+  explanation="Rate = k[NO]²[O₂] = 3.556 × (0.20)² × 0.50 = 0.0711 mol L⁻¹ s⁻¹. The concentration of NO enters squared and that of O₂ enters to the first power, so the rate is smaller than in experiment 1."
+>
+A mixture of nitric oxide and oxygen has $[\ce{NO}] = 0.20\ \text{mol L}^{-1}$ and $[\ce{O2}] = 0.50\ \text{mol L}^{-1}$. Using the rate law and the rate constant found above, what is the initial rate of NO₂ formation in mol L⁻¹ s⁻¹?
+</Check>
+
+<Check
+  n={2}
+  options={[
+    "×1.5",
+    "×4.5",
+    "×6",
+    "×9"
+  ]}
+  answer={1}
+  explanation="Tripling [NO] gives 3² = 9 and halving [O₂] gives ½, so the rate changes by 9 × ½ = 4.5. The exponents come from the rate law, not from the coefficients 2 and 1 of the balanced equation."
+>
+Starting from the Table 3.2 mixture of 0.30 mol L⁻¹ NO and 0.30 mol L⁻¹ O₂, you triple the nitric oxide and halve the oxygen. By what factor does the initial rate change?
+</Check>
+
+<Check
+  n={3}
+  options={[
+    "mol L⁻¹ s⁻¹",
+    "s⁻¹",
+    "mol⁻¹ L s⁻¹",
+    "mol⁻² L² s⁻¹"
+  ]}
+  answer={2}
+  explanation="The units of k are (mol L⁻¹)^(1−n) s⁻¹. With overall order n = 2, that gives (mol L⁻¹)⁻¹ s⁻¹ = mol⁻¹ L s⁻¹. The nitric oxide law has overall order 3, so its k is in mol⁻² L² s⁻¹."
+>
+A reaction has the rate law $\text{Rate} = k[\ce{A}][\ce{B}]$. In what units is $k$ expressed?
+</Check>
+
+<KeyIdeas>
+- The **rate law** $\text{Rate} = k[\ce{A}]^{x}[\ce{B}]^{y}$ relates the rate to the concentrations of the reactants. Its exponents must be found by experiment.
+- Comparing **initial rates** from runs that change one concentration at a time gives each exponent: doubling a concentration that multiplies the rate by $2^{x}$ identifies the order $x$.
+- The exponents need not equal the coefficients of the balanced equation. For $\ce{NO}$ and $\ce{O2}$ they agree, but $\ce{CHCl3 + Cl2}$ has an exponent of $\tfrac12$ on chlorine.
+- The **rate constant** $k$ is the rate when every concentration term equals $1\ \text{mol L}^{-1}$. Its units, $(\text{mol L}^{-1})^{1-n}\,\text{s}^{-1}$, depend on the overall order $n$.
+- Once $k$ and the exponents are known, the rate law predicts the rate for any starting mixture.
+</KeyIdeas>
