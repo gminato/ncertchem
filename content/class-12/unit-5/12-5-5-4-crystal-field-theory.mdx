@@ -1,0 +1,212 @@
+---
+class: 12
+unit: 5
+section: "5.5.4"
+order: 6
+title: "Crystal Field Theory"
+slug: "12-5-5-4-crystal-field-theory"
+access: free
+summary: "Ligands split the five d orbitals into two sets, and whether the electrons then pair up or spread out decides the spin, the stability and the colour of a complex."
+ncert: "Class 12, Part I, Unit 5, Section 5.5.4"
+---
+
+<Hook>
+Two complexes of the same metal ion in the same oxidation state can differ sharply: one is strongly attracted into a magnetic field and the other is barely affected. Valence bond theory could label such pairs but could not say why the ligands behave differently. What property of a ligand decides how a metal ion arranges its d electrons?
+</Hook>
+
+## Ligands as a field of negative charge
+
+Crystal field theory (CFT) treats the bond between metal and ligand as purely electrostatic. The metal ion is a positive centre. An anionic ligand is a point of negative charge, and a neutral ligand such as $\ce{NH3}$ or $\ce{H2O}$ is a point dipole whose negative end faces the metal. Nothing is shared and no hybrid orbitals are built.
+
+In a free gaseous ion the five d orbitals have the same energy, so we call them degenerate. If the ion sat inside a perfectly spherical shell of negative charge, all five would rise together and stay degenerate. A set of ligands at fixed positions is not a sphere, so the d orbitals feel different amounts of repulsion and the degeneracy is lifted. This is crystal field splitting. How the orbitals split depends on the geometry of the field.
+
+## Octahedral splitting
+
+Place six ligands on the three axes, one on each side of the metal. The orbitals $d_{x^2-y^2}$ and $d_{z^2}$ point straight along those axes, towards the ligands, so an electron in them is repelled strongly and their energy rises. The orbitals $d_{xy}$, $d_{yz}$ and $d_{xz}$ point between the axes, away from the ligands, so they feel less repulsion and sit lower, relative to the spherical-field average.
+
+The result is two groups. The three lower orbitals form the $t_{2g}$ set and the two upper orbitals form the $e_g$ set. The gap between them is written $\Delta_o$, where the subscript o stands for octahedral. Measured from the spherical-field average energy, called the barycentre, the shifts are fixed fractions of that gap:
+
+$$
+E(e_g) = +\tfrac{3}{5}\,\Delta_o \qquad E(t_{2g}) = -\tfrac{2}{5}\,\Delta_o
+$$
+
+These fractions keep the average unchanged: $3 \times (-\tfrac{2}{5}) + 2 \times (+\tfrac{3}{5}) = 0$.
+
+<Scrolly animation="cft-octahedral-splitting">
+  <Step>
+    **A spherical field:** A metal ion sits at the centre of a faint sphere of negative charge. Five d orbital lobes are drawn beside it on one level line, labelled as degenerate. No orbital is favoured, so one common energy level holds all five.
+  </Step>
+  <Step>
+    **Six ligands arrive:** Six negative charges slide in along the plus and minus x, y and z axes and form an octahedron. The two orbitals that point along the axes, $d_{x^2-y^2}$ and $d_{z^2}$, are highlighted where they meet the ligands, and the repulsion is marked as strong. The three orbitals that point between the axes, $d_{xy}$, $d_{yz}$ and $d_{xz}$, are highlighted in a second colour and the repulsion is marked as weak.
+  </Step>
+  <Step>
+    **The levels split:** The single level line becomes two. The two axis-pointing orbitals rise to an upper pair labelled $e_g$ at $+\tfrac{3}{5}\Delta_o$. The three in-between orbitals fall to a lower triple labelled $t_{2g}$ at $-\tfrac{2}{5}\Delta_o$. The dashed spherical-average line stays in place between them, and a double arrow between the two sets is labelled $\Delta_o$.
+  </Step>
+  <Step>
+    **Reading the energies:** The diagram keeps both sets and adds the shift numbers. A bracket shows that three orbitals each dropped $\tfrac{2}{5}\Delta_o$ and two orbitals each rose $\tfrac{3}{5}\Delta_o$, with a note that the total shift is zero.
+  </Step>
+</Scrolly>
+
+## What sets the size of the gap
+
+The gap $\Delta_o$ depends on two things: the field the ligands produce, and the charge on the metal ion. Some ligands produce a strong field and a large gap. Others produce a weak field and a small gap. Experiments on how complexes absorb light let chemists line the ligands up in order of rising field strength. This line is the spectrochemical series:
+
+$$
+\ce{I^- < Br^- < SCN^- < Cl^- < S^2- < F^- < OH^- < C2O4^2- < H2O < NCS^- < edta^4- < NH3 < en < CN^- < CO}
+$$
+
+Iodide gives the smallest gap in the list and carbon monoxide gives the largest. Water lies in the middle, and ammonia and ethane-1,2-diamine (en) produce stronger fields than water. The series is an experimental ordering, not a derived one, so it is learnt rather than predicted. Note the pair $\ce{SCN^-}$ and $\ce{NCS^-}$: the same ion bound through different atoms sits at two different places.
+
+<Check
+  n={1}
+  options={[
+    "H₂O",
+    "Cl⁻",
+    "en",
+    "I⁻"
+  ]}
+  answer={2}
+  explanation="In the spectrochemical series, I⁻ < Cl⁻ < H₂O < en (with NH₃ between H₂O and en). Ethane-1,2-diamine therefore gives the largest Δo of these four ligands."
+>
+Which of these ligands produces the strongest crystal field, and so the largest $\Delta_o$ in an octahedral complex?
+</Check>
+
+## Filling the orbitals: weak and strong fields
+
+Electrons enter the lower $t_{2g}$ level first. One electron goes into one $t_{2g}$ orbital. The second and third electrons also enter $t_{2g}$ orbitals singly, following Hund's rule, so $d^1$, $d^2$ and $d^3$ have only one possible arrangement.
+
+The fourth electron has a real choice. It can pair up with an electron already in a $t_{2g}$ orbital, which costs the pairing energy $P$, the energy needed to squeeze two electrons into one orbital. Or it can jump to an $e_g$ orbital, which costs the gap $\Delta_o$. It takes whichever is cheaper.
+
+- If $\Delta_o < P$, the electron goes up into $e_g$, giving $t_{2g}^{3}\,e_g^{1}$. Ligands that give this outcome are weak field ligands, and the complexes are high spin.
+- If $\Delta_o > P$, the electron pairs in $t_{2g}$, giving $t_{2g}^{4}\,e_g^{0}$. Ligands that give this outcome are strong field ligands, and the complexes are low spin.
+
+The same choice appears for $d^5$, $d^6$ and $d^7$ ions. It disappears from $d^8$ upward, because by then the $t_{2g}$ set is full and the remaining electrons must go to $e_g$ either way. For $d^4$ to $d^7$, calculations show that the strong field arrangement is the more stable one in a strong field and the weak field arrangement is the more stable one in a weak field.
+
+<Scrolly animation="cft-high-low-spin">
+  <Step>
+    **One to three electrons:** An octahedral level diagram shows the $t_{2g}$ triple below the $e_g$ pair. Electrons are added one at a time as upward arrows, each into a separate $t_{2g}$ orbital. After three, the $t_{2g}$ triple holds three parallel arrows, and a label says the arrangement is the same in any field.
+  </Step>
+  <Step>
+    **The fourth electron has two routes:** A fourth arrow hovers above the diagram with two dashed paths. One path leads to an $e_g$ orbital and is marked with a cost of $\Delta_o$. The other path leads to a downward arrow pairing in a $t_{2g}$ orbital and is marked with a cost of $P$. Two bars at the side, one for $\Delta_o$ and one for $P$, show that the shorter bar wins.
+  </Step>
+  <Step>
+    **Weak field, high spin:** The $\Delta_o$ bar is drawn shorter than $P$. The fourth arrow lands in $e_g$, giving $t_{2g}^{3}\,e_g^{1}$. The diagram counts four unpaired electrons and the label reads high spin.
+  </Step>
+  <Step>
+    **Strong field, low spin:** The $\Delta_o$ bar is now longer than $P$, and the gap on the diagram is drawn wider. The fourth arrow pairs in a $t_{2g}$ orbital, giving $t_{2g}^{4}\,e_g^{0}$. The diagram counts two unpaired electrons and the label reads low spin.
+  </Step>
+  <Step>
+    **Across $d^4$ to $d^7$:** Four small diagrams side by side show $d^4$, $d^5$, $d^6$ and $d^7$, each with a weak field row above and a strong field row below. The unpaired electron counts are written under each row, and the strong field row always has fewer unpaired electrons.
+  </Step>
+</Scrolly>
+
+<Check
+  n={2}
+  options={[
+    "t₂g³ eg¹, with four unpaired electrons",
+    "t₂g⁴ eg⁰, with two unpaired electrons",
+    "t₂g² eg², with two unpaired electrons",
+    "t₂g⁴ eg⁰, with four unpaired electrons"
+  ]}
+  answer={0}
+  explanation="A weak field ligand means Δo < P, so the fourth electron avoids the pairing cost and enters an eg orbital. The arrangement is t₂g³ eg¹, and all four electrons are unpaired. The t₂g⁴ eg⁰ arrangement is the strong field outcome and has two unpaired electrons."
+>
+A $d^4$ metal ion forms an octahedral complex with a weak field ligand. What is its electron arrangement?
+</Check>
+
+## Tetrahedral splitting
+
+With four ligands in a tetrahedron the picture is turned around. The ligands now lie between the axes, so they approach the $d_{xy}$, $d_{yz}$ and $d_{xz}$ orbitals more closely than the other two. The three-orbital set ($t_2$) is now the higher one, raised by $\tfrac{2}{5}\Delta_t$ above the barycentre, and the two-orbital set ($e$) is the lower one, lowered by $\tfrac{3}{5}\Delta_t$. The splitting is inverted compared with the octahedral case.
+
+It is also smaller. For the same metal, the same ligands and the same metal to ligand distances,
+
+$$
+\Delta_t = \tfrac{4}{9}\,\Delta_o
+$$
+
+Four ligands instead of six and a less direct approach to the orbitals both contribute. Because $\Delta_t$ is so small, it is rarely larger than the pairing energy. Electrons spread out rather than pair, and low spin tetrahedral complexes are rarely found.
+
+A note on labels: the subscript g marks orbitals in species that have a centre of symmetry, such as octahedral and square planar complexes. A tetrahedron has no centre of symmetry, so tetrahedral levels are written $e$ and $t_2$, without g.
+
+<Scrolly animation="cft-tetrahedral-splitting">
+  <Step>
+    **Four ligands in a tetrahedron:** A cube is drawn with a metal ion at its centre and four ligand charges on alternate corners, so they sit between the axes. The three orbitals $d_{xy}$, $d_{yz}$ and $d_{xz}$ are drawn with lobes that point closer to the ligands, and the two orbitals $d_{x^2-y^2}$ and $d_{z^2}$ are drawn pointing along the axes, away from them.
+  </Step>
+  <Step>
+    **The inverted split:** The level line separates into a lower pair labelled $e$ at $-\tfrac{3}{5}\Delta_t$ and an upper triple labelled $t_2$ at $+\tfrac{2}{5}\Delta_t$, the reverse of the octahedral diagram. A double arrow between them is labelled $\Delta_t$. Both sets are positioned around the same dashed barycentre line.
+  </Step>
+  <Step>
+    **Octahedral and tetrahedral side by side:** Both level diagrams are drawn to one scale. The tetrahedral gap is about four ninths the height of the octahedral gap, with the relation $\Delta_t = \tfrac{4}{9}\Delta_o$ written between them. A note says that this small gap rarely beats pairing, so tetrahedral complexes are almost always high spin.
+  </Step>
+</Scrolly>
+
+<Check
+  n={3}
+  numeric
+  answer={120}
+  tolerance={0.5}
+  unit="kJ/mol"
+  explanation="For the same metal, ligands and distances, Δt = (4/9) Δo. With Δo = 270 kJ/mol, Δt = 4 × 270 / 9 = 120 kJ/mol."
+>
+A metal ion with a given set of ligands has an octahedral splitting of $\Delta_o = 270\ \text{kJ/mol}$. What would the tetrahedral splitting $\Delta_t$ be for the same metal, the same ligands and the same distances? (The value is illustrative, not from NCERT.)
+</Check>
+
+## Try the splitting lab
+
+Choose a metal ion with a d electron count, pick a ligand from the spectrochemical series, switch between octahedral and tetrahedral geometry, and watch the electrons fill the levels. Compare the gap with the pairing energy and see where the high spin to low spin switch happens.
+
+{/*
+Simulation: crystal-field-splitting-lab
+Inputs:
+  - d electron count n, a slider or stepper from 1 to 10.
+  - Geometry toggle: octahedral or tetrahedral.
+  - Ligand dropdown, the 15 ligands of the spectrochemical series in printed order (use NCERT_SPECTROCHEMICAL_SERIES from src/lib/chem/ncert-c12-unit5-s6-tables.ts), each mapped to an illustrative Δo value that rises monotonically along the series (clearly labelled "illustrative scale, not NCERT data").
+  - Pairing energy P slider, drawn as a horizontal marker with an illustrative default.
+Outputs:
+  - A level diagram: for octahedral, a t2g triple at -2/5 Δo and an eg pair at +3/5 Δo; for tetrahedral, the inverted diagram with Δt = (4/9) Δo (use tetrahedralSplitting and tetrahedralLevelEnergies), lower e pair at -3/5 Δt and upper t2 triple at +2/5 Δt.
+  - Electron arrows filled by octahedralConfig(n, fieldType(Δo, P) === 'strong') for octahedral, and tetrahedralConfig(n) for tetrahedral (high spin by Hund's rule across e and t2).
+  - A readout: the configuration written as t2g^a eg^b (octahedral) or e^a t2^b (tetrahedral), the number of unpaired electrons, and the label weak field / high spin or strong field / low spin when n is 4 to 7 in octahedral geometry (and "no choice for this d count" otherwise).
+  - A bar comparing Δ with P, with the shorter bar highlighted as the cheaper route.
+Behaviour:
+  - Changing any input updates everything immediately.
+  - The diagram animates arrows moving between levels when a ligand change flips the spin state.
+  - The tetrahedral view states that low spin is rarely observed.
+  - Keyboard accessible controls with labels.
+*/}
+<Simulation name="crystal-field-splitting-lab" title="Crystal Field Splitting Lab" />
+
+<Check
+  n={4}
+  options={[
+    "Δo < P, so the electron avoids pairing and the complex is high spin",
+    "Δo > P, so the electron avoids pairing and the complex is high spin",
+    "Δo < P, so the electron pairs and the complex is low spin",
+    "Δo = 0 in the spherical field, so the complex is low spin"
+  ]}
+  answer={0}
+  explanation="High spin means the electrons spread across both sets before pairing, which happens only when it is cheaper to climb the gap than to pay the pairing energy: Δo < P. When Δo > P the electrons pair in t₂g and the complex is low spin."
+>
+Which statement correctly links the gap, the pairing energy and the spin state of an octahedral $d^6$ complex that has four unpaired electrons?
+</Check>
+
+<Check
+  n={5}
+  options={[
+    "0",
+    "2",
+    "4",
+    "6"
+  ]}
+  answer={0}
+  explanation="A d⁶ ion in a strong octahedral field fills the t₂g set completely, t₂g⁶ eg⁰, with every electron paired. It has no unpaired electrons and is diamagnetic. In a weak field the arrangement would be t₂g⁴ eg², with four unpaired electrons."
+>
+How many unpaired electrons does a $d^6$ ion have in an octahedral complex with a strong field ligand such as $\ce{CN^-}$?
+</Check>
+
+<KeyIdeas>
+- Crystal field theory treats ligands as point charges or point dipoles; the five d orbitals, degenerate in the free ion, split once the ligands arrive.
+- In an octahedral field the $e_g$ pair rises by $\tfrac{3}{5}\Delta_o$ and the $t_{2g}$ triple falls by $\tfrac{2}{5}\Delta_o$; the size of $\Delta_o$ depends on the ligand and on the metal ion charge.
+- The spectrochemical series, from $\ce{I^-}$ at the weak end to $\ce{CO}$ at the strong end, ranks ligands by field strength and is found by experiment.
+- For $d^4$ to $d^7$ ions, $\Delta_o < P$ gives a weak field, high spin complex and $\Delta_o > P$ gives a strong field, low spin complex.
+- Tetrahedral splitting is inverted and smaller, $\Delta_t = \tfrac{4}{9}\Delta_o$, so tetrahedral complexes are almost always high spin.
+</KeyIdeas>
