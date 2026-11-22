@@ -107,26 +107,32 @@ export function VbtOrbitalLab() {
           />
         </div>
 
-        <div className={styles.field}>
+        <div
+          className={styles.field}
+          aria-disabled={state.spinLocked}
+        >
           <span className={styles.fieldLabel}>
             {cn === 6 ? 'Orbital / spin path' : 'Hybridisation path'}
+            {state.spinLocked ? ' (locked)' : ''}
           </span>
-          <Segmented
-            label="Orbital and spin path"
-            value={state.effectiveSpin}
-            onChange={handleSpinChange}
-            options={
-              cn === 6
-                ? [
-                    { value: 'low', label: 'Inner / Low spin' },
-                    { value: 'high', label: 'Outer / High spin' },
-                  ]
-                : [
-                    { value: 'low', label: 'dsp² (Sq. planar)' },
-                    { value: 'high', label: 'sp³ (Tetrahedral)' },
-                  ]
-            }
-          />
+          <div className={state.spinLocked ? styles.segmentedLocked : undefined}>
+            <Segmented
+              label="Orbital and spin path"
+              value={state.effectiveSpin}
+              onChange={handleSpinChange}
+              options={
+                cn === 6
+                  ? [
+                      { value: 'low', label: 'Inner / Low spin' },
+                      { value: 'high', label: 'Outer / High spin' },
+                    ]
+                  : [
+                      { value: 'low', label: 'dsp² (Sq. planar)' },
+                      { value: 'high', label: 'sp³ (Tetrahedral)' },
+                    ]
+              }
+            />
+          </div>
         </div>
       </div>
 

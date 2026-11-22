@@ -157,7 +157,12 @@ export function computeVbtState(params: {
     hybridisation = 'sp³d²'
     geometry = 'octahedral'
     geometryLabel = 'Octahedral'
-    orbitalTypeLabel = 'Outer orbital (high spin)'
+    orbitalTypeLabel =
+      d === 10
+        ? 'Outer orbital (3d¹⁰ filled, diamagnetic)'
+        : d === 9
+          ? 'Outer orbital (3d⁹, 1 unpaired e⁻)'
+          : 'Outer orbital (high spin)'
     bracket = { startIndex: 5, endIndex: 10, label: 'sp³d² (6 ligand pairs)' }
   } else if (effectiveSpin === 'low') {
     // CN = 4 square planar: pair d electrons into first 4 boxes, vacate 5th 3d box
@@ -190,7 +195,12 @@ export function computeVbtState(params: {
     hybridisation = 'sp³'
     geometry = 'tetrahedral'
     geometryLabel = 'Tetrahedral'
-    orbitalTypeLabel = 'Outer s/p orbitals (high spin)'
+    orbitalTypeLabel =
+      d === 10
+        ? 'Outer s/p (3d¹⁰ filled, diamagnetic)'
+        : d === 9
+          ? 'Outer s/p (3d⁹, 1 unpaired e⁻)'
+          : 'Outer s/p orbitals (high spin)'
     bracket = { startIndex: 5, endIndex: 8, label: 'sp³ (4 ligand pairs)' }
   }
 

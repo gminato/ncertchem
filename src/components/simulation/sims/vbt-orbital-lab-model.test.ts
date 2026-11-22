@@ -43,8 +43,19 @@ describe('vbt-orbital-lab-model', () => {
 
   it('locks octahedral d7-d10 to outer orbital sp3d2 and CN4 d9-d10 to tetrahedral sp3', () => {
     expect(computeVbtState({ d: 8, cn: 6, spin: 'low' })).toMatchObject({ hybridisation: 'sp³d²', unpaired: 2, spinLocked: true })
-    expect(computeVbtState({ d: 10, cn: 4, spin: 'low' })).toMatchObject({ hybridisation: 'sp³', unpaired: 0, spinLocked: true })
-    expect(computeVbtState({ d: 9, cn: 4, spin: 'low' })).toMatchObject({ hybridisation: 'sp³', unpaired: 1, spinLocked: true })
+    const cn4d10 = computeVbtState({ d: 10, cn: 4, spin: 'low' })
+    expect(cn4d10).toMatchObject({ hybridisation: 'sp³', unpaired: 0, spinLocked: true, magnetism: 'Diamagnetic' })
+    expect(cn4d10.orbitalTypeLabel.toLowerCase()).not.toContain('high spin')
+    expect(cn4d10.orbitalTypeLabel).toContain('3d¹⁰')
+
+    const cn6d10 = computeVbtState({ d: 10, cn: 6, spin: 'low' })
+    expect(cn6d10).toMatchObject({ hybridisation: 'sp³d²', unpaired: 0, spinLocked: true, magnetism: 'Diamagnetic' })
+    expect(cn6d10.orbitalTypeLabel.toLowerCase()).not.toContain('high spin')
+    expect(cn6d10.orbitalTypeLabel).toContain('3d¹⁰')
+
+    const cn4d9 = computeVbtState({ d: 9, cn: 4, spin: 'low' })
+    expect(cn4d9).toMatchObject({ hybridisation: 'sp³', unpaired: 1, spinLocked: true })
+    expect(cn4d9.orbitalTypeLabel.toLowerCase()).not.toContain('high spin')
   })
 
   it('models CN4 d8 tetrahedral (sp3, 2 unpaired) vs square planar (dsp2, 0 unpaired)', () => {

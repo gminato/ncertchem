@@ -101,7 +101,7 @@ test.describe('Section 5.5.1-5.5.3 Scrolly Animation and VBT Lab (Desktop 1280x8
       await expect(panel).toBeVisible()
       await panel.screenshot({ path: `test-results/screens/c12u5-s5-step${k}-desktop.png` })
       expect(await svgOutOfBounds(page, `[data-animation="${ANIMATION}"]`)).toEqual([])
-      expect(await smallTextLeaves(page, `[data-animation="${ANIMATION}"] svg[role="img"]`, 13)).toEqual([])
+      expect(await smallTextLeaves(page, `[data-animation="${ANIMATION}"] svg[role="img"]`, 14)).toEqual([])
     }
 
     // Now test the embedded Simulation on the Section page
@@ -135,6 +135,15 @@ test.describe('Section 5.5.1-5.5.3 Scrolly Animation and VBT Lab (Desktop 1280x8
     await expect(sim.locator('[aria-live="polite"]')).toContainText('2 unpaired electrons')
     await expect(sim.locator('[aria-live="polite"]')).toContainText('2.83 BM')
     await sim.screenshot({ path: 'test-results/screens/c12u5-s5-sim-custom-tet-desktop.png' })
+
+    // Switch preset to [Ni(CO)4] (3d10, diamagnetic, locked spin path)
+    await sim.getByRole('combobox', { name: 'NCERT complex preset' }).selectOption('ni-co-4')
+    await expect(sim.locator('[aria-live="polite"]')).toContainText('Diamagnetic')
+    await expect(sim.locator('[aria-disabled="true"]')).toHaveCount(1)
+    await expect(sim).not.toContainText('high spin')
+    await sim.screenshot({ path: 'test-results/screens/c12u5-s5-sim-nico4-desktop.png' })
+    expect(await svgOutOfBounds(page, `[data-simulation="${SIM}"]`)).toEqual([])
+    expect(await smallTextLeaves(page, `[data-simulation="${SIM}"]`, 14)).toEqual([])
 
     // Verify KaTeX and zero console errors
     await expect(page.locator('.katex-error')).toHaveCount(0)
