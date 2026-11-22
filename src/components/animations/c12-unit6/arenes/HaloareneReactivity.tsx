@@ -283,18 +283,20 @@ function Step5() {
       <Mol smiles={ARENE_SMILES.chlorobenzene} x={92} y={112} scale={38} showLonePairs />
       <Label x={202} y={120}>+</Label>
       <Mol smiles={ARENE_SMILES.chloroethane} x={254} y={112} scale={38} showLonePairs />
-      <line x1={330} y1={112} x2={376} y2={112} stroke="var(--fg-muted)" strokeWidth={2} />
+      <line x1={330} y1={112} x2={370} y2={112} stroke="var(--fg-muted)" strokeWidth={2} />
+      <polygon points="368,106 380,112 368,118" fill="var(--fg-muted)" />
       <Label x={353} y={96}>2 Na</Label>
       <Mol smiles={ARENE_SMILES.ethylbenzene} x={478} y={112} scale={38} />
       <Label x={W / 2} y={190}>Wurtz–Fittig: a ring bonds to a chain</Label>
       <Mol smiles={ARENE_SMILES.bromobenzene} x={110} y={262} scale={38} showLonePairs />
       <Label x={216} y={270}>+</Label>
       <Mol smiles={ARENE_SMILES.bromobenzene} x={290} y={262} scale={38} showLonePairs />
-      <line x1={290} y1={298} x2={290} y2={326} stroke="var(--fg-muted)" strokeWidth={2} />
-      <Label x={312} y={318} anchor="start">2 Na</Label>
-      <Mol smiles={ARENE_SMILES.biphenyl} x={290} y={386} scale={38} />
-      <Label x={W / 2} y={446}>{formulaOf(ARENE_SMILES.biphenyl)}</Label>
-      <Label x={W / 2} y={470}>Fittig: each C–X bond breaks; one new C–C bond forms.</Label>
+      <line x1={216} y1={300} x2={216} y2={330} stroke="var(--fg-muted)" strokeWidth={2} />
+      <polygon points="210,328 222,328 216,340" fill="var(--fg-muted)" />
+      <Label x={232} y={326} anchor="start">2 Na</Label>
+      <Mol smiles={ARENE_SMILES.biphenyl} x={216} y={390} scale={38} />
+      <Label x={216} y={446}>{formulaOf(ARENE_SMILES.biphenyl)}</Label>
+      <Label x={W / 2} y={470}>Fittig: both C–X bonds break; one new C–C bond forms.</Label>
     </>
   )
 }
