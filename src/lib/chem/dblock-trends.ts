@@ -100,7 +100,8 @@ export function interiorMinimum(points: readonly TrendPoint[]): TrendPoint | nul
 
 /** A value with its unit, rounded for display; approximate values carry ≈. */
 export function formatTrendValue(property: TrendProperty, value: number, approx = false): string {
-  const digits = property === 'density' ? value.toFixed(2) : String(Math.round(value))
+  // Density keeps Table 4.2 precision with no trailing zero (7.1, 8.9, 6.07).
+  const digits = property === 'density' ? String(Number(value.toFixed(2))) : String(Math.round(value))
   const signed = digits.replace('-', '−')
   const prefix = approx ? '≈ ' : ''
   return `${prefix}${signed} ${TREND_UNIT[property]}`
@@ -124,6 +125,9 @@ export function pointReading(property: TrendProperty, point: TrendPoint): string
 }
 
 const names = (symbols: string[]) => (symbols.length <= 2 ? symbols.join(' and ') : `${symbols.slice(0, -1).join(', ')} and ${symbols[symbols.length - 1]}`)
+
+/** Anomalous melting-point dips inside each row (NCERT: Mn and Tc depart from the mid-row maximum). */
+const MELTING_DIPS: Partial<Record<TrendSeries, string>> = { '3d': 'Mn (3d)', '4d': 'Tc (4d)' }
 
 /** The shape sentence for the visible series. Names and numbers come from the data, so ties and maxima stay true. */
 export function shapeNote(property: TrendProperty, visible: readonly TrendSeries[]): string {
@@ -153,7 +157,11 @@ export function shapeNote(property: TrendProperty, visible: readonly TrendSeries
     const top = extremes(trendPoints(property, s), 'max')!
     return `${names(top.symbols)} (${s}, ${formatTrendValue(property, top.value, property === 'atomisation' && s !== '3d')})`
   })
-  const peakText = `Each row peaks near its middle: ${peaks.join(', ')}.`
+  const dipNames = visible.map((s) => MELTING_DIPS[s]).filter((d): d is string => Boolean(d))
+  const peakText =
+    property === 'melting'
+      ? `Each row climbs to a maximum near its middle${dipNames.length ? `, apart from the dips at ${names(dipNames)}` : ''}: ${peaks.join(', ')}.`
+      : `Each row peaks near its middle: ${peaks.join(', ')}.`
   if (property === 'melting') {
     const ends = visible.map((s) => {
       const z = trendPoints(property, s)

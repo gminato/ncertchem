@@ -111,7 +111,7 @@ for (const scheme of ['light', 'dark'] as const) {
     await sim.getByRole('radio', { name: 'Density' }).click()
     await expect(sim.getByRole('combobox', { name: 'Element' }).locator('option', { hasText: /^Sc$/ })).toHaveCount(0)
     await sim.getByRole('combobox', { name: 'Element' }).selectOption('3d:Ni')
-    await expect(sim.locator('[aria-live="polite"]')).toContainText('Ni (3d): density 8.90 g cm⁻³')
+    await expect(sim.locator('[aria-live="polite"]')).toContainText('Ni (3d): density 8.9 g cm⁻³')
     await sim.screenshot({ path: `test-results/screens/c12u4-2-sim-density-${scheme}.png` })
     expect(await smallTextLeaves(page)).toEqual([])
     expect(await svgOutOfBounds(page)).toEqual([])

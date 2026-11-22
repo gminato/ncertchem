@@ -65,3 +65,13 @@ describe('shape notes', () => {
     expect(shapeNote('melting', [])).toBe('Choose at least one series to plot.')
   })
 })
+
+describe('readout wording', () => {
+  it('names the Mn and Tc melting dips in the melting shape note', () => {
+    expect(shapeNote('melting', ['3d', '4d', '5d'])).toContain('apart from the dips at Mn (3d) and Tc (4d)')
+  })
+  it('prints density with Table 4.2 precision and no trailing zero', () => {
+    expect(formatTrendValue('density', 8.9)).toBe('8.9 g cm⁻³')
+    expect(formatTrendValue('density', 7.1)).toBe('7.1 g cm⁻³')
+  })
+})

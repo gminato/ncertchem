@@ -84,6 +84,15 @@ interface PointLayerProps {
   onPick: (key: string) => void
 }
 
+/** Faint dashed 0 °C guide for the melting view. The axis itself stays at the plot floor (-100 °C). */
+function ZeroGuide() {
+  const scale = usePlotScale()
+  return <line x1={FRAME.x} x2={FRAME.x + FRAME.width} y1={scale.y(0)} y2={scale.y(0)} stroke="var(--kin-grid)" strokeWidth={1} strokeDasharray="4 4" opacity={0.7} />
+}
+
+/** Points whose value label sits to the left, clear of the neighbouring 5d curve (Zr 160 pm in the radius view). */
+const LABEL_BESIDE = new Set(['Zr'])
+
 /** Markers for every visible point. Hovering previews a value; clicking selects it (the Element menu is the keyboard route). */
 function PointLayer({ items, property, selectedKey, inspectedKey, hoverKey, onHover, onPick }: PointLayerProps) {
   const scale = usePlotScale()
@@ -95,6 +104,7 @@ function PointLayer({ items, property, selectedKey, inspectedKey, hoverKey, onHo
         const tone = SERIES_TONE[it.series]
         const isInspected = it.key === inspectedKey
         const short = formatTrendValue(property, it.value, it.approx).replace(` ${TREND_UNIT[property]}`, '')
+        const beside = property === 'radius' && LABEL_BESIDE.has(it.symbol)
         return (
           <g
             key={it.key}
@@ -109,9 +119,9 @@ function PointLayer({ items, property, selectedKey, inspectedKey, hoverKey, onHo
             {it.key === hoverKey && <circle cx={cx} cy={cy} r={11} fill="none" stroke="var(--fg)" strokeWidth={1.4} strokeDasharray="3 3" />}
             {isInspected && (
               <text
-                x={cx}
-                y={cy - 16}
-                textAnchor="middle"
+                x={beside ? cx - 12 : cx}
+                y={beside ? cy + 4 : cy - 16}
+                textAnchor={beside ? 'end' : 'middle'}
                 fontSize={15}
                 fill="var(--fg)"
                 stroke="var(--surface)"
@@ -192,12 +202,14 @@ export function DBlockTrendsLab() {
             width={FRAME.width}
             height={FRAME.height}
             domain={{ xMin, xMax: 10.5, yMin: axis.yMin, yMax: axis.yMax }}
+            grid={property !== 'melting'}
             xTicks={positions}
             yTicks={axis.ticks}
             xTickFormat={() => ''}
             yTickFormat={(v) => String(v)}
             yTitle={axis.yTitle}
           >
+            {property === 'melting' && <ZeroGuide />}
             {visible.map((s) => (
               <SeriesCurve key={s} points={items.filter((i) => i.series === s)} tone={SERIES_TONE[s]} dashed={s !== '3d' && property === 'atomisation'} />
             ))}
