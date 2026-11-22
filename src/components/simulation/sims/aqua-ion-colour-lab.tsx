@@ -19,9 +19,10 @@ function parseIon(ion: string): { symbol: string; charge: number } {
 /** Ions the lab offers: every Table 4.8 row the vocab colours, in table order. */
 const IONS = NCERT_AQUA_COLOURS.map((row) => row.ion).filter((ion) => aquaIonColour(ion) !== null)
 
+const VIEW_W = 440
 const WHEEL_CX = 220
 const WHEEL_CY = 320
-const WHEEL_R = 70
+const WHEEL_R = 62
 const CONFIG_X = 24
 const CONFIG_Y = 470
 const CONFIG_W = 392
@@ -54,9 +55,10 @@ export function AquaIonColourLab() {
       : `${info.ion}(aq) has a full 3d set (${config.display}), so no electron can jump to a higher d level: the solution is colourless.`
     : `${info.ion}(aq) is ${colourName}. It absorbs ${absorbed} light and transmits ${seen}${nearest ? ' (nearest sector on the wheel)' : ''}.`
 
+  const dLabel = `${dCount} d ${dCount === 1 ? 'electron' : 'electrons'}`
   const liveSummary = colourless
-    ? `${info.ion}(aq) is colourless. Every colour passes through. It has ${dCount} d electrons.`
-    : `${info.ion}(aq) is ${colourName}. It absorbs ${absorbed} and transmits ${seen}${nearest ? ', the nearest sector' : ''}. It has ${dCount} d electrons.`
+    ? `${info.ion}(aq) is colourless. Every colour passes through. It has ${dLabel}.`
+    : `${info.ion}(aq) is ${colourName}. It absorbs ${absorbed} and transmits ${seen}${nearest ? ', the nearest sector' : ''}. It has ${dLabel}.`
 
   return (
     <div className={styles.sim}>
@@ -76,7 +78,7 @@ export function AquaIonColourLab() {
       <div className={styles.stage}>
         <svg
           className={styles.scene}
-          viewBox={`0 0 440 ${viewHeight}`}
+          viewBox={`0 0 ${VIEW_W} ${viewHeight}`}
           role="img"
           aria-label={`${info.ion} in water: ${colourless ? 'colourless' : `${colourName}, absorbs ${absorbed}`}, with ${dCount} d electrons`}
         >
