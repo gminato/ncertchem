@@ -143,6 +143,19 @@ test('Section 5.3 Scrolly (6 steps) and Complex Namer on desktop 1280x800', asyn
   await sim.getByRole('button', { name: /Switch to K⁺/ }).click()
   await expect(sim.getByTestId('complex-formula')).toHaveText('K₄[Fe(CN)₆]')
 
+  // Test entity multiplicity subscript when entityCount > 1: [Co(en)3]2(SO4)3
+  await sim.getByRole('combobox', { name: 'Central metal' }).selectOption('Co')
+  await sim.getByRole('combobox', { name: 'Oxidation state' }).selectOption('3')
+  await sim.getByRole('combobox', { name: 'Ligand slot 1' }).selectOption('en')
+  await sim.getByRole('slider', { name: 'Ligand slot 1 count' }).fill('3')
+  await sim.getByRole('slider', { name: 'Ligand slot 2 count' }).fill('0')
+  await sim.getByRole('combobox', { name: 'Counter ion' }).selectOption('SO4')
+  await expect(sim.getByTestId('complex-formula')).toHaveText('[Co(en)₃]₂(SO₄)₃')
+  await expect(sim.getByTestId('entity-count-subscript')).toHaveText('2')
+  expect(await smallTextLeaves(sim)).toEqual([])
+  expect(await svgOutOfBounds(sim)).toEqual([])
+  await sim.screenshot({ path: 'test-results/screens/c12u5-s3-sim-sulphate-desktop.png' })
+
   // Toggle Name to formula mode
   await sim.getByRole('button', { name: 'Name to formula' }).click()
   await expect(sim).toContainText('tetraamminedichloridocobalt(III) chloride')

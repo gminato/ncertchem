@@ -55,11 +55,14 @@ function ComplexDiagram({
   const gap = 10
   const counterW = 86
   const bracketPad = 14
+  const showEntitySubscript = result.balanced && result.entityCount > 1
+  const entitySubW = showEntitySubscript ? 20 : 0
 
   const innerW = metalW + (ligCount > 0 ? ligCount * (ligW + gap) : 0)
   const totalW =
     innerW +
     bracketPad * 2 +
+    entitySubW +
     (showLeftCounter ? counterW + gap : 0) +
     (showRightCounter ? counterW + gap : 0)
 
@@ -81,7 +84,7 @@ function ComplexDiagram({
   })
 
   const bracketRightX = cursor - gap + bracketPad
-  cursor = bracketRightX + gap
+  cursor = bracketRightX + entitySubW + gap
 
   const rightCounterX = showRightCounter ? cursor : null
 
@@ -224,6 +227,21 @@ function ComplexDiagram({
         strokeLinecap="round"
         strokeLinejoin="round"
       />
+
+      {/* Entity multiplicity subscript when more than one entity balances the counter ion */}
+      {showEntitySubscript && (
+        <text
+          x={bracketRightX + 9}
+          y={tileY + tileH + 10}
+          textAnchor="middle"
+          fontSize={17}
+          fontWeight={700}
+          fill="var(--fg)"
+          data-testid="entity-count-subscript"
+        >
+          {String(result.entityCount)}
+        </text>
+      )}
 
       {/* Right counter ion (anion) */}
       {showRightCounter && rightCounterX !== null && counterObj && (

@@ -106,9 +106,36 @@ export function mergeLigandSlots(slots: readonly LigandSlot[]): MergedLigand[] {
   return merged.sort((a, b) => a.ligand.name.localeCompare(b.ligand.name))
 }
 
+const EXTRA_SIMPLE_PREFIXES: Record<number, string> = {
+  7: 'hepta',
+  8: 'octa',
+  9: 'nona',
+  10: 'deca',
+  11: 'undeca',
+  12: 'dodeca',
+  13: 'trideca',
+  14: 'tetradeca',
+  15: 'pentadeca',
+  16: 'hexadeca',
+  17: 'heptadeca',
+  18: 'octadeca',
+}
+
 const EXTRA_COMPLEX_PREFIXES: Record<number, string> = {
   5: 'pentakis',
   6: 'hexakis',
+  7: 'heptakis',
+  8: 'octakis',
+  9: 'nonakis',
+  10: 'decakis',
+  11: 'undecakis',
+  12: 'dodecakis',
+  13: 'tridecakis',
+  14: 'tetradecakis',
+  15: 'pentadecakis',
+  16: 'hexadecakis',
+  17: 'heptadecakis',
+  18: 'octadecakis',
 }
 
 function ligandNamePart(ligand: Ligand, count: number): string {
@@ -117,7 +144,7 @@ function ligandNamePart(ligand: Ligand, count: number): string {
     const prefix = COMPLEX_PREFIXES[count] ?? EXTRA_COMPLEX_PREFIXES[count] ?? `${count}-`
     return `${prefix}(${ligand.name})`
   }
-  const prefix = count <= 1 ? '' : SIMPLE_PREFIXES[count] ?? `${count}-`
+  const prefix = count <= 1 ? '' : SIMPLE_PREFIXES[count] ?? EXTRA_SIMPLE_PREFIXES[count] ?? `${count}-`
   return `${prefix}${ligand.name}`
 }
 

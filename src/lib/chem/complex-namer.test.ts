@@ -96,6 +96,34 @@ describe('complex-namer chemistry engine', () => {
     expect(res.balanced).toBe(true)
   })
 
+  it('uses valid IUPAC prefixes when duplicate ligand slots sum above 6', () => {
+    const simpleSpec: ComplexSpec = {
+      metal: 'Co',
+      oxidationState: 3,
+      slots: [
+        { formula: 'NH3', count: 4 },
+        { formula: 'NH3', count: 4 },
+        { formula: 'H2O', count: 0 },
+      ],
+      counterIon: 'Cl',
+    }
+    const simpleRes = evaluateComplex(simpleSpec)
+    expect(simpleRes.fullName).toBe('octaamminecobalt(III) chloride')
+
+    const complexSpec: ComplexSpec = {
+      metal: 'Co',
+      oxidationState: 3,
+      slots: [
+        { formula: 'en', count: 4 },
+        { formula: 'en', count: 3 },
+        { formula: 'H2O', count: 0 },
+      ],
+      counterIon: 'Cl',
+    }
+    const complexRes = evaluateComplex(complexSpec)
+    expect(complexRes.fullName).toBe('heptakis(ethane-1,2-diamine)cobalt(III) chloride')
+  })
+
   it('verifies every reverse-mode challenge matches its own spec', () => {
     for (const ch of REVERSE_CHALLENGES) {
       const evaluated = evaluateComplex(ch.spec)
