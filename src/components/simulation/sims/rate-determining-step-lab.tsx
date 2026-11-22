@@ -85,7 +85,7 @@ export function RateDeterminingStepLab({ reducedMotion }: SimulationProps) {
 
   const vessel = (index: 0 | 1 | 2, conc: number) => {
     const count = dotsFor(conc)
-    const tone = index === 0 ? 'reactant' : index === 1 ? 'catalyst' : 'product'
+    const tone = index === 0 ? 'reactant' : index === 1 ? 'neutral' : 'product'
     return (
       <ReactionBox x={BOX_X[index]} y={BOX_Y} width={BOX_W} height={BOX_H}>
         {SLOTS.slice(0, count).map((s, i) => {
@@ -129,22 +129,22 @@ export function RateDeterminingStepLab({ reducedMotion }: SimulationProps) {
         <g className={styles.arrow}>
           <line x1={166} y1={BOX_Y + BOX_H / 2} x2={206} y2={BOX_Y + BOX_H / 2} />
           <path d={`M206 ${BOX_Y + BOX_H / 2 - 6} L214 ${BOX_Y + BOX_H / 2} L206 ${BOX_Y + BOX_H / 2 + 6} Z`} />
-          <text x={186} y={BOX_Y + BOX_H / 2 - 12} textAnchor="middle" className={styles.label}>k₁</text>
+          <text x={186} y={BOX_Y + BOX_H / 2 - 12} textAnchor="middle" className={styles.label}><tspan className="sym">k</tspan>₁</text>
         </g>
         <g className={styles.arrow}>
           <line x1={369} y1={BOX_Y + BOX_H / 2} x2={409} y2={BOX_Y + BOX_H / 2} />
           <path d={`M409 ${BOX_Y + BOX_H / 2 - 6} L417 ${BOX_Y + BOX_H / 2} L409 ${BOX_Y + BOX_H / 2 + 6} Z`} />
-          <text x={389} y={BOX_Y + BOX_H / 2 - 12} textAnchor="middle" className={styles.label}>k₂</text>
+          <text x={389} y={BOX_Y + BOX_H / 2 - 12} textAnchor="middle" className={styles.label}><tspan className="sym">k</tspan>₂</text>
         </g>
 
         <text x={BOX_X[0] + BOX_W / 2} y={BOX_Y + BOX_H + 26} textAnchor="middle" className={styles.label}>
-          [A] = {formatSig(now.A, 3)}
+          [<tspan className="sym">A</tspan>] = {formatSig(now.A, 3)}
         </text>
         <text x={BOX_X[1] + BOX_W / 2} y={BOX_Y + BOX_H + 26} textAnchor="middle" className={styles.label}>
-          [I] = {formatSig(now.I, 3)}
+          [<tspan className="sym">I</tspan>] = {formatSig(now.I, 3)}
         </text>
         <text x={BOX_X[2] + BOX_W / 2} y={BOX_Y + BOX_H + 26} textAnchor="middle" className={styles.label}>
-          [P] = {formatSig(now.P, 3)}
+          [<tspan className="sym">P</tspan>] = {formatSig(now.P, 3)}
         </text>
 
         {/* Concentration against time */}
@@ -158,41 +158,41 @@ export function RateDeterminingStepLab({ reducedMotion }: SimulationProps) {
           yTicks={yTicks}
           yTickFormat={(v) => formatSig(v, 2)}
           xTitle="t / s"
-          yTitle="[X] / mol L⁻¹"
+          yTitle={<>[<tspan className="sym">X</tspan>] / mol L⁻¹</>}
         >
           <PlotCurve fn={(x) => twoStepSeries(A0, k1, k2, x).A} from={0} to={T_MAX} tone="reactant" />
-          <PlotCurve fn={(x) => twoStepSeries(A0, k1, k2, x).I} from={0} to={T_MAX} tone="catalyst" />
+          <PlotCurve fn={(x) => twoStepSeries(A0, k1, k2, x).I} from={0} to={T_MAX} tone="neutral" />
           <PlotCurve fn={(x) => twoStepSeries(A0, k1, k2, x).P} from={0} to={T_MAX} tone="product" />
           <PlotGuide at={{ x: t, y: 0 }} to="x" tone="neutral" />
           <PlotPoint at={{ x: t, y: now.A }} tone="reactant" />
-          <PlotPoint at={{ x: t, y: now.I }} tone="catalyst" />
+          <PlotPoint at={{ x: t, y: now.I }} tone="neutral" />
           <PlotPoint at={{ x: t, y: now.P }} tone="product" />
         </PlotFrame>
       </svg>
 
       <ul className={styles.legend} aria-label="Curve key">
         <li><span className={styles.swatchReactant} aria-hidden="true" />A, reactant</li>
-        <li><span className={styles.swatchCatalyst} aria-hidden="true" />I, intermediate</li>
+        <li><span className={styles.swatchNeutral} aria-hidden="true" />I, intermediate</li>
         <li><span className={styles.swatchProduct} aria-hidden="true" />P, product</li>
       </ul>
 
       <dl className={styles.readout}>
         <div>
-          <dt>Rate = k₁[A] (A used up)</dt>
+          <dt>Rate = <span className="sym">k</span>₁[<span className="sym">A</span>] (<span className="sym">A</span> used up)</dt>
           <dd>{formatSig(rateA, 3)} mol L⁻¹ s⁻¹</dd>
         </div>
         <div>
-          <dt>k₂[I] (P formed)</dt>
+          <dt><span className="sym">k</span>₂[<span className="sym">I</span>] (<span className="sym">P</span> formed)</dt>
           <dd>{formatSig(rateP, 3)} mol L⁻¹ s⁻¹</dd>
         </div>
         <div>
-          <dt>Largest [I]</dt>
+          <dt>Largest [<span className="sym">I</span>]</dt>
           <dd>{formatSig(peak.I, 3)} mol L⁻¹ at {formatSig(peak.t, 3)} s</dd>
         </div>
       </dl>
 
       <p className={styles.summary} aria-live="polite">
-        {summary} At t = {tFmt} s: [A] = {formatSig(now.A, 3)}, [I] = {formatSig(now.I, 3)}, [P] = {formatSig(now.P, 3)} mol L⁻¹.
+        {summary} At <span className="sym">t</span> = {tFmt} s: [<span className="sym">A</span>] = {formatSig(now.A, 3)}, [<span className="sym">I</span>] = {formatSig(now.I, 3)}, [<span className="sym">P</span>] = {formatSig(now.P, 3)} mol L⁻¹.
       </p>
     </div>
   )

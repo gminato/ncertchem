@@ -16,7 +16,7 @@ On a highway toll plaza, two booths sit one behind the other. One is a quick FAS
 
 ## Counting the molecules in one step
 
-Molecularity is the number of reacting species, whether atoms, ions or molecules, that must collide at the same instant for the reaction to occur. It applies to an **elementary reaction**, a single act of collision with no hidden stages inside it. The count sorts elementary reactions into three families:
+Picture one elementary step as a single moment of contact. Tally the particles that have to touch at that moment for the step to go through (atoms, ions and molecules all count), and the tally is the **molecularity**. An **elementary reaction** is exactly one such act of contact, with no stages hidden inside it. The count sorts elementary reactions into three families:
 
 - **Unimolecular:** one species reacts on its own, as when ammonium nitrite falls apart: $\ce{NH4NO2 -> N2 + 2H2O}$.
 - **Bimolecular:** two species meet, as when hydrogen iodide breaks down: $\ce{2HI -> H2 + I2}$.
@@ -35,7 +35,7 @@ Because molecularity is a head count of the particles in one collision, it is al
     **Three at one instant:** Two nitric oxide molecules and one oxygen molecule must come together at the same moment: $\ce{2NO + O2 -> 2NO2}$. The three converge on one spot and a burst marks the collision. Because all three must meet at once, such events are uncommon, and this termolecular reaction is slow.
   </Step>
   <Step>
-    **The slow first step:** In the two-step peroxide route, a hydrogen peroxide molecule meets an iodide ion and forms water and the hypoiodite ion $\ce{IO-}$. This is step 1, and it is slow, so only a few $\ce{IO-}$ ions appear each second. Step 1 is drawn in the slow tone and marked as the rate-determining step.
+    **The slow first step:** In the two-step peroxide route, a hydrogen peroxide molecule meets an iodide ion and forms water and the hypoiodite ion $\ce{IO-}$. This is step 1, and it is slow, so only a few $\ce{IO-}$ ions appear each second. Step 1 carries an accent label that names it the rate-determining step.
   </Step>
   <Step>
     **The intermediate is used up:** Each $\ce{IO-}$ meets a hydrogen peroxide molecule almost at once and gives water, iodide ion and oxygen: $\ce{H2O2 + IO- -> H2O + I- + O2}$. The iodide ion returns unchanged and the intermediate's level stays low. Adding both steps gives the overall equation $\ce{2H2O2 -> 2H2O + O2}$.
@@ -58,7 +58,7 @@ Which of these equations describes a termolecular elementary step?
 
 ## Why three is the practical ceiling
 
-The chance that four or more molecules meet at one point at one instant is very small. A termolecular step is already rare and slow, and steps with higher molecularity are hardly ever seen. So a reaction whose balanced equation contains many molecules almost always runs in several steps.
+Try to picture four molecules arriving at one point at one instant. The odds are tiny, and even three arriving together is uncommon enough to make a termolecular step slow. For that reason, a reaction whose equation lists many molecules is nearly always a relay of smaller steps rather than one large collision.
 
 The reaction below is a good case.
 
@@ -66,13 +66,13 @@ $$
 \ce{KClO3 + 6FeSO4 + 3H2SO4 -> KCl + 3Fe2(SO4)3 + 3H2O}
 $$
 
-Its equation has ten reactant molecules, which suggests an order of ten. Measurements show a second-order rate law, which tells you that the reaction is really a chain of simpler steps.
+Count the reactant molecules in that equation and you get ten, so a naive guess would be tenth order. The measured rate law is second order instead, a clear sign that the change is a chain of simpler steps.
 
 ## Complex reactions and the slow step
 
 A **complex reaction** is a sequence of elementary steps, called its mechanism. The overall pace is set by the slowest of those steps, the **rate-determining step**. Think of a factory line: however fast the other machines run, the line's output is that of its slowest machine.
 
-Take the decomposition of hydrogen peroxide, catalysed by iodide ions in an alkaline medium. The overall equation is $\ce{2H2O2 -> 2H2O + O2}$, but experiment gives the rate law $\text{Rate} = k[\ce{H2O2}][\ce{I-}]$, first order in each of the two reactants. Two elementary steps fit that law:
+Hydrogen peroxide breaks down in basic solution, and iodide ions quicken the breakdown. The overall equation is $\ce{2H2O2 -> 2H2O + O2}$, but experiment gives the rate law $\text{Rate} = k[\ce{H2O2}][\ce{I-}]$, first order in each of the two reactants. Two elementary steps fit that law:
 
 $$
 \begin{aligned}
@@ -97,7 +97,7 @@ In the hydrogen peroxide mechanism, $[\ce{H2O2}]$ is tripled while $[\ce{I-}]$ i
 
 ## Order and molecularity compared
 
-Order is found from experiment. It can be zero or a fraction, and it applies to elementary and complex reactions alike. Molecularity is a count for a single elementary step, always a positive whole number, and it means nothing for a complex reaction taken as a whole. In the peroxide case both numbers happen to be two, but they are different quantities, and they need not agree in general.
+Order is found from experiment. It can be zero or a fraction, and it applies to elementary and complex reactions alike. Molecularity is a count for a single elementary step, always a positive whole number, and it means nothing for a complex reaction taken as a whole. In the peroxide case both numbers happen to be two, but they are different quantities. The general link runs through the slowest step: a complex reaction's rate law takes its form from that step, so when the rate law is built from the slow step's reactants, the reaction's order equals the molecularity of its rate-determining step.
 
 ## Two steps in a row
 
@@ -120,6 +120,6 @@ The simulation starts with $[\ce{A}]_0 = 1.00\ \text{mol L}^{-1}$, $k_1 = 0.10\ 
 - **Molecularity** counts the species that must collide in one elementary step: unimolecular, bimolecular or termolecular. It is a positive whole number and applies only to elementary steps.
 - **Order** is measured from experiment, may be zero or a fraction, and applies to any reaction, simple or complex.
 - **Three is the practical ceiling.** Steps needing four or more molecules to meet at once are so improbable that complex reactions break into smaller steps.
-- **The slowest step sets the pace.** It is the rate-determining step, and its reactants appear in the rate law.
+- **The slowest step sets the pace.** It is the rate-determining step; its reactants appear in the rate law, and its molecularity gives the reaction's order.
 - **Intermediates** form in one step and are used up in another, so they never appear in the overall equation.
 </KeyIdeas>
