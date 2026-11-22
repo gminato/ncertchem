@@ -1,0 +1,286 @@
+.sim {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.modeBar {
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+.modeButton {
+  font: inherit;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--fg-muted);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: var(--space-2) var(--space-4);
+  min-height: 44px;
+  cursor: pointer;
+}
+
+.modeActive {
+  color: var(--accent-fg);
+  background: var(--accent);
+  border-color: var(--accent);
+}
+
+.modeButton:focus-visible,
+.select:focus-visible,
+.primaryButton:focus-visible,
+.secondaryButton:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.challengeCard {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  background: var(--accent-soft);
+  border: 1px solid var(--accent);
+  border-radius: var(--radius-md);
+  padding: var(--space-3) var(--space-4);
+}
+
+.challengeHeader {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+}
+
+.challengeName {
+  margin: 0;
+  font-size: 19px;
+  font-weight: 700;
+  color: var(--fg);
+  overflow-wrap: anywhere;
+}
+
+.challengePrompt {
+  margin: 0;
+  font-size: 15px;
+  color: var(--fg-muted);
+}
+
+.controlsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 190px), 1fr));
+  gap: var(--space-3);
+}
+
+.slotsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 220px), 1fr));
+  gap: var(--space-3);
+}
+
+.slotCard {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  background: var(--surface-raised);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: var(--space-3);
+  min-width: 0;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  min-width: 0;
+}
+
+.fieldLabel {
+  font-size: 14px;
+  color: var(--fg-muted);
+}
+
+.select {
+  font: inherit;
+  font-size: 15px;
+  color: var(--fg);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: var(--space-2) var(--space-3);
+  min-height: 44px;
+  width: 100%;
+  min-width: 0;
+}
+
+.slider {
+  width: 100%;
+  accent-color: var(--accent);
+  min-height: 32px;
+}
+
+.stage {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  background: var(--surface-raised);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: var(--space-3);
+}
+
+.scene {
+  display: block;
+  width: 100%;
+  max-width: 640px;
+  height: auto;
+  margin: 0 auto;
+}
+
+.warningBox {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+  background: var(--caution-soft);
+  border: 1px solid var(--caution);
+  border-radius: var(--radius-md);
+  padding: var(--space-3);
+}
+
+.warningText {
+  margin: 0;
+  font-size: 15px;
+  color: var(--fg);
+}
+
+.readouts {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr));
+  gap: var(--space-3);
+}
+
+.readoutCard {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: var(--space-3);
+  min-width: 0;
+}
+
+.readoutLabel {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--fg-muted);
+}
+
+.formulaValue {
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--fg);
+  overflow-wrap: anywhere;
+}
+
+.nameValue {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--fg);
+  overflow-wrap: anywhere;
+}
+
+.metaLine {
+  margin: 0;
+  font-size: 14px;
+  color: var(--fg-muted);
+}
+
+.reverseActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+.primaryButton {
+  font: inherit;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--accent-fg);
+  background: var(--accent);
+  border: 1px solid var(--accent);
+  border-radius: var(--radius-md);
+  padding: var(--space-2) var(--space-4);
+  min-height: 44px;
+  cursor: pointer;
+}
+
+.secondaryButton {
+  font: inherit;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--fg);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: var(--space-2) var(--space-3);
+  min-height: 40px;
+  cursor: pointer;
+}
+
+.matchFeedback {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--success);
+}
+
+.missFeedback {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--caution);
+}
+
+.rulesWrap {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+.ruleChip {
+  display: inline-flex;
+  align-items: center;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--fg-muted);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  padding: 5px 12px;
+}
+
+.ruleChipActive {
+  color: var(--success);
+  background: var(--success-soft);
+  border-color: var(--success);
+  font-weight: 600;
+}
+
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
