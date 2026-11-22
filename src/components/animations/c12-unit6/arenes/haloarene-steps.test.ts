@@ -10,6 +10,7 @@ import {
   formulaOf,
   ladderCards,
   nitroVerdict,
+  PARA_CARBANION_CONTRIBUTORS,
 } from './haloarene-steps'
 
 describe('haloarene Scrolly Steps', () => {
@@ -59,6 +60,22 @@ describe('haloarene Scrolly Steps', () => {
       [2, 'NaOH, 368 K'],
       [3, 'warm H₂O'],
     ])
+  })
+
+  it('parses each para carbanion form as C₆H₅ClNO₃ with one negative charge', () => {
+    for (const smiles of Object.values(PARA_CARBANION_CONTRIBUTORS)) {
+      const g = parseSmiles(smiles)
+      expect(molecularFormula(g)).toMatch(/^C6H5ClNO3/)
+      expect(g.atoms.reduce((sum, a) => sum + (a.charge ?? 0), 0)).toBe(-1)
+    }
+  })
+
+  it('puts a second negative charge on a nitro O only in the nitro form', () => {
+    // Every ordinary nitro group carries one O⁻; the nitro-O form has the charge on both nitro O atoms.
+    const negativeOxygens = (smiles: string) =>
+      parseSmiles(smiles).atoms.filter((a) => a.element === 'O' && (a.charge ?? 0) === -1).length
+    expect(negativeOxygens(PARA_CARBANION_CONTRIBUTORS.nitroO)).toBe(2)
+    expect(negativeOxygens(PARA_CARBANION_CONTRIBUTORS.c2)).toBe(1)
   })
 
   it('reads the activation verdicts and the carbanion sites from the lib', () => {

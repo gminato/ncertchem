@@ -20,6 +20,15 @@ export const ARENE_SMILES = {
   biphenyl: 'C1=CC=C(C=C1)C1=CC=CC=C1',
 } as const
 
+/**
+ * Two forms of the para-nitro carbanion after OH⁻ adds at C1 (sp³, with OH and Cl). The C2 form puts the charge
+ * on a ring carbon; the nitro-O form has moved it onto a nitro O, where the ring C=N is double (the C4 carbon bears NO₂).
+ */
+export const PARA_CARBANION_CONTRIBUTORS = {
+  c2: 'OC1(Cl)[CH-]C=C([N+](=O)[O-])C=C1',
+  nitroO: 'OC1(Cl)C=CC(=[N+]([O-])[O-])C=C1',
+} as const
+
 /** IUPAC names shown under the products. Each must equal iupacNameFromSmiles of its SMILES (tested). */
 export const ARENE_NAMES = {
   bromo4Nitro: '1-bromo-4-nitrobenzene',
