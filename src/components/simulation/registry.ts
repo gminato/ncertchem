@@ -96,6 +96,7 @@ import { LeadAcidCycle } from './sims/lead-acid-cycle'
 import { InitialRatesLab } from './sims/initial-rates-lab'
 import { ZeroOrderLab } from './sims/zero-order-lab'
 import { FirstOrderLab } from './sims/first-order-lab'
+import { SubstitutionRace } from './sims/substitution-race'
 import { HalfLifeCompare } from './sims/half-life-compare'
 import { ArrheniusLab } from './sims/arrhenius-lab'
 import { ConfigurationExplorer } from './sims/configuration-explorer'
@@ -219,6 +220,7 @@ export const simulations: Record<string, ComponentType<SimulationProps>> = {
   'rate-determining-step-lab': RateDeterminingStepLab,
   'zero-order-lab': ZeroOrderLab,
   'first-order-lab': FirstOrderLab,
+  'substitution-race': SubstitutionRace,
   'aqua-ion-colour-lab': AquaIonColourLab,
   'half-life-compare': HalfLifeCompare,
   'arrhenius-lab': ArrheniusLab,
