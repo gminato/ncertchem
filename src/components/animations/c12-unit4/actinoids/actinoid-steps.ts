@@ -50,28 +50,6 @@ export function actinoidRadiusPoints(): RadiusPoint[] {
   }))
 }
 
-function pmOf(points: RadiusPoint[], symbol: string): number {
-  const hit = points.find((p) => p.symbol === symbol)
-  if (!hit || hit.pm === null) throw new Error(`No printed radius for ${symbol}`)
-  return hit.pm
-}
-
-/** Average fall in M³⁺ radius per element, Ce to Yb (pm per step). */
-export function lanthanoidPmPerStep(): number {
-  const pts = lanthanoidRadiusPoints()
-  const drop = pmOf(pts, 'Ce') - pmOf(pts, 'Yb')
-  const steps = pts.find((p) => p.symbol === 'Yb')!.pos - pts.find((p) => p.symbol === 'Ce')!.pos
-  return drop / steps
-}
-
-/** Average fall in M³⁺ radius per element, U to Cf (pm per step). */
-export function actinoidPmPerStep(): number {
-  const pts = actinoidRadiusPoints()
-  const drop = pmOf(pts, 'U') - pmOf(pts, 'Cf')
-  const steps = pts.find((p) => p.symbol === 'Cf')!.pos - pts.find((p) => p.symbol === 'U')!.pos
-  return drop / steps
-}
-
 /** Ln and An oxidation-state dots: Table 4.9 (Ln) and Table 4.11 (An). */
 export function lanthanoidLadder(): LadderCell[] {
   const cells: LadderCell[] = []
