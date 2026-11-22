@@ -83,6 +83,9 @@ function Bars({ frame, bars, width }: { frame: Frame; bars: readonly Bar[]; widt
         const left = sx(frame, b.cx - width / 2)
         const barWidth = (width / frame.xMax) * frame.width
         const top = sy(frame, b.bpK)
+        const label = String(b.bpK)
+        const labelWidth = label.length * 9 + 6
+        const labelX = left + barWidth / 2
         return (
           <g key={i}>
             <rect
@@ -94,6 +97,8 @@ function Bars({ frame, bars, width }: { frame: Frame; bars: readonly Bar[]; widt
               stroke={b.gas ? b.fill : 'none'}
               strokeWidth={2.4}
             />
+            {/* A background behind the value breaks any guide line that runs through it. */}
+            <rect x={labelX - labelWidth / 2} y={top - 19} width={labelWidth} height={16} rx={3} fill="var(--surface)" />
             <text
               x={left + barWidth / 2}
               y={top - 6}
@@ -217,6 +222,8 @@ const BROMOBUTANE_NAMES: readonly (readonly string[])[] = [
   ['2-bromo-2-methyl', 'propane'],
 ]
 const CARD_X = [98, 290, 482] as const
+/** Step 3 cards sit further from the y-axis so the leftmost bar label clears it. */
+const DCB_CARD_X = [164, 306, 448] as const
 
 /** Step 2: three C₄H₉Br isomers, the bars falling as the shape gets more compact. */
 function ShapeBars() {
@@ -257,9 +264,9 @@ function PackingBars() {
       <Text x={W / 2} y={22}>Dichlorobenzenes: b.p. and m.p. / K</Text>
       {DICHLOROBENZENES.map((d, i) => (
         <g key={d.smiles}>
-          <Text x={CARD_X[i]} y={48} muted>{d.isomer}</Text>
-          <SkeletalFormula graph={d.graph} scale={40} x={CARD_X[i]} y={118} />
-          <Text x={CARD_X[i]} y={198}>{d.name.toLowerCase()}</Text>
+          <Text x={DCB_CARD_X[i]} y={48} muted>{d.isomer}</Text>
+          <SkeletalFormula graph={d.graph} scale={40} x={DCB_CARD_X[i]} y={118} />
+          <Text x={DCB_CARD_X[i]} y={198}>{d.name.toLowerCase()}</Text>
         </g>
       ))}
       <Chart frame={DCB_FRAME} yTicks={[0, 250, 500]} yTitle="temperature / K">
@@ -267,8 +274,8 @@ function PackingBars() {
           frame={DCB_FRAME}
           width={22}
           bars={DICHLOROBENZENES.flatMap((d, i) => [
-            { cx: CARD_X[i] - BP_STRIP.x - 12, bpK: d.bpK, fill: 'var(--fg-muted)', gas: false },
-            { cx: CARD_X[i] - BP_STRIP.x + 12, bpK: d.mpK, fill: 'var(--accent)', gas: false },
+            { cx: DCB_CARD_X[i] - DCB_FRAME.x - 12, bpK: d.bpK, fill: 'var(--fg-muted)', gas: false },
+            { cx: DCB_CARD_X[i] - DCB_FRAME.x + 12, bpK: d.mpK, fill: 'var(--accent)', gas: false },
           ])}
         />
       </Chart>
@@ -277,6 +284,9 @@ function PackingBars() {
     </g>
   )
 }
+
+/** A Table 6.3 liquid layer: a stronger tone than water, with a darker edge so each layer reads. */
+const LIQUID_LAYER = { fill: 'var(--accent)', fillOpacity: 0.3, stroke: 'var(--accent)', strokeWidth: 1.5 } as const
 
 /** One test tube with water and one Table 6.3 liquid, which sinks or floats. */
 function Tube({ cx, unicode, printed, floats }: {
@@ -299,9 +309,9 @@ function Tube({ cx, unicode, printed, floats }: {
       <path d={`${wall} Z`} fill="var(--glass-fill)" stroke="var(--glass-wall)" strokeWidth={2} />
       <path d={waterPath} fill="var(--accent-soft)" />
       {floats ? (
-        <rect x={x0 + 2} y={waterTop - 50} width={x1 - x0 - 4} height={50} fill="var(--liquid)" />
+        <rect x={x0 + 2} y={waterTop - 50} width={x1 - x0 - 4} height={50} {...LIQUID_LAYER} />
       ) : (
-        <path d={sinkPath} fill="var(--liquid)" />
+        <path d={sinkPath} {...LIQUID_LAYER} />
       )}
       <path d={`${wall}`} fill="none" stroke="var(--glass-wall)" strokeWidth={2} />
       <Text x={cx} y={356}>{unicode}</Text>
@@ -392,6 +402,17 @@ function Lattice({ x0, hbond }: { x0: number; hbond: boolean }) {
           />
         )
       )}
+      {/* A background card lifts the haloalkane above the contact lines that meet its cell. */}
+      <rect
+        x={cells[CENTRE][0] - 58}
+        y={cells[CENTRE][1] - 34}
+        width={116}
+        height={68}
+        rx={10}
+        fill="var(--surface)"
+        stroke="var(--fg-subtle)"
+        strokeWidth={1}
+      />
       <SkeletalFormula graph={SOLVENT_HALOALKANE.graph} scale={40} x={cells[CENTRE][0]} y={cells[CENTRE][1]} />
     </g>
   )
