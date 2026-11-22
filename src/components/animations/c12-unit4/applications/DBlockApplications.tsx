@@ -42,7 +42,7 @@ const METAL: Record<string, string> = {
   Cu: 'var(--metal-cu)',
   Ag: 'var(--metal-ag)',
   Zn: 'var(--metal-zn)',
-  Au: 'var(--metal-generic)',
+  Au: 'var(--agi-yellow)',
   Cr: SERIES_TONE['3d'],
   Mn: SERIES_TONE['3d'],
   Ti: SERIES_TONE['3d'],
@@ -267,7 +267,7 @@ function ReactorStep() {
         CH₃CHO
       </text>
       <text x={290} y={252} fontSize={14} fill={MUTED} textAnchor="middle">
-        Wacker, PdCl₂: Pd(II) ⇄ Pd(0)
+        Wacker, PdCl₂: Pd(II) → Pd(0)
       </text>
       <text x={290} y={274} fontSize={16} fill={INK} textAnchor="middle">
         {wacker}
