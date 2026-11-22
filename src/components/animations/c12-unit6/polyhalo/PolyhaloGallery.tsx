@@ -162,18 +162,23 @@ function StepIodoform() {
         wound
       </text>
       <text x={470} y={172} textAnchor="middle" fontSize={15} fill={FG}>
-        free iodine
+        free iodine, I₂
       </text>
+      {/* Iodine is set free as I₂ molecules: two bonded atoms each. */}
       {[
-        [430, 236],
-        [472, 262],
-        [506, 232],
+        [430, 238],
+        [480, 268],
       ].map(([cx, cy]) => (
         <g key={`${cx}-${cy}`}>
-          <circle cx={cx} cy={cy} r={15} fill={I} />
-          <text x={cx} y={cy + 5} textAnchor="middle" fontSize={14} fontWeight={600} fill="var(--accent-fg)">
-            I
-          </text>
+          <line x1={cx} y1={cy} x2={cx + 30} y2={cy} stroke={I} strokeWidth={4} />
+          {[cx, cx + 30].map((x) => (
+            <g key={x}>
+              <circle cx={x} cy={cy} r={15} fill={I} />
+              <text x={x} y={cy + 5} textAnchor="middle" fontSize={14} fontWeight={600} fill="var(--accent-fg)">
+                I
+              </text>
+            </g>
+          ))}
         </g>
       ))}
       <text x={135} y={330} textAnchor="middle" fontSize={15} fill={MUTED}>
