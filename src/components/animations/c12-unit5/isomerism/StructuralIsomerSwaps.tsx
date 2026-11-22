@@ -15,7 +15,7 @@ const LIG_NH3: LigandStyle = { label: 'N', fill: TONE.l }
 const LIG_CN: LigandStyle = { label: 'CN', fill: TONE.b }
 const LIG_H2O: LigandStyle = { label: 'O', fill: TONE.accent }
 const LIG_CL: LigandStyle = { label: 'Cl', fill: TONE.x }
-const LIG_SO4: LigandStyle = { label: 'SO4', fill: TONE.yellow }
+const LIG_SO4: LigandStyle = { label: 'SO₄', fill: TONE.yellow }
 const LIG_BR: LigandStyle = { label: 'Br', fill: TONE.b }
 const LIG_ONO: LigandStyle = { label: 'O', fill: TONE.red }
 const LIG_NO2: LigandStyle = { label: 'N', fill: TONE.yellow }
@@ -47,7 +47,7 @@ function StepLinkage() {
         Bound through O
       </text>
       <text x={129} y={356} textAnchor="middle" fontSize={16} fill={TONE.muted}>
-        [Co(NH3)5(ONO)]Cl2
+        [Co(NH₃)₅(ONO)]Cl₂
       </text>
 
       {/* Center flip arrow */}
@@ -70,17 +70,17 @@ function StepLinkage() {
         fontSize={16}
       />
       <text x={411} y={306} textAnchor="middle" fontSize={17} fontWeight={700} fill={TONE.fg}>
-        Co-NO2 (yellow)
+        Co-NO₂ (yellow)
       </text>
       <text x={411} y={332} textAnchor="middle" fontSize={16} fill={TONE.muted}>
         Bound through N
       </text>
       <text x={411} y={356} textAnchor="middle" fontSize={16} fill={TONE.muted}>
-        [Co(NH3)5(NO2)]Cl2
+        [Co(NH₃)₅(NO₂)]Cl₂
       </text>
 
       <text x={W / 2} y={414} textAnchor="middle" fontSize={16} fill={TONE.muted}>
-        Five blue dots = NH3; top ligand flips between O and N.
+        Five blue dots = NH₃; top ligand flips between O and N.
       </text>
     </g>
   )
@@ -96,48 +96,48 @@ function StepCoordination() {
 
   return (
     <g>
-      <text x={W / 2} y={28} textAnchor="middle" fontSize={18} fontWeight={700} fill={TONE.fg}>
+      <text x={W / 2} y={24} textAnchor="middle" fontSize={18} fontWeight={700} fill={TONE.fg}>
         Coordination isomerism (5.4.4)
       </text>
 
       {/* Top pair */}
-      <rect x={18} y={44} width={236} height={152} rx={10} fill={TONE.raised} stroke={TONE.l} strokeWidth={1.6} />
-      <OctahedralComplex cx={136} cy={108} radius={44} metal="Co" ligands={sixNH3} fontSize={16} />
-      <text x={136} y={184} textAnchor="middle" fontSize={16} fontWeight={700} fill={TONE.fg}>
-        [Co(NH3)6]3+
+      <rect x={18} y={36} width={236} height={164} rx={10} fill={TONE.raised} stroke={TONE.l} strokeWidth={1.6} />
+      <OctahedralComplex cx={136} cy={106} radius={54} yawDeg={12} pitchDeg={28} metal="Co" ligands={sixNH3} fontSize={16} />
+      <text x={136} y={190} textAnchor="middle" fontSize={16} fontWeight={700} fill={TONE.fg}>
+        [Co(NH₃)₆]³⁺
       </text>
 
-      <rect x={286} y={44} width={236} height={152} rx={10} fill={TONE.raised} stroke={TONE.b} strokeWidth={1.6} />
-      <OctahedralComplex cx={404} cy={108} radius={44} metal="Cr" ligands={sixCN} fontSize={16} />
-      <text x={404} y={184} textAnchor="middle" fontSize={16} fontWeight={700} fill={TONE.fg}>
-        [Cr(CN)6]3-
+      <rect x={286} y={36} width={236} height={164} rx={10} fill={TONE.raised} stroke={TONE.b} strokeWidth={1.6} />
+      <OctahedralComplex cx={404} cy={106} radius={54} yawDeg={12} pitchDeg={28} metal="Cr" ligands={sixCN} fontSize={16} />
+      <text x={404} y={190} textAnchor="middle" fontSize={16} fontWeight={700} fill={TONE.fg}>
+        [Cr(CN)₆]³⁻
       </text>
 
       {/* Swap arrows */}
-      <line x1={190} y1={202} x2={340} y2={236} stroke={TONE.l} strokeWidth={2.4} />
-      <polygon points="346,238 334,239 337,230" fill={TONE.l} />
-      <line x1={350} y1={202} x2={200} y2={236} stroke={TONE.b} strokeWidth={2.4} />
-      <polygon points="194,238 206,239 203,230" fill={TONE.b} />
+      <line x1={190} y1={204} x2={340} y2={234} stroke={TONE.l} strokeWidth={2.4} />
+      <polygon points="346,236 334,237 337,228" fill={TONE.l} />
+      <line x1={350} y1={204} x2={200} y2={234} stroke={TONE.b} strokeWidth={2.4} />
+      <polygon points="194,236 206,237 203,228" fill={TONE.b} />
       <rect x={W / 2 - 64} y={206} width={128} height={26} rx={13} fill={TONE.surface} stroke={TONE.guide} strokeWidth={1.2} />
       <text x={W / 2} y={224} textAnchor="middle" fontSize={16} fontWeight={700} fill={TONE.fg}>
         Swap ligands
       </text>
 
       {/* Bottom pair */}
-      <rect x={18} y={244} width={236} height={152} rx={10} fill={TONE.raised} stroke={TONE.l} strokeWidth={1.6} />
-      <OctahedralComplex cx={136} cy={308} radius={44} metal="Cr" ligands={sixNH3} fontSize={16} />
-      <text x={136} y={384} textAnchor="middle" fontSize={16} fontWeight={700} fill={TONE.fg}>
-        [Cr(NH3)6]3+
+      <rect x={18} y={240} width={236} height={164} rx={10} fill={TONE.raised} stroke={TONE.l} strokeWidth={1.6} />
+      <OctahedralComplex cx={136} cy={310} radius={54} yawDeg={12} pitchDeg={28} metal="Cr" ligands={sixNH3} fontSize={16} />
+      <text x={136} y={394} textAnchor="middle" fontSize={16} fontWeight={700} fill={TONE.fg}>
+        [Cr(NH₃)₆]³⁺
       </text>
 
-      <rect x={286} y={244} width={236} height={152} rx={10} fill={TONE.raised} stroke={TONE.b} strokeWidth={1.6} />
-      <OctahedralComplex cx={404} cy={308} radius={44} metal="Co" ligands={sixCN} fontSize={16} />
-      <text x={404} y={384} textAnchor="middle" fontSize={16} fontWeight={700} fill={TONE.fg}>
-        [Co(CN)6]3-
+      <rect x={286} y={240} width={236} height={164} rx={10} fill={TONE.raised} stroke={TONE.b} strokeWidth={1.6} />
+      <OctahedralComplex cx={404} cy={310} radius={54} yawDeg={12} pitchDeg={28} metal="Co" ligands={sixCN} fontSize={16} />
+      <text x={404} y={394} textAnchor="middle" fontSize={16} fontWeight={700} fill={TONE.fg}>
+        [Co(CN)₆]³⁻
       </text>
 
-      <text x={W / 2} y={428} textAnchor="middle" fontSize={16} fill={TONE.muted}>
-        Overall formula count is unchanged: 1 Co, 1 Cr, 6 NH3, 6 CN.
+      <text x={W / 2} y={432} textAnchor="middle" fontSize={16} fill={TONE.muted}>
+        Overall formula count is unchanged: 1 Co, 1 Cr, 6 NH₃, 6 CN⁻.
       </text>
     </g>
   )
@@ -168,16 +168,16 @@ function StepIonisation() {
       {/* Free counter ion */}
       <circle cx={218} cy={178} r={22} fill={TONE.b} />
       <text x={218} y={184} textAnchor="middle" fontSize={16} fontWeight={700} fill="var(--accent-fg)">
-        Br-
+        Br⁻
       </text>
       <text x={135} y={300} textAnchor="middle" fontSize={16} fontWeight={700} fill={TONE.fg}>
-        [Co(NH3)5(SO4)]Br
+        [Co(NH₃)₅(SO₄)]Br
       </text>
       <text x={135} y={328} textAnchor="middle" fontSize={16} fill={TONE.muted}>
         Free ion in water:
       </text>
       <text x={135} y={352} textAnchor="middle" fontSize={16} fontWeight={700} fill={TONE.b}>
-        Br- (gives AgBr)
+        Br⁻ (gives AgBr)
       </text>
 
       {/* Center swap arrow */}
@@ -195,18 +195,18 @@ function StepIonisation() {
         ligands={[LIG_BR, LIG_NH3, LIG_NH3, LIG_NH3, LIG_NH3, LIG_NH3]}
         fontSize={16}
       />
-      <circle cx={488} cy={178} r={24} fill={TONE.yellow} />
+      <circle cx={488} cy={178} r={26} fill={TONE.yellow} />
       <text x={488} y={184} textAnchor="middle" fontSize={16} fontWeight={700} fill="var(--accent-fg)">
-        SO4
+        SO₄²⁻
       </text>
       <text x={405} y={300} textAnchor="middle" fontSize={16} fontWeight={700} fill={TONE.fg}>
-        [Co(NH3)5Br]SO4
+        [Co(NH₃)₅Br]SO₄
       </text>
       <text x={405} y={328} textAnchor="middle" fontSize={16} fill={TONE.muted}>
         Free ion in water:
       </text>
       <text x={405} y={352} textAnchor="middle" fontSize={16} fontWeight={700} fill={TONE.yellow}>
-        SO4^2- (gives BaSO4)
+        SO₄²⁻ (gives BaSO₄)
       </text>
 
       <text x={W / 2} y={414} textAnchor="middle" fontSize={16} fill={TONE.muted}>
@@ -239,22 +239,22 @@ function StepSolvate() {
       />
       {/* Lattice ions */}
       <text x={216} y={142} textAnchor="middle" fontSize={16} fontWeight={700} fill={TONE.x}>
-        Cl-
+        Cl⁻
       </text>
       <text x={216} y={178} textAnchor="middle" fontSize={16} fontWeight={700} fill={TONE.x}>
-        Cl-
+        Cl⁻
       </text>
       <text x={216} y={214} textAnchor="middle" fontSize={16} fontWeight={700} fill={TONE.x}>
-        Cl-
+        Cl⁻
       </text>
       <text x={134} y={298} textAnchor="middle" fontSize={16} fontWeight={700} fill={TONE.fg}>
-        [Cr(H2O)6]Cl3
+        [Cr(H₂O)₆]Cl₃
       </text>
       <text x={134} y={324} textAnchor="middle" fontSize={16} fontWeight={700} fill={TONE.violet}>
-        Violet (3 free Cl-)
+        Violet (3 free Cl⁻)
       </text>
       <text x={134} y={350} textAnchor="middle" fontSize={16} fill={TONE.muted}>
-        0 lattice H2O
+        0 lattice H₂O
       </text>
 
       {/* Center swap arrow */}
@@ -273,26 +273,26 @@ function StepSolvate() {
         fontSize={16}
       />
       <text x={488} y={142} textAnchor="middle" fontSize={16} fontWeight={700} fill={TONE.x}>
-        Cl-
+        Cl⁻
       </text>
       <text x={488} y={178} textAnchor="middle" fontSize={16} fontWeight={700} fill={TONE.x}>
-        Cl-
+        Cl⁻
       </text>
       <text x={488} y={214} textAnchor="middle" fontSize={16} fontWeight={700} fill={TONE.accent}>
-        H2O
+        H₂O
       </text>
       <text x={406} y={298} textAnchor="middle" fontSize={16} fontWeight={700} fill={TONE.fg}>
-        [Cr(H2O)5Cl]Cl2.H2O
+        [Cr(H₂O)₅Cl]Cl₂·H₂O
       </text>
       <text x={406} y={324} textAnchor="middle" fontSize={16} fontWeight={700} fill={TONE.greyGreen}>
-        Grey-green (2 free Cl-)
+        Grey-green (2 free Cl⁻)
       </text>
       <text x={406} y={350} textAnchor="middle" fontSize={16} fill={TONE.muted}>
-        1 lattice H2O
+        1 lattice H₂O
       </text>
 
       <text x={W / 2} y={414} textAnchor="middle" fontSize={16} fill={TONE.muted}>
-        One H2O leaves the bracket and one Cl- enters it.
+        One H₂O leaves the bracket and one Cl⁻ enters it.
       </text>
     </g>
   )

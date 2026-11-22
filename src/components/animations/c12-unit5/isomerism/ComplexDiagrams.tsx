@@ -2,9 +2,12 @@
 
 import {
   OCTA_EDGES,
+  OCTA_MIRROR_DIAG03_VERTS,
+  OCTA_MIRROR_YZ_VERTS,
   OCTA_VERTS,
   SQ_CORNERS,
   TETRA_EDGES,
+  TETRA_MIRROR_PLANE_VERTS,
   TETRA_VERTS,
   chelateArcPath,
   mirrorX,
@@ -222,13 +225,15 @@ export function TetrahedralComplex({
         ))}
 
       {showMirrorPlane && (
-        <line
-          x1={cx}
-          y1={cy - radius - ligandR}
-          x2={cx}
-          y2={cy + radius + ligandR * 0.6}
+        <polygon
+          points={TETRA_MIRROR_PLANE_VERTS.map((v) => {
+            const p = project3D(v, cx, cy, radius, yawDeg, pitchDeg)
+            return `${p.x.toFixed(1)},${p.y.toFixed(1)}`
+          }).join(' ')}
+          fill={TONE.accent}
+          fillOpacity={0.12}
           stroke={TONE.accent}
-          strokeWidth={2}
+          strokeWidth={1.8}
           strokeDasharray="6 4"
         />
       )}
@@ -323,8 +328,10 @@ export interface OctahedralProps {
   shadedFace?: readonly [number, number, number]
   /** Highlighted meridian circle through 3 vertices (e.g. [0, 3, 1] for mer). */
   meridianTriple?: readonly [number, number, number]
-  /** Show an internal dashed vertical mirror plane through M and axial ligands (0, 1). */
+  /** Show an internal dashed symmetry mirror plane projected from 3D coordinates. */
   showMirrorPlane?: boolean
+  /** Which internal 3D mirror plane to show when showMirrorPlane is true ('yz' through M+0+1, or 'diag-03' through M+0+1+3+5). */
+  mirrorPlane?: 'yz' | 'diag-03'
   /** Highlight angle guide between two vertices. */
   highlightPair?: readonly [number, number]
   opacity?: number
@@ -344,6 +351,7 @@ export function OctahedralComplex({
   shadedFace,
   meridianTriple,
   showMirrorPlane = false,
+  mirrorPlane = 'yz',
   highlightPair,
   opacity = 1,
   fontSize = 15,
@@ -352,6 +360,17 @@ export function OctahedralComplex({
   const pts: Point2[] = verts.map((v) => project3D(v, cx, cy, radius, yawDeg, pitchDeg))
   const ligandR = Math.max(13, radius * 0.22)
   const metalR = Math.max(16, radius * 0.25)
+
+  const mirrorPlaneVerts = mirrorPlane === 'diag-03' ? OCTA_MIRROR_DIAG03_VERTS : OCTA_MIRROR_YZ_VERTS
+  const projectedMirrorVerts = showMirrorPlane
+    ? mirrorPlaneVerts.map((v) => project3D(mirrored ? mirrorX(v) : v, cx, cy, radius, yawDeg, pitchDeg))
+    : []
+
+  const computedChelates = chelates.map((ch) => ({
+    ch,
+    arc: chelateArcPath(pts[ch.from], pts[ch.to], cx, cy, 0.56),
+    stroke: ch.highlight ? TONE.enMismatch : (ch.tone ?? TONE.en),
+  }))
 
   const items: Array<{ kind: 'metal' | 'ligand'; idx: number; z: number }> = [
     { kind: 'metal' as const, idx: -1, z: 0 },
@@ -407,10 +426,10 @@ export function OctahedralComplex({
         </g>
       )}
 
-      {/* Optional internal symmetry mirror plane */}
+      {/* Optional internal symmetry mirror plane (3D-projected) */}
       {showMirrorPlane && (
         <polygon
-          points={`${(cx - radius * 0.55).toFixed(1)},${(cy - radius * 1.15).toFixed(1)} ${(cx + radius * 0.55).toFixed(1)},${(cy - radius * 0.92).toFixed(1)} ${(cx + radius * 0.55).toFixed(1)},${(cy + radius * 1.15).toFixed(1)} ${(cx - radius * 0.55).toFixed(1)},${(cy + radius * 0.92).toFixed(1)}`}
+          points={projectedMirrorVerts.map((p) => `${p.x.toFixed(1)},${p.y.toFixed(1)}`).join(' ')}
           fill={TONE.accent}
           fillOpacity={0.12}
           stroke={TONE.accent}
@@ -449,36 +468,15 @@ export function OctahedralComplex({
         ) : null,
       )}
 
-      {/* Chelate arcs (en bridges) */}
-      {chelates.map((ch, idx) => {
-        const a = pts[ch.from]
-        const b = pts[ch.to]
-        const arc = chelateArcPath(a, b, cx, cy, 0.56)
-        const stroke = ch.highlight ? TONE.enMismatch : (ch.tone ?? TONE.en)
-        return (
-          <g key={`ch-${idx}`}>
-            {ch.highlight && (
-              <path d={arc.d} fill="none" stroke={TONE.enMismatch} strokeWidth={9} strokeLinecap="round" opacity={0.28} />
-            )}
-            <path d={arc.d} fill="none" stroke={stroke} strokeWidth={ch.highlight ? 4.2 : 3.2} strokeLinecap="round" />
-            {ch.label && (
-              <text
-                x={arc.labelX}
-                y={arc.labelY + 5}
-                textAnchor="middle"
-                fontSize={fontSize}
-                fontWeight={700}
-                fill={stroke}
-                stroke={TONE.surface}
-                strokeWidth={3.5}
-                paintOrder="stroke"
-              >
-                {ch.label}
-              </text>
-            )}
-          </g>
-        )
-      })}
+      {/* Chelate arcs (en bridges) - paths drawn beneath ligand circles */}
+      {computedChelates.map(({ ch, arc, stroke }, idx) => (
+        <g key={`ch-${idx}`}>
+          {ch.highlight && (
+            <path d={arc.d} fill="none" stroke={TONE.enMismatch} strokeWidth={9} strokeLinecap="round" opacity={0.28} />
+          )}
+          <path d={arc.d} fill="none" stroke={stroke} strokeWidth={ch.highlight ? 4.2 : 3.2} strokeLinecap="round" />
+        </g>
+      ))}
 
       {/* Depth-sorted metal + ligands */}
       {items.map((item) => {
@@ -531,6 +529,26 @@ export function OctahedralComplex({
           </g>
         )
       })}
+
+      {/* Chelate arc labels rendered in a top pass so ligand circles never occlude them */}
+      {computedChelates.map(({ ch, arc, stroke }, idx) =>
+        ch.label ? (
+          <text
+            key={`chl-${idx}`}
+            x={arc.labelX}
+            y={arc.labelY + 5}
+            textAnchor="middle"
+            fontSize={fontSize}
+            fontWeight={700}
+            fill={stroke}
+            stroke={TONE.surface}
+            strokeWidth={3.5}
+            paintOrder="stroke"
+          >
+            {ch.label}
+          </text>
+        ) : null,
+      )}
     </g>
   )
 }

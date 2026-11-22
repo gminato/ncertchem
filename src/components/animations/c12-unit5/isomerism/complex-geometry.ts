@@ -68,7 +68,6 @@ export const OCTA_EDGES: readonly (readonly [number, number])[] = [
 ]
 
 /** Unit vertices of a regular tetrahedron (all 6 pairwise distances equal). */
-const S = 1 / Math.sqrt(3)
 export const TETRA_VERTS: readonly Vec3[] = [
   { x: 0, y: 1, z: 0 },
   { x: 0.9428, y: -0.3333, z: 0 },
@@ -127,4 +126,35 @@ export function dist3D(a: Vec3, b: Vec3): number {
   return Math.hypot(a.x - b.x, a.y - b.y, a.z - b.z)
 }
 
-export const _UNUSED_S = S
+/**
+ * 3D corners of the symmetry mirror plane in a regular tetrahedron containing M (0,0,0),
+ * vertex 0 (0, 1, 0), and vertex 1 (0.9428, -0.3333, 0): the XY plane (z = 0).
+ */
+export const TETRA_MIRROR_PLANE_VERTS: readonly Vec3[] = [
+  { x: -0.85, y: 1.15, z: 0 },
+  { x: 1.15, y: 1.15, z: 0 },
+  { x: 1.15, y: -0.85, z: 0 },
+  { x: -0.85, y: -0.85, z: 0 },
+]
+
+/**
+ * 3D corners of the vertical YZ symmetry mirror plane (x = 0) in an octahedron,
+ * containing M (0,0,0) and axial vertices 0 and 1.
+ */
+export const OCTA_MIRROR_YZ_VERTS: readonly Vec3[] = [
+  { x: 0, y: 1.15, z: -0.95 },
+  { x: 0, y: 1.15, z: 0.95 },
+  { x: 0, y: -1.15, z: 0.95 },
+  { x: 0, y: -1.15, z: -0.95 },
+]
+
+/**
+ * 3D corners of the diagonal symmetry mirror plane (x = z) in an octahedron,
+ * containing M (0,0,0) and vertices 0, 1, 3, and 5 (for cis-MX2L4 and mer-Ma3b3).
+ */
+export const OCTA_MIRROR_DIAG03_VERTS: readonly Vec3[] = [
+  { x: -0.67, y: 1.15, z: -0.67 },
+  { x: 0.67, y: 1.15, z: 0.67 },
+  { x: 0.67, y: -1.15, z: 0.67 },
+  { x: -0.67, y: -1.15, z: -0.67 },
+]

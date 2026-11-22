@@ -30,7 +30,7 @@ function StepPropellers() {
   return (
     <g>
       <text x={W / 2} y={32} textAnchor="middle" fontSize={18} fontWeight={700} fill={TONE.fg}>
-        Optical isomers of [Co(en)3]3+
+        Optical isomers of [Co(en)₃]³⁺
       </text>
       <text x={W / 2} y={56} textAnchor="middle" fontSize={16} fill={TONE.muted}>
         Mirror-image propellers (NCERT Fig. 5.6)
@@ -232,9 +232,9 @@ function StepPolarimeter() {
         Emergent plane
       </text>
 
-      <PolarimeterCell cx={96} title="d solution" angleDeg={32} readout="+theta" tone={TONE.accent} />
-      <PolarimeterCell cx={270} title="l solution" angleDeg={-32} readout="-theta" tone={TONE.b} />
-      <PolarimeterCell cx={444} title="Equal d + l" angleDeg={0} readout="0 deg" tone={TONE.success} />
+      <PolarimeterCell cx={96} title="d solution" angleDeg={32} readout="+θ" tone={TONE.accent} />
+      <PolarimeterCell cx={270} title="l solution" angleDeg={-32} readout="-θ" tone={TONE.b} />
+      <PolarimeterCell cx={444} title="Equal d + l" angleDeg={0} readout="0°" tone={TONE.success} />
 
       <text x={W / 2} y={424} textAnchor="middle" fontSize={16} fill={TONE.muted}>
         Equal amounts of d and l cancel out: zero net rotation.
@@ -262,7 +262,7 @@ function StepCisVsTransPt() {
   return (
     <g>
       <text x={W / 2} y={28} textAnchor="middle" fontSize={17} fontWeight={700} fill={TONE.fg}>
-        [PtCl2(en)2]2+: cis vs trans (NCERT Fig. 5.7)
+        [PtCl₂(en)₂]²⁺: cis vs trans (NCERT Fig. 5.7)
       </text>
 
       {/* Top box: cis pair (chiral) */}

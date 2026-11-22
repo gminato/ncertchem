@@ -119,6 +119,7 @@ function renderIsomerBody(
         mirrored={mirrored}
         yawDeg={yawDeg}
         showMirrorPlane={showMirrorPlane}
+        mirrorPlane={isCis ? 'diag-03' : 'yz'}
         fontSize={16}
       />
     )
@@ -174,6 +175,7 @@ function renderIsomerBody(
         mirrored={mirrored}
         yawDeg={yawDeg}
         showMirrorPlane={showMirrorPlane}
+        mirrorPlane={isFac ? 'yz' : 'diag-03'}
         fontSize={16}
       />
     )
