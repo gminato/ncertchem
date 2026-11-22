@@ -198,6 +198,14 @@ function commonCharges(symbol: string): number[] {
   return states === undefined ? [1, 2] : states.map((s) => s.state)
 }
 
+/** Digits as Unicode superscripts, for UI text such as d¹⁰. */
+function supDigits(n: number): string {
+  return String(n)
+    .split('')
+    .map((c) => '⁰¹²³⁴⁵⁶⁷⁸⁹'[Number(c)])
+    .join('')
+}
+
 /**
  * IUPAC definition: a transition element has an incomplete d subshell in the atom or in a
  * common ion. Checked here against the atom and every ion of charge 1 up to the electrons
@@ -229,7 +237,7 @@ export function isTransitionElement(symbol: string): TransitionVerdict {
   }
   return {
     verdict: false,
-    reason: `the atom and every ion have a full or empty d subshell (d${atomD} in the atom), as for Zn, Cd and Hg`,
+    reason: `the atom and its common ions have a full or empty d subshell (d${supDigits(atomD)} in the atom), as for Zn, Cd and Hg`,
   }
 }
 
