@@ -219,7 +219,10 @@ export function LanthanoidExplorer() {
                 <li key={s.ion} className={styles.state}>
                   <span className={styles.stateIon}>{s.ion}</span>
                   <span className={styles.stateF}>{s.fLabel}</span>
-                  <span className={styles.stateReason}>{s.characteristic ? 'characteristic state' : s.reason}</span>
+                  <span className={styles.stateReason}>
+                    {s.characteristic ? 'characteristic state' : s.reason}
+                    {s.oxidesOnly ? ' (oxides only)' : ''}
+                  </span>
                 </li>
               ))}
             </ul>

@@ -29,8 +29,23 @@ export interface LanthanoidState {
   readonly fLabel: string
   /** True for the +3 state every lanthanoid shows. */
   readonly characteristic: boolean
+  /** True for a +4 state NCERT gives only in oxides (MO₂): Pr, Nd, Tb and Dy. */
+  readonly oxidesOnly: boolean
   readonly reason: string
 }
+
+/**
+ * Special +2 states NCERT names beyond the four in specialLanthanoidStates (Sm²⁺),
+ * and the +4 states it gives only in oxides (Pr, Nd, Dy; Tb⁴⁺ comes from the shared list).
+ */
+const EXTRA_STATES: ReadonlyArray<{ symbol: string; charge: number; reason: string }> = [
+  { symbol: 'Sm', charge: 2, reason: 'NCERT names this +2 state for samarium' },
+  { symbol: 'Pr', charge: 4, reason: 'a +4 state seen only in oxides' },
+  { symbol: 'Nd', charge: 4, reason: 'a +4 state seen only in oxides' },
+  { symbol: 'Dy', charge: 4, reason: 'a +4 state seen only in oxides' },
+]
+
+const OXIDES_ONLY = new Set(['Pr4', 'Nd4', 'Tb4', 'Dy4'])
 
 export interface LanthanoidEntry {
   readonly symbol: string
@@ -73,9 +88,10 @@ function buildStates(symbol: string): LanthanoidState[] {
     fCount: f3,
     fLabel: `f${sup(f3)}`,
     characteristic: true,
+    oxidesOnly: false,
     reason: 'the characteristic state of every lanthanoid',
   }
-  const specials = specialLanthanoidStates()
+  const shared = specialLanthanoidStates()
     .filter((s) => s.symbol === symbol)
     .map((s): LanthanoidState => ({
       ion: s.ion,
@@ -83,9 +99,24 @@ function buildStates(symbol: string): LanthanoidState[] {
       fCount: s.fCount,
       fLabel: `f${sup(s.fCount)}`,
       characteristic: false,
+      oxidesOnly: OXIDES_ONLY.has(`${s.symbol}${s.charge}`),
       reason: s.reason,
     }))
-  return [characteristic, ...specials]
+  const extra = EXTRA_STATES
+    .filter((e) => e.symbol === symbol)
+    .map((e): LanthanoidState => {
+      const fC = fCount(symbol, e.charge)
+      return {
+        ion: ionSymbol(symbol, e.charge),
+        charge: e.charge,
+        fCount: fC,
+        fLabel: `f${sup(fC)}`,
+        characteristic: false,
+        oxidesOnly: OXIDES_ONLY.has(`${symbol}${e.charge}`),
+        reason: e.reason,
+      }
+    })
+  return [characteristic, ...shared, ...extra]
 }
 
 /** The entry for one lanthanoid symbol, from Table 4.9 and the dblock helpers. */

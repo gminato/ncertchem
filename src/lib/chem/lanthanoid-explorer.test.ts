@@ -43,7 +43,13 @@ describe('lanthanoidEntries', () => {
     expect(eu.states[1].fCount).toBe(7)
     expect(lanthanoidEntry('Tb').states.find((s) => s.charge === 4)?.fCount).toBe(7)
     expect(lanthanoidEntry('Yb').states.find((s) => s.charge === 2)?.fCount).toBe(14)
-    expect(lanthanoidEntry('Pr').states).toHaveLength(1)
+    expect(lanthanoidEntry('Pr').states.map((s) => s.ion)).toEqual(['Pr³⁺', 'Pr⁴⁺'])
+    expect(lanthanoidEntry('Pr').states[1].oxidesOnly).toBe(true)
+    const sm = lanthanoidEntry('Sm')
+    expect(sm.states.map((s) => [s.ion, s.fCount])).toEqual([['Sm³⁺', 5], ['Sm²⁺', 6]])
+    expect(sm.states[1].oxidesOnly).toBe(false)
+    expect(lanthanoidEntry('Tb').states.find((s) => s.charge === 4)?.oxidesOnly).toBe(true)
+    expect(lanthanoidEntry('Eu').states[1].oxidesOnly).toBe(false)
   })
 
   it('keeps every display string free of caret and underscore notation', () => {
