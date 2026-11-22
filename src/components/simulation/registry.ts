@@ -103,6 +103,7 @@ import { MagneticMomentLab } from './sims/magnetic-moment-lab'
 import { AquaIonColourLab } from './sims/aqua-ion-colour-lab'
 import { LanthanoidExplorer } from './sims/lanthanoid-explorer'
 import { IndustrialCatalystExplorer } from './sims/industrial-catalyst-explorer'
+import { FBlockCompare } from './sims/f-block-compare'
 
 export interface SimulationProps {
   /** True when the Learner has asked the OS for reduced motion. Skip tweens and loops when set. */
@@ -220,4 +221,5 @@ export const simulations: Record<string, ComponentType<SimulationProps>> = {
   'magnetic-moment-lab': MagneticMomentLab,
   'lanthanoid-explorer': LanthanoidExplorer,
   'industrial-catalyst-explorer': IndustrialCatalystExplorer,
+  'f-block-compare': FBlockCompare,
 }
