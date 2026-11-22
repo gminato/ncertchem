@@ -141,7 +141,7 @@ function ProfileScene({ on, reducedMotion }: { on: 0 | 1; reducedMotion: boolean
         peakLabel="activated complex"
         productsLabel="2HI"
         eaLabel={<Ea />}
-        dhLabel={<>Δ<tspan baseline-shift="sub" fontSize="70%">r</tspan><tspan className="sym">H</tspan></>}
+        dhLabel={<>Δ<tspan baselineShift="sub" fontSize="70%">r</tspan><tspan className="sym">H</tspan></>}
         xTitle="reaction coordinate"
         yTitle="potential energy"
       />
