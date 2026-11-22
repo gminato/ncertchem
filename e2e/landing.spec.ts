@@ -31,7 +31,7 @@ test.describe('Home page', () => {
     await expect(page.getByRole('contentinfo')).toContainText('not affiliated with or endorsed by NCERT')
   })
 
-  test('the Syllabus Map links every Class 11 Unit and Class 12 Units 1 and 2, and lists remaining Class 12 Units as being written', async ({ page }) => {
+  test('the Syllabus Map links every Class 11 Unit and Class 12 Units 1 to 3, and lists remaining Class 12 Units as being written', async ({ page }) => {
     await page.goto('/')
     const class11 = page.getByRole('list', { name: 'Class 11 Units' })
     const hrefs = await class11.getByRole('link').evaluateAll((els) => els.map((el) => el.getAttribute('href')))
@@ -39,14 +39,16 @@ test.describe('Home page', () => {
     await expect(class11.getByRole('link', { name: /Unit 9\s*Hydrocarbons/ })).toContainText('15 Sections')
 
     const class12Live = page.getByRole('list', { name: 'Class 12 Units' })
-    await expect(class12Live.getByRole('link')).toHaveCount(2)
+    await expect(class12Live.getByRole('link')).toHaveCount(3)
     await expect(class12Live.getByRole('link', { name: /Unit 1\s*Solutions/ })).toHaveAttribute('href', '/class-12/unit-1')
     await expect(class12Live.getByRole('link', { name: /Unit 1\s*Solutions/ })).toContainText('8 Sections')
     await expect(class12Live.getByRole('link', { name: /Unit 2\s*Electrochemistry/ })).toHaveAttribute('href', '/class-12/unit-2')
     await expect(class12Live.getByRole('link', { name: /Unit 2\s*Electrochemistry/ })).toContainText('10 Sections')
+    await expect(class12Live.getByRole('link', { name: /Unit 3\s*Chemical Kinetics/ })).toHaveAttribute('href', '/class-12/unit-3')
+    await expect(class12Live.getByRole('link', { name: /Unit 3\s*Chemical Kinetics/ })).toContainText('10 Sections')
 
     const class12 = page.getByRole('list', { name: 'Class 12 Units that are being written' })
-    await expect(class12.getByRole('listitem')).toHaveCount(8)
+    await expect(class12.getByRole('listitem')).toHaveCount(7)
     await expect(class12.getByRole('link')).toHaveCount(0)
     await expect(class12).toContainText('Biomolecules')
   })

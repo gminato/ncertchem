@@ -88,9 +88,29 @@ test.describe('Unit navigation', () => {
   })
 
   test('a Unit with no Sections yet shows a calm empty state', async ({ page }) => {
+    await page.goto('/class-12/unit-4')
+    await expect(page.getByRole('heading', { level: 1 })).toHaveText('The d- and f-Block Elements')
+    await expect(page.getByText('The Sections of this Unit are being written.')).toBeVisible()
+  })
+
+  test('Class 12 Unit 3 lists its ten Sections in order', async ({ page }) => {
     await page.goto('/class-12/unit-3')
     await expect(page.getByRole('heading', { level: 1 })).toHaveText('Chemical Kinetics')
-    await expect(page.getByText('The Sections of this Unit are being written.')).toBeVisible()
+    const links = page.locator('a[href^="/class-12/unit-3/"]')
+    await expect(links).toHaveCount(10)
+    const hrefs = await links.evaluateAll((els) => els.map((e) => e.getAttribute('href')))
+    expect(hrefs.map((h) => h?.split('/').pop())).toEqual([
+      '12-3-1-rate-of-a-chemical-reaction',
+      '12-3-2-rate-law-and-rate-constant',
+      '12-3-2-3-order-of-a-reaction',
+      '12-3-2-4-molecularity',
+      '12-3-3-1-zero-order-reactions',
+      '12-3-3-2-first-order-reactions',
+      '12-3-3-3-half-life',
+      '12-3-4-temperature-and-arrhenius',
+      '12-3-4-1-effect-of-catalyst',
+      '12-3-5-collision-theory',
+    ])
   })
 
   test('Class 12 Unit 2 lists its ten Sections in order', async ({ page }) => {
