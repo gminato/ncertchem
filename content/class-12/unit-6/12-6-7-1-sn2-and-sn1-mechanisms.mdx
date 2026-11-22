@@ -1,0 +1,106 @@
+---
+class: 12
+unit: 6
+section: "6.7.1"
+order: 8
+title: "SN2 and SN1 Mechanisms"
+slug: "12-6-7-1-sn2-and-sn1-mechanisms"
+access: free
+summary: "Substitution at a haloalkane can happen in one push from behind, whose speed follows both reactants, or in two steps, whose speed follows only the halide."
+ncert: "Class 12, Part II — Unit 6, Section 6.7.1 (a), (b)"
+---
+
+<Hook>
+Two chemists run what looks like the same experiment: a hydroxide ion swaps a bromine out of a haloalkane. In the first flask, doubling the hydroxide doubles the speed. In the second, doubling the hydroxide changes nothing at all. Both flasks hold a haloalkane and a hydroxide, so what is different about the molecule in each one?
+</Hook>
+
+## Two ways to swap a halogen
+
+In a haloalkane the carbon that carries the halogen is slightly positive, because the halogen pulls the bonding electrons towards itself. A nucleophile, a species with a lone pair it can share with carbon, can take the place of the halide. The halide leaves as an ion, so it is called the leaving group.
+
+Chemists have found that this replacement follows one of two routes. Which route runs depends on the molecule, the solvent and the nucleophile, and each route leaves its own fingerprint in the rate. The walk-through below shows both routes on a small set of molecules.
+
+<Scrolly animation="sn2-sn1">
+  <Step>
+  Bromomethane sits in the flask with a hydroxide ion approaching from the far side, opposite the C–Br bond. A curved arrow starts at a lone pair on the oxygen and ends at the carbon. Nothing has left yet: the C–Br bond is still whole, and the three hydrogens point away from the incoming oxygen.
+  </Step>
+  <Step>
+  The two bonds now overlap at the carbon. The transition state sits in square brackets with a double dagger. Oxygen and bromine are both partly attached, their bonds drawn dashed, and carbon is bonded to five atoms at once. The three hydrogens lie in one plane, pushed away from the oxygen. This state is too unstable to isolate.
+  </Step>
+  <Step>
+  The C–Br bond breaks and bromide leaves with the electrons. The product, methanol, has its three hydrogens on the other side of the carbon, like an umbrella turned inside out in a gust. Beside the drawing, the energy profile has a single hump, with the transition state at its top and no valley.
+  </Step>
+  <Step>
+  Put bigger groups in place of the hydrogens and the back of the carbon fills up. A strip shows four bromides in a row: methyl, ethyl, isopropyl and tert-butyl. With the ethyl case as 1, their relative SN2 rates read 30, 1, 0.02 and ≈ 0 (negligible). Each added group blocks more of the approach, so the tertiary halide is the least reactive.
+  </Step>
+  <Step>
+  Now the solvent is water or an alcohol and the substrate is tert-butyl bromide. In step one the C–Br bond breaks by itself, leaving bromide and a flat tert-butyl cation. The energy profile now has two humps with a valley between them. The cation sits in the valley, and the first hump is the higher of the two.
+  </Step>
+  <Step>
+  Hydroxide attacks the flat cation from either face in a fast second step. For allyl bromide, the cation spreads its positive charge over both ends of the double bond, so two resonance forms can be drawn. Benzyl chloride does the same with its ring. The extra stability makes both halides very reactive on this route.
+  </Step>
+</Scrolly>
+
+## Rate laws: the clue in the flask
+
+In the one-step route the nucleophile is part of the step that sets the speed, so the rate depends on both reactants:
+
+$$
+\text{rate} = k\,[\ce{CH3Br}]\,[\ce{HO-}]
+$$
+
+Doubling either concentration doubles the rate, and doubling both quadruples it. The reaction is second order overall. Hughes and Ingold proposed this route in 1937 and named it $\mathrm{S_N2}$, for substitution, nucleophilic, bimolecular. The nucleophile attacks from the side opposite the leaving group, so no intermediate is ever formed.
+
+In the two-step route the slow step is the first one, and it does not involve the nucleophile. The rate therefore depends only on the halide:
+
+$$
+\text{rate} = k\,[\ce{(CH3)3CBr}]
+$$
+
+Adding more hydroxide does nothing to the speed. This route is $\mathrm{S_N1}$. Its first step is also reversible, and the polar solvent helps it along by surrounding the separating ions. The more stable the carbocation, the easier it forms: the order is tertiary > secondary > primary > methyl.
+
+For a given alkyl group, both routes rank the halogen in the same way: $\ce{R-I > R-Br > R-Cl \gg R-F}$. The carbon–halogen bond breaks most easily when the halogen is large and its bond to carbon is weak.
+
+## Explore the substitution race
+
+In the simulation below, choose a substrate and double the reactants to see how its rate responds. Work out which substrates follow the $\mathrm{S_N2}$ pattern, which follow the $\mathrm{S_N1}$ pattern, and which of them get the allylic and benzylic boost.
+
+<Simulation name="substitution-race" title="Substitution Race" />
+
+## Check your understanding
+
+<Check
+  n={1}
+  options={["1-bromopropane", "2-bromopropane", "2-bromo-2-methylpropane"]}
+  answer={0}
+  explanation="1-bromopropane is primary, the least crowded of the three at the carbon bearing bromine. In SN2 the order is primary > secondary > tertiary, so the tertiary substrate is the slowest."
+>
+Three haloalkanes are each treated with hydroxide by the SN2 route in the same solvent. Which one reacts fastest?
+</Check>
+
+<Check
+  n={2}
+  options={["1-chloropropane", "Benzyl chloride (C₆H₅CH₂Cl)"]}
+  answer={1}
+  explanation="Benzyl chloride is benzylic. Its carbocation is stabilised by resonance with the ring, so it forms much more easily than the primary carbocation from 1-chloropropane. The benzylic boost applies in SN1."
+>
+Under SN1 conditions, which compound ionises faster, 1-chloropropane or benzyl chloride?
+</Check>
+
+<Check
+  n={3}
+  numeric
+  answer={4}
+  tolerance={0.01}
+  explanation="SN2 has the rate law rate = k[RX][Nu⁻]. Doubling both concentrations multiplies the rate by 2 × 2 = 4. An SN1 rate depends only on the halide, so the same change to the hydroxide would leave an SN1 rate unchanged."
+>
+A bromoalkane reacts with hydroxide by the SN2 route. If both the bromoalkane and the hydroxide concentrations are doubled, by what factor does the rate increase?
+</Check>
+
+<KeyIdeas>
+- $\mathrm{S_N2}$ is a single step: the nucleophile attacks from the side opposite the leaving group, and the rate law is $\text{rate} = k[\ce{RX}][\ce{Nu-}]$.
+- The SN2 transition state has carbon bonded to five atoms, and the configuration inverts, like an umbrella turned inside out.
+- $\mathrm{S_N1}$ is two steps: a slow, reversible ionisation to a carbocation, then a fast attack. Its rate is $\text{rate} = k[\ce{RX}]$, with no dependence on the nucleophile.
+- SN2 slows as the alkyl groups crowd the carbon (methyl > primary > secondary > tertiary); SN1 speeds up as the carbocation becomes more stable (tertiary > secondary > primary > methyl).
+- Allylic and benzylic halides are very reactive in SN1 because their carbocations are stabilised by resonance, and for a given alkyl group the halogen order is $\ce{R-I > R-Br > R-Cl \gg R-F}$ in both routes.
+</KeyIdeas>
