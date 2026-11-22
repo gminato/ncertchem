@@ -1,0 +1,108 @@
+---
+class: 12
+unit: 3
+section: "3.4.1"
+order: 9
+title: "Effect of a Catalyst"
+slug: "12-3-4-1-effect-of-catalyst"
+access: free
+summary: "A catalyst speeds a reaction by offering a route over a lower energy hump, then comes out unchanged, leaving the Gibbs energy and the equilibrium constant alone."
+ncert: "Class 12, Part I — Unit 3, Section 3.4.1"
+---
+
+<Hook>
+A catalytic converter in a BS-VI petrol car holds a thin coating of platinum, palladium and rhodium. Exhaust gases pass through it in a fraction of a second, and harmful gases such as carbon monoxide and nitrogen oxides are converted into less harmful ones, yet the metal comes out as it went in. How can something speed up a reaction and remain unchanged?
+</Hook>
+
+## A catalyst speeds a reaction and is left unchanged
+
+A catalyst is a substance that increases the rate of a reaction without undergoing any permanent chemical change of its own. Manganese dioxide is a classic example. Heated with potassium chlorate, it makes the decomposition far quicker, and the manganese dioxide is still there at the end:
+
+$$
+\ce{2KClO3 ->[MnO2] 2KCl + 3O2}
+$$
+
+A substance that slows a reaction is not a catalyst. It is an **inhibitor**, and the word catalyst should be kept for something that speeds the change up.
+
+## How a catalyst works: an alternative route
+
+The usual explanation is **intermediate complex theory**. The catalyst joins the reaction by forming temporary bonds with the reactants. The result is an intermediate complex that has only a brief existence. It then breaks apart to give the products and the catalyst again. In symbols, with a catalyst $\ce{M}$, the change is
+
+$$
+\ce{A + M -> AM}, \qquad \ce{AM + B -> P + M}
+$$
+
+The two steps add up to the familiar $\ce{A + B -> P}$, and $\ce{M}$ appears in both steps but not in the overall equation. The catalyst has not been used up.
+
+Why does this speed things up? The catalyst gives the reaction a different pathway, one with a lower activation energy. The energy barrier is lower, so more molecules can cross it in a given time. The Arrhenius equation makes this precise: the smaller the activation energy, the faster the reaction, at the same temperature. Because a catalyst works through a cycle like this, a small amount can convert a large amount of reactant.
+
+<Scrolly animation="catalyst-pathway">
+  <Step>
+    **The uncatalysed route.** Start with the energy profile on its own. The reactants sit on the left at a level we call zero. To reach the products, the molecules must climb over a single hump. The height of that hump above the reactants is the activation energy, $E_\text{a} = 60\ \text{kJ mol}^{-1}$. The products sit 20 kJ mol⁻¹ lower, so the reaction is exothermic, with $\Delta_\text{r}H = -20\ \text{kJ mol}^{-1}$. Only this one curve is drawn.
+  </Step>
+  <Step>
+    **A second route with lower humps.** The catalysed path now appears in a second colour. It starts at the same reactant level and ends at the same product level. It rises to a shallow valley, the intermediate complex, then climbs to a second hump. The higher of the two humps is 50 kJ mol⁻¹ above the reactants, and that is the barrier that limits the rate. The uncatalysed hump stays faintly visible for comparison.
+  </Step>
+  <Step>
+    **More molecules over the lower barrier.** This view shows the Maxwell–Boltzmann curve at 298 K, with the fraction of molecules on the vertical axis. Two markers sit at 60 and 50 kJ mol⁻¹. The shaded tail beyond 60 holds $1.72 \times 10^{-10}$ of the molecules. The tail beyond 50 holds $8.93 \times 10^{-9}$, about 52 times as many. The curve is the same for both routes; only the threshold marker moves left.
+  </Step>
+  <Step>
+    **Both directions speed up equally.** Reverse the arrow and the backward reaction has its own barrier, given by $E_{\text{a}}^{\text{backward}} = E_\text{a}^{\text{forward}} - \Delta_\text{r}H$. Uncatalysed it is 80 kJ mol⁻¹, and catalysed it is 70 kJ mol⁻¹. Both barriers drop by the same 10 kJ mol⁻¹. The forward and backward rates therefore rise by the same factor, $e^{10\,000/RT} = 56.6$ at 298 K. The end levels and $\Delta_\text{r}H$ do not move.
+  </Step>
+  <Step>
+    **What a catalyst cannot do.** Now the reaction runs uphill, with the products standing above the reactants, so its Gibbs energy change is positive. The catalysed path is drawn again, with its lower hump, but the products stay where they were. A catalyst can make the climb quicker, but it cannot pull a non-spontaneous reaction downhill, because it does not alter the Gibbs energy of the reaction.
+  </Step>
+</Scrolly>
+
+<Check
+  n={1}
+  numeric
+  answer={56.6}
+  tolerance={0.1}
+  explanation="With the same A in both routes, the rate ratio is e^((Eₐ,uncat − Eₐ,cat)/RT) = e^(10 000 / (8.314 × 298)) = e^4.03 = 56.6, so the catalysed rate is about 57 times the uncatalysed rate. The same factor applies to the backward reaction."
+>
+A reaction has $E_\text{a} = 60\ \text{kJ mol}^{-1}$ on its uncatalysed route. A catalyst lowers the activation energy to 50 kJ mol⁻¹ and leaves the pre-exponential factor $A$ unchanged. By what factor does the rate rise at 298 K?
+</Check>
+
+## The simulation: lower the barrier and watch both directions
+
+The lab below draws both routes for any barrier you choose. Set the uncatalysed activation energy, how far the catalyst lowers it, the enthalpy change and the temperature. Then switch the catalyst on and off. The readouts show the rate enhancement for the forward and backward reactions, and they confirm that $\Delta_\text{r}H$ and the equilibrium constant stay the same.
+
+<Simulation name="catalyst-lab" title="Catalyst Lab" />
+
+## Equilibrium: reached sooner, not moved
+
+A catalyst does not change the equilibrium constant. It speeds up the forward and backward reactions by the same factor, so the ratio that defines $K$ stays fixed. The mixture simply reaches its equilibrium composition earlier. For the same reason, a catalyst does not change the Gibbs energy of the reaction, $\Delta_\text{r}G$, which depends only on the reactants and products. A catalyst therefore speeds up only spontaneous reactions. It can help a reaction that is already moving downhill get there faster, but it cannot make an uphill reaction happen.
+
+<Check
+  n={2}
+  options={[
+    "The catalyst lowers ΔrG, so the reaction becomes more spontaneous",
+    "The catalyst raises the equilibrium constant K, so more product forms",
+    "The catalyst speeds the forward and backward reactions to the same extent, so K is unchanged",
+    "A substance that slows a reaction is a catalyst used at a low dose"
+  ]}
+  answer={2}
+  explanation="A catalyst leaves ΔrG and K unchanged. It lowers the barriers of both directions by the same amount, so both rates rise by the same factor and equilibrium is reached sooner. A substance that slows a reaction is an inhibitor, not a catalyst."
+>
+Which statement about a catalyst at equilibrium is correct?
+</Check>
+
+<Check
+  n={3}
+  numeric
+  answer={70}
+  tolerance={0.1}
+  unit="kJ mol⁻¹"
+  explanation="Eₐ,backward = Eₐ,forward − ΔrH = 50 − (−20) = 70 kJ mol⁻¹. The uncatalysed backward barrier is 80 kJ mol⁻¹, so the catalyst lowers the backward barrier by the same 10 kJ mol⁻¹ as the forward one."
+>
+A catalysed reaction has a forward activation energy of 50 kJ mol⁻¹, and its enthalpy change is $\Delta_\text{r}H = -20\ \text{kJ mol}^{-1}$. What is the activation energy of the backward reaction on the catalysed route, in kJ mol⁻¹?
+</Check>
+
+<KeyIdeas>
+- A catalyst raises the rate by offering an alternative route with a lower activation energy. It is chemically unchanged at the end, and a substance that slows a reaction is an inhibitor.
+- In intermediate complex theory the catalyst forms temporary bonds with the reactants, giving an intermediate complex that breaks down to return the catalyst and give the products.
+- With the same $A$, a fall of 10 kJ mol⁻¹ in $E_\text{a}$ at 298 K raises the rate by $e^{10\,000/RT} = 56.6$.
+- A catalyst leaves $\Delta_\text{r}H$, $\Delta_\text{r}G$ and $K$ unchanged. It speeds the forward and backward reactions equally, so equilibrium is reached sooner.
+- A catalyst speeds up only spontaneous reactions. It cannot make a non-spontaneous reaction proceed.
+</KeyIdeas>
