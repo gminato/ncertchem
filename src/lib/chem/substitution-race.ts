@@ -12,39 +12,50 @@ export type SubstrateId = 'methyl' | 'primary' | 'secondary' | 'tertiary' | 'all
 export interface RaceSubstrate {
   id: SubstrateId
   smiles: string
+  /** The namer's IUPAC name (lower case, as iupacNameFromSmiles prints it). */
   name: string
+  /** Common name first, namer name in brackets, e.g. "benzyl chloride (chlorophenylmethane)". */
+  label: string
   formula: string
   halogen: HalideClass['halogen']
   kind: HalideClass['kind']
   degree: HalideClass['degree']
-  product: { smiles: string; name: string }
+  product: { smiles: string; name: string; label: string }
 }
 
-const SUBSTRATE_SMILES: readonly { id: SubstrateId; smiles: string }[] = [
-  { id: 'methyl', smiles: 'CBr' },
-  { id: 'primary', smiles: 'CCBr' },
-  { id: 'secondary', smiles: 'CC(C)Br' },
-  { id: 'tertiary', smiles: 'CC(C)(C)Br' },
-  { id: 'allylic', smiles: 'C=CCBr' },
-  { id: 'benzylic', smiles: 'ClCC1=CC=CC=C1' },
+/** Common names as NCERT and standard usage give them; the alcohols are the products with HO⁻. */
+const SUBSTRATE_SMILES: readonly { id: SubstrateId; smiles: string; common: string; productCommon: string }[] = [
+  { id: 'methyl', smiles: 'CBr', common: 'methyl bromide', productCommon: 'methyl alcohol' },
+  { id: 'primary', smiles: 'CCBr', common: 'ethyl bromide', productCommon: 'ethyl alcohol' },
+  { id: 'secondary', smiles: 'CC(C)Br', common: 'isopropyl bromide', productCommon: 'isopropyl alcohol' },
+  { id: 'tertiary', smiles: 'CC(C)(C)Br', common: 'tert-butyl bromide', productCommon: 'tert-butyl alcohol' },
+  { id: 'allylic', smiles: 'C=CCBr', common: 'allyl bromide', productCommon: 'allyl alcohol' },
+  { id: 'benzylic', smiles: 'ClCC1=CC=CC=C1', common: 'benzyl chloride', productCommon: 'benzyl alcohol' },
 ]
+
+/** Common name first, namer name in brackets. */
+export function withNamerName(common: string, namer: string): string {
+  return `${common} (${namer})`
+}
 
 /** Each substrate with its name, formula, classification and the alcohol it gives with HO⁻. */
 export function raceSubstrates(): RaceSubstrate[] {
-  return SUBSTRATE_SMILES.map(({ id, smiles }) => {
+  return SUBSTRATE_SMILES.map(({ id, smiles, common, productCommon }) => {
     const cls = classifyHalideSmiles(smiles).halides[0]
     if (!cls) throw new Error(`no halogen in ${smiles}`)
     const product = substitute(smiles, 'first', 'O')
     if (!product.name) throw new Error(`no product name for ${smiles}`)
+    const name = iupacNameFromSmiles(smiles)
     return {
       id,
       smiles,
-      name: iupacNameFromSmiles(smiles),
+      name,
+      label: withNamerName(common, name),
       formula: formulaUnicode(molecularFormula(parseSmiles(smiles))),
       halogen: cls.halogen,
       kind: cls.kind,
       degree: cls.degree,
-      product: { smiles: product.smiles, name: product.name },
+      product: { smiles: product.smiles, name: product.name, label: withNamerName(productCommon, product.name) },
     }
   })
 }

@@ -84,7 +84,7 @@ for (const scheme of ['light', 'dark'] as const) {
 
     // State 1: default, tert-butyl bromide, SN2 view, ×1 and ×1.
     await expect(sim.locator('[aria-live="polite"]')).toContainText('rate = k[RX][Nu⁻]. [RX] × 1 and [Nu⁻] × 1 make the rate ×1.')
-    await expect(sim.locator('[aria-live="polite"]')).toContainText('2-methylpropan-2-ol')
+    await expect(sim.locator('[aria-live="polite"]')).toContainText('SN2 product: negligible (Fig. 6.3 rate ≈ 0).')
     await sim.screenshot({ path: `test-results/screens/c12u6-8-sim-default-${scheme}.png` })
     expect(await smallTextLeaves(page)).toEqual([])
     expect(await svgOutOfBounds(page)).toEqual([])

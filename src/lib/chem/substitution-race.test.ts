@@ -30,6 +30,14 @@ describe('substitution race', () => {
     expect(byId.methyl.product.name).toBe('methanol')
   })
 
+  it('shows the common name first and the namer name in brackets', () => {
+    expect(byId.benzylic.label).toBe('benzyl chloride (chlorophenylmethane)')
+    expect(byId.benzylic.product.label).toBe(`benzyl alcohol (${byId.benzylic.product.name})`)
+    expect(byId.tertiary.label).toBe(`tert-butyl bromide (${byId.tertiary.name})`)
+    expect(byId.tertiary.product.label).toBe('tert-butyl alcohol (2-methylpropan-2-ol)')
+    expect(byId.allylic.label.startsWith('allyl bromide (')).toBe(true)
+  })
+
   it('multiplies the rate by the rate law', () => {
     expect(rateFactor('SN2', 2, 2)).toBe(4)
     expect(rateFactor('SN2', 3, 2)).toBe(6)

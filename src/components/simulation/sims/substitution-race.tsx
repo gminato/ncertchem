@@ -59,6 +59,9 @@ const KEPT_GROUPS: Record<SubstrateId, readonly [string, string, string]> = {
   benzylic: ['H', 'H', 'C₆H₅'],
 }
 
+const INTERMEDIATE_LABEL_X = 300
+const INTERMEDIATE_LABEL_Y = 66
+
 const SN1_ORDER = 'tertiary > secondary > primary > methyl'
 
 function sameDegree(sub: RaceSubstrate, degree: string) {
@@ -92,10 +95,14 @@ export function SubstitutionRace({ reducedMotion: _reducedMotion }: SimulationPr
     mechanism === 'SN2'
       ? `${rateLaw('SN2')}. [RX] × ${rx} and [Nu⁻] × ${nu} make the rate ×${factor}.`
       : `${rateLaw('SN1')}. The nucleophile is not in the rate law, so the rate is ×${factor} whatever [Nu⁻] is.`
-  const productText = `Product with HO⁻: ${sub.product.name}.`
+  // Fig. 6.3 gives ≈ 0 for a tertiary halide, so an SN2 product is not shown for it.
+  const negligibleSn2 = mechanism === 'SN2' && fig !== null && fig.relativeRate === 0
+  const productText = negligibleSn2
+    ? 'SN2 product: negligible (Fig. 6.3 rate ≈ 0).'
+    : `Product with HO⁻: ${sub.product.label}.`
   const figText = fig ? `Relative SN2 rate (Fig. 6.3): ${fig.display}.` : ''
 
-  const liveSummary = [`${sub.name}, ${mechanism} view.`, rateText, figText, productText].filter(Boolean).join(' ')
+  const liveSummary = [`${sub.label}, ${mechanism} view.`, rateText, figText, productText].filter(Boolean).join(' ')
 
 
   return (
@@ -109,7 +116,7 @@ export function SubstitutionRace({ reducedMotion: _reducedMotion }: SimulationPr
 
       <div className={styles.stage}>
         <p className={styles.caption}>
-          {sub.name} ({sub.formula}) with HO⁻: {mechanism === 'SN2' ? 'one step, attack from the back' : 'two steps, through a planar carbocation'}
+          {sub.label}, {sub.formula}, with HO⁻: {mechanism === 'SN2' ? 'one step, attack from the back' : 'two steps, through a planar carbocation'}
         </p>
         {mechanism === 'SN2' ? (
           <>
@@ -117,7 +124,7 @@ export function SubstitutionRace({ reducedMotion: _reducedMotion }: SimulationPr
               className={styles.svg}
               viewBox={`0 0 ${STEREO_SIZE.width} ${STEREO_SIZE.height}`}
               role="img"
-              aria-label={`Transition state of the SN2 reaction of ${sub.name} with hydroxide`}
+              aria-label={`Transition state of the SN2 reaction of ${sub.label} with hydroxide`}
             >
               <StereoCentre
                 umbrella={[{ label: others[0] }, { label: others[1] }, { label: others[2] }]}
@@ -142,7 +149,7 @@ export function SubstitutionRace({ reducedMotion: _reducedMotion }: SimulationPr
               className={styles.svg}
               viewBox={`0 0 ${PLANAR_CATION_SIZE.width} ${PLANAR_CATION_SIZE.height}`}
               role="img"
-              aria-label={`Planar carbocation from ${sub.name}, attacked from both faces`}
+              aria-label={`Planar carbocation from ${sub.label}, attacked from both faces`}
             >
               <PlanarCation groups={[others[0], others[1], others[2]]} attackTop attackBottom nucleophile="HO⁻" />
             </svg>
@@ -153,6 +160,10 @@ export function SubstitutionRace({ reducedMotion: _reducedMotion }: SimulationPr
               aria-label="Two-step energy profile: two humps with the carbocation in the valley"
             >
               <MechanismProfile kind="two-step" intermediateLabel={null} />
+              {/* Above the valley and clear of both humps (the valley sits near x 280 in this box). */}
+              <text x={INTERMEDIATE_LABEL_X} y={INTERMEDIATE_LABEL_Y} textAnchor="middle" fontSize={15} fill="var(--fg)">
+                intermediate
+              </text>
             </svg>
           </>
         )}
@@ -183,7 +194,7 @@ export function SubstitutionRace({ reducedMotion: _reducedMotion }: SimulationPr
           </div>
         ) : (
           <p className={styles.note}>
-            The valley between the two humps is the planar carbocation. Carbocation stability: {SN1_ORDER}. Allylic and benzylic cations are stabilised by resonance, so these halides react very readily by SN1.
+            The valley between the two humps is the planar carbocation. Carbocation stability: {SN1_ORDER}. Allylic and benzylic cations are resonance-stabilised (see the Scrolly), so these halides react very readily by SN1.
           </p>
         )}
         <p className={styles.product}>{productText}</p>
