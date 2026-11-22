@@ -142,6 +142,7 @@ import { SheMeasurement } from './c12-unit2/she/SheMeasurement'
 import { NernstConcentration } from './c12-unit2/nernst/NernstConcentration'
 import { CollisionOrientation } from './c12-unit3/collision/CollisionOrientation'
 import { ActinoidComparison } from './c12-unit4/actinoids/ActinoidComparison'
+import { HaloprepRoutes } from './c12-unit6/haloprep/HaloprepRoutes'
 import { ConductivityMeasurement } from './c12-unit2/conductance/ConductivityMeasurement'
 import { DilutionConductivity } from './c12-unit2/dilution/DilutionConductivity'
 import { ElectrolysisProducts } from './c12-unit2/products/ElectrolysisProducts'
@@ -346,6 +347,7 @@ export const animations = {
   'actinoid-comparison': ActinoidComparison,
   'halide-classes': HalideClasses,
   'halide-naming': HalideNaming,
+  'haloalkane-routes': HaloprepRoutes,
 } as const
 
 export type AnimationName = keyof typeof animations
