@@ -9,11 +9,9 @@ import {
   CONFIG_ROW_SYMBOLS,
   STEP_COUNT,
   actinoidLadder,
-  actinoidPmPerStep,
   actinoidRadiusPoints,
   actinoidSubshells,
   lanthanoidLadder,
-  lanthanoidPmPerStep,
   lanthanoidRadiusPoints,
   type LadderCell,
   type RadiusPoint,
@@ -42,11 +40,6 @@ const STEP_LABELS = [
   'Oxidation states of the lanthanoids (Table 4.9) and actinoids (Table 4.11) as ladders',
   'Schematic radial extent of 4f and 5f orbitals, with the bonding and hydrolysis notes',
 ]
-
-/** Format a per-step slope from the lib to one decimal place (half-up). */
-function oneDecimal(v: number): string {
-  return (Math.floor(v * 10 + 0.5) / 10).toFixed(1)
-}
 
 function Note({ x, y, children, anchor = 'start', fill = FG, size = 15 }: {
   x: number
@@ -181,12 +174,6 @@ function RadiiStep() {
         {anDrawn.map((p) => (
           <circle key={`an-${p.symbol}`} cx={scale.x(p.pos)} cy={scale.y(p.pm)} r={5.5} fill={AN} stroke={SURFACE} strokeWidth={1.5} />
         ))}
-        <Note x={scale.x(8.4)} y={scale.y(113)} fill={LN}>
-          {`Ln: about ${oneDecimal(lanthanoidPmPerStep())} pm per step`}
-        </Note>
-        <Note x={scale.x(8.4)} y={scale.y(107.5)} fill={AN}>
-          {`An: about ${oneDecimal(actinoidPmPerStep())} pm per step`}
-        </Note>
         <Note x={scale.x(1.5)} y={scale.y(82)} anchor="middle" fill={MUTED}>
           Th, Pa: not printed
         </Note>
@@ -195,13 +182,10 @@ function RadiiStep() {
         </Note>
       </PlotFrame>
       <Note x={30} y={470} fill={FG}>
-        NCERT says the actinoid contraction is steeper from element
+        NCERT describes the actinoid contraction as greater from
       </Note>
       <Note x={30} y={496} fill={FG}>
-        to element, because 5f electrons shield poorly. The printed
-      </Note>
-      <Note x={30} y={522} fill={FG}>
-        M³⁺ radii do not clearly show that. Es to Lr print a dash.
+        element to element because 5f electrons shield poorly.
       </Note>
     </>
   )

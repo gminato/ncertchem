@@ -38,6 +38,13 @@ for (const scheme of ['light', 'dark'] as const) {
         const panel = scrolly.locator('svg').first()
         await expect(panel).toBeVisible()
         await panel.screenshot({ path: `test-results/screens/c12u4-10-step${k + 1}-${scheme}.png` })
+        // Per-step contraction figures are not NCERT's; the plot shows printed radii only.
+        const perStep = await scrolly.evaluate((root) =>
+          Array.from(root.querySelectorAll('text'))
+            .map((t) => t.textContent ?? '')
+            .filter((t) => /per step/i.test(t)),
+        )
+        expect(perStep, `step ${k + 1}`).toEqual([])
       }
 
       // R4 for Scrolly text: rendered size = font-size x (svg rendered width / viewBox width), minimum 13 px.

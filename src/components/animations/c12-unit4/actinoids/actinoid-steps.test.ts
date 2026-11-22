@@ -2,11 +2,9 @@ import { describe, expect, it } from 'vitest'
 import {
   CONFIG_ROW_SYMBOLS,
   actinoidLadder,
-  actinoidPmPerStep,
   actinoidRadiusPoints,
   actinoidSubshells,
   lanthanoidLadder,
-  lanthanoidPmPerStep,
   lanthanoidRadiusPoints,
   maxActinoidState,
 } from './actinoid-steps'
@@ -41,10 +39,10 @@ describe('actinoid Scrolly data (Section 10)', () => {
     expect(lanthanoidRadiusPoints().find((p) => p.symbol === 'Lu')?.pm).toBeNull()
   })
 
-  it('computes the per-step falls from the printed radii', () => {
-    // Ce 103 -> Yb 86 over 12 steps; U 103 -> Cf 98 over 6 steps.
-    expect(lanthanoidPmPerStep()).toBeCloseTo(17 / 12, 6)
-    expect(actinoidPmPerStep()).toBeCloseTo(5 / 6, 6)
+  it('keeps the printed radii for the plot and no per-step figure', () => {
+    expect(actinoidRadiusPoints().find((p) => p.symbol === 'U')?.pm).toBe(103)
+    expect(lanthanoidRadiusPoints().find((p) => p.symbol === 'Ce')?.pm).toBe(103)
+    expect(lanthanoidRadiusPoints().find((p) => p.symbol === 'Yb')?.pm).toBe(86)
   })
 
   it('shows +7 for Np and Pu and nothing above +3 from Cf on (Table 4.11)', () => {
