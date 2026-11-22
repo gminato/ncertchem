@@ -150,7 +150,17 @@ for (const scheme of ['light', 'dark'] as const) {
     await sim.getByRole('button', { name: 'Increase bound Cl on cobalt' }).click()
     await expect(sim.getByTestId('electrolyte-readout')).toHaveText('none (neutral)')
     await expect(sim.getByTestId('verdict-readout')).toHaveText('secondary valence 6 satisfied')
+    await expect(sim).toContainText('Charge: 0')
+    await expect(sim).not.toContainText('Charge: +0')
+    await expect(sim.locator('[aria-live="polite"]')).toContainText('charge 0,')
+    await sim.screenshot({ path: `test-results/screens/c12u5-s1-sim-neutral-${scheme}.png` })
     expect(await svgOutOfBounds(sim)).toEqual([])
+
+    // Verify Double salts and coordination complexes subsection renders
+    const doubleSaltHeading = page.getByRole('heading', { name: 'Double salts and coordination complexes' })
+    await expect(doubleSaltHeading).toBeVisible()
+    await doubleSaltHeading.scrollIntoViewIfNeeded()
+    await page.screenshot({ path: `test-results/screens/c12u5-s1-double-salts-${scheme}.png` })
 
     // KaTeX and console errors
     await expect(page.locator('.katex-error')).toHaveCount(0)

@@ -139,8 +139,10 @@ export function WernerPrecipitationLab({ reducedMotion }: SimulationProps) {
   const spacing = 62
   const startY = 174 - ((Math.max(1, counterCount) - 1) * spacing) / 2
 
+  const chargeText = evalState.entityCharge > 0 ? `+${evalState.entityCharge}` : '0'
+
   const liveSummary =
-    `Formula ${evalState.fullFormula}, entity ${evalState.entityFormula}, charge +${evalState.entityCharge}, ` +
+    `Formula ${evalState.fullFormula}, entity ${evalState.entityFormula}, charge ${chargeText}, ` +
     `${evalState.counterIons} counter chloride ion${evalState.counterIons === 1 ? '' : 's'}, ` +
     `electrolyte ${evalState.electrolyte}, ${evalState.verdict}. ` +
     (agno3Added
@@ -469,7 +471,7 @@ export function WernerPrecipitationLab({ reducedMotion }: SimulationProps) {
           <p className={styles.cardValue} data-testid="entity-formula">
             {evalState.entityFormula}
           </p>
-          <p className={styles.cardSub}>{`Full: ${evalState.fullFormula} · Charge: +${evalState.entityCharge}`}</p>
+          <p className={styles.cardSub}>{`Full: ${evalState.fullFormula} · Charge: ${chargeText}`}</p>
         </article>
 
         <article className={styles.card}>
