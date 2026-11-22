@@ -53,15 +53,24 @@ export function idealConc(t: number): number {
   return zeroOrderConc(R0, K, t)
 }
 
+/** Seconds over which the real curve eases away from the ideal line after T_BEND. */
+const T_EASE = 8
+
 /**
- * The real curve, schematic: it follows the ideal line to T_BEND, then bends towards zero with
- * the same initial slope, so it leaves the line smoothly. Used only for the drawing.
+ * The real curve, schematic: it follows the ideal line to T_BEND, then eases away from it. The
+ * tail is an exponential that starts with the same slope, blended in with a smoothstep over T_EASE
+ * seconds, so the departure has no kink. The real curve stays above the ideal line and flattens
+ * towards zero. Used only for the drawing.
  */
 export function realConc(t: number): number {
   if (t <= T_BEND) return idealConc(t)
   const rb = idealConc(T_BEND)
   const kPrime = K / rb
-  return rb * Math.exp(-kPrime * (t - T_BEND))
+  const tail = rb * Math.exp(-kPrime * (t - T_BEND))
+  const ideal = idealConc(t)
+  const s = Math.min(1, (t - T_BEND) / T_EASE)
+  const w = s * s * (3 - 2 * s)
+  return ideal + w * (tail - ideal)
 }
 
 const T_TWO = 12
@@ -116,7 +125,7 @@ const STEP_TEXT: readonly { id: ZeroOrderStepId; title: string; readout: string;
     id: 'two-points',
     title: 'Two points give k',
     readout: `k = (${formatSig(R0, 2)} − ${formatSig(R_TWO, 2)}) ÷ ${T_TWO} s = ${formatSig(K_FROM_TWO, 2)} mol L⁻¹ s⁻¹`,
-    aria: `Drop-lines from t = 0 and t = 12 seconds. The fall of ${formatSig(DROP, 2)} mol per litre over 12 seconds gives k.`,
+    aria: `Two points on the line, at t = 0 and t = 12 seconds, joined by a slope triangle. The fall of ${formatSig(DROP, 2)} mol per litre over 12 seconds gives k.`,
     gas: 6,
     occupied: ALL_FULL,
     lineReveal: 1,
@@ -129,8 +138,8 @@ const STEP_TEXT: readonly { id: ZeroOrderStepId; title: string; readout: string;
   {
     id: 'sites-empty',
     title: 'When the sites empty',
-    readout: `Ideal line ends at ${T_ZERO} s; the real curve bends before it`,
-    aria: 'Few gas molecules remain and about half the sites are bare. The real curve leaves the dashed ideal line and bends towards zero. The rate arrow is shorter.',
+    readout: `Ideal line ends at ${T_ZERO} s; schematic real curve bends earlier`,
+    aria: 'Few gas molecules remain and about half the sites are bare. In this schematic, the real curve leaves the dashed ideal line smoothly and flattens towards zero. The rate arrow is shorter.',
     gas: 3,
     occupied: HALF_BARE,
     lineReveal: 1,
