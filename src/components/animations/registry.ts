@@ -150,6 +150,7 @@ import { OrderCurves } from './c12-unit3/order/OrderCurves'
 import { MechanismSteps } from './c12-unit3/molecularity/MechanismSteps'
 import { ZeroOrderSurface } from './c12-unit3/zeroorder/ZeroOrderSurface'
 import { FirstOrderPlots } from './c12-unit3/firstorder/FirstOrderPlots'
+import { HalfLifeLadder } from './c12-unit3/halflife/HalfLifeLadder'
 
 /**
  * Animations available to a Scrolly Animation, keyed by the `animation` prop.
@@ -310,6 +311,7 @@ export const animations = {
   'mechanism-steps': MechanismSteps,
   'zero-order-surface': ZeroOrderSurface,
   'first-order-plots': FirstOrderPlots,
+  'half-life-ladder': HalfLifeLadder,
 } as const
 
 export type AnimationName = keyof typeof animations

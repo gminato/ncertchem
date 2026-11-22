@@ -1,0 +1,72 @@
+import { test, expect, type Page } from '@playwright/test'
+
+const SLUG = '12-3-3-3-half-life'
+const ANIMATION = 'half-life-ladder'
+const STEP_COUNT = 6
+
+function watchErrors(page: Page): string[] {
+  const errors: string[] = []
+  page.on('pageerror', (err) => errors.push(err.message))
+  page.on('console', (msg) => {
+    if (msg.type() === 'error') {
+      const text = msg.text()
+      // Local servers do not serve Vercel's hosted analytics script.
+      if (text.includes('Failed to load resource: the server responded with a status of 404')) return
+      errors.push(text)
+    }
+  })
+  return errors
+}
+
+for (const scheme of ['light', 'dark'] as const) {
+  test.describe(`Half-life Scrolly (${scheme})`, () => {
+    test.use({ viewport: { width: 1440, height: 900 }, colorScheme: scheme, reducedMotion: 'reduce' })
+
+    test('renders every step with KaTeX and no console errors', async ({ page }) => {
+      const errors = watchErrors(page)
+      await page.goto(`/class-12/unit-3/${SLUG}`)
+      await expect(page.getByRole('heading', { level: 1 })).toHaveText('Half-Life of a Reaction')
+
+      const scrolly = page.locator(`[data-animation="${ANIMATION}"]`)
+      await expect(scrolly).toBeVisible()
+      const steps = scrolly.locator('[data-scrolly-step]')
+      await expect(steps).toHaveCount(STEP_COUNT)
+
+      for (let k = 0; k < STEP_COUNT; k++) {
+        await steps.nth(k).scrollIntoViewIfNeeded()
+        // Let the CSS fade between step targets finish (600 ms).
+        await page.waitForTimeout(900)
+        const panel = scrolly.locator('svg').first()
+        await expect(panel).toBeVisible()
+        // Rendered text size (R4): font-size x (SVG rendered width / viewBox width), in CSS px.
+        const minPx = await panel.evaluate((el) => {
+          const svg = el as unknown as SVGSVGElement
+          const scale = svg.getBoundingClientRect().width / svg.viewBox.baseVal.width
+          let min = Infinity
+          svg.querySelectorAll('text').forEach((t) => {
+            if (!t.textContent?.trim()) return
+            min = Math.min(min, parseFloat(getComputedStyle(t).fontSize) * scale)
+          })
+          return min
+        })
+        expect(minPx, `step ${k + 1} smallest rendered SVG text`).toBeGreaterThanOrEqual(13)
+        await panel.screenshot({ path: `test-results/screens/c12u3-7-step${k + 1}-${scheme}.png` })
+      }
+
+      await expect(page.locator('.katex-error')).toHaveCount(0)
+      await expect(page.locator('.katex-display').first()).toBeVisible()
+      expect(errors).toEqual([])
+    })
+  })
+}
+
+test.describe('Half-life Section at phone width', () => {
+  test.use({ viewport: { width: 390, height: 844 }, colorScheme: 'light' })
+
+  test('does not scroll sideways at 390 px', async ({ page }) => {
+    await page.goto(`/class-12/unit-3/${SLUG}`)
+    await expect(page.getByRole('heading', { level: 1 })).toHaveText('Half-Life of a Reaction')
+    const scrollWidth = await page.evaluate(() => document.documentElement.scrollWidth)
+    expect(scrollWidth).toBeLessThanOrEqual(390)
+  })
+})
