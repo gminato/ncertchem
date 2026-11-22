@@ -25,6 +25,7 @@ import { HessBuilder } from './sims/hess-builder'
 import { OxidationNumberFinder } from './sims/oxidation-number-finder'
 import { RedoxTitrationLab } from './sims/redox-titration-lab'
 import { ElectrodePotentialExplorer } from './sims/electrode-potential-explorer'
+import { ElectrodePotentialLab } from './sims/electrode-potential-lab'
 import { RedoxClassifier } from './sims/redox-classifier'
 import { MetalDisplacementLab } from './sims/metal-displacement-lab'
 import { RedoxBalancer } from './sims/redox-balancer'
@@ -131,6 +132,7 @@ export const simulations: Record<string, ComponentType<SimulationProps>> = {
   'oxidation-number-finder': OxidationNumberFinder,
   'redox-titration-lab': RedoxTitrationLab,
   'electrode-potential-explorer': ElectrodePotentialExplorer,
+  'electrode-potential-lab': ElectrodePotentialLab,
   'redox-classifier': RedoxClassifier,
   'metal-displacement-lab': MetalDisplacementLab,
   'redox-balancer': RedoxBalancer,
