@@ -282,16 +282,23 @@ function StepMagnesium() {
   const c = 1
   const br = 2
   const m = mol(g, 78, 210, 250)
+  const ch3 = at(m, 0)
   const cPt = at(m, c)
   const brPt = at(m, br)
   const mg = out(m, c, 112)
+  // The C–Br bond is drawn only as the dashed, breaking bond: no solid C–Br line underneath.
+  const len = Math.hypot(brPt.x - cPt.x, brPt.y - cPt.y) || 1
+  const brEnd = { x: brPt.x - ((brPt.x - cPt.x) / len) * 20, y: brPt.y - ((brPt.y - cPt.y) / len) * 20 }
   return (
     <g>
       <Title>Magnesium steps in</Title>
-      <SkeletalFormula graph={g} scale={78} x={210} y={250} />
-      <line x1={cPt.x} y1={cPt.y} x2={brPt.x} y2={brPt.y} stroke={MUTED} strokeWidth={3} strokeDasharray="7 6" opacity={0.6} />
-      <line x1={cPt.x} y1={cPt.y} x2={mg.x} y2={mg.y} stroke={BOND} strokeWidth={3} strokeLinecap="round" />
-      <line x1={mg.x} y1={mg.y} x2={brPt.x} y2={brPt.y} stroke={MG} strokeWidth={2.5} strokeDasharray="3 5" strokeLinecap="round" />
+      <line x1={ch3.x} y1={ch3.y} x2={cPt.x} y2={cPt.y} stroke={BOND} strokeWidth={3.5} strokeLinecap="round" />
+      <line x1={cPt.x} y1={cPt.y} x2={brEnd.x} y2={brEnd.y} stroke={BOND} strokeWidth={3} strokeDasharray="7 6" />
+      <line x1={cPt.x} y1={cPt.y} x2={mg.x} y2={mg.y} stroke={BOND} strokeWidth={3.5} strokeLinecap="round" />
+      <line x1={mg.x} y1={mg.y} x2={brPt.x} y2={brPt.y - 16} stroke={MG} strokeWidth={2.5} strokeDasharray="3 5" strokeLinecap="round" />
+      <Label x={brPt.x} y={brPt.y + 6} size={18} fill={HALOGEN_TONE.Br} weight={600}>
+        Br
+      </Label>
       <circle cx={mg.x} cy={mg.y} r={24} fill={MG} fillOpacity={0.2} stroke={MG} strokeWidth={2} />
       <Label x={mg.x} y={mg.y + 6} size={17} weight={600}>
         Mg
@@ -299,7 +306,7 @@ function StepMagnesium() {
       <Label x={mg.x + 40} y={mg.y - 14} size={18} fill={DELTA_PLUS} weight={600}>
         δ⁺
       </Label>
-      <Label x={cPt.x - 40} y={cPt.y + 44} size={18} fill={DELTA_MINUS} weight={600}>
+      <Label x={cPt.x} y={cPt.y + 38} size={18} fill={DELTA_MINUS} weight={600}>
         δ⁻
       </Label>
       <Label x={brPt.x + 2} y={brPt.y + 44} size={15} fill={MUTED}>
@@ -318,35 +325,41 @@ function StepMagnesium() {
 /* ---------------------------------------------------------------- Step 5: water undoes it */
 
 function StepWater() {
-  const ethyl = parseSmiles(ETHANE_SMILES)
-  const e = mol(ethyl, 66, 170, 190)
-  const c = at(e, 1)
-  const mg = out(e, 1, 110)
-  const br = { x: mg.x + 74, y: mg.y }
+  // The ethyl group as a two-segment chain: CH₃ and CH₂ are both visible, bonded to Mg.
+  const row = 170
+  const mgX = 250
   const ethaneName = FACTS.ethane()
   return (
     <g>
       <Title>Water undoes it</Title>
-      <SkeletalFormula graph={ethyl} scale={66} x={170} y={190} />
-      <line x1={c.x} y1={c.y} x2={mg.x} y2={mg.y} stroke={BOND} strokeWidth={3} strokeLinecap="round" />
-      <circle cx={mg.x} cy={mg.y} r={24} fill={MG} fillOpacity={0.2} stroke={MG} strokeWidth={2} />
-      <Label x={mg.x} y={mg.y + 6} size={17} weight={600}>
-        Mg
-      </Label>
-      <line x1={mg.x + 26} y1={mg.y} x2={br.x - 14} y2={br.y} stroke={MG} strokeWidth={2.5} strokeDasharray="3 5" strokeLinecap="round" />
-      <Label x={br.x} y={br.y + 6} size={17} fill={HALOGEN_TONE.Br} weight={600}>
-        Br
-      </Label>
-      <Label x={170} y={108} size={18} weight={600}>
+      <Label x={215} y={112} size={18} weight={600}>
         CH₃CH₂MgBr
       </Label>
-      <circle cx={450} cy={150} r={30} fill={ROLE_TONE.base} fillOpacity={0.2} stroke={ROLE_TONE.base} strokeWidth={2} />
-      <Label x={450} y={156} size={18} weight={600}>
+      <Label x={70} y={row + 8} size={22} weight={600}>
+        CH₃
+      </Label>
+      <line x1={94} y1={row} x2={134} y2={row} stroke={BOND} strokeWidth={3} strokeLinecap="round" />
+      <Label x={160} y={row + 8} size={22} weight={600}>
+        CH₂
+      </Label>
+      <line x1={184} y1={row} x2={mgX - 26} y2={row} stroke={BOND} strokeWidth={3} strokeLinecap="round" />
+      <circle cx={mgX} cy={row} r={24} fill={MG} fillOpacity={0.2} stroke={MG} strokeWidth={2} />
+      <Label x={mgX} y={row + 6} size={17} weight={600}>
+        Mg
+      </Label>
+      <line x1={mgX + 28} y1={row} x2={344} y2={row} stroke={MG} strokeWidth={2.5} strokeDasharray="3 5" strokeLinecap="round" />
+      <Label x={366} y={row + 6} size={17} fill={HALOGEN_TONE.Br} weight={600}>
+        Br
+      </Label>
+      <circle cx={250} cy={290} r={30} fill={ROLE_TONE.base} fillOpacity={0.2} stroke={ROLE_TONE.base} strokeWidth={2} />
+      <Label x={250} y={296} size={18} weight={600}>
         H₂O
       </Label>
-      <CurvedArrow from={{ x: 420, y: 162 }} to={{ x: c.x + 4, y: c.y - 14 }} bend={0.3} />
-      <SkeletalFormula graph={parseSmiles(ETHANE_SMILES)} scale={66} x={170} y={330} />
-      <Label x={170} y={404} size={18} weight={600}>
+      <CurvedArrow from={{ x: 232, y: 268 }} to={{ x: 152, y: row + 16 }} bend={0.3} />
+      <Label x={170} y={350} size={26} weight={600}>
+        CH₃–CH₃
+      </Label>
+      <Label x={170} y={390} size={18} weight={600}>
         {`${ethaneName.name} (${formulaUnicode(ethaneName.formula)})`}
       </Label>
       <Label x={450} y={330} size={18} weight={600}>
@@ -371,24 +384,24 @@ function StepWurtz() {
   return (
     <g>
       <Title>Two halves join</Title>
-      <SkeletalFormula graph={bromoethane} scale={52} x={150} y={150} />
-      <SkeletalFormula graph={bromoethane} scale={52} x={430} y={150} />
-      <Label x={W / 2} y={158} size={24} weight={600}>
+      <SkeletalFormula graph={bromoethane} scale={78} x={137} y={128} />
+      <SkeletalFormula graph={bromoethane} scale={78} x={443} y={128} />
+      <Label x={W / 2} y={136} size={26} weight={600}>
         +
       </Label>
-      <Label x={150} y={222} size={18} fill={NA} weight={600}>
+      <Label x={137} y={218} size={18} fill={NA} weight={600}>
         2 Na
       </Label>
-      <Label x={430} y={222} size={18} fill={NA} weight={600}>
+      <Label x={443} y={218} size={18} fill={NA} weight={600}>
         2 Na
       </Label>
-      <line x1={290} y1={236} x2={290} y2={300} stroke={MUTED} strokeWidth={2.5} />
-      <polygon points="282,296 298,296 290,308" fill={MUTED} />
-      <SkeletalFormula graph={butane} scale={56} x={290} y={352} />
-      <Label x={W / 2} y={414} size={18} weight={600}>
+      <line x1={290} y1={230} x2={290} y2={246} stroke={MUTED} strokeWidth={2.5} />
+      <polygon points="282,244 298,244 290,256" fill={MUTED} />
+      <SkeletalFormula graph={butane} scale={92} x={290} y={344} />
+      <Label x={W / 2} y={440} size={18} weight={600}>
         {`${butaneName.name} (${formulaUnicode(butaneName.formula)}) + 2 NaBr`}
       </Label>
-      <Label x={W / 2} y={440} fill={MUTED} size={16}>
+      <Label x={W / 2} y={462} fill={MUTED} size={16}>
         Four carbons in the product: twice the two in each halide.
       </Label>
     </g>
