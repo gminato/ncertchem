@@ -1,0 +1,133 @@
+---
+class: 12
+unit: 5
+section: "5.6"
+order: 8
+title: "Bonding in Metal Carbonyls"
+slug: "12-5-6-metal-carbonyls"
+access: free
+summary: "Carbon monoxide binds a zero-valent metal through two cooperating bonds: a sigma bond donated by carbon, and a pi bond donated back from filled metal d orbitals. Each strengthens the other."
+ncert: "Class 12, Part I, Unit 5, Section 5.6"
+---
+
+<Hook>
+Nickel metal and carbon monoxide gas, mixed at mild conditions, give a volatile liquid that boils off and can be decomposed again to pure nickel. Nickel here is in oxidation state zero, with no positive charge to attract a ligand, and CO is a neutral molecule with no charge to be attracted. Why do the two hold on so tightly?
+</Hook>
+
+## Carbonyls: metals with only CO attached
+
+A metal carbonyl is a complex in which carbon monoxide is the ligand, written CO and named carbonyl. Most transition metals form **homoleptic carbonyls**, meaning CO is the only kind of ligand present. The metal sits in oxidation state 0, and every CO ligand attaches to the metal through its carbon atom. Their shapes are simple and well defined, and they follow the geometries you already know from the earlier sections.
+
+- $\ce{Ni(CO)4}$, tetracarbonylnickel(0): tetrahedral.
+- $\ce{Fe(CO)5}$, pentacarbonyliron(0): trigonal bipyramidal.
+- $\ce{Cr(CO)6}$, hexacarbonylchromium(0): octahedral.
+
+Two carbonyls contain two metal atoms. In $\ce{[Mn2(CO)10]}$, decacarbonyldimanganese(0), two square pyramidal $\ce{Mn(CO)5}$ units are joined directly by a Mn-Mn bond. In $\ce{[Co2(CO)8]}$, octacarbonyldicobalt(0), there is a Co-Co bond and two of the CO groups bridge across the two cobalt atoms.
+
+<Scrolly animation="carbonyl-structures">
+  <Step>
+    **Single-metal carbonyls:** Draw three skeletal structures side by side in the Visual Vocabulary, each with the metal symbol at the centre in its element tone and CO groups as short labelled sticks. $\ce{Ni(CO)4}$ has four CO groups at tetrahedral positions. $\ce{Fe(CO)5}$ has three CO groups in a plane and one above and one below the metal. $\ce{Cr(CO)6}$ has CO groups along three perpendicular axes. Caption each with its shape name.
+  </Step>
+  <Step>
+    **Two metals, one bond:** Replace the three drawings with $\ce{[Mn2(CO)10]}$. Show two square pyramidal $\ce{Mn(CO)5}$ halves, each with five CO groups, facing each other and joined by one heavy Mn-Mn line. Highlight the Mn-Mn line while the ten CO labels stay muted.
+  </Step>
+  <Step>
+    **Two metals, two bridges:** Show $\ce{[Co2(CO)8]}$. A Co-Co line runs between the metals. Two CO groups are drawn as bridges, each a carbon atom lying between the two cobalt atoms with its oxygen pointing away. The remaining six CO groups are terminal, three on each metal. Count the CO groups aloud in the caption: 2 bridging plus 6 terminal gives 8.
+  </Step>
+</Scrolly>
+
+## The two-way bond between metal and CO
+
+The metal-carbon bond in a carbonyl has both sigma and pi character, and the two parts work in opposite directions.
+
+1. **Sigma bond, ligand to metal.** The carbon atom of CO has a lone pair. It donates this pair into a vacant orbital of the metal and forms the M-C sigma bond.
+2. **Pi bond, metal to ligand.** The metal has filled d orbitals. It donates a pair of electrons from one of them into the empty antibonding $\pi^*$ orbital of carbon monoxide. This forms the M-C pi bond.
+
+The second step is called **back bonding**, because charge flows back from the metal to the ligand. It does not run independently of the first. Sigma donation loads the metal with extra electron density, which makes it a better donor in the pi bond. Pi back donation in turn drains that excess, so the metal can accept more sigma donation. Each bond encourages the other, which is the **synergic effect**, and the net result is a stronger bond between CO and the metal. This explains why a neutral ligand can bind a metal in oxidation state zero so firmly.
+
+<Scrolly animation="carbonyl-synergic-bonding">
+  <Step>
+    **The parts:** On the left draw a metal atom with one vacant orbital (empty lobe, outline only) and one filled d orbital (shaded lobes with a pair of dots). On the right draw CO as C and O, with a lone pair on C pointing toward the metal and an empty antibonding $\pi^*$ orbital (outline lobes) beside the C. Nothing is connected yet; label each orbital as filled or vacant.
+  </Step>
+  <Step>
+    **Sigma donation:** Animate an arrow from the carbon lone pair into the vacant metal orbital, tinted in the ligand tone. Label it "sigma bond: C to M". The vacant metal lobe fills in and the metal gains a small negative tint.
+  </Step>
+  <Step>
+    **Pi back donation:** Animate a second arrow, tinted in the metal tone, running the other way from the filled metal d lobes into the empty $\pi^*$ lobes on carbon. Label it "pi bond: M to C". The $\pi^*$ lobes fill and the metal's negative tint fades.
+  </Step>
+  <Step>
+    **Synergy:** Show both arrows at once as a closed loop of two arrows, with the M-C line drawn heavier than in step 2. Caption: each donation makes the other easier, so the M-CO bond is strengthened.
+  </Step>
+</Scrolly>
+
+## Putting it together
+
+When you meet a carbonyl, ask three questions. What is the metal's oxidation state (zero)? How many CO groups are attached, and is the shape tetrahedral, trigonal bipyramidal, octahedral or built from two such units? Are any CO groups bridging between two metals? Then recall the bond: sigma from carbon to metal, pi from metal back to carbon, and the two together strengthen each other.
+
+Explore the five carbonyls from the section and see the donation arrows for each.
+
+{/*
+Simulation "carbonyl-explorer".
+Inputs: a selector (buttons) for the five carbonyls from Fig. 5.13: Ni(CO)4, Fe(CO)5, Cr(CO)6, [Mn2(CO)10], [Co2(CO)8]; a toggle "show sigma donation"; a toggle "show pi back donation"; both default on.
+Outputs: a skeletal drawing of the chosen carbonyl in the Visual Vocabulary (metal in element tone, CO sticks); a readout panel with the IUPAC name, shape (from NCERT_CARBONYLS in src/lib/chem/ncert-c12-unit5-s8-tables.ts), oxidation state of the metal (0), total CO count, and bridging CO count.
+Behaviour: toggles draw sigma arrows (C to M, ligand tone) and pi arrows (M to C, metal tone) on every M-CO bond; for [Co2(CO)8] the two bridging CO groups are drawn bridging, and a Co-Co line is shown. For [Mn2(CO)10] a Mn-Mn line is shown. When both toggles are on, display the label "synergic: stronger M-CO bond". Data from NCERT_CARBONYLS and NCERT_SYNERGIC_BOND only; no hard-coded values in the component.
+*/}
+<Simulation name="carbonyl-explorer" title="Carbonyl Explorer" />
+
+## Check your understanding
+
+<Check
+  n={1}
+  numeric
+  answer={5}
+  tolerance={0}
+  explanation="Pentacarbonyliron(0), Fe(CO)5, has five CO ligands (penta means five) in a trigonal bipyramidal arrangement."
+>
+How many CO ligands are attached to the iron atom in pentacarbonyliron(0)?
+</Check>
+
+<Check
+  n={2}
+  options={[
+    "Sigma donation from a filled metal d orbital into carbon's vacant orbital",
+    "Sigma donation from the carbon lone pair into a vacant metal orbital",
+    "Pi donation from the carbon lone pair into a filled metal orbital",
+    "Pi donation from the oxygen atom into the metal nucleus"
+  ]}
+  answer={1}
+  explanation="The sigma bond forms when the lone pair on the carbonyl carbon is donated into a vacant orbital of the metal. The pi bond runs the other way, from a filled metal d orbital into the vacant pi* orbital of CO."
+>
+Which describes how the M-C sigma bond forms in a metal carbonyl?
+</Check>
+
+<Check
+  n={3}
+  options={[
+    "Two Mn(CO)5 units joined by a Mn-Mn bond, with no bridging CO",
+    "Two Mn(CO)5 units held together by two bridging CO groups",
+    "A single tetrahedral Mn atom with ten CO groups",
+    "An octahedral Mn atom with a Mn-Mn double bond"
+  ]}
+  answer={0}
+  explanation="Decacarbonyldimanganese(0) is two square pyramidal Mn(CO)5 units joined by a Mn-Mn bond. The bridged structure belongs to octacarbonyldicobalt(0)."
+>
+Which statement describes the structure of $\ce{[Mn2(CO)10]}$?
+</Check>
+
+<Check
+  n={4}
+  numeric
+  answer={2}
+  tolerance={0}
+  explanation="[Co2(CO)8] has a Co-Co bond bridged by two CO groups. The other six CO groups are terminal."
+>
+How many bridging CO groups are present in $\ce{[Co2(CO)8]}$?
+</Check>
+
+<KeyIdeas>
+- Homoleptic carbonyls contain only CO as ligand, with the metal in oxidation state 0. $\ce{Ni(CO)4}$ is tetrahedral, $\ce{Fe(CO)5}$ trigonal bipyramidal and $\ce{Cr(CO)6}$ octahedral.
+- $\ce{[Mn2(CO)10]}$ is two square pyramidal $\ce{Mn(CO)5}$ units joined by a Mn-Mn bond. $\ce{[Co2(CO)8]}$ has a Co-Co bond bridged by two CO groups.
+- The M-C sigma bond forms when the carbon lone pair is donated into a vacant metal orbital.
+- The M-C pi bond forms when a filled metal d orbital donates electrons into the vacant antibonding $\pi^*$ orbital of CO.
+- The two donations reinforce each other (synergic effect), strengthening the bond between CO and the metal.
+</KeyIdeas>
