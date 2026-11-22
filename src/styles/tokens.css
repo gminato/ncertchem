@@ -571,3 +571,38 @@
     --polymer: #5EEAD4;
   }
 }
+
+/* Chemical kinetics drawing set: plot strokes, grid, axes, particle sheen and catalyst flashes.
+   Light and dark share one set of names; the forced-dark block mirrors [data-theme="dark"]. */
+:root,
+[data-theme="light"] {
+  --kin-reactant: #2563EB;
+  --kin-product: #0E8A6B;
+  --kin-catalyst: #B42A7A;
+  --kin-grid: rgba(31, 32, 35, 0.08);
+  --kin-axis: rgba(31, 32, 35, 0.55);
+  --kin-sheen: rgba(255, 255, 255, 0.85);
+  --kin-flash: #D97706;
+}
+
+[data-theme="dark"] {
+  --kin-reactant: #6CB6FF;
+  --kin-product: #3DD6A8;
+  --kin-catalyst: #FF7AC0;
+  --kin-grid: rgba(240, 246, 252, 0.08);
+  --kin-axis: rgba(240, 246, 252, 0.5);
+  --kin-sheen: rgba(255, 255, 255, 0.35);
+  --kin-flash: #FBBF24;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --kin-reactant: #6CB6FF;
+    --kin-product: #3DD6A8;
+    --kin-catalyst: #FF7AC0;
+    --kin-grid: rgba(240, 246, 252, 0.08);
+    --kin-axis: rgba(240, 246, 252, 0.5);
+    --kin-sheen: rgba(255, 255, 255, 0.35);
+    --kin-flash: #FBBF24;
+  }
+}
