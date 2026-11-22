@@ -18,6 +18,8 @@ export interface HaloprepRoutesProps {
 const W = 600
 const H = 470
 const BOND = 44
+/** Scale for the larger drawings (Steps 1, 3 and 4), so the structures fill the panel. */
+const LARGE = 54
 const TEXT = 15
 const NAME = 16
 const INK = 'var(--bond)'
@@ -201,11 +203,11 @@ function Step1({ reveal }: { reveal: number }) {
       title="Alcohol and thionyl chloride"
       captions={['SO₂ and HCl leave as gases.', 'The liquid chloroalkane stays behind in the flask.']}
     >
-      <Species smiles={SPECIES.butanol} cx={125} cy={200} tag="1° alcohol" />
-      <Arrow x1={215} x2={335} y={200} above="SOCl₂" />
-      <Species smiles={SPECIES.chlorobutane} cx={455} cy={200} reveal={reveal} />
-      <GasTag x={270} y={112} label="SO₂" />
-      <GasTag x={370} y={112} label="HCl" />
+      <Species smiles={SPECIES.butanol} cx={116} cy={240} scale={LARGE} tag="1° alcohol" />
+      <Arrow x1={226} x2={346} y={240} above="SOCl₂" />
+      <Species smiles={SPECIES.chlorobutane} cx={464} cy={240} scale={LARGE} reveal={reveal} />
+      <GasTag x={250} y={170} label="SO₂" />
+      <GasTag x={338} y={170} label="HCl" />
     </Frame>
   )
 }
@@ -214,7 +216,7 @@ function Step2({ reveal }: { reveal: number }) {
   return (
     <Frame
       title="Alkane and chlorine in light"
-      captions={['A mixture of isomeric chloroalkanes, hard to separate.', 'The yield of any one of them is low.']}
+      captions={['Several isomeric chloroalkanes form, and separating them is laborious.', 'So the usable yield of any single isomer is poor.']}
     >
       <Species smiles={SPECIES.butane} cx={115} cy={200} />
       <g stroke="var(--spec-yellow)" strokeWidth={2.4} strokeLinecap="round">
@@ -234,11 +236,11 @@ function Step3({ reveal }: { reveal: number }) {
   return (
     <Frame
       title="Alkene and hydrogen bromide"
-      captions={['H goes to the CH₂ end, which already has more hydrogens.', 'Br goes to the middle carbon: the major product.']}
+      captions={['H goes to the CH₂ end, which already has more hydrogens.', 'Br goes to the second carbon: the major product.']}
     >
-      <Species smiles={SPECIES.butene} cx={125} cy={200} />
-      <Arrow x1={210} x2={330} y={200} above="Hδ⁺–Brδ⁻" />
-      <Species smiles={SPECIES.bromobutaneSecondary} cx={455} cy={200} tag="major (Markovnikov)" reveal={reveal} />
+      <Species smiles={SPECIES.butene} cx={116} cy={240} scale={LARGE} />
+      <Arrow x1={226} x2={346} y={240} above="Hδ⁺–Brδ⁻" />
+      <Species smiles={SPECIES.bromobutaneSecondary} cx={464} cy={240} scale={LARGE} tag="major (Markovnikov)" reveal={reveal} />
     </Frame>
   )
 }
@@ -249,13 +251,13 @@ function Step4({ reveal }: { reveal: number }) {
       title="Alkene and bromine in solvent"
       captions={['One Br adds to each carbon of the C=C.', 'The reddish-brown colour disappears: a test for a double bond.']}
     >
-      <Species smiles={SPECIES.butene} cx={125} cy={200} />
-      <Arrow x1={210} x2={330} y={200} above="Br₂ in CCl₄" />
-      <rect x={210} y={214} width={120} height={14} rx={7} fill="url(#haloprep-br-fade)" />
-      <text x={270} y={250} textAnchor="middle" fontSize={TEXT} fill="var(--fg-muted)">
+      <Species smiles={SPECIES.butene} cx={116} cy={240} scale={LARGE} />
+      <Arrow x1={226} x2={346} y={240} above="Br₂ in CCl₄" />
+      <rect x={226} y={254} width={120} height={14} rx={7} fill="url(#haloprep-br-fade)" />
+      <text x={286} y={290} textAnchor="middle" fontSize={TEXT} fill="var(--fg-muted)">
         Br₂ is used up
       </text>
-      <Species smiles={SPECIES.dibromobutane} cx={455} cy={200} tag="colourless" reveal={reveal} />
+      <Species smiles={SPECIES.dibromobutane} cx={464} cy={240} scale={LARGE} tag="colourless" reveal={reveal} />
     </Frame>
   )
 }
