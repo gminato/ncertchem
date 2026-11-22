@@ -24,6 +24,7 @@ import { FirstLawLab } from './sims/first-law-lab'
 import { HessBuilder } from './sims/hess-builder'
 import { OxidationNumberFinder } from './sims/oxidation-number-finder'
 import { RedoxTitrationLab } from './sims/redox-titration-lab'
+import { OxidantTitrationLab } from './sims/oxidant-titration-lab'
 import { ElectrodePotentialExplorer } from './sims/electrode-potential-explorer'
 import { RedoxClassifier } from './sims/redox-classifier'
 import { MetalDisplacementLab } from './sims/metal-displacement-lab'
@@ -130,6 +131,7 @@ export const simulations: Record<string, ComponentType<SimulationProps>> = {
   'hess-builder': HessBuilder,
   'oxidation-number-finder': OxidationNumberFinder,
   'redox-titration-lab': RedoxTitrationLab,
+  'oxidant-titration-lab': OxidantTitrationLab,
   'electrode-potential-explorer': ElectrodePotentialExplorer,
   'redox-classifier': RedoxClassifier,
   'metal-displacement-lab': MetalDisplacementLab,
