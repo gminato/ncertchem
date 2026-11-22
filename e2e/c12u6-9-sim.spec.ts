@@ -92,6 +92,7 @@ for (const scheme of ['light', 'dark'] as const) {
     // State 2: the mirror image of 2-chloropentane is shown; its verdict says the molecule is chiral.
     await sim.getByRole('switch', { name: 'Show the mirror image' }).click()
     await expect(sim.locator('[aria-live="polite"]')).toContainText('pentan-2-ol')
+    await expect(sim.locator('[aria-live="polite"]')).toContainText('opposite sign')
     await expect(sim.getByText(/No turn of the mirror image/)).toBeVisible()
     await sim.screenshot({ path: `test-results/screens/c12u6-9-sim-mirror-${scheme}.png` })
     expect(await smallTextLeaves(page)).toEqual([])
@@ -109,6 +110,7 @@ for (const scheme of ['light', 'dark'] as const) {
     // State 4: 3-chloropentane has no stereocentre: no mechanism control, and the mirror image superimposes.
     await sim.getByRole('radio', { name: '3-chloropentane' }).click()
     await expect(sim.locator('[aria-live="polite"]')).toContainText('no stereocentre')
+    await expect(sim.locator('[aria-live="polite"]')).toContainText('Polarimeter: zero')
     await expect(sim.getByRole('radio', { name: 'SN1' })).toHaveCount(0)
     await sim.screenshot({ path: `test-results/screens/c12u6-9-sim-achiral-${scheme}.png` })
     expect(await smallTextLeaves(page)).toEqual([])

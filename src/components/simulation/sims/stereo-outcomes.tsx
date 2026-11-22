@@ -52,12 +52,14 @@ export function StereoOutcomes() {
   const verdict = superpositionVerdict(id)
 
   const summary = !model.chiral
-    ? `${molecule.label} (${model.formulaUnicode}) has no stereocentre, so there is no mechanism to compare.`
+    ? `${molecule.label} (${model.formulaUnicode}) has no stereocentre, so there is no mechanism to compare. Polarimeter: zero.`
     : active === 'SN2'
       ? `${molecule.label} (${model.formulaUnicode}), SN2 with hydroxide: one product, ${model.product.name} (${model.product.formulaUnicode}), with the OH on the side opposite the halogen. Polarimeter: ${outcome?.polarimeter}.`
       : active === 'SN1'
         ? `${molecule.label} (${model.formulaUnicode}), SN1 with hydroxide: a planar carbocation is attacked from both faces, giving ${model.product.name} as a 50 : 50 mixture of two mirror images. Polarimeter: zero.`
         : ''
+
+  const mirrorNote = mirror && model.chiral ? ' Mirror image of the reactant: the polarimeter reads rotates, equal angle, opposite sign.' : ''
 
   return (
     <div className={styles.sim}>
@@ -79,14 +81,14 @@ export function StereoOutcomes() {
           <SkeletalFormula graph={model.graph} x={280} y={110} scale={44} highlightAtoms={model.stereoAtoms} />
         </svg>
 
-        <svg className={styles.scene} viewBox="0 0 560 340" role="img" aria-label={`Stereocentre of ${molecule.label}${mirror ? ', mirror image' : ''}`}>
+        <svg className={styles.scene} viewBox="62 0 460 290" role="img" aria-label={`Stereocentre of ${molecule.label}${mirror ? ', mirror image' : ''}`}>
           <Enlarged>
             <StereoCentre umbrella={arms} leaving={reactantGroup} mirror={mirror} />
           </Enlarged>
         </svg>
 
         {outcome && active === 'SN2' ? (
-          <svg className={styles.scene} viewBox="0 0 560 340" role="img" aria-label={`SN2 product of ${molecule.label}: the OH sits on the side opposite the halogen`}>
+          <svg className={styles.scene} viewBox="62 0 460 290" role="img" aria-label={`SN2 product of ${molecule.label}: the OH sits on the side opposite the halogen`}>
             <Enlarged>
               <StereoCentre umbrella={arms} incoming={{ label: 'OH' }} invert={1} />
             </Enlarged>
@@ -94,7 +96,7 @@ export function StereoOutcomes() {
         ) : null}
 
         {outcome && active === 'SN1' ? (
-          <svg className={styles.scene} viewBox="0 0 560 680" role="img" aria-label={`SN1 on ${molecule.label}: the two mirror-image products in equal amounts`}>
+          <svg className={styles.scene} viewBox="20 0 520 620" role="img" aria-label={`SN1 on ${molecule.label}: the two mirror-image products in equal amounts`}>
             <Enlarged>
               <StereoCentre umbrella={arms} incoming={{ label: 'OH' }} />
             </Enlarged>
@@ -107,7 +109,7 @@ export function StereoOutcomes() {
 
       <div className={styles.readout}>
         <p className={styles.verdict}>{verdict}</p>
-        <p className={styles.summary} aria-live="polite">{summary}</p>
+        <p className={styles.summary} aria-live="polite">{summary}{mirrorNote}</p>
       </div>
     </div>
   )

@@ -38,7 +38,7 @@
 .note {
   margin: 0;
   font-size: 14px;
-  color: var(--fg-muted);
+  color: var(--fg);
 }
 
 .readout {
