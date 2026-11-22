@@ -19,12 +19,12 @@ function parseIon(ion: string): { symbol: string; charge: number } {
 /** Ions the lab offers: every Table 4.8 row the vocab colours, in table order. */
 const IONS = NCERT_AQUA_COLOURS.map((row) => row.ion).filter((ion) => aquaIonColour(ion) !== null)
 
-const WHEEL_CX = 420
-const WHEEL_CY = 120
-const WHEEL_R = 90
-const CONFIG_X = 40
-const CONFIG_Y = 330
-const CONFIG_W = 500
+const WHEEL_CX = 220
+const WHEEL_CY = 320
+const WHEEL_R = 70
+const CONFIG_X = 24
+const CONFIG_Y = 470
+const CONFIG_W = 392
 const CONFIG_MAX = 28
 
 const COLOUR_WORD: Record<string, string> = { purple: 'purple', pink: 'pink' }
@@ -76,22 +76,14 @@ export function AquaIonColourLab() {
       <div className={styles.stage}>
         <svg
           className={styles.scene}
-          viewBox={`0 0 560 ${viewHeight}`}
+          viewBox={`0 0 440 ${viewHeight}`}
           role="img"
           aria-label={`${info.ion} in water: ${colourless ? 'colourless' : `${colourName}, absorbs ${absorbed}`}, with ${dCount} d electrons`}
         >
-          <SolutionColour x={40} y={30} width={170} ion={info.key} light label={`${info.ion}(aq)`} />
+          <SolutionColour x={135} y={20} width={170} ion={info.key} light label={`${info.ion}(aq)`} />
           {colourless ? null : (
             <g>
               <ColourWheel cx={WHEEL_CX} cy={WHEEL_CY} radius={WHEEL_R} absorbed={absorbed} seen={seen} />
-              <text x={WHEEL_CX} y={WHEEL_CY + WHEEL_R + 28} textAnchor="middle" className={styles.caption}>
-                absorbed {absorbed}, seen {seen}
-              </text>
-              {nearest ? (
-                <text x={WHEEL_CX} y={WHEEL_CY + WHEEL_R + 50} textAnchor="middle" className={styles.caption}>
-                  {colourName}: nearest sector
-                </text>
-              ) : null}
             </g>
           )}
           {colourless ? (
