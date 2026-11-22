@@ -50,6 +50,11 @@
   overflow: visible;
 }
 
+/* Highlight rings glow a little so the carbon ring stays visible on the dark panel. */
+.ring {
+  filter: drop-shadow(0 0 2px var(--delta-plus));
+}
+
 .caption {
   font-size: 16px;
   fill: var(--fg);

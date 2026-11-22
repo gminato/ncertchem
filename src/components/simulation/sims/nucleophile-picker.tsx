@@ -3,7 +3,7 @@
 import { useId, useState, type ReactNode } from 'react'
 import { Segmented } from '@/components/controls'
 import type { SimulationProps } from '@/components/simulation/registry'
-import { SkeletalFormula, skeletalFrame } from '@/components/organic'
+import { SkeletalFormula, freeAngle, skeletalFrame } from '@/components/organic'
 import { ROLE_TONE } from '@/components/vocab/organic6'
 import { classifyHalide, formulaUnicode } from '@/lib/chem/haloalkanes'
 import { parseSmiles } from '@/lib/chem/molecule-parse'
@@ -18,14 +18,16 @@ import {
 } from '@/lib/chem/nucleophile-picker'
 import styles from './nucleophile-picker.module.css'
 
-/** Scale 46 puts the skeletal atom labels at 17 px in the drawing's own units; the molecules fill the panel. */
-const SCALE = 46
 const VIEW_W = 560
 const VIEW_H = 330
-const SUB_X = 118
-const PROD_X = 432
+const SUB_X = 112
+const PROD_X = 448
 const MOL_Y = 136
-const RING_R = 0.42 * SCALE
+/** Each drawing gets the largest scale that fits its column (labels stay at or above 0.36 x scale). */
+const FIT_W = 200
+const FIT_H = 130
+const MIN_SCALE = 44
+const MAX_SCALE = 66
 const ARROW_X0 = 226
 const ARROW_X1 = 312
 const ARROW_MID = (ARROW_X0 + ARROW_X1) / 2
@@ -53,9 +55,63 @@ function productCaption(p: PickerProduct): string {
   return p.name ?? formulaUnicode(p.formula)
 }
 
-function ringAt(points: readonly { x: number; y: number }[], index: number, tone: string, key: string): ReactNode {
+type Graph = Parameters<typeof skeletalFrame>[0]
+
+function fitScale(graph: Graph): number {
+  const f = skeletalFrame(graph, 100)
+  const xs = f.points.map((p) => p.x)
+  const ys = f.points.map((p) => p.y)
+  const w = (Math.max(...xs) - Math.min(...xs)) / 100
+  const h = (Math.max(...ys) - Math.min(...ys)) / 100
+  const s = Math.min(FIT_W / (w + 0.5), FIT_H / (h + 0.5), MAX_SCALE)
+  return Math.round(Math.max(MIN_SCALE, s))
+}
+
+function ringAt(
+  points: readonly { x: number; y: number }[],
+  index: number,
+  tone: string,
+  key: string,
+  scale: number
+): ReactNode {
   const p = points[index]
-  return <circle key={key} cx={p.x} cy={p.y} r={RING_R} fill="none" stroke={tone} strokeWidth={3} />
+  return <circle key={key} className={styles.ring} cx={p.x} cy={p.y} r={0.26 * scale} fill="none" stroke={tone} strokeWidth={3} />
+}
+
+/** A tinted dot set off from an atom, in the free direction farthest from its bonds and from its charge sign. */
+function attackDot(
+  points: readonly { x: number; y: number }[],
+  adj: number[][],
+  index: number,
+  tone: string,
+  scale: number
+): ReactNode {
+  const p = points[index]
+  const bonds = adj[index].map((q) => Math.atan2(points[q].y - p.y, points[q].x - p.x))
+  const charge = freeAngle(points, adj, index)
+  const separation = (a: number, b: number) => {
+    const d = Math.abs(a - b) % (2 * Math.PI)
+    return d > Math.PI ? 2 * Math.PI - d : d
+  }
+  let best = -Math.PI / 2
+  let bestScore = -1
+  for (let k = 0; k < 12; k++) {
+    const c = (k * Math.PI) / 6
+    const score = Math.min(separation(c, charge), ...bonds.map((b) => separation(c, b)))
+    if (score > bestScore) {
+      bestScore = score
+      best = c
+    }
+  }
+  return (
+    <circle
+      key="attack"
+      cx={p.x + Math.cos(best) * 0.5 * scale}
+      cy={p.y + Math.sin(best) * 0.5 * scale}
+      r={0.14 * scale}
+      fill={tone}
+    />
+  )
 }
 
 export function NucleophilePicker(_: SimulationProps) {
@@ -69,8 +125,10 @@ export function NucleophilePicker(_: SimulationProps) {
   const product = pickerProduct(substrateId, reagentId)
   const subGraph = parseSmiles(substrate.smiles)
   const subHalogen = subGraph.atoms.length - 1
-  const subFrame = skeletalFrame(subGraph, SCALE)
-  const prodFrame = skeletalFrame(product.graph, SCALE)
+  const subScale = fitScale(subGraph)
+  const prodScale = fitScale(product.graph)
+  const subFrame = skeletalFrame(subGraph, subScale)
+  const prodFrame = skeletalFrame(product.graph, prodScale)
   const prodBond = product.graph.bonds.findIndex(
     (b) =>
       (b.a === product.carbonIndex && b.b === product.attackIndex) ||
@@ -112,14 +170,14 @@ export function NucleophilePicker(_: SimulationProps) {
         <g className={styles.molecule}>
           <SkeletalFormula
             graph={subGraph}
-            scale={SCALE}
+            scale={subScale}
             x={SUB_X}
             y={MOL_Y}
             highlightBonds={subBond >= 0 ? [subBond] : []}
             overlay={
               <>
-                {ringAt(subFrame.points, product.carbonIndex, ROLE_TONE.electrophilicCarbon, 'c')}
-                {ringAt(subFrame.points, subHalogen, ROLE_TONE.leavingGroup, 'x')}
+                {ringAt(subFrame.points, product.carbonIndex, ROLE_TONE.electrophilicCarbon, 'c', subScale)}
+                {ringAt(subFrame.points, subHalogen, ROLE_TONE.leavingGroup, 'x', subScale)}
               </>
             }
           />
@@ -145,12 +203,12 @@ export function NucleophilePicker(_: SimulationProps) {
         <g className={styles.molecule}>
           <SkeletalFormula
             graph={product.graph}
-            scale={SCALE}
+            scale={prodScale}
             x={PROD_X}
             y={MOL_Y}
             highlightBonds={prodBond >= 0 ? [prodBond] : []}
             overlay={
-              product.attackIndex === null ? null : ringAt(prodFrame.points, product.attackIndex, ROLE_TONE.nucleophile, 'n')
+              product.attackIndex === null ? null : attackDot(prodFrame.points, prodFrame.adj, product.attackIndex, ROLE_TONE.nucleophile, prodScale)
             }
           />
           <text className={styles.caption} x={PROD_X} y={MOL_Y + 116} textAnchor="middle">
