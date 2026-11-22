@@ -160,6 +160,7 @@ import { IonisationSteps } from './c12-unit4/ionisation/IonisationSteps'
 import { OxidationStateGrid } from './c12-unit4/oxstates/OxidationStateGrid'
 import { ElectrodePotentialCycle } from './c12-unit4/electrode/ElectrodePotentialCycle'
 import { SpinOnlyMoment } from './c12-unit4/magnetic/SpinOnlyMoment'
+import { DdColourScrolly } from './c12-unit4/colour/DdColourScrolly'
 
 /**
  * Animations available to a Scrolly Animation, keyed by the `animation` prop.
@@ -330,6 +331,7 @@ export const animations = {
   'oxidation-state-grid': OxidationStateGrid,
   'electrode-potential-cycle': ElectrodePotentialCycle,
   'spin-only-moment': SpinOnlyMoment,
+  'dd-colour': DdColourScrolly,
 } as const
 
 export type AnimationName = keyof typeof animations

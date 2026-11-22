@@ -99,6 +99,7 @@ import { DBlockTrendsLab } from './sims/dblock-trends-lab'
 import { IonisationExplorer } from './sims/ionisation-explorer'
 import { OxidationStateExplorer } from './sims/oxidation-state-explorer'
 import { MagneticMomentLab } from './sims/magnetic-moment-lab'
+import { AquaIonColourLab } from './sims/aqua-ion-colour-lab'
 
 export interface SimulationProps {
   /** True when the Learner has asked the OS for reduced motion. Skip tweens and loops when set. */
@@ -205,6 +206,7 @@ export const simulations: Record<string, ComponentType<SimulationProps>> = {
   'rate-determining-step-lab': RateDeterminingStepLab,
   'zero-order-lab': ZeroOrderLab,
   'first-order-lab': FirstOrderLab,
+  'aqua-ion-colour-lab': AquaIonColourLab,
   'half-life-compare': HalfLifeCompare,
   'arrhenius-lab': ArrheniusLab,
   'configuration-explorer': ConfigurationExplorer,
