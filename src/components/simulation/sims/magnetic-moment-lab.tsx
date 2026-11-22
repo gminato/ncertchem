@@ -25,6 +25,17 @@ const BOX_WIDTH = 240
 const BOX_MAX = 36
 const TONE = SERIES_TONE['3d']
 
+/**
+ * Where the selected point's label goes. The label keeps clear of the Table 4.7 range bars and marks:
+ * at d⁸ the Ni²⁺ range bar sits above the point, so the label goes below-left; at d³ the label
+ * would sit on the rising line, so it goes above-left.
+ */
+function labelSide(d: number): 'ne' | 'nw' | 'sw' {
+  if (d === 8) return 'sw'
+  if (d === 3) return 'nw'
+  return d >= 8 ? 'nw' : 'ne'
+}
+
 /** The calculated hill (filled points joined by a line) and the Table 4.7 measured values (hollow marks, ranges as bars). */
 function MomentSeries() {
   const s = usePlotScale()
@@ -103,7 +114,7 @@ export function MagneticMomentLab() {
             yTitle="μ / BM"
           >
             <MomentSeries />
-            <PlotPoint at={{ x: r.dCount, y: r.mu }} tone="accent" label={r.muText} side={r.dCount >= 8 ? 'nw' : 'ne'} />
+            <PlotPoint at={{ x: r.dCount, y: r.mu }} tone="accent" label={r.muText} side={labelSide(r.dCount)} />
           </PlotFrame>
         </svg>
       </div>

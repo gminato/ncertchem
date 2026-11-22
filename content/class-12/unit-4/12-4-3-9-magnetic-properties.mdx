@@ -11,7 +11,7 @@ ncert: "Class 12, Part I — Unit 4, Section 4.3.9"
 ---
 
 <Hook>
-Hold a strong magnet close to a pinch of green iron(II) sulphate and the powder is drawn gently toward it. Do the same with white zinc sulphate and nothing much happens. Both salts contain a 2+ metal ion and a sulphate, so what does the magnet detect inside the iron ion that it cannot find in the zinc one?
+Set a pinch of green iron(II) sulphate on a sensitive balance beside a strong magnet, and the balance shows the powder is drawn gently toward it. Do the same with white zinc sulphate and the reading barely changes. Both salts contain a 2+ metal ion and a sulphate, so what does the magnet detect inside the iron ion that it cannot find in the zinc one?
 </Hook>
 
 ## Three ways a substance answers a magnet
@@ -28,7 +28,7 @@ Everything that matters comes from the arrangement of electrons inside each atom
     **Three responses:** A diamagnetic sample has all its electrons paired and is weakly pushed out of the field. A paramagnetic sample has unpaired electrons and is drawn into the field. A ferromagnetic sample is drawn in very strongly, and it is best thought of as an extreme case of paramagnetism. Many transition metal ions are paramagnetic.
   </Step>
   <Step>
-    **Why an electron acts as a magnet:** Each electron carries a spin, and that spin behaves like a tiny magnet. Two electrons sharing an orbital have opposite spins, so their magnets cancel. Only the unpaired electrons leave a net moment. In the first row of transition metals the orbital motion of the electrons contributes almost nothing in a compound, so the spins alone decide the response.
+    **Why an electron acts as a magnet:** Every electron spins, and the spin makes it a tiny magnet. Where two electrons occupy one orbital, their spins point opposite ways and the two magnets null each other, so the ion keeps a net moment only from its unpaired electrons. Orbital motion is the other possible source of a moment, but in a compound it is largely switched off for these first-row 3d ions, which leaves the spins to decide the response.
   </Step>
   <Step>
     **Counting into a number:** Take $\ce{Cr^3+}$, with configuration $[\ce{Ar}]\,3d^{3}$. Its three d electrons sit in three separate orbitals, so $n = 3$. The spin-only moment is $\mu = \sqrt{3 \times 5} = \sqrt{15} = 3.87\ \text{BM}$. A single unpaired electron gives $\sqrt{3} = 1.73\ \text{BM}$, so the moment grows as the count grows.
@@ -54,13 +54,16 @@ Try the count on a simple case. A $\ce{Ti^3+}$ ion has $3d^{1}$, with one unpair
 
 <Check
   n={1}
-  numeric
-  answer={3.87}
-  tolerance={0.005}
-  unit="BM"
-  explanation="Cr³⁺ is 3d³ with n = 3 unpaired electrons in high spin form, so μ = √(3 × 5) = √15 = 3.87 BM to two decimal places."
+  options={[
+    "Cr²⁺, by two unpaired electrons",
+    "Ti²⁺, by one unpaired electron",
+    "Cr²⁺, by one unpaired electron",
+    "Neither: both are 3d ions, so their moments are equal"
+  ]}
+  answer={0}
+  explanation="Cr²⁺ is 3d⁴ with four unpaired electrons, and Ti²⁺ is 3d² with two. Cr²⁺ therefore leads by two unpaired electrons, which is √24 = 4.90 BM against √8 = 2.83 BM. Count the unpaired electrons first, then apply the formula."
 >
-Using the spin-only formula, what is the magnetic moment of $\ce{Cr^3+}$ (configuration $[\ce{Ar}]\,3d^{3}$) in Bohr magnetons, to two decimal places?
+Which ion has the larger spin-only moment, $\ce{Cr^2+}$ or $\ce{Ti^2+}$, and by how many unpaired electrons does it lead?
 </Check>
 
 ## Reading the moment from the ion
