@@ -173,6 +173,7 @@ import { HalideNaming } from './c12-unit6/naming/HalideNaming'
 import { HaloareneRoutes } from './c12-unit6/arenprep/HaloareneRoutes'
 import { HalidePhysical } from './c12-unit6/physical/HalidePhysical'
 import { NucleophileSwap } from './c12-unit6/nusub/NucleophileSwap'
+import { ChiralitySubstitution } from './c12-unit6/stereo/ChiralitySubstitution'
 
 /**
  * Animations available to a Scrolly Animation, keyed by the `animation` prop.
@@ -356,6 +357,7 @@ export const animations = {
   'halide-physical': HalidePhysical,
   'nucleophile-swap': NucleophileSwap,
   'sn2-sn1': Sn2Sn1Scrolly,
+  'chirality-and-substitution': ChiralitySubstitution,
 } as const
 
 export type AnimationName = keyof typeof animations

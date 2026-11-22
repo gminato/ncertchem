@@ -1,0 +1,67 @@
+.sim {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.controls {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.choices {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.stage {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  background: var(--surface-raised);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: var(--space-3);
+}
+
+.scene {
+  display: block;
+  width: 100%;
+  max-width: 560px;
+  height: auto;
+  margin: 0 auto;
+}
+
+.note {
+  margin: 0;
+  font-size: 14px;
+  color: var(--fg);
+}
+
+.readout {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.verdict {
+  margin: 0;
+  font-size: 16px;
+  color: var(--fg);
+}
+
+.summary {
+  margin: 0;
+  font-size: 16px;
+  color: var(--fg-muted);
+}
+
+/* The subscript N keeps the 14 px floor: it is lowered, not shrunk. */
+.sub {
+  position: relative;
+  top: 0.3em;
+  font-size: inherit;
+}

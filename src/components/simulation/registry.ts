@@ -18,6 +18,7 @@ import { DipoleLab } from './sims/dipole-lab'
 import { MOBuilder } from './sims/mo-builder'
 import { HybridExplorer } from './sims/hybrid-explorer'
 import { PVWorkLab } from './sims/pv-work-lab'
+import { StereoOutcomes } from './sims/stereo-outcomes'
 import { BondEnergyLedger } from './sims/bond-energy-ledger'
 import { GibbsExplorer } from './sims/gibbs-explorer'
 import { FirstLawLab } from './sims/first-law-lab'
@@ -238,4 +239,5 @@ export const simulations: Record<string, ComponentType<SimulationProps>> = {
   'haloarene-maker': HaloareneMaker,
   'halide-properties-lab': HalidePropertiesLab,
   'nucleophile-picker': NucleophilePicker,
+  'stereo-outcomes': StereoOutcomes,
 }
