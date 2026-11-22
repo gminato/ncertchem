@@ -39,6 +39,7 @@ for (const scheme of ['light', 'dark'] as const) {
         await page.waitForTimeout(1500)
         const panel = scrolly.locator('svg').first()
         await expect(panel).toBeVisible()
+        if (k === STEP_COUNT - 1) await expect(panel).toHaveAttribute('aria-label', /schematic/)
         await panel.screenshot({ path: `test-results/screens/c12u3-5-step${k + 1}-${scheme}.png` })
       }
 

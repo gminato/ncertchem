@@ -79,4 +79,12 @@ describe('schematic real curve', () => {
     expect(realConc(t)).toBeGreaterThan(idealConc(t))
     expect(realConc(36)).toBeLessThan(realConc(30))
   })
+
+  it('eases away from the ideal line (no kink) and stays above it', () => {
+    expect(realConc(T_BEND + 1) - idealConc(T_BEND + 1)).toBeLessThan(0.001)
+    expect(realConc(T_BEND + 8)).toBeGreaterThan(idealConc(T_BEND + 8) + 0.01)
+    for (let t = T_BEND; t <= 36; t += 0.5) {
+      expect(realConc(t)).toBeGreaterThanOrEqual(idealConc(t) - 1e-12)
+    }
+  })
 })
