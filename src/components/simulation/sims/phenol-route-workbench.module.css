@@ -1,0 +1,160 @@
+.sim {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  font-family: var(--font-sans);
+  color: var(--fg);
+}
+
+.stage {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: var(--space-3);
+  overflow: hidden;
+}
+
+.scene {
+  display: block;
+  width: 100%;
+  max-width: 960px;
+  height: auto;
+  margin: 0 auto;
+}
+
+.ledger {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--space-3);
+}
+
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: var(--space-3) var(--space-4);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  min-width: 0;
+}
+
+.cardLabel {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--fg-muted);
+}
+
+.cardValue {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--fg);
+  line-height: 1.35;
+  overflow-wrap: anywhere;
+}
+
+.statusBanner {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: var(--space-3) var(--space-4);
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.statusBanner[data-status="complete"] {
+  border-color: var(--success);
+  background: var(--success-soft);
+}
+
+.statusBanner[data-status="trapped"],
+.statusBanner[data-status="blocked"],
+.statusBanner[data-status="decomposed"] {
+  border-color: var(--caution);
+  background: var(--caution-soft);
+}
+
+.statusBanner[data-status="intermediate"] {
+  border-color: var(--accent);
+  background: var(--accent-soft);
+}
+
+.statusBadge {
+  display: inline-flex;
+  align-items: center;
+  padding: var(--space-1) var(--space-3);
+  border-radius: 999px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--fg);
+  white-space: nowrap;
+}
+
+.explanation {
+  margin: 0;
+  font-size: 15px;
+  line-height: 1.45;
+  color: var(--fg);
+  flex: 1 1 260px;
+}
+
+.controlsRoot {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.controlRow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: var(--space-4) var(--space-6);
+}
+
+.controlBlock {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  min-width: 0;
+  max-width: 100%;
+}
+
+.controlTitle {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--fg-muted);
+}
+
+.sliderWrap {
+  min-width: min(260px, 100%);
+  flex: 1 1 240px;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.targetNote {
+  font-size: 14px;
+  color: var(--fg-muted);
+}
+
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+@media (max-width: 720px) {
+  .ledger {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}

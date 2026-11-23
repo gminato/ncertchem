@@ -1,0 +1,147 @@
+.sim {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  font-family: var(--font-sans);
+  color: var(--fg);
+  font-size: 16px;
+}
+
+.controlGroup {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  min-width: 0;
+  max-width: 100%;
+}
+
+.controlLabel {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--fg-muted);
+}
+
+.sliderWrap {
+  min-width: 210px;
+  flex: 1 1 220px;
+  max-width: 300px;
+}
+
+.sliderBandHint {
+  font-size: 14px;
+  color: var(--fg-muted);
+}
+
+.checkboxRow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-3) var(--space-4);
+}
+
+.checkboxLabel {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-height: 44px;
+  padding: 0 var(--space-2);
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border);
+  background: var(--surface-raised);
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--fg);
+  cursor: pointer;
+}
+
+.checkboxLabel input {
+  width: 18px;
+  height: 18px;
+  accent-color: var(--accent);
+  cursor: pointer;
+}
+
+.stage {
+  width: 100%;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: var(--space-3);
+  display: flex;
+  justify-content: center;
+}
+
+.scene {
+  display: block;
+  width: 100%;
+  max-width: 760px;
+  height: auto;
+}
+
+.readoutGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+  gap: var(--space-3);
+}
+
+.statCard {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  padding: var(--space-3);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  background: var(--surface);
+  min-width: 0;
+}
+
+.statCardAlert {
+  border-color: var(--caution);
+  background: var(--caution-soft);
+}
+
+.statCardSuccess {
+  border-color: var(--success);
+  background: var(--success-soft);
+}
+
+.statLabel {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--fg-muted);
+}
+
+.statValue {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--fg);
+  overflow-wrap: anywhere;
+}
+
+.statSub {
+  font-size: 14px;
+  color: var(--fg-muted);
+  overflow-wrap: anywhere;
+}
+
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+@media (max-width: 640px) {
+  .sliderWrap {
+    min-width: 0;
+    flex: 1 1 100%;
+    max-width: 100%;
+  }
+
+  .readoutGrid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}

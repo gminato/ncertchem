@@ -125,6 +125,18 @@ import { HalidePropertiesLab } from './sims/halide-properties-lab'
 import { ZaitsevChooser } from './sims/zaitsev-chooser'
 import { NitroActivation } from './sims/nitro-activation'
 import { PolyhalogenExplorer } from './sims/polyhalogen-explorer'
+import { OxyClassBuilder } from './sims/oxy-class-builder'
+import { OxygenGroupNamer } from './sims/oxygen-group-namer'
+import { FunctionalGroupGeometryLab } from './sims/functional-group-geometry-lab'
+import { AlcoholPrepLab } from './sims/alcohol-prep-lab'
+import { PhenolRouteWorkbench } from './sims/phenol-route-workbench'
+import { AlcoholPropertiesExplorer } from './sims/alcohol-properties-explorer'
+import { AcidityEsterificationLab } from './sims/acidity-esterification-lab'
+import { AlcoholCoCleavageLab } from './sims/alcohol-co-cleavage-lab'
+import { PhenolReactionBench } from './sims/phenol-reaction-bench'
+import { CommercialAlcoholsLab } from './sims/commercial-alcohols-lab'
+import { EtherSynthesisAndPropertiesLab } from './sims/ether-synthesis-and-properties-lab'
+import { EtherReactionWorkbench } from './sims/ether-reaction-workbench'
 
 export interface SimulationProps {
   /** True when the Learner has asked the OS for reduced motion. Skip tweens and loops when set. */
@@ -264,4 +276,16 @@ export const simulations: Record<string, ComponentType<SimulationProps>> = {
   'zaitsev-chooser': ZaitsevChooser,
   'nitro-activation': NitroActivation,
   'polyhalogen-explorer': PolyhalogenExplorer,
+  'oxy-class-builder': OxyClassBuilder,
+  'oxygen-group-namer': OxygenGroupNamer,
+  'functional-group-geometry-lab': FunctionalGroupGeometryLab,
+  'alcohol-prep-lab': AlcoholPrepLab,
+  'phenol-route-workbench': PhenolRouteWorkbench,
+  'alcohol-properties-explorer': AlcoholPropertiesExplorer,
+  'acidity-esterification-lab': AcidityEsterificationLab,
+  'alcohol-co-cleavage-lab': AlcoholCoCleavageLab,
+  'phenol-reaction-bench': PhenolReactionBench,
+  'commercial-alcohols-lab': CommercialAlcoholsLab,
+  'ether-synthesis-and-properties-lab': EtherSynthesisAndPropertiesLab,
+  'ether-reaction-workbench': EtherReactionWorkbench,
 }

@@ -1,0 +1,251 @@
+---
+class: 12
+unit: 7
+section: "7.4.1"
+order: 4
+title: "Preparation of Alcohols"
+slug: "12-7-4-1-preparation-of-alcohols"
+access: free
+summary: "Alkenes, carbonyl compounds and carboxylic acids all lead to alcohols, and your choice of reagent decides both carbon skeleton and regioselectivity."
+ncert: "Class 12, Part II, Unit 7, Section 7.4.1"
+---
+
+<Hook>
+Start from propene, a simple three-carbon alkene, and ask for a three-carbon alcohol. One sequence of reagents places the hydroxyl group squarely on the middle carbon to give propan-2-ol. Another places it on the end carbon to give propan-1-ol in high yield. Both reactions add the elements of water across the same double bond, so why do the atoms end up on opposite carbons?
+</Hook>
+
+## Hydration of alkenes: two paths to opposite carbons
+
+Alkenes are rich in $\pi$ electrons, so water alone does not react with a double bond rapidly enough to be useful. Chemists bridge that gap in two complementary ways: **acid-catalysed hydration**, which proceeds through a carbocation intermediate, and **hydroboration-oxidation**, which attaches boron first and replaces it with oxygen later. Because their mechanisms differ, their regioselectivities point in opposite directions.
+
+### Acid-catalysed hydration (Markovnikov route)
+
+In the presence of a dilute mineral acid such as $\ce{H2SO4}$ (supplying $\ce{H+}$), water adds reversibly across a carbon-carbon double bond:
+
+$$
+\ce{>C=C< + H2O <=>[H+] >CH-C(OH)<}
+$$
+
+When the alkene is unsymmetrical, addition obeys **Markovnikov's rule**: hydrogen attaches to the $sp^2$ carbon that already bears more hydrogen atoms, and the $-\ce{OH}$ group ends up on the more substituted carbon. Thus propene yields propan-2-ol:
+
+$$
+\ce{CH3CH=CH2 + H2O <=>[H+] CH3-CH(OH)-CH3}
+$$
+
+This regioselectivity arises directly from the three-step mechanism. First, the acid protonates water to generate the hydronium ion ($\ce{H2O + H+ -> H3O+}$). Next, the $\pi$ bond attacks $\ce{H3O+}$ (Step 1), forming the more stable carbocation: for propene, protonation at $\ce{C-1}$ yields a secondary carbocation rather than a much less stable primary one. In Step 2, a water molecule acts as a nucleophile and attacks the positively charged carbon to form a protonated alcohol (an oxonium ion). In Step 3, a second water molecule removes a proton from that oxonium ion, releasing the neutral alcohol and regenerating the $\ce{H3O+}$ catalyst.
+
+### Hydroboration-oxidation (anti-Markovnikov route)
+
+In 1959, H. C. Brown reported an indirect hydration sequence using diborane, $\ce{(BH3)2}$ (work for which Brown shared the 1979 Nobel Prize in Chemistry with G. Wittig). Diborane adds across three equivalents of an alkene to produce a **trialkylborane**:
+
+$$
+\ce{3 CH3-CH=CH2 + 1/2 (BH3)2 -> (CH3-CH2-CH2)3B}
+$$
+
+During each $\ce{B-H}$ addition across the double bond, the boron atom attaches to the $sp^2$ carbon carrying the greater number of hydrogen atoms, while hydrogen adds to the more substituted carbon. The resulting trialkylborane is then oxidised without isolation using hydrogen peroxide ($\ce{H2O2}$) in aqueous sodium hydroxide ($\ce{NaOH}$):
+
+$$
+\ce{(CH3-CH2-CH2)3B + 3 H2O2 ->[OH- , H2O] 3 CH3-CH2-CH2-OH + B(OH)3}
+$$
+
+Oxidation replaces every $\ce{C-B}$ bond with a $\ce{C-OH}$ bond and leaves boric acid, $\ce{B(OH)3}$, in solution. The overall transformation looks like adding water opposite to Markovnikov's rule (**anti-Markovnikov** hydration), giving primary alcohols such as propan-1-ol in excellent yields.
+
+<Scrolly animation="alkene-hydration-mechanisms">
+  <Step>
+    **Acid hydration, Step 1 (protonation):** Propene meets $\ce{H3O+}$ in acidic water. The $\pi$ bond reaches out to a proton on $\ce{H3O+}$, forming a $\ce{C-H}$ bond at the terminal $\ce{CH2}$ carbon and placing the positive charge on the internal carbon as a secondary carbocation.
+  </Step>
+  <Step>
+    **Acid hydration, Step 2 (nucleophilic attack):** A lone pair on oxygen in a neutral $\ce{H2O}$ molecule attacks the planar carbocation carbon. A new $\ce{C-O}$ bond forms, producing a positively charged oxonium intermediate.
+  </Step>
+  <Step>
+    **Acid hydration, Step 3 (deprotonation):** Another $\ce{H2O}$ molecule abstracts one proton from the oxonium oxygen. The $\ce{O-H}$ bonding pair stays on oxygen, yielding propan-2-ol (Markovnikov product) and regenerating $\ce{H3O+}$.
+  </Step>
+  <Step>
+    **Hydroboration (trialkylborane formation):** Switching to diborane, $\ce{(BH3)2}$, reverses the placement of oxygen. Each $\ce{B-H}$ unit adds across a propene double bond with boron attaching to the less substituted terminal $sp^2$ carbon, building up propylborane, dipropylborane and finally tripropylborane, $\ce{(CH3CH2CH2)3B}$.
+  </Step>
+  <Step>
+    **Oxidation (boron to hydroxyl):** Aqueous $\ce{H2O2}$ in $\ce{NaOH}$ cleaves all three $\ce{C-B}$ bonds and installs $-\ce{OH}$ at the terminal carbons. The products are three molecules of propan-1-ol (anti-Markovnikov outcome) and boric acid, $\ce{B(OH)3}$.
+  </Step>
+</Scrolly>
+
+## Reduction of carbonyl compounds and carboxylic acids
+
+When a molecule already carries a carbon-oxygen double bond ($\ce{C=O}$), reducing it adds hydrogen across the carbonyl group without changing the carbon skeleton. Different carbonyl functional groups, however, require reducing agents of different strengths.
+
+### Aldehydes and ketones
+
+Aldehydes ($\ce{RCHO}$) and ketones ($\ce{RCOR'}$) are converted to **primary** and **secondary** alcohols, respectively, by two main methods:
+
+1. **Catalytic hydrogenation:** Adding $\ce{H2}$ gas in the presence of a finely divided metal catalyst such as platinum ($\ce{Pt}$), palladium ($\ce{Pd}$), or nickel ($\ce{Ni}$):
+
+$$
+\ce{RCHO + H2 ->[Pd] RCH2OH}
+$$
+
+2. **Complex metal hydrides:** Treating the carbonyl compound with **sodium borohydride** ($\ce{NaBH4}$) or **lithium aluminium hydride** ($\ce{LiAlH4}$). For example, reducing a ketone gives a secondary alcohol:
+
+$$
+\ce{RCOR' ->[NaBH4] R-CH(OH)-R'}
+$$
+
+### Carboxylic acids and esters
+
+Carboxylic acids ($\ce{RCOOH}$) are much harder to reduce than aldehydes or ketones. Sodium borohydride is too mild for them, so laboratory preparations use **$\ce{LiAlH4}$**, a much stronger hydride donor, followed by careful hydrolysis with water:
+
+$$
+\ce{RCOOH ->[(i) LiAlH4][(ii) H2O] RCH2OH}
+$$
+
+Notice the numbered sequence on the arrow: `(ii) H2O` is added only after the reaction with `(i) LiAlH4` has finished, because $\ce{LiAlH4}$ reacts violently with water.
+
+Although $\ce{LiAlH4}$ gives primary alcohols in excellent yields, it is expensive and reserved for specialised laboratory syntheses. Commercially, carboxylic acids are first converted to **esters** by heating with an alcohol in acid ($\ce{H+}$), and the ester is then reduced with $\ce{H2}$ over a hydrogenation catalyst:
+
+$$
+\ce{RCOOH ->[R'OH][H+] RCOOR' ->[H2][Catalyst] RCH2OH + R'OH}
+$$
+
+The alcohol $\ce{R'OH}$ used to form the ester is recovered at the end, making the industrial sequence economical.
+
+## Building carbon-carbon bonds with Grignard reagents
+
+Hydrogenation and hydride reduction keep the carbon count fixed. To lengthen or branch the carbon chain at the same time as forming an alcohol, chemists turn to **Grignard reagents** ($\ce{RMgX}$, prepared from haloalkanes and magnesium in dry ether). Because magnesium is far more electropositive than carbon, the $\ce{C-Mg}$ bond is polarised as $\ce{^{\delta-}R-Mg^{\delta+}-X}$, turning the alkyl group into a carbon nucleophile.
+
+The reaction proceeds in two clean steps:
+
+1. **Nucleophilic addition:** The $\ce{^{\delta-}R}$ group attacks the electrophilic carbonyl carbon while the carbonyl $\pi$ electrons shift onto oxygen, forming a magnesium alkoxide **adduct**:
+
+$$
+\ce{>C=O + R-MgX -> [>C(R)-O- Mg+ -X]}
+$$
+
+2. **Hydrolysis:** Adding water breaks the oxygen-magnesium association, yielding the alcohol and $\ce{Mg(OH)X}$:
+
+$$
+\ce{[>C(R)-O- Mg+ -X] + H2O -> >C(R)-OH + Mg(OH)X}
+$$
+
+Choosing the carbonyl partner gives direct control over the degree of the resulting alcohol:
+
+- **Methanal ($\ce{HCHO}$)** has two hydrogens on the carbonyl carbon, so adding one $\ce{R}$ group produces a **primary ($1^\circ$) alcohol** ($\ce{RCH2OH}$).
+- **Any other aldehyde ($\ce{RCHO}$)** already carries one alkyl group, so adding $\ce{R'MgX}$ yields a **secondary ($2^\circ$) alcohol** ($\ce{RCH(OH)R'}$).
+- **A ketone ($\ce{RCOR}$)** already carries two carbon groups, so adding $\ce{R'MgX}$ produces a **tertiary ($3^\circ$) alcohol** ($\ce{R2C(OH)R'}$).
+
+<Scrolly animation="carbonyl-reduction-and-grignard">
+  <Step>
+    **Aldehydes and ketones with hydrides or $\ce{H2}$:** Adding $\ce{H2}$ over $\ce{Pt}$, $\ce{Pd}$ or $\ce{Ni}$, or using $\ce{NaBH4}$ or $\ce{LiAlH4}$, adds $\ce{H}$ across the $\ce{C=O}$ bond. An aldehyde yields a primary alcohol ($\ce{RCH2OH}$), and a ketone yields a secondary alcohol ($\ce{RCH(OH)R'}$) with the same carbon skeleton.
+  </Step>
+  <Step>
+    **Carboxylic acids (lab vs commercial):** In the lab, $\ce{RCOOH}$ requires strong $\ce{LiAlH4}$ in step (i) followed by $\ce{H2O}$ in step (ii) to reach $\ce{RCH2OH}$. Commercially, acid-catalysed esterification ($\ce{R'OH / H+}$) converts $\ce{RCOOH}$ into $\ce{RCOOR'}$, which then undergoes catalytic hydrogenation ($\ce{H2}$ / catalyst) to give $\ce{RCH2OH}$ and regenerate $\ce{R'OH}$.
+  </Step>
+  <Step>
+    **Grignard addition, Step (i) (adduct formation):** A curved arrow runs from the polarised $\ce{^{\delta-}R-Mg^{\delta+}X}$ bond to the carbonyl carbon, pushing $\ce{C=O}$ $\pi$ electrons onto oxygen to build a new $\ce{C-C}$ bond inside the magnesium alkoxide adduct.
+  </Step>
+  <Step>
+    **Grignard hydrolysis, Step (ii) ($1^\circ$, $2^\circ$ or $3^\circ$ alcohol):** Adding $\ce{H2O}$ protonates the alkoxide and releases $\ce{Mg(OH)X}$. Methanal gives a $1^\circ$ alcohol, higher aldehydes give $2^\circ$ alcohols, and ketones give $3^\circ$ alcohols.
+  </Step>
+</Scrolly>
+
+## Design an alcohol synthesis
+
+Use the workbench below to test how starting materials and reagents map onto alcohol structure, regioselectivity, and degree ($1^\circ$, $2^\circ$, or $3^\circ$). Pick a substrate family, choose the reagent conditions, and inspect the intermediate and final products.
+
+{/*
+SIMULATION SPEC: alcohol-prep-lab ("Alcohol Synthesis Workbench")
+- Controls:
+  1. Substrate selector tabs/buttons grouped by family:
+     - Alkenes: "Propene (CH₃CH=CH₂)", "2-Methylpropene ((CH₃)₂C=CH₂)", "But-1-ene (CH₃CH₂CH=CH₂)"
+     - Carbonyls & Acids: "Propanal (CH₃CH₂CHO)", "Butanone (CH₃COCH₂CH₃)", "Butanoic acid (CH₃CH₂CH₂COOH)"
+     - Grignard pairings: "Methanal (HCHO)", "Ethanal (CH₃CHO)", "Propanone (CH₃COCH₃)" + Grignard alkyl toggle ("CH₃MgBr" / "C₂H₅MgBr")
+  2. Reagent selector matching valid/invalid choices:
+     - Alkene reagents: "H₂O / H⁺ (acid hydration)", "(i) (BH₃)₂, (ii) H₂O₂ / OH⁻ (hydroboration-oxidation)"
+     - Carbonyl/Acid reagents: "H₂ / Pd", "NaBH₄", "(i) LiAlH₄, (ii) H₂O", "(i) R'OH / H⁺, (ii) H₂ / Catalyst"
+     - Grignard reagent steps: "Step (i): Adduct formation", "Step (ii): H₂O hydrolysis"
+- Chemistry Rules:
+  - Alkenes + H₂O/H⁺ -> Markovnikov alcohol via most stable carbocation (propene -> propan-2-ol; 2-methylpropene -> 2-methylpropan-2-ol; but-1-ene -> butan-2-ol).
+  - Alkenes + hydroboration-oxidation -> anti-Markovnikov primary alcohol + B(OH)₃ (propene -> propan-1-ol; 2-methylpropene -> 2-methylpropan-1-ol; but-1-ene -> butan-1-ol).
+  - Propanal + H₂/Pd or NaBH₄ or LiAlH₄ -> propan-1-ol (1°); Butanone + H₂/Pd or NaBH₄ or LiAlH₄ -> butan-2-ol (2°).
+  - Butanoic acid + NaBH₄ -> "No reaction (NaBH₄ is too mild for carboxylic acids)"; + LiAlH₄/H₂O -> butan-1-ol (1°, lab route); + R'OH/H⁺ then H₂/Catalyst -> butan-1-ol + R'OH (1°, commercial route).
+  - Grignard: HCHO -> 1° alcohol; CH₃CHO -> 2° alcohol; CH₃COCH₃ -> 3° alcohol; with intermediate magnesium alkoxide adduct rendered when Step (i) is selected and final alcohol + Mg(OH)X when Step (ii) is selected.
+- Visual Layout:
+  - Left/top: SVG reaction scheme showing skeletal/structural formula of substrate -> key intermediate (carbocation / trialkylborane / ester / alkoxide adduct) -> major alcohol product + by-product, with highlighted newly formed C-O, C-H, or C-C bond.
+  - Right/bottom: Live readout badges (Product IUPAC name, Alcohol class 1°/2°/3° or No Reaction, Regioselectivity / Mechanism note, Carbon count change ΔC, By-products).
+- Readouts:
+  - Product name & formula, Alcohol degree (1°/2°/3°), Key intermediate, By-products, Carbon count change (0 for hydration/reduction, +1 or +2 for Grignard).
+*/}
+<Simulation name="alcohol-prep-lab" title="Alcohol Synthesis Workbench" />
+
+## Check your understanding
+
+<Check
+  n={1}
+  options={[
+    "Pentan-1-ol",
+    "Pentan-2-ol",
+    "2-Methylbutan-2-ol",
+    "Pentan-3-ol"
+  ]}
+  answer={0}
+  explanation="Hydroboration-oxidation attaches boron to the sp² carbon bearing more hydrogen atoms (C-1 of pent-1-ene). Oxidation with H₂O₂ in aqueous NaOH replaces boron with -OH, giving anti-Markovnikov pentan-1-ol (along with B(OH)₃)."
+>
+Pent-1-ene is treated first with diborane, (BH₃)₂, and then oxidised with H₂O₂ in aqueous NaOH. Which alcohol is the major product?
+</Check>
+
+<Check
+  n={2}
+  numeric
+  answer={3}
+  tolerance={0}
+  unit="mol"
+  explanation="One BH₃ unit has three B-H bonds, so 3 mol of alkene add across it to form 1 mol of trialkylborane (R₃B). Subsequent oxidation with 3 mol of H₂O₂ in aqueous NaOH yields 3 mol of alcohol and 1 mol of B(OH)₃."
+>
+How many moles of an alkene add to 1 mol of BH₃ (equivalent to 0.5 mol of diborane, (BH₃)₂) to form 1 mol of a trialkylborane, R₃B?
+</Check>
+
+<Check
+  n={3}
+  options={[
+    "Convert to an ester with R'OH/H⁺, then reduce with H₂ over a catalyst",
+    "Treat with NaBH₄ in water, then warm with H₃PO₄",
+    "React with (BH₃)₂, then oxidise with H₂O₂/OH⁻",
+    "Treat with CH₃MgBr, then hydrolyse with water"
+  ]}
+  answer={0}
+  explanation="LiAlH₄ reduces carboxylic acids to primary alcohols in excellent yield, but it is too expensive for large-scale manufacture. Industrially, the acid is esterified with an alcohol (R'OH/H⁺) and the ester is reduced by catalytic hydrogenation (H₂/catalyst), regenerating R'OH. Note that NaBH₄ does not reduce carboxylic acids."
+>
+A chemical plant needs to convert hexanoic acid into hexan-1-ol commercially without using expensive LiAlH₄. Which two-step route achieves this?
+</Check>
+
+<Check
+  n={4}
+  options={[
+    "Methanal (HCHO) + methylmagnesium bromide",
+    "Ethanal (CH₃CHO) + methylmagnesium bromide",
+    "Propanal (CH₃CH₂CHO) + methylmagnesium bromide",
+    "Butanone (CH₃COCH₂CH₃) + methylmagnesium bromide"
+  ]}
+  answer={3}
+  explanation="2-Methylbutan-2-ol is a tertiary (3°) alcohol. Only a ketone reacts with a Grignard reagent to give a tertiary alcohol: butanone + CH₃MgBr forms the tertiary alkoxide adduct, which hydrolyses with H₂O to 2-methylbutan-2-ol. Methanal gives a 1° alcohol, and ethanal or propanal gives a 2° alcohol."
+>
+Which pair of reactants yields the tertiary alcohol 2-methylbutan-2-ol, (CH₃)₂C(OH)CH₂CH₃, after hydrolysis with water?
+</Check>
+
+<Check
+  n={5}
+  numeric
+  answer={5}
+  tolerance={0}
+  unit="carbons"
+  explanation="Propanal contributes 3 carbons and ethylmagnesium bromide (CH₃CH₂MgBr) transfers a 2-carbon ethyl group to the carbonyl carbon. Hydrolysis yields pentan-3-ol, CH₃CH₂CH(OH)CH₂CH₃, a secondary alcohol with 3 + 2 = 5 carbon atoms."
+>
+Propanal (CH₃CH₂CHO) reacts with ethylmagnesium bromide (CH₃CH₂MgBr), followed by hydrolysis with H₂O. How many carbon atoms are present in the resulting secondary alcohol molecule?
+</Check>
+
+## Key ideas
+
+<KeyIdeas>
+- Acid-catalysed hydration of an unsymmetrical alkene ($\ce{H2O / H+}$) proceeds through a carbocation intermediate in three steps (protonation, nucleophilic attack of $\ce{H2O}$, deprotonation) and follows Markovnikov's rule.
+- Hydroboration-oxidation ($\ce{(BH3)2}$ followed by $\ce{H2O2 / OH-}$) adds boron to the less substituted $sp^2$ carbon and oxidises the trialkylborane to an anti-Markovnikov alcohol plus $\ce{B(OH)3}$.
+- Aldehydes reduce to $1^\circ$ alcohols and ketones reduce to $2^\circ$ alcohols with $\ce{H2}$ ($\ce{Pt}$, $\ce{Pd}$, or $\ce{Ni}$), $\ce{NaBH4}$, or $\ce{LiAlH4}$.
+- Carboxylic acids require $\ce{LiAlH4}$ followed by $\ce{H2O}$ in the laboratory, whereas commercially they are converted to esters ($\ce{R'OH / H+}$) and hydrogenated ($\ce{H2}$ / catalyst) to give $1^\circ$ alcohols.
+- Grignard reagents ($\ce{RMgX}$) add nucleophilically to carbonyl compounds to form an alkoxide adduct that hydrolyses with $\ce{H2O}$: methanal yields $1^\circ$ alcohols, higher aldehydes yield $2^\circ$ alcohols, and ketones yield $3^\circ$ alcohols.
+</KeyIdeas>
