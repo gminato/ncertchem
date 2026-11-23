@@ -131,7 +131,7 @@ function Step2() {
   return (
     <g>
       <g transform={`translate(${ax} ${ay})`}>
-        <CurvedArrow from={lone} to={mid(P[1], P[2])} gap={6} bend={0.5} />
+        <CurvedArrow from={lone} to={mid(P[1], P[2])} gap={6} bend={-0.7} />
         <CurvedArrow from={mid(P[1], P[3])} to={lonePairPoint(P[3], -Math.PI / 4, 18)} gap={4} bend={0.5} />
       </g>
       <Mol smiles={RESONANCE_NEUTRAL} cx={ax} cy={ay} scale={S2} />
