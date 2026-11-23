@@ -63,7 +63,7 @@ function ProductBlock({ p, x, y }: { p: Product; x: number; y: number }) {
           {p.condensed}
         </text>
       ) : nitro ? (
-        <BenzeneRing variant="kekule" substituents={NITRO_RING} x={x} y={y} />
+        <BenzeneRing variant="kekule" substituents={NITRO_RING} x={x + 40} y={y} />
       ) : (
         <SkeletalFormula graph={parseSmiles(p.smiles)} scale={40} x={x} y={y} />
       )}
