@@ -105,7 +105,7 @@ export async function auditSvg(svg: Locator, opts: SvgAuditOptions): Promise<Svg
 /** Asserts an SVG passes every audit; `where` names the Step or state in the failure message. */
 export async function expectCleanSvg(svg: Locator, opts: SvgAuditOptions, where: string): Promise<void> {
   const audit = await auditSvg(svg, opts)
-  expect(audit, `SVG audit failed at ${where}`).toEqual({ small: [], overlaps: [], outside: [] })
+  expect.soft(audit, `SVG audit failed at ${where}`).toEqual({ small: [], overlaps: [], outside: [] })
 }
 
 /** Asserts the page does not scroll sideways at its current viewport width. */
