@@ -92,7 +92,7 @@ function StepHaloarene({ reveal }: { reveal: number }) {
         y={y}
         r={42}
         opacity={0.3 + 0.7 * reveal}
-        topSubstituent={{ label: 'O⁻ Na⁺', color: 'var(--atom-o)' }}
+        topSubstituent={{ label: 'O⁻ Na⁺', color: 'var(--atom-o)', anchor: 'first-atom' }}
         caption="Sodium phenoxide"
         subcaption="trapped salt"
       />
@@ -115,7 +115,7 @@ function StepHaloarene({ reveal }: { reveal: number }) {
         opacity={reveal}
         highlightRing
         ringFill="var(--success-soft)"
-        topSubstituent={{ label: 'OH', color: 'var(--atom-o)' }}
+        topSubstituent={{ label: 'OH', color: 'var(--atom-o)', anchor: 'first-atom' }}
         caption="Phenol"
         subcaption="C₆H₅OH"
         captionColor="var(--success)"
@@ -160,7 +160,7 @@ function StepSulphonic({ reveal }: { reveal: number }) {
         y={topY}
         r={34}
         opacity={0.35 + 0.65 * reveal}
-        topSubstituent={{ label: 'SO₃H', color: 'var(--atom-s)' }}
+        topSubstituent={{ label: 'SO₃H', color: 'var(--atom-s)', anchor: 'first-atom' }}
         caption="Benzenesulphonic acid"
       />
 
@@ -190,7 +190,7 @@ function StepSulphonic({ reveal }: { reveal: number }) {
         y={botY}
         r={34}
         opacity={0.35 + 0.65 * reveal}
-        topSubstituent={{ label: 'O⁻ Na⁺', color: 'var(--atom-o)' }}
+        topSubstituent={{ label: 'O⁻ Na⁺', color: 'var(--atom-o)', anchor: 'first-atom' }}
         caption="Sodium phenoxide"
       />
 
@@ -212,7 +212,7 @@ function StepSulphonic({ reveal }: { reveal: number }) {
         opacity={reveal}
         highlightRing
         ringFill="var(--success-soft)"
-        topSubstituent={{ label: 'OH', color: 'var(--atom-o)' }}
+        topSubstituent={{ label: 'OH', color: 'var(--atom-o)', anchor: 'first-atom' }}
         caption="Phenol"
         captionColor="var(--success)"
       />
@@ -245,7 +245,7 @@ function StepDiazonium({ reveal, time, reducedMotion }: { reveal: number; time: 
         x={100}
         y={y}
         r={42}
-        topSubstituent={{ label: 'NH₂', color: 'var(--atom-n)' }}
+        topSubstituent={{ label: 'NH₂', color: 'var(--atom-n)', anchor: 'first-atom' }}
         caption="Aniline"
         subcaption="C₆H₅NH₂"
       />
@@ -266,7 +266,7 @@ function StepDiazonium({ reveal, time, reducedMotion }: { reveal: number; time: 
         y={y}
         r={42}
         opacity={0.35 + 0.65 * reveal}
-        topSubstituent={{ label: 'N₂⁺ Cl⁻', color: 'var(--atom-n)' }}
+        topSubstituent={{ label: 'N₂⁺ Cl⁻', color: 'var(--atom-n)', anchor: 'first-atom' }}
         caption="Benzene diazonium"
         subcaption="chloride"
       />
@@ -292,6 +292,8 @@ function StepDiazonium({ reveal, time, reducedMotion }: { reveal: number; time: 
           stroke="var(--success)"
           textColor="var(--success)"
         />
+      </g>
+      <g opacity={reveal}>
         <TagPill
           x={538}
           y={110}
@@ -310,7 +312,7 @@ function StepDiazonium({ reveal, time, reducedMotion }: { reveal: number; time: 
         opacity={reveal}
         highlightRing
         ringFill="var(--success-soft)"
-        topSubstituent={{ label: 'OH', color: 'var(--atom-o)' }}
+        topSubstituent={{ label: 'OH', color: 'var(--atom-o)', anchor: 'first-atom' }}
         caption="Phenol"
         subcaption="C₆H₅OH"
         captionColor="var(--success)"
@@ -355,7 +357,7 @@ function StepWorkupComparison({ reveal }: { reveal: number }) {
         x={124}
         y={192}
         r={30}
-        topSubstituent={{ label: 'O⁻ Na⁺', color: 'var(--atom-o)', bondHighlight: true, haloColor: 'var(--caution-soft)' }}
+        topSubstituent={{ label: 'O⁻ Na⁺', color: 'var(--atom-o)', bondHighlight: true, haloColor: 'var(--caution-soft)', anchor: 'first-atom' }}
         caption="Trapped phenoxide"
       />
       <StraightArrow
@@ -375,7 +377,7 @@ function StepWorkupComparison({ reveal }: { reveal: number }) {
         opacity={reveal}
         highlightRing
         ringFill="var(--success-soft)"
-        topSubstituent={{ label: 'OH', color: 'var(--atom-o)' }}
+        topSubstituent={{ label: 'OH', color: 'var(--atom-o)', anchor: 'first-atom' }}
         caption="Free phenol"
         captionColor="var(--success)"
       />
@@ -407,7 +409,7 @@ function StepWorkupComparison({ reveal }: { reveal: number }) {
         x={124}
         y={394}
         r={30}
-        topSubstituent={{ label: 'N₂⁺ Cl⁻', color: 'var(--atom-n)' }}
+        topSubstituent={{ label: 'N₂⁺ Cl⁻', color: 'var(--atom-n)', anchor: 'first-atom' }}
         caption="Diazonium salt"
       />
       <StraightArrow
@@ -427,7 +429,7 @@ function StepWorkupComparison({ reveal }: { reveal: number }) {
         opacity={reveal}
         highlightRing
         ringFill="var(--success-soft)"
-        topSubstituent={{ label: 'OH', color: 'var(--atom-o)' }}
+        topSubstituent={{ label: 'OH', color: 'var(--atom-o)', anchor: 'first-atom' }}
         caption="Direct phenol"
         captionColor="var(--success)"
       />

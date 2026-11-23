@@ -8,6 +8,9 @@ export interface TopSubstituentSpec {
   color?: string
   bondHighlight?: boolean
   haloColor?: string
+  /** Align the substituent so the first bonded atom sits directly above the ring bond (x = 0). */
+  anchor?: 'middle' | 'first-atom'
+  anchorDx?: number
 }
 
 export interface AromaticRingProps {
@@ -147,9 +150,9 @@ export function AromaticRing({
             strokeLinecap="round"
           />
           <text
-            x={0}
+            x={topSubstituent.anchor === 'first-atom' ? (topSubstituent.anchorDx ?? -6.5) : 0}
             y={labelY}
-            textAnchor="middle"
+            textAnchor={topSubstituent.anchor === 'first-atom' ? 'start' : 'middle'}
             dominantBaseline="central"
             fontSize={18}
             fontWeight={700}

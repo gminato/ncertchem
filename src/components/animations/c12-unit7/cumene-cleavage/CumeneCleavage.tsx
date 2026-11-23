@@ -326,7 +326,7 @@ function StepDualProducts({ reveal }: { reveal: number }) {
           variant="kekule"
           highlightRing
           ringFill="var(--success-soft)"
-          topSubstituent={{ label: 'OH', color: 'var(--atom-o)' }}
+          topSubstituent={{ label: 'OH', color: 'var(--atom-o)', anchor: 'first-atom' }}
           caption="Phenol"
           subcaption="C₆H₅OH"
           captionColor="var(--success)"

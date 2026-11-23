@@ -81,6 +81,77 @@ async function svgOutOfBounds(container: Locator): Promise<string[]> {
   })
 }
 
+/**
+ * Verifies inside `svg[role="img"]` that:
+ * 1. Every `<text>` vertically inside a `<rect>` within the same `<g>` fits horizontally inside that `<rect>`.
+ * 2. No `<text>` overlaps any `[data-stage-box]` outside its own `<g>`.
+ * 3. No two `<text>` elements overlap each other (with 2px tolerance for font-box ascent/descent).
+ */
+async function svgOverlapsAndContainment(container: Locator): Promise<string[]> {
+  return container.locator('svg[role="img"]').evaluateAll((svgs) => {
+    const issues: string[] = []
+    svgs.forEach((svg) => {
+      const frame = svg.getBoundingClientRect()
+      if (frame.width === 0) return
+
+      // 1. Check text containment inside enclosing <g> <rect> (pills & dashed stage boxes)
+      svg.querySelectorAll('g').forEach((g) => {
+        const rect = Array.from(g.children).find((c) => c.tagName.toLowerCase() === 'rect')
+        if (!rect) return
+        const rr = rect.getBoundingClientRect()
+        if (rr.width === 0) return
+        Array.from(g.children)
+          .filter((c) => c.tagName.toLowerCase() === 'text')
+          .forEach((t) => {
+            const tr = t.getBoundingClientRect()
+            if (tr.width === 0) return
+            const tMidY = (tr.top + tr.bottom) / 2
+            if (tMidY >= rr.top && tMidY <= rr.bottom) {
+              if (tr.left < rr.left + 1 || tr.right > rr.right - 1) {
+                issues.push(
+                  `overflow rect: "${t.textContent?.trim()}" [${tr.left.toFixed(1)}..${tr.right.toFixed(1)}] outside [${rr.left.toFixed(1)}..${rr.right.toFixed(1)}]`
+                )
+              }
+            }
+          })
+      })
+
+      // 2. Check text elements against external [data-stage-box] rects
+      const stageBoxes = Array.from(svg.querySelectorAll('rect[data-stage-box]'))
+      const texts = Array.from(svg.querySelectorAll('text')).filter((t) => (t.textContent ?? '').trim().length > 0)
+
+      stageBoxes.forEach((box) => {
+        const br = box.getBoundingClientRect()
+        const parentG = box.parentElement
+        texts.forEach((t) => {
+          if (parentG && parentG.contains(t)) return
+          const tr = t.getBoundingClientRect()
+          if (tr.left < br.right && tr.right > br.left && tr.top < br.bottom && tr.bottom > br.top) {
+            issues.push(`text "${t.textContent?.trim()}" collides with stage box`)
+          }
+        })
+      })
+
+      // 3. Pairwise text collision check
+      for (let i = 0; i < texts.length; i++) {
+        const a = texts[i].getBoundingClientRect()
+        for (let j = i + 1; j < texts.length; j++) {
+          const b = texts[j].getBoundingClientRect()
+          if (
+            a.left + 2 < b.right - 2 &&
+            a.right - 2 > b.left + 2 &&
+            a.top + 2 < b.bottom - 2 &&
+            a.bottom - 2 > b.top + 2
+          ) {
+            issues.push(`text overlap: "${texts[i].textContent?.trim()}" vs "${texts[j].textContent?.trim()}"`)
+          }
+        }
+      }
+    })
+    return issues
+  })
+}
+
 async function checkScrollySteps(
   page: Page,
   animationName: string,
@@ -103,6 +174,7 @@ async function checkScrollySteps(
     await expect(svg).toHaveAttribute('data-step', String(k))
     expect(await smallTextLeaves(visual)).toEqual([])
     expect(await svgOutOfBounds(visual)).toEqual([])
+    expect(await svgOverlapsAndContainment(visual)).toEqual([])
     await visual.screenshot({ path: `test-results/screens/c12u7-s5-${tag}-step${k + 1}-${scheme}.png` })
   }
 }
@@ -131,6 +203,7 @@ for (const scheme of ['light', 'dark'] as const) {
       await expect(sim.locator('[data-testid="readout-byproducts"]')).toContainText('NaCl')
       expect(await smallTextLeaves(sim)).toEqual([])
       expect(await svgOutOfBounds(sim)).toEqual([])
+      expect(await svgOverlapsAndContainment(sim)).toEqual([])
       await sim.screenshot({ path: `test-results/screens/c12u7-s5-sim-chloro-${scheme}.png` })
 
       // Trapped phenoxide when HCl workup is switched OFF
@@ -139,6 +212,7 @@ for (const scheme of ['light', 'dark'] as const) {
       await expect(sim.locator('[data-testid="readout-products"]')).toContainText('Trapped as C₆H₅O⁻ Na⁺')
       expect(await smallTextLeaves(sim)).toEqual([])
       expect(await svgOutOfBounds(sim)).toEqual([])
+      expect(await svgOverlapsAndContainment(sim)).toEqual([])
 
       // Under-heated chlorobenzene -> No reaction
       const chloroTemp = sim.getByRole('slider', { name: /Fusion temperature/i })
@@ -146,6 +220,8 @@ for (const scheme of ['light', 'dark'] as const) {
       await expect(sim.locator('[aria-live="polite"]')).toContainText('No reaction: aryl C–Cl resists mild NaOH')
       expect(await smallTextLeaves(sim)).toEqual([])
       expect(await svgOutOfBounds(sim)).toEqual([])
+      expect(await svgOverlapsAndContainment(sim)).toEqual([])
+      await sim.screenshot({ path: `test-results/screens/c12u7-s5-sim-chloro-blocked-${scheme}.png` })
 
       // 2. Benzene route
       await sim.getByRole('radio', { name: /Benzene \(C₆H₆\)/i }).click()
@@ -153,13 +229,32 @@ for (const scheme of ['light', 'dark'] as const) {
       await expect(sim.locator('[data-testid="readout-products"]')).toContainText('Phenol (C₆H₅OH)')
       expect(await smallTextLeaves(sim)).toEqual([])
       expect(await svgOutOfBounds(sim)).toEqual([])
+      expect(await svgOverlapsAndContainment(sim)).toEqual([])
       await sim.screenshot({ path: `test-results/screens/c12u7-s5-sim-benzene-${scheme}.png` })
+
+      // Benzene Step 3 acidification OFF -> intermediate stays C6H5SO3H, trapped as phenoxide
+      const benzeneAcidSwitch = sim.getByRole('switch', { name: /Step 3 acidification/i })
+      await benzeneAcidSwitch.click()
+      await expect(sim.locator('[data-testid="readout-products"]')).toContainText('Trapped as C₆H₅O⁻ Na⁺')
+      expect(await smallTextLeaves(sim)).toEqual([])
+      expect(await svgOutOfBounds(sim)).toEqual([])
+      expect(await svgOverlapsAndContainment(sim)).toEqual([])
+      await sim.screenshot({ path: `test-results/screens/c12u7-s5-sim-benzene-trapped-${scheme}.png` })
 
       // Aqueous NaOH stops at benzenesulphonic acid
       await sim.getByRole('radio', { name: 'Aqueous NaOH' }).click()
       await expect(sim.locator('[data-testid="readout-products"]')).toContainText('select Molten NaOH + heat')
       expect(await smallTextLeaves(sim)).toEqual([])
       expect(await svgOutOfBounds(sim)).toEqual([])
+      expect(await svgOverlapsAndContainment(sim)).toEqual([])
+      await sim.screenshot({ path: `test-results/screens/c12u7-s5-sim-benzene-aq-${scheme}.png` })
+
+      // No oleum -> blocked
+      await sim.getByRole('radio', { name: 'None' }).click()
+      await expect(sim.locator('[data-testid="readout-products"]')).toContainText('C₆H₆ unchanged')
+      expect(await smallTextLeaves(sim)).toEqual([])
+      expect(await svgOutOfBounds(sim)).toEqual([])
+      expect(await svgOverlapsAndContainment(sim)).toEqual([])
 
       // 3. Aniline route
       await sim.getByRole('radio', { name: /Aniline/i }).click()
@@ -167,6 +262,7 @@ for (const scheme of ['light', 'dark'] as const) {
       await expect(sim.locator('[data-testid="readout-byproducts"]')).toContainText('N₂ + HCl')
       expect(await smallTextLeaves(sim)).toEqual([])
       expect(await svgOutOfBounds(sim)).toEqual([])
+      expect(await svgOverlapsAndContainment(sim)).toEqual([])
       await sim.screenshot({ path: `test-results/screens/c12u7-s5-sim-aniline-${scheme}.png` })
 
       // Above 278 K flags premature decomposition
@@ -175,6 +271,15 @@ for (const scheme of ['light', 'dark'] as const) {
       await expect(sim.locator('[aria-live="polite"]')).toContainText('premature thermal decomposition')
       expect(await smallTextLeaves(sim)).toEqual([])
       expect(await svgOutOfBounds(sim)).toEqual([])
+      expect(await svgOverlapsAndContainment(sim)).toEqual([])
+      await sim.screenshot({ path: `test-results/screens/c12u7-s5-sim-aniline-decomposed-${scheme}.png` })
+
+      // Below 273 K -> too cold
+      await diazoTemp.fill('270')
+      await expect(sim.locator('[data-testid="readout-intermediate"]')).toContainText('below 273 K')
+      expect(await smallTextLeaves(sim)).toEqual([])
+      expect(await svgOutOfBounds(sim)).toEqual([])
+      expect(await svgOverlapsAndContainment(sim)).toEqual([])
 
       // 4. Cumene route
       await sim.getByRole('radio', { name: /Cumene/i }).click()
@@ -182,7 +287,16 @@ for (const scheme of ['light', 'dark'] as const) {
       await expect(sim.locator('[data-testid="readout-byproducts"]')).toContainText('Acetone (CH₃COCH₃)')
       expect(await smallTextLeaves(sim)).toEqual([])
       expect(await svgOutOfBounds(sim)).toEqual([])
+      expect(await svgOverlapsAndContainment(sim)).toEqual([])
       await sim.screenshot({ path: `test-results/screens/c12u7-s5-sim-cumene-${scheme}.png` })
+
+      // O2 OFF -> blocked
+      await sim.getByRole('switch', { name: /O₂ \(air\) oxidation/i }).click()
+      await expect(sim.locator('[data-testid="readout-products"]')).toContainText('cumene unchanged')
+      expect(await smallTextLeaves(sim)).toEqual([])
+      expect(await svgOutOfBounds(sim)).toEqual([])
+      expect(await svgOverlapsAndContainment(sim)).toEqual([])
+      await sim.screenshot({ path: `test-results/screens/c12u7-s5-sim-cumene-blocked-${scheme}.png` })
 
       await expect(page.locator('.katex-display').first()).toBeAttached()
       await expect(page.locator('.katex-error')).toHaveCount(0)

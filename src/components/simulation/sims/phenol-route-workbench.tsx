@@ -68,22 +68,25 @@ function StageSpecies({ node, x, y }: { node: PipelineStageVisual; x: number; y:
   const r = 36
   if (node.kind === 'blocked' || node.kind === 'degraded') {
     const stroke = node.kind === 'degraded' ? 'var(--proton)' : 'var(--caution)'
+    const lines = node.formula.split('\n')
+    const twoLines = lines.length > 1
     return (
       <g transform={`translate(${x}, ${y})`}>
         <rect
-          x={-68}
-          y={-42}
-          width={136}
-          height={84}
+          x={-74}
+          y={-44}
+          width={148}
+          height={88}
           rx={12}
           fill="var(--caution-soft)"
           stroke={stroke}
           strokeWidth={1.8}
           strokeDasharray="6 4"
+          data-stage-box="true"
         />
         <text
           x={0}
-          y={-8}
+          y={twoLines ? -22 : -12}
           textAnchor="middle"
           dominantBaseline="central"
           fontSize={16}
@@ -93,20 +96,23 @@ function StageSpecies({ node, x, y }: { node: PipelineStageVisual; x: number; y:
         >
           {node.kind === 'degraded' ? 'Decomposed' : 'Blocked'}
         </text>
+        {lines.map((line, idx) => (
+          <text
+            key={idx}
+            x={0}
+            y={twoLines ? 3 + idx * 21 : 15}
+            textAnchor="middle"
+            dominantBaseline="central"
+            fontSize={16}
+            fontFamily="var(--font-sans)"
+            fill="var(--fg)"
+          >
+            {line}
+          </text>
+        ))}
         <text
           x={0}
-          y={18}
-          textAnchor="middle"
-          dominantBaseline="central"
-          fontSize={16}
-          fontFamily="var(--font-sans)"
-          fill="var(--fg)"
-        >
-          {node.formula}
-        </text>
-        <text
-          x={0}
-          y={r + 24}
+          y={r + 26}
           textAnchor="middle"
           dominantBaseline="central"
           fontSize={16}
@@ -123,13 +129,13 @@ function StageSpecies({ node, x, y }: { node: PipelineStageVisual; x: number; y:
   const topSubstituentMap = {
     benzene: undefined,
     chlorobenzene: { label: 'Cl', color: 'var(--atom-hal)', bondHighlight: true },
-    benzenesulphonicAcid: { label: 'SO₃H', color: 'var(--atom-s)' },
-    phenoxide: { label: 'O⁻ Na⁺', color: 'var(--atom-o)' },
-    aniline: { label: 'NH₂', color: 'var(--atom-n)' },
-    diazonium: { label: 'N₂⁺ Cl⁻', color: 'var(--atom-n)' },
-    cumene: { label: 'CH(CH₃)₂', color: 'var(--fg)' },
-    hydroperoxide: { label: 'C(CH₃)₂OOH', color: 'var(--atom-o)' },
-    phenol: { label: 'OH', color: 'var(--atom-o)' },
+    benzenesulphonicAcid: { label: 'SO₃H', color: 'var(--atom-s)', anchor: 'first-atom' as const },
+    phenoxide: { label: 'O⁻ Na⁺', color: 'var(--atom-o)', anchor: 'first-atom' as const },
+    aniline: { label: 'NH₂', color: 'var(--atom-n)', anchor: 'first-atom' as const },
+    diazonium: { label: 'N₂⁺ Cl⁻', color: 'var(--atom-n)', anchor: 'first-atom' as const },
+    cumene: { label: 'CH(CH₃)₂', color: 'var(--fg)', anchor: 'first-atom' as const },
+    hydroperoxide: { label: 'C(CH₃)₂OOH', color: 'var(--atom-o)', anchor: 'first-atom' as const },
+    phenol: { label: 'OH', color: 'var(--atom-o)', anchor: 'first-atom' as const },
   } as const
 
   const highlightRing = node.kind === 'phenol'
@@ -157,8 +163,11 @@ export function PhenolRouteWorkbench({ reducedMotion }: SimulationProps) {
   const badgeStyle = statusColors(outcome.statusKind)
 
   const step1Blocked = !outcome.step1Active && (outcome.statusKind === 'blocked' || outcome.statusKind === 'decomposed')
-  const step2Blocked = outcome.step1Active && !outcome.step2Active
+  const step2Blocked = outcome.step2Blocked
+  const step2Caution = !outcome.step2Active && !step2Blocked && outcome.statusKind === 'trapped'
   const bubbleShift = reducedMotion || !outcome.gasBubbles ? 0 : Math.sin(time * 2.4) * 5
+  const statusPillWidth = Math.max(128, Math.ceil(outcome.statusLabel.length * 10 + 32))
+  const statusPillX = VB_W - 20 - statusPillWidth / 2
 
   return (
     <div className={styles.sim}>
@@ -183,10 +192,10 @@ export function PhenolRouteWorkbench({ reducedMotion }: SimulationProps) {
             {ROUTE_TITLES[state.substrate]}
           </text>
           <TagPill
-            x={700}
+            x={statusPillX}
             y={30}
             text={outcome.statusLabel}
-            width={200}
+            width={statusPillWidth}
             height={32}
             fill={badgeStyle.fill}
             stroke={badgeStyle.stroke}
@@ -195,23 +204,23 @@ export function PhenolRouteWorkbench({ reducedMotion }: SimulationProps) {
           />
 
           {/* Stage column headings */}
-          <text x={115} y={66} textAnchor="middle" dominantBaseline="central" fontSize={16} fontWeight={600} fontFamily="var(--font-sans)" fill="var(--fg-muted)">
+          <text x={90} y={66} textAnchor="middle" dominantBaseline="central" fontSize={16} fontWeight={600} fontFamily="var(--font-sans)" fill="var(--fg-muted)">
             Substrate
           </text>
-          <text x={395} y={66} textAnchor="middle" dominantBaseline="central" fontSize={16} fontWeight={600} fontFamily="var(--font-sans)" fill="var(--fg-muted)">
+          <text x={394} y={66} textAnchor="middle" dominantBaseline="central" fontSize={16} fontWeight={600} fontFamily="var(--font-sans)" fill="var(--fg-muted)">
             Intermediate
           </text>
-          <text x={685} y={66} textAnchor="middle" dominantBaseline="central" fontSize={16} fontWeight={600} fontFamily="var(--font-sans)" fill="var(--fg-muted)">
+          <text x={710} y={66} textAnchor="middle" dominantBaseline="central" fontSize={16} fontWeight={600} fontFamily="var(--font-sans)" fill="var(--fg-muted)">
             Workup / Product
           </text>
 
           {/* Pipeline species and arrows */}
-          <StageSpecies node={outcome.startNode} x={115} y={176} />
+          <StageSpecies node={outcome.startNode} x={90} y={176} />
 
           <StraightArrow
-            x1={174}
+            x1={144}
             y1={176}
-            x2={322}
+            x2={308}
             y2={176}
             above={[outcome.step1Reagent]}
             below={[outcome.step1Condition]}
@@ -220,28 +229,29 @@ export function PhenolRouteWorkbench({ reducedMotion }: SimulationProps) {
             blocked={step1Blocked}
           />
 
-          <StageSpecies node={outcome.intermediateNode} x={395} y={176} />
+          <StageSpecies node={outcome.intermediateNode} x={394} y={176} />
 
           <StraightArrow
-            x1={468}
+            x1={480}
             y1={176}
-            x2={610}
+            x2={624}
             y2={176}
             above={[outcome.step2Reagent]}
             below={[outcome.step2Condition]}
-            color={outcome.step2Active ? 'var(--success)' : 'var(--fg-muted)'}
-            aboveColor={outcome.step2Active ? 'var(--fg)' : 'var(--fg-muted)'}
+            color={outcome.step2Active ? 'var(--success)' : step2Caution ? 'var(--caution)' : 'var(--fg-muted)'}
+            aboveColor={outcome.step2Active || step2Caution ? 'var(--fg)' : 'var(--fg-muted)'}
+            belowColor={step2Caution ? 'var(--caution)' : 'var(--fg-muted)'}
             dashed={!outcome.step2Active}
             blocked={step2Blocked}
           />
 
-          <StageSpecies node={outcome.productNode} x={685} y={176} />
+          <StageSpecies node={outcome.productNode} x={710} y={176} />
 
           {/* Animated N2 gas bubbles for diazonium hydrolysis / decomposition */}
           {outcome.gasBubbles && (
             <g transform={`translate(0, ${bubbleShift.toFixed(2)})`}>
               <TagPill
-                x={540}
+                x={552}
                 y={102}
                 text="N₂ ↑ gas"
                 width={106}
@@ -256,7 +266,7 @@ export function PhenolRouteWorkbench({ reducedMotion }: SimulationProps) {
           {/* Co-product / by-product pill in bottom margin */}
           {outcome.coProductFormula && (
             <TagPill
-              x={685}
+              x={710}
               y={302}
               text={`+ ${outcome.coProductFormula}`}
               width={186}

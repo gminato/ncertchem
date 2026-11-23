@@ -56,9 +56,13 @@ describe('Phenol Synthesis Workbench chemistry rules', () => {
     const aqNaoh = evaluateWorkbench({ ...DEFAULT_WORKBENCH_STATE, substrate: 'benzene', benzeneStep2: 'aqueous' })
     expect(aqNaoh.statusKind).toBe('intermediate')
     expect(aqNaoh.intermediateNode.kind).toBe('benzenesulphonicAcid')
+    expect(aqNaoh.step2Blocked).toBe(true)
 
     const noAcid = evaluateWorkbench({ ...DEFAULT_WORKBENCH_STATE, substrate: 'benzene', benzeneAcidify: false })
     expect(noAcid.statusKind).toBe('trapped')
+    expect(noAcid.intermediateNode.kind).toBe('benzenesulphonicAcid')
+    expect(noAcid.productNode.kind).toBe('phenoxide')
+    expect(noAcid.step2Blocked).toBe(false)
 
     const ok = evaluateWorkbench({ ...DEFAULT_WORKBENCH_STATE, substrate: 'benzene' })
     expect(ok.statusKind).toBe('complete')
