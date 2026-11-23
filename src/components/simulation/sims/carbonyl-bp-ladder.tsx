@@ -71,7 +71,13 @@ export function CarbonylBpLadder() {
   const atLeft = (i: number): [number, number] => [LEFT_X + pts[i].x, BOX_Y + pts[i].y]
   const atRight = (i: number): [number, number] => [RIGHT_X + rightPts[i].x, BOX_Y + rightPts[i].y]
 
-  const vdW = inset(atLeft(rightmostC), atRight(leftmostC), 12)
+  // In an O–H molecule the van der Waals dots run under the hydrogen bond, between the lowest carbons facing each other, so the two never cross.
+  const lowLeftC = carbons.reduce((best, i) => (pts[i].y > pts[best].y || (pts[i].y === pts[best].y && pts[i].x > pts[best].x) ? i : best), carbons[0])
+  const lowRightC = rightCarbons.reduce((best, i) => (rightPts[i].y > rightPts[best].y || (rightPts[i].y === rightPts[best].y && rightPts[i].x < rightPts[best].x) ? i : best), rightCarbons[0])
+  const shiftDown = (p: [number, number]): [number, number] => [p[0], p[1] + 22]
+  const vdW = hasHBond
+    ? inset(shiftDown(atLeft(lowLeftC)), shiftDown(atRight(lowRightC)), 12)
+    : inset(atLeft(rightmostC), atRight(leftmostC), 12)
   const dipoleLine = site && hasDipole && dipoleOn ? inset(atLeft(site.oxygen), atRight(site.partner), 14) : null
   const leftOxygen = graph.atoms.findIndex((a) => a.element === 'O')
   const rightOxygen = rightGraph.atoms.findIndex((a) => a.element === 'O')

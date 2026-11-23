@@ -16,7 +16,6 @@ import {
   ladderRow,
   LADDER_ACTIVE_K,
   ladderY,
-  nearestPair,
   outwardFrom,
   PENTANAL_C,
   PENTANAL_O,
@@ -54,6 +53,12 @@ const LABEL_SIZE = 15
 const NAME = (smiles: string) => ladderRow(smiles).name
 
 const mol = (smiles: string, scale: number, cx: number, cy: number): Placed => ({ smiles, scale, cx, cy })
+
+/** A molecule placed so that its atom `index` sits at `target` (SVG px). */
+function placeAtom(smiles: string, scale: number, index: number, target: Point): Placed {
+  const local = atomAt(mol(smiles, scale, 0, 0), index)
+  return mol(smiles, scale, target.x - local.x, target.y - local.y)
+}
 
 function Name({ x, y, children, fill = INK }: { x: number; y: number; children: ReactNode; fill?: string }) {
   return (
@@ -164,25 +169,27 @@ function dirFrom(p: Placed, index: number): Point {
   return { x: q.x - a.x, y: q.y - a.y }
 }
 
-function rotateVec(v: Point, deg: number): Point {
-  const r = (deg * Math.PI) / 180
-  return { x: v.x * Math.cos(r) - v.y * Math.sin(r), y: v.x * Math.sin(r) + v.y * Math.cos(r) }
-}
-
-/** An acetone with waters hydrogen-bonded to its carbonyl O, fanned out around it. */
-function AcetoneCluster({ p, angles }: { p: Placed; angles: readonly number[] }) {
+/** Two waters, each H-bonded to one lone pair of the carbonyl O (210 and 330 degrees); a third water is H-bonded to the first. */
+function AcetoneWithWaters({ p }: { p: Placed }) {
   const o = atomAt(p, ACETONE_O)
-  const d = dirFrom(p, ACETONE_O)
-  const len = Math.hypot(d.x, d.y) || 1
-  const unit = { x: d.x / len, y: d.y / len }
+  const unit = (deg: number): Point => {
+    const r = (deg * Math.PI) / 180
+    return { x: Math.cos(r), y: Math.sin(r) }
+  }
+  const d1 = unit(210)
+  const d2 = unit(330)
+  const d3 = unit(230)
+  const w1 = { x: o.x + d1.x * 112, y: o.y + d1.y * 112 }
+  const w2 = { x: o.x + d2.x * 112, y: o.y + d2.y * 112 }
+  const w3 = { x: w1.x + d3.x * 90, y: w1.y + d3.y * 90 }
+  const lp1 = { x: o.x + d1.x * 22, y: o.y + d1.y * 22 }
+  const lp2 = { x: o.x + d2.x * 22, y: o.y + d2.y * 22 }
   return (
     <g>
       <Drawn p={p} />
-      {angles.map((deg) => {
-        const v = rotateVec(unit, deg)
-        const at = { x: o.x + v.x * 80, y: o.y + v.y * 80 }
-        return <Water key={deg} at={at} toward={o} />
-      })}
+      <Water at={w1} toward={lp1} />
+      <Water at={w2} toward={lp2} />
+      <Water at={w3} toward={w1} />
       <Name x={p.cx} y={p.cy + 64}>
         {NAME(ACETONE_SMILES)}
       </Name>
@@ -190,53 +197,31 @@ function AcetoneCluster({ p, angles }: { p: Placed; angles: readonly number[] })
   )
 }
 
-/** Step 3: propanal and acetone line up, with each δ⁺ carbon facing a δ⁻ oxygen. */
+/** Step 3: propanal's O sits directly below acetone's C, so one dashed line joins the O (δ⁻) to the C (δ⁺). */
 function DipoleOverlay({ a, b }: { a: Placed; b: Placed }) {
   const aC = atomAt(a, PROPANAL_C)
-  const aO = atomAt(a, PROPANAL_O)
   const bC = atomAt(b, ACETONE_C)
-  const bO = atomAt(b, ACETONE_O)
   const lab = (p: Point, text: string, fill: string) => (
     <text x={p.x} y={p.y} textAnchor="middle" fontSize={LABEL_SIZE} fill={fill}>
       {deltaText(text)}
     </text>
   )
-  const aCl = outwardFrom(a, PROPANAL_C, 24)
-  const aOl = outwardFrom(a, PROPANAL_O, 22)
-  const bCl = outwardFrom(b, ACETONE_C, 24)
-  const bOl = outwardFrom(b, ACETONE_O, 22)
   return (
     <g>
-      <Line a={aO} b={bC} stroke={MUTED} dash="6 5" width={2.5} trim={12} />
-      <Line a={bO} b={aC} stroke={MUTED} dash="6 5" width={2.5} trim={12} />
-      {lab(aCl, 'δ⁺', DELTA_PLUS)}
-      {lab(aOl, 'δ⁻', DELTA_MINUS)}
-      {lab(bCl, 'δ⁺', DELTA_PLUS)}
-      {lab(bOl, 'δ⁻', DELTA_MINUS)}
+      <Line a={atomAt(a, PROPANAL_O)} b={bC} stroke={MUTED} dash="6 5" width={2.5} trim={12} />
+      {lab({ x: aC.x - 6, y: aC.y + 26 }, 'δ⁺', DELTA_PLUS)}
+      {lab(outwardFrom(a, PROPANAL_O, 24), 'δ⁻', DELTA_MINUS)}
+      {lab({ x: bC.x - 26, y: bC.y - 6 }, 'δ⁺', DELTA_PLUS)}
+      {lab(outwardFrom(b, ACETONE_O, 24), 'δ⁻', DELTA_MINUS)}
     </g>
   )
 }
 
-/** Step 4: two propan-1-ol molecules, one O–H hydrogen bonded to the other's oxygen. */
+/** Step 4: one dotted hydrogen bond from the left molecule's O–H hydrogen to the right O's lone pair. */
 function HydrogenBondOverlay({ a, b }: { a: Placed; b: Placed }) {
   const oa = atomAt(a, PROPAN1OL_O)
   const ob = atomAt(b, PROPAN1OL_O)
-  const len = Math.hypot(ob.x - oa.x, ob.y - oa.y) || 1
-  const ux = (ob.x - oa.x) / len
-  const uy = (ob.y - oa.y) / len
-  // The H label sits 14 units to one side of the dotted line, clear of the O–C bond.
-  const mx = (oa.x + ob.x) / 2
-  const my = (oa.y + ob.y) / 2
-  const hx = mx - uy * 14
-  const hy = my + ux * 14
-  return (
-    <g>
-      <Line a={oa} b={ob} stroke={HBOND} dash="1 6" width={3.5} trim={12} />
-      <text x={hx} y={hy} textAnchor="middle" fontSize={LABEL_SIZE} fill={INK}>
-        H
-      </text>
-    </g>
-  )
+  return <Line a={{ x: oa.x + 26, y: oa.y - 6 }} b={{ x: ob.x, y: ob.y - 20 }} stroke={HBOND} dash="1 6" width={3.5} />
 }
 
 function Scene({ beat }: { beat: CarbonylBeat }) {
@@ -262,27 +247,31 @@ function Scene({ beat }: { beat: CarbonylBeat }) {
       )
     }
     case 'butane-alone': {
-      const main = mol(BUTANE_SMILES, 39, 420, 290)
-      const left = mol(BUTANE_SMILES, 39, 300, 440)
-      const right = mol(BUTANE_SMILES, 39, 505, 150)
-      const [a1, a2] = nearestPair(main, left)
-      const [b1, b2] = nearestPair(main, right)
+      // One butane in the middle, one neighbour above and one below, 60 units apart; each pair joined by four vertical contacts.
+      const main = mol(BUTANE_SMILES, 39, 380, 290)
+      const above = mol(BUTANE_SMILES, 39, 380, 230)
+      const below = mol(BUTANE_SMILES, 39, 380, 350)
       return (
         <g>
-          <Drawn p={left} opacity={0.45} />
-          <Drawn p={right} opacity={0.45} />
+          <Drawn p={above} opacity={0.45} />
+          <Drawn p={below} opacity={0.45} />
           <Drawn p={main} />
-          <Line a={a1} b={a2} stroke={MUTED} dash="4 4" trim={4} />
-          <Line a={b1} b={b2} stroke={MUTED} dash="4 4" trim={4} />
-          <Name x={main.cx} y={main.cy + 60}>
+          {[0, 1, 2, 3].map((i) => (
+            <g key={i}>
+              <Line a={atomAt(main, i)} b={atomAt(above, i)} stroke={MUTED} dash="4 4" trim={6} />
+              <Line a={atomAt(main, i)} b={atomAt(below, i)} stroke={MUTED} dash="4 4" trim={6} />
+            </g>
+          ))}
+          <text x={main.cx + 64} y={main.cy + 40} fontSize={16} fill={INK}>
             {NAME(BUTANE_SMILES)}
-          </Name>
+          </text>
         </g>
       )
     }
     case 'dipoles': {
-      const a = mol(PROPANAL_SMILES, 39, 300, 200)
-      const b = mol(ACETONE_SMILES, 39, 470, 380)
+      const a = placeAtom(PROPANAL_SMILES, 39, PROPANAL_O, { x: 390, y: 296 })
+      const b = placeAtom(ACETONE_SMILES, 39, ACETONE_C, { x: 390, y: 236 })
+      const bO = atomAt(b, ACETONE_O)
       return (
         <g>
           <Drawn p={a} />
@@ -291,38 +280,29 @@ function Scene({ beat }: { beat: CarbonylBeat }) {
           <Name x={a.cx} y={a.cy + 56}>
             {NAME(PROPANAL_SMILES)}
           </Name>
-          <Name x={b.cx} y={b.cy + 56}>
+          <text x={b.cx + 52} y={bO.y + 4} fontSize={16} fill={INK}>
             {NAME(ACETONE_SMILES)}
-          </Name>
+          </text>
         </g>
       )
     }
     case 'hydrogen-bonds': {
-      const a = mol(PROPAN1OL_SMILES, 39, 300, 170)
-      const b = mol(PROPAN1OL_SMILES, 39, 312, 214)
+      // Two propan-1-ol molecules side by side, the left O–H reaching the right O.
+      const a = placeAtom(PROPAN1OL_SMILES, 39, PROPAN1OL_O, { x: 345, y: 250 })
+      const b = placeAtom(PROPAN1OL_SMILES, 39, PROPAN1OL_O, { x: 485, y: 250 })
       return (
         <g>
           <Drawn p={a} />
           <Drawn p={b} />
           <HydrogenBondOverlay a={a} b={b} />
-          <Name x={a.cx} y={a.cy - 34}>
-            {NAME(PROPAN1OL_SMILES)}
-          </Name>
-          <Name x={b.cx} y={b.cy + 40}>
+          <Name x={(a.cx + b.cx) / 2} y={a.cy + 72}>
             {NAME(PROPAN1OL_SMILES)}
           </Name>
         </g>
       )
     }
     case 'acetone-water': {
-      const a = mol(ACETONE_SMILES, 39, 190, 190)
-      const b = mol(ACETONE_SMILES, 39, 420, 370)
-      return (
-        <g>
-          <AcetoneCluster p={a} angles={[0, 60, -60]} />
-          <AcetoneCluster p={b} angles={[0, 60, -60]} />
-        </g>
-      )
+      return <AcetoneWithWaters p={placeAtom(ACETONE_SMILES, 39, ACETONE_O, { x: 380, y: 300 })} />
     }
     case 'pentanal-water': {
       const p = mol(PENTANAL_SMILES, 39, 230, 290)
@@ -331,13 +311,12 @@ function Scene({ beat }: { beat: CarbonylBeat }) {
       const d = dirFrom(p, PENTANAL_O)
       const len = Math.hypot(d.x, d.y) || 1
       const at = { x: o.x + (d.x / len) * 80, y: o.y + (d.y / len) * 80 }
-      const mid = { x: (o.x + c.x) / 2, y: (o.y + c.y) / 2 }
       return (
         <g>
-          {/* The whole chain in grey; the carbonyl end is redrawn in ink through a clip. */}
+          {/* The whole chain in the muted tone; the C=O bond and its O are redrawn in ink, clipped to the right of the carbonyl carbon. */}
           <Drawn p={p} style={{ ['--fg' as string]: 'var(--fg-muted)' } as CSSProperties} />
           <clipPath id="c12u8-4-carbonyl-clip">
-            <circle cx={mid.x} cy={mid.y} r={44} />
+            <rect x={c.x - 1} y={0} width={W} height={H} />
           </clipPath>
           <g clipPath="url(#c12u8-4-carbonyl-clip)">
             <Drawn p={p} />
