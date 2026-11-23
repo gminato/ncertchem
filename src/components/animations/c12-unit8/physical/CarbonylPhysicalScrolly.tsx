@@ -251,7 +251,7 @@ function Scene({ beat }: { beat: CarbonylBeat }) {
             return (
               <g key={r.smiles}>
                 <Line a={{ x: 226, y: ladderY(r.bpK) }} b={{ x: 280, y: cy }} stroke={MUTED} dash="none" width={1.5} />
-                <Drawn p={mol(r.smiles, 36, 340, cy)} />
+                <Drawn p={mol(r.smiles, 39, 340, cy)} />
                 <Name x={340} y={cy + 50}>
                   {r.name}
                 </Name>
@@ -262,9 +262,9 @@ function Scene({ beat }: { beat: CarbonylBeat }) {
       )
     }
     case 'butane-alone': {
-      const main = mol(BUTANE_SMILES, 36, 420, 290)
-      const left = mol(BUTANE_SMILES, 36, 300, 440)
-      const right = mol(BUTANE_SMILES, 36, 505, 150)
+      const main = mol(BUTANE_SMILES, 39, 420, 290)
+      const left = mol(BUTANE_SMILES, 39, 300, 440)
+      const right = mol(BUTANE_SMILES, 39, 505, 150)
       const [a1, a2] = nearestPair(main, left)
       const [b1, b2] = nearestPair(main, right)
       return (
@@ -281,8 +281,8 @@ function Scene({ beat }: { beat: CarbonylBeat }) {
       )
     }
     case 'dipoles': {
-      const a = mol(PROPANAL_SMILES, 36, 300, 200)
-      const b = mol(ACETONE_SMILES, 36, 470, 380)
+      const a = mol(PROPANAL_SMILES, 39, 300, 200)
+      const b = mol(ACETONE_SMILES, 39, 470, 380)
       return (
         <g>
           <Drawn p={a} />
@@ -298,8 +298,8 @@ function Scene({ beat }: { beat: CarbonylBeat }) {
       )
     }
     case 'hydrogen-bonds': {
-      const a = mol(PROPAN1OL_SMILES, 36, 300, 170)
-      const b = mol(PROPAN1OL_SMILES, 36, 312, 214)
+      const a = mol(PROPAN1OL_SMILES, 39, 300, 170)
+      const b = mol(PROPAN1OL_SMILES, 39, 312, 214)
       return (
         <g>
           <Drawn p={a} />
@@ -315,8 +315,8 @@ function Scene({ beat }: { beat: CarbonylBeat }) {
       )
     }
     case 'acetone-water': {
-      const a = mol(ACETONE_SMILES, 36, 190, 190)
-      const b = mol(ACETONE_SMILES, 36, 420, 370)
+      const a = mol(ACETONE_SMILES, 39, 190, 190)
+      const b = mol(ACETONE_SMILES, 39, 420, 370)
       return (
         <g>
           <AcetoneCluster p={a} angles={[0, 60, -60]} />
@@ -325,7 +325,7 @@ function Scene({ beat }: { beat: CarbonylBeat }) {
       )
     }
     case 'pentanal-water': {
-      const p = mol(PENTANAL_SMILES, 36, 230, 290)
+      const p = mol(PENTANAL_SMILES, 39, 230, 290)
       const o = atomAt(p, PENTANAL_O)
       const c = atomAt(p, PENTANAL_C)
       const d = dirFrom(p, PENTANAL_O)

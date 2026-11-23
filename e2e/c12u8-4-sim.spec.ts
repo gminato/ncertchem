@@ -35,7 +35,7 @@ const STATES: { name: string; act: (sim: Locator) => Promise<void> }[] = [
     act: async (sim) => {
       await sim.getByRole('button', { name: 'Acetone', exact: true }).click()
       await sim.getByRole('slider').press('End')
-      await expect(sim.locator('[aria-live="polite"]')).toContainText('Least soluble of the four.')
+      await expect(sim.locator('[aria-live="polite"]')).toContainText('Least soluble of these aldehydes.')
     },
   },
 ]
