@@ -28,7 +28,22 @@ describe('Aldol Scrolly: names come from the namer', () => {
     expect(unit8Name(SMILES.ethanal)).toBe('ethanal')
   })
 
-  it('names the four Step 6 products, in grid order (row = nucleophile, column = electrophile)', () => {
+  it('each Step 6 cell names the product of its column (carbanion) and its row (carbonyl attacked)', () => {
+    const cells = [
+      { col: 'propanal', row: 'propanal', smiles: 'CCC(O)C(C)C=O', name: '3-hydroxy-2-methylpentanal' },
+      { col: '2-methylpropanal', row: 'propanal', smiles: 'CCC(O)C(C)(C)C=O', name: '3-hydroxy-2,2-dimethylpentanal' },
+      { col: 'propanal', row: '2-methylpropanal', smiles: 'CC(C)C(O)C(C)C=O', name: '3-hydroxy-2,4-dimethylpentanal' },
+      { col: '2-methylpropanal', row: '2-methylpropanal', smiles: 'CC(C)C(O)C(C)(C)C=O', name: '3-hydroxy-2,2,4-trimethylpentanal' },
+    ]
+    // Grid order is top-left, top-right, bottom-left, bottom-right (see Step6 in AldolScrolly.tsx).
+    const order = [0, 1, 2, 3]
+    for (const k of order) {
+      expect(unit8Name(cells[k].smiles)).toBe(cells[k].name)
+      expect(GRID_NAMES[k]).toBe(cells[k].name)
+    }
+  })
+
+  it('names the four Step 6 products, in grid order (row = carbonyl attacked, column = carbanion former)', () => {
     expect(GRID_NAMES).toEqual([
       '3-hydroxy-2-methylpentanal',
       '3-hydroxy-2,2-dimethylpentanal',

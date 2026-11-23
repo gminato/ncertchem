@@ -14,7 +14,7 @@ import {
 import { ROLE_TONE } from '@/components/vocab/organic6'
 import type { MolGraph } from '@/lib/chem/molecule-graph'
 import { unit8Name } from '@/lib/chem/ncert-c12-unit8-data'
-import { BUTENAL, CARBANION, ENOLATE, ETHANAL, GRID, GRID_NAMES, HYDROXYBUTANAL, SMILES, WATER } from './aldol-steps'
+import { BUTENAL, CARBANION, ENOLATE, ETHANAL, GRID, GRID_NAMES, HYDROXYBUTANAL, SMILES } from './aldol-steps'
 
 export interface AldolScrollyProps {
   /** 0-based Step index from Scrolly. */
@@ -84,6 +84,28 @@ function callout(m: Placed, i: number, lines: ReadonlyArray<readonly [string, st
   )
 }
 
+/** Water as a text label, so that it reads H₂O (a drawn water molecule would read OH₂). */
+function waterLabel(x: number, y: number, key: string): ReactNode {
+  return (
+    <text key={key} x={x} y={y} textAnchor="middle" dominantBaseline="central" fontSize={17} fontWeight={600} fontFamily="var(--font-sans)" fill={INK}>
+      H₂O
+    </text>
+  )
+}
+
+/** A left-hand row label of one or more lines, centred on y. */
+function rowLabel(lines: readonly string[], x: number, y: number, key: string): ReactNode {
+  return (
+    <text key={key} x={x} y={y - ((lines.length - 1) * 18) / 2} dominantBaseline="central" fontSize={LABEL} fontFamily="var(--font-sans)" fill={INK}>
+      {lines.map((t, k) => (
+        <tspan key={k} x={x} dy={k === 0 ? 0 : 18}>
+          {t}
+        </tspan>
+      ))}
+    </text>
+  )
+}
+
 function caption(x: number, y: number, text: string, key: string, fill = MUTED): ReactNode {
   return (
     <text key={key} x={x} y={y} textAnchor="middle" fontSize={LABEL} fontFamily="var(--font-sans)" fill={fill}>
@@ -133,7 +155,9 @@ function Step2() {
       {arrow(bondAnchor(p0, h, 0.5), p0, 0.35, 'arrow-bond')}
       {drawMolecule(carb, 'carbanion')}
       {drawMolecule(enol, 'enolate')}
-      {callout(carb, 0, [['CH₂⁻', INK]], 'carbanion-label', 34)}
+      <text x={at(carb, 0).x} y={at(carb, 0).y + 32} textAnchor="middle" fontSize={LABEL} fontFamily="var(--font-sans)" fill={INK}>
+        CH₂
+      </text>
       {caption(440, 395, 'carbanion', 'carb-cap')}
       {caption(440, 40, 'resonance form', 'enol-cap')}
       {caption(440, 212, '↔', 'resonance-sign', INK)}
@@ -144,8 +168,8 @@ function Step2() {
 
 /** Step 3: the carbanion's lone pair attacks the carbonyl carbon of a second ethanal. */
 function Step3() {
-  const carb = place(CARBANION, 120, 220, 100)
-  const second = place(ETHANAL, 440, 220, 100)
+  const carb = place(CARBANION, 176, 220, 100)
+  const second = place(ETHANAL, 424, 220, 100)
   const lp = lonePairPoint(at(carb, 0), outward(carb, 0), 20)
   const carbonyl = at(second, 1)
   const oxygen = at(second, 2)
@@ -157,8 +181,8 @@ function Step3() {
       {dot(second, 1, ROLE_TONE.electrophilicCarbon, 'electrophile')}
       {arrow(lp, carbonyl, -0.4, 'arrow-attack')}
       {arrow(bondAnchor(carbonyl, oxygen, 0.5), oxygen, 0.6, 'arrow-pi')}
-      {caption(120, 380, 'carbanion', 'carb-cap')}
-      {caption(440, 380, 'second ethanal', 'second-cap')}
+      {caption(176, 380, 'carbanion', 'carb-cap')}
+      {caption(424, 380, 'second ethanal', 'second-cap')}
       {caption(W / 2, 40, 'attack on the carbonyl carbon', 'title')}
     </g>
   )
@@ -167,13 +191,12 @@ function Step3() {
 /** Step 4: the aldol, 3-hydroxybutanal, with α- and β-carbons labelled; a proton from water. */
 function Step4() {
   const m = place(HYDROXYBUTANAL, 230, 210, 100)
-  const water = place(WATER, 500, 140, 64)
   return (
     <g>
       {drawMolecule(m, 'aldol')}
       {callout(m, 3, [['α-carbon', INK]], 'alpha-label')}
       {callout(m, 1, [['β-carbon', INK]], 'beta-label')}
-      {drawMolecule(water, 'water')}
+      {waterLabel(500, 140, 'water')}
       {caption(500, 230, 'proton from H₂O', 'water-cap')}
       {caption(230, 380, unit8Name(SMILES.hydroxybutanal), 'name')}
     </g>
@@ -182,19 +205,20 @@ function Step4() {
 
 /** Step 5: heat; water leaves and but-2-enal forms with the C=C between α and β. */
 function Step5() {
-  const left = place(HYDROXYBUTANAL, 130, 200, 90)
-  const right = place(BUTENAL, 410, 200, 90)
-  const water = place(WATER, 500, 340, 56)
+  const left = place(HYDROXYBUTANAL, 118, 200, 56)
+  const right = place(BUTENAL, 406, 200, 56)
   return (
     <g>
       {drawMolecule(left, 'aldol')}
       {drawMolecule(right, 'butenal')}
-      {drawMolecule(water, 'water')}
-      <line x1={218} y1={200} x2={300} y2={200} stroke={INK} strokeWidth={2} />
-      <path d="M 300 200 L 290 194 L 290 206 Z" fill={INK} />
-      {caption(259, 186, 'heat', 'heat', INK)}
-      {caption(130, 360, unit8Name(SMILES.hydroxybutanal), 'name-left')}
-      {caption(410, 360, unit8Name(SMILES.butenal), 'name-right')}
+      <line x1={240} y1={200} x2={280} y2={200} stroke={INK} strokeWidth={2} />
+      <path d="M 292 200 L 282 194 L 282 206 Z" fill={INK} />
+      {caption(260, 186, 'heat', 'heat', INK)}
+      {caption(118, 360, unit8Name(SMILES.hydroxybutanal), 'name-left')}
+      {caption(406, 360, unit8Name(SMILES.butenal), 'name-right')}
+      <text x={406} y={305} textAnchor="middle" fontSize={17} fontWeight={600} fontFamily="var(--font-sans)" fill={INK}>
+        + H₂O
+      </text>
       {caption(W / 2, 40, 'water leaves: C=C forms between α and β', 'title')}
     </g>
   )
@@ -202,23 +226,26 @@ function Step5() {
 
 /** Step 6: 2 × 2 grid of the four aldol products from propanal and 2-methylpropanal. */
 function Step6() {
-  const cols = [150, 430]
+  const cols = [196, 436]
   const rows = [130, 300]
-  const cells = GRID.map((c, k) => ({ graph: c.graph, x: cols[k % 2], y: rows[Math.floor(k / 2)] }))
+  const nameY = [207, 362]
+  const cells = GRID.map((c, k) => ({ graph: c.graph, x: cols[k % 2], y: rows[Math.floor(k / 2)], nameY: nameY[Math.floor(k / 2)] }))
   return (
     <g>
       {caption(cols[0], 32, 'propanal', 'col-0')}
       {caption(cols[1], 32, '2-methylpropanal', 'col-1')}
+      {rowLabel(['propanal'], 12, rows[0] - 14, 'row-0')}
+      {rowLabel(['2-methyl', 'propanal'], 12, rows[1] - 14, 'row-1')}
       {cells.map((c, k) => {
         const m = place(c.graph, c.x, c.y - 14, 40)
         return (
           <g key={k}>
             {drawMolecule(m, `cell-${k}`)}
-            {caption(c.x, c.y + 64, GRID_NAMES[k], `name-${k}`, INK)}
+            {caption(c.x, c.nameY, GRID_NAMES[k], `name-${k}`, INK)}
           </g>
         )
       })}
-      {caption(W / 2, H - 14, 'Down: the nucleophile. Across: the electrophile.', 'legend')}
+      {caption(W / 2, H - 14, 'Across: forms the carbanion. Down: is attacked.', 'legend')}
     </g>
   )
 }
