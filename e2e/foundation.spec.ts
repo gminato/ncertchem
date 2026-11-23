@@ -88,9 +88,31 @@ test.describe('Unit navigation', () => {
   })
 
   test('a Unit with no Sections yet shows a calm empty state', async ({ page }) => {
+    await page.goto('/class-12/unit-8')
+    await expect(page.getByRole('heading', { level: 1 })).toHaveText('Aldehydes, Ketones and Carboxylic Acids')
+    await expect(page.getByText('The Sections of this Unit are being written.')).toBeVisible()
+  })
+
+  test('Class 12 Unit 7 lists its twelve Sections in order', async ({ page }) => {
     await page.goto('/class-12/unit-7')
     await expect(page.getByRole('heading', { level: 1 })).toHaveText('Alcohols, Phenols and Ethers')
-    await expect(page.getByText('The Sections of this Unit are being written.')).toBeVisible()
+    const links = page.locator('a[href^="/class-12/unit-7/"]')
+    await expect(links).toHaveCount(12)
+    const hrefs = await links.evaluateAll((els) => els.map((e) => e.getAttribute('href')))
+    expect(hrefs.map((h) => h?.split('/').pop())).toEqual([
+      '12-7-1-classification',
+      '12-7-2-nomenclature',
+      '12-7-3-structures-of-functional-groups',
+      '12-7-4-1-preparation-of-alcohols',
+      '12-7-4-2-preparation-of-phenols',
+      '12-7-4-3-physical-properties',
+      '12-7-4-4-acidity-and-esterification',
+      '12-7-4-4-cleavage-of-c-o-bond',
+      '12-7-4-4-reactions-of-phenols',
+      '12-7-5-commercially-important-alcohols',
+      '12-7-6-1-preparation-and-properties-of-ethers',
+      '12-7-6-3-chemical-reactions-of-ethers',
+    ])
   })
 
   test('Class 12 Unit 5 lists its nine Sections in order', async ({ page }) => {
