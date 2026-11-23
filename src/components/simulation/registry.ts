@@ -108,6 +108,7 @@ import { WernerPrecipitationLab } from './sims/werner-precipitation-lab'
 import { CoordinationDissector } from './sims/coordination-dissector'
 import { ComplexNamer } from './sims/complex-namer'
 import { IsomerLab } from './sims/isomer-lab'
+import { VbtOrbitalLab } from './sims/vbt-orbital-lab'
 
 export interface SimulationProps {
   /** True when the Learner has asked the OS for reduced motion. Skip tweens and loops when set. */
@@ -230,4 +231,5 @@ export const simulations: Record<string, ComponentType<SimulationProps>> = {
   'coordination-dissector': CoordinationDissector,
   'complex-namer': ComplexNamer,
   'isomer-lab': IsomerLab,
+  'vbt-orbital-lab': VbtOrbitalLab,
 }
