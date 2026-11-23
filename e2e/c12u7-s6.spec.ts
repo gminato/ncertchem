@@ -146,6 +146,24 @@ test('Section 7.4.3 Scrolly animations and Simulation pass desktop checks and ca
   await sim.getByRole('button', { name: '298 K (Room T)' }).click()
   await expect(sim.locator('[aria-live="polite"]')).toContainText('Gas (vapour) at 298 K')
 
+  // State 2b: 315 K (in 306-320 K range) -> Room 298 K badge moves below 298 K line, no overlap with T = 315 K badge
+  await slider.fill('315')
+  await expect(sim.locator('[aria-live="polite"]')).toContainText('Gas (vapour) at 315 K')
+  await sim.screenshot({ path: 'test-results/screens/c12u7-s6-sim-boiling-315k-desktop.png' })
+  expect(await smallTextLeaves(sim), 'sim 315 K small text').toEqual([])
+  expect(await svgOutOfBounds(sim), 'sim 315 K svg bounds').toEqual([])
+  const badgesOverlap = await sim.evaluate((root) => {
+    const texts = Array.from(root.querySelectorAll('svg text'))
+    const roomText = texts.find((t) => t.textContent?.trim() === 'Room 298 K')
+    const tempText = texts.find((t) => t.textContent?.trim() === 'T = 315 K')
+    if (!roomText || !tempText) return 'missing-badge'
+    const r1 = roomText.getBoundingClientRect()
+    const r2 = tempText.getBoundingClientRect()
+    const overlap = !(r1.right < r2.left || r2.right < r1.left || r1.bottom < r2.top || r2.bottom < r1.top)
+    return overlap ? 'overlap' : 'ok'
+  })
+  expect(badgesOverlap).toBe('ok')
+
   // State 3: Chain Length set -> Butan-1-ol at 405 K (vapour above 390 K)
   await sim.getByRole('radio', { name: 'Chain Length' }).click()
   await sim.getByRole('radio', { name: 'Butan-1-ol' }).click()

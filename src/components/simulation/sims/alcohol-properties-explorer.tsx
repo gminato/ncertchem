@@ -532,8 +532,11 @@ function BoilingChartPanel({
   const cols = [124, 218, 312]
   const yRoom = sy(ROOM_TEMP_K)
   const yTemp = sy(temperatureK)
-  const nearRoom = Math.abs(temperatureK - ROOM_TEMP_K) <= 22
-  const tempBadgeY = nearRoom || yTemp <= plotTop + 28 ? yTemp + 4 : yTemp - 24
+  const roomBadgeBelow = temperatureK > ROOM_TEMP_K && temperatureK <= 325
+  const roomBadgeRectY = roomBadgeBelow ? yRoom + 3 : yRoom - 22
+  const roomBadgeTextY = roomBadgeBelow ? yRoom + 18 : yRoom - 7
+  const nearRoomBelow = temperatureK <= ROOM_TEMP_K && ROOM_TEMP_K - temperatureK <= 22
+  const tempBadgeY = nearRoomBelow || yTemp <= plotTop + 28 ? yTemp + 4 : yTemp - 24
 
   return (
     <svg
@@ -570,8 +573,8 @@ function BoilingChartPanel({
 
       {/* 298 K reference line */}
       <line x1={plotLeft} y1={yRoom} x2={plotRight} y2={yRoom} stroke="var(--accent)" strokeWidth={1.8} strokeDasharray="5 4" />
-      <rect x={plotRight - 92} y={yRoom - 22} width={86} height={19} rx={4} fill="var(--surface)" />
-      <text x={plotRight - 8} y={yRoom - 7} textAnchor="end" fontSize={15} fill="var(--accent)">
+      <rect x={plotRight - 92} y={roomBadgeRectY} width={86} height={19} rx={4} fill="var(--surface)" />
+      <text x={plotRight - 8} y={roomBadgeTextY} textAnchor="end" fontSize={15} fill="var(--accent)">
         Room 298 K
       </text>
 

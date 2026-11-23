@@ -65,6 +65,7 @@ describe('Class 12 Unit 7 Section 7.4.3 physical properties model', () => {
     const tert = getBoilingCompound('branching', '2-methylpropan-2-ol')
     expect(phaseAtTemperature(tert, 298).state).toBe('liquid')
     expect(phaseAtTemperature(tert, 350).state).toBe('transition')
+    expect(phaseAtTemperature(tert, 390).label).toBe('Gas (vapour) at 390 K (≥ 390 K upper bound)')
     expect(phaseAtTemperature(tert, 395).isVapour).toBe(true)
   })
 

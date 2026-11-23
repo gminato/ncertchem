@@ -285,7 +285,7 @@ export function phaseAtTemperature(compound: BoilingCompound, temperatureK: numb
   }
   return {
     state: 'gas',
-    label: `Gas (vapour) above 390 K at ${temperatureK} K`,
+    label: `Gas (vapour) at ${temperatureK} K (≥ 390 K upper bound)`,
     isVapour: true,
   }
 }
