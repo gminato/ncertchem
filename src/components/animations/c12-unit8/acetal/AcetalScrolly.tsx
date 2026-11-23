@@ -33,21 +33,45 @@ function Mol({ p, highlightAtoms }: { p: PlacedMolecule; highlightAtoms?: number
   )
 }
 
-/** A δ⁺ mark and a soft tone disc on the electrophilic carbonyl carbon. */
-function Electrophile({ at }: { at: Point }) {
+/** A δ⁺ mark and a soft tone disc on the electrophilic carbonyl carbon. The δ⁺ sits where the Step has no bond. */
+function Electrophile({ at, tx, ty, anchor = 'start' }: { at: Point; tx?: number; ty?: number; anchor?: 'start' | 'middle' | 'end' }) {
   return (
     <g>
       <circle cx={at.x} cy={at.y} r={20} fill={ROLE_TONE.electrophilicCarbon} fillOpacity={0.22} />
-      <text x={at.x + 18} y={at.y - 16} fontSize={16} fill={ROLE_TONE.electrophilicCarbon}>
+      <text x={tx ?? at.x + 18} y={ty ?? at.y - 16} textAnchor={anchor} fontSize={16} fill={ROLE_TONE.electrophilicCarbon}>
         {deltaText('δ⁺')}
       </text>
     </g>
   )
 }
 
-/** Electron-pair arrow from a lone pair on `from` (atom `index`) to the point `to`. */
+/** Methanol as written text (the carbon is written, not hidden). Its O lone pair is drawn above the O. */
+function MethanolText({ p }: { p: PlacedMolecule }) {
+  const o = methanolO(p)
+  return (
+    <g>
+      <text x={p.cx} y={p.cy} textAnchor="middle" dominantBaseline="central" fontSize={18} fill={INK}>CH₃OH</text>
+      <circle cx={o.x - 4} cy={o.y - 18} r={2.4} fill={INK} />
+      <circle cx={o.x + 4} cy={o.y - 18} r={2.4} fill={INK} />
+    </g>
+  )
+}
+
+/** The oxygen of MethanolText, about 10.5 units right of the centre of "CH₃OH" at 18 px. */
+function methanolO(p: PlacedMolecule): Point {
+  return { x: p.cx + 10.5, y: p.cy }
+}
+
+/** Water written as text, with its "+" on the product side, on the product's baseline. */
+function WaterText({ p }: { p: PlacedMolecule }) {
+  return (
+    <text x={p.cx} y={p.cy} dominantBaseline="central" fontSize={18} fill={INK}>+ H₂O</text>
+  )
+}
+
+/** Electron-pair arrow from the top of atom `index` of `from`, starting just beyond its lone-pair dots. */
 function PairArrow({ from, index, to, bend = -0.3 }: { from: PlacedMolecule; index: number; to: Point; bend?: number }) {
-  const start = lonePairAnchor(atomPoint(from, index), UP, 20)
+  const start = lonePairAnchor(atomPoint(from, index), UP, 40)
   return <CurvedArrow from={start} to={to} bend={bend} gap={6} />
 }
 
@@ -122,14 +146,21 @@ export function AcetalScrolly({ step }: AcetalScrollyProps) {
   }
 
   if (index === 0) {
+    const propanal = get('propanal')
     const pro = get('pro')
-    const O = atomPoint(pro, 3)
+    const e = atomPoint(pro, 2)
     return (
       <Frame label="Dry HCl protonates the carbonyl oxygen of propanal">
+        <Mol p={propanal} />
+        <text x={326} y={100} textAnchor="middle" dominantBaseline="central" fontSize={18} fill={INK}>H</text>
+        <line x1={340} y1={100} x2={420} y2={100} stroke={INK} strokeWidth={2} />
+        <text x={434} y={100} textAnchor="middle" dominantBaseline="central" fontSize={18} fill={INK}>Cl</text>
+        <PairArrow from={propanal} index={3} to={{ x: 316, y: 100 }} bend={0.3} />
+        <CurvedArrow from={{ x: 380, y: 100 }} to={{ x: 434, y: 120 }} bend={-0.3} gap={4} />
+        <DownArrow x={210} y1={210} y2={320} label="H⁺" />
         <Mol p={pro} />
-        <Electrophile at={atomPoint(pro, 2)} />
-        <text x={58} y={126} fontSize={18} fill={INK}>H–Cl</text>
-        <CurvedArrow from={{ x: 96, y: 118 }} to={O} bend={-0.3} gap={8} />
+        <Electrophile at={e} tx={e.x} ty={e.y + 36} anchor="middle" />
+        <text x={340} y={400} dominantBaseline="central" fontSize={18} fill={INK}>+ Cl⁻</text>
         <Caption>Dry HCl: H⁺ goes onto the carbonyl oxygen</Caption>
       </Frame>
     )
@@ -140,12 +171,14 @@ export function AcetalScrolly({ step }: AcetalScrollyProps) {
     const meoh = get('meoh')
     const oxo = get('oxo')
     const hemi = get('hemi')
+    const e = atomPoint(pro, 2)
+    const o = methanolO(meoh)
     return (
       <Frame label="Methanol adds to protonated propanal, the oxonium ion loses H⁺ and gives the hemiacetal">
         <Mol p={pro} />
-        <Mol p={meoh} />
-        <Electrophile at={atomPoint(pro, 2)} />
-        <PairArrow from={meoh} index={1} to={atomPoint(pro, 2)} />
+        <MethanolText p={meoh} />
+        <Electrophile at={e} tx={e.x - 22} ty={e.y + 28} anchor="end" />
+        <CurvedArrow from={{ x: o.x, y: o.y - 34 }} to={e} bend={0.3} gap={8} />
         <Mol p={oxo} />
         <DownArrow x={290} y1={392} y2={452} label="−H⁺" />
         <Mol p={hemi} />
@@ -160,14 +193,13 @@ export function AcetalScrolly({ step }: AcetalScrollyProps) {
     const acetal = get('acetal')
     const water = get('water')
     return (
-      <Frame label="A second methanol gives the acetal, and water is released">
+      <Frame label="Hemiacetal and methanol give the acetal and water, in dry HCl">
         <Mol p={hemi} />
-        <Mol p={meoh} />
-        <Electrophile at={atomPoint(hemi, 2)} />
-        <PairArrow from={meoh} index={1} to={atomPoint(hemi, 2)} />
-        <DownArrow x={150} y1={196} y2={300} label="−H₂O" />
+        <text x={300} y={150} textAnchor="middle" dominantBaseline="central" fontSize={22} fill={INK}>+</text>
+        <MethanolText p={meoh} />
+        <DownArrow x={290} y1={236} y2={316} label="dry HCl" />
         <Mol p={acetal} />
-        <Mol p={water} />
+        <WaterText p={water} />
         <Caption>Acetal, 1,1-dimethoxypropane: C₅H₁₂O₂</Caption>
       </Frame>
     )
@@ -186,7 +218,7 @@ export function AcetalScrolly({ step }: AcetalScrollyProps) {
         <PairArrow from={glycol} index={0} to={atomPoint(ketone, 2)} />
         <DownArrow x={290} y1={206} y2={300} label="−H₂O" />
         <Mol p={ketal} highlightAtoms={[4, 7]} />
-        <Mol p={water} />
+        <WaterText p={water} />
         <Caption>Cyclic ethylene glycol ketal: C₆H₁₂O₂</Caption>
       </Frame>
     )
@@ -205,9 +237,9 @@ export function AcetalScrolly({ step }: AcetalScrollyProps) {
         <Electrophile at={atomPoint(propanal, 2)} />
         <PairArrow from={nh3} index={0} to={atomPoint(propanal, 2)} />
         <Mol p={hemiaminal} />
-        <DownArrow x={290} y1={392} y2={452} label="−H₂O" />
+        <DownArrow x={300} y1={410} y2={460} label="−H₂O" />
         <Mol p={imine} />
-        <Mol p={water} />
+        <WaterText p={water} />
         <Caption>Propanimine, CH₃CH₂CH=NH: C=N in place of C=O</Caption>
       </Frame>
     )
