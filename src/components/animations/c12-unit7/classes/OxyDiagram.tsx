@@ -26,10 +26,8 @@ export interface OxyDiagramProps {
   showPlanarAngle?: boolean
   /** Show lone pairs on oxygen atoms. */
   showLonePairs?: boolean
-  /** Optional ether left/right arm labels & symmetry line. */
+  /** Optional ether symmetry line & inferred arm labels. */
   etherOverlay?: {
-    leftLabel: string
-    rightLabel: string
     symmetrical: boolean
   }
   /** Surface fill token for small badge chips inside the drawing. */
@@ -178,9 +176,12 @@ export function OxyDiagram({
     const arm2X = arm2.reduce((s, i) => s + frame.points[i].x, 0) / Math.max(arm2.length, 1)
     const leftArm = arm1X <= arm2X ? arm1 : arm2
     const rightArm = arm1X <= arm2X ? arm2 : arm1
+    const leftIsSp2 = leftArm.some((i) => isAromaticRingCarbon(graph, i))
+    const rightIsSp2 = rightArm.some((i) => isAromaticRingCarbon(graph, i))
     const same = classification.etherSymmetry === 'simple'
-    const leftTone = 'var(--orbital-neg)'
-    const rightTone = same ? 'var(--orbital-neg)' : 'var(--ox)'
+    const unequalSp3 = !same && !leftIsSp2 && !rightIsSp2
+    const leftTone = leftIsSp2 ? 'var(--ox)' : 'var(--orbital-neg)'
+    const rightTone = rightIsSp2 ? 'var(--ox)' : 'var(--orbital-neg)'
 
     for (const [arm, tone, prefix] of [
       [leftArm, leftTone, 'l'],
@@ -196,6 +197,10 @@ export function OxyDiagram({
             r={0.28 * scale}
             fill={tone}
             fillOpacity={0.18}
+            stroke={unequalSp3 ? (prefix === 'r' ? 'var(--accent)' : tone) : undefined}
+            strokeOpacity={unequalSp3 ? (prefix === 'r' ? 0.85 : 0.55) : undefined}
+            strokeWidth={unequalSp3 ? 1.6 : undefined}
+            strokeDasharray={unequalSp3 && prefix === 'r' ? '3.5 2.5' : undefined}
           />
         )
       }
@@ -243,8 +248,22 @@ export function OxyDiagram({
       const armY = Math.max(...frame.points.map((p) => p.y)) + 0.62 * scale
       const actualLeftLabel = etherArmGroupLabel(graph, leftArm)
       const actualRightLabel = etherArmGroupLabel(graph, rightArm)
+      const leftChipW = actualLeftLabel.length > 3 ? 48 : 42
+      const rightChipW = actualRightLabel.length > 3 ? 48 : 42
       overlays.push(
         <g key="ether-arm-labels">
+          {unequalSp3 && (
+            <rect
+              x={lx - leftChipW / 2}
+              y={armY - 11}
+              width={leftChipW}
+              height={22}
+              rx={6}
+              fill={surfaceFill}
+              stroke={leftTone}
+              strokeWidth={1.6}
+            />
+          )}
           <text
             x={lx}
             y={armY}
@@ -257,6 +276,19 @@ export function OxyDiagram({
           >
             {actualLeftLabel}
           </text>
+          {unequalSp3 && (
+            <rect
+              x={rx - rightChipW / 2}
+              y={armY - 11}
+              width={rightChipW}
+              height={22}
+              rx={6}
+              fill={surfaceFill}
+              stroke="var(--accent)"
+              strokeWidth={1.6}
+              strokeDasharray="4 3"
+            />
+          )}
           <text
             x={rx}
             y={armY}

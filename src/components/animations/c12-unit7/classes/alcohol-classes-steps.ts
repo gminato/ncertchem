@@ -97,7 +97,7 @@ export const ALCOHOL_STEPS: readonly (readonly AlcoholPanelSpec[])[] = [
       id: 'allylic-3',
       smiles: 'C=CC(C)(O)C',
       name: '2-methylbut-3-en-2-ol',
-      formula: 'CH₂=CH–C(OH)R₂',
+      formula: 'CH₂=CH–C(OH)(CH₃)₂',
       badge: 'sp³ C–OH next to C=C',
       classLabel: '3° allylic',
     },

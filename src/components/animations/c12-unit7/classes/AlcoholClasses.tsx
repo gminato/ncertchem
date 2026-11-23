@@ -31,9 +31,9 @@ export function AlcoholClasses({ step }: AlcoholClassesProps) {
   if (s === 3) {
     const gap = 8
     const padX = 10
-    const topY = 44
+    const topY = 38
     const cardW = (W - 2 * padX - gap) / 2
-    const cardH = 180
+    const cardH = 186
 
     return (
       <svg
@@ -45,7 +45,7 @@ export function AlcoholClasses({ step }: AlcoholClassesProps) {
       >
         <text
           x={W / 2}
-          y={26}
+          y={24}
           textAnchor="middle"
           fontSize={16}
           fontWeight={600}
@@ -77,7 +77,7 @@ export function AlcoholClasses({ step }: AlcoholClassesProps) {
                 graph={p.graph}
                 classification={p.classification}
                 cx={cx}
-                cy={y0 + 58}
+                cy={y0 + 68}
                 maxW={cardW - 30}
                 maxH={78}
                 minScale={41}
@@ -86,7 +86,7 @@ export function AlcoholClasses({ step }: AlcoholClassesProps) {
               />
               <text
                 x={cx}
-                y={y0 + 136}
+                y={y0 + 144}
                 textAnchor="middle"
                 fontSize={15}
                 fontWeight={700}
@@ -97,7 +97,7 @@ export function AlcoholClasses({ step }: AlcoholClassesProps) {
               </text>
               <text
                 x={cx}
-                y={y0 + 160}
+                y={y0 + 166}
                 textAnchor="middle"
                 fontSize={15}
                 fontFamily="var(--font-sans)"
@@ -258,7 +258,13 @@ export function AlcoholClasses({ step }: AlcoholClassesProps) {
         const x0 = padX + i * (colW + gap)
         const cx = x0 + colW / 2
         const splitName = p.name === '2-methylbut-3-en-2-ol'
-        const splitFormula = p.formula === 'CH₂(OH)CH(OH)CH₂OH'
+        const wrappedFormula: readonly [string, string] | null =
+          p.formula === 'CH₂(OH)CH(OH)CH₂OH'
+            ? ['CH₂(OH)–', 'CH(OH)CH₂OH']
+            : p.formula === 'CH₂=CH–C(OH)(CH₃)₂'
+              ? ['CH₂=CH–', 'C(OH)(CH₃)₂']
+              : null
+        const formulaY1 = splitName ? cardY + 298 : cardY + 294
         return (
           <g key={p.id}>
             <rect
@@ -344,27 +350,27 @@ export function AlcoholClasses({ step }: AlcoholClassesProps) {
                 {p.name}
               </text>
             )}
-            {splitFormula ? (
+            {wrappedFormula ? (
               <>
                 <text
                   x={cx}
-                  y={cardY + 294}
+                  y={formulaY1}
                   textAnchor="middle"
                   fontSize={15}
                   fontFamily="var(--font-sans)"
                   fill="var(--fg-muted)"
                 >
-                  CH₂(OH)–
+                  {wrappedFormula[0]}
                 </text>
                 <text
                   x={cx}
-                  y={cardY + 314}
+                  y={formulaY1 + 20}
                   textAnchor="middle"
                   fontSize={15}
                   fontFamily="var(--font-sans)"
                   fill="var(--fg-muted)"
                 >
-                  CH(OH)CH₂OH
+                  {wrappedFormula[1]}
                 </text>
               </>
             ) : (

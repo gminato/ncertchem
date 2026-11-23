@@ -78,6 +78,47 @@ async function svgOutOfBounds(container: Locator): Promise<string[]> {
   })
 }
 
+async function svgCardOutOfBounds(container: Locator): Promise<string[]> {
+  return container.locator('svg[role="img"]').evaluateAll((svgs) => {
+    const out: string[] = []
+    svgs.forEach((svg) => {
+      const [, , vbW] = (svg.getAttribute('viewBox') ?? '0 0 0 0').split(/\s+/).map(Number)
+      const frame = svg.getBoundingClientRect()
+      if (frame.width === 0 || vbW === 0) return
+      const scale = vbW / frame.width
+      svg.querySelectorAll(':scope > g').forEach((card) => {
+        const cardRectEl = card.querySelector(':scope > rect')
+        if (!cardRectEl) return
+        const cw = parseFloat(cardRectEl.getAttribute('width') ?? '0')
+        const ch = parseFloat(cardRectEl.getAttribute('height') ?? '0')
+        if (cw < 100 || ch < 100) return
+        const cr = cardRectEl.getBoundingClientRect()
+        const cx0 = (cr.left - frame.left) * scale
+        const cy0 = (cr.top - frame.top) * scale
+        const cx1 = (cr.right - frame.left) * scale
+        const cy1 = (cr.bottom - frame.top) * scale
+        const leaves = card.querySelectorAll('text, circle, line, path, rect, ellipse, polygon, polyline')
+        leaves.forEach((el) => {
+          if (el === cardRectEl) return
+          if (el.closest('defs, clipPath, mask, pattern, symbol, marker')) return
+          const r = el.getBoundingClientRect()
+          if (r.width === 0 && r.height === 0) return
+          const x0 = (r.left - frame.left) * scale
+          const y0 = (r.top - frame.top) * scale
+          const x1 = (r.right - frame.left) * scale
+          const y1 = (r.bottom - frame.top) * scale
+          if (x0 < cx0 + 0.5 || y0 < cy0 + 0.5 || x1 > cx1 - 0.5 || y1 > cy1 - 0.5) {
+            out.push(
+              `${el.tagName} ${el.textContent?.trim().slice(0, 30) ?? ''} [${x0.toFixed(1)},${y0.toFixed(1)},${x1.toFixed(1)},${y1.toFixed(1)}] outside card [${cx0.toFixed(1)},${cy0.toFixed(1)},${cx1.toFixed(1)},${cy1.toFixed(1)}]`
+            )
+          }
+        })
+      })
+    })
+    return out
+  })
+}
+
 for (const scheme of ['light', 'dark'] as const) {
   test.describe(`Unit 7 Section 1 (${scheme})`, () => {
     test.use({ viewport: { width: 1440, height: 900 }, colorScheme: scheme, reducedMotion: 'reduce' })
@@ -101,6 +142,7 @@ for (const scheme of ['light', 'dark'] as const) {
         await expect(svg).toBeVisible()
         expect(await smallTextLeavesInContainer(scrolly1.locator('[data-testid="scrolly-visual"]'))).toEqual([])
         expect(await svgOutOfBounds(scrolly1.locator('[data-testid="scrolly-visual"]'))).toEqual([])
+        expect(await svgCardOutOfBounds(scrolly1.locator('[data-testid="scrolly-visual"]'))).toEqual([])
         await svg.screenshot({ path: `test-results/screens/c12u7-s1-alcohol-step${k + 1}-${scheme}.png` })
       }
 
@@ -117,6 +159,7 @@ for (const scheme of ['light', 'dark'] as const) {
         await expect(svg).toBeVisible()
         expect(await smallTextLeavesInContainer(scrolly2.locator('[data-testid="scrolly-visual"]'))).toEqual([])
         expect(await svgOutOfBounds(scrolly2.locator('[data-testid="scrolly-visual"]'))).toEqual([])
+        expect(await svgCardOutOfBounds(scrolly2.locator('[data-testid="scrolly-visual"]'))).toEqual([])
         await svg.screenshot({ path: `test-results/screens/c12u7-s1-phenol-ether-step${k + 1}-${scheme}.png` })
       }
 
@@ -160,16 +203,33 @@ for (const scheme of ['light', 'dark'] as const) {
       expect(await svgOutOfBounds(sim)).toEqual([])
       await sim.screenshot({ path: `test-results/screens/c12u7-s1-sim-phenol-${scheme}.png` })
 
-      // Ether mode: mixed (ethyl phenyl ether) and symmetrical (diethyl ether)
+      // Ether mode: mixed (ethyl phenyl ether, ethyl methyl ether) and symmetrical (diethyl ether, diphenyl ether)
       await sim.getByRole('radio', { name: 'Ether' }).click()
-      await sim.getByRole('radiogroup', { name: 'Left group R1' }).getByRole('radio', { name: 'Ethyl (C₂H₅)' }).click()
-      await sim.getByRole('radiogroup', { name: 'Right group R2' }).getByRole('radio', { name: 'Phenyl (C₆H₅)' }).click()
+      await sim.getByRole('radiogroup', { name: 'Group 1 R1' }).getByRole('radio', { name: 'Ethyl (C₂H₅)' }).click()
+      await sim.getByRole('radiogroup', { name: 'Group 2 R2' }).getByRole('radio', { name: 'Phenyl (C₆H₅)' }).click()
       await expect(sim.getByTestId('oxy-name')).toHaveText('Ethoxybenzene')
       await expect(sim.getByTestId('oxy-verdict')).toHaveText('Mixed (unsymmetrical) ether')
       await expect(sim.getByTestId('oxy-hyb')).toHaveText('sp³ & sp²')
       expect(await smallTextLeavesInContainer(sim)).toEqual([])
       expect(await svgOutOfBounds(sim)).toEqual([])
       await sim.screenshot({ path: `test-results/screens/c12u7-s1-sim-ether-mixed-${scheme}.png` })
+
+      await sim.getByRole('button', { name: 'ethyl methyl ether' }).click()
+      await expect(sim.getByTestId('oxy-name')).toHaveText('Methoxyethane')
+      await expect(sim.getByTestId('oxy-verdict')).toHaveText('Mixed (unsymmetrical) ether')
+      await expect(sim.getByTestId('oxy-hyb')).toHaveText('sp³')
+      expect(await smallTextLeavesInContainer(sim)).toEqual([])
+      expect(await svgOutOfBounds(sim)).toEqual([])
+      await sim.screenshot({ path: `test-results/screens/c12u7-s1-sim-ether-mixed-sp3-${scheme}.png` })
+
+      await sim.getByRole('radiogroup', { name: 'Group 1 R1' }).getByRole('radio', { name: 'Phenyl (C₆H₅)' }).click()
+      await sim.getByRole('radiogroup', { name: 'Group 2 R2' }).getByRole('radio', { name: 'Phenyl (C₆H₅)' }).click()
+      await expect(sim.getByTestId('oxy-name')).toHaveText('Phenoxybenzene')
+      await expect(sim.getByTestId('oxy-verdict')).toHaveText('Simple (symmetrical) ether')
+      await expect(sim.getByTestId('oxy-hyb')).toHaveText('sp²')
+      expect(await smallTextLeavesInContainer(sim)).toEqual([])
+      expect(await svgOutOfBounds(sim)).toEqual([])
+      await sim.screenshot({ path: `test-results/screens/c12u7-s1-sim-ether-diaryl-${scheme}.png` })
 
       await sim.getByRole('button', { name: 'diethyl ether' }).click()
       await expect(sim.getByTestId('oxy-verdict')).toHaveText('Simple (symmetrical) ether')

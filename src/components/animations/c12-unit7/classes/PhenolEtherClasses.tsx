@@ -80,15 +80,7 @@ export function PhenolEtherClasses({ step }: PhenolEtherClassesProps) {
               highlightOh={!isEther}
               labelRingAlkyl={s === 0}
               showLonePairs={isEther}
-              etherOverlay={
-                isEther && p.armLeft && p.armRight
-                  ? {
-                      leftLabel: p.armLeft,
-                      rightLabel: p.armRight,
-                      symmetrical: Boolean(p.symmetrical),
-                    }
-                  : undefined
-              }
+              etherOverlay={isEther ? { symmetrical: Boolean(p.symmetrical) } : undefined}
               surfaceFill="var(--surface-raised)"
             />
             <text
@@ -98,7 +90,7 @@ export function PhenolEtherClasses({ step }: PhenolEtherClassesProps) {
               fontSize={15}
               fontWeight={600}
               fontFamily="var(--font-sans)"
-              fill={isEther ? (p.symmetrical ? 'var(--orbital-neg)' : 'var(--ox)') : 'var(--atom-o)'}
+              fill={isEther ? (p.symmetrical ? 'var(--orbital-neg)' : 'var(--fg-muted)') : 'var(--atom-o)'}
             >
               {p.badge}
             </text>

@@ -572,7 +572,6 @@ export interface BuiltOxyMolecule {
   formula: string
   smiles: string
   classification: OxyClassification
-  etherArms?: { leftLabel: string; rightLabel: string; same: boolean }
 }
 
 const ETHER_LABEL: Record<EtherGroup, string> = {
@@ -659,11 +658,6 @@ export function buildOxyMolecule(rawSpec: OxyBuilderSpec): BuiltOxyMolecule {
       formula: oxyFormulaUnicode(meta.smiles),
       smiles: meta.smiles,
       classification: classifyOxySmiles(meta.smiles),
-      etherArms: {
-        leftLabel: ETHER_LABEL[spec.r1],
-        rightLabel: ETHER_LABEL[spec.r2],
-        same: spec.r1 === spec.r2,
-      },
     }
   }
 

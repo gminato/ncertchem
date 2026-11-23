@@ -130,15 +130,7 @@ export function OxyClassBuilder(_props: SimulationProps) {
               labelRingAlkyl={c.family === 'phenol'}
               showPlanarAngle={c.subclassKind === 'vinylic'}
               showLonePairs={c.family === 'ether'}
-              etherOverlay={
-                built.etherArms
-                  ? {
-                      leftLabel: built.etherArms.leftLabel,
-                      rightLabel: built.etherArms.rightLabel,
-                      symmetrical: built.etherArms.same,
-                    }
-                  : undefined
-              }
+              etherOverlay={c.family === 'ether' ? { symmetrical: c.etherSymmetry === 'simple' } : undefined}
               surfaceFill="var(--surface)"
             />
             <text
@@ -335,18 +327,18 @@ export function OxyClassBuilder(_props: SimulationProps) {
           ) : (
             <div className={styles.row}>
               <div className={styles.controlGroup}>
-                <span className={styles.groupLabel}>Left group (R₁)</span>
+                <span className={styles.groupLabel}>Group 1 (R₁)</span>
                 <Segmented
-                  label="Left group R1"
+                  label="Group 1 R1"
                   options={ETHER_GROUP_OPTIONS}
                   value={spec.r1}
                   onChange={(r1) => setSpec((prev) => ({ ...prev, r1 }))}
                 />
               </div>
               <div className={styles.controlGroup}>
-                <span className={styles.groupLabel}>Right group (R₂)</span>
+                <span className={styles.groupLabel}>Group 2 (R₂)</span>
                 <Segmented
-                  label="Right group R2"
+                  label="Group 2 R2"
                   options={ETHER_GROUP_OPTIONS}
                   value={spec.r2}
                   onChange={(r2) => setSpec((prev) => ({ ...prev, r2 }))}

@@ -9,8 +9,6 @@ export interface PhenolEtherPanelSpec {
   formula: string
   badge: string
   classLabel: string
-  armLeft?: string
-  armRight?: string
   symmetrical?: boolean
 }
 
@@ -67,8 +65,6 @@ export const PHENOL_ETHER_STEPS: readonly (readonly PhenolEtherPanelSpec[])[] = 
       formula: 'C₂H₅OC₂H₅',
       badge: 'R₁ = R₂ (both C₂H₅)',
       classLabel: 'Simple (symmetrical) ether',
-      armLeft: 'C₂H₅',
-      armRight: 'C₂H₅',
       symmetrical: true,
     },
   ],
@@ -81,8 +77,6 @@ export const PHENOL_ETHER_STEPS: readonly (readonly PhenolEtherPanelSpec[])[] = 
       formula: 'C₂H₅OCH₃',
       badge: 'R₁ ≠ R₂ (C₂H₅ vs CH₃)',
       classLabel: 'Mixed (unsymmetrical) ether',
-      armLeft: 'C₂H₅',
-      armRight: 'CH₃',
       symmetrical: false,
     },
     {
@@ -92,8 +86,6 @@ export const PHENOL_ETHER_STEPS: readonly (readonly PhenolEtherPanelSpec[])[] = 
       formula: 'C₂H₅OC₆H₅',
       badge: 'R₁ ≠ R₂ (C₂H₅ vs C₆H₅)',
       classLabel: 'Mixed (unsymmetrical) ether',
-      armLeft: 'C₂H₅',
-      armRight: 'C₆H₅',
       symmetrical: false,
     },
   ],
