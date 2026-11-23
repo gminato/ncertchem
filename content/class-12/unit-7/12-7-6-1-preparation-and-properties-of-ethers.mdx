@@ -1,0 +1,266 @@
+---
+class: 12
+unit: 7
+section: "7.6.1-7.6.2"
+order: 11
+title: "Preparation and Physical Properties of Ethers"
+slug: "12-7-6-1-preparation-and-properties-of-ethers"
+access: free
+summary: "Control temperature and halide structure to build symmetrical, unsymmetrical, and aryl ethers instead of alkenes, and see why ethers boil like alkanes yet dissolve in water like alcohols."
+ncert: "Class 12, Part II, Unit 7, Section 7.6.1-7.6.2"
+---
+
+<Hook>
+Ethoxyethane and butan-1-ol share the same molecular formula, $\ce{C4H10O}$, and the exact same molar mass. Yet ethoxyethane boils at $307.6\text{ K}$, barely different from n-pentane at $309.1\text{ K}$, while butan-1-ol refuses to boil until $390\text{ K}$. Drop both oxygen compounds into water, however, and ethoxyethane dissolves nearly as well as the alcohol while n-pentane stays apart. How can one oxygen bridge behave like a hydrocarbon in the pure liquid and like an alcohol in water, and how do chemists forge that $\ce{C-O-C}$ bridge without turning the reactants into an alkene instead?
+</Hook>
+
+## Preparation by dehydration of alcohols
+
+Alcohols lose water when heated with protic acids such as sulphuric acid ($\ce{H2SO4}$) or phosphoric acid ($\ce{H3PO4}$). Two reaction paths compete inside the flask: bimolecular substitution, which links two alcohol molecules into an ether, and elimination, which produces an alkene. Reaction temperature tips the balance.
+
+With ethanol and concentrated $\ce{H2SO4}$:
+
+- Heating at **$413\text{ K}$** favours substitution and yields **ethoxyethane** ($\ce{C2H5OC2H5}$, commonly called diethyl ether) as the main product.
+- Raising the temperature to **$443\text{ K}$** favours elimination and yields **ethene** ($\ce{CH2=CH2}$).
+
+$$
+\ce{CH3CH2OH ->[\ce{H2SO4},\; 413\text{ K}] C2H5OC2H5} \qquad\text{versus}\qquad \ce{CH3CH2OH ->[\ce{H2SO4},\; 443\text{ K}] CH2=CH2 + H2O}
+$$
+
+Historically, diethyl ether served widely as an inhalation anaesthetic, though its slow action and unpleasant recovery period eventually led medicine to replace it with safer alternatives.
+
+### How the $\mathrm{S_N2}$ dehydration mechanism works
+
+At $413\text{ K}$, ether formation proceeds by a bimolecular nucleophilic substitution ($\mathrm{S_N2}$) pathway in three steps, where a neutral ethanol molecule attacks a protonated ethanol molecule:
+
+1. **Protonation of the alcohol:** An oxygen lone pair accepts a proton from the acid catalyst to convert the poor $-\ce{OH}$ leaving group into a good $-\ce{OH2+}$ leaving group.
+
+$$
+\ce{CH3-CH2-OH + H+ -> CH3-CH2-\overset{+}{O}H2}
+$$
+
+2. **Nucleophilic $\mathrm{S_N2}$ attack:** A second ethanol molecule uses an oxygen lone pair to attack the $\alpha$-carbon of the protonated alcohol from the back, displacing a neutral water molecule.
+
+$$
+\ce{CH3CH2-OH + CH3-CH2-\overset{+}{O}H2 -> CH3CH2-\overset{+}{O}(H)-CH2CH3 + H2O}
+$$
+
+3. **Deprotonation:** The protonated ether transfers $\ce{H+}$ back to the medium, freeing the neutral ether and regenerating the acid catalyst.
+
+$$
+\ce{CH3CH2-\overset{+}{O}(H)-CH2CH3 -> CH3CH2-O-CH2CH3 + H+}
+$$
+
+### Scope and limitations of acid-catalysed dehydration
+
+Acid dehydration is a clean route only for **symmetrical ethers** carrying **unhindered primary alkyl groups** at controlled low temperatures. Two important limitations restrict its use:
+
+- **Secondary and tertiary alcohols fail to give ethers:** With branched $2^\circ$ or $3^\circ$ alcohols, dehydration shifts toward an $\mathrm{S_N1}$-type pathway in which elimination easily outpaces substitution, so alkenes form instead of ethers.
+- **Unsymmetrical ethers give mixtures:** Trying to make ethyl methyl ether ($\ce{CH3-O-CH2CH3}$) by dehydrating a mixture of methanol and ethanol lets either alcohol protonate and either alcohol act as the nucleophile. That creates three competing ethers ($\ce{CH3OCH3}$, $\ce{C2H5OC2H5}$, and $\ce{CH3OC2H5}$) that are tedious to separate.
+
+<Scrolly animation="ether-dehydration-vs-alkene">
+  <Step>
+    **Protonating the leaving group:** Ethanol meets $\ce{H+}$ from $\ce{H2SO4}$. An oxygen lone pair captures the proton, turning the hydroxyl group into $-\ce{OH2+}$ so that water can leave cleanly in the next step.
+  </Step>
+  <Step>
+    **Bimolecular attack at 413 K:** Keeping the temperature at $413\text{ K}$ lets a second ethanol molecule attack the carbon bonded to $-\ce{OH2+}$ via an $\mathrm{S_N2}$ displacement. Water departs, and losing $\ce{H+}$ from the oxonium intermediate yields ethoxyethane ($\ce{C2H5OC2H5}$).
+  </Step>
+  <Step>
+    **Elimination takes over at 443 K:** Raising the temperature to $443\text{ K}$ shifts the pathway to elimination. Instead of another ethanol attacking carbon, a $\beta$-proton leaves and a $\pi$ bond forms, giving ethene ($\ce{CH2=CH2}$) and water.
+  </Step>
+  <Step>
+    **Why branching and mixtures fail:** Replacing a $1^\circ$ alcohol with a $2^\circ$ or $3^\circ$ alcohol accelerates elimination over substitution to give alkenes, while mixing two $1^\circ$ alcohols such as $\ce{CH3OH}$ and $\ce{C2H5OH}$ yields all three possible ethers ($\ce{CH3OCH3}$, $\ce{CH3OC2H5}$, and $\ce{C2H5OC2H5}$).
+  </Step>
+</Scrolly>
+
+## Williamson synthesis
+
+To build **both symmetrical and unsymmetrical ethers** selectively, including ethers containing secondary or tertiary alkyl groups, chemists turn to the **Williamson synthesis**, named after Alexander William Williamson (1824-1904), who became Professor of Chemistry at University College, London in 1849.
+
+In this laboratory method, an alkyl halide reacts with a sodium alkoxide:
+
+$$
+\ce{R-X + R'-O^-Na+ -> R-O-R' + NaX}
+$$
+
+The reaction proceeds by **$\mathrm{S_N2}$ nucleophilic attack** of the alkoxide ion ($\ce{R'-O-}$) on the alkyl halide ($\ce{R-X}$), displacing halide ($\ce{X-}$).
+
+### Why the halide must be primary
+
+Alkoxide ions are strong nucleophiles, but they are also **strong bases**. Because $\mathrm{S_N2}$ attack is sensitive to steric crowding, the structure of the alkyl halide decides whether substitution or elimination wins:
+
+- **Primary alkyl halide ($1^\circ$ $\ce{R-X}$): substitution dominates.** Unhindered primary halides undergo smooth $\mathrm{S_N2}$ displacement even when the alkoxide itself is bulky. For example, sodium tert-butoxide reacts cleanly with bromomethane to produce tert-butyl methyl ether (2-methoxy-2-methylpropane):
+
+$$
+\ce{(CH3)3C-O^-Na+ + CH3-Br -> (CH3)3C-O-CH3 + NaBr}
+$$
+
+- **Secondary and tertiary alkyl halides: elimination competes or dominates.** With a $2^\circ$ halide, elimination competes strongly with substitution. With a **$3^\circ$ alkyl halide**, steric hindrance blocks backside $\mathrm{S_N2}$ attack completely, so the alkoxide acts purely as a base, abstracting a $\beta$-proton to form **an alkene as the sole organic product** with zero ether. Reversing the partners above illustrates this pitfall: sodium methoxide with tert-butyl bromide yields exclusively 2-methylpropene:
+
+$$
+\ce{(CH3)3C-Br + CH3O^-Na+ -> CH2=C(CH3)2 + NaBr + CH3OH}
+$$
+
+### Making alkyl aryl ethers from phenols
+
+Phenols also undergo Williamson synthesis cleanly when converted first into the **phenoxide ion**. Treating phenol with aqueous $\ce{NaOH}$ generates sodium phenoxide ($\ce{C6H5O^-Na+}$), which then attacks an alkyl halide ($\ce{R-X}$) by $\mathrm{S_N2}$ substitution to produce an alkyl aryl ether ($\ce{C6H5-O-R}$), such as methoxybenzene (anisole) when $\ce{R-X}$ is a methyl halide:
+
+$$
+\ce{C6H5-OH + NaOH -> C6H5-O^-Na+ ->[\ce{R-X}] C6H5-O-R + NaX}
+$$
+
+<Scrolly animation="williamson-sn2-vs-e2">
+  <Step>
+    **The general $\mathrm{S_N2}$ displacement:** An alkoxide oxygen lone pair attacks the carbon of a primary alkyl halide ($\ce{R-X}$) from the side opposite the leaving halide, forming a new $\ce{C-O}$ bond while $\ce{Na+}$ and $\ce{X-}$ pair up as $\ce{NaX}$.
+  </Step>
+  <Step>
+    **Bulky alkoxide on a primary halide succeeds:** Sodium tert-butoxide ($\ce{(CH3)3C-O^-Na+}$) approaches bromomethane ($\ce{CH3-Br}$). Because the methyl carbon is unhindered and carries no $\beta$-hydrogens, $\mathrm{S_N2}$ substitution proceeds cleanly to tert-butyl methyl ether ($\ce{(CH3)3C-O-CH3}$).
+  </Step>
+  <Step>
+    **Swapping partners triggers elimination:** With tert-butyl bromide ($\ce{(CH3)3C-Br}$) and sodium methoxide ($\ce{CH3O^-Na+}$), three methyl groups block backside attack. Methoxide abstracts a $\beta$-hydrogen instead, ejecting $\ce{Br-}$ and producing 2-methylpropene ($\ce{CH2=C(CH3)2}$), $\ce{NaBr}$, and $\ce{CH3OH}$ with no ether formed.
+  </Step>
+  <Step>
+    **From phenol to alkyl aryl ether:** Phenol reacts with $\ce{NaOH}$ to form the resonance-stabilised sodium phenoxide ($\ce{C6H5O^-Na+}$). The phenoxide oxygen then displaces halide from $\ce{R-X}$ in an $\mathrm{S_N2}$ step to yield the alkyl aryl ether $\ce{C6H5-O-R}$.
+  </Step>
+</Scrolly>
+
+## Physical properties of ethers
+
+### Polarity and boiling points
+
+In an ether, each $\ce{C-O}$ bond is polar because oxygen is more electronegative than carbon. Because the $\ce{C-O-C}$ bond angle is bent (for example, $111.7^\circ$ in methoxymethane), the two $\ce{C-O}$ bond dipoles do not cancel, giving ether molecules a **net dipole moment**.
+
+Despite this polarity, ethers boil far below alcohols of similar molar mass and close to alkanes of comparable molar mass. The reason lies in hydrogen bonding:
+
+- **Alcohols** carry an $-\ce{O-H}$ group, so molecules link together in the pure liquid through strong intermolecular $\ce{O-H\cdots O}$ hydrogen bonds.
+- **Ethers** have no hydrogen attached to oxygen, so pure ether molecules cannot hydrogen-bond with one another. Their weak dipole-dipole attractions add little beyond ordinary van der Waals forces.
+
+| Compound | Formula | Boiling point ($\text{K}$) | Miscibility in water ($\text{g per 100 mL}$) |
+| :--- | :--- | :--- | :--- |
+| n-Pentane | $\ce{CH3(CH2)3CH3}$ | $309.1$ | Essentially immiscible |
+| Ethoxyethane | $\ce{C2H5-O-C2H5}$ | $307.6$ | $7.5$ |
+| Butan-1-ol | $\ce{CH3(CH2)3-OH}$ | $390$ | $9$ |
+
+Notice that ethoxyethane ($307.6\text{ K}$) and n-pentane ($309.1\text{ K}$) sit within $1.5\text{ K}$ of each other, whereas butan-1-ol boils at $390\text{ K}$, more than $80\text{ K}$ higher.
+
+### Miscibility with water
+
+When an ether enters water, the picture changes completely. Although an ether molecule cannot donate a hydrogen bond to another ether molecule, its oxygen atom still holds two lone pairs and **accepts hydrogen bonds from water's $\ce{O-H}$ hydrogens** ($\ce{R2O\cdots H-O-H}$).
+
+As a result, the water miscibility of lower ethers closely tracks that of alcohols of similar molar mass:
+
+- **Ethoxyethane** dissolves to the extent of **$7.5\text{ g per 100 mL}$** of water, very close to **butan-1-ol** at **$9\text{ g per 100 mL}$** of water.
+- **n-Pentane** lacks an oxygen atom, cannot form hydrogen bonds with water molecules, and remains **essentially immiscible**.
+
+<Scrolly animation="ether-hbond-boiling-miscibility">
+  <Step>
+    **Net dipole without self-hydrogen bonding:** In an ether, two polar $\ce{C-O}$ bonds meet at a bent angle around oxygen, creating a net molecular dipole. However, with no $\ce{O-H}$ hydrogen present, neighbouring ether molecules cannot form hydrogen bonds with one another.
+  </Step>
+  <Step>
+    **Boiling points side by side:** Comparing molecules of similar molar mass puts n-pentane at $309.1\text{ K}$ and ethoxyethane right beside it at $307.6\text{ K}$, while butan-1-ol towers above both at $390\text{ K}$ because extra thermal energy is required to break its intermolecular hydrogen-bond network.
+  </Step>
+  <Step>
+    **Hydrogen bonding with water flips solubility:** In aqueous solution, water molecules donate $\ce{O-H}$ hydrogen bonds to the lone pairs on ethoxyethane's oxygen atom, lifting its solubility to $7.5\text{ g per 100 mL}$, close to butan-1-ol ($9\text{ g per 100 mL}$), while n-pentane stays separated as an immiscible layer.
+  </Step>
+</Scrolly>
+
+## Explore synthesis routes and physical properties
+
+Use the lab below to test both ether-making strategies and inspect why ethoxyethane pairs alkane-like volatility with alcohol-like water miscibility.
+
+{/*
+SIM: ether-synthesis-and-properties-lab
+Controls:
+  1. Mode tabs: "Synthesis Lab" and "Physical Properties Lab".
+  2. In Synthesis Lab:
+     - Route selector: "Alcohol Dehydration (H2SO4)" vs "Williamson Synthesis".
+     - For Alcohol Dehydration: alcohol class selector ("1° Ethanol (CH3CH2OH)", "1° Mixture (CH3OH + C2H5OH)", "2° Propan-2-ol", "3° tert-Butyl alcohol") and temperature toggle ("413 K", "443 K").
+     - For Williamson Synthesis: nucleophile selector ("CH3O- Na+", "(CH3)3CO- Na+", "C6H5O- Na+") and alkyl halide selector ("CH3-Br (1°)", "CH3CH2-Br (1°)", "(CH3)3C-Br (3°)").
+  3. In Physical Properties Lab:
+     - Compound selector: "n-Pentane", "Ethoxyethane", "Butan-1-ol" (and "Compare All").
+     - Phase view toggle: "Pure Liquid (Boiling)" vs "In Water (Miscibility)".
+Chemistry rules (exact NCERT 7.6.1-7.6.2 values from src/lib/chem/ncert-c12-unit7-data.ts):
+  - Ethanol + H2SO4 at 413 K -> Ethoxyethane (C2H5OC2H5) via SN2; at 443 K -> Ethene (CH2=CH2) via elimination.
+  - 1° mixture (CH3OH + C2H5OH) -> Statistical mixture of 3 ethers (CH3OCH3, CH3OC2H5, C2H5OC2H5).
+  - 2° or 3° alcohol + H2SO4 -> Elimination dominates (propene or 2-methylpropene), ether synthesis fails.
+  - Williamson with 1° halide (CH3-Br or CH3CH2-Br) + any alkoxide or phenoxide -> SN2 substitution yields the target ether + NaBr cleanly.
+  - Williamson with 3° halide ((CH3)3C-Br) + alkoxide -> Elimination is sole reaction; forms exclusively 2-methylpropene (CH2=C(CH3)2) + NaBr + alcohol (0% ether). With phenoxide + 3° halide -> elimination also dominates over SN2.
+  - Physical Properties (NCERT Section 7.6.2): n-Pentane (309.1 K, essentially immiscible), Ethoxyethane (307.6 K, 7.5 g / 100 mL water, H-bond acceptor only), Butan-1-ol (390 K, 9 g / 100 mL water, H-bond donor and acceptor).
+Visual layout:
+  - Left/top interactive SVG stage: shows curved-arrow mechanism and structural products in Synthesis Lab, or a molecular H-bond network + boiling point thermometer + water-layer beaker in Physical Properties Lab.
+  - Right/bottom readout panel: pathway verdict ("SN2 Substitution" vs "Elimination" vs "Mixed Ethers"), major product, by-products, and ether yield badge in Synthesis Lab; boiling point (K), water miscibility (g / 100 mL), and H-bond donor/acceptor flags in Properties Lab.
+*/}
+<Simulation name="ether-synthesis-and-properties-lab" title="Ether Synthesis and Properties Lab" />
+
+## Check your understanding
+
+<Check
+  n={1}
+  numeric
+  answer={82.4}
+  tolerance={0.1}
+  unit="K"
+  explanation="Butan-1-ol boils at 390 K and ethoxyethane boils at 307.6 K. Subtracting gives 390 - 307.6 = 82.4 K. This large gap arises because butan-1-ol molecules form intermolecular O-H···O hydrogen bonds in the pure liquid, whereas ethoxyethane molecules cannot hydrogen-bond with one another."
+>
+Butan-1-ol boils at $390\text{ K}$ and ethoxyethane boils at $307.6\text{ K}$. By how many kelvin does the boiling point of butan-1-ol exceed that of ethoxyethane?
+</Check>
+
+<Check
+  n={2}
+  options={[
+    "Ethoxyethane, by SN2 attack of a neutral ethanol molecule on a protonated ethanol molecule",
+    "Ethene, by SN2 displacement of water",
+    "Ethoxyethane, by SN1 dissociation of a primary carbocation",
+    "Ethene, by acid-catalysed elimination"
+  ]}
+  answer={0}
+  explanation="At 413 K with H₂SO₄, ethanol undergoes bimolecular nucleophilic substitution (SN2): an unprotonated ethanol molecule attacks protonated ethanol, displacing H₂O to give ethoxyethane after deprotonation. Raising the temperature to 443 K shifts the reaction to elimination, producing ethene."
+>
+Ethanol is heated with concentrated $\ce{H2SO4}$ at $413\text{ K}$. Which is the major product, and by what mechanism does it form?
+</Check>
+
+<Check
+  n={3}
+  options={[
+    "CH₃O⁻Na⁺ + (CH₃)₂CH-Br",
+    "(CH₃)₂CHO⁻Na⁺ + CH₃-Br",
+    "Propan-2-ol + methanol + H₂SO₄ at 443 K",
+    "(CH₃)₂CH-Br + NaOH(aq)"
+  ]}
+  answer={1}
+  explanation="Williamson synthesis gives the best yield when the alkyl halide is primary (unhindered) and any bulky secondary or tertiary group sits on the alkoxide. Sodium isopropoxide attacking bromomethane (CH₃-Br) proceeds cleanly by SN2 substitution to form 2-methoxypropane. Using a secondary halide such as 2-bromopropane with a strong base like CH₃O⁻Na⁺ leads to competing elimination, while acid dehydration of a secondary alcohol at 443 K gives alkenes and mixed products."
+>
+Which reactant pair should be chosen to prepare 2-methoxypropane, $\ce{CH3-O-CH(CH3)2}$, in good yield by the Williamson synthesis?
+</Check>
+
+<Check
+  n={4}
+  options={[
+    "Treat phenol with NaOH to form sodium phenoxide, then react with iodomethane (CH₃-I)",
+    "React chlorobenzene directly with sodium methoxide (CH₃O⁻Na⁺) at room temperature",
+    "Heat phenol and methanol with H₂SO₄ at 443 K",
+    "React bromobenzene with water and NaOH"
+  ]}
+  answer={0}
+  explanation="Phenols are converted into alkyl aryl ethers by first deprotonating phenol with NaOH to form sodium phenoxide (C₆H₅O⁻Na⁺), which then performs SN2 displacement on a primary alkyl halide such as CH₃-I to produce anisole (C₆H₅OCH₃). Direct SN2 attack on an aryl halide such as chlorobenzene does not occur under mild Williamson conditions."
+>
+How is anisole (methoxybenzene, $\ce{C6H5OCH3}$) prepared via the Williamson synthesis?
+</Check>
+
+<Check
+  n={5}
+  numeric
+  answer={15}
+  tolerance={0.1}
+  unit="g"
+  explanation="The miscibility of ethoxyethane in water is 7.5 g per 100 mL of water. For 200 mL of water, twice the mass dissolves: 7.5 g × 2 = 15 g. Ethoxyethane dissolves to this extent because its oxygen lone pairs accept hydrogen bonds from water molecules."
+>
+The miscibility of ethoxyethane in water is $7.5\text{ g}$ per $100\text{ mL}$ of water. How many grams of ethoxyethane can dissolve in $200\text{ mL}$ of water?
+</Check>
+
+<KeyIdeas>
+- Acid-catalysed dehydration of ethanol with $\ce{H2SO4}$ is temperature-controlled: $413\text{ K}$ gives ethoxyethane ($\ce{C2H5OC2H5}$) via an $\mathrm{S_N2}$ pathway, whereas $443\text{ K}$ gives ethene ($\ce{CH2=CH2}$); the method works cleanly only for symmetrical ethers from unhindered primary alcohols.
+- The Williamson synthesis ($\ce{R-X + R'-O^-Na+ -> R-O-R' + NaX}$) builds both symmetrical and unsymmetrical ethers by $\mathrm{S_N2}$ displacement and requires a primary alkyl halide; with tertiary alkyl halides, strong-base elimination yields exclusively an alkene.
+- Phenols form alkyl aryl ethers through sodium phenoxide ($\ce{C6H5O^-Na+}$) reacting with an alkyl halide ($\ce{R-X}$).
+- Ethers have a net dipole moment from their bent polar $\ce{C-O-C}$ bonds, yet lack $\ce{O-H}$ self-hydrogen bonding, so their boiling points match alkanes of comparable molar mass ($307.6\text{ K}$ for ethoxyethane vs $309.1\text{ K}$ for n-pentane, far below $390\text{ K}$ for butan-1-ol) while their oxygen lone pairs accept hydrogen bonds from water to give alcohol-like miscibility ($7.5\text{ g}$ vs $9\text{ g}$ per $100\text{ mL}$ water).
+</KeyIdeas>
