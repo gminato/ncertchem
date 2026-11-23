@@ -63,7 +63,7 @@ function ProductBlock({ p, x, y }: { p: Product; x: number; y: number }) {
           {p.condensed}
         </text>
       ) : nitro ? (
-        <BenzeneRing variant="kekule" substituents={NITRO_RING} x={x + 40} y={y} />
+        <BenzeneRing variant="kekule" substituents={NITRO_RING} x={x + 4} y={y} />
       ) : (
         <SkeletalFormula graph={parseSmiles(p.smiles)} scale={40} x={x} y={y} />
       )}
@@ -113,7 +113,7 @@ export function CarbonylFateSorter() {
 
           <line x1={200} y1={150} x2={290} y2={150} stroke="var(--fg-muted)" strokeWidth={2} />
           <polygon points="296,150 282,144 282,156" fill="var(--fg-muted)" />
-          <text x={272} y={132} textAnchor="middle" fontSize={15} fontFamily="var(--font-sans)" fill="var(--fg-muted)">
+          <text x={248} y={132} textAnchor="middle" fontSize={15} fontFamily="var(--font-sans)" fill="var(--fg-muted)">
             {conditionLabel}
           </text>
 
