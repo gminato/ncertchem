@@ -24,7 +24,8 @@ export interface MechanismProfileProps extends Omit<EnergyProfileProps, 'profile
 }
 
 /** Energy against reaction coordinate for a one-step or two-step mechanism, with the same axis titles in every Section. */
-export function MechanismProfile({ kind, ...rest }: MechanismProfileProps) {
+/** `x` and `y` place the top-left corner of the MECHANISM_PROFILE_SIZE box; the margins sit inside it. */
+export function MechanismProfile({ kind, x = 0, y = 0, ...rest }: MechanismProfileProps) {
   const profile = [...LEVELS[kind]]
   const labels =
     kind === 'one-step'
@@ -32,8 +33,8 @@ export function MechanismProfile({ kind, ...rest }: MechanismProfileProps) {
       : { peakLabel: 'transition state 1', intermediateLabel: 'carbocation intermediate' }
   return (
     <EnergyProfile
-      x={MARGIN_LEFT}
-      y={MARGIN_TOP}
+      x={x + MARGIN_LEFT}
+      y={y + MARGIN_TOP}
       width={MECHANISM_PROFILE_SIZE.width - MARGIN_LEFT - MARGIN_RIGHT}
       height={MECHANISM_PROFILE_SIZE.height - MARGIN_TOP - MARGIN_BOTTOM}
       profile={profile}
