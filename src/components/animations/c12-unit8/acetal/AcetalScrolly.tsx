@@ -74,7 +74,7 @@ function Caption({ children }: { children: ReactNode }) {
 
 function Frame({ label, children }: { label: string; children: ReactNode }) {
   return (
-    <svg viewBox={`0 0 ${W} ${H}`} width="100%" height="auto" role="img" aria-label={label} style={{ display: 'block' }}>
+    <svg viewBox={`0 0 ${W} ${H}`} role="img" aria-label={label} style={{ width: '100%', height: 'auto', display: 'block' }}>
       {children}
     </svg>
   )

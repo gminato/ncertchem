@@ -17,7 +17,7 @@ async function expectCleanSim(sim: Locator, where: string) {
 const STATES: { name: string; act: (sim: Locator) => Promise<void> }[] = [
   { name: 'default', act: async () => {} },
   { name: 'hemiacetal', act: async (sim) => { await sim.getByRole('button', { name: 'Methanol, 1 equivalent' }).click(); await expect(sim.locator('[aria-live="polite"]')).toContainText('hemiacetal') } },
-  { name: 'hydrolysed', act: async (sim) => { await sim.getByRole('switch', { name: 'Hydrolyse back with aqueous mineral acid' }).click(); await expect(sim.locator('[aria-live="polite"]')).toContainText('hydrolysed') } },
+  { name: 'hydrolysed', act: async (sim) => { await sim.getByRole('button', { name: 'Methanol, 2 equivalents' }).click(); await sim.getByRole('switch', { name: 'Hydrolyse back with aqueous mineral acid' }).click(); await expect(sim.locator('[aria-live="polite"]')).toContainText('hydrolysed') } },
   { name: 'butanone', act: async (sim) => { await sim.getByRole('radio', { name: 'Butan-2-one' }).click(); await expect(sim.locator('[aria-live="polite"]')).toContainText('butan-2-one') } },
   // { name: 'changed', act: async (sim) => { await sim.getByRole('button', { name: '…' }).click(); await expect(sim.locator('[aria-live="polite"]')).toContainText('…') } },
 ]
