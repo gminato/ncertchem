@@ -24,7 +24,7 @@ export interface AldolScrollyProps {
 
 /** One viewBox for every Step, so the panel keeps its size as the reader scrolls. */
 const W = 580
-const H = 420
+const H = 460
 const INK = 'var(--fg)'
 const MUTED = 'var(--fg-muted)'
 const LABEL = 15
@@ -227,8 +227,8 @@ function Step5() {
 /** Step 6: 2 × 2 grid of the four aldol products from propanal and 2-methylpropanal. */
 function Step6() {
   const cols = [196, 436]
-  const rows = [130, 300]
-  const nameY = [207, 362]
+  const rows = [130, 334]
+  const nameY = [207, 396]
   const cells = GRID.map((c, k) => ({ graph: c.graph, x: cols[k % 2], y: rows[Math.floor(k / 2)], nameY: nameY[Math.floor(k / 2)] }))
   return (
     <g>
