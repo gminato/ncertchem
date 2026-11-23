@@ -232,19 +232,27 @@ export function FunctionalGroupMolecule({
     { kind: 'wedge' as const, deg: 86 },
   ]
 
-  // Lone pair lobe angles above oxygen (-128° and -52°)
-  const lpAngles = [-128, -52]
-  const lpLen = 54 * s
-  const lpHalfW = 14 * s
+  // Lone pair lobe angles above oxygen (-108° and -72°)
+  const lpAngles = [-108, -72]
+  const lpLen = 40 * s
+  const lpHalfW = 9 * s
 
   // Bond segments trimmed cleanly around atom labels
-  const trimC = moleculeId === 'phenol' ? 3 : 16
+  const trimC = moleculeId === 'phenol' ? 0 : 16
   const trimO = 17
   const coSeg = alongDist(C1, O, trimC, trimO)
   const rightSeg = alongDist(O, RAtom, trimO, moleculeId === 'methoxymethane' ? 16 : 15)
 
-  // Methanol 142 pm ghost reference point along left bond
-  const ghostPt = polar(O, methanolRec.coBondLengthPm * s, leftAngleDeg)
+  // Bond-length DimensionCallout offset & methanol 142 pm ghost tick along the bracket line
+  const coOffset = -38 * s
+  const coDx = O.x - C1.x
+  const coDy = O.y - C1.y
+  const coSegLen = Math.hypot(coDx, coDy) || 1
+  const coNx = -coDy / coSegLen
+  const coNy = coDx / coSegLen
+  const oBracket: Pt = { x: O.x + coNx * coOffset, y: O.y + coNy * coOffset }
+  const cBracket: Pt = { x: C1.x + coNx * coOffset, y: C1.y + coNy * coOffset }
+  const ghostBracketPt = polar(oBracket, methanolRec.coBondLengthPm * s, leftAngleDeg)
 
   const atomFont = compact ? 20 : 22
   const hFont = 19
@@ -291,21 +299,21 @@ export function FunctionalGroupMolecule({
               />
             )
           })}
-          {/* Outward steric push arrows */}
+          {/* Outward steric push arrows (dropped clear below ref 109°28′ label) */}
           <line
             x1={O.x - 24 * s}
-            y1={C1.y + 20 * s}
+            y1={C1.y + 43 * s}
             x2={C1.x + 24 * s}
-            y2={C1.y + 20 * s}
+            y2={C1.y + 43 * s}
             stroke="var(--caution)"
             strokeWidth={2.4}
             markerEnd={`url(#arrow-${uid})`}
           />
           <line
             x1={O.x + 24 * s}
-            y1={RAtom.y + 20 * s}
+            y1={RAtom.y + 43 * s}
             x2={RAtom.x - 24 * s}
-            y2={RAtom.y + 20 * s}
+            y2={RAtom.y + 43 * s}
             stroke="var(--caution)"
             strokeWidth={2.4}
             markerEnd={`url(#arrow-${uid})`}
@@ -370,7 +378,7 @@ export function FunctionalGroupMolecule({
           {!compact && (
             <text
               x={O.x}
-              y={O.y + refArcR + 20 * s}
+              y={O.y + refArcR + 13 * s}
               textAnchor="middle"
               dominantBaseline="central"
               fontSize={19}
@@ -461,9 +469,9 @@ export function FunctionalGroupMolecule({
           })()}
           {showLonePairs && (
             <CurvedArrow
-              from={polar(O, lpLen * 0.56, -132)}
+              from={polar(O, lpLen * 0.56, lpAngles[0])}
               to={{ x: C1.x * 0.36 + O.x * 0.64 - 4 * s, y: C1.y * 0.36 + O.y * 0.64 - 8 * s }}
-              bend={0.3}
+              bend={0.24}
               kind="pair"
               headSize={11}
               strokeWidth={2.2}
@@ -629,23 +637,23 @@ export function FunctionalGroupMolecule({
         </g>
       )}
 
-      {/* 10. Methanol 142 pm ghost tick along C-O direction */}
+      {/* 10. Methanol 142 pm ghost tick along C-O DimensionCallout bracket */}
       {showMethanolGhost && moleculeId !== 'methanol' && (
         <g>
           <line
-            x1={C1.x}
-            y1={C1.y}
-            x2={ghostPt.x}
-            y2={ghostPt.y}
+            x1={cBracket.x}
+            y1={cBracket.y}
+            x2={ghostBracketPt.x}
+            y2={ghostBracketPt.y}
             stroke="var(--fg-subtle)"
-            strokeWidth={2}
+            strokeWidth={1.8}
             strokeDasharray="3 3"
           />
           <circle
-            cx={ghostPt.x}
-            cy={ghostPt.y}
+            cx={ghostBracketPt.x}
+            cy={ghostBracketPt.y}
             r={4}
-            fill="none"
+            fill="var(--surface)"
             stroke="var(--fg-muted)"
             strokeWidth={1.6}
           />
@@ -726,10 +734,10 @@ export function FunctionalGroupMolecule({
           <DimensionCallout
             p={C1}
             q={O}
-            offset={-26 * s}
+            offset={coOffset}
             label={`${rec.coBondLengthPm} pm`}
-            labelDx={compact ? -36 * s : -36 * s}
-            labelDy={compact ? -14 * s : -18 * s}
+            labelDx={-36 * s}
+            labelDy={-17 * s}
             fontSize={calloutFont}
             color={moleculeId === 'phenol' ? 'var(--accent)' : 'var(--fg)'}
           />
@@ -738,10 +746,10 @@ export function FunctionalGroupMolecule({
             <DimensionCallout
               p={O}
               q={RAtom}
-              offset={-26 * s}
+              offset={coOffset}
               label={`${rec.ohBondLengthPm} pm`}
-              labelDx={compact ? 36 * s : 28 * s}
-              labelDy={compact ? -12 * s : -16 * s}
+              labelDx={compact ? 34 * s : 28 * s}
+              labelDy={compact ? -14 * s : -14 * s}
               fontSize={calloutFont}
               color="var(--fg)"
             />
@@ -752,8 +760,20 @@ export function FunctionalGroupMolecule({
       {/* 14. Carbon hybridisation tag */}
       {showHybridTags && !compact && (
         <text
-          x={moleculeId === 'phenol' ? ringCentre.x - 20 * s : C1.x - 56 * s}
-          y={moleculeId === 'phenol' ? ringCentre.y - ringR - 20 * s : C1.y - 44 * s}
+          x={
+            moleculeId === 'phenol'
+              ? ringCentre.x - 20 * s
+              : showStericHalos && moleculeId === 'methoxymethane'
+                ? C1.x - 82 * s
+                : C1.x - 62 * s
+          }
+          y={
+            moleculeId === 'phenol'
+              ? ringCentre.y - ringR - 20 * s
+              : showStericHalos && moleculeId === 'methoxymethane'
+                ? C1.y - 68 * s
+                : C1.y - 46 * s
+          }
           textAnchor="middle"
           dominantBaseline="central"
           fontSize={19}
