@@ -113,9 +113,12 @@ export function CarbonylFateSorter() {
 
           <line x1={200} y1={150} x2={290} y2={150} stroke="var(--fg-muted)" strokeWidth={2} />
           <polygon points="296,150 282,144 282,156" fill="var(--fg-muted)" />
-          <text x={248} y={132} textAnchor="middle" fontSize={15} fontFamily="var(--font-sans)" fill="var(--fg-muted)">
-            {conditionLabel}
-          </text>
+          {/* Split at "/" onto two lines, so a long reagent (Conc. HNO₃/H₂SO₄) stays over its arrow and clear of the product. */}
+          {conditionLabel.split('/').map((part, i, all) => (
+            <text key={part} x={248} y={136 - (all.length - 1 - i) * 18} textAnchor="middle" fontSize={15} fontFamily="var(--font-sans)" fill="var(--fg-muted)">
+              {i < all.length - 1 ? `${part} +` : part}
+            </text>
+          ))}
 
           {products.length === 0 ? (
             <text x={435} y={150} textAnchor="middle" dominantBaseline="middle" fontSize={17} fontFamily="var(--font-sans)" fill="var(--fg-muted)">
