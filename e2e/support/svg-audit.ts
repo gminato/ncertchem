@@ -96,6 +96,15 @@ export async function auditSvg(svg: Locator, opts: SvgAuditOptions): Promise<Svg
           }
         })
       }
+      // A panel with a max-height (the Scrolly's sticky panel) does not grow to fit a tall drawing: the SVG spills
+      // out of it over the page. Report that as drawing outside, in pixels.
+      let box: Element | null = root.parentElement
+      while (box && getComputedStyle(box).maxHeight === 'none') box = box.parentElement
+      if (box) {
+        const p = box.getBoundingClientRect()
+        const spill = Math.max(rect.bottom - p.bottom, p.top - rect.top)
+        if (spill > 2) outside.push(`svg spills out of its panel by ${spill.toFixed(0)} px (viewBox too tall for the panel)`)
+      }
       return { small, overlaps, outside }
     },
     { minPx: opts.minPx, overlapShare: opts.overlapShare ?? 0.2 }

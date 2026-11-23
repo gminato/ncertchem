@@ -198,6 +198,7 @@ import { HaloareneReactivity } from './c12-unit6/arenes/HaloareneReactivity'
 import { CarbonylRedoxScrolly } from './c12-unit8/redox/CarbonylRedoxScrolly'
 import { NucleophilicAdditionScrolly } from './c12-unit8/nucadd/NucleophilicAdditionScrolly'
 import { AcidStrengthScrolly } from './c12-unit8/acidity/AcidStrengthScrolly'
+import { CarbonylRoutesScrolly } from './c12-unit8/routes/CarbonylRoutesScrolly'
 
 /**
  * Animations available to a Scrolly Animation, keyed by the `animation` prop.
@@ -406,6 +407,7 @@ export const animations = {
   'carbonyl-redox': CarbonylRedoxScrolly,
   'nucleophilic-addition': NucleophilicAdditionScrolly,
   'acid-strength': AcidStrengthScrolly,
+  'carbonyl-routes': CarbonylRoutesScrolly,
 } as const
 
 export type AnimationName = keyof typeof animations
