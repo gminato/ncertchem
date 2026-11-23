@@ -1,4 +1,4 @@
-import { type SchemePath, reactionSchemeSize } from '@/components/organic'
+import { type SchemePath, layoutReactionScheme } from '@/components/organic'
 import { CARBONYL_PREPARATIONS, unit8Name } from '@/lib/chem/ncert-c12-unit8-data'
 import { parseSmiles } from '@/lib/chem/molecule-parse'
 
@@ -98,12 +98,12 @@ const NITRILE_ROUTE: SchemePath = [
 
 /** Step 6, route (c): Friedel–Crafts acylation of benzene. */
 const FRIEDEL_ROUTE: SchemePath = [
-  [g('benzene'), g('ethanoylChloride')],
+  [g('benzene'), text('CH₃COCl')],
   { reagents: 'anhydrous AlCl₃' },
-  [g('acetophenone'), text('HCl')],
+  [g('acetophenone')],
 ]
 
-/** The six Steps in Prose order. Step 6 holds three routes, drawn one above another. */
+/** The six Steps in Prose order. Step 6 holds three routes, drawn one row above another. */
 export const AROMPREP_STEPS: readonly (SchemePath | readonly SchemePath[])[] = [
   OVERSHOOT,
   ETARD_PATH,
@@ -121,23 +121,40 @@ export const ACETOPHENONE_NAME = unit8Name(AROMPREP_SMILES.acetophenone)
 /** Width each scheme is laid out to, in viewBox units. */
 export const SCHEME_WIDTH = 540
 
+/** Step 6: each route is one row, so the scheme may use the panel's width less a 12-unit margin each side. */
+export const ROUTE_WIDTH = 556
+
+/** Step 6 scales to try, largest first: each row takes the largest that keeps its route on one line. */
+export const ROUTE_SCALES = [56, 52, 48, 44, 40, 36, 32, 28, 24] as const
+
 /** Blocks of one Step, top to bottom, with each scheme's own height. Used for drawing and for the layout test. */
 export interface AromprepBlock {
   label?: string
   path: SchemePath
+  /** Width the scheme is laid out to. */
+  width: number
+  /** Bond-length scales to try, or undefined for the layout's default list. */
+  scales?: readonly number[]
   height: number
 }
 
 export function aromprepStepBlocks(step: number): AromprepBlock[] {
   const index = Math.min(AROMPREP_STEPS.length - 1, Math.max(0, Math.round(step)))
   const content = AROMPREP_STEPS[index]
-  const paths = isRoutes(content) ? content : [content]
-  const labels = isRoutes(content) ? ['(a) Acyl chloride with a dialkylcadmium', '(b) Nitrile with a Grignard reagent', '(c) Benzene with an acyl chloride, Friedel–Crafts'] : []
-  return paths.map((path, i) => ({
-    label: labels[i],
-    path,
-    height: reactionSchemeSize(path, SCHEME_WIDTH).height,
-  }))
+  const routes = isRoutes(content)
+  const paths = routes ? content : [content]
+  const labels = routes ? ['(a) Acyl chloride with a dialkylcadmium', '(b) Nitrile with a Grignard reagent', '(c) Benzene with an acyl chloride, Friedel–Crafts'] : []
+  return paths.map((path, i) => {
+    const width = routes ? ROUTE_WIDTH : SCHEME_WIDTH
+    const scales = routes ? ROUTE_SCALES : undefined
+    return {
+      label: labels[i],
+      path,
+      width,
+      scales,
+      height: Math.ceil(layoutReactionScheme(path, width, scales ? [...scales] : undefined).height),
+    }
+  })
 }
 
 /** Step 6 is three routes (a list of schemes); the other Steps are one scheme (a list of groups and arrows). */

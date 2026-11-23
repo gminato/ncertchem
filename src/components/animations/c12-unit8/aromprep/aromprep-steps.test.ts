@@ -65,7 +65,7 @@ describe('Aromatic carbonyl routes: Steps', () => {
   it('Step 6 draws three routes, all to acetophenone', () => {
     const routes = AROMPREP_STEPS[5] as readonly SchemePath[]
     expect(routes).toHaveLength(3)
-    expect(drawnFormulas(AROMPREP_STEPS[5])).toEqual(['C7H5ClO', 'C8H8O', 'C7H5N', 'C8H8O', 'C6H6', 'C2H3ClO', 'C8H8O'])
+    expect(drawnFormulas(AROMPREP_STEPS[5])).toEqual(['C7H5ClO', 'C8H8O', 'C7H5N', 'C8H8O', 'C6H6', 'C8H8O'])
   })
 
   it('Steps 1 to 5 fit above the caption in the 960-unit viewBox', () => {
@@ -76,10 +76,22 @@ describe('Aromatic carbonyl routes: Steps', () => {
     }
   })
 
-  it('Step 6 (three routes stacked) is taller than the panel: flagged in A3.md', () => {
+  it('Step 6: each route is one row, at most 300 units with its caption', () => {
+    for (const block of aromprepStepBlocks(5)) {
+      expect(block.height + 22).toBeLessThanOrEqual(300)
+    }
+  })
+
+  it('Step 6: the three rows fit above the caption, starting 28 units from the top', () => {
     const blocks = aromprepStepBlocks(5)
-    const height = blocks.reduce((sum, b) => sum + b.height + (b.label ? 22 : 0), 0) + 12 * (blocks.length - 1)
-    expect(height).toBeGreaterThan(960)
+    const height = blocks.reduce((sum, b) => sum + b.height + (b.label ? 22 : 0), 0) + 28 * (blocks.length - 1)
+    expect(28 + height).toBeLessThanOrEqual(960 - 34 - 20)
+  })
+
+  it('Step 6: every row is at most 556 units wide, leaving a 12-unit margin in the 580-unit viewBox', () => {
+    for (const block of aromprepStepBlocks(5)) {
+      expect(block.width).toBeLessThanOrEqual(580 - 2 * 12)
+    }
   })
 
   it('clamps an out-of-range Step index', () => {
