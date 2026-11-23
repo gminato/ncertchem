@@ -26,7 +26,7 @@ export const SYNERGIC_STEPS: readonly SynergicStepState[] = [
     metalNegativeTint: false,
     mcBondStrength: 'none',
     heading: 'Unbonded metal and CO orbitals',
-    caption: 'Metal has a vacant orbital and a filled d orbital; CO has a filled C lone pair and vacant pi* orbitals.',
+    caption: 'Metal has a vacant orbital and a filled d orbital; CO has a filled C lone pair and vacant \u03c0* orbitals.',
   },
   {
     kind: 'sigma',

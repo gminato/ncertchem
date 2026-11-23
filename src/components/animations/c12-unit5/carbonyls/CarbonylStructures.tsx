@@ -41,7 +41,7 @@ function SingleMetalScene() {
               markerPrefix={`struct-s1-${idx}`}
             />
             <text x={cx} y={306} textAnchor="middle" fontSize={16} fontWeight={700} fill="var(--fg)">
-              {c.formula}
+              {c.displayFormula}
             </text>
             {isTbp ? (
               <>
@@ -72,7 +72,7 @@ function MnDimerScene() {
   return (
     <g>
       <text x={W / 2} y={36} textAnchor="middle" fontSize={17} fontWeight={600} fill="var(--fg)">
-        {`${MN_CARBONYL.formula}: ${MN_CARBONYL.name}`}
+        {`${MN_CARBONYL.displayFormula}: ${MN_CARBONYL.name}`}
       </text>
 
       <CarbonylDiagram
@@ -87,7 +87,7 @@ function MnDimerScene() {
       />
 
       <text x={W / 2} y={368} textAnchor="middle" fontSize={16} fontWeight={600} fill="var(--fg)">
-        Two square pyramidal Mn(CO)5 units joined by a Mn-Mn bond
+        Two square pyramidal Mn(CO)₅ units joined by a Mn-Mn bond
       </text>
       <text x={W / 2} y={394} textAnchor="middle" fontSize={15} fill="var(--fg-muted)">
         All 10 CO ligands are terminal (0 bridging CO).
@@ -100,7 +100,7 @@ function CoBridgedScene() {
   return (
     <g>
       <text x={W / 2} y={36} textAnchor="middle" fontSize={17} fontWeight={600} fill="var(--fg)">
-        {`${CO_CARBONYL.formula}: ${CO_CARBONYL.name}`}
+        {`${CO_CARBONYL.displayFormula}: ${CO_CARBONYL.name}`}
       </text>
 
       <CarbonylDiagram

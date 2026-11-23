@@ -33,10 +33,11 @@ export function CarbonylExplorer() {
                 key={item.formula}
                 type="button"
                 className={active ? `${styles.pickBtn} ${styles.pickBtnActive}` : styles.pickBtn}
+                aria-label={item.formula}
                 aria-pressed={active}
                 onClick={() => setFormula(item.formula)}
               >
-                {item.formula}
+                {item.displayFormula}
               </button>
             )
           })}
@@ -128,7 +129,7 @@ export function CarbonylExplorer() {
 
       <div className={styles.cards}>
         <article className={styles.card}>
-          <h4 className={styles.cardTitle}>{`${carbonyl.formula}: ${carbonyl.name}`}</h4>
+          <h4 className={styles.cardTitle}>{`${carbonyl.displayFormula}: ${carbonyl.name}`}</h4>
           <dl className={styles.facts}>
             <dt>Shape</dt>
             <dd>{carbonyl.geometry}</dd>

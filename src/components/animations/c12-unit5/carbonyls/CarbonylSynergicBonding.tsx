@@ -112,8 +112,7 @@ export function CarbonylSynergicBonding({ step, reducedMotion }: CarbonylSynergi
             style={{ transition: tr }}
           />
         ))}
-        {/* Electron pairs in the filled d lobes facing CO */}
-        <ElectronPair x={46} y={-46} angleDeg={-45} color={PI_TONE} />
+        {/* Single electron pair in one lobe of the filled d orbital (matching NCERT Fig. 5.14) */}
         <ElectronPair x={46} y={46} angleDeg={45} color={PI_TONE} />
 
         {/* Metal vacant sigma-acceptor orbital pointing right toward C */}
@@ -219,7 +218,7 @@ export function CarbonylSynergicBonding({ step, reducedMotion }: CarbonylSynergi
             markerEnd="url(#syn-sigma)"
           />
           <text
-            x={(MX + CX) / 2}
+            x={(MX + CX) / 2 + 10}
             y={CY - 34}
             textAnchor="middle"
             fontSize={15}
