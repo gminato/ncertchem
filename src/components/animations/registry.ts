@@ -221,6 +221,18 @@ import { EtherCleavagePathways } from './c12-unit7/ether-cleavage/EtherCleavageP
 import { AnisoleResonanceEas } from './c12-unit7/anisole-eas/AnisoleResonanceEas'
 import { CarbonylRedoxScrolly } from './c12-unit8/redox/CarbonylRedoxScrolly'
 import { NucleophilicAdditionScrolly } from './c12-unit8/nucadd/NucleophilicAdditionScrolly'
+import { AcidStrengthScrolly } from './c12-unit8/acidity/AcidStrengthScrolly'
+import { CarbonylRoutesScrolly } from './c12-unit8/routes/CarbonylRoutesScrolly'
+import { AcetalScrolly } from './c12-unit8/acetal/AcetalScrolly'
+import { AromaticCarbonylScrolly } from './c12-unit8/aromprep/AromaticCarbonylScrolly'
+import { AcidRoutesScrolly } from './c12-unit8/acidprep/AcidRoutesScrolly'
+import { HvzAndRing } from './c12-unit8/hvz/HvzAndRing'
+import { CarbonylScrolly } from './c12-unit8/carbonyl/CarbonylScrolly'
+import { AldolScrolly } from './c12-unit8/aldol/AldolScrolly'
+import { CarbonylPhysicalScrolly } from './c12-unit8/physical/CarbonylPhysicalScrolly'
+import { AcidDerivativesScrolly } from './c12-unit8/cooh/AcidDerivativesScrolly'
+import { CannizzaroScrolly } from './c12-unit8/cannizzaro/CannizzaroScrolly'
+import { CarboxylGroupScrolly } from './c12-unit8/carboxyl/CarboxylGroupScrolly'
 
 /**
  * Animations available to a Scrolly Animation, keyed by the `animation` prop.
@@ -452,6 +464,18 @@ export const animations = {
   'anisole-resonance-eas': AnisoleResonanceEas,
   'carbonyl-redox': CarbonylRedoxScrolly,
   'nucleophilic-addition': NucleophilicAdditionScrolly,
+  'acid-strength': AcidStrengthScrolly,
+  'carbonyl-routes': CarbonylRoutesScrolly,
+  'acetal-and-imine': AcetalScrolly,
+  'aromatic-carbonyl-routes': AromaticCarbonylScrolly,
+  'acid-routes': AcidRoutesScrolly,
+  'hvz-and-ring': HvzAndRing,
+  'carbonyl-group': CarbonylScrolly,
+  'aldol': AldolScrolly,
+  'carbonyl-physical': CarbonylPhysicalScrolly,
+  'acid-derivatives': AcidDerivativesScrolly,
+  'cannizzaro-and-ring': CannizzaroScrolly,
+  'carboxyl-group': CarboxylGroupScrolly,
 } as const
 
 export type AnimationName = keyof typeof animations

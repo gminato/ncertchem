@@ -1,4 +1,5 @@
 import { MoleBridge } from './sims/mole-bridge'
+import { HvzBench } from './sims/hvz-bench'
 import type { ComponentType } from 'react'
 import { SigFigRuler } from './sims/sigfig-ruler'
 import { StatesOfMatter } from './sims/StatesOfMatter'
@@ -58,6 +59,7 @@ import { AlkyneIsomers } from './sims/alkyne-isomers'
 import { HuckelChecker } from './sims/huckel-checker'
 import { FormulaTranslator } from './sims/formula-translator'
 import { ArrowPusher } from './sims/arrow-pusher'
+import { CarbonylRouteFinder } from './sims/carbonyl-route-finder'
 import { AlkyneAcidTest } from './sims/alkyne-acid-test'
 import { HalideNamer } from './sims/halide-namer'
 import { HalogenationLab } from './sims/halogenation-lab'
@@ -125,6 +127,7 @@ import { HalidePropertiesLab } from './sims/halide-properties-lab'
 import { ZaitsevChooser } from './sims/zaitsev-chooser'
 import { NitroActivation } from './sims/nitro-activation'
 import { NucleophilicAdditionLab } from './sims/nucleophilic-addition-lab'
+import { AcidNamer } from './sims/acid-namer'
 import { PolyhalogenExplorer } from './sims/polyhalogen-explorer'
 import { OxyClassBuilder } from './sims/oxy-class-builder'
 import { OxygenGroupNamer } from './sims/oxygen-group-namer'
@@ -139,6 +142,15 @@ import { CommercialAlcoholsLab } from './sims/commercial-alcohols-lab'
 import { EtherSynthesisAndPropertiesLab } from './sims/ether-synthesis-and-properties-lab'
 import { EtherReactionWorkbench } from './sims/ether-reaction-workbench'
 import { CarbonylTests } from './sims/carbonyl-tests'
+import { AcidStrengthLab } from './sims/acid-strength-lab'
+import { CarbonylDerivativeMaker } from './sims/carbonyl-derivative-maker'
+import { ArylCarbonylBench } from './sims/aryl-carbonyl-bench'
+import { AcidSynthesisPlanner } from './sims/acid-synthesis-planner'
+import { CarbonylNamer } from './sims/carbonyl-namer'
+import { AldolBuilder } from './sims/aldol-builder'
+import { CarbonylBpLadder } from './sims/carbonyl-bp-ladder'
+import { AcidDerivativeBench } from './sims/acid-derivative-bench'
+import { CarbonylFateSorter } from './sims/carbonyl-fate-sorter'
 
 export interface SimulationProps {
   /** True when the Learner has asked the OS for reduced motion. Skip tweens and loops when set. */
@@ -278,6 +290,7 @@ export const simulations: Record<string, ComponentType<SimulationProps>> = {
   'zaitsev-chooser': ZaitsevChooser,
   'nitro-activation': NitroActivation,
   'nucleophilic-addition-lab': NucleophilicAdditionLab,
+  'hvz-bench': HvzBench,
   'polyhalogen-explorer': PolyhalogenExplorer,
   'oxy-class-builder': OxyClassBuilder,
   'oxygen-group-namer': OxygenGroupNamer,
@@ -292,4 +305,15 @@ export const simulations: Record<string, ComponentType<SimulationProps>> = {
   'ether-synthesis-and-properties-lab': EtherSynthesisAndPropertiesLab,
   'ether-reaction-workbench': EtherReactionWorkbench,
   'carbonyl-tests': CarbonylTests,
+  'acid-strength-lab': AcidStrengthLab,
+  'carbonyl-route-finder': CarbonylRouteFinder,
+  'carbonyl-derivative-maker': CarbonylDerivativeMaker,
+  'aryl-carbonyl-bench': ArylCarbonylBench,
+  'acid-synthesis-planner': AcidSynthesisPlanner,
+  'carbonyl-namer': CarbonylNamer,
+  'aldol-builder': AldolBuilder,
+  'carbonyl-bp-ladder': CarbonylBpLadder,
+  'acid-derivative-bench': AcidDerivativeBench,
+  'carbonyl-fate-sorter': CarbonylFateSorter,
+  'acid-namer': AcidNamer,
 }
