@@ -200,6 +200,7 @@ import { NucleophilicAdditionScrolly } from './c12-unit8/nucadd/NucleophilicAddi
 import { AcidStrengthScrolly } from './c12-unit8/acidity/AcidStrengthScrolly'
 import { CarbonylRoutesScrolly } from './c12-unit8/routes/CarbonylRoutesScrolly'
 import { AcetalScrolly } from './c12-unit8/acetal/AcetalScrolly'
+import { AromaticCarbonylScrolly } from './c12-unit8/aromprep/AromaticCarbonylScrolly'
 
 /**
  * Animations available to a Scrolly Animation, keyed by the `animation` prop.
@@ -410,6 +411,7 @@ export const animations = {
   'acid-strength': AcidStrengthScrolly,
   'carbonyl-routes': CarbonylRoutesScrolly,
   'acetal-and-imine': AcetalScrolly,
+  'aromatic-carbonyl-routes': AromaticCarbonylScrolly,
 } as const
 
 export type AnimationName = keyof typeof animations

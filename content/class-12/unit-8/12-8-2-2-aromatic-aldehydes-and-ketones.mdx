@@ -1,0 +1,111 @@
+---
+class: 12
+unit: 8
+section: "8.2"
+order: 3
+title: "Aromatic Aldehydes and Ketones"
+slug: "12-8-2-2-aromatic-aldehydes-and-ketones"
+access: free
+summary: "Strong oxidants overshoot benzaldehyde on the way to benzoic acid, so chemists use special reagents to stop halfway, and build aromatic ketones another way."
+ncert: "Class 12, Part II — Unit 8, Section 8.2.2–8.2.3"
+---
+
+<Hook>
+Benzaldehyde is the compound behind the bitter-almond note of badam essence, a flavouring used in many sweets. Yet the methyl group that benzaldehyde can come from is exactly the group a strong oxidising agent pushes straight past the aldehyde, into benzoic acid. How do chemists make the oxidation stop halfway?
+</Hook>
+
+The carbon skeleton of an aromatic aldehyde is already there in methylbenzene, which chemists also call toluene. Its CH₃ group sits on the ring, and that group can be oxidised. The difficulty is control. A strong oxidising agent keeps going, and the side chain finishes as a carboxylic acid.
+
+Each method below handles the methyl group through an intermediate. Hydrolysing that intermediate then releases the aldehyde, so the oxidation never reaches the acid stage.
+
+<Scrolly animation="aromatic-carbonyl-routes">
+  <Step>
+    **The overshoot.** Begin with methylbenzene, a ring carrying one CH₃ group. A strong oxidising agent attacks that group, and the carbon climbs the oxidation ladder. Benzaldehyde appears only as a passing rung. The reaction carries on until the side chain is a COOH group, and the product is benzoic acid.
+  </Step>
+  <Step>
+    **Chromyl chloride.** Dissolve $\ce{CrO2Cl2}$, chromyl chloride, in carbon disulphide and add it to methylbenzene. It oxidises the CH₃ group only as far as a chromium complex, an intermediate that is hard to oxidise further. Hydrolysis of that complex with H₃O⁺ releases benzaldehyde. This is the Etard reaction.
+  </Step>
+  <Step>
+    **Two acetates on one carbon.** Chromic oxide, $\ce{CrO3}$, in acetic anhydride at 273–283 K turns methylbenzene into benzylidene diacetate, $\ce{C6H5CH(OCOCH3)2}$. Both acetate groups hang on the carbon that used to be the methyl. Aqueous acid then hydrolyses the diacetate, and benzaldehyde is left behind.
+  </Step>
+  <Step>
+    **Chlorine on the side chain.** Light drives chlorine into the methyl group. CH₃ becomes CHCl₂, which makes benzal chloride, $\ce{C6H5CHCl2}$. Water at 373 K hydrolyses benzal chloride to benzaldehyde and two molecules of HCl. This side-chain route is the one used for commercial manufacture of benzaldehyde.
+  </Step>
+  <Step>
+    **Starting from the ring.** Now the start is benzene, with no side chain at all. Feed in carbon monoxide and hydrogen chloride, and a CHO group lands on the ring once anhydrous aluminium chloride or cuprous chloride is present. The product is benzaldehyde. This is the Gatterman–Koch reaction.
+  </Step>
+  <Step>
+    **Two routes to one ketone.** Acetophenone, 1-phenylethan-1-one, can be reached from a compound that already carries the benzene ring and one carbon. Benzoyl chloride meets dimethylcadmium, $\ce{(CH3)2Cd}$, and gives acetophenone. Benzonitrile meets $\ce{CH3MgBr}$, and hydrolysis afterwards gives the same ketone.
+  </Step>
+  <Step>
+    **A third route, from benzene itself.** Benzene meets ethanoyl chloride under anhydrous $\ce{AlCl3}$, and the acyl group joins the ring. The product is acetophenone again, with hydrogen chloride as the other product.
+  </Step>
+</Scrolly>
+
+Chemists make the dialkylcadmium reagent by treating cadmium chloride with a Grignard reagent. The cadmium reagent then reacts with an acyl chloride, and the ketone forms with cadmium chloride as the other product:
+
+$$
+\ce{2C6H5COCl + (CH3)2Cd -> 2C6H5COCH3 + CdCl2}
+$$
+
+The Friedel–Crafts acylation builds the ketone directly on the ring. Under anhydrous aluminium chloride, an acid chloride can hand its acyl group to benzene:
+
+$$
+\ce{C6H6 + CH3COCl ->[\text{anhydrous AlCl3}] C6H5COCH3 + HCl}
+$$
+
+The nitrile route starts from a different functional group. Treat a nitrile with a Grignard reagent and then hydrolyse, and a ketone results:
+
+$$
+\ce{C6H5CN ->[1. CH3MgBr][2. H3O+] C6H5COCH3}
+$$
+
+The Simulation below picks up these routes. Start from methylbenzene, benzene, an acyl chloride such as benzoyl chloride or ethanoyl chloride, or benzonitrile, and then choose a reagent set. It shows the product as an aldehyde, a ketone, or a compound that goes on to the acid, and it draws the intermediate whenever NCERT names one.
+
+<Simulation name="aryl-carbonyl-bench" title="Aryl Carbonyl Bench" />
+
+<Check
+  n={1}
+  options={[
+    "Benzoic acid, C₆H₅COOH",
+    "Benzyl alcohol, C₆H₅CH₂OH",
+    "Benzaldehyde, C₆H₅CHO",
+    "Benzophenone, (C₆H₅)₂CO"
+  ]}
+  answer={2}
+  explanation="Chlorine and light turn the CH₃ of methylbenzene into CHCl₂, giving benzal chloride, C₆H₅CHCl₂. Hot water at 373 K then hydrolyses it to benzaldehyde. Benzoic acid is what a strong oxidising agent gives instead, and this route does not produce it."
+>
+A chemist chlorinates the side chain of methylbenzene until benzal chloride forms, and then hydrolyses it with water at 373 K. Which compound is the final organic product?
+</Check>
+
+<Check
+  n={2}
+  numeric
+  answer={3}
+  tolerance={0}
+  explanation="Ethanoyl chloride, CH₃COCl, gives the ketone CH₃COCH₃, which is propan-2-one (acetone, C₃H₆O). The acyl group CH₃CO– takes one CH₃ from the cadmium reagent, so the ketone carries three carbon atoms."
+>
+Ethanoyl chloride reacts with dimethylcadmium, $\ce{(CH3)2Cd}$, and gives a ketone. How many carbon atoms does that ketone contain?
+</Check>
+
+<Check
+  n={3}
+  options={[
+    "Benzonitrile with CH₃MgBr, followed by hydrolysis",
+    "Methylbenzene with CrO₂Cl₂ in CS₂, followed by H₃O⁺",
+    "Benzene and benzoyl chloride with anhydrous AlCl₃ (Friedel–Crafts acylation)",
+    "Benzene with CO and HCl over AlCl₃ and CuCl (Gatterman–Koch)"
+  ]}
+  answer={2}
+  explanation="Benzoyl chloride, C₆H₅COCl, acylates benzene under anhydrous aluminium chloride, and the product is benzophenone, (C₆H₅)₂CO, also called diphenylmethanone. The other three reactions give acetophenone or benzaldehyde instead."
+>
+Which reaction gives benzophenone, $\ce{(C6H5)2CO}$?
+</Check>
+
+<KeyIdeas>
+- A strong oxidising agent carries the side-chain CH₃ of methylbenzene past benzaldehyde to benzoic acid, so the aldehyde needs a special route.
+- The Etard reaction (CrO₂Cl₂ in CS₂, then H₃O⁺) and the chromic oxide route (CrO₃ in acetic anhydride at 273–283 K, then aqueous acid) both give benzaldehyde through an intermediate that is hydrolysed.
+- Side-chain chlorination gives benzal chloride, and hydrolysis at 373 K gives benzaldehyde. It is the commercial method.
+- The Gatterman–Koch reaction puts a CHO group on benzene, with CO and HCl in the presence of anhydrous AlCl₃ or CuCl.
+- Ketones come from acyl chlorides with dialkylcadmium, from nitriles with a Grignard reagent followed by hydrolysis, and from benzene with an acid chloride in the Friedel–Crafts acylation.
+</KeyIdeas>

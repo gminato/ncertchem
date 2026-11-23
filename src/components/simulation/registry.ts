@@ -130,6 +130,7 @@ import { PolyhalogenExplorer } from './sims/polyhalogen-explorer'
 import { CarbonylTests } from './sims/carbonyl-tests'
 import { AcidStrengthLab } from './sims/acid-strength-lab'
 import { CarbonylDerivativeMaker } from './sims/carbonyl-derivative-maker'
+import { ArylCarbonylBench } from './sims/aryl-carbonyl-bench'
 
 export interface SimulationProps {
   /** True when the Learner has asked the OS for reduced motion. Skip tweens and loops when set. */
@@ -274,4 +275,5 @@ export const simulations: Record<string, ComponentType<SimulationProps>> = {
   'acid-strength-lab': AcidStrengthLab,
   'carbonyl-route-finder': CarbonylRouteFinder,
   'carbonyl-derivative-maker': CarbonylDerivativeMaker,
+  'aryl-carbonyl-bench': ArylCarbonylBench,
 }
