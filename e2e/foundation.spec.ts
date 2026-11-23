@@ -93,6 +93,30 @@ test.describe('Unit navigation', () => {
     await expect(page.getByText('The Sections of this Unit are being written.')).toBeVisible()
   })
 
+  test('Class 12 Unit 8 lists its fourteen Sections in order', async ({ page }) => {
+    await page.goto('/class-12/unit-8')
+    await expect(page.getByRole('heading', { level: 1 })).toHaveText('Aldehydes, Ketones and Carboxylic Acids')
+    const links = page.locator('a[href^="/class-12/unit-8/"]')
+    await expect(links).toHaveCount(14)
+    const hrefs = await links.evaluateAll((els) => els.map((e) => e.getAttribute('href')))
+    expect(hrefs.map((h) => h?.split('/').pop())).toEqual([
+      '12-8-1-nomenclature-and-structure-of-carbonyl-group',
+      '12-8-2-preparation-of-aldehydes-and-ketones',
+      '12-8-2-2-aromatic-aldehydes-and-ketones',
+      '12-8-3-physical-properties',
+      '12-8-4-1-nucleophilic-addition',
+      '12-8-4-1-addition-of-alcohols-and-ammonia-derivatives',
+      '12-8-4-2-reduction-and-oxidation',
+      '12-8-4-4-reactions-due-to-alpha-hydrogen',
+      '12-8-4-5-cannizzaro-ring-substitution-and-uses',
+      '12-8-6-nomenclature-and-structure-of-carboxyl-group',
+      '12-8-7-preparation-of-carboxylic-acids',
+      '12-8-8-physical-properties-and-acidity',
+      '12-8-9-2-reactions-of-the-c-oh-bond-and-the-cooh-group',
+      '12-8-9-4-substitution-and-uses-of-carboxylic-acids',
+    ])
+  })
+
   test('Class 12 Unit 7 lists its twelve Sections in order', async ({ page }) => {
     await page.goto('/class-12/unit-7')
     await expect(page.getByRole('heading', { level: 1 })).toHaveText('Alcohols, Phenols and Ethers')
