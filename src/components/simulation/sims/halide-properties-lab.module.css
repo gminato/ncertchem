@@ -1,0 +1,122 @@
+.sim {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3) var(--space-5);
+}
+
+.stage {
+  display: flex;
+  justify-content: center;
+}
+
+.scene {
+  display: block;
+  width: 100%;
+  max-width: 560px;
+  height: auto;
+}
+
+.title {
+  font-size: 15px;
+  font-weight: 600;
+  fill: var(--fg);
+}
+
+.label {
+  font-size: 14px;
+  fill: var(--fg);
+}
+
+.value {
+  font-size: 15px;
+  font-weight: 600;
+  fill: var(--fg);
+}
+
+.phase {
+  font-size: 14px;
+  font-style: italic;
+  fill: var(--fg);
+}
+
+.muted {
+  font-size: 14px;
+  fill: var(--fg-muted);
+}
+
+.roomLine {
+  stroke: var(--fg-muted);
+  stroke-width: 1.5;
+  stroke-dasharray: 6 5;
+}
+
+.parentTick {
+  stroke: var(--fg-muted);
+  stroke-width: 2;
+}
+
+.glass {
+  fill: var(--glass-fill);
+  stroke: var(--glass-wall);
+  stroke-width: 1.5;
+}
+
+.gas {
+  fill: var(--vapour);
+}
+
+.liquid {
+  fill: var(--liquid);
+  stroke: var(--liquid-edge);
+  stroke-width: 1.5;
+}
+
+.water {
+  fill: var(--sol-clear);
+}
+
+.halideLayer {
+  fill-opacity: 0.85;
+}
+
+.readout {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+  gap: var(--space-3);
+}
+
+.stat {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  padding: var(--space-3);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  background: var(--surface);
+}
+
+.statLabel {
+  font-size: 14px;
+  color: var(--fg-muted);
+}
+
+.statValue {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--fg);
+}
+
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}

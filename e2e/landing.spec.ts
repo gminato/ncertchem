@@ -39,7 +39,7 @@ test.describe('Home page', () => {
     await expect(class11.getByRole('link', { name: /Unit 9\s*Hydrocarbons/ })).toContainText('15 Sections')
 
     const class12Live = page.getByRole('list', { name: 'Class 12 Units' })
-    await expect(class12Live.getByRole('link')).toHaveCount(5)
+    await expect(class12Live.getByRole('link')).toHaveCount(6)
     await expect(class12Live.getByRole('link', { name: /Unit 1\s*Solutions/ })).toHaveAttribute('href', '/class-12/unit-1')
     await expect(class12Live.getByRole('link', { name: /Unit 1\s*Solutions/ })).toContainText('8 Sections')
     await expect(class12Live.getByRole('link', { name: /Unit 2\s*Electrochemistry/ })).toHaveAttribute('href', '/class-12/unit-2')
@@ -50,9 +50,11 @@ test.describe('Home page', () => {
     await expect(class12Live.getByRole('link', { name: /Unit 4\s*The d- and f-Block Elements/ })).toContainText('11 Sections')
     await expect(class12Live.getByRole('link', { name: /Unit 5\s*Coordination Compounds/ })).toHaveAttribute('href', '/class-12/unit-5')
     await expect(class12Live.getByRole('link', { name: /Unit 5\s*Coordination Compounds/ })).toContainText('9 Sections')
+    await expect(class12Live.getByRole('link', { name: /Unit 6\s*Haloalkanes and Haloarenes/ })).toHaveAttribute('href', '/class-12/unit-6')
+    await expect(class12Live.getByRole('link', { name: /Unit 6\s*Haloalkanes and Haloarenes/ })).toContainText('12 Sections')
 
     const class12 = page.getByRole('list', { name: 'Class 12 Units that are being written' })
-    await expect(class12.getByRole('listitem')).toHaveCount(5)
+    await expect(class12.getByRole('listitem')).toHaveCount(4)
     await expect(class12.getByRole('link')).toHaveCount(0)
     await expect(class12).toContainText('Biomolecules')
   })

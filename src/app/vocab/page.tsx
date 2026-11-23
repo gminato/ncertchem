@@ -234,6 +234,7 @@ import {
 } from '@/components/vocab'
 import { KineticsGallery } from '@/components/vocab/kinetics/KineticsGallery'
 import { DBlockGallery } from '@/components/vocab/dblock/DBlockGallery'
+import { OrganicGallery } from '@/components/vocab/organic6/OrganicGallery'
 
 export const metadata: Metadata = {
   title: pageTitle('Visual Vocabulary'),
@@ -3938,6 +3939,18 @@ export default function VocabPage() {
         </p>
 
         <DBlockGallery />
+      </section>
+
+      <section className={styles.section} id="c12-unit6-vocab" aria-labelledby="c12-unit6-vocab-heading">
+        <h2 id="c12-unit6-vocab-heading" className={styles.sectionTitle}>
+          Haloalkanes and haloarenes
+        </h2>
+        <p className={styles.sectionSubtitle}>
+          The stereocentre, the polar C–X bond, the polarimeter, the energy profile and the planar carbocation, drawn with one set of parts: the same halogen
+          colours and the same roles in every section.
+        </p>
+
+        <OrganicGallery />
       </section>
     </div>
   )

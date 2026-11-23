@@ -112,6 +112,28 @@ test.describe('Unit navigation', () => {
     ])
   })
 
+  test('Class 12 Unit 6 lists its twelve Sections in order', async ({ page }) => {
+    await page.goto('/class-12/unit-6')
+    await expect(page.getByRole('heading', { level: 1 })).toHaveText('Haloalkanes and Haloarenes')
+    const links = page.locator('a[href^="/class-12/unit-6/"]')
+    await expect(links).toHaveCount(12)
+    const hrefs = await links.evaluateAll((els) => els.map((e) => e.getAttribute('href')))
+    expect(hrefs.map((h) => h?.split('/').pop())).toEqual([
+      '12-6-1-classification',
+      '12-6-2-nomenclature',
+      '12-6-3-nature-of-the-c-x-bond',
+      '12-6-4-preparation-of-haloalkanes',
+      '12-6-5-preparation-of-haloarenes',
+      '12-6-6-physical-properties',
+      '12-6-7-1-nucleophilic-substitution',
+      '12-6-7-1-sn2-and-sn1-mechanisms',
+      '12-6-7-1-stereochemistry-of-substitution',
+      '12-6-7-1-elimination-and-reactions-with-metals',
+      '12-6-7-2-reactions-of-haloarenes',
+      '12-6-8-polyhalogen-compounds',
+    ])
+  })
+
   test('Class 12 Unit 4 lists its eleven Sections in order', async ({ page }) => {
     await page.goto('/class-12/unit-4')
     await expect(page.getByRole('heading', { level: 1 })).toHaveText('The d- and f-Block Elements')

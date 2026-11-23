@@ -142,6 +142,7 @@ import { SheMeasurement } from './c12-unit2/she/SheMeasurement'
 import { NernstConcentration } from './c12-unit2/nernst/NernstConcentration'
 import { CollisionOrientation } from './c12-unit3/collision/CollisionOrientation'
 import { ActinoidComparison } from './c12-unit4/actinoids/ActinoidComparison'
+import { HaloprepRoutes } from './c12-unit6/haloprep/HaloprepRoutes'
 import { ConductivityMeasurement } from './c12-unit2/conductance/ConductivityMeasurement'
 import { DilutionConductivity } from './c12-unit2/dilution/DilutionConductivity'
 import { ElectrolysisProducts } from './c12-unit2/products/ElectrolysisProducts'
@@ -153,11 +154,14 @@ import { OrderCurves } from './c12-unit3/order/OrderCurves'
 import { MechanismSteps } from './c12-unit3/molecularity/MechanismSteps'
 import { ZeroOrderSurface } from './c12-unit3/zeroorder/ZeroOrderSurface'
 import { FirstOrderPlots } from './c12-unit3/firstorder/FirstOrderPlots'
+import { CarbonHalogenBond } from './c12-unit6/cxbond/CarbonHalogenBond'
 import { DblockConfigurations } from './c12-unit4/config/DblockConfigurations'
 import { PhysicalTrends } from './c12-unit4/physical/PhysicalTrends'
 import { HalfLifeLadder } from './c12-unit3/halflife/HalfLifeLadder'
+import { PolyhaloGallery } from './c12-unit6/polyhalo/PolyhaloGallery'
 import { CatalystPathway } from './c12-unit3/catalyst/CatalystPathway'
 import { ArrheniusEnergy } from './c12-unit3/arrhenius/ArrheniusEnergy'
+import { Sn2Sn1Scrolly } from './c12-unit6/mechanisms/Sn2Sn1Scrolly'
 import { IonisationSteps } from './c12-unit4/ionisation/IonisationSteps'
 import { OxidationStateGrid } from './c12-unit4/oxstates/OxidationStateGrid'
 import { ElectrodePotentialCycle } from './c12-unit4/electrode/ElectrodePotentialCycle'
@@ -183,6 +187,14 @@ import { CftLimitations } from './c12-unit5/limitations/CftLimitations'
 import { CarbonylStructures } from './c12-unit5/carbonyls/CarbonylStructures'
 import { CarbonylSynergicBonding } from './c12-unit5/carbonyls/CarbonylSynergicBonding'
 import { CoordinationApplications } from './c12-unit5/applications/CoordinationApplications'
+import { HalideClasses } from './c12-unit6/classes/HalideClasses'
+import { HalideNaming } from './c12-unit6/naming/HalideNaming'
+import { HaloareneRoutes } from './c12-unit6/arenprep/HaloareneRoutes'
+import { HalidePhysical } from './c12-unit6/physical/HalidePhysical'
+import { NucleophileSwap } from './c12-unit6/nusub/NucleophileSwap'
+import { ChiralitySubstitution } from './c12-unit6/stereo/ChiralitySubstitution'
+import { EliminationAndMetals } from './c12-unit6/elimination/EliminationAndMetals'
+import { HaloareneReactivity } from './c12-unit6/arenes/HaloareneReactivity'
 
 /**
  * Animations available to a Scrolly Animation, keyed by the `animation` prop.
@@ -343,6 +355,7 @@ export const animations = {
   'mechanism-steps': MechanismSteps,
   'zero-order-surface': ZeroOrderSurface,
   'first-order-plots': FirstOrderPlots,
+  'carbon-halogen-bond': CarbonHalogenBond,
   'half-life-ladder': HalfLifeLadder,
   'catalyst-pathway': CatalystPathway,
   'arrhenius-energy': ArrheniusEnergy,
@@ -376,6 +389,17 @@ export const animations = {
   'carbonyl-structures': CarbonylStructures,
   'carbonyl-synergic-bonding': CarbonylSynergicBonding,
   'coordination-applications': CoordinationApplications,
+  'halide-classes': HalideClasses,
+  'halide-naming': HalideNaming,
+  'haloalkane-routes': HaloprepRoutes,
+  'haloarene-routes': HaloareneRoutes,
+  'halide-physical': HalidePhysical,
+  'nucleophile-swap': NucleophileSwap,
+  'sn2-sn1': Sn2Sn1Scrolly,
+  'chirality-and-substitution': ChiralitySubstitution,
+  'elimination-and-metals': EliminationAndMetals,
+  'haloarene-reactivity': HaloareneReactivity,
+  'polyhalo-gallery': PolyhaloGallery,
 } as const
 
 export type AnimationName = keyof typeof animations

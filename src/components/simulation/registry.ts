@@ -18,6 +18,7 @@ import { DipoleLab } from './sims/dipole-lab'
 import { MOBuilder } from './sims/mo-builder'
 import { HybridExplorer } from './sims/hybrid-explorer'
 import { PVWorkLab } from './sims/pv-work-lab'
+import { StereoOutcomes } from './sims/stereo-outcomes'
 import { BondEnergyLedger } from './sims/bond-energy-ledger'
 import { GibbsExplorer } from './sims/gibbs-explorer'
 import { FirstLawLab } from './sims/first-law-lab'
@@ -58,7 +59,9 @@ import { HuckelChecker } from './sims/huckel-checker'
 import { FormulaTranslator } from './sims/formula-translator'
 import { ArrowPusher } from './sims/arrow-pusher'
 import { AlkyneAcidTest } from './sims/alkyne-acid-test'
+import { HalideNamer } from './sims/halide-namer'
 import { HalogenationLab } from './sims/halogenation-lab'
+import { HaloalkanePrepBench } from './sims/haloalkane-prep-bench'
 import { OzonolysisDetective } from './sims/ozonolysis-detective'
 import { AlkaneSynthesisPlanner } from './sims/alkane-synthesis-planner'
 import { AlkeneMaker } from './sims/alkene-maker'
@@ -78,6 +81,7 @@ import { AzeotropeExplorer } from './sims/azeotrope-explorer'
 import { ColligativeThermalLab } from './sims/colligative-thermal-lab'
 import { OpposingVoltageLab } from './sims/opposing-voltage-lab'
 import { HalfCellPairingBench } from './sims/half-cell-pairing'
+import { NucleophilePicker } from './sims/nucleophile-picker'
 import { NernstLab } from './sims/nernst-lab'
 import { RateSlopeExplorer } from './sims/rate-slope-explorer'
 import { RateDeterminingStepLab } from './sims/rate-determining-step-lab'
@@ -93,6 +97,7 @@ import { LeadAcidCycle } from './sims/lead-acid-cycle'
 import { InitialRatesLab } from './sims/initial-rates-lab'
 import { ZeroOrderLab } from './sims/zero-order-lab'
 import { FirstOrderLab } from './sims/first-order-lab'
+import { SubstitutionRace } from './sims/substitution-race'
 import { HalfLifeCompare } from './sims/half-life-compare'
 import { ArrheniusLab } from './sims/arrhenius-lab'
 import { ConfigurationExplorer } from './sims/configuration-explorer'
@@ -113,6 +118,13 @@ import { CrystalFieldSplittingLab } from './sims/crystal-field-splitting-lab'
 import { LigandColourLab } from './sims/ligand-colour-lab'
 import { CarbonylExplorer } from './sims/carbonyl-explorer'
 import { ComplexApplicationExplorer } from './sims/complex-application-explorer'
+import { HalideClassifier } from './sims/halide-classifier'
+import { CXBondExplorer } from './sims/c-x-bond-explorer'
+import { HaloareneMaker } from './sims/haloarene-maker'
+import { HalidePropertiesLab } from './sims/halide-properties-lab'
+import { ZaitsevChooser } from './sims/zaitsev-chooser'
+import { NitroActivation } from './sims/nitro-activation'
+import { PolyhalogenExplorer } from './sims/polyhalogen-explorer'
 
 export interface SimulationProps {
   /** True when the Learner has asked the OS for reduced motion. Skip tweens and loops when set. */
@@ -185,6 +197,7 @@ export const simulations: Record<string, ComponentType<SimulationProps>> = {
   'arrow-pusher': ArrowPusher,
   'alkyne-acid-test': AlkyneAcidTest,
   'halogenation-lab': HalogenationLab,
+  'haloalkane-prep-bench': HaloalkanePrepBench,
   'ozonolysis-detective': OzonolysisDetective,
   'alkane-synthesis-planner': AlkaneSynthesisPlanner,
   'alkene-maker': AlkeneMaker,
@@ -220,6 +233,7 @@ export const simulations: Record<string, ComponentType<SimulationProps>> = {
   'rate-determining-step-lab': RateDeterminingStepLab,
   'zero-order-lab': ZeroOrderLab,
   'first-order-lab': FirstOrderLab,
+  'substitution-race': SubstitutionRace,
   'aqua-ion-colour-lab': AquaIonColourLab,
   'half-life-compare': HalfLifeCompare,
   'arrhenius-lab': ArrheniusLab,
@@ -240,4 +254,14 @@ export const simulations: Record<string, ComponentType<SimulationProps>> = {
   'ligand-colour-lab': LigandColourLab,
   'carbonyl-explorer': CarbonylExplorer,
   'complex-application-explorer': ComplexApplicationExplorer,
+  'halide-classifier': HalideClassifier,
+  'halide-namer': HalideNamer,
+  'c-x-bond-explorer': CXBondExplorer,
+  'haloarene-maker': HaloareneMaker,
+  'halide-properties-lab': HalidePropertiesLab,
+  'nucleophile-picker': NucleophilePicker,
+  'stereo-outcomes': StereoOutcomes,
+  'zaitsev-chooser': ZaitsevChooser,
+  'nitro-activation': NitroActivation,
+  'polyhalogen-explorer': PolyhalogenExplorer,
 }

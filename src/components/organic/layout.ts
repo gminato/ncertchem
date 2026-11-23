@@ -29,6 +29,9 @@ const TAU = Math.PI * 2
 const RING_MIN = 3
 const RING_MAX = 8
 
+/** Half-angle between two substituents on one ring atom, in radians (about 33°). */
+const GEM_SPLAY = 0.58
+
 export function adjacency(g: MolGraph): number[][] {
   const adj: number[][] = g.atoms.map(() => [])
   for (const b of g.bonds) {
@@ -250,6 +253,15 @@ export function layout2D(g: MolGraph): Point[] {
         const cands = [back + (2 * Math.PI) / 3, back - (2 * Math.PI) / 3]
         if (k >= 3) cands.push(back + Math.PI)
         return cands
+      }
+      // A ring atom carrying two substituents (an sp3 ring carbon such as C1 of a Meisenheimer
+      // complex or an arenium ion): splay both outside the ring, either side of the outward bisector.
+      const inRing = rings.some((r) => r.includes(p))
+      const ringNb = adj[p].filter((q) => placed[q] && rings.some((r) => r.includes(p) && r.includes(q))).map((q) => pts[q])
+      if (inRing && ringNb.length === 2 && nb.length + k === 4) {
+        const r = sumUnit(pts[p], ringNb)
+        const outward = Math.atan2(-r.y, -r.x)
+        return [outward + GEM_SPLAY, outward - GEM_SPLAY]
       }
       const s = sumUnit(pts[p], nb)
       let out: number

@@ -1,0 +1,131 @@
+.sim {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-4);
+  align-items: flex-start;
+}
+
+.stage {
+  background: var(--surface-raised);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: var(--space-3);
+}
+
+.scene {
+  display: block;
+  width: 100%;
+  max-width: 640px;
+  height: auto;
+  margin: 0 auto;
+  overflow: visible;
+}
+
+.scene :global(text) {
+  font-family: var(--font-sans);
+  fill: var(--fg);
+}
+
+.scene :global(line),
+.scene :global(path) {
+  stroke: var(--bond);
+}
+
+.arrow line {
+  stroke: var(--fg-muted);
+}
+
+.arrow polygon {
+  fill: var(--fg-muted);
+}
+
+.reagent {
+  font-size: 18px;
+  font-weight: 600;
+  fill: var(--fg);
+}
+
+.condition {
+  font-size: 16px;
+  fill: var(--fg-muted);
+}
+
+.caption {
+  font-size: 16px;
+  font-style: italic;
+  fill: var(--fg-muted);
+}
+
+.note {
+  font-size: 16px;
+  fill: var(--fg-muted);
+}
+
+.cross line {
+  stroke: var(--red);
+  stroke-width: 6;
+  stroke-linecap: round;
+}
+
+.verdict {
+  font-size: 17px;
+  fill: var(--red);
+}
+
+.verdictText {
+  margin: 0;
+  color: var(--red);
+  font-size: 16px;
+  line-height: 1.5;
+}
+
+.readout {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.products {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: var(--space-2);
+}
+
+.products li {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--space-2);
+  font-size: 16px;
+}
+
+.role {
+  min-width: 4.5em;
+  color: var(--fg-muted);
+  text-transform: capitalize;
+}
+
+.name {
+  font-weight: 600;
+}
+
+.formula {
+  color: var(--fg-muted);
+}
+
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
