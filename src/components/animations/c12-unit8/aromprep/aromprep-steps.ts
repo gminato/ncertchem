@@ -98,8 +98,8 @@ const NITRILE_ROUTE: SchemePath = [
 
 /** Step 6, route (c): Friedel–Crafts acylation of benzene. */
 const FRIEDEL_ROUTE: SchemePath = [
-  [g('benzene'), text('CH₃COCl')],
-  { reagents: 'anhydrous AlCl₃' },
+  [g('benzene')],
+  { reagents: 'CH₃COCl', conditions: 'anhydrous AlCl₃' },
   [tagged('acetophenone', 'HCl also formed')],
 ]
 
@@ -125,7 +125,8 @@ export const SCHEME_WIDTH = 540
 export const ROUTE_WIDTH = 556
 
 /** Step 6 scales to try, largest first: each row takes the largest that keeps its route on one line. */
-export const ROUTE_SCALES = [56, 52, 48, 44, 40, 36, 32, 28, 24] as const
+/** 40 keeps atom labels at 13 px or more on a 540 px panel (0.36 × 40 × 540 / 580 = 13.4). */
+export const ROUTE_SCALES = [40] as const
 
 /** Blocks of one Step, top to bottom, with each scheme's own height. Used for drawing and for the layout test. */
 export interface AromprepBlock {
