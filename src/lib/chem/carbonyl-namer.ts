@@ -165,3 +165,29 @@ export const RING_OPTIONS: readonly RingOption[] = [
   },
   { id: 'acetophenone', label: 'Acetophenone', smiles: 'CC(=O)C1=CC=CC=C1', common: 'acetophenone', verdict: 'ketone' },
 ]
+
+/** Distance from a vertex to its locant, in drawing units. */
+export const LOCANT_OFFSET = 14
+
+/**
+ * Where a locant goes: LOCANT_OFFSET units out from its own vertex, along the bisector of the widest free
+ * angle between that vertex's bonds. For a chain carbon that is the outside of the zig-zag, away from its bonds.
+ */
+export function locantPosition(
+  atom: number,
+  points: readonly { x: number; y: number }[],
+  neighbours: readonly number[],
+): { x: number; y: number } {
+  const p = points[atom]
+  const angles = neighbours.map((j) => Math.atan2(points[j].y - p.y, points[j].x - p.x)).sort((a, b) => a - b)
+  let bisector = -Math.PI / 2
+  let widest = -1
+  angles.forEach((start, i) => {
+    const end = i + 1 < angles.length ? angles[i + 1] : angles[0] + 2 * Math.PI
+    if (end - start > widest) {
+      widest = end - start
+      bisector = start + widest / 2
+    }
+  })
+  return { x: p.x + LOCANT_OFFSET * Math.cos(bisector), y: p.y + LOCANT_OFFSET * Math.sin(bisector) }
+}

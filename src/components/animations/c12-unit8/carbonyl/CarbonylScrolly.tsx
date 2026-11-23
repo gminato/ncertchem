@@ -1,7 +1,7 @@
 'use client'
 
 import type { ReactNode } from 'react'
-import { drawingFrame, ResonanceSet, type SkeletalMark, SkeletalFormula } from '@/components/organic'
+import { drawingFrame, elementColour, type SkeletalMark, SkeletalFormula } from '@/components/organic'
 import { ROLE_TONE } from '@/components/vocab/organic6'
 import { parseSmiles } from '@/lib/chem/molecule-parse'
 import { unit8Name } from '@/lib/chem/ncert-c12-unit8-data'
@@ -14,7 +14,6 @@ import {
   CARBONYL_BEATS,
   CHLOROBUTANAL,
   type CarbonylBeat,
-  DIPOLAR_FORM,
   FORMALDEHYDE,
   METHYLCYCLOHEXANECARBALDEHYDE,
 } from './carbonyl-steps'
@@ -89,32 +88,124 @@ function Molecule({ smiles, carbonyl, scale, x, y, locants, partialCharges }: {
   )
 }
 
-function PlanarView() {
-  const scale = 90
-  const cx = W / 2
-  const cy = 250
-  const at = placed(FORMALDEHYDE.smiles, scale, cx, cy)
-  const c = at(0)
-  const o = at(1)
-  const phi = Math.atan2(o.y - c.y, o.x - c.x)
-  const phiH = phi + (2 * Math.PI) / 3
-  const r = 30
-  const arcStart = { x: c.x + r * Math.cos(phi), y: c.y + r * Math.sin(phi) }
-  const arcEnd = { x: c.x + r * Math.cos(phiH), y: c.y + r * Math.sin(phiH) }
-  const labelAngle = phi + Math.PI / 3
-  const label = { x: c.x + 62 * Math.cos(labelAngle), y: c.y + 62 * Math.sin(labelAngle) }
+type Pt = { x: number; y: number }
+
+/** Bond length of the methanal drawing in Steps 1 and 2, in viewBox units. */
+const PLANAR_BOND = 200
+/** Height of the molecular plane in Step 1 (and the centre line of Step 2). */
+const PLANE_Y = 250
+/** Gap between a bond end and an atom letter. */
+const ATOM_GAP = 13
+
+/**
+ * Methanal, H₂C=O, drawn in full: C at (x0, y), O to its right on the same line, and both H atoms
+ * at 120° to the C=O bond. The hydrogens are drawn, so the three σ bonds can be seen.
+ */
+function methanal(x0: number, y: number, bond: number) {
+  const dx = bond / 2
+  const dy = (bond * Math.sqrt(3)) / 2
+  return {
+    c: { x: x0, y },
+    o: { x: x0 + bond, y },
+    h1: { x: x0 - dx, y: y - dy },
+    h2: { x: x0 - dx, y: y + dy },
+  }
+}
+type Methanal = ReturnType<typeof methanal>
+
+/** Centres a methanal drawing on X: it runs from the H atoms (x0 - bond/2) to O (x0 + bond). */
+function methanalCentred(X: number, y: number, bond: number): Methanal {
+  return methanal(X - bond / 4, y, bond)
+}
+
+/** The part of segment a→b that is left after `from` is cut off the start and `to` off the end. */
+function between(a: Pt, b: Pt, from: number, to: number) {
+  const len = Math.hypot(b.x - a.x, b.y - a.y)
+  const ux = (b.x - a.x) / len
+  const uy = (b.y - a.y) / len
+  return { x1: a.x + ux * from, y1: a.y + uy * from, x2: b.x - ux * to, y2: b.y - uy * to }
+}
+
+/** The C–H bonds, and the C=O bond (doubled, or single in the dipolar form). */
+function MethanalBonds({ m, doubleBond }: { m: Methanal; doubleBond: boolean }) {
+  const hs = [between(m.c, m.h1, ATOM_GAP, ATOM_GAP), between(m.c, m.h2, ATOM_GAP, ATOM_GAP)]
+  const co = between(m.c, m.o, ATOM_GAP, ATOM_GAP)
+  const offsets = doubleBond ? [-5, 5] : [0]
+  return (
+    <g stroke={INK} strokeWidth={2} strokeLinecap="round">
+      {hs.map((l, i) => (
+        <line key={`ch-${i}`} x1={l.x1} y1={l.y1} x2={l.x2} y2={l.y2} />
+      ))}
+      {offsets.map((d) => (
+        <line key={`co-${d}`} x1={co.x1} y1={co.y1 + d} x2={co.x2} y2={co.y2 + d} />
+      ))}
+    </g>
+  )
+}
+
+/** The letters of methanal, with optional charges: ⊕ up and right of C, ⊖ up and right of O. */
+function MethanalAtoms({ m, carbonCharge, oxygenCharge }: { m: Methanal; carbonCharge?: string; oxygenCharge?: string }) {
+  return (
+    <g fontSize={18} textAnchor="middle" dominantBaseline="central">
+      <text x={m.c.x} y={m.c.y} fill={INK}>C</text>
+      <text x={m.o.x} y={m.o.y} fill={elementColour('O')}>O</text>
+      <text x={m.h1.x} y={m.h1.y} fill={INK}>H</text>
+      <text x={m.h2.x} y={m.h2.y} fill={INK}>H</text>
+      {carbonCharge && (
+        <text x={m.c.x + 9} y={m.c.y - 12} fontSize={14} textAnchor="start" fill={INK}>{carbonCharge}</text>
+      )}
+      {oxygenCharge && (
+        <text x={m.o.x + 9} y={m.o.y - 12} fontSize={14} textAnchor="start" fill={INK}>{oxygenCharge}</text>
+      )}
+    </g>
+  )
+}
+
+/** One lone pair: two dots side by side, 16 units out from the atom in direction (ux, uy). */
+function LonePair({ x, y, ux, uy }: { x: number; y: number; ux: number; uy: number }) {
+  const px = -uy * 3
+  const py = ux * 3
+  return (
+    <g fill={INK}>
+      <circle cx={x + ux * 16 + px} cy={y + uy * 16 + py} r={2.2} />
+      <circle cx={x + ux * 16 - px} cy={y + uy * 16 - py} r={2.2} />
+    </g>
+  )
+}
+
+/** Neutral oxygen has two lone pairs, to the right; the O⁻ of the dipolar form has three. */
+function OxygenPairs({ o, kind }: { o: Pt; kind: 'neutral' | 'anion' }) {
+  const dirs = kind === 'neutral' ? [[0.707, -0.707], [0.707, 0.707]] : [[0, -1], [0, 1], [1, 0]]
   return (
     <g>
-      <ellipse cx={cx} cy={cy} rx={200} ry={118} fill={MUTED} fillOpacity={0.08} />
-      <Molecule smiles={FORMALDEHYDE.smiles} carbonyl={FORMALDEHYDE.carbonyl} scale={scale} x={cx} y={cy} />
+      {dirs.map(([ux, uy]) => (
+        <LonePair key={`${ux},${uy}`} x={o.x} y={o.y} ux={ux} uy={uy} />
+      ))}
+    </g>
+  )
+}
+
+function PlanarView() {
+  const m = methanalCentred(W / 2, PLANE_Y, PLANAR_BOND)
+  const r = 30
+  const arcStart = { x: m.c.x + r, y: m.c.y }
+  const arcEnd = { x: m.c.x + r * Math.cos((-2 * Math.PI) / 3), y: m.c.y + r * Math.sin((-2 * Math.PI) / 3) }
+  const label = { x: m.c.x + 31, y: m.c.y - 54 }
+  return (
+    <g>
+      <ellipse cx={W / 2} cy={PLANE_Y} rx={270} ry={230} fill={MUTED} fillOpacity={0.08} />
+      <CarbonylHalo p={m.c} />
+      <MethanalBonds m={m} doubleBond />
+      <MethanalAtoms m={m} />
+      <OxygenPairs o={m.o} kind="neutral" />
       <path
-        d={`M ${arcStart.x} ${arcStart.y} A ${r} ${r} 0 0 1 ${arcEnd.x} ${arcEnd.y}`}
+        d={`M ${arcStart.x} ${arcStart.y} A ${r} ${r} 0 0 0 ${arcEnd.x} ${arcEnd.y}`}
         fill="none"
         stroke={INK}
         strokeWidth={1.5}
       />
       <Caption x={label.x} y={label.y + 5} size={14}>≈ 120°</Caption>
-      <Caption y={388} size={16} weight={600}>{unit8Name(FORMALDEHYDE.smiles)} (formaldehyde)</Caption>
+      <Caption y={500} size={16} weight={600}>{unit8Name(FORMALDEHYDE.smiles)} (formaldehyde)</Caption>
       <Caption y={H - 56}>Three σ bonds leave the carbonyl carbon, at about 120°</Caption>
       <Caption y={H - 28} fill={MUTED}>All four atoms lie in one plane</Caption>
     </g>
@@ -122,25 +213,23 @@ function PlanarView() {
 }
 
 function PiView() {
-  const scale = 90
-  const cx = W / 2
-  const cy = 250
-  const at = placed(FORMALDEHYDE.smiles, scale, cx, cy)
-  const c = at(0)
-  const o = at(1)
-  const mid = { x: (c.x + o.x) / 2, y: (c.y + o.y) / 2 }
-  const half = Math.hypot(o.x - c.x, o.y - c.y) / 2
+  const m = methanalCentred(W / 2, PLANE_Y, PLANAR_BOND)
+  const mid = { x: (m.c.x + m.o.x) / 2, y: PLANE_Y }
+  const half = PLANAR_BOND / 2
   const lobeY = 46
   return (
     <g>
-      <ellipse cx={mid.x} cy={cy - lobeY} rx={half + 34} ry={22} fill={ACCENT} fillOpacity={0.2} />
-      <ellipse cx={mid.x} cy={cy + lobeY} rx={half + 34} ry={22} fill={ACCENT} fillOpacity={0.2} />
-      {[c, o].flatMap((p) => [
+      <ellipse cx={mid.x} cy={PLANE_Y - lobeY} rx={half + 20} ry={22} fill={ACCENT} fillOpacity={0.2} />
+      <ellipse cx={mid.x} cy={PLANE_Y + lobeY} rx={half + 20} ry={22} fill={ACCENT} fillOpacity={0.2} />
+      {[m.c, m.o].flatMap((p) => [
         <ellipse key={`up-${p.x}`} cx={p.x} cy={p.y - lobeY} rx={13} ry={22} fill={ACCENT} fillOpacity={0.55} />,
         <ellipse key={`dn-${p.x}`} cx={p.x} cy={p.y + lobeY} rx={13} ry={22} fill={ACCENT} fillOpacity={0.55} />,
       ])}
-      <Molecule smiles={FORMALDEHYDE.smiles} carbonyl={FORMALDEHYDE.carbonyl} scale={scale} x={cx} y={cy} />
-      <Caption y={388} size={16} weight={600}>p orbitals overlap sideways</Caption>
+      <CarbonylHalo p={m.c} />
+      <MethanalBonds m={m} doubleBond />
+      <MethanalAtoms m={m} />
+      <OxygenPairs o={m.o} kind="neutral" />
+      <Caption y={500} size={16} weight={600}>p orbitals overlap sideways</Caption>
       <Caption y={H - 56}>The overlap forms the π bond, above and below the plane</Caption>
       <Caption y={H - 28} fill={MUTED}>Oxygen keeps its two lone pairs</Caption>
     </g>
@@ -148,25 +237,34 @@ function PiView() {
 }
 
 function PolarisedView() {
+  const top = methanalCentred(W / 2, 150, 120)
+  const left = methanalCentred(180, 400, 84)
+  const right = methanalCentred(400, 400, 84)
   return (
     <g>
-      <Molecule
-        smiles={FORMALDEHYDE.smiles}
-        carbonyl={FORMALDEHYDE.carbonyl}
-        scale={84}
-        x={W / 2}
-        y={190}
-        partialCharges={[
-          { atom: 0, label: 'δ⁺' },
-          { atom: 1, label: 'δ⁻' },
-        ]}
-      />
-      <ResonanceSet
-        contributors={[{ graph: parseSmiles(FORMALDEHYDE.smiles) }, { graph: parseSmiles(DIPOLAR_FORM.smiles) }]}
-        scale={56}
-        x={W / 2}
-        y={430}
-      />
+      <CarbonylHalo p={top.c} />
+      <MethanalBonds m={top} doubleBond />
+      <MethanalAtoms m={top} />
+      <OxygenPairs o={top.o} kind="neutral" />
+      <text x={top.c.x + 12} y={top.c.y + 22} fontSize={14} fill={INK}>δ⁺</text>
+      <text x={top.o.x + 24} y={top.o.y + 5} fontSize={14} fill={INK}>δ⁻</text>
+
+      <CarbonylHalo p={left.c} />
+      <MethanalBonds m={left} doubleBond />
+      <MethanalAtoms m={left} />
+      <OxygenPairs o={left.o} kind="neutral" />
+      <Caption x={180} y={500} size={14} fill={MUTED}>neutral form</Caption>
+
+      <line x1={268} y1={400} x2={312} y2={400} stroke={INK} strokeWidth={1.5} />
+      <polygon points="262,400 270,396 270,404" fill={INK} />
+      <polygon points="318,400 310,396 310,404" fill={INK} />
+
+      <CarbonylHalo p={right.c} />
+      <MethanalBonds m={right} doubleBond={false} />
+      <MethanalAtoms m={right} carbonCharge="⊕" oxygenCharge="⊖" />
+      <OxygenPairs o={right.o} kind="anion" />
+      <Caption x={400} y={500} size={14} fill={MUTED}>dipolar form</Caption>
+
       <Caption y={H - 56}>δ⁺ on the carbon, δ⁻ on the oxygen</Caption>
       <Caption y={H - 28} fill={MUTED}>Neutral and dipolar forms; the real molecule is a blend</Caption>
     </g>

@@ -1,12 +1,15 @@
 import { describe, expect, it } from 'vitest'
+import { drawingFrame } from '@/components/organic/frame'
 import { parseSmiles, molecularFormula } from './molecule-parse'
 import { unit8Name } from './ncert-c12-unit8-data'
 import {
   CHAIN_LENGTHS,
   RING_OPTIONS,
   SUBSTITUENTS,
+  LOCANT_OFFSET,
   buildChain,
   carbonylPositions,
+  locantPosition,
   substituentPositions,
   type ChainLength,
   type SubstituentKind,
@@ -96,5 +99,40 @@ describe('ring molecules', () => {
     }
     expect(RING_OPTIONS.find((r) => r.id === 'methylcyclohexane')?.common).toBe('γ-Methylcyclohexanecarbaldehyde')
     expect(RING_OPTIONS.find((r) => r.id === 'acetophenone')?.verdict).toBe('ketone')
+  })
+})
+
+describe('locant placement', () => {
+  it('puts every chain locant nearest to the carbon it numbers, for every chain, substituent and C=O position', () => {
+    const problems: string[] = []
+    let checked = 0
+    for (const n of CHAIN_LENGTHS) {
+      for (const carbonyl of carbonylPositions(n)) {
+        const subs: { substituent: SubstituentKind; at: number | null }[] = [{ substituent: 'none', at: null }]
+        for (const s of SUBSTITUENTS) {
+          if (s.id === 'none') continue
+          for (const at of substituentPositions(n, carbonyl)) subs.push({ substituent: s.id, at })
+        }
+        for (const { substituent, at } of subs) {
+          const chain = buildChain({ n, carbonyl, substituent, at })
+          const graph = parseSmiles(chain.smiles)
+          const points = drawingFrame(graph, 50).points
+          const adj: number[][] = graph.atoms.map(() => [])
+          for (const b of graph.bonds) {
+            adj[b.a].push(b.b)
+            adj[b.b].push(b.a)
+          }
+          for (const atom of chain.carbons) {
+            checked += 1
+            const p = locantPosition(atom, points, adj[atom])
+            const dist = (i: number) => Math.hypot(points[i].x - p.x, points[i].y - p.y)
+            const nearest = points.reduce((best, _, i) => (dist(i) < dist(best) ? i : best), 0)
+            if (nearest !== atom || Math.abs(dist(atom) - LOCANT_OFFSET) > 1e-6) problems.push(`${chain.smiles} C${atom}`)
+          }
+        }
+      }
+    }
+    expect(checked).toBeGreaterThan(0)
+    expect(problems).toEqual([])
   })
 })

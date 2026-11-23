@@ -14,6 +14,7 @@ import {
   SUBSTITUENTS,
   buildChain,
   carbonylPositions,
+  locantPosition,
   substituentPositions,
   type ChainLength,
   type SubstituentKind,
@@ -33,6 +34,16 @@ const subscript = (f: string) => f.replace(/[0-9]/g, (d) => SUB[d])
 /** One drawing scale for the whole view: the chain fits 470 units wide, and labels stay large. */
 const MAX_SCALE = 70
 const FIT_WIDTH = 470
+
+/** Each atom's bonded neighbours, by index. */
+function adjacency(g: MolGraph): number[][] {
+  const adj: number[][] = g.atoms.map(() => [])
+  for (const b of g.bonds) {
+    adj[b.a].push(b.b)
+    adj[b.b].push(b.a)
+  }
+  return adj
+}
 
 /** Ring numbering for the methylcyclohexane option: C1 carries CHO, and the methyl sits on C3, as the name says. */
 function ringLocants(g: MolGraph, carbonylAtom: number, mode: Mode): { atom: number; label: string }[] {
@@ -88,6 +99,7 @@ export function CarbonylNamer() {
   const sentence = sentenceFor(mode, verdict, carbonyl, n)
   const scale = Math.min(MAX_SCALE, FIT_WIDTH / drawingFrame(graph, 1).bounds.width)
   const frame = drawingFrame(graph, scale)
+  const adj = adjacency(graph)
   const locants = ring ? ringLocants(graph, carbonylAtom, mode) : chain.carbons.map((atom, k) => ({ atom, label: String(k + 1) }))
   const verdictLabel = verdict === 'aldehyde' ? 'Aldehyde' : 'Ketone'
   const commonText = common ?? 'NCERT gives no common name for this one'
@@ -109,11 +121,20 @@ export function CarbonylNamer() {
               scale={scale}
               x={280}
               y={240}
-              locants={locants}
               overlay={
-                carbonylAtom >= 0 ? (
-                  <circle cx={frame.points[carbonylAtom].x} cy={frame.points[carbonylAtom].y} r={0.2 * scale} fill={ROLE_TONE.electrophilicCarbon} />
-                ) : null
+                <g>
+                  {carbonylAtom >= 0 ? (
+                    <circle cx={frame.points[carbonylAtom].x} cy={frame.points[carbonylAtom].y} r={0.2 * scale} fill={ROLE_TONE.electrophilicCarbon} />
+                  ) : null}
+                  {locants.map((l) => {
+                    const p = locantPosition(l.atom, frame.points, adj[l.atom])
+                    return (
+                      <text key={l.atom} x={p.x} y={p.y} fontSize={15} fontWeight={700} textAnchor="middle" dominantBaseline="central" fill="var(--fg)">
+                        {l.label}
+                      </text>
+                    )
+                  })}
+                </g>
               }
             />
             <text x={280} y={412} textAnchor="middle" fontSize={22} fontWeight={700} fontFamily="var(--font-sans)" fill="var(--fg)">
