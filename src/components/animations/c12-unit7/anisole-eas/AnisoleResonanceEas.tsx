@@ -404,9 +404,9 @@ function MiniProductRing({
       />
       <circle cx={cx} cy={cy} r={r * 0.56} fill="none" stroke={FG} strokeWidth={1.6} />
 
-      {/* Top -OCH3 */}
-      <line x1={verts[0].x} y1={verts[0].y} x2={verts[0].x} y2={verts[0].y - 18} stroke={FG} strokeWidth={2.2} />
-      <text x={verts[0].x} y={verts[0].y - 30} textAnchor="middle" dominantBaseline="central" fontSize={16} fontWeight={600} fill={O_TONE}>
+      {/* Top -OR */}
+      <line x1={verts[0].x} y1={verts[0].y} x2={verts[0].x} y2={verts[0].y - 15} stroke={FG} strokeWidth={2.2} />
+      <text x={verts[0].x} y={verts[0].y - 26} textAnchor="middle" dominantBaseline="central" fontSize={16} fontWeight={600} fill={O_TONE}>
         OR
       </text>
 
@@ -414,7 +414,7 @@ function MiniProductRing({
       <line x1={target.x} y1={target.y} x2={ex} y2={ey} stroke={FG} strokeWidth={2.2} />
       <text
         x={position === 'ortho' ? ex + 10 : ex}
-        y={position === 'ortho' ? ey - 4 : ey + 12}
+        y={position === 'ortho' ? ey - 4 : ey + 9}
         textAnchor={position === 'ortho' ? 'start' : 'middle'}
         dominantBaseline="central"
         fontSize={16}
@@ -490,7 +490,7 @@ function Step3EasAttack() {
       <text x={433} y={82} textAnchor="middle" dominantBaseline="central" fontSize={16} fontWeight={600} fill={MUTED}>
         Ortho (minor)
       </text>
-      <MiniProductRing cx={420} cy={160} r={25} subLabel="E" position="ortho" />
+      <MiniProductRing cx={420} cy={160} r={22} subLabel="E" position="ortho" />
 
       <rect x={340} y={232} width={186} height={192} rx={10} fill={SURFACE} stroke={SUCCESS} strokeWidth={1.8} />
       <rect x={340} y={232} width={186} height={32} rx={10} fill={SUCCESS_SOFT} stroke="none" />
@@ -498,8 +498,8 @@ function Step3EasAttack() {
       <text x={433} y={248} textAnchor="middle" dominantBaseline="central" fontSize={16} fontWeight={700} fill={FG}>
         Para (major)
       </text>
-      <MiniProductRing cx={433} cy={322} r={24} subLabel="E" position="para" />
-      <text x={433} y={406} textAnchor="middle" dominantBaseline="central" fontSize={16} fontWeight={500} fill={SUCCESS}>
+      <MiniProductRing cx={433} cy={330} r={21} subLabel="E" position="para" />
+      <text x={433} y={408} textAnchor="middle" dominantBaseline="central" fontSize={16} fontWeight={500} fill={SUCCESS}>
         Less steric hindrance
       </text>
     </g>

@@ -290,7 +290,7 @@ const EAS_EXTRA: Record<
     pillLabel: 'Nitration (conc. H₂SO₄ + HNO₃)',
     electrophile: 'NO₂⁺',
     substituentGroup: 'NO₂',
-    catalystFallback: 'Acid mixture (conc. H₂SO₄ + HNO₃)',
+    catalystFallback: 'Conc. H₂SO₄ generates NO₂⁺',
     noLewisAcidNeeded: false,
     note: 'Concentrated sulphuric and nitric acids generate the nitronium ion (NO₂⁺) to form 4-nitroanisole (major) and 2-nitroanisole (minor).',
   },

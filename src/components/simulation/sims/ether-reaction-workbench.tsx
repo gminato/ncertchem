@@ -255,9 +255,9 @@ function CleavageStage({ outcome }: { outcome: CleavageOutcome }) {
 
       {/* Bottom status strip inside left panel */}
       <rect
-        x={28}
+        x={24}
         y={282}
-        width={420}
+        width={428}
         height={48}
         rx={10}
         fill={isAnisole && stoichiometry === 'excess' ? CAUTION_SOFT : outcome.excessConvertsAlcohol ? CAUTION_SOFT : SURFACE}
@@ -267,11 +267,11 @@ function CleavageStage({ outcome }: { outcome: CleavageOutcome }) {
       <text x={238} y={306} textAnchor="middle" dominantBaseline="central" fontSize={15} fontWeight={600} fill={FG}>
         {isAnisole
           ? stoichiometry === 'excess'
-            ? 'Excess HI: Phenol still resists substitution (no C₆H₅I)'
+            ? 'Excess HI: Phenol resists substitution (no C₆H₅I)'
             : 'Alkyl-oxygen bond cleaves; aryl C-O stays intact'
           : outcome.excessConvertsAlcohol
-            ? 'Excess HI, high T: alcohol converts to second iodide + H₂O'
-            : '1 eq HI: stops after one alkyl iodide + one alcohol'}
+            ? 'Excess HI, high T: alcohol -> 2nd iodide + H₂O'
+            : '1 eq HI: stops at one alkyl iodide + one alcohol'}
       </text>
 
       {/* Right panel: Mechanism & Products */}
@@ -348,8 +348,8 @@ function ProductMiniRing({
 }) {
   const verts = benzeneVertices(r).map((p) => ({ x: cx + p.x, y: cy + p.y }))
   const target = position === 'ortho' ? verts[1] : verts[3]
-  const gx = position === 'ortho' ? target.x + 18 : target.x
-  const gy = position === 'ortho' ? target.y - 10 : target.y + 18
+  const gx = position === 'ortho' ? target.x + 14 : target.x
+  const gy = position === 'ortho' ? target.y - 8 : target.y + 14
   return (
     <g>
       <polygon
@@ -367,7 +367,7 @@ function ProductMiniRing({
       <line x1={target.x} y1={target.y} x2={gx} y2={gy} stroke={FG} strokeWidth={2} />
       <text
         x={position === 'ortho' ? gx + 4 : gx}
-        y={position === 'ortho' ? gy - 4 : gy + 11}
+        y={position === 'ortho' ? gy - 4 : gy + 10}
         textAnchor={position === 'ortho' ? 'start' : 'middle'}
         dominantBaseline="central"
         fontSize={15}
@@ -380,18 +380,24 @@ function ProductMiniRing({
   )
 }
 
-function splitProductName(name: string, yieldPercent: number | null): [string, string] {
+function splitProductName(
+  name: string,
+  yieldPercent: number | null,
+): { line1: string; line2: string; isYieldLine: boolean } {
   const clean = name.replace(/\s*\([^)]*\)/g, '').trim()
   if (yieldPercent !== null) {
-    return [clean, `(${yieldPercent}% yield)`]
+    return { line1: clean, line2: `(${yieldPercent}% yield)`, isYieldLine: true }
   }
-  if (clean.length <= 15) return [clean, '']
+  if (clean.length <= 15) return { line1: clean, line2: '', isYieldLine: false }
+  const methoxyMatch = /^(\d+-Methoxy)(.+)$/.exec(clean)
+  if (methoxyMatch) {
+    return { line1: `${methoxyMatch[1]}-`, line2: methoxyMatch[2], isYieldLine: false }
+  }
   const dash = clean.indexOf('-', 2)
   if (dash > 0 && dash < clean.length - 3) {
-    return [clean.slice(0, dash + 1), clean.slice(dash + 1)]
+    return { line1: clean.slice(0, dash + 1), line2: clean.slice(dash + 1), isYieldLine: false }
   }
-  const mid = Math.ceil(clean.length / 2)
-  return [clean.slice(0, mid), clean.slice(mid)]
+  return { line1: clean, line2: '', isYieldLine: false }
 }
 
 function EasStage({ reaction }: { reaction: AnisoleEasRecord }) {
@@ -399,15 +405,17 @@ function EasStage({ reaction }: { reaction: AnisoleEasRecord }) {
   const cy = 186
   const R = 56
   const verts = benzeneVertices(R).map((p) => ({ x: cx + p.x, y: cy + p.y }))
-  const [majorL1, majorL2] = splitProductName(reaction.majorProduct, reaction.majorYieldPercent)
-  const [minorL1, minorL2] = splitProductName(reaction.minorProduct, null)
+  const major = splitProductName(reaction.majorProduct, reaction.majorYieldPercent)
+  const minor = splitProductName(reaction.minorProduct, null)
 
   const reagentLines =
     reaction.id === 'bromination'
       ? ['Br₂ in', 'CH₃COOH']
-      : reaction.id === 'nitration'
-        ? ['Conc. H₂SO₄ +', 'conc. HNO₃']
-        : [reaction.reagents]
+      : reaction.id === 'fc-acylation'
+        ? ['CH₃COCl', '(ethanoyl chloride)']
+        : reaction.id === 'nitration'
+          ? ['Conc. H₂SO₄ +', 'conc. HNO₃']
+          : [reaction.reagents]
 
   return (
     <svg
@@ -498,13 +506,21 @@ function EasStage({ reaction }: { reaction: AnisoleEasRecord }) {
       <text x={609} y={28} textAnchor="middle" dominantBaseline="central" fontSize={15} fontWeight={700} fill={FG}>
         {reaction.majorYieldPercent ? `Major · ${reaction.majorYieldPercent}% yield` : 'Major product (para)'}
       </text>
-      <ProductMiniRing cx={524} cy={114} r={25} group={reaction.substituentGroup} position="para" />
-      <text x={648} y={majorL2 ? 104 : 114} textAnchor="middle" dominantBaseline="central" fontSize={16} fontWeight={700} fill={FG}>
-        {majorL1}
+      <ProductMiniRing cx={506} cy={114} r={22} group={reaction.substituentGroup} position="para" />
+      <text x={672} y={major.line2 ? 104 : 114} textAnchor="middle" dominantBaseline="central" fontSize={16} fontWeight={700} fill={FG}>
+        {major.line1}
       </text>
-      {majorL2 && (
-        <text x={648} y={126} textAnchor="middle" dominantBaseline="central" fontSize={15} fontWeight={600} fill={SUCCESS}>
-          {majorL2}
+      {major.line2 && (
+        <text
+          x={672}
+          y={126}
+          textAnchor="middle"
+          dominantBaseline="central"
+          fontSize={major.isYieldLine ? 15 : 16}
+          fontWeight={major.isYieldLine ? 600 : 700}
+          fill={major.isYieldLine ? SUCCESS : FG}
+        >
+          {major.line2}
         </text>
       )}
 
@@ -514,13 +530,13 @@ function EasStage({ reaction }: { reaction: AnisoleEasRecord }) {
       <text x={609} y={209} textAnchor="middle" dominantBaseline="central" fontSize={15} fontWeight={600} fill={MUTED}>
         Minor product (ortho)
       </text>
-      <ProductMiniRing cx={524} cy={284} r={25} group={reaction.substituentGroup} position="ortho" />
-      <text x={656} y={minorL2 ? 274 : 284} textAnchor="middle" dominantBaseline="central" fontSize={16} fontWeight={600} fill={FG}>
-        {minorL1}
+      <ProductMiniRing cx={506} cy={292} r={22} group={reaction.substituentGroup} position="ortho" />
+      <text x={672} y={minor.line2 ? 280 : 290} textAnchor="middle" dominantBaseline="central" fontSize={16} fontWeight={600} fill={FG}>
+        {minor.line1}
       </text>
-      {minorL2 && (
-        <text x={656} y={296} textAnchor="middle" dominantBaseline="central" fontSize={16} fontWeight={600} fill={FG}>
-          {minorL2}
+      {minor.line2 && (
+        <text x={672} y={302} textAnchor="middle" dominantBaseline="central" fontSize={16} fontWeight={600} fill={FG}>
+          {minor.line2}
         </text>
       )}
     </svg>

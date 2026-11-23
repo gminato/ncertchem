@@ -80,6 +80,100 @@ async function svgOutOfBounds(root: Locator): Promise<string[]> {
   })
 }
 
+/** Check inner-panel containment & non-overlap inside the EAS SVG stage. */
+async function easContainmentIssues(sim: Locator): Promise<string[]> {
+  return sim.getByTestId('eas-svg').evaluate((svg) => {
+    const [, , vbW] = (svg.getAttribute('viewBox') ?? '0 0 0 0').split(/\s+/).map(Number)
+    const frame = svg.getBoundingClientRect()
+    const scale = vbW / frame.width
+    const boxOf = (el: Element) => {
+      const r = el.getBoundingClientRect()
+      return {
+        x0: (r.left - frame.left) * scale,
+        y0: (r.top - frame.top) * scale,
+        x1: (r.right - frame.left) * scale,
+        y1: (r.bottom - frame.top) * scale,
+      }
+    }
+    const issues: string[] = []
+    const texts = Array.from(svg.querySelectorAll('text'))
+
+    // Center box: x=258..460, y=64..296
+    for (const t of texts) {
+      const b = boxOf(t)
+      const txt = (t.textContent ?? '').trim()
+      if (b.x0 >= 240 && b.x1 <= 480 && b.y0 >= 64 && b.y1 <= 296) {
+        if (b.x0 < 260 || b.x1 > 458) {
+          issues.push(`Center reagent overflow "${txt}": [${b.x0.toFixed(1)}, ${b.x1.toFixed(1)}]`)
+        }
+      }
+    }
+
+    // Major product card: x=470..748, y=44..184 (below header)
+    const majorTexts = texts.filter((t) => {
+      const b = boxOf(t)
+      return b.x0 >= 468 && b.y0 >= 40 && b.y1 <= 186
+    })
+    for (const t of majorTexts) {
+      const b = boxOf(t)
+      const txt = (t.textContent ?? '').trim()
+      if (b.x0 < 472 || b.x1 > 746 || b.y0 < 46 || b.y1 > 182) {
+        issues.push(`Major card edge collision "${txt}": [${b.x0.toFixed(1)},${b.y0.toFixed(1)},${b.x1.toFixed(1)},${b.y1.toFixed(1)}]`)
+      }
+    }
+
+    // Minor product card: x=470..748, y=224..348 (below header)
+    const minorTexts = texts.filter((t) => {
+      const b = boxOf(t)
+      return b.x0 >= 468 && b.y0 >= 220 && b.y1 <= 350
+    })
+    const minorSubstituent = minorTexts.find((t) => {
+      const txt = (t.textContent ?? '').trim()
+      return txt !== 'OCH₃' && boxOf(t).x0 < 605
+    })
+    const minorNameTexts = minorTexts.filter((t) => boxOf(t).x0 >= 600)
+    for (const t of minorTexts) {
+      const b = boxOf(t)
+      const txt = (t.textContent ?? '').trim()
+      if (b.x0 < 472 || b.x1 > 746 || b.y0 < 226 || b.y1 > 346) {
+        issues.push(`Minor card edge collision "${txt}": [${b.x0.toFixed(1)},${b.y0.toFixed(1)},${b.x1.toFixed(1)},${b.y1.toFixed(1)}]`)
+      }
+    }
+    if (minorSubstituent) {
+      const subBox = boxOf(minorSubstituent)
+      for (const nt of minorNameTexts) {
+        const nb = boxOf(nt)
+        if (nb.x0 - subBox.x1 < 6) {
+          issues.push(
+            `Minor substituent "${minorSubstituent.textContent}" (${subBox.x1.toFixed(1)}) too close to "${nt.textContent}" (${nb.x0.toFixed(1)})`
+          )
+        }
+      }
+    }
+    return issues
+  })
+}
+
+/** Check bottom status banner containment inside cleavage SVG stage. */
+async function cleavageStatusContainmentIssues(sim: Locator): Promise<string[]> {
+  return sim.getByTestId('cleavage-svg').evaluate((svg) => {
+    const [, , vbW] = (svg.getAttribute('viewBox') ?? '0 0 0 0').split(/\s+/).map(Number)
+    const frame = svg.getBoundingClientRect()
+    const scale = vbW / frame.width
+    const issues: string[] = []
+    svg.querySelectorAll('text').forEach((t) => {
+      const r = t.getBoundingClientRect()
+      const x0 = (r.left - frame.left) * scale
+      const y0 = (r.top - frame.top) * scale
+      const x1 = (r.right - frame.left) * scale
+      if (y0 >= 280 && x0 < 460 && (x0 < 28 || x1 > 448)) {
+        issues.push(`Status banner text "${t.textContent?.trim()}" near/outside rect: [${x0.toFixed(1)}, ${x1.toFixed(1)}]`)
+      }
+    })
+    return issues
+  })
+}
+
 for (const scheme of ['light', 'dark'] as const) {
   test(`Section 7.6.3 Scrolly animations and Simulation work cleanly in ${scheme} (desktop 1280x800)`, async ({
     page,
@@ -130,6 +224,29 @@ for (const scheme of ['light', 'dark'] as const) {
       })
       expect(await smallTextLeaves(visualPanel)).toEqual([])
       expect(await svgOutOfBounds(visualPanel)).toEqual([])
+      if (k === 3) {
+        const step4Issues = await visualPanel.locator('svg[role="img"]').first().evaluate((svg) => {
+          const [, , vbW] = (svg.getAttribute('viewBox') ?? '0 0 0 0').split(/\s+/).map(Number)
+          const frame = svg.getBoundingClientRect()
+          const scale = vbW / frame.width
+          const issues: string[] = []
+          svg.querySelectorAll('text').forEach((t) => {
+            const txt = (t.textContent ?? '').trim()
+            const r = t.getBoundingClientRect()
+            const x0 = (r.left - frame.left) * scale
+            const y0 = (r.top - frame.top) * scale
+            const y1 = (r.bottom - frame.top) * scale
+            if (txt === 'OR' && x0 > 380 && y0 > 240 && y0 < 267) {
+              issues.push(`Para OR y0=${y0.toFixed(1)} touches header bar (264)`)
+            }
+            if (txt === 'E' && x0 > 380 && y0 > 340 && y1 > 395) {
+              issues.push(`Para E y1=${y1.toFixed(1)} too close to footer label`)
+            }
+          })
+          return issues
+        })
+        expect(step4Issues).toEqual([])
+      }
     }
 
     // 3. Simulation: ether-reaction-workbench
@@ -167,10 +284,14 @@ for (const scheme of ['light', 'dark'] as const) {
     await sim.screenshot({ path: `test-results/screens/c12u7-s12-sim-cleavage-anisole-${scheme}.png` })
     expect(await smallTextLeaves(sim)).toEqual([])
     expect(await svgOutOfBounds(sim)).toEqual([])
+    expect(await cleavageStatusContainmentIssues(sim)).toEqual([])
 
     // Diethyl ether: excess vs 1 eq
     await sim.getByRole('button', { name: /Diethyl ether/i }).click()
     await expect(sim.getByTestId('cleavage-products')).toHaveText('2 C₂H₅I + H₂O')
+    await sim.screenshot({ path: `test-results/screens/c12u7-s12-sim-cleavage-diethyl-excess-${scheme}.png` })
+    expect(await smallTextLeaves(sim)).toEqual([])
+    expect(await cleavageStatusContainmentIssues(sim)).toEqual([])
     await sim.getByRole('radio', { name: '1 eq conc. HI' }).click()
     await expect(sim.getByTestId('cleavage-products')).toHaveText('C₂H₅I + C₂H₅OH')
     expect(await svgOutOfBounds(sim)).toEqual([])
@@ -182,27 +303,36 @@ for (const scheme of ['light', 'dark'] as const) {
     await sim.screenshot({ path: `test-results/screens/c12u7-s12-sim-eas-bromo-${scheme}.png` })
     expect(await smallTextLeaves(sim)).toEqual([])
     expect(await svgOutOfBounds(sim)).toEqual([])
+    expect(await easContainmentIssues(sim)).toEqual([])
 
     // FC Alkylation
     await sim.getByRole('button', { name: /Friedel-Crafts Alkylation/i }).click()
     await expect(sim.getByTestId('eas-reagent')).toContainText('Anhydrous AlCl₃')
     await expect(sim.getByTestId('eas-major')).toHaveText('4-Methoxytoluene')
     await expect(sim.getByTestId('eas-minor')).toHaveText('2-Methoxytoluene')
+    await sim.screenshot({ path: `test-results/screens/c12u7-s12-sim-eas-alkyl-${scheme}.png` })
+    expect(await smallTextLeaves(sim)).toEqual([])
     expect(await svgOutOfBounds(sim)).toEqual([])
+    expect(await easContainmentIssues(sim)).toEqual([])
 
     // FC Acylation
     await sim.getByRole('button', { name: /Friedel-Crafts Acylation/i }).click()
     await expect(sim.getByTestId('eas-major')).toHaveText('4-Methoxyacetophenone')
     await expect(sim.getByTestId('eas-minor')).toHaveText('2-Methoxyacetophenone')
+    await sim.screenshot({ path: `test-results/screens/c12u7-s12-sim-eas-acyl-${scheme}.png` })
+    expect(await smallTextLeaves(sim)).toEqual([])
     expect(await svgOutOfBounds(sim)).toEqual([])
+    expect(await easContainmentIssues(sim)).toEqual([])
 
     // Nitration
     await sim.getByRole('button', { name: /Nitration/i }).click()
     await expect(sim.getByTestId('eas-major')).toHaveText('4-Nitroanisole')
     await expect(sim.getByTestId('eas-minor')).toHaveText('2-Nitroanisole')
+    await expect(sim.getByTestId('eas-reagent')).toContainText('Conc. H₂SO₄ generates NO₂⁺')
     await sim.screenshot({ path: `test-results/screens/c12u7-s12-sim-eas-nitro-${scheme}.png` })
     expect(await smallTextLeaves(sim)).toEqual([])
     expect(await svgOutOfBounds(sim)).toEqual([])
+    expect(await easContainmentIssues(sim)).toEqual([])
 
     // KaTeX & console errors
     await expect(page.locator('.katex-display').first()).toBeAttached()

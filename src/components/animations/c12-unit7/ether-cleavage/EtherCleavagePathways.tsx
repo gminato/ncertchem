@@ -403,24 +403,26 @@ function Step2ExcessHi() {
   return (
     <g>
       <Card x={14} y={50} w={532} h={188} label="1. Excess conc. HI, high T protonates ethanol" tone="caution" />
-      <Formula x={78} y={148} size={18}>CH₃CH₂</Formula>
-      <line x1={120} y1={148} x2={146} y2={148} stroke={BOND} strokeWidth={2.6} strokeLinecap="round" />
-      <Formula x={160} y={148} size={20} fill={O_TONE} weight={700}>O</Formula>
-      <LonePairDots x={160} y={128} />
-      <LonePairDots x={160} y={168} />
-      <line x1={174} y1={148} x2={198} y2={148} stroke={BOND} strokeWidth={2.6} strokeLinecap="round" />
-      <Formula x={210} y={148} size={18}>H</Formula>
+      <Formula x={62} y={148} size={18}>CH₃CH₂</Formula>
+      <line x1={100} y1={148} x2={124} y2={148} stroke={BOND} strokeWidth={2.6} strokeLinecap="round" />
+      <Formula x={136} y={148} size={20} fill={O_TONE} weight={700}>O</Formula>
+      <LonePairDots x={136} y={128} />
+      <LonePairDots x={136} y={168} />
+      <line x1={148} y1={148} x2={170} y2={148} stroke={BOND} strokeWidth={2.6} strokeLinecap="round" />
+      <Formula x={180} y={148} size={18}>H</Formula>
 
-      <Formula x={242} y={148} size={19} fill={MUTED}>+</Formula>
-      <Formula x={274} y={148} size={19} weight={700}>H</Formula>
-      <line x1={286} y1={148} x2={316} y2={148} stroke={BOND} strokeWidth={2.6} strokeLinecap="round" />
-      <Formula x={328} y={148} size={20} fill={I_TONE} weight={700}>I</Formula>
+      <Formula x={206} y={148} size={19} fill={MUTED}>+</Formula>
+      <Formula x={230} y={148} size={19} weight={700}>H</Formula>
+      <line x1={240} y1={148} x2={266} y2={148} stroke={BOND} strokeWidth={2.6} strokeLinecap="round" />
+      <Formula x={276} y={148} size={20} fill={I_TONE} weight={700}>I</Formula>
 
-      <CurvedArrow from={{ x: 164, y: 122 }} to={{ x: 268, y: 136 }} bend={-0.3} />
-      <CurvedArrow from={{ x: 300, y: 150 }} to={{ x: 326, y: 168 }} bend={0.55} />
+      <CurvedArrow from={{ x: 140, y: 122 }} to={{ x: 224, y: 136 }} bend={-0.3} />
+      <CurvedArrow from={{ x: 253, y: 150 }} to={{ x: 274, y: 168 }} bend={0.55} />
 
-      <EqHarpoons x={374} y={148} len={38} />
-      <Formula x={470} y={148} size={18} fill={FG}>CH₃CH₂-O⁺H₂</Formula>
+      <EqHarpoons x={312} y={148} len={32} />
+      <Formula x={412} y={148} size={18} fill={FG}>CH₃CH₂-O⁺H₂</Formula>
+      <Formula x={490} y={148} size={19} fill={MUTED}>+</Formula>
+      <Formula x={518} y={148} size={20} fill={I_TONE} weight={700}>I⁻</Formula>
 
       <Pill cx={426} cy={210} w={216} h={28} text="Excess conc. HI + heat" tone="caution" />
 
@@ -439,7 +441,7 @@ function Step2ExcessHi() {
       <Pill cx={454} cy={366} w={144} h={32} text="+ H₂O (leaves)" tone="success" />
 
       <Formula x={280} y={414} size={16} weight={600} fill={MUTED}>
-        Overall: CH₃-O-CH₂CH₃ → CH₃I + CH₃CH₂I + H₂O
+        Overall: CH₃-O-CH₂CH₃ + 2 HI → CH₃I + CH₃CH₂I + H₂O
       </Formula>
     </g>
   )
