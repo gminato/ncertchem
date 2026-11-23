@@ -812,6 +812,7 @@ interface GroupMeta {
   commonFragment: string
   commonSortKey: string
   condensed: string
+  condensedLeft?: string
   smilesFragmentRight: string
   alkoxyPrefix: string
 }
@@ -844,6 +845,7 @@ export const ETHER_GROUPS: Record<EtherLeftGroup | EtherRightGroup, GroupMeta> =
     commonFragment: 'isopropyl',
     commonSortKey: 'isopropyl',
     condensed: 'CH(CH₃)₂',
+    condensedLeft: '(CH₃)₂CH',
     smilesFragmentRight: 'C(C)C',
     alkoxyPrefix: 'isopropoxy',
   },
@@ -1112,12 +1114,13 @@ export function getEtherPairNomenclature(r1: EtherLeftGroup, r2: EtherRightGroup
   const subGroup = parentSide === 'left' ? right : left
   const smiles = buildEtherSmiles(r1, r2)
   const { common, alt: commonAlt } = buildEtherCommonName(r1, r2)
+  const leftCondensed = left.condensedLeft ?? left.condensed
   const condensedFormula =
     r1 === 'phenyl' && r2 === 'heptyl'
       ? 'C₆H₅O(CH₂)₆CH₃'
       : r1 === 'phenyl' && r2 === 'isopentyl'
         ? 'C₆H₅OCH₂CH₂CH(CH₃)₂'
-        : `${left.condensed}O${right.condensed}`
+        : `${leftCondensed}O${right.condensed}`
 
   let iupacName: string
   let iupacAlt: string | undefined

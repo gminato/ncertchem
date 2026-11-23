@@ -282,22 +282,22 @@ function StepDietherAndCyclo({ spec }: { spec: EtherStepSpec }) {
       />
       <MoleculeDiagram
         structure={dimethoxy.structure}
-        cx={145}
+        cx={136}
         cy={127}
-        maxWidth={215}
+        maxWidth={204}
         maxHeight={116}
         maxScale={44}
         showNumbering
       />
-      <line x1={262} y1={72} x2={262} y2={182} stroke="var(--border)" strokeWidth={1} />
-      <text x={278} y={88} fontSize={15} fontWeight={600} fill="var(--fwd)" fontFamily="var(--font-sans)">
+      <line x1={252} y1={72} x2={252} y2={182} stroke="var(--border)" strokeWidth={1} />
+      <text x={268} y={88} fontSize={15} fontWeight={600} fill="var(--fwd)" fontFamily="var(--font-sans)">
         Ethane (2 C) + two -OCH₃
       </text>
-      <text x={278} y={124} fontSize={19} fontWeight={700} fill="var(--accent)" fontFamily="var(--font-sans)">
+      <text x={268} y={124} fontSize={19} fontWeight={700} fill="var(--accent)" fontFamily="var(--font-sans)">
         {dimethoxy.iupacName}
       </text>
-      <text x={278} y={156} fontSize={15} fill="var(--fg-muted)" fontFamily="var(--font-sans)">
-        Both C-1 and C-2 carry methoxy (di-)
+      <text x={268} y={156} fontSize={15} fill="var(--fg-muted)" fontFamily="var(--font-sans)">
+        Methoxy at C-1 and C-2 (di-)
       </text>
 
       <rect

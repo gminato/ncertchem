@@ -122,7 +122,11 @@ describe('Section 7.2 nomenclature model', () => {
     expect(getEtherPairNomenclature('isopropyl', 'methyl')).toMatchObject({
       commonName: 'Methyl isopropyl ether',
       iupacName: '2-Methoxypropane',
+      condensedFormula: '(CH₃)₂CHOCH₃',
     })
+    for (const r2 of rights) {
+      expect(getEtherPairNomenclature('isopropyl', r2).condensedFormula.startsWith('(CH₃)₂CHO')).toBe(true)
+    }
     expect(getEtherPairNomenclature('phenyl', 'isopentyl')).toMatchObject({
       commonName: 'Phenyl isopentyl ether',
       iupacName: '3-Methylbutoxybenzene',
