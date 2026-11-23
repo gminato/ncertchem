@@ -1,0 +1,45 @@
+.root {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  font-family: var(--font-sans);
+  color: var(--fg);
+}
+
+.stage {
+  margin: 0;
+  background: var(--surface-raised);
+  border-radius: var(--radius-md, 10px);
+  padding: var(--space-3);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  min-width: 0;
+}
+
+.drawing {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.summary {
+  margin: 0;
+  font-size: 16px;
+  line-height: 1.5;
+  color: var(--fg);
+}
+
+.equation {
+  margin: 0;
+  font-size: 16px;
+  color: var(--fg-muted);
+  overflow-wrap: anywhere;
+}
+
+.reagents {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
