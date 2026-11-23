@@ -63,8 +63,8 @@ export interface AcidRouteStep {
 
 /** Width of every scheme row, inside a 560-unit panel with a 16-unit margin. */
 export const ACID_ROUTE_SCHEME_WIDTH = 528
-/** Bond-length scales for the skeletal structures: 40 keeps every label at 14 units or more. */
-export const ACID_ROUTE_SCALES = [44, 40] as const
+/** Bond-length scale for the skeletal structures: 38 keeps every 0.36 em label at 13 px or more on a 540 px panel. */
+export const ACID_ROUTE_SCALES = [38] as const
 const ROW_GAP = 24
 const MARGIN = 12
 
@@ -119,12 +119,12 @@ export const ACID_ROUTE_STEPS: readonly AcidRouteStep[] = [
     rows: [
       [
         [{ mol: 'nitrile', highlight: [1] }],
-        { reagents: 'H₂O, H⁺ or OH⁻' },
+        { reagents: 'H₂O, H⁺/OH⁻' },
         [{ mol: 'amide', highlight: [1] }],
       ],
       [
         [{ mol: 'amide', highlight: [1] }],
-        { reagents: 'H₂O, H⁺ or OH⁻', conditions: 'heat' },
+        { reagents: 'H₂O, H⁺/OH⁻', conditions: 'heat' },
         [{ mol: 'phenylpropanoic', highlight: [1] }, { mol: 'ammonia', text: 'NH₃' }],
       ],
     ],
@@ -135,10 +135,10 @@ export const ACID_ROUTE_STEPS: readonly AcidRouteStep[] = [
       [
         [{ mol: 'bromobutane', tag: 'four carbons' }],
         { reagents: 'Mg, dry ether' },
-        [{ mol: 'butylMgBr', text: 'CH₃CH₂CH₂CH₂MgBr' }],
+        [{ mol: 'butylMgBr', text: 'C₄H₉MgBr' }],
       ],
       [
-        [{ mol: 'butylMgBr', text: 'CH₃CH₂CH₂CH₂MgBr' }, { mol: 'co2', highlight: [1] }],
+        [{ mol: 'butylMgBr', text: 'C₄H₉MgBr' }, { mol: 'co2', text: 'CO₂' }],
         { reagents: 'dry ether', conditions: 'then H₃O⁺' },
         [{ mol: 'pentanoic', highlight: [4], tag: 'five carbons' }],
       ],
@@ -158,8 +158,8 @@ export const ACID_ROUTE_STEPS: readonly AcidRouteStep[] = [
         [{ mol: 'ethanoicAcid', text: 'CH₃COOH' }, { mol: 'ethanoicAcid', text: 'CH₃COOH' }],
       ],
       [
-        [{ mol: 'acetylChloride', text: 'CH₃COCl' }, { mol: 'hydroxideIon', text: '2 OH⁻' }],
-        {},
+        [{ mol: 'acetylChloride', text: 'CH₃COCl' }],
+        { reagents: '2 OH⁻' },
         [{ mol: 'acetateIon', text: 'CH₃COO⁻' }, { mol: 'chlorideIon', text: 'Cl⁻' }, { mol: 'water', text: 'H₂O' }],
       ],
     ],
@@ -184,7 +184,7 @@ export const ACID_ROUTE_STEPS: readonly AcidRouteStep[] = [
 ]
 
 /** One panel height for every Step, so the visual keeps its shape between Steps. */
-export const ACID_ROUTE_VIEW_HEIGHT = Math.max(...ACID_ROUTE_STEPS.map(stepContentHeight)) + 2 * MARGIN
+export const ACID_ROUTE_VIEW_HEIGHT = 700
 export const ACID_ROUTE_VIEW_WIDTH = 560
 export const ACID_ROUTE_MARGIN = MARGIN
 export const ACID_ROUTE_ROW_GAP = ROW_GAP

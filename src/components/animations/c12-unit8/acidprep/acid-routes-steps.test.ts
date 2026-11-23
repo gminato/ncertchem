@@ -1,12 +1,16 @@
 import { describe, expect, it } from 'vitest'
+import { layoutReactionScheme } from '@/components/organic/hydrocarbon-geometry'
 import { molecularFormula, parseSmiles } from '@/lib/chem/molecule-parse'
 import {
   ACID_ROUTE_MOLECULES,
+  ACID_ROUTE_SCALES,
+  ACID_ROUTE_SCHEME_WIDTH,
   ACID_ROUTE_STEPS,
   ACID_ROUTE_VIEW_HEIGHT,
   isGroup,
   type Piece,
   stepContentHeight,
+  toSchemePath,
 } from './acid-routes-steps'
 
 /** Element counts of a formula such as C6H12O2 or HCl, independent of the order written. */
@@ -59,10 +63,14 @@ describe('acid-routes Scrolly Steps', () => {
     expect(graph.atoms[5].element).toBe('O')
   })
 
-  it('keeps every Step inside the fixed panel height', () => {
+  it('fits every Step in the 700-unit panel: content at most 676 tall, every row at most 528 wide', () => {
+    expect(ACID_ROUTE_VIEW_HEIGHT).toBe(700)
     for (const step of ACID_ROUTE_STEPS) {
-      expect(stepContentHeight(step)).toBeLessThanOrEqual(ACID_ROUTE_VIEW_HEIGHT - 24)
+      expect(stepContentHeight(step), step.label).toBeLessThanOrEqual(676)
+      for (const row of step.rows) {
+        const layout = layoutReactionScheme(toSchemePath(row), ACID_ROUTE_SCHEME_WIDTH, ACID_ROUTE_SCALES)
+        expect(layout.width, step.label).toBeLessThanOrEqual(528)
+      }
     }
-    expect(ACID_ROUTE_VIEW_HEIGHT).toBeLessThanOrEqual(1100)
   })
 })
