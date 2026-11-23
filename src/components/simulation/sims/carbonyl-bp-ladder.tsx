@@ -57,18 +57,25 @@ export function CarbonylBpLadder() {
   const attractions = interactionsFor(row.smiles)
   const hasDipole = attractions.includes('dipole–dipole')
   const hasHBond = attractions.includes('hydrogen bonding')
+  // An O–H molecule is drawn from its O end on the right (the same molecule, written OCCC), so the two O atoms face each other.
+  const rightSmiles = hasHBond ? 'OCCC' : row.smiles
+  const rightGraph = useMemo(() => parseSmiles(rightSmiles), [rightSmiles])
+  const rightFrame = useMemo(() => skeletalFrame(rightGraph, BOX_SCALE), [rightGraph])
 
   const pts = frame.points
+  const rightPts = rightFrame.points
   const carbons = graph.atoms.flatMap((a, i) => (a.element === 'C' ? [i] : []))
+  const rightCarbons = rightGraph.atoms.flatMap((a, i) => (a.element === 'C' ? [i] : []))
   const rightmostC = carbons.reduce((best, i) => (pts[i].x > pts[best].x ? i : best), carbons[0])
-  const leftmostC = carbons.reduce((best, i) => (pts[i].x < pts[best].x ? i : best), carbons[0])
-  const at = (i: number, x0: number): [number, number] => [x0 + pts[i].x, BOX_Y + pts[i].y]
+  const leftmostC = rightCarbons.reduce((best, i) => (rightPts[i].x < rightPts[best].x ? i : best), rightCarbons[0])
+  const atLeft = (i: number): [number, number] => [LEFT_X + pts[i].x, BOX_Y + pts[i].y]
+  const atRight = (i: number): [number, number] => [RIGHT_X + rightPts[i].x, BOX_Y + rightPts[i].y]
 
-  const vdW = inset(at(rightmostC, LEFT_X), at(leftmostC, RIGHT_X), 12)
-  const dipoleLine = site && hasDipole && dipoleOn ? inset(at(site.oxygen, LEFT_X), at(site.partner, RIGHT_X), 14) : null
-  const oxygenIndex = graph.atoms.findIndex((a) => a.element === 'O')
-  const hBondAnchor = hasHBond ? oxygenIndex : -1
-  const hBondSegment = hBondAnchor >= 0 && hBondOn ? inset(at(hBondAnchor, LEFT_X), at(hBondAnchor, RIGHT_X), 26, 14) : null
+  const vdW = inset(atLeft(rightmostC), atRight(leftmostC), 12)
+  const dipoleLine = site && hasDipole && dipoleOn ? inset(atLeft(site.oxygen), atRight(site.partner), 14) : null
+  const leftOxygen = graph.atoms.findIndex((a) => a.element === 'O')
+  const rightOxygen = rightGraph.atoms.findIndex((a) => a.element === 'O')
+  const hBondSegment = hasHBond && hBondOn ? inset(atLeft(leftOxygen), atRight(rightOxygen), 26, 18) : null
 
   const notes: string[] = [
     'Van der Waals contacts (short dots): in every molecule.',
@@ -102,17 +109,17 @@ export function CarbonylBpLadder() {
               {`Two ${row.name.toLowerCase()} molecules`}
             </text>
             <SkeletalFormula graph={graph} scale={BOX_SCALE} x={LEFT_X} y={BOX_Y} highlightAtoms={site ? [site.oxygen] : []} />
-            <SkeletalFormula graph={graph} scale={BOX_SCALE} x={RIGHT_X} y={BOX_Y} highlightAtoms={site ? [site.oxygen] : []} />
+            <SkeletalFormula graph={rightGraph} scale={BOX_SCALE} x={RIGHT_X} y={BOX_Y} highlightAtoms={site ? [site.oxygen] : []} />
             <line x1={vdW[0]} y1={vdW[1]} x2={vdW[2]} y2={vdW[3]} stroke="var(--fg-muted)" strokeWidth={2} strokeDasharray="2 5" strokeLinecap="round" />
             {dipoleLine && site && (
               <g>
                 <line x1={dipoleLine[0]} y1={dipoleLine[1]} x2={dipoleLine[2]} y2={dipoleLine[3]} stroke="var(--dipole)" strokeWidth={2.5} strokeDasharray="8 5" />
-                <text x={at(site.oxygen, LEFT_X)[0] - 26} y={at(site.oxygen, LEFT_X)[1] - 22} fontSize={16} fontWeight={700} fontFamily="var(--font-sans)" fill="var(--delta-minus)">δ⁻</text>
-                <text x={at(site.partner, RIGHT_X)[0] + 12} y={at(site.partner, RIGHT_X)[1] - 6} fontSize={16} fontWeight={700} fontFamily="var(--font-sans)" fill="var(--delta-plus)">δ⁺</text>
+                <text x={atLeft(site.oxygen)[0] - 26} y={atLeft(site.oxygen)[1] - 22} fontSize={16} fontWeight={700} fontFamily="var(--font-sans)" fill="var(--delta-minus)">δ⁻</text>
+                <text x={atRight(site.partner)[0] + 12} y={atRight(site.partner)[1] + 36} fontSize={16} fontWeight={700} fontFamily="var(--font-sans)" fill="var(--delta-plus)">δ⁺</text>
               </g>
             )}
             {hBondSegment && (
-              <line x1={hBondSegment[0]} y1={hBondSegment[1]} x2={hBondSegment[2]} y2={hBondSegment[3]} stroke="var(--accent)" strokeWidth={2.5} strokeDasharray="2 4" strokeLinecap="round" />
+              <line x1={hBondSegment[0]} y1={hBondSegment[1]} x2={hBondSegment[2]} y2={hBondSegment[3]} stroke="var(--accent)" strokeWidth={3.5} strokeDasharray="0 6" strokeLinecap="round" />
             )}
             {notes.map((note, i) => (
               <text key={note} x={24} y={210 + i * 22} fontSize={15} fontFamily="var(--font-sans)" fill="var(--fg-muted)">

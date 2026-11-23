@@ -53,7 +53,7 @@ export const SOLUBILITY_NOTES: readonly string[] = [
   'Mixes with water in any proportion.',
   'Solubility has fallen as the alkyl chain lengthened.',
   'Solubility has fallen further.',
-  'Least soluble of the four.',
+  'Least soluble of these aldehydes.',
 ]
 
 /** The water-contact sentence that applies to every step of the ladder. */

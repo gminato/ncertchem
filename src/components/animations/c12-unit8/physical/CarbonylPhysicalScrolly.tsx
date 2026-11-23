@@ -57,7 +57,7 @@ const mol = (smiles: string, scale: number, cx: number, cy: number): Placed => (
 
 function Name({ x, y, children, fill = INK }: { x: number; y: number; children: ReactNode; fill?: string }) {
   return (
-    <text x={x} y={y} textAnchor="middle" fontSize={LABEL_SIZE} fill={fill}>
+    <text x={x} y={y} textAnchor="middle" fontSize={16} fill={fill}>
       {children}
     </text>
   )
@@ -92,7 +92,6 @@ function Line({ a, b, stroke, dash, width = 2, trim = 0 }: { a: Point; b: Point;
 
 function Ladder({ beat }: { beat: CarbonylBeat }) {
   const active = LADDER_ACTIVE_K[beat]
-  const names = beat === 'ladder-all'
   return (
     <g>
       <line x1={AXIS_X} y1={LADDER_TOP_Y} x2={AXIS_X} y2={LADDER_BOTTOM_Y} stroke={MUTED} strokeWidth={2} />
@@ -117,11 +116,6 @@ function Ladder({ beat }: { beat: CarbonylBeat }) {
             <text x={AXIS_X + 62} y={y + 5} fontSize={LABEL_SIZE} fill={on ? INK : MUTED}>
               {r.bpK} K
             </text>
-            {names ? (
-              <text x={320} y={y + 5} fontSize={LABEL_SIZE} fill={INK}>
-                {r.name}
-              </text>
-            ) : null}
           </g>
         )
       })}
@@ -230,8 +224,11 @@ function HydrogenBondOverlay({ a, b }: { a: Placed; b: Placed }) {
   const len = Math.hypot(ob.x - oa.x, ob.y - oa.y) || 1
   const ux = (ob.x - oa.x) / len
   const uy = (ob.y - oa.y) / len
-  const hx = oa.x + ux * len * 0.3 - uy * 12
-  const hy = oa.y + uy * len * 0.3 + ux * 12
+  // The H label sits 14 units to one side of the dotted line, clear of the O–C bond.
+  const mx = (oa.x + ob.x) / 2
+  const my = (oa.y + ob.y) / 2
+  const hx = mx - uy * 14
+  const hy = my + ux * 14
   return (
     <g>
       <Line a={oa} b={ob} stroke={HBOND} dash="1 6" width={3.5} trim={12} />
@@ -245,19 +242,29 @@ function HydrogenBondOverlay({ a, b }: { a: Placed; b: Placed }) {
 function Scene({ beat }: { beat: CarbonylBeat }) {
   switch (beat) {
     case 'ladder-all': {
-      // Five molecules, each beside its rung of the ladder.
+      // Five molecules in even rows, highest boiling point on top; a thin leader joins each to its rung.
+      const rows = [...CARBONYL_BOILING_POINTS].sort((x, y) => y.bpK - x.bpK)
       return (
         <g>
-          {CARBONYL_BOILING_POINTS.map((r) => (
-            <Drawn key={r.smiles} p={mol(r.smiles, 16, 270, ladderY(r.bpK))} />
-          ))}
+          {rows.map((r, i) => {
+            const cy = 80 + i * 100
+            return (
+              <g key={r.smiles}>
+                <Line a={{ x: 226, y: ladderY(r.bpK) }} b={{ x: 280, y: cy }} stroke={MUTED} dash="none" width={1.5} />
+                <Drawn p={mol(r.smiles, 36, 340, cy)} />
+                <Name x={340} y={cy + 50}>
+                  {r.name}
+                </Name>
+              </g>
+            )
+          })}
         </g>
       )
     }
     case 'butane-alone': {
-      const main = mol(BUTANE_SMILES, 30, 420, 290)
-      const left = mol(BUTANE_SMILES, 30, 300, 440)
-      const right = mol(BUTANE_SMILES, 30, 505, 150)
+      const main = mol(BUTANE_SMILES, 36, 420, 290)
+      const left = mol(BUTANE_SMILES, 36, 300, 440)
+      const right = mol(BUTANE_SMILES, 36, 505, 150)
       const [a1, a2] = nearestPair(main, left)
       const [b1, b2] = nearestPair(main, right)
       return (
@@ -274,8 +281,8 @@ function Scene({ beat }: { beat: CarbonylBeat }) {
       )
     }
     case 'dipoles': {
-      const a = mol(PROPANAL_SMILES, 26, 300, 200)
-      const b = mol(ACETONE_SMILES, 26, 470, 380)
+      const a = mol(PROPANAL_SMILES, 36, 300, 200)
+      const b = mol(ACETONE_SMILES, 36, 470, 380)
       return (
         <g>
           <Drawn p={a} />
@@ -291,22 +298,25 @@ function Scene({ beat }: { beat: CarbonylBeat }) {
       )
     }
     case 'hydrogen-bonds': {
-      const a = mol(PROPAN1OL_SMILES, 26, 300, 200)
-      const b = mol(PROPAN1OL_SMILES, 26, 470, 380)
+      const a = mol(PROPAN1OL_SMILES, 36, 300, 170)
+      const b = mol(PROPAN1OL_SMILES, 36, 312, 214)
       return (
         <g>
           <Drawn p={a} />
           <Drawn p={b} />
           <HydrogenBondOverlay a={a} b={b} />
-          <Name x={a.cx} y={a.cy + 56}>
+          <Name x={a.cx} y={a.cy - 34}>
+            {NAME(PROPAN1OL_SMILES)}
+          </Name>
+          <Name x={b.cx} y={b.cy + 40}>
             {NAME(PROPAN1OL_SMILES)}
           </Name>
         </g>
       )
     }
     case 'acetone-water': {
-      const a = mol(ACETONE_SMILES, 34, 190, 190)
-      const b = mol(ACETONE_SMILES, 34, 420, 370)
+      const a = mol(ACETONE_SMILES, 36, 190, 190)
+      const b = mol(ACETONE_SMILES, 36, 420, 370)
       return (
         <g>
           <AcetoneCluster p={a} angles={[0, 60, -60]} />
@@ -315,7 +325,7 @@ function Scene({ beat }: { beat: CarbonylBeat }) {
       )
     }
     case 'pentanal-water': {
-      const p = mol(PENTANAL_SMILES, 30, 230, 290)
+      const p = mol(PENTANAL_SMILES, 36, 230, 290)
       const o = atomAt(p, PENTANAL_O)
       const c = atomAt(p, PENTANAL_C)
       const d = dirFrom(p, PENTANAL_O)
