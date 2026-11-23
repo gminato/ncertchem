@@ -19,13 +19,13 @@ const STATES: { name: string; act: (sim: Locator) => Promise<void> }[] = [
     await expect(sim.locator('[aria-live="polite"]')).toContainText('2-bromobutanoic acid')
   } },
   { name: 'ethanoic-three-steps', act: async (sim) => {
-    await sim.getByLabel('Acid', { exact: true }).selectOption({ index: 2 })
+    await sim.getByRole('combobox').selectOption({ index: 2 })
     await sim.getByRole('radio', { name: 'Br₂' }).check()
     await sim.getByRole('slider', { name: 'HVZ steps' }).fill('3')
     await expect(sim.locator('[aria-live="polite"]')).toContainText('3 of 3 α-H replaced')
   } },
   { name: 'benzoic-nitration', act: async (sim) => {
-    await sim.getByLabel('Acid', { exact: true }).selectOption({ index: 6 })
+    await sim.getByRole('combobox').selectOption({ index: 6 })
     await sim.getByRole('radio', { name: 'Nitration' }).check()
     await expect(sim.locator('[aria-live="polite"]')).toContainText('3-nitrobenzoic acid')
   } },
