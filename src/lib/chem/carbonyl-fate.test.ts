@@ -3,6 +3,7 @@ import {
   CANNIZZARO_PRODUCTS,
   CARBONYLS,
   NITRO_PRODUCTS,
+  alphaHydrogenCaption,
   carbonylById,
   carbonylName,
   formulaOf,
@@ -62,5 +63,14 @@ describe('carbonyl fate: every drawn molecule', () => {
       if (!p) continue
       expect(formulaOf(p.smiles), p.smiles).toBe(p.formula)
     }
+  })
+})
+
+describe('carbonyl fate: alpha-hydrogen note', () => {
+  it('ethanal under conc. NaOH gives the aldol note, not a Cannizzaro product', () => {
+    expect(alphaHydrogenCaption(carbonylById('ethanal')).join(' ')).toBe(
+      'Ethanal has α-hydrogens, so it does not undergo the Cannizzaro reaction. With dilute alkali it gives the aldol reaction instead (Section 8.4.4).',
+    )
+    expect(productsOf(carbonylById('ethanal'), 'conc-alkali')).toEqual([])
   })
 })

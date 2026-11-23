@@ -37,7 +37,7 @@ const STATES: { name: string; act: (sim: Locator) => Promise<void> }[] = [
     name: 'ethanal-none',
     act: async (sim) => {
       await sim.getByRole('radio', { name: /^Ethanal\b/i }).click()
-      await verdict(sim, 'No reaction in this Section')
+      await verdict(sim, 'No Cannizzaro reaction')
     },
   },
 ]

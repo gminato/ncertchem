@@ -1,7 +1,7 @@
 'use client'
 
 import type { ReactNode } from 'react'
-import { SkeletalFormula } from '@/components/organic'
+import { BenzeneRing, SkeletalFormula } from '@/components/organic'
 import { parseSmiles } from '@/lib/chem/molecule-parse'
 import type { MolGraph } from '@/lib/chem/molecule-graph'
 import { unit8Name } from '@/lib/chem/ncert-c12-unit8-data'
@@ -27,6 +27,12 @@ export interface CannizzaroScrollyProps {
 /** One viewBox for every Step, so the panel keeps the same size as the reader scrolls. */
 const W = 580
 const H = 520
+/** Step 5 product ring: CHO at position 1, NO₂ (condensed) at position 3, meta to it. */
+const NITRO_RING = [
+  { position: 1, label: 'CHO' },
+  { position: 3, label: 'NO₂' },
+] as const
+
 const INK = 'var(--fg)'
 const MUTED = 'var(--fg-muted)'
 const ARROW_HEAD = 10
@@ -36,7 +42,6 @@ const GRAPH: Record<string, MolGraph> = {
   benzaldehyde: parseSmiles(BENZALDEHYDE_SMILES),
   phenylmethanol: parseSmiles(PHENYLMETHANOL_SMILES),
   benzoate: parseSmiles(BENZOATE_SMILES),
-  nitro: parseSmiles(NITRO_BENZALDEHYDE_SMILES),
   propanone: parseSmiles(PROPANONE_SMILES),
   butanone: parseSmiles(BUTANONE_SMILES),
 }
@@ -188,7 +193,7 @@ function ProductsSideBySide() {
   )
 }
 
-/** Step 5: benzaldehyde nitrated in the ring; the NO₂ sits at the meta position, named under the product. */
+/** Step 5: benzaldehyde nitrated in the ring. NO₂ is the condensed group on the meta carbon, as NCERT prints it. */
 function MetaNitration() {
   return (
     <g>
@@ -196,15 +201,21 @@ function MetaNitration() {
       <Label x={105} y={300} size={15} fill={MUTED}>
         benzaldehyde
       </Label>
-      <Label x={225} y={178} size={15} fill={MUTED}>
+      <Label x={235} y={150} size={15} fill={MUTED}>
+        conc. HNO₃
+      </Label>
+      <Label x={235} y={168} size={15} fill={MUTED}>
+        conc. H₂SO₄
+      </Label>
+      <ReactionArrow x1={170} y1={200} x2={300} y2={200} />
+      <Label x={235} y={222} size={15} fill={MUTED}>
         nitration
       </Label>
-      <ReactionArrow x1={180} y1={200} x2={272} y2={200} />
-      <SkeletalFormula graph={GRAPH.nitro} scale={58} x={410} y={206} />
-      <Label x={410} y={356} size={17} weight={600}>
+      <BenzeneRing variant="kekule" substituents={NITRO_RING} x={416} y={200} />
+      <Label x={416} y={318} size={17} weight={600}>
         {unit8Name(NITRO_BENZALDEHYDE_SMILES)}
       </Label>
-      <Label x={410} y={382} size={15} fill={MUTED}>
+      <Label x={416} y={342} size={15} fill={MUTED}>
         {formulaOf(NITRO_BENZALDEHYDE_SMILES)}
       </Label>
       <Label x={W / 2} y={448} size={16}>

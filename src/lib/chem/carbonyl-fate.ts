@@ -93,6 +93,20 @@ export function carbonylName(c: Carbonyl): string {
   return unit8Name(c.smiles)
 }
 
+/**
+ * Caption lines for a carbonyl with alpha-H under concentrated alkali: no Cannizzaro reaction.
+ * Joined with spaces they read as one sentence; the lines fit the Simulation's panel.
+ */
+export function alphaHydrogenCaption(c: Carbonyl): readonly string[] {
+  const name = carbonylName(c)
+  const cap = name.charAt(0).toUpperCase() + name.slice(1)
+  return [
+    `${cap} has α-hydrogens, so it does not undergo`,
+    'the Cannizzaro reaction. With dilute alkali it gives',
+    'the aldol reaction instead (Section 8.4.4).',
+  ]
+}
+
 /** Molecular formula of a SMILES, from molecularFormula. */
 export function formulaOf(smiles: string): string {
   return molecularFormula(parseSmiles(smiles))
