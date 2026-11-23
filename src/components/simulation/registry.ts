@@ -125,6 +125,7 @@ import { HalidePropertiesLab } from './sims/halide-properties-lab'
 import { ZaitsevChooser } from './sims/zaitsev-chooser'
 import { NitroActivation } from './sims/nitro-activation'
 import { PolyhalogenExplorer } from './sims/polyhalogen-explorer'
+import { CarbonylNamer } from './sims/carbonyl-namer'
 
 export interface SimulationProps {
   /** True when the Learner has asked the OS for reduced motion. Skip tweens and loops when set. */
@@ -264,4 +265,5 @@ export const simulations: Record<string, ComponentType<SimulationProps>> = {
   'zaitsev-chooser': ZaitsevChooser,
   'nitro-activation': NitroActivation,
   'polyhalogen-explorer': PolyhalogenExplorer,
+  'carbonyl-namer': CarbonylNamer,
 }
