@@ -1,0 +1,284 @@
+.sim {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  width: 100%;
+  min-width: 0;
+}
+
+.controls {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  padding: var(--space-3);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+}
+
+.controlGroup {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  min-width: 0;
+}
+
+.controlLabel {
+  font-family: var(--font-sans);
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--fg-muted);
+}
+
+.segmentedLarge button {
+  font-size: 15px;
+  padding: var(--space-2) var(--space-3);
+  line-height: 1.25;
+}
+
+.buttonRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+.choiceBtn {
+  appearance: none;
+  font-family: var(--font-sans);
+  font-size: 15px;
+  font-weight: 500;
+  line-height: 1.3;
+  padding: 0.48rem 0.85rem;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border);
+  background: var(--surface-raised);
+  color: var(--fg);
+  cursor: pointer;
+  text-align: left;
+  transition: background-color 0.15s var(--ease-out), border-color 0.15s var(--ease-out),
+    color 0.15s var(--ease-out);
+}
+
+.choiceBtn:hover {
+  border-color: var(--accent);
+}
+
+.choiceBtn[aria-checked='true'] {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: var(--accent-fg);
+  font-weight: 600;
+}
+
+.choiceBtn:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.stage {
+  background: var(--surface-raised);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: var(--space-3);
+  min-width: 0;
+}
+
+.scene {
+  display: block;
+  width: 100%;
+  max-width: 1036px;
+  height: auto;
+  margin: 0 auto;
+}
+
+.card {
+  fill: var(--surface);
+  stroke: var(--border);
+  stroke-width: 1.2;
+}
+
+.cardReaction {
+  fill: var(--surface);
+  stroke: var(--success);
+  stroke-width: 1.8;
+}
+
+.cardIntermediate {
+  fill: var(--surface);
+  stroke: var(--accent);
+  stroke-width: 1.6;
+}
+
+.cardCaution {
+  fill: var(--surface);
+  stroke: var(--caution);
+  stroke-width: 1.8;
+}
+
+.cardEyebrow {
+  font-family: var(--font-sans);
+  font-size: 14px;
+  font-weight: 600;
+  fill: var(--fg-muted);
+}
+
+.cardTitle {
+  font-family: var(--font-sans);
+  font-size: 15px;
+  font-weight: 600;
+  fill: var(--fg);
+}
+
+.cardSub {
+  font-family: var(--font-sans);
+  font-size: 14px;
+  font-weight: 500;
+  fill: var(--fg-muted);
+}
+
+.cardHighlightTag {
+  font-family: var(--font-sans);
+  font-size: 14px;
+  font-weight: 600;
+  fill: var(--success);
+}
+
+.cardCautionTag {
+  font-family: var(--font-sans);
+  font-size: 14px;
+  font-weight: 600;
+  fill: var(--caution);
+}
+
+.arrowLine {
+  stroke: var(--bond);
+  stroke-width: 2.2;
+  stroke-linecap: round;
+}
+
+.arrowDashed {
+  stroke: var(--fg-subtle);
+  stroke-width: 2;
+  stroke-dasharray: 5 4;
+  stroke-linecap: round;
+}
+
+.arrowHead {
+  fill: var(--bond);
+}
+
+.arrowText {
+  font-family: var(--font-sans);
+  font-size: 14px;
+  font-weight: 600;
+  fill: var(--fg);
+}
+
+.arrowSubText {
+  font-family: var(--font-sans);
+  font-size: 14px;
+  font-weight: 500;
+  fill: var(--fg-muted);
+}
+
+.readoutGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(175px, 1fr));
+  gap: var(--space-3);
+}
+
+.readoutCard {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  padding: var(--space-3);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  min-width: 0;
+}
+
+.readoutLabel {
+  font-family: var(--font-sans);
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--fg-muted);
+}
+
+.readoutValue {
+  font-family: var(--font-sans);
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--fg);
+  overflow-wrap: anywhere;
+}
+
+.degreeBadge {
+  display: inline-flex;
+  align-self: flex-start;
+  padding: 0.15rem 0.65rem;
+  border-radius: 999px;
+  font-family: var(--font-sans);
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.badgeSuccess {
+  background: var(--success-soft);
+  color: var(--success);
+  border: 1px solid var(--success);
+}
+
+.badgeAccent {
+  background: var(--accent-soft);
+  color: var(--accent);
+  border: 1px solid var(--accent);
+}
+
+.badgeCaution {
+  background: var(--caution-soft);
+  color: var(--caution);
+  border: 1px solid var(--caution);
+}
+
+.noteBanner {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--space-2) var(--space-3);
+  padding: var(--space-3);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+}
+
+.noteText {
+  margin: 0;
+  font-family: var(--font-sans);
+  font-size: 15px;
+  line-height: 1.5;
+  color: var(--fg);
+}
+
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+@media (max-width: 640px) {
+  .controls {
+    padding: var(--space-2);
+  }
+
+  .choiceBtn {
+    width: 100%;
+  }
+
+  .readoutGrid {
+    grid-template-columns: 1fr;
+  }
+}
