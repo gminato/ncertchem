@@ -26,7 +26,7 @@ import styles from './phenol-reaction-bench.module.css'
 
 const STAGE_W = 620
 const UPPER_H = 232
-const LOWER_H = 258
+const LOWER_H = 274
 
 const GROUP_ORDER: readonly PhenolPathwayGroup[] = [
   'nitration',
@@ -214,7 +214,7 @@ function MultiStepDetailSvg({
 
       <PhenolRing
         spec={activeStep.reactant}
-        cx={126}
+        cx={112}
         cy={104}
         radius={26}
         showName
@@ -222,12 +222,12 @@ function MultiStepDetailSvg({
       />
 
       {showMechanism && activeStep.reactant.id === 'phenoxide' ? (
-        <CurvedArrow from={{ x: 96, y: 50 }} to={{ x: 122, y: 70 }} bend={-0.38} />
+        <CurvedArrow from={{ x: 84, y: 50 }} to={{ x: 108, y: 70 }} bend={0.42} />
       ) : null}
 
       <ReactionArrow
-        x1={224}
-        x2={358}
+        x1={236}
+        x2={364}
         y={104}
         above={activeStep.reagentAbove}
         below={activeStep.conditionBelow}
@@ -260,7 +260,7 @@ function MultiStepDetailSvg({
       {showMechanism ? (
         <text
           x={310}
-          y={238}
+          y={256}
           textAnchor="middle"
           dominantBaseline="central"
           fontSize={15}
@@ -342,7 +342,7 @@ function DetailSvg({
           Activated ortho &amp; para sites + steam distillation note
         </text>
         <PhenolRing spec={STRUCT_PHENOL_ACTIVATED} cx={116} cy={126} radius={34} />
-        <CurvedArrow from={{ x: 88, y: 66 }} to={{ x: 112, y: 84 }} bend={-0.38} />
+        <CurvedArrow from={{ x: 88, y: 66 }} to={{ x: 112, y: 84 }} bend={0.42} />
         <rect x={228} y={56} width={376} height={148} rx={12} fill="var(--surface-raised)" stroke="var(--border)" strokeWidth={1.2} />
         <text x={244} y={84} fontSize={15} fontWeight={600} fontFamily="var(--font-sans)" fill="var(--fg)">
           {`Table 7.3 pKₐ values: Phenol (${pkas.phenol.printed})`}
@@ -422,7 +422,7 @@ function DetailSvg({
           {isWater ? 'Aqueous Medium: 2,4,6-Tribromophenol Precipitate' : 'Low-Polarity Medium: Selective Monobromination'}
         </text>
         <PhenolRing spec={STRUCT_PHENOL_ACTIVATED} cx={116} cy={126} radius={34} />
-        <CurvedArrow from={{ x: 88, y: 66 }} to={{ x: 112, y: 84 }} bend={-0.38} />
+        <CurvedArrow from={{ x: 88, y: 66 }} to={{ x: 112, y: 84 }} bend={0.42} />
         <rect x={228} y={56} width={376} height={150} rx={12} fill="var(--surface-raised)" stroke="var(--border)" strokeWidth={1.2} />
         <text x={244} y={84} fontSize={15} fontWeight={600} fontFamily="var(--font-sans)" fill="var(--accent)">
           {isWater ? 'White precipitate + 3 HBr' : 'Major para + Minor ortho at 273 K'}

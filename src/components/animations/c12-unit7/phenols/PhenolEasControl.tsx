@@ -266,16 +266,16 @@ function Step3() {
         High yield
       </text>
 
-      <PhenolRing spec={STRUCT_PHENOL_PLAIN} cx={56} cy={324} radius={20} />
-      <ReactionArrow x1={88} x2={176} y={324} above="Conc. H₂SO₄" />
-      <PhenolRing spec={STRUCT_DISULPHONIC} cx={226} cy={324} radius={20} />
-      <ReactionArrow x1={314} x2={402} y={324} above="Conc. HNO₃" />
-      <PhenolRing spec={STRUCT_PICRIC_ACID} cx={484} cy={324} radius={20} />
+      <PhenolRing spec={STRUCT_PHENOL_PLAIN} cx={56} cy={318} radius={20} />
+      <ReactionArrow x1={88} x2={176} y={318} above="Conc. H₂SO₄" />
+      <PhenolRing spec={STRUCT_DISULPHONIC} cx={226} cy={318} radius={20} />
+      <ReactionArrow x1={314} x2={402} y={318} above="Conc. HNO₃" />
+      <PhenolRing spec={STRUCT_PICRIC_ACID} cx={484} cy={318} radius={20} />
 
-      <text x={226} y={398} textAnchor="middle" fontSize={15} fontWeight={600} fontFamily="var(--font-sans)" fill="var(--fg)">
+      <text x={226} y={400} textAnchor="middle" dominantBaseline="central" fontSize={15} fontWeight={600} fontFamily="var(--font-sans)" fill="var(--fg)">
         Phenol-2,4-disulphonic acid
       </text>
-      <text x={484} y={398} textAnchor="middle" fontSize={15} fontWeight={600} fontFamily="var(--font-sans)" fill="var(--fg)">
+      <text x={484} y={400} textAnchor="middle" dominantBaseline="central" fontSize={15} fontWeight={600} fontFamily="var(--font-sans)" fill="var(--fg)">
         Picric acid
       </text>
     </Frame>

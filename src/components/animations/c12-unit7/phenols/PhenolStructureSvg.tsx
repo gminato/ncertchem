@@ -107,7 +107,7 @@ export function PhenolRing({
 
   // Bracket extents for Reimer-Tiemann / ionic intermediates
   const brLeft = -(R * 0.866 + (hasLeftSub ? bondLen + 36 : 16))
-  const brRight = R * 0.866 + (hasRightSub ? bondLen + 50 : 18)
+  const brRight = R * 0.866 + (hasRightSub ? bondLen + 68 : 18)
   const brTop = -(R + bondLen + 22)
   const brBottom = R + (hasBottomSub ? bondLen + 20 : 12)
 
@@ -434,12 +434,12 @@ export function HBondNitrophenolComparison({
       <g>
         {/* Top card: o-Nitrophenol */}
         <rect x={16} y={54} width={528} height={164} rx={12} fill="var(--surface-raised)" stroke="var(--border)" strokeWidth={1.2} />
-        <text x={32} y={78} fontSize={16} fontWeight={600} fontFamily="var(--font-sans)" fill="var(--accent)">
+        <text x={32} y={72} dominantBaseline="central" fontSize={16} fontWeight={600} fontFamily="var(--font-sans)" fill="var(--accent)">
           o-Nitrophenol (Intramolecular H-bonding)
         </text>
 
-        {/* Hexagon at (110, 152), R=32 with 6-membered H-bond loop */}
-        <g transform="translate(110, 152)">
+        {/* Hexagon at (110, 162), R=32 with 6-membered H-bond loop */}
+        <g transform="translate(110, 162)">
           <PhenolRing
             spec={{ id: 'o-hbond-ring', name: '', ringMode: 'kekule-a', substituents: [] }}
             cx={0}

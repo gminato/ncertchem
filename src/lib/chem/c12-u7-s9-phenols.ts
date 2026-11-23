@@ -166,7 +166,7 @@ export const STRUCT_PHENOXIDE: PhenolStructureSpec = {
   name: 'Sodium phenoxide',
   subtitle: 'C₆H₅O⁻Na⁺',
   ringMode: 'kekule-a',
-  substituents: [{ position: 1, label: 'ONa', tone: 'o', lonePairs: 2, charge: '−' }],
+  substituents: [{ position: 1, label: 'ONa', tone: 'o', lonePairs: 2 }],
   highlightPositions: [2, 4, 6],
   ringCharges: [
     { position: 2, label: 'δ−' },

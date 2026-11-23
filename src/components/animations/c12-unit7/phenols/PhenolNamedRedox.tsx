@@ -83,7 +83,7 @@ function Step0() {
       <PhenolRing spec={STRUCT_PHENOL} cx={98} cy={196} radius={42} showName />
       <ReactionArrow x1={164} x2={278} y={196} above="NaOH" below="− H₂O" />
       <PhenolRing spec={STRUCT_PHENOXIDE} cx={392} cy={196} radius={46} showName nameYOffset={96} />
-      <CurvedArrow from={{ x: 364, y: 112 }} to={{ x: 389, y: 138 }} bend={-0.38} />
+      <CurvedArrow from={{ x: 364, y: 114 }} to={{ x: 388, y: 138 }} bend={0.42} />
 
       <rect x={36} y={346} width={488} height={60} rx={12} fill="var(--surface-raised)" stroke="var(--border)" strokeWidth={1.2} />
       <text x={280} y={366} textAnchor="middle" dominantBaseline="central" fontSize={15} fontWeight={600} fontFamily="var(--font-sans)" fill="var(--fg)">
@@ -147,13 +147,13 @@ function Step3() {
       <text x={32} y={76} fontSize={15} fontWeight={600} fontFamily="var(--font-sans)" fill="var(--fg)">
         Step 2: Alkaline hydrolysis (-CHCl₂ to -CHO)
       </text>
-      <PhenolRing spec={STRUCT_BENZAL_INTERMEDIATE} cx={120} cy={146} radius={24} />
-      <ReactionArrow x1={222} x2={342} y={146} above="NaOH" below="hydrolysis" />
-      <PhenolRing spec={STRUCT_FORMYL_PHENOXIDE} cx={418} cy={146} radius={24} />
-      <text x={120} y={208} textAnchor="middle" fontSize={15} fontFamily="var(--font-sans)" fill="var(--fg-muted)">
+      <PhenolRing spec={STRUCT_BENZAL_INTERMEDIATE} cx={108} cy={146} radius={24} />
+      <ReactionArrow x1={230} x2={346} y={146} above="NaOH" below="hydrolysis" />
+      <PhenolRing spec={STRUCT_FORMYL_PHENOXIDE} cx={422} cy={146} radius={24} />
+      <text x={108} y={208} textAnchor="middle" fontSize={15} fontFamily="var(--font-sans)" fill="var(--fg-muted)">
         o-(CHCl₂)C₆H₄O⁻Na⁺
       </text>
-      <text x={418} y={208} textAnchor="middle" fontSize={15} fontFamily="var(--font-sans)" fill="var(--fg-muted)">
+      <text x={422} y={208} textAnchor="middle" fontSize={15} fontFamily="var(--font-sans)" fill="var(--fg-muted)">
         o-(CHO)C₆H₄O⁻Na⁺
       </text>
 

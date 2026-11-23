@@ -43,7 +43,7 @@ async function smallTextLeaves(container: Locator): Promise<string[]> {
           const viewBoxWidth = vbParts[2] || 1
           size *= svg.getBoundingClientRect().width / viewBoxWidth
         }
-        if (size < 13.9) bad.push(`${size.toFixed(1)}px: ${text.slice(0, 40)}`)
+        if (size < 14) bad.push(`${size.toFixed(1)}px: ${text.slice(0, 40)}`)
       }
       node = walker.nextNode()
     }
@@ -80,6 +80,43 @@ async function svgOutOfBounds(container: Locator): Promise<string[]> {
   })
 }
 
+/** Checks that no two SVG <text> leaves or bracket <path>s overlap inside a container. */
+async function svgTextOverlaps(container: Locator): Promise<string[]> {
+  return container.locator('svg[role="img"]').evaluateAll((svgs) => {
+    const overlaps: string[] = []
+    svgs.forEach((svg) => {
+      const texts = Array.from(svg.querySelectorAll('text')).map((el) => ({
+        label: el.textContent?.trim().slice(0, 28) ?? '',
+        r: el.getBoundingClientRect(),
+      }))
+      for (let i = 0; i < texts.length; i++) {
+        const a = texts[i]
+        if (a.r.width === 0 || a.r.height === 0) continue
+        for (let j = i + 1; j < texts.length; j++) {
+          const b = texts[j]
+          if (b.r.width === 0 || b.r.height === 0) continue
+          if (a.r.left < b.r.right && a.r.right > b.r.left && a.r.top < b.r.bottom && a.r.bottom > b.r.top) {
+            overlaps.push(`"${a.label}" vs "${b.label}"`)
+          }
+        }
+      }
+      const brackets = Array.from(svg.querySelectorAll('g[stroke-linecap="square"] path')).map((el) =>
+        el.getBoundingClientRect(),
+      )
+      for (const t of texts) {
+        if (t.r.width === 0 || t.r.height === 0) continue
+        for (const br of brackets) {
+          if (br.width === 0 || br.height === 0) continue
+          if (t.r.left < br.right && t.r.right > br.left && t.r.top < br.bottom && t.r.bottom > br.top) {
+            overlaps.push(`"${t.label}" vs bracket`)
+          }
+        }
+      }
+    })
+    return overlaps
+  })
+}
+
 for (const scheme of ['light', 'dark'] as const) {
   test.describe(`Section 7.4.4 Reactions of Phenols (${scheme})`, () => {
     test.use({ viewport: { width: 1440, height: 900 }, colorScheme: scheme, reducedMotion: 'reduce' })
@@ -103,6 +140,7 @@ for (const scheme of ['light', 'dark'] as const) {
         await expect(svg).toHaveAttribute('data-step', String(k))
         expect(await smallTextLeaves(scrollyEas.locator('[data-testid="scrolly-visual"]'))).toEqual([])
         expect(await svgOutOfBounds(scrollyEas)).toEqual([])
+        expect(await svgTextOverlaps(scrollyEas)).toEqual([])
         await svg.screenshot({ path: `test-results/screens/c12u7-s9-eas-step${k + 1}-${scheme}.png` })
       }
 
@@ -119,6 +157,7 @@ for (const scheme of ['light', 'dark'] as const) {
         await expect(svg).toHaveAttribute('data-step', String(k))
         expect(await smallTextLeaves(scrollyRedox.locator('[data-testid="scrolly-visual"]'))).toEqual([])
         expect(await svgOutOfBounds(scrollyRedox)).toEqual([])
+        expect(await svgTextOverlaps(scrollyRedox)).toEqual([])
         await svg.screenshot({ path: `test-results/screens/c12u7-s9-redox-step${k + 1}-${scheme}.png` })
       }
 
@@ -144,6 +183,8 @@ for (const scheme of ['light', 'dark'] as const) {
       // Modern two-step H2SO4 then HNO3 -> Step 1 vs Final Product
       await sim.getByRole('button', { name: 'Nitration: Conc. H₂SO₄ then Conc. HNO₃' }).click()
       await expect(sim.getByTestId('bench-observation')).toContainText('phenol-2,4-disulphonic acid')
+      expect(await smallTextLeaves(sim)).toEqual([])
+      expect(await svgOutOfBounds(sim)).toEqual([])
       await sim.getByRole('button', { name: 'Final Product' }).click()
       await expect(sim.getByTestId('bench-observation')).toContainText('2,4,6-trinitrophenol')
       expect(await smallTextLeaves(sim)).toEqual([])
@@ -162,22 +203,37 @@ for (const scheme of ['light', 'dark'] as const) {
       await expect(sim.getByTestId('bench-status-badge')).toContainText('White precipitate')
       expect(await svgOutOfBounds(sim)).toEqual([])
 
-      // Kolbe reaction
+      // Kolbe reaction (Step 1 and Final Product with mechanistic toggle active)
       await sim.getByRole('button', { name: 'Kolbe: NaOH, (i) CO₂, (ii) H⁺' }).click()
       await expect(sim.getByTestId('bench-ring-state')).toContainText('Phenoxide')
+      expect(await smallTextLeaves(sim)).toEqual([])
+      expect(await svgOutOfBounds(sim)).toEqual([])
+      expect(await svgTextOverlaps(sim)).toEqual([])
+      await sim.screenshot({ path: `test-results/screens/c12u7-s9-sim-kolbe-step1-${scheme}.png` })
       await sim.getByRole('button', { name: 'Final Product' }).click()
       await expect(sim.getByTestId('bench-products')).toContainText('Salicylic acid')
+      expect(await smallTextLeaves(sim)).toEqual([])
       expect(await svgOutOfBounds(sim)).toEqual([])
+      expect(await svgTextOverlaps(sim)).toEqual([])
+      await sim.screenshot({ path: `test-results/screens/c12u7-s9-sim-kolbe-final-${scheme}.png` })
 
-      // Reimer-Tiemann reaction (3 steps)
+      // Reimer-Tiemann reaction (3 steps, mechanistic toggle active)
       await sim.getByRole('button', { name: 'Reimer-Tiemann: CHCl₃ + aq. NaOH, NaOH, H⁺' }).click()
       await expect(sim.getByTestId('bench-observation')).toContainText('benzal chloride')
+      expect(await smallTextLeaves(sim)).toEqual([])
+      expect(await svgOutOfBounds(sim)).toEqual([])
+      expect(await svgTextOverlaps(sim)).toEqual([])
+      await sim.screenshot({ path: `test-results/screens/c12u7-s9-sim-reimer-step1-${scheme}.png` })
       await sim.getByRole('button', { name: 'Step 2' }).click()
       await expect(sim.getByTestId('bench-observation')).toContainText('-CHO')
+      expect(await smallTextLeaves(sim)).toEqual([])
+      expect(await svgOutOfBounds(sim)).toEqual([])
+      expect(await svgTextOverlaps(sim)).toEqual([])
       await sim.getByRole('button', { name: 'Final Product' }).click()
       await expect(sim.getByTestId('bench-products')).toContainText('Salicylaldehyde')
       expect(await smallTextLeaves(sim)).toEqual([])
       expect(await svgOutOfBounds(sim)).toEqual([])
+      expect(await svgTextOverlaps(sim)).toEqual([])
       await sim.screenshot({ path: `test-results/screens/c12u7-s9-sim-reimer-${scheme}.png` })
 
       // Reduction: Zn dust
@@ -194,6 +250,10 @@ for (const scheme of ['light', 'dark'] as const) {
 
       await expect(page.locator('.katex-display').first()).toBeAttached()
       await expect(page.locator('.katex-error')).toHaveCount(0)
+      const katexTextSpans = await page.locator('.katex-display .mord.text').allInnerTexts()
+      for (const t of katexTextSpans) {
+        expect(t).not.toMatch(/HNO3|O2NC6H4OH|Br2|CS2|BrC6H4OH|CO2|HOC6H4|CHCl3|CHCl2|C6H4ONa|Na2Cr2O7|H2SO4/)
+      }
       expect(errors).toEqual([])
     })
   })
