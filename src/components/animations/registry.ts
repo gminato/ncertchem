@@ -177,6 +177,9 @@ import { VbtHybridisation } from './c12-unit5/vbt/VbtHybridisation'
 import { CftOctahedralSplitting } from './c12-unit5/cft/CftOctahedralSplitting'
 import { CftHighLowSpin } from './c12-unit5/cft/CftHighLowSpin'
 import { CftTetrahedralSplitting } from './c12-unit5/cft/CftTetrahedralSplitting'
+import { CftDdColour } from './c12-unit5/colour/CftDdColour'
+import { NiEnColourSeries } from './c12-unit5/ni-en/NiEnColourSeries'
+import { CftLimitations } from './c12-unit5/limitations/CftLimitations'
 
 /**
  * Animations available to a Scrolly Animation, keyed by the `animation` prop.
@@ -364,6 +367,9 @@ export const animations = {
   'cft-octahedral-splitting': CftOctahedralSplitting,
   'cft-high-low-spin': CftHighLowSpin,
   'cft-tetrahedral-splitting': CftTetrahedralSplitting,
+  'cft-d-d-colour': CftDdColour,
+  'ni-en-colour-series': NiEnColourSeries,
+  'cft-limitations': CftLimitations,
 } as const
 
 export type AnimationName = keyof typeof animations

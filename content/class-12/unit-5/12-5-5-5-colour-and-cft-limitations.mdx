@@ -1,0 +1,221 @@
+---
+class: 12
+unit: 5
+section: "5.5.5-5.5.6"
+order: 7
+title: "Colour in Coordination Compounds and Limitations of CFT"
+slug: "12-5-5-5-colour-and-cft-limitations"
+access: free
+summary: "A complex is coloured because one electron jumps between split d levels and removes a band of white light. The same theory also has two honest weak spots."
+ncert: "Class 12, Part I, Unit 5, Section 5.5.5-5.5.6"
+---
+
+<Hook>
+Blue copper sulphate crystals turn to a white powder when you heat them, and turn blue again when water is dripped back on. The copper and the sulphate never left. Only the water did. What did the water molecules do to a copper ion to make it blue, and why does the colour vanish without them?
+</Hook>
+
+## White light with a band missing
+
+White light is a mixture of every visible colour. When it passes through a sample, the sample may absorb one band of wavelengths and let the rest through. What reaches your eye is white light with a band taken out, and the eye reads that leftover mixture as a single colour. That colour is the complementary colour of the band that was absorbed.
+
+Take a simple case. If a complex swallows green light, the light that emerges is red, so the complex looks red. Table 5.3 of the textbook pairs the wavelength absorbed with the colour seen for six real complexes, and the pattern is always the same: look up the colour absorbed, then read off its partner on the wheel.
+
+| Coordination entity | Wavelength absorbed (nm) | Colour absorbed | Colour seen |
+|---|---|---|---|
+| $[\ce{CoCl(NH3)5}]^{2+}$ | 535 | Yellow | Violet |
+| $[\ce{Co(NH3)5(H2O)}]^{3+}$ | 500 | Blue green | Red |
+| $[\ce{Co(NH3)6}]^{3+}$ | 475 | Blue | Yellow orange |
+| $[\ce{Co(CN)6}]^{3-}$ | 310 | Ultraviolet (not visible) | Pale yellow |
+| $[\ce{Cu(H2O)4}]^{2+}$ | 600 | Red | Blue |
+| $[\ce{Ti(H2O)6}]^{3+}$ | 498 | Blue green | Violet |
+
+The cyanide complex is the instructive row. Its absorption lies in the ultraviolet, outside what the eye can see, so nothing visible is removed and it is nearly colourless, with only a pale yellow tint.
+
+## Where the missing light goes: a d to d jump
+
+Crystal field theory (the model of Sections 5.5.1 to 5.5.4) explains the absorbing step. In an octahedral complex the five d orbitals split into a lower $t_{2g}$ set and a higher $e_g$ set, separated by the energy $\Delta_o$. A d electron sitting in the lower set can climb to the upper set if it receives exactly the right energy. A photon from the visible region can supply it. The photon is removed from the beam, and that is the absorbed band.
+
+Follow $[\ce{Ti(H2O)6}]^{3+}$. The ion $\ce{Ti^3+}$ has a single d electron ($3d^{1}$). In the ground state that electron sits in $t_{2g}$, so the configuration is $t_{2g}^{1}e_g^{0}$. Absorbing a blue-green photon lifts it to give $t_{2g}^{0}e_g^{1}$. Blue green is taken out of white light, and the complementary violet is what you see.
+
+$$
+t_{2g}^{1}\,e_g^{0}\ \xrightarrow{\ h\nu\ (\text{blue-green})\ }\ t_{2g}^{0}\,e_g^{1}
+$$
+
+The photon energy must match the gap: $\Delta_o = h\nu = hc/\lambda$. A large gap needs a short wavelength, a small gap a long one. This is why the ligand matters so much for colour: a ligand that splits the d orbitals more shifts the absorption toward shorter wavelength, and the colour you see changes with it.
+
+<Scrolly animation="cft-d-d-colour">
+  <Step>
+    **White light enters:** A beam of white light, drawn as a fan of the seven spectral colours from red on the left to violet on the right, travels from a lamp toward a beaker of $[\ce{Ti(H2O)6}]^{3+}$ solution. A thin strip below the beam is a wavelength axis labelled 400 nm to 700 nm. Nothing has been removed yet, so every colour in the fan is full brightness.
+  </Step>
+  <Step>
+    **The d levels of the complex:** Beside the beaker an energy diagram appears with two levels. The lower level is $t_{2g}$ and holds one filled dot with an up arrow, the single d electron of $\ce{Ti^3+}$. The upper level is $e_g$ and is empty. The vertical gap between them is bracketed and labelled $\Delta_o$.
+  </Step>
+  <Step>
+    **One photon is absorbed:** A blue-green photon, drawn as a wavy arrow in the 498 nm position of the strip, strikes the electron. The dot jumps from $t_{2g}$ to $e_g$, and the labels read $t_{2g}^{1}e_g^{0}$ turning into $t_{2g}^{0}e_g^{1}$. In the beam, the blue-green band fades to grey at that wavelength.
+  </Step>
+  <Step>
+    **What the eye sees:** The beam leaving the beaker is the fan with the blue-green band missing. A colour wheel appears with the absorbed blue-green sector marked on one side and its opposite sector, violet, marked on the other, and the beaker liquid is tinted violet. A caption reads that the colour seen is the complement of the colour absorbed.
+  </Step>
+  <Step>
+    **Take the ligand away:** The water molecules around the metal slide off one by one and the $\Delta_o$ bracket shrinks to nothing, because the two levels collapse back into five equal d orbitals. With no gap there is no jump, the blue-green band is no longer dimmed, the whole fan emerges at full brightness, and the liquid turns colourless.
+  </Step>
+</Scrolly>
+
+## Colour tracks the ligand
+
+Because the colour comes from the gap, and the gap depends on the ligands, changing the ligands changes the colour. Table 5.3 already shows it: three cobalt(III) complexes carrying different mixes of $\ce{NH3}$, $\ce{Cl-}$ and $\ce{H2O}$ absorb at 535, 500 and 475 nm and look violet, red and yellow orange.
+
+The textbook builds a clean series with nickel(II). Dissolve nickel(II) chloride in water to get green $[\ce{Ni(H2O)6}]^{2+}$, then add ethane-1,2-diamine (en) in the molar ratios en to Ni of 1:1, 2:1 and 3:1. Each bidentate en displaces two water molecules, and each new complex has a different colour.
+
+| en : Ni ratio | Complex | Colour |
+|---|---|---|
+| none | $[\ce{Ni(H2O)6}]^{2+}$ | Green |
+| 1 : 1 | $[\ce{Ni(H2O)4(en)}]^{2+}$ | Pale blue |
+| 2 : 1 | $[\ce{Ni(H2O)2(en)2}]^{2+}$ | Blue or purple |
+| 3 : 1 | $[\ce{Ni(en)3}]^{2+}$ | Violet |
+
+The three steps are written as
+$$
+[\ce{Ni(H2O)6}]^{2+} + \ce{en} \rightleftharpoons [\ce{Ni(H2O)4(en)}]^{2+} + 2\,\ce{H2O}
+$$
+and the same pattern repeats twice more. Counting the waters left is a handy check: $6 - 2n$ remain after $n$ en molecules have bonded, so none are left in the violet complex.
+
+<Scrolly animation="ni-en-colour-series">
+  <Step>
+    **Start with water:** A test tube holds green solution. Next to it is a drawing of the nickel(II) ion at the centre of an octahedron with six water molecules at the corners, each drawn as a small blue-and-white bent ball. The label reads $[\ce{Ni(H2O)6}]^{2+}$.
+  </Step>
+  <Step>
+    **First en:** A dropper adds one en molecule. Two adjacent water molecules at the corners peel away and one bidentate en, drawn as a short curved chain with a donor atom at each end, takes their place. The test tube turns pale blue and the label becomes $[\ce{Ni(H2O)4(en)}]^{2+}$, with a counter showing four waters left.
+  </Step>
+  <Step>
+    **Second en:** A second en displaces the next two water molecules. The tube turns blue-purple, the label reads $[\ce{Ni(H2O)2(en)2}]^{2+}$ and the water counter shows two.
+  </Step>
+  <Step>
+    **Third en:** The last two waters leave and a third en closes the octahedron. The tube is violet, the label reads $[\ce{Ni(en)3}]^{2+}$ and the water counter shows zero. A row of four swatches at the bottom lines the colours up: green, pale blue, blue-purple, violet.
+  </Step>
+</Scrolly>
+
+## Why dehydrating a salt removes the colour
+
+The d to d jump needs a crystal field, and a crystal field needs ligands. Without ligands the d orbitals stay degenerate and there is no gap for a photon to match. So a coloured hydrate can lose its colour when the ligands are taken away.
+
+- Heating $[\ce{Ti(H2O)6}]\ce{Cl3}$ drives off the water, and the solid becomes colourless.
+- Anhydrous $\ce{CuSO4}$ is white, while $\ce{CuSO4.5H2O}$ is blue. This is the opening Hook: the water supplies the field that splits the copper d orbitals.
+
+A full $d^{10}$ shell or an empty $d^{0}$ shell has the same effect from the electron side. There is no electron to promote, or no empty d level to promote it into, so there is no jump either. The Unit 4 colour lab on aqua ions made that point.
+
+## Gem stones are d to d jumps in a crystal
+
+The same physics colours gems. Ruby is aluminium oxide, $\ce{Al2O3}$, with about 0.5 to 1% of the $\ce{Al^3+}$ sites taken by $\ce{Cr^3+}$ ions ($d^{3}$). Each chromium sits in an octahedron of oxide ions, so you can treat it as an octahedral chromium(III) complex locked in the alumina lattice. Its d to d jumps give ruby its red.
+
+Emerald is a different host, the mineral beryl, $\ce{Be3Al2Si6O18}$, but the colouring ion is again $\ce{Cr^3+}$ in octahedral sites. The surroundings differ slightly, and the absorption bands move to longer wavelength, into the yellow-red and the blue. With those two bands removed, the light that gets through is green. Same metal ion, different host, different colour.
+
+## Try the ligand colour lab
+
+Pick a metal ion and a set of ligands, and watch the gap, the absorbed band and the colour you see move together.
+
+{/*
+Simulation ligand-colour-lab (Ligand Colour Lab).
+INPUTS: (1) a selector for the complex, with the six Table 5.3 entities (NCERT_TABLE_5_3 in src/lib/chem/ncert-c12-unit5-s7-tables.ts) plus the four Ni(II) en-series complexes (NCERT_NI_EN_SERIES); (2) a toggle "ligands present / ligands removed" (removed shows the hydrate without its water, colourless); (3) a read-out switch for wavelength in nm or photon energy in joules.
+OUTPUTS: an energy diagram with the t2g and eg levels and the electron jump arrow; a 400 nm to 700 nm spectrum strip showing the absorbed band as a dark gap (for the cobalt cyanide entry the band sits at 310 nm, off the strip, with an "ultraviolet, not visible" note); a colour wheel marking the absorbed sector and its opposite sector; a swatch of the colour seen; and the photon energy E = hc / lambda.
+BEHAVIOUR: changing the complex moves the absorbed band and updates every output together. Removing ligands collapses the gap, restores the full spectrum and shows a colourless swatch. For the Ni(II) series, stepping the en count 0 to 3 updates the water count (6 minus 2n) and the swatch (green, pale blue, blue/purple, violet). Colours seen always come from the printed table, never recomputed.
+*/}
+<Simulation name="ligand-colour-lab" title="Ligand Colour Lab" />
+
+## Where crystal field theory falls short
+
+Crystal field theory is a strong model. It accounts, to a large extent, for the formation of complexes, their shapes, their colours and their magnetic behaviour, with nothing more than point charges and orbital energies. It has two honest weak spots, though.
+
+First, the ligands are modelled as point charges, so an anionic ligand, with a full negative charge, ought to push on the d orbitals hardest and give the biggest splitting. Experiments say the opposite: anionic ligands such as $\ce{Cl-}$ and $\ce{OH-}$ sit near the weak-field end of the spectrochemical series, below neutral $\ce{H2O}$ and $\ce{NH3}$. A model of pure charge cannot explain that order.
+
+Second, the model ignores the covalent character of the bond between ligand and central metal, treating the interaction as purely electrostatic. Real metal to ligand bonds share electrons.
+
+Both gaps are repaired by ligand field theory and by molecular orbital theory, which bring the overlap of orbitals back in. They go beyond this course, but it is worth knowing why they exist: the point-charge picture is a good start and not the final word.
+
+<Scrolly animation="cft-limitations">
+  <Step>
+    **The prediction:** A metal ion at the centre with two ligand types lined up on the left: a negatively charged $\ce{Cl-}$ drawn with a large minus sign and a neutral $\ce{H2O}$ drawn with a small partial charge. A bar chart labelled "splitting predicted by point charges" shows the $\ce{Cl-}$ bar much taller than the $\ce{H2O}$ bar.
+  </Step>
+  <Step>
+    **The measurement:** A second bar chart appears beside the first, labelled "splitting observed", and the order is reversed: the $\ce{H2O}$ bar is taller than the $\ce{Cl-}$ bar. A red cross marks the mismatch between the two charts and a note reads that anionic ligands sit at the low end of the spectrochemical series.
+  </Step>
+  <Step>
+    **Missing covalency:** The point-charge picture is replaced by a drawing of the metal d orbital and a ligand orbital overlapping in a shared lobe, with the shared electron cloud shaded between the two atoms. A caption reads that crystal field theory leaves this overlap out.
+  </Step>
+  <Step>
+    **The way forward:** Two boxes labelled ligand field theory and molecular orbital theory slide in, each with an arrow pointing at the overlap drawing and a tick next to the two problems. A caption notes that both are beyond this course.
+  </Step>
+</Scrolly>
+
+## Check your understanding
+
+<Check
+  n={1}
+  numeric
+  answer={3.99}
+  tolerance={0.03}
+  unit="× 10⁻¹⁹ J"
+  explanation="The complex absorbs at 498 nm. E = hc / λ = (6.626 × 10⁻³⁴ J s)(2.998 × 10⁸ m/s) / (498 × 10⁻⁹ m) = 3.99 × 10⁻¹⁹ J, so this is the size of the gap Δₒ for one photon in [Ti(H₂O)₆]³⁺."
+>
+The complex $[\ce{Ti(H2O)6}]^{3+}$ absorbs light of wavelength 498 nm (Table 5.3). Using $E = hc/\lambda$ with $h = 6.626\times10^{-34}\ \text{J s}$ and $c = 2.998\times10^{8}\ \text{m/s}$, what is the energy of one such photon, in units of $10^{-19}\ \text{J}$?
+</Check>
+
+<Check
+  n={2}
+  options={[
+    "Red",
+    "Blue",
+    "Yellow orange",
+    "Violet"
+  ]}
+  answer={0}
+  explanation="Table 5.3 lists the aqua copper(II) complex as blue, absorbing at 600 nm. The colour absorbed is the complement of the colour seen, and the complement of blue is orange to red, so red light is what the ion removes."
+>
+A solution of $[\ce{Cu(H2O)4}]^{2+}$ appears blue. Which colour of light does it absorb?
+</Check>
+
+<Check
+  n={3}
+  options={[
+    "There are no water ligands to split the d orbitals, so no d to d jump can occur",
+    "The copper has been reduced to the metal",
+    "The sulphate ion absorbs all visible light",
+    "Heating makes copper(II) a d¹⁰ ion"
+  ]}
+  answer={0}
+  explanation="Without water, crystal field splitting does not occur, so there is no gap for a visible photon to match and the solid is white. Copper stays copper(II) and keeps its d⁹ configuration, so the other options are wrong."
+>
+Anhydrous $\ce{CuSO4}$ is white while $\ce{CuSO4.5H2O}$ is blue. What is the best reason?
+</Check>
+
+<Check
+  n={4}
+  numeric
+  answer={2}
+  tolerance={0}
+  explanation="Each bidentate en displaces two water molecules, so [Ni(H₂O)₆]²⁺ with two en added becomes [Ni(H₂O)₂(en)₂]²⁺. The waters left are 6 - 2 × 2 = 2."
+>
+How many water molecules remain bonded to nickel in the blue or purple complex formed when two en molecules have bonded to $[\ce{Ni(H2O)6}]^{2+}$?
+</Check>
+
+<Check
+  n={5}
+  options={[
+    "It treats ligands as point charges, so anions should split most, yet anions rank low in the spectrochemical series",
+    "It cannot explain why any complex is coloured",
+    "It predicts that all ligands give the same splitting",
+    "It says covalent bonding is the only interaction in a complex"
+  ]}
+  answer={0}
+  explanation="The point-charge assumption predicts that anionic ligands push hardest on the d orbitals, but they sit near the weak end of the series. A second weakness is that covalent character of the metal to ligand bond is ignored. CFT does explain colour well, and it assumes purely electrostatic, not covalent, bonding."
+>
+Which statement describes a limitation of crystal field theory?
+</Check>
+
+<KeyIdeas>
+- A complex looks the complementary colour of the band it absorbs: absorbing green gives red, and absorbing blue green in $[\ce{Ti(H2O)6}]^{3+}$ gives violet.
+- Crystal field theory ascribes the colour to a d to d transition, where an electron moves from the lower $t_{2g}$ level to the upper $e_g$ level by absorbing a photon of energy $\Delta_o = hc/\lambda$.
+- Changing the ligands changes the gap and the colour, as in the nickel(II) series with en (green, pale blue, blue or purple, violet). With no ligands there is no splitting, so the substance is colourless.
+- Ruby and emerald both owe their colour to octahedral $\ce{Cr^3+}$ ($d^{3}$); the different host lattice moves the absorption bands and changes the colour.
+- Crystal field theory treats ligands as point charges, so it cannot explain why anionic ligands are weak, and it ignores covalent bonding. Ligand field theory and molecular orbital theory address both.
+</KeyIdeas>
