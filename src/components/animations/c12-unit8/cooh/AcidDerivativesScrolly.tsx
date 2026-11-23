@@ -226,7 +226,7 @@ function Step6() {
 const TITLES: Readonly<Record<number, string>> = {
   1: 'Two acids lose water: an anhydride',
   2: 'Esterification with an acid catalyst',
-  3: 'The mechanism, arrow by arrow',
+  3: 'The mechanism, stage by stage',
   4: 'The OH swapped for Cl',
   5: 'Ammonia: salt, then amide on heating',
   6: 'The COOH carbon: reduction and decarboxylation',
