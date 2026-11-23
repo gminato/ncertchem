@@ -330,8 +330,6 @@ function PkaScale() {
 /** Step 6: chloroacetic acid with inductive arrows, and the ordered strip. */
 function InductiveStrip() {
   const y = 200
-  const stripX = [20, 104, 204, 271, 363, 447]
-  const separators = [92, 192, 259, 351, 435]
   return (
     <g>
       <Atom at={{ x: 110, y }}>Cl</Atom>
@@ -346,23 +344,23 @@ function InductiveStrip() {
       <Caption y={250} fill={MUTED}>
         Arrows: electron density pulled along the chain towards Cl
       </Caption>
-      <text x={W / 2} y={330} textAnchor="middle" fontSize={15} fill={INK}>
+      <text x={W / 2} y={310} textAnchor="middle" fontSize={15} fill={INK}>
         Acids from strongest to weakest
       </text>
       {STRIP_FORMULAS.map((f, i) => (
-        <text key={f} x={stripX[i]} y={380} fontSize={15} fill={INK}>
-          {f}
-        </text>
+        <g key={f}>
+          <text x={200} y={350 + i * 36} textAnchor="end" fontSize={15} fill={MUTED}>
+            {i + 1}
+          </text>
+          <text x={220} y={350 + i * 36} fontSize={15} fill={INK}>
+            {f}
+          </text>
+        </g>
       ))}
-      {separators.map((x) => (
-        <text key={x} x={x} y={380} fontSize={15} fill={MUTED}>
-          ›
-        </text>
-      ))}
-      <text x={20} y={430} fontSize={14} fill={MUTED}>
+      <text x={400} y={350} fontSize={14} fill={MUTED}>
         strongest
       </text>
-      <text x={560} y={430} textAnchor="end" fontSize={14} fill={MUTED}>
+      <text x={400} y={350 + (STRIP_FORMULAS.length - 1) * 36} fontSize={14} fill={MUTED}>
         weakest
       </text>
     </g>
