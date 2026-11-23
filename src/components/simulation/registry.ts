@@ -1,4 +1,5 @@
 import { MoleBridge } from './sims/mole-bridge'
+import { HvzBench } from './sims/hvz-bench'
 import type { ComponentType } from 'react'
 import { SigFigRuler } from './sims/sigfig-ruler'
 import { StatesOfMatter } from './sims/StatesOfMatter'
@@ -271,6 +272,7 @@ export const simulations: Record<string, ComponentType<SimulationProps>> = {
   'zaitsev-chooser': ZaitsevChooser,
   'nitro-activation': NitroActivation,
   'nucleophilic-addition-lab': NucleophilicAdditionLab,
+  'hvz-bench': HvzBench,
   'polyhalogen-explorer': PolyhalogenExplorer,
   'carbonyl-tests': CarbonylTests,
   'acid-strength-lab': AcidStrengthLab,
