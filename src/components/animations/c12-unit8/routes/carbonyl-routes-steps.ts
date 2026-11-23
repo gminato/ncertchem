@@ -1,6 +1,7 @@
 import type { SchemePath } from '@/components/organic/hydrocarbon-geometry'
 import { parseSmiles } from '@/lib/chem/molecule-parse'
 import { unit8Name } from '@/lib/chem/ncert-c12-unit8-data'
+import { CONDENSED_TEXT } from '@/lib/chem/carbonyl-routes'
 
 /**
  * A compound in a route drawing. `smiles` is drawn as a molecule, named by unit8Name and tested
@@ -151,7 +152,9 @@ export function routeScheme(sequence: RouteSequence): SchemePath {
   return sequence.map((item) => {
     if (!isList(item)) return item
     return item.map((sp) => {
-      const formula = sp.smiles !== undefined && sp.text === undefined ? parseSmiles(sp.smiles) : (sp.text ?? sp.formula)
+      const condensed = sp.smiles === undefined ? undefined : CONDENSED_TEXT[sp.smiles]
+      const formula =
+        condensed ?? (sp.smiles !== undefined && sp.text === undefined ? parseSmiles(sp.smiles) : (sp.text ?? sp.formula))
       const tag = sp.smiles !== undefined && sp.text === undefined ? unit8Name(sp.smiles) : undefined
       return tag === undefined ? { formula } : { formula, tag }
     })

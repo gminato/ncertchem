@@ -87,3 +87,14 @@ export const BYPRODUCTS: readonly string[] = ['H₂', 'H₂O', 'HCl']
 export function nameOfSpecies(species: string): string {
   return BYPRODUCTS.includes(species) ? species : unit8Name(species)
 }
+
+/**
+ * One- and two-carbon species, and the alkynes, are drawn as condensed text: a skeletal line with
+ * no carbon at its end would hide the carbon (C₁ and C₂ read as fragments). Keyed by SMILES.
+ */
+export const CONDENSED_TEXT: Readonly<Record<string, string>> = {
+  CO: 'CH₃OH',
+  'C=O': 'HCHO',
+  'C#C': 'HC≡CH',
+  'CC#CC': 'CH₃C≡CCH₃',
+}

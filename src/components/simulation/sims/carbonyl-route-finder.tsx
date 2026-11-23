@@ -9,6 +9,7 @@ import { unit8Name } from '@/lib/chem/ncert-c12-unit8-data'
 import {
   BYPRODUCTS,
   CLASSES,
+  CONDENSED_TEXT,
   REAGENTS,
   outcome,
   type ReagentId,
@@ -22,9 +23,16 @@ function subscript(formula: string): string {
   return formula.replace(/\d/g, (d) => SUBSCRIPT[Number(d)])
 }
 
-const DRAW_WIDTH = 520
-const VIEW_WIDTH = 560
+/**
+ * Wide enough that every reaction fits on one row at the largest bond length (56 px), so reactant,
+ * arrow and product read left to right. The widest case needs about 738 px of drawing.
+ */
+const DRAW_WIDTH = 760
+const VIEW_WIDTH = 800
 const MARGIN = 20
+
+/** Condensed text for one- and two-carbon species, else the skeletal drawing from SMILES. */
+const drawn = (smiles: string) => CONDENSED_TEXT[smiles] ?? parseSmiles(smiles)
 
 export function CarbonylRouteFinder() {
   const [cls, setCls] = useState<SubstrateClass>('alcohol')
@@ -40,10 +48,10 @@ export function CarbonylRouteFinder() {
   const products =
     result.kind === 'product'
       ? result.products.map((p) =>
-          BYPRODUCTS.includes(p) ? { formula: p } : { formula: parseSmiles(p), tag: unit8Name(p) },
+          BYPRODUCTS.includes(p) ? { formula: p } : { formula: drawn(p), tag: unit8Name(p) },
         )
       : [{ formula: 'no reaction' }]
-  const path: SchemePath = [[{ formula: parseSmiles(smiles), tag: substrateName }], { reagents: reagent.label }, products]
+  const path: SchemePath = [[{ formula: drawn(smiles), tag: substrateName }], { reagents: reagent.label }, products]
 
   const drawHeight = reactionSchemeSize(path, DRAW_WIDTH).height + 2 * MARGIN
 
