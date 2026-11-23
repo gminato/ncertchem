@@ -241,7 +241,9 @@ function Step6() {
         return (
           <g key={k}>
             {drawMolecule(m, `cell-${k}`)}
-            {caption(c.x, c.nameY, GRID_NAMES[k], `name-${k}`, INK)}
+            {/* Two lines ("3-hydroxy-" / the rest), so neighbouring names in a row cannot run together. */}
+            {caption(c.x, c.nameY, GRID_NAMES[k].slice(0, GRID_NAMES[k].indexOf('-', 2) + 1), `name-${k}a`, INK)}
+            {caption(c.x, c.nameY + 17, GRID_NAMES[k].slice(GRID_NAMES[k].indexOf('-', 2) + 1), `name-${k}b`, INK)}
           </g>
         )
       })}
