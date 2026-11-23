@@ -124,6 +124,7 @@ import { HaloareneMaker } from './sims/haloarene-maker'
 import { HalidePropertiesLab } from './sims/halide-properties-lab'
 import { ZaitsevChooser } from './sims/zaitsev-chooser'
 import { NitroActivation } from './sims/nitro-activation'
+import { AcidNamer } from './sims/acid-namer'
 import { PolyhalogenExplorer } from './sims/polyhalogen-explorer'
 
 export interface SimulationProps {
@@ -264,4 +265,5 @@ export const simulations: Record<string, ComponentType<SimulationProps>> = {
   'zaitsev-chooser': ZaitsevChooser,
   'nitro-activation': NitroActivation,
   'polyhalogen-explorer': PolyhalogenExplorer,
+  'acid-namer': AcidNamer,
 }
