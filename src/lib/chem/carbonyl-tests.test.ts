@@ -5,6 +5,8 @@ import {
   carboxylateName,
   compoundName,
   compoundSmiles,
+  productTestResult,
+  reducedTestResult,
   reductionProduct,
   testResult,
 } from './carbonyl-tests'
@@ -82,5 +84,57 @@ describe('reduction products', () => {
 
   it('every compound is in the rack list', () => {
     expect(COMPOUNDS).toHaveLength(5)
+  })
+})
+
+describe('tests run on the reduction product', () => {
+  it('butanal + hydride: butan-1-ol gives no change in all three tests', () => {
+    for (const test of ['tollens', 'fehling', 'iodoform'] as const) {
+      expect(reducedTestResult('butanal', 'hydride', test).outcome).toBe('no-change')
+    }
+    expect(reductionProduct('butanal', 'hydride')?.name).toBe('butan-1-ol')
+  })
+
+  it('butanal + hydrocarbon: butane gives no change in all three tests', () => {
+    for (const test of ['tollens', 'fehling', 'iodoform'] as const) {
+      expect(reducedTestResult('butanal', 'hydrocarbon', test).outcome).toBe('no-change')
+    }
+  })
+
+  it('pentan-3-one + hydride: pentan-3-ol gives no change in all three tests', () => {
+    expect(reductionProduct('pentan-3-one', 'hydride')?.name).toBe('pentan-3-ol')
+    for (const test of ['tollens', 'fehling', 'iodoform'] as const) {
+      expect(reducedTestResult('pentan-3-one', 'hydride', test).outcome).toBe('no-change')
+    }
+  })
+
+  it('butan-2-one + hydride: butan-2-ol gives yellow iodoform and propanoate, not the unreduced result', () => {
+    expect(reductionProduct('butan-2-one', 'hydride')?.name).toBe('butan-2-ol')
+    const r = reducedTestResult('butan-2-one', 'hydride', 'iodoform')
+    expect(r.outcome).toBe('yellow-precipitate')
+    expect(r.productName).toBe('propanoic acid')
+    expect(r.productLabel).toBe('sodium propanoate')
+    expect(reducedTestResult('butan-2-one', 'hydride', 'tollens').outcome).toBe('no-change')
+    expect(reducedTestResult('butan-2-one', 'hydrocarbon', 'iodoform').outcome).toBe('no-change')
+  })
+
+  it('propan-2-ol (from propan-2-one + NaBH4) gives a yellow iodoform precipitate', () => {
+    const r = productTestResult('CC(C)O', 'iodoform')
+    expect(r.outcome).toBe('yellow-precipitate')
+    expect(r.productLabel).toBe('sodium ethanoate')
+    expect(productTestResult('CC(C)O', 'tollens').outcome).toBe('no-change')
+  })
+
+  it('benzaldehyde + hydride or hydrocarbon: benzyl alcohol and toluene give no change', () => {
+    for (const test of ['tollens', 'fehling', 'iodoform'] as const) {
+      expect(reducedTestResult('benzaldehyde', 'hydride', test).outcome).toBe('no-change')
+      expect(reducedTestResult('benzaldehyde', 'hydrocarbon', test).outcome).toBe('no-change')
+    }
+  })
+
+  it('with no reduction, or a reductant that finds no carbonyl group, the tests run on the compound', () => {
+    expect(reducedTestResult('butanal', 'none', 'tollens')).toEqual(testResult('butanal', 'tollens'))
+    expect(reductionProduct('propan-2-ol', 'hydride')).toBeNull()
+    expect(reducedTestResult('propan-2-ol', 'hydride', 'iodoform')).toEqual(testResult('propan-2-ol', 'iodoform'))
   })
 })

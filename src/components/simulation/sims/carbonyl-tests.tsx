@@ -10,8 +10,8 @@ import {
   TESTS,
   compoundName,
   compoundSmiles,
+  reducedTestResult,
   reductionProduct,
-  testResult,
   type CompoundId,
   type Outcome,
   type ReductionId,
@@ -102,7 +102,7 @@ export function CarbonylTests() {
   const graph = useMemo(() => parseSmiles(smiles), [smiles])
   const name = compoundName(compound)
   const formula = subscript(molecularFormula(graph))
-  const results = TESTS.map((t) => ({ id: t.id, ...testResult(compound, t.id) }))
+  const results = TESTS.map((t) => ({ id: t.id, ...reducedTestResult(compound, reduction, t.id) }))
   const active = results.find((r) => r.id === test)!
   const reduced = reductionProduct(compound, reduction)
   const reducedGraph = useMemo(() => (reduced ? parseSmiles(reduced.smiles) : null), [reduced])
@@ -158,6 +158,8 @@ export function CarbonylTests() {
           </svg>
           <figcaption className={styles.caption}>
             {name}, {formula}. Tube results for the three tests on the same compound.
+            <br />
+            {`Tests run on: ${reduced ? reduced.name : name}.`}
           </figcaption>
         </figure>
 

@@ -73,18 +73,55 @@ export interface TestResult {
   productLabel: string | null
 }
 
-export function testResult(compound: CompoundId, test: TestId): TestResult {
-  const outcome = OUTCOME[compound][test]
-  const productSmiles = OXIDATION_PRODUCT_SMILES[compound]
-  if (outcome === 'no-change' || !productSmiles) {
+function resultFor(outcome: Outcome, test: TestId, oxidationSmiles: string | undefined): TestResult {
+  if (outcome === 'no-change' || !oxidationSmiles) {
     return { outcome, productName: null, productLabel: null }
   }
-  const acid = iupacNameFromSmiles(productSmiles)
+  const acid = iupacNameFromSmiles(oxidationSmiles)
   const carboxylate = carboxylateName(acid)
   if (test === 'iodoform') {
     return { outcome, productName: acid, productLabel: `sodium ${carboxylate}` }
   }
   return { outcome, productName: acid, productLabel: `${carboxylate} ion` }
+}
+
+export function testResult(compound: CompoundId, test: TestId): TestResult {
+  return resultFor(OUTCOME[compound][test], test, OXIDATION_PRODUCT_SMILES[compound])
+}
+
+type OutcomeRow = Readonly<Record<TestId, Outcome>>
+
+const NO_CHANGE: OutcomeRow = { tollens: 'no-change', fehling: 'no-change', iodoform: 'no-change' }
+
+/**
+ * The three tests on the molecules a reductant can leave in the tubes. Once a compound is reduced
+ * the rack tests the product, so these rows are the only results the reduction branch shows.
+ * Keys are the Kekulé SMILES that REDUCTION_SMILES and the propan-2-ol row use.
+ */
+const PRODUCT_TESTS: Readonly<Record<string, { outcome: OutcomeRow; oxidation?: string }>> = {
+  'CCCCO': { outcome: NO_CHANGE }, // butan-1-ol
+  'CCCC': { outcome: NO_CHANGE }, // butane
+  'CCC(O)CC': { outcome: NO_CHANGE }, // pentan-3-ol
+  'CCCCC': { outcome: NO_CHANGE }, // pentane
+  'OCC1=CC=CC=C1': { outcome: NO_CHANGE }, // benzyl alcohol
+  'CC1=CC=CC=C1': { outcome: NO_CHANGE }, // toluene
+  'CCC(C)O': {
+    // butan-2-ol: CH₃CH(OH) is oxidised to CH₃CO, so iodoform comes out yellow.
+    outcome: { tollens: 'no-change', fehling: 'no-change', iodoform: 'yellow-precipitate' },
+    oxidation: 'CCC(O)=O',
+  },
+  'CC(C)O': {
+    // propan-2-ol (from propan-2-one and NaBH₄): the same CH₃CH(OH) group, so iodoform is yellow.
+    outcome: { tollens: 'no-change', fehling: 'no-change', iodoform: 'yellow-precipitate' },
+    oxidation: 'CC(O)=O',
+  },
+}
+
+/** The three tests run on a molecule by its Kekulé SMILES (a reduction product). */
+export function productTestResult(smiles: string, test: TestId): TestResult {
+  const row = PRODUCT_TESTS[smiles]
+  if (!row) throw new Error(`No test model for ${smiles}`)
+  return resultFor(row.outcome[test], test, row.oxidation)
 }
 
 export interface ReductionResult {
@@ -98,4 +135,11 @@ export function reductionProduct(compound: CompoundId, reduction: ReductionId): 
   const smiles = REDUCTION_SMILES[compound][reduction]
   if (!smiles) return null
   return { smiles, name: iupacNameFromSmiles(smiles) }
+}
+
+/** Result of one test on the compound as it sits in the tube: the reduction product if a reductant changed it. */
+export function reducedTestResult(compound: CompoundId, reduction: ReductionId, test: TestId): TestResult {
+  const product = reductionProduct(compound, reduction)
+  if (!product) return testResult(compound, test)
+  return productTestResult(product.smiles, test)
 }

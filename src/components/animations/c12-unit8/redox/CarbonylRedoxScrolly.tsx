@@ -200,15 +200,27 @@ function Tube({ x, top, bottom, liquid, mirror = false, precipitate }: { x: numb
 function ReductionStrip() {
   return (
     <g>
-      <Mol k="butanal" x={170} y={110} />
-      <Name x={300} y={115} k="butanal" anchor="start" />
-      <Arrow x1={170} y1={150} x2={170} y2={262} lx={185} ly={210} label="NaBH₄ or LiAlH₄, or H₂ with a catalyst" />
-      <Mol k="butanol" x={170} y={300} />
-      <Name x={300} y={305} k="butanol" anchor="start" />
-      <Arrow x1={170} y1={340} x2={170} y2={452} lx={185} ly={400} label="Clemmensen or Wolff–Kishner" />
-      <Mol k="butane" x={170} y={490} />
-      <Name x={300} y={478} k="butane" anchor="start" />
-      <Caption x={300} y={524} anchor="start">
+      <Mol k="butanal" x={290} y={115} />
+      <Name x={400} y={115} k="butanal" anchor="start" />
+      <Arrow x1={250} y1={175} x2={175} y2={235} lx={0} ly={0} />
+      <text x={12} y={190} fontSize={15} fill={INK}>
+        NaBH₄ or LiAlH₄,
+      </text>
+      <text x={12} y={208} fontSize={15} fill={INK}>
+        or H₂ with a catalyst
+      </text>
+      <Arrow x1={330} y1={175} x2={405} y2={235} lx={0} ly={0} />
+      <text x={420} y={190} fontSize={15} fill={INK}>
+        Clemmensen or
+      </text>
+      <text x={420} y={208} fontSize={15} fill={INK}>
+        Wolff–Kishner
+      </text>
+      <Mol k="butanol" x={150} y={300} />
+      <Name x={150} y={375} k="butanol" />
+      <Mol k="butane" x={430} y={300} />
+      <Name x={430} y={375} k="butane" />
+      <Caption x={430} y={425}>
         the C=O carbon is now CH₂
       </Caption>
       <ShadeKey x={150} y={553} text="shaded: the carbon of the C=O group" />
@@ -303,7 +315,7 @@ function HaloformTest() {
       <Arrow x1={200} y1={232} x2={290} y2={318} lx={262} ly={262} label="NaOI (sodium hypoiodite)" />
       <Mol k="triiodomethane" x={150} y={390} />
       <Name x={150} y={470} k="triiodomethane" />
-      <ellipse cx={240} cy={392} rx={16} ry={10} fill="var(--ox)" />
+      <ellipse cx={240} cy={392} rx={16} ry={10} fill="#f2c200" stroke="var(--fg)" strokeWidth={0.8} />
       <Caption x={150} y={510}>yellow solid</Caption>
       <text x={300} y={398} textAnchor="middle" fontSize={24} fill={INK}>
         +
