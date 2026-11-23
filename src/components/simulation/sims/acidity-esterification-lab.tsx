@@ -226,10 +226,31 @@ function AcidityFlaskAndScaleSvg({
   }
   const pinY = (c: AcidityCompound) => (c.pKa !== null ? yFromPka(c.pKa) : qualY(c.acidityRank))
   const pinAY = pinY(compoundA)
-  let pinBY = pinY(compoundB)
-  if (Math.abs(pinBY - pinAY) < 22) {
-    pinBY = pinAY > scaleBottom - 6 ? pinAY - 22 : pinAY + 22
+  const pinBY = pinY(compoundB)
+
+  // Keep both circles at their true pKa / qualitative coordinates on the scale axis;
+  // stagger only the text labels (with leader ticks) when markers sit close together.
+  const minLabelGap = 22
+  let labelAY = pinAY
+  let labelBY = pinBY
+  if (Math.abs(pinBY - pinAY) < minLabelGap) {
+    const midY = (pinAY + pinBY) / 2
+    const aIsUpper = pinAY <= pinBY
+    let upperY = midY - minLabelGap / 2
+    let lowerY = midY + minLabelGap / 2
+    const maxLowerY = 344
+    const minUpperY = 52
+    if (lowerY > maxLowerY) {
+      lowerY = maxLowerY
+      upperY = lowerY - minLabelGap
+    } else if (upperY < minUpperY) {
+      upperY = minUpperY
+      lowerY = upperY + minLabelGap
+    }
+    labelAY = aIsUpper ? upperY : lowerY
+    labelBY = aIsUpper ? lowerY : upperY
   }
+  const circlesOverlap = Math.abs(pinBY - pinAY) < 5
 
   const bubbleLift = (phase: number) => (time > 0 ? ((time * 24 + phase) % 34) : phase % 22)
 
@@ -309,14 +330,20 @@ function AcidityFlaskAndScaleSvg({
       <line x1={266} y1={scaleBottom + 14} x2={434} y2={scaleBottom + 14} stroke="var(--border)" strokeDasharray="4 3" />
 
       {/* Marker A */}
-      <circle cx={326} cy={pinAY} r={7} fill="var(--accent)" stroke="var(--surface)" strokeWidth={2} />
-      <text x={340} y={pinAY} textAnchor="start" dominantBaseline="central" fontSize={14} fontWeight={700} fontFamily={FONT} fill="var(--accent)">
+      <circle cx={326} cy={pinAY} r={circlesOverlap ? 7.5 : 6.5} fill="var(--accent)" stroke="var(--surface)" strokeWidth={2} />
+      {Math.abs(labelAY - pinAY) > 2 && (
+        <line x1={332} y1={pinAY} x2={342} y2={labelAY} stroke="var(--accent)" strokeWidth={1.3} />
+      )}
+      <text x={344} y={labelAY} textAnchor="start" dominantBaseline="central" fontSize={14} fontWeight={700} fontFamily={FONT} fill="var(--accent)">
         A: {compoundA.printedPka ?? 'qual.'}
       </text>
 
       {/* Marker B */}
-      <circle cx={326} cy={pinBY} r={7} fill="var(--ox)" stroke="var(--surface)" strokeWidth={2} />
-      <text x={340} y={pinBY} textAnchor="start" dominantBaseline="central" fontSize={14} fontWeight={700} fontFamily={FONT} fill="var(--ox)">
+      <circle cx={326} cy={pinBY} r={circlesOverlap ? 4.5 : 6.5} fill="var(--ox)" stroke="var(--surface)" strokeWidth={1.6} />
+      {Math.abs(labelBY - pinBY) > 2 && (
+        <line x1={332} y1={pinBY} x2={342} y2={labelBY} stroke="var(--ox)" strokeWidth={1.3} />
+      )}
+      <text x={344} y={labelBY} textAnchor="start" dominantBaseline="central" fontSize={14} fontWeight={700} fontFamily={FONT} fill="var(--ox)">
         B: {compoundB.printedPka ?? 'qual.'}
       </text>
     </svg>
@@ -354,12 +381,12 @@ function EsterSubstrateGlyph({ substrate, cx, cy }: { substrate: EsterSubstrateI
         <polygon points={verts.map((v) => `${v.x.toFixed(1)},${v.y.toFixed(1)}`).join(' ')} fill="none" stroke="var(--fg)" strokeWidth={2.1} />
         <circle cx={cx} cy={cy} r={innerR} fill="none" stroke="var(--fg)" strokeWidth={1.6} />
         <line x1={c1.x} y1={c1.y} x2={c1.x} y2={c1.y - 18} stroke="var(--fg)" strokeWidth={2.1} />
-        <text x={c1.x - 10} y={c1.y - 26} textAnchor="middle" dominantBaseline="central" fontSize={16} fontWeight={700} fontFamily={FONT} fill="var(--atom-o)">
+        <text x={c1.x} y={c1.y - 28} textAnchor="middle" dominantBaseline="central" fontSize={16} fontWeight={700} fontFamily={FONT} fill="var(--atom-o)">
           O
         </text>
-        <line x1={c1.x} y1={c1.y - 26} x2={c1.x + 20} y2={c1.y - 26} stroke="var(--fg)" strokeWidth={2} />
-        <line x1={c1.x + 7} y1={c1.y - 16} x2={c1.x + 13} y2={c1.y - 36} stroke="var(--rev)" strokeWidth={2.4} strokeDasharray="3 2" />
-        <text x={c1.x + 28} y={c1.y - 26} textAnchor="middle" dominantBaseline="central" fontSize={16} fontWeight={700} fontFamily={FONT} fill="var(--fg)">
+        <line x1={c1.x + 8} y1={c1.y - 28} x2={c1.x + 28} y2={c1.y - 28} stroke="var(--fg)" strokeWidth={2} />
+        <line x1={c1.x + 15} y1={c1.y - 18} x2={c1.x + 21} y2={c1.y - 38} stroke="var(--rev)" strokeWidth={2.4} strokeDasharray="3 2" />
+        <text x={c1.x + 36} y={c1.y - 28} textAnchor="middle" dominantBaseline="central" fontSize={16} fontWeight={700} fontFamily={FONT} fill="var(--fg)">
           H
         </text>
       </g>
@@ -428,7 +455,7 @@ function EsterProductGlyph({
         <polygon points={verts.map((v) => `${v.x.toFixed(1)},${v.y.toFixed(1)}`).join(' ')} fill="none" stroke="var(--fg)" strokeWidth={2.1} />
         <circle cx={cx} cy={cy} r={innerR} fill="none" stroke="var(--fg)" strokeWidth={1.6} />
         <line x1={c1.x} y1={c1.y} x2={c1.x} y2={c1.y - 18} stroke="var(--fg)" strokeWidth={2.1} />
-        <text x={c1.x} y={c1.y - 28} textAnchor="middle" dominantBaseline="central" fontSize={16} fontWeight={700} fontFamily={FONT} fill="var(--accent)">
+        <text x={c1.x - 6} y={c1.y - 28} textAnchor="start" dominantBaseline="central" fontSize={16} fontWeight={700} fontFamily={FONT} fill="var(--accent)">
           O–{acylTag}
         </text>
       </g>
@@ -553,19 +580,45 @@ function EsterEquilibriumGaugeSvg({
       </text>
 
       {trapActive ? (
-        <g>
-          <line x1={130} y1={82} x2={130} y2={58 - pulse * 0.5} stroke="var(--fwd)" strokeWidth={2.6} strokeLinecap="round" />
-          <polygon points={`130,${50 - pulse * 0.5} 124,${60 - pulse * 0.5} 136,${60 - pulse * 0.5}`} fill="var(--fwd)" />
-          <text x={236} y={96} textAnchor="start" fontSize={15} fontWeight={700} fontFamily={FONT} fill="var(--fwd)">
-            {acylReagent === 'acyl-chloride' ? 'Pyridine traps HCl' : acylReagent === 'carboxylic-acid' ? 'H₂O removed ↑' : 'Driven to ester'}
-          </text>
-          <text x={236} y={124} textAnchor="start" fontSize={14} fontFamily={FONT} fill="var(--fg)">
-            {acylReagent === 'acyl-chloride' ? 'Forms pyridinium chloride' : 'Blocks reverse hydrolysis'}
-          </text>
-          <text x={236} y={152} textAnchor="start" fontSize={14} fontWeight={600} fontFamily={FONT} fill="var(--fwd)">
-            {out.verdictBadge}
-          </text>
-        </g>
+        acylReagent === 'carboxylic-acid' ? (
+          <g>
+            <line x1={130} y1={82} x2={130} y2={58 - pulse * 0.5} stroke="var(--fwd)" strokeWidth={2.6} strokeLinecap="round" />
+            <polygon points={`130,${50 - pulse * 0.5} 124,${60 - pulse * 0.5} 136,${60 - pulse * 0.5}`} fill="var(--fwd)" />
+            <text x={236} y={96} textAnchor="start" fontSize={15} fontWeight={700} fontFamily={FONT} fill="var(--fwd)">
+              H₂O removed ↑
+            </text>
+            <text x={236} y={124} textAnchor="start" fontSize={14} fontFamily={FONT} fill="var(--fg)">
+              Blocks reverse hydrolysis
+            </text>
+            <text x={236} y={152} textAnchor="start" fontSize={14} fontWeight={600} fontFamily={FONT} fill="var(--fwd)">
+              {out.verdictBadge}
+            </text>
+          </g>
+        ) : acylReagent === 'anhydride' ? (
+          <g>
+            <text x={236} y={96} textAnchor="start" fontSize={15} fontWeight={700} fontFamily={FONT} fill="var(--fwd)">
+              {out.isAspirinSynthesis ? 'Acetylates phenolic –OH' : 'Driven to ester'}
+            </text>
+            <text x={236} y={124} textAnchor="start" fontSize={14} fontFamily={FONT} fill="var(--fg)">
+              {out.isAspirinSynthesis ? 'Yields Aspirin + CH₃COOH' : "Shifts R'COOH equilibrium"}
+            </text>
+            <text x={236} y={152} textAnchor="start" fontSize={14} fontWeight={600} fontFamily={FONT} fill="var(--fwd)">
+              {out.verdictBadge}
+            </text>
+          </g>
+        ) : (
+          <g>
+            <text x={236} y={96} textAnchor="start" fontSize={15} fontWeight={700} fontFamily={FONT} fill="var(--fwd)">
+              Pyridine traps HCl
+            </text>
+            <text x={236} y={124} textAnchor="start" fontSize={14} fontFamily={FONT} fill="var(--fg)">
+              Forms pyridinium chloride
+            </text>
+            <text x={236} y={152} textAnchor="start" fontSize={14} fontWeight={600} fontFamily={FONT} fill="var(--fwd)">
+              {out.verdictBadge}
+            </text>
+          </g>
+        )
       ) : (
         <g>
           <text x={236} y={104} textAnchor="start" fontSize={15} fontWeight={700} fontFamily={FONT} fill="var(--rev)">

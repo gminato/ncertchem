@@ -150,10 +150,19 @@ for (const scheme of ['light', 'dark'] as const) {
       expect(await smallTextLeaves(sim)).toEqual([])
       expect(await svgOutOfBounds(sim)).toEqual([])
 
+      // State A4: Close pKa pair (p-Nitrophenol 7.1 vs o-Nitrophenol 7.2) -> true dot positions + staggered labels
+      await sim.getByLabel('Compound A').selectOption('p-nitrophenol')
+      await sim.getByLabel('Compound B').selectOption('o-nitrophenol')
+      await expect(sim).toContainText('ΔpKₐ = 0.1')
+      await sim.screenshot({ path: `test-results/screens/c12u7-s7-sim-acidity-close-${scheme}.png` })
+      expect(await smallTextLeaves(sim)).toEqual([])
+      expect(await svgOutOfBounds(sim)).toEqual([])
+
       // State E1: Switch to Esterification Bench (Salicylic acid + Acid anhydride -> Aspirin)
       await sim.getByRole('radio', { name: 'Esterification Bench' }).click()
       await expect(sim).toContainText('Acetylsalicylic acid (Aspirin)')
-      await expect(sim).toContainText('CH₃COOH')
+      await expect(sim).toContainText('Yields Aspirin + CH₃COOH')
+      await expect(sim).not.toContainText('Blocks reverse hydrolysis')
       await sim.screenshot({ path: `test-results/screens/c12u7-s7-sim-aspirin-${scheme}.png` })
       expect(await smallTextLeaves(sim)).toEqual([])
       expect(await svgOutOfBounds(sim)).toEqual([])
@@ -167,6 +176,15 @@ for (const scheme of ['light', 'dark'] as const) {
       await sim.getByRole('switch', { name: /Remove H₂O \/ Add Pyridine/ }).click()
       await expect(sim).toContainText('Trap ON')
       await sim.screenshot({ path: `test-results/screens/c12u7-s7-sim-chloride-${scheme}.png` })
+      expect(await smallTextLeaves(sim)).toEqual([])
+      expect(await svgOutOfBounds(sim)).toEqual([])
+
+      // State E3: Phenol + Carboxylic acid (checks phenol O-H cleavage glyph, phenyl ester glyph, and H2O removal)
+      await sim.getByRole('radio', { name: 'Phenol' }).click()
+      await sim.getByRole('radio', { name: "Carboxylic acid (R'COOH)" }).click()
+      await expect(sim).toContainText('Phenyl ester')
+      await expect(sim).toContainText('Blocks reverse hydrolysis')
+      await sim.screenshot({ path: `test-results/screens/c12u7-s7-sim-phenol-acid-${scheme}.png` })
       expect(await smallTextLeaves(sim)).toEqual([])
       expect(await svgOutOfBounds(sim)).toEqual([])
 
