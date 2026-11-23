@@ -202,6 +202,8 @@ import { EtherNaming } from './c12-unit7/ether-naming/EtherNaming'
 import { FunctionalGroupStructures } from './c12-unit7/structures/FunctionalGroupStructures'
 import { AlkeneHydrationMechanisms } from './c12-unit7/alkene-hydration/AlkeneHydrationMechanisms'
 import { CarbonylReductionAndGrignard } from './c12-unit7/carbonyl-grignard/CarbonylReductionAndGrignard'
+import { PhenolPrepRoutes } from './c12-unit7/phenol-prep/PhenolPrepRoutes'
+import { CumeneCleavage } from './c12-unit7/cumene-cleavage/CumeneCleavage'
 
 /**
  * Animations available to a Scrolly Animation, keyed by the `animation` prop.
@@ -414,6 +416,8 @@ export const animations = {
   'functional-group-structures': FunctionalGroupStructures,
   'alkene-hydration-mechanisms': AlkeneHydrationMechanisms,
   'carbonyl-reduction-and-grignard': CarbonylReductionAndGrignard,
+  'phenol-prep-routes': PhenolPrepRoutes,
+  'cumene-hydroperoxide-cleavage': CumeneCleavage,
 } as const
 
 export type AnimationName = keyof typeof animations
