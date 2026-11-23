@@ -28,7 +28,7 @@ const STATES: { name: string; act: (sim: Locator) => Promise<void> }[] = [
   {
     name: 'methanal',
     act: async (sim) => {
-      await sim.getByRole('radio', { name: 'Methanal', exact: true }).click()
+      await sim.getByRole('radio', { name: /^Methanal\b/i }).click()
       await sim.getByRole('radio', { name: 'Conc. NaOH, heat', exact: true }).click()
       await verdict(sim, 'Cannizzaro reaction')
     },
@@ -36,7 +36,7 @@ const STATES: { name: string; act: (sim: Locator) => Promise<void> }[] = [
   {
     name: 'ethanal-none',
     act: async (sim) => {
-      await sim.getByRole('radio', { name: 'Ethanal', exact: true }).click()
+      await sim.getByRole('radio', { name: /^Ethanal\b/i }).click()
       await verdict(sim, 'No reaction in this Section')
     },
   },
