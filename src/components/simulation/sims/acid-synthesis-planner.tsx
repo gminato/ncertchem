@@ -23,7 +23,7 @@ import styles from './acid-synthesis-planner.module.css'
 
 type Mode = 'find' | 'try'
 
-const SCALE = 38
+const SCALE = 44
 const SUB: Record<string, string> = { '0': '₀', '1': '₁', '2': '₂', '3': '₃', '4': '₄', '5': '₅', '6': '₆', '7': '₇', '8': '₈', '9': '₉' }
 const sub = (n: number) => String(n).replace(/[0-9]/g, (d) => SUB[d])
 
@@ -119,33 +119,33 @@ export function AcidSynthesisPlanner() {
             return (
               <svg viewBox={`0 0 560 ${Math.ceil(height)}`} role="img" aria-label={summary} className={styles.drawing} data-testid="planner-drawing">
                 <SkeletalFormula graph={top} scale={SCALE} x={280} y={yTop} />
-                <text x={280} y={nameTop} textAnchor="middle" fontSize={15} fontWeight={600} fontFamily="var(--font-sans)" fill="var(--fg)">
+                <text x={280} y={nameTop} textAnchor="middle" fontSize={16} fontWeight={600} fontFamily="var(--font-sans)" fill="var(--fg)">
                   {outcome.topName}
                 </text>
                 <line x1={280} y1={arrowTop} x2={280} y2={arrowBottom} stroke="var(--fg-muted)" strokeWidth={2} />
                 <path d={`M 272 ${arrowBottom - 10} L 280 ${arrowBottom} L 288 ${arrowBottom - 10}`} fill="none" stroke="var(--fg-muted)" strokeWidth={2} strokeLinejoin="round" />
-                <text x={296} y={arrowTop + 24} fontSize={14} fontFamily="var(--font-sans)" fill="var(--fg)">
+                <text x={296} y={arrowTop + 24} fontSize={16} fontFamily="var(--font-sans)" fill="var(--fg)">
                   {reagentLabel(outcome.reagent)}
                 </text>
                 {bottom ? (
                   <>
                     <SkeletalFormula graph={bottom} scale={SCALE} x={280} y={yBottom} />
-                    <text x={280} y={nameBottom} textAnchor="middle" fontSize={15} fontWeight={600} fontFamily="var(--font-sans)" fill="var(--fg)">
+                    <text x={280} y={nameBottom} textAnchor="middle" fontSize={16} fontWeight={600} fontFamily="var(--font-sans)" fill="var(--fg)">
                       {outcome.bottomName}
                     </text>
-                    <text x={280} y={carbonY} textAnchor="middle" fontSize={15} fontFamily="var(--font-sans)" fill="var(--fg)">
+                    <text x={280} y={carbonY} textAnchor="middle" fontSize={16} fontFamily="var(--font-sans)" fill="var(--fg)">
                       {`Carbon count ${outcome.carbon}`}
                     </text>
-                    <text x={280} y={noteY} textAnchor="middle" fontSize={14} fontFamily="var(--font-sans)" fill="var(--fg-muted)">
+                    <text x={280} y={noteY} textAnchor="middle" fontSize={16} fontFamily="var(--font-sans)" fill="var(--fg-muted)">
                       {outcome.note}
                     </text>
                   </>
                 ) : (
                   <>
-                    <text x={280} y={arrowBottom + 44} textAnchor="middle" fontSize={18} fontWeight={600} fontFamily="var(--font-sans)" fill="var(--fg)">
+                    <text x={280} y={arrowBottom + 44} textAnchor="middle" fontSize={19} fontWeight={600} fontFamily="var(--font-sans)" fill="var(--fg)">
                       No acid forms
                     </text>
-                    <text x={280} y={arrowBottom + 70} textAnchor="middle" fontSize={14} fontFamily="var(--font-sans)" fill="var(--fg-muted)">
+                    <text x={280} y={arrowBottom + 70} textAnchor="middle" fontSize={16} fontFamily="var(--font-sans)" fill="var(--fg-muted)">
                       {outcome.reason}
                     </text>
                   </>
