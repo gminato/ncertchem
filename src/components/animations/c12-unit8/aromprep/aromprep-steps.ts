@@ -57,11 +57,11 @@ const ETARD_PATH: SchemePath = [
   [g('benzaldehyde')],
 ]
 
-/** Step 3: CrO₃ in acetic anhydride, via benzylidene diacetate (formula and class name only). */
+/** Step 3: CrO₃ in acetic anhydride to benzylidene diacetate, then H₃O⁺ to benzaldehyde. The intermediate is condensed text, one row at scale 40. */
 const CHROMIC_PATH: SchemePath = [
   [g('toluene')],
-  { reagents: 'CrO₃', conditions: `in (CH₃CO)₂O, ${CHROMIC.reagent.match(/\d+–\d+ K/)?.[0] ?? ''}` },
-  [g('benzylideneDiacetate')],
+  { reagents: 'CrO₃, (CH₃CO)₂O', conditions: CHROMIC.reagent.match(/\d+–\d+ K/)?.[0] ?? '' },
+  [text('C₆H₅CH(OCOCH₃)₂')],
   { reagents: 'H₃O⁺', conditions: 'aqueous' },
   [g('benzaldehyde')],
 ]
@@ -96,37 +96,49 @@ const NITRILE_ROUTE: SchemePath = [
   [g('acetophenone')],
 ]
 
-/** Step 6, route (c): Friedel–Crafts acylation of benzene. */
+/** Step 7, route (c): Friedel–Crafts acylation of benzene. */
 const FRIEDEL_ROUTE: SchemePath = [
   [g('benzene')],
   { reagents: 'CH₃COCl', conditions: 'anhydrous AlCl₃' },
   [tagged('acetophenone', 'HCl also formed')],
 ]
 
-/** The six Steps in Prose order. Step 6 holds three routes, drawn one row above another. */
+/** The seven Steps in Prose order. Steps 6 and 7 hold routes, one row each. */
 export const AROMPREP_STEPS: readonly (SchemePath | readonly SchemePath[])[] = [
   OVERSHOOT,
   ETARD_PATH,
-  CHROMIC_PATH,
+  [CHROMIC_PATH],
   CHLORINATION_PATH,
   GATTERMAN_PATH,
-  [CADMIUM_ROUTE, NITRILE_ROUTE, FRIEDEL_ROUTE],
+  [CADMIUM_ROUTE, NITRILE_ROUTE],
+  [FRIEDEL_ROUTE],
 ]
 
 export const AROMPREP_STEP_COUNT = AROMPREP_STEPS.length
 
-/** The name shown under the three routes of Step 6. */
+/** The name shown under the three routes of Steps 6 and 7. */
 export const ACETOPHENONE_NAME = unit8Name(AROMPREP_SMILES.acetophenone)
 
-/** Width each scheme is laid out to, in viewBox units. */
-export const SCHEME_WIDTH = 540
+/** Width each single scheme is laid out to, in viewBox units (12-unit margins in the 580 viewBox). */
+export const SCHEME_WIDTH = 556
 
-/** Step 6: each route is one row, so the scheme may use the panel's width less a 12-unit margin each side. */
+/** Route rows: the scheme may use the panel's width less a 12-unit margin each side. */
 export const ROUTE_WIDTH = 556
 
-/** Step 6 scales to try, largest first: each row takes the largest that keeps its route on one line. */
+/** Gaps between rows, in viewBox units: labelled route rows (Steps 6 and 7); any other stacked rows; a single scheme. */
+export const BLOCK_GAP = 12
+export const STACK_GAP = 16
+export const ROUTE_GAP = 28
+
+/** Route steps scale to try, largest first: each row takes the largest that keeps its route on one line. */
 /** 40 keeps atom labels at 13 px or more on a 540 px panel (0.36 × 40 × 540 / 580 = 13.4). */
 export const ROUTE_SCALES = [40] as const
+
+/** Caption above each route row of a route Step, in Step order. */
+const ROUTE_LABELS: Readonly<Record<number, readonly string[]>> = {
+  5: ['(a) Acyl chloride with a dialkylcadmium', '(b) Nitrile with a Grignard reagent'],
+  6: ['(c) Benzene with an acyl chloride, Friedel–Crafts'],
+}
 
 /** Blocks of one Step, top to bottom, with each scheme's own height. Used for drawing and for the layout test. */
 export interface AromprepBlock {
@@ -139,12 +151,18 @@ export interface AromprepBlock {
   height: number
 }
 
+/** Gap between the blocks of a Step: routes with captions get the widest gap, plain stacked rows a smaller one. */
+export function blockGap(blocks: readonly AromprepBlock[]): number {
+  if (blocks.length < 2) return BLOCK_GAP
+  return blocks.some((b) => b.label !== undefined) ? ROUTE_GAP : STACK_GAP
+}
+
 export function aromprepStepBlocks(step: number): AromprepBlock[] {
   const index = Math.min(AROMPREP_STEPS.length - 1, Math.max(0, Math.round(step)))
   const content = AROMPREP_STEPS[index]
   const routes = isRoutes(content)
   const paths = routes ? content : [content]
-  const labels = routes ? ['(a) Acyl chloride with a dialkylcadmium', '(b) Nitrile with a Grignard reagent', '(c) Benzene with an acyl chloride, Friedel–Crafts'] : []
+  const labels = routes ? (ROUTE_LABELS[index] ?? []) : []
   return paths.map((path, i) => {
     const width = routes ? ROUTE_WIDTH : SCHEME_WIDTH
     const scales = routes ? ROUTE_SCALES : undefined
@@ -158,9 +176,8 @@ export function aromprepStepBlocks(step: number): AromprepBlock[] {
   })
 }
 
-/** Step 6 is three routes (a list of schemes); the other Steps are one scheme (a list of groups and arrows). */
+/** Steps 3, 6 and 7 are lists of rows (routes); the other Steps are one scheme (a list of groups and arrows). */
 function isRoutes(content: SchemePath | readonly SchemePath[]): content is readonly SchemePath[] {
   const first = content[0] as unknown
   return Array.isArray(first) && Array.isArray(first[0])
 }
-

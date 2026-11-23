@@ -4,7 +4,7 @@ import { watchErrors, expectCleanSvg, expectNoSidewaysScroll } from './support/s
 // Template: replace the four constants. Keep the checks; add Step-specific expects where useful.
 const SLUG = '12-8-2-2-aromatic-aldehydes-and-ketones'
 const ANIMATION = 'aromatic-carbonyl-routes'
-const STEP_COUNT = 6
+const STEP_COUNT = 7
 const TAG = 'c12u8-3' // e.g. c12u8-3: screenshots go to test-results/screens/<TAG>-step<k>-<scheme>.png
 
 for (const scheme of ['light', 'dark'] as const) {

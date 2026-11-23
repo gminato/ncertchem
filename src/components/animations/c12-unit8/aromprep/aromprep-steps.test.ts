@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import type { SchemePath } from '@/components/organic'
+import { type SchemePath, layoutReactionScheme } from '@/components/organic'
 import { molecularFormula, parseSmiles } from '@/lib/chem/molecule-parse'
 import {
   ACETOPHENONE_NAME,
@@ -7,7 +7,9 @@ import {
   AROMPREP_SMILES,
   AROMPREP_STEP_COUNT,
   AROMPREP_STEPS,
+  ROUTE_WIDTH,
   aromprepStepBlocks,
+  blockGap,
 } from './aromprep-steps'
 
 /** Every drawn molecule (graph species) in a Step, one entry per species. */
@@ -24,6 +26,11 @@ function drawnFormulas(content: SchemePath | readonly SchemePath[]): string[] {
   return out
 }
 
+/** The viewBox height and the caption band, from the Scrolly. */
+const VIEW_H = 720
+const CAPTION_BAND = 40
+const MARGIN = 24
+
 describe('Aromatic carbonyl routes: molecules', () => {
   for (const key of Object.keys(AROMPREP_SMILES) as (keyof typeof AROMPREP_SMILES)[]) {
     it(`${key} has the molecular formula ${AROMPREP_FORMULAS[key]}`, () => {
@@ -37,13 +44,12 @@ describe('Aromatic carbonyl routes: molecules', () => {
 })
 
 describe('Aromatic carbonyl routes: Steps', () => {
-  it('has six Steps in Prose order', () => {
-    expect(AROMPREP_STEP_COUNT).toBe(6)
+  it('has seven Steps in Prose order', () => {
+    expect(AROMPREP_STEP_COUNT).toBe(7)
   })
 
   it('Step 1 passes benzaldehyde on to benzoic acid', () => {
-    const drawn = drawnFormulas(AROMPREP_STEPS[0])
-    expect(drawn).toEqual(['C7H8', 'C7H6O', 'C7H6O2'])
+    expect(drawnFormulas(AROMPREP_STEPS[0])).toEqual(['C7H8', 'C7H6O', 'C7H6O2'])
   })
 
   it('Step 2 (Etard) draws toluene and benzaldehyde, with the unnamed complex as text', () => {
@@ -51,7 +57,8 @@ describe('Aromatic carbonyl routes: Steps', () => {
   })
 
   it('Step 3 (CrO₃ in acetic anhydride) passes through benzylidene diacetate', () => {
-    expect(drawnFormulas(AROMPREP_STEPS[2])).toEqual(['C7H8', 'C11H12O4', 'C7H6O'])
+    expect(AROMPREP_STEPS[2]).toHaveLength(1)
+    expect(drawnFormulas(AROMPREP_STEPS[2])).toEqual(['C7H8', 'C7H6O'])
   })
 
   it('Step 4 (side-chain chlorination) passes through benzal chloride', () => {
@@ -62,35 +69,42 @@ describe('Aromatic carbonyl routes: Steps', () => {
     expect(drawnFormulas(AROMPREP_STEPS[4])).toEqual(['C6H6', 'C7H6O'])
   })
 
-  it('Step 6 draws three routes, all to acetophenone', () => {
-    const routes = AROMPREP_STEPS[5] as readonly SchemePath[]
-    expect(routes).toHaveLength(3)
-    expect(drawnFormulas(AROMPREP_STEPS[5])).toEqual(['C7H5ClO', 'C8H8O', 'C7H5N', 'C8H8O', 'C6H6', 'C8H8O'])
+  it('Step 6 draws routes (a) and (b), both to acetophenone', () => {
+    expect(AROMPREP_STEPS[5]).toHaveLength(2)
+    expect(drawnFormulas(AROMPREP_STEPS[5])).toEqual(['C7H5ClO', 'C8H8O', 'C7H5N', 'C8H8O'])
   })
 
-  it('Steps 1 to 5 fit above the caption in the 960-unit viewBox', () => {
-    for (let k = 0; k < 5; k++) {
+  it('Step 7 draws route (c), benzene to acetophenone', () => {
+    expect(AROMPREP_STEPS[6]).toHaveLength(1)
+    expect(drawnFormulas(AROMPREP_STEPS[6])).toEqual(['C6H6', 'C8H8O'])
+  })
+
+  it('every Step fits the 720-unit viewBox: rows, captions, gaps and margins total at most 720 − 24', () => {
+    for (let k = 0; k < AROMPREP_STEP_COUNT; k++) {
       const blocks = aromprepStepBlocks(k)
-      const height = blocks.reduce((sum, b) => sum + b.height + (b.label ? 22 : 0), 0) + 12 * (blocks.length - 1)
-      expect(height).toBeLessThanOrEqual(960 - 34 - 40 - 20)
+      const gap = blockGap(blocks)
+      const rows = blocks.reduce((sum, b) => sum + b.height + (b.label ? 22 : 0), 0)
+      const total = rows + gap * (blocks.length - 1) + CAPTION_BAND + MARGIN
+      expect(total, `Step ${k + 1}`).toBeLessThanOrEqual(VIEW_H - 24)
     }
   })
 
-  it('Step 6: each route is one row, at most 300 units with its caption', () => {
-    for (const block of aromprepStepBlocks(5)) {
-      expect(block.height + 22).toBeLessThanOrEqual(300)
+  it('every row of every Step is at most 556 units wide, measured on its layout', () => {
+    for (let k = 0; k < AROMPREP_STEP_COUNT; k++) {
+      for (const block of aromprepStepBlocks(k)) {
+        const layout = layoutReactionScheme(block.path, block.width, block.scales ? [...block.scales] : undefined)
+        expect(layout.width, `Step ${k + 1}`).toBeLessThanOrEqual(556)
+      }
     }
+    expect(ROUTE_WIDTH).toBeLessThanOrEqual(556)
   })
 
-  it('Step 6: the three rows fit above the caption, starting 28 units from the top', () => {
-    const blocks = aromprepStepBlocks(5)
-    const height = blocks.reduce((sum, b) => sum + b.height + (b.label ? 22 : 0), 0) + 28 * (blocks.length - 1)
-    expect(28 + height).toBeLessThanOrEqual(960 - 34 - 20)
-  })
-
-  it('Step 6: every row is at most 556 units wide, leaving a 12-unit margin in the 580-unit viewBox', () => {
-    for (const block of aromprepStepBlocks(5)) {
-      expect(block.width).toBeLessThanOrEqual(580 - 2 * 12)
+  it('Step 6 and 7 routes are each one row, with its caption above', () => {
+    for (const k of [5, 6]) {
+      for (const block of aromprepStepBlocks(k)) {
+        expect(block.label).toBeDefined()
+        expect(block.height).toBeGreaterThan(0)
+      }
     }
   })
 

@@ -3,7 +3,7 @@
 import type { ReactNode } from 'react'
 import { type SchemePath, ReactionScheme } from '@/components/organic'
 import { CARBONYL_PREPARATIONS } from '@/lib/chem/ncert-c12-unit8-data'
-import { ACETOPHENONE_NAME, AROMPREP_STEPS, aromprepStepBlocks, ROUTE_WIDTH, SCHEME_WIDTH } from './aromprep-steps'
+import { ACETOPHENONE_NAME, AROMPREP_STEPS, aromprepStepBlocks, blockGap } from './aromprep-steps'
 
 export interface AromaticCarbonylScrollyProps {
   /** 0-based Step index from Scrolly. */
@@ -14,18 +14,21 @@ export interface AromaticCarbonylScrollyProps {
 
 /** One viewBox for every Step, so the panel keeps the same size as the reader scrolls. */
 const W = 580
-const H = 960
-const SCHEME_X = (W - SCHEME_WIDTH) / 2
+const H = 720
 const CAPTION_Y = H - 34
 const LABEL_SIZE = 15
 const LABEL_LINE = 22
-const BLOCK_GAP = 12
-/** Step 6 rows: 12-unit side margins (the widest row is ROUTE_WIDTH) and a clear gap between routes. */
-const ROUTE_X = (W - ROUTE_WIDTH) / 2
-const ROUTE_GAP = 28
+/** Labelled route rows (Steps 6 and 7) start 28 units from the top; other Steps are centred. */
 const ROUTE_TOP = 28
 const INK = 'var(--fg)'
 const MUTED = 'var(--fg-muted)'
+
+/** Bottom caption of a Step, by 0-based index (none for the other Steps). */
+function captionFor(index: number): string | undefined {
+  if (index === 3) return CARBONYL_PREPARATIONS.sideChainChlorination.note
+  if (index === 6) return `All three give ${ACETOPHENONE_NAME}`
+  return undefined
+}
 
 function Caption({ x, y, children, fill = MUTED }: { x: number; y: number; children: ReactNode; fill?: string }) {
   return (
@@ -38,14 +41,14 @@ function Caption({ x, y, children, fill = MUTED }: { x: number; y: number; child
 export function AromaticCarbonylScrolly({ step }: AromaticCarbonylScrollyProps) {
   const index = Math.min(AROMPREP_STEPS.length - 1, Math.max(0, Math.round(step)))
   const blocks = aromprepStepBlocks(index)
-  const isRouteStep = blocks.length > 1
-  const gap = isRouteStep ? ROUTE_GAP : BLOCK_GAP
-  const x = isRouteStep ? ROUTE_X : SCHEME_X
+  const gap = blockGap(blocks)
+  const anchored = blocks.length > 1 && blocks.some((b) => b.label !== undefined)
   const totalHeight = blocks.reduce((sum, b) => sum + b.height + (b.label ? LABEL_LINE : 0), 0) + gap * (blocks.length - 1)
-  // Single schemes are centred in the space above the caption; the three route rows start near the top.
-  let y = isRouteStep ? ROUTE_TOP : (CAPTION_Y - 40 - totalHeight) / 2
+  // Labelled route rows start near the top; every other Step is centred in the space above the caption.
+  let y = anchored ? ROUTE_TOP : (CAPTION_Y - 40 - totalHeight) / 2
   const lines: ReactNode[] = []
   blocks.forEach((block, i) => {
+    const x = (W - block.width) / 2
     if (block.label) {
       lines.push(
         <text key={`label-${i}`} x={x} y={y + LABEL_SIZE} fontSize={LABEL_SIZE} fill={INK}>
@@ -61,6 +64,7 @@ export function AromaticCarbonylScrolly({ step }: AromaticCarbonylScrollyProps) 
     )
     y += block.height + gap
   })
+  const caption = captionFor(index)
   return (
     <svg
       viewBox={`0 0 ${W} ${H}`}
@@ -70,8 +74,7 @@ export function AromaticCarbonylScrolly({ step }: AromaticCarbonylScrollyProps) 
       style={{ display: 'block', width: '100%', height: 'auto' }}
     >
       {lines}
-      {index === 3 && <Caption x={W / 2} y={CAPTION_Y}>{CARBONYL_PREPARATIONS.sideChainChlorination.note}</Caption>}
-      {isRouteStep && <Caption x={W / 2} y={CAPTION_Y}>{`All three give ${ACETOPHENONE_NAME}`}</Caption>}
+      {caption && <Caption x={W / 2} y={CAPTION_Y}>{caption}</Caption>}
     </svg>
   )
 }
