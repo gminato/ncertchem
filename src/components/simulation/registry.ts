@@ -131,6 +131,7 @@ import { FunctionalGroupGeometryLab } from './sims/functional-group-geometry-lab
 import { AlcoholPrepLab } from './sims/alcohol-prep-lab'
 import { PhenolRouteWorkbench } from './sims/phenol-route-workbench'
 import { AlcoholPropertiesExplorer } from './sims/alcohol-properties-explorer'
+import { AcidityEsterificationLab } from './sims/acidity-esterification-lab'
 
 export interface SimulationProps {
   /** True when the Learner has asked the OS for reduced motion. Skip tweens and loops when set. */
@@ -276,4 +277,5 @@ export const simulations: Record<string, ComponentType<SimulationProps>> = {
   'alcohol-prep-lab': AlcoholPrepLab,
   'phenol-route-workbench': PhenolRouteWorkbench,
   'alcohol-properties-explorer': AlcoholPropertiesExplorer,
+  'acidity-esterification-lab': AcidityEsterificationLab,
 }

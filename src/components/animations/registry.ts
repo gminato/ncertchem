@@ -206,6 +206,8 @@ import { PhenolPrepRoutes } from './c12-unit7/phenol-prep/PhenolPrepRoutes'
 import { CumeneCleavage } from './c12-unit7/cumene-cleavage/CumeneCleavage'
 import { AlcoholHBondBoiling } from './c12-unit7/physical/AlcoholHBondBoiling'
 import { AlcoholWaterSolubility } from './c12-unit7/physical/AlcoholWaterSolubility'
+import { AlcoholPhenolAcidity } from './c12-unit7/acidity/AlcoholPhenolAcidity'
+import { EsterificationAcetylation } from './c12-unit7/esterification/EsterificationAcetylation'
 
 /**
  * Animations available to a Scrolly Animation, keyed by the `animation` prop.
@@ -422,6 +424,8 @@ export const animations = {
   'cumene-hydroperoxide-cleavage': CumeneCleavage,
   'alcohol-hbond-boiling': AlcoholHBondBoiling,
   'alcohol-water-solubility': AlcoholWaterSolubility,
+  'alcohol-phenol-acidity': AlcoholPhenolAcidity,
+  'esterification-acetylation': EsterificationAcetylation,
 } as const
 
 export type AnimationName = keyof typeof animations
