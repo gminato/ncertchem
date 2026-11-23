@@ -125,8 +125,8 @@ function Step2() {
   const P = fA.points
   const ax = 140
   const ay = 200
-  // Start 30 units out, clear of the OH label, and bow below the C–O bond on the way to its midpoint.
-  const lone = lonePairPoint(P[2], outwardAngle(P, fA.adj, 2), 30)
+  // Start at the lone pair BELOW the OH label (28 units down), and bow below the C–O bond on the way to its midpoint.
+  const lone = lonePairPoint(P[2], Math.PI / 2, 28)
   const bx = 420
   return (
     <g>
