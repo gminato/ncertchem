@@ -88,9 +88,28 @@ test.describe('Unit navigation', () => {
   })
 
   test('a Unit with no Sections yet shows a calm empty state', async ({ page }) => {
+    await page.goto('/class-12/unit-6')
+    await expect(page.getByRole('heading', { level: 1 })).toHaveText('Haloalkanes and Haloarenes')
+    await expect(page.getByText('The Sections of this Unit are being written.')).toBeVisible()
+  })
+
+  test('Class 12 Unit 5 lists its nine Sections in order', async ({ page }) => {
     await page.goto('/class-12/unit-5')
     await expect(page.getByRole('heading', { level: 1 })).toHaveText('Coordination Compounds')
-    await expect(page.getByText('The Sections of this Unit are being written.')).toBeVisible()
+    const links = page.locator('a[href^="/class-12/unit-5/"]')
+    await expect(links).toHaveCount(9)
+    const hrefs = await links.evaluateAll((els) => els.map((e) => e.getAttribute('href')))
+    expect(hrefs.map((h) => h?.split('/').pop())).toEqual([
+      '12-5-1-werners-theory',
+      '12-5-2-definitions-of-important-terms',
+      '12-5-3-nomenclature',
+      '12-5-4-isomerism',
+      '12-5-5-1-valence-bond-theory',
+      '12-5-5-4-crystal-field-theory',
+      '12-5-5-5-colour-and-cft-limitations',
+      '12-5-6-metal-carbonyls',
+      '12-5-7-importance-and-applications',
+    ])
   })
 
   test('Class 12 Unit 4 lists its eleven Sections in order', async ({ page }) => {
