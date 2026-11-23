@@ -318,7 +318,7 @@ function SortingStep() {
           mmine
         </text>
         <text x={110} y={198} textAnchor="middle" fontSize={16} fill={MUTED}>
-          lands on "a"
+          lands on “a”
         </text>
       </Tile>
 
@@ -331,7 +331,7 @@ function SortingStep() {
           hlorido
         </text>
         <text x={297} y={198} textAnchor="middle" fontSize={16} fill={MUTED}>
-          lands on "c"
+          lands on “c”
         </text>
       </Tile>
 
@@ -399,7 +399,7 @@ function SortingStep() {
 
       <rect x={24} y={404} width={552} height={62} rx={10} fill={RAISED} stroke={BORDER} strokeWidth={1} />
       <text x={W / 2} y={432} textAnchor="middle" fontSize={16} fill={TEXT}>
-        Sort on "a" before "c", and "c" before "e".
+        Sort on “a” before “c”, and “c” before “e”.
       </text>
       <text x={W / 2} y={456} textAnchor="middle" fontSize={16} fill={MUTED}>
         Multiplying prefixes (di, tri, tetra, bis, tris) never change the order.

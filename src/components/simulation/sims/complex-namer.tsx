@@ -77,11 +77,8 @@ function ComplexDiagram({
   const metalX = cursor
   cursor += metalW + gap
 
-  const ligandXs = ligands.map(() => {
-    const x = cursor
-    cursor += ligW + gap
-    return x
-  })
+  const ligandXs = ligands.map((_, i) => cursor + i * (ligW + gap))
+  cursor += ligands.length * (ligW + gap)
 
   const bracketRightX = cursor - gap + bracketPad
   cursor = bracketRightX + entitySubW + gap
