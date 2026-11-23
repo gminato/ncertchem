@@ -1,4 +1,5 @@
 import { layoutReactionScheme, type SchemeArrow, type SchemePath, type SchemeSpecies } from '@/components/organic/hydrocarbon-geometry'
+import { skeletalBounds } from '@/components/organic/SkeletalFormula'
 import { parseSmiles } from '@/lib/chem/molecule-parse'
 
 /**
@@ -54,12 +55,24 @@ export interface ArrowSpec {
 /** A group of species joined by '+', or an arrow. A row alternates groups and arrows. */
 export type Piece = readonly SpeciesSpec[] | ArrowSpec
 
+/** One piece of a column Step: a skeletal molecule, or a down-arrow with its label to the right. */
+export type ColumnPiece =
+  | { mol: MoleculeKey; highlight?: readonly number[] }
+  | { arrow: string; note?: string }
+
 export interface AcidRouteStep {
   /** Accessible label for the drawing. */
   label: string
-  /** Each row is one reaction path, drawn one above the other. */
+  /** Each row is one reaction path, drawn one above the other. Empty when `column` is given. */
   rows: readonly (readonly Piece[])[]
+  /** A vertical reaction: molecules stacked top to bottom, joined by down-arrows. */
+  column?: readonly ColumnPiece[]
 }
+
+/** Length of a column down-arrow, in units. */
+export const COLUMN_ARROW_LENGTH = 80
+/** Gap between a column piece and the next, and the top and bottom margin of a column. */
+export const COLUMN_GAP = 12
 
 /** Width of every scheme row, inside a 560-unit panel with a 16-unit margin. */
 export const ACID_ROUTE_SCHEME_WIDTH = 528
@@ -67,6 +80,8 @@ export const ACID_ROUTE_SCHEME_WIDTH = 528
 export const ACID_ROUTE_SCALES = [38] as const
 const ROW_GAP = 24
 const MARGIN = 12
+/** Panel height in units; see ACID_ROUTE_VIEW_HEIGHT below. */
+const ACID_ROUTE_VIEW_HEIGHT_UNITS = 700
 
 export function isGroup(piece: Piece): piece is readonly SpeciesSpec[] {
   return Array.isArray(piece)
@@ -87,8 +102,31 @@ export function rowHeight(path: SchemePath): number {
   return Math.ceil(layoutReactionScheme(path, ACID_ROUTE_SCHEME_WIDTH, ACID_ROUTE_SCALES).height)
 }
 
-/** Height of a Step's rows with the gaps between them. */
+function columnPieceHeight(p: ColumnPiece): number {
+  if ('arrow' in p) return COLUMN_ARROW_LENGTH
+  return skeletalBounds(parseSmiles(ACID_ROUTE_MOLECULES[p.mol].smiles), ACID_ROUTE_SCALES[0]).height
+}
+
+/** Height of a column between its first and last piece, without the margins. */
+export function columnContentHeight(column: readonly ColumnPiece[]): number {
+  const heights = column.map(columnPieceHeight)
+  return heights.reduce((sum, h) => sum + h, 0) + COLUMN_GAP * (heights.length - 1)
+}
+
+/** Each column piece with its top edge, centred vertically in the panel. */
+export function placeColumn(column: readonly ColumnPiece[]): { piece: ColumnPiece; top: number; height: number }[] {
+  let top = (ACID_ROUTE_VIEW_HEIGHT_UNITS - columnContentHeight(column)) / 2
+  return column.map((piece) => {
+    const height = columnPieceHeight(piece)
+    const placed = { piece, top, height }
+    top += height + COLUMN_GAP
+    return placed
+  })
+}
+
+/** Height of a Step's rows with the gaps between them, or of its column with both margins. */
 export function stepContentHeight(step: AcidRouteStep): number {
+  if (step.column) return columnContentHeight(step.column) + 2 * MARGIN
   const heights = step.rows.map((row) => rowHeight(toSchemePath(row)))
   return heights.reduce((sum, h) => sum + h, 0) + ROW_GAP * (heights.length - 1)
 }
@@ -116,17 +154,13 @@ export const ACID_ROUTE_STEPS: readonly AcidRouteStep[] = [
   },
   {
     label: '3-Phenylpropanenitrile through the amide to 3-phenylpropanoic acid',
-    rows: [
-      [
-        [{ mol: 'nitrile', highlight: [1] }],
-        { reagents: 'H₂O, H⁺/OH⁻' },
-        [{ mol: 'amide', highlight: [1] }],
-      ],
-      [
-        [{ mol: 'amide', highlight: [1] }],
-        { reagents: 'H₂O, H⁺/OH⁻', conditions: 'heat' },
-        [{ mol: 'phenylpropanoic', highlight: [1] }, { mol: 'ammonia', text: 'NH₃' }],
-      ],
+    rows: [],
+    column: [
+      { mol: 'nitrile', highlight: [1] },
+      { arrow: 'H₂O, H⁺ or OH⁻' },
+      { mol: 'amide', highlight: [1] },
+      { arrow: 'heat, same catalyst', note: '− NH₃' },
+      { mol: 'phenylpropanoic', highlight: [1] },
     ],
   },
   {
@@ -184,7 +218,7 @@ export const ACID_ROUTE_STEPS: readonly AcidRouteStep[] = [
 ]
 
 /** One panel height for every Step, so the visual keeps its shape between Steps. */
-export const ACID_ROUTE_VIEW_HEIGHT = 700
+export const ACID_ROUTE_VIEW_HEIGHT = ACID_ROUTE_VIEW_HEIGHT_UNITS
 export const ACID_ROUTE_VIEW_WIDTH = 560
 export const ACID_ROUTE_MARGIN = MARGIN
 export const ACID_ROUTE_ROW_GAP = ROW_GAP
