@@ -214,45 +214,45 @@ function SubstrateStructure({
     <g>
       {cleaveBetaCH ? (
         <>
-          <Atom x={32} y={146} label="CH₂" size={16} />
-          <Bond x1={32} y1={110} x2={32} y2={132} cleaving />
-          <Atom x={32} y={96} label="H" size={16} fill={OX} />
+          <Atom x={28} y={146} label="CH₂" size={16} />
+          <Bond x1={28} y1={110} x2={28} y2={132} cleaving />
+          <Atom x={28} y={96} label="H" size={16} fill={OX} />
         </>
       ) : (
-        <Atom x={30} y={146} label="CH₃" size={16} />
+        <Atom x={28} y={146} label="CH₃" size={16} />
       )}
-      <Bond x1={48} y1={146} x2={62} y2={146} />
-      <Atom x={74} y={146} label="CH" size={16} />
+      <Bond x1={49} y1={146} x2={62} y2={146} />
+      <Atom x={77} y={146} label="CH" size={16} />
 
       {/* C=C double bond */}
       {preserveDoubleBond && (
-        <rect x={86} y={134} width={28} height={24} rx={6} fill={SUCCESS} fillOpacity={0.2} stroke={SUCCESS} strokeWidth={1.4} />
+        <rect x={91} y={134} width={26} height={24} rx={6} fill={SUCCESS} fillOpacity={0.2} stroke={SUCCESS} strokeWidth={1.4} />
       )}
       {cleaveCCDouble && (
-        <rect x={86} y={134} width={28} height={24} rx={6} fill={OX} fillOpacity={0.22} stroke={OX} strokeWidth={1.4} />
+        <rect x={91} y={134} width={26} height={24} rx={6} fill={OX} fillOpacity={0.22} stroke={OX} strokeWidth={1.4} />
       )}
-      <Bond x1={88} y1={142} x2={112} y2={142} intact={preserveDoubleBond} cleaving={cleaveCCDouble} />
-      <Bond x1={88} y1={151} x2={112} y2={151} intact={preserveDoubleBond} cleaving={cleaveCCDouble} />
+      <Bond x1={93} y1={142} x2={115} y2={142} intact={preserveDoubleBond} cleaving={cleaveCCDouble} />
+      <Bond x1={93} y1={151} x2={115} y2={151} intact={preserveDoubleBond} cleaving={cleaveCCDouble} />
 
-      <Atom x={126} y={146} label="CH" size={16} />
-      <Bond x1={140} y1={146} x2={152} y2={146} />
-      <Atom x={162} y={146} label="C" size={17} />
-      <Bond x1={162} y1={108} x2={162} y2={132} cleaving={cleaveAlphaCH} />
-      <Atom x={162} y={94} label="H" size={16} fill={cleaveAlphaCH ? OX : MUTED} />
-      <Bond x1={162} y1={160} x2={162} y2={184} />
-      <Atom x={162} y={198} label="H" size={16} fill={MUTED} />
-      <Bond x1={172} y1={146} x2={196} y2={146} cleaving={cleaveCO} />
-      <Atom x={206} y={146} label="O" size={17} fill={OXYGEN} />
-      <Bond x1={216} y1={146} x2={234} y2={146} cleaving={cleaveOH} />
-      <Atom x={244} y={146} label="H" size={16} fill={cleaveOH ? OX : INK} />
+      <Atom x={132} y={146} label="CH" size={16} />
+      <Bond x1={148} y1={146} x2={160} y2={146} />
+      <Atom x={170} y={146} label="C" size={17} />
+      <Bond x1={170} y1={108} x2={170} y2={132} cleaving={cleaveAlphaCH} />
+      <Atom x={170} y={94} label="H" size={16} fill={cleaveAlphaCH ? OX : MUTED} />
+      <Bond x1={170} y1={160} x2={170} y2={184} />
+      <Atom x={170} y={198} label="H" size={16} fill={MUTED} />
+      <Bond x1={180} y1={146} x2={202} y2={146} cleaving={cleaveCO} />
+      <Atom x={212} y={146} label="O" size={17} fill={OXYGEN} />
+      <Bond x1={223} y1={146} x2={237} y2={146} cleaving={cleaveOH} />
+      <Atom x={246} y={146} label="H" size={16} fill={cleaveOH ? OX : INK} />
 
       {preserveDoubleBond && (
-        <text x={100} y={118} textAnchor="middle" fontSize={15} fontWeight={700} fontFamily={FONT} fill={SUCCESS}>
+        <text x={104} y={118} textAnchor="middle" fontSize={15} fontWeight={700} fontFamily={FONT} fill={SUCCESS}>
           C=C intact
         </text>
       )}
       {cleaveCCDouble && (
-        <text x={100} y={118} textAnchor="middle" fontSize={15} fontWeight={700} fontFamily={FONT} fill={PROTON}>
+        <text x={104} y={118} textAnchor="middle" fontSize={15} fontWeight={700} fontFamily={FONT} fill={PROTON}>
           C=C cleaved
         </text>
       )}
@@ -533,12 +533,13 @@ function DehydrationBarrierDiagnostic({ outcome }: { outcome: CleavageOutcome })
   const baseLine = 172
   const thresholdHeight = assessment.severityRank === 1 ? 42 : assessment.severityRank === 2 ? 72 : 102
   const thresholdY = baseLine - thresholdHeight
+  const isAllylic = outcome.substrate.isAllylic
 
   return (
     <div className={styles.diagnosticBody}>
       <svg
         className={styles.diagnosticSvg}
-        viewBox="0 0 240 202"
+        viewBox={isAllylic ? '0 0 240 226' : '0 0 240 202'}
         role="img"
         aria-label={`E1 activation barrier gauge: ${assessment.passes ? 'passes' : 'blocked'}`}
       >
@@ -579,6 +580,12 @@ function DehydrationBarrierDiagnostic({ outcome }: { outcome: CleavageOutcome })
 
         {/* Applied condition thermal threshold */}
         <line x1={18} y1={thresholdY} x2={222} y2={thresholdY} stroke={ACCENT} strokeWidth={2.4} strokeDasharray="6 4" />
+
+        {isAllylic && (
+          <text x={120} y={216} textAnchor="middle" fontSize={15} fontWeight={700} fontFamily={FONT} fill={ACCENT}>
+            Allylic 1° ≈ 2° barrier
+          </text>
+        )}
       </svg>
 
       <p
@@ -587,6 +594,11 @@ function DehydrationBarrierDiagnostic({ outcome }: { outcome: CleavageOutcome })
       >
         {assessment.passes ? 'Barrier overcome: alkene forms' : `Blocked: needs ${assessment.requiredLabel}`}
       </p>
+      {isAllylic && (
+        <p className={styles.diagnosticCaption}>
+          Resonance lowers the allylic 1° carbocation barrier to ~2° level.
+        </p>
+      )}
     </div>
   )
 }

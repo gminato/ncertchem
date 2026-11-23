@@ -202,8 +202,8 @@ Simulation spec for `alcohol-co-cleavage-lab` (title: "Alcohol C-O Cleavage and 
   3. Optional dehydration condition override toggle when Acid dehydration is active:
      - Compare 20% H3PO4 / 358 K vs 85% H3PO4 / 440 K vs conc. H2SO4 / 443 K to see which alcohols pass the activation barrier.
 - Chemistry rules (strictly matching NCERT 7.4.4(b)):
-  - Lucas reagent: 3° -> immediate turbidity ((CH3)3CCl + H2O); 2° -> delayed turbidity (CH3CH(Cl)CH3 + H2O); 1° (ethanol / but-2-en-1-ol) -> no turbidity at room temperature.
-  - Acid dehydration: threshold barriers match NCERT ease 3° (20% H3PO4, 358 K -> 2-methylpropene) > 2° (85% H3PO4, 440 K -> propene) > 1° (conc. H2SO4, 443 K -> ethene). But-2-en-1-ol noted as dehydrating via allylic pathway under strong acid/heat or focus on the three canonical NCERT substrates.
+  - Lucas reagent: 3° -> immediate turbidity ((CH3)3CCl + H2O); 2° -> delayed turbidity (CH3CH(Cl)CH3 + H2O); saturated 1° (ethanol) -> no turbidity at room temperature; allylic 1° (but-2-en-1-ol) -> rapid turbidity via resonance-stabilised allylic carbocation (1-chlorobut-2-ene + H2O).
+  - Acid dehydration: threshold barriers match NCERT ease 3° (20% H3PO4, 358 K -> 2-methylpropene) > 2° (85% H3PO4, 440 K -> propene) > 1° (conc. H2SO4, 443 K -> ethene). But-2-en-1-ol dehydrates via resonance-stabilised allylic carbocation at ~2° barrier (85% H3PO4, 440 K -> buta-1,3-diene).
   - PCC (anhydrous): 1° -> aldehyde (ethanol -> ethanal; but-2-en-1-ol -> but-2-enal with C=C intact); 2° -> ketone (propanone); 3° -> no reaction.
   - CrO3 (anhydrous): 1° -> aldehyde; 2° -> ketone; 3° -> no reaction.
   - Acidified KMnO4: 1° -> carboxylic acid directly (ethanoic acid; note C=C in but-2-en-1-ol is also vulnerable to strong KMnO4); 2° -> ketone/harsh conditions; 3° -> no mild oxidation (under elevated T, C-C cleavage to mixture of shorter carboxylic acids).
@@ -215,7 +215,7 @@ Simulation spec for `alcohol-co-cleavage-lab` (title: "Alcohol C-O Cleavage and 
     - E1 carbocation energy barrier gauge (1° high / 2° medium / 3° low) when Dehydration is active.
     - Alpha-H counter badge (2 for 1°, 1 for 2°, 0 for 3°) when Oxidation / Cu 573 K is active.
 - Readouts:
-  - Reaction Type (`Nucleophilic Substitution (Lucas)`, `E1 Dehydration`, `Selective Oxidation`, `Complete Oxidation`, `Catalytic Dehydrogenation`, `C-C Cleavage (harsh T)`, or `No reaction at room temperature`).
+  - Reaction Type (`Nucleophilic Substitution (Lucas)`, `E1 Dehydration`, `Catalytic Dehydration`, `Selective Oxidation`, `Complete Oxidation`, `Catalytic Dehydrogenation`, `C-C Cleavage (harsh T)`, or `No reaction at room temperature`).
   - Bonds Cleaved (`C-O`, `O-H and alpha-C-H`, or `C-C under elevated T`).
   - Major Product & By-product.
   - NCERT Condition Note.

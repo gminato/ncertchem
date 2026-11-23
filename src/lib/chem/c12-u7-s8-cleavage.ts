@@ -162,7 +162,7 @@ export const SUBSTRATES: readonly SubstrateMeta[] = [
     isAllylic: true,
     carbocationNote: 'Resonance-stabilised allylic carbocation (1° carbinol C)',
     dehydrationRank: 2,
-    matchedDehydrationId: 'conc-h2so4-443k',
+    matchedDehydrationId: '85-h3po4-440k',
   },
 ] as const
 
@@ -254,6 +254,30 @@ function evaluateLucas(sub: SubstrateMeta, reagent: ReagentMeta): CleavageOutcom
     }
     return { ...base, liveSummary: buildSummary(base) }
   }
+  if (sub.isAllylic) {
+    const base: Omit<CleavageOutcome, 'liveSummary'> = {
+      substrate: sub,
+      reagent,
+      diagnosticMode: 'lucas',
+      reacts: true,
+      reactionType: 'Nucleophilic Substitution (Lucas)',
+      mechanismNote: sub.carbocationNote,
+      bondsCleaved: 'C-O',
+      highlightMode: 'co',
+      preserveDoubleBond: true,
+      reagentArrowTop: 'conc. HCl + anhyd. ZnCl₂',
+      reagentArrowBottom: '298 K (rapid)',
+      majorProductName: '1-Chlorobut-2-ene',
+      majorProductFormula: 'CH₃-CH=CH-CH₂Cl',
+      byProduct: lucas.byProducts ?? 'H₂O',
+      lucasTurbidity: 'immediate',
+      dehydrationAssessment: null,
+      alphaHydrogens: sub.alphaHydrogens,
+      ncertNote:
+        'NCERT 7.4.4(b) benchmarks saturated 1° ethanol (no turbidity at 298 K), whereas allylic 1° alcohols react rapidly at room temperature via a resonance-stabilised carbocation to form the immiscible allylic chloride.',
+    }
+    return { ...base, liveSummary: buildSummary(base) }
+  }
   const base: Omit<CleavageOutcome, 'liveSummary'> = {
     substrate: sub,
     reagent,
@@ -272,9 +296,8 @@ function evaluateLucas(sub: SubstrateMeta, reagent: ReagentMeta): CleavageOutcom
     lucasTurbidity: 'none',
     dehydrationAssessment: null,
     alphaHydrogens: sub.alphaHydrogens,
-    ncertNote: sub.isAllylic
-      ? 'In NCERT Section 7.4.4(b), primary (1°) alcohols dissolve cleanly in Lucas reagent and produce no turbidity at room temperature.'
-      : 'Primary (1°) alcohols dissolve in Lucas reagent and react too slowly at room temperature to separate out an immiscible chloride layer.',
+    ncertNote:
+      'Primary (1°) saturated alcohols dissolve in Lucas reagent and react too slowly at room temperature to separate out an immiscible chloride layer.',
   }
   return { ...base, liveSummary: buildSummary(base) }
 }
@@ -303,7 +326,7 @@ function evaluateDehydration(
         ? `${iso.reagents}, ${iso.temperatureK} K`
         : sub.id === '2-methylpropan-2-ol'
           ? `${tbu.reagents}, ${tbu.temperatureK} K`
-          : '85% H₃PO₄ / conc. H₂SO₄, heat'
+          : `${iso.reagents}, ${iso.temperatureK} K`
 
   const activeLabel = condMeta.label
 
@@ -619,7 +642,7 @@ function evaluateOxidation(sub: SubstrateMeta, reagent: ReagentMeta): CleavageOu
       reagent,
       diagnosticMode: 'oxidation',
       reacts: true,
-      reactionType: 'E1 Dehydration',
+      reactionType: 'Catalytic Dehydration',
       mechanismNote: '0 α-H shifts Cu 573 K pathway to dehydration',
       bondsCleaved: 'C-O and β-C-H',
       highlightMode: 'co-beta-ch',

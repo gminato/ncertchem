@@ -140,6 +140,15 @@ for (const scheme of ['light', 'dark'] as const) {
       expect(await smallTextLeaves(sim)).toEqual([])
       expect(await svgOutOfBounds(sim)).toEqual([])
 
+      await sim.getByRole('radio', { name: 'Matched (NCERT)' }).click()
+      await expect(sim.locator('[aria-live="polite"]')).toContainText('Buta-1,3-diene')
+      await expect(sim).toContainText('85% H₃PO₄, 440 K')
+      await expect(sim).toContainText('Allylic 1° ≈ 2° barrier')
+      expect(await smallTextLeaves(sim)).toEqual([])
+      expect(await svgOutOfBounds(sim)).toEqual([])
+      await sim.screenshot({ path: `test-results/screens/c12u7-s8-sim-dehydration-allylic-${scheme}.png` })
+
+      await sim.getByRole('radio', { name: '20% H₃PO₄, 358 K' }).click()
       await sim.getByRole('radio', { name: '2-Methylpropan-2-ol (3°)' }).click()
       await expect(sim.locator('[aria-live="polite"]')).toContainText('2-Methylpropene')
       expect(await smallTextLeaves(sim)).toEqual([])
@@ -158,6 +167,14 @@ for (const scheme of ['light', 'dark'] as const) {
       expect(await smallTextLeaves(sim)).toEqual([])
       expect(await svgOutOfBounds(sim)).toEqual([])
 
+      await sim.getByRole('radio', { name: 'But-2-en-1-ol (allylic 1°)' }).click()
+      await expect(sim.locator('[aria-live="polite"]')).toContainText('1-Chlorobut-2-ene')
+      await expect(sim.locator('[aria-live="polite"]')).toContainText('CH₃-CH=CH-CH₂Cl')
+      await expect(sim).toContainText('Immediate turbidity')
+      expect(await smallTextLeaves(sim)).toEqual([])
+      expect(await svgOutOfBounds(sim)).toEqual([])
+      await sim.screenshot({ path: `test-results/screens/c12u7-s8-sim-lucas-allylic-${scheme}.png` })
+
       // State 4: But-2-en-1-ol + PCC (C=C preserved -> But-2-enal) vs KMnO4 (C=C cleaved)
       await sim.getByRole('radio', { name: 'But-2-en-1-ol (allylic 1°)' }).click()
       await sim.getByRole('radio', { name: 'PCC' }).click()
@@ -172,10 +189,10 @@ for (const scheme of ['light', 'dark'] as const) {
       expect(await smallTextLeaves(sim)).toEqual([])
       expect(await svgOutOfBounds(sim)).toEqual([])
 
-      // State 5: 3° alcohol + Heated Cu (573 K) -> E1 Dehydration to 2-Methylpropene + H2O
+      // State 5: 3° alcohol + Heated Cu (573 K) -> Catalytic Dehydration to 2-Methylpropene + H2O
       await sim.getByRole('radio', { name: '2-Methylpropan-2-ol (3°)' }).click()
       await sim.getByRole('radio', { name: 'Cu, 573 K' }).click()
-      await expect(sim.locator('[aria-live="polite"]')).toContainText('E1 Dehydration')
+      await expect(sim.locator('[aria-live="polite"]')).toContainText('Catalytic Dehydration')
       await expect(sim.locator('[aria-live="polite"]')).toContainText('2-Methylpropene')
       expect(await smallTextLeaves(sim)).toEqual([])
       expect(await svgOutOfBounds(sim)).toEqual([])

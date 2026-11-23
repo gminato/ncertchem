@@ -42,8 +42,13 @@ describe('NCERT Section 7.4.4(b) C-O cleavage and oxidation model', () => {
     expect(et.bondsCleaved).toBe('None')
 
     const allylic = evaluateCleavageReaction('but-2-en-1-ol', 'lucas')
-    expect(allylic.lucasTurbidity).toBe('none')
-    expect(allylic.reacts).toBe(false)
+    expect(allylic.lucasTurbidity).toBe('immediate')
+    expect(allylic.reacts).toBe(true)
+    expect(allylic.bondsCleaved).toBe('C-O')
+    expect(allylic.majorProductName).toBe('1-Chlorobut-2-ene')
+    expect(allylic.majorProductFormula).toBe('CH₃-CH=CH-CH₂Cl')
+    expect(allylic.byProduct).toBe('H₂O')
+    expect(allylic.preserveDoubleBond).toBe(true)
   })
 
   it('matches NCERT acid dehydration temperatures and barrier overrides', () => {
@@ -75,6 +80,13 @@ describe('NCERT Section 7.4.4(b) C-O cleavage and oxidation model', () => {
     expect(pcc.bondsCleaved).toBe('O-H and α-C-H')
     expect(pcc.mechanismNote).toContain('C=C')
 
+    const allylicMatched = evaluateCleavageReaction('but-2-en-1-ol', 'dehydration', 'matched')
+    expect(allylicMatched.reacts).toBe(true)
+    expect(allylicMatched.reagentArrowTop).toBe('85% H₃PO₄')
+    expect(allylicMatched.reagentArrowBottom).toBe('440 K')
+    expect(allylicMatched.dehydrationAssessment?.requiredLabel).toBe('85% H₃PO₄, 440 K')
+    expect(allylicMatched.dehydrationAssessment?.passes).toBe(true)
+
     const allylicDehydration = evaluateCleavageReaction('but-2-en-1-ol', 'dehydration', 'conc-h2so4-443k')
     expect(allylicDehydration.reacts).toBe(true)
     expect(allylicDehydration.majorProductFormula).toBe('CH₂=CH-CH=CH₂')
@@ -97,7 +109,7 @@ describe('NCERT Section 7.4.4(b) C-O cleavage and oxidation model', () => {
     expect(iso.majorProductFormula).toBe('CH₃COCH₃')
 
     const tBu = evaluateCleavageReaction('2-methylpropan-2-ol', 'cu-573k')
-    expect(tBu.reactionType).toBe('E1 Dehydration')
+    expect(tBu.reactionType).toBe('Catalytic Dehydration')
     expect(tBu.byProduct).toBe('H₂O')
     expect(tBu.majorProductFormula).toBe('CH₂=C(CH₃)CH₃')
     expect(tBu.bondsCleaved).toBe('C-O and β-C-H')
