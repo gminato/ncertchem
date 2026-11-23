@@ -100,7 +100,7 @@ const NITRILE_ROUTE: SchemePath = [
 const FRIEDEL_ROUTE: SchemePath = [
   [g('benzene'), text('CH₃COCl')],
   { reagents: 'anhydrous AlCl₃' },
-  [g('acetophenone')],
+  [tagged('acetophenone', 'HCl also formed')],
 ]
 
 /** The six Steps in Prose order. Step 6 holds three routes, drawn one row above another. */
