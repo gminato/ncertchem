@@ -21,22 +21,22 @@ const STATES: { name: string; act: (sim: Locator) => Promise<void> }[] = [
   {
     name: 'nitration',
     act: async (sim) => {
-      await sim.getByRole('radio', { name: 'Conc. HNO₃/H₂SO₄' }).click()
+      await sim.getByRole('radio', { name: 'Conc. HNO₃/H₂SO₄', exact: true }).click()
       await verdict(sim, 'Ring substitution, meta')
     },
   },
   {
     name: 'methanal',
     act: async (sim) => {
-      await sim.getByRole('radio', { name: 'Methanal' }).click()
-      await sim.getByRole('radio', { name: 'Conc. NaOH, heat' }).click()
+      await sim.getByRole('radio', { name: 'Methanal', exact: true }).click()
+      await sim.getByRole('radio', { name: 'Conc. NaOH, heat', exact: true }).click()
       await verdict(sim, 'Cannizzaro reaction')
     },
   },
   {
     name: 'ethanal-none',
     act: async (sim) => {
-      await sim.getByRole('radio', { name: 'Ethanal' }).click()
+      await sim.getByRole('radio', { name: 'Ethanal', exact: true }).click()
       await verdict(sim, 'No reaction in this Section')
     },
   },
