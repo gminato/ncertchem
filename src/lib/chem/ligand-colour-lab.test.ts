@@ -1,9 +1,11 @@
 import { describe, expect, it } from 'vitest'
 import {
   LAB_COMPLEXES,
+  WHEEL_SECTORS,
   findLabComplex,
   formatPhotonEnergy,
   wavelengthFraction,
+  wheelSectorIndex,
 } from './ligand-colour-lab'
 
 describe('ligand-colour-lab model', () => {
@@ -32,6 +34,22 @@ describe('ligand-colour-lab model', () => {
       const ni = findLabComplex(`ni-en-${n}`)
       expect(ni.enPerNi).toBe(n)
       expect(ni.waterLeft).toBe(6 - 2 * n)
+    }
+  })
+
+  it('maps every visible complex to 180-degree opposite sectors on the colour wheel', () => {
+    const half = WHEEL_SECTORS.length / 2
+    for (const c of LAB_COMPLEXES) {
+      if (c.isUv) {
+        expect(c.wheelAbsorbed).toBeNull()
+        expect(c.wheelSeen).toBeNull()
+        continue
+      }
+      expect(c.wheelAbsorbed).not.toBeNull()
+      expect(c.wheelSeen).not.toBeNull()
+      const iAbs = wheelSectorIndex(c.wheelAbsorbed!)
+      const iSeen = wheelSectorIndex(c.wheelSeen!)
+      expect((iAbs + half) % WHEEL_SECTORS.length).toBe(iSeen)
     }
   })
 })

@@ -5,9 +5,33 @@ import {
   type ColourRow,
   type NickelEnStep,
 } from './ncert-c12-unit5-s7-tables'
-import type { SpectralKey } from '@/components/vocab/dblock'
 
 export type ComplexSource = 'table-5-3' | 'ni-en'
+
+/**
+ * 8-sector complementary colour wheel in spectral order.
+ * Opposite sectors are always 4 steps (180 degrees) apart:
+ *   red (0) <-> blue-green (4)
+ *   orange (1) <-> blue (5)
+ *   yellow (2) <-> violet (6)
+ *   green (3) <-> purple (7)
+ */
+export const WHEEL_SECTORS = [
+  { key: 'red', label: 'red', fill: 'var(--spec-red)' },
+  { key: 'orange', label: 'orange', fill: 'var(--spec-orange)' },
+  { key: 'yellow', label: 'yellow', fill: 'var(--spec-yellow)' },
+  { key: 'green', label: 'green', fill: 'var(--spec-green)' },
+  { key: 'blue-green', label: 'blue-green', fill: 'var(--db-ln)' },
+  { key: 'blue', label: 'blue', fill: 'var(--spec-blue)' },
+  { key: 'violet', label: 'violet', fill: 'var(--spec-violet)' },
+  { key: 'purple', label: 'purple', fill: 'var(--rev)' },
+] as const
+
+export type WheelSectorKey = (typeof WHEEL_SECTORS)[number]['key']
+
+export function wheelSectorIndex(key: WheelSectorKey): number {
+  return WHEEL_SECTORS.findIndex((s) => s.key === key)
+}
 
 export interface LabComplex {
   readonly id: string
@@ -23,10 +47,10 @@ export interface LabComplex {
   readonly absorbedText: string
   readonly observedText: string
   readonly isUv: boolean
-  /** Wheel sector absorbed (null when UV or Ni qualitative series). */
-  readonly wheelAbsorbed: SpectralKey | null
-  /** Wheel sector seen (null when UV or Ni qualitative series). */
-  readonly wheelSeen: SpectralKey | null
+  /** Wheel sector absorbed (null when UV). */
+  readonly wheelAbsorbed: WheelSectorKey | null
+  /** Wheel sector seen, always 180 degrees opposite wheelAbsorbed (null when UV). */
+  readonly wheelSeen: WheelSectorKey | null
   /** CSS token or colour value for the solution swatch, matching printed NCERT colour. */
   readonly swatchFill: string
   /** For Ni(II) en series only: number of en ligands (0..3) and water molecules left (6 - 2n). */
@@ -41,8 +65,8 @@ const TABLE_5_3_META: Record<
     displayFormula: string
     metalIon: string
     dCount: number
-    wheelAbsorbed: SpectralKey | null
-    wheelSeen: SpectralKey | null
+    wheelAbsorbed: WheelSectorKey | null
+    wheelSeen: WheelSectorKey | null
     swatchFill: string
     note: string
   }
@@ -60,7 +84,7 @@ const TABLE_5_3_META: Record<
     displayFormula: '[Co(NH₃)₅(H₂O)]³⁺',
     metalIon: 'Co³⁺',
     dCount: 6,
-    wheelAbsorbed: 'green',
+    wheelAbsorbed: 'blue-green',
     wheelSeen: 'red',
     swatchFill: 'var(--spec-red)',
     note: 'H₂O splits more than Cl⁻ but less than NH₃, so absorption sits at 500 nm (blue-green) and the complex looks red.',
@@ -87,17 +111,17 @@ const TABLE_5_3_META: Record<
     displayFormula: '[Cu(H₂O)₄]²⁺',
     metalIon: 'Cu²⁺',
     dCount: 9,
-    wheelAbsorbed: 'red',
+    wheelAbsorbed: 'orange',
     wheelSeen: 'blue',
     swatchFill: 'var(--ion-cu2)',
-    note: 'Absorbs red light at 600 nm and transmits its complement, blue.',
+    note: 'Absorbs red-orange light at 600 nm and transmits its complement, blue.',
   },
   'ti-h2o-6': {
     displayFormula: '[Ti(H₂O)₆]³⁺',
     metalIon: 'Ti³⁺',
     dCount: 1,
     wheelAbsorbed: 'green',
-    wheelSeen: 'violet',
+    wheelSeen: 'purple',
     swatchFill: 'var(--ion-ti3)',
     note: 'A single 3d electron jumps from t₂g¹ eg⁰ to t₂g⁰ eg¹ by absorbing 498 nm blue-green light, leaving violet.',
   },
@@ -107,8 +131,8 @@ const NI_EN_META: readonly {
   displayFormula: string
   relativeGap: number
   absorbedText: string
-  wheelAbsorbed: SpectralKey
-  wheelSeen: SpectralKey
+  wheelAbsorbed: WheelSectorKey
+  wheelSeen: WheelSectorKey
   swatchFill: string
   note: string
 }[] = [
@@ -117,7 +141,7 @@ const NI_EN_META: readonly {
     relativeGap: 0.34,
     absorbedText: 'Red region (smaller Δₒ)',
     wheelAbsorbed: 'red',
-    wheelSeen: 'green',
+    wheelSeen: 'blue-green',
     swatchFill: 'var(--ion-ni2)',
     note: 'Six water ligands give the smallest splitting in this series; the solution is green.',
   },
@@ -143,8 +167,8 @@ const NI_EN_META: readonly {
     displayFormula: '[Ni(en)₃]²⁺',
     relativeGap: 0.82,
     absorbedText: 'Yellow-green region (largest Δₒ)',
-    wheelAbsorbed: 'yellow',
-    wheelSeen: 'violet',
+    wheelAbsorbed: 'green',
+    wheelSeen: 'purple',
     swatchFill: 'var(--ion-ti3)',
     note: 'Three en ligands displace all six waters, giving the largest Δₒ in the series and a violet solution.',
   },

@@ -48,7 +48,7 @@ export function NiEnColourSeries({ step, reducedMotion }: NiEnColourSeriesProps)
 
   // Octahedron centre on the right
   const cx = 368
-  const cy = 176
+  const cy = 184
 
   // Which corners are occupied by en?
   const enCorners = new Set<number>()
@@ -60,10 +60,10 @@ export function NiEnColourSeries({ step, reducedMotion }: NiEnColourSeriesProps)
   return (
     <svg viewBox={`0 0 ${W} ${H}`} role="img" aria-label={s.ariaLabel}>
       {/* Top formula & ratio header */}
-      <text x={W / 2} y={32} textAnchor="middle" fontSize={18} fontWeight={700} fill={FG}>
+      <text x={W / 2} y={26} textAnchor="middle" fontSize={18} fontWeight={700} fill={FG}>
         {s.formulaDisplay}
       </text>
-      <text x={W / 2} y={56} textAnchor="middle" fontSize={16} fill={MUTED}>
+      <text x={W / 2} y={48} textAnchor="middle" fontSize={16} fill={MUTED}>
         {`${s.ratioLabel}  |  Waters left: ${s.waterLeft}`}
       </text>
 
@@ -163,7 +163,7 @@ export function NiEnColourSeries({ step, reducedMotion }: NiEnColourSeriesProps)
         {/* Water ligands (peel outward and fade when displaced by en) */}
         {CORNERS.map((c) => {
           const displaced = enCorners.has(c.id)
-          const mult = displaced ? 1.38 : 1
+          const mult = displaced ? 1.28 : 1
           const wx = cx + c.dx * mult
           const wy = cy + c.dy * mult
           return (

@@ -1,7 +1,7 @@
 'use client'
 
 import { useId } from 'react'
-import { SPECTRAL_KEYS, SPECTRAL_TOKEN, type SpectralKey } from '@/components/vocab/dblock'
+import { WHEEL_SECTORS, wheelSectorIndex, type WheelSectorKey } from '@/lib/chem/ligand-colour-lab'
 import { SEVEN_SPECTRAL_BANDS, cftDdStepState } from './cft-dd-colour-steps'
 
 export interface CftDdColourProps {
@@ -16,7 +16,7 @@ const FG = 'var(--fg)'
 const MUTED = 'var(--fg-muted)'
 const SURFACE = 'var(--surface)'
 
-/** Six-sector colour wheel with >= 16px labels so rendered size stays >= 14px. */
+/** Eight-sector complementary colour wheel where opposite sectors sit 180 degrees apart across the centre. */
 function CompactWheel({
   cx,
   cy,
@@ -28,64 +28,67 @@ function CompactWheel({
   cx: number
   cy: number
   radius: number
-  absorbed: SpectralKey
-  seen: SpectralKey
+  absorbed: WheelSectorKey
+  seen: WheelSectorKey
   markerId: string
 }) {
   const rad = (deg: number) => (deg * Math.PI) / 180
-  const sectorAngle = (i: number) => -60 + 60 * i
-  const labelR = radius + 20
+  const n = WHEEL_SECTORS.length
+  const stepDeg = 360 / n
+  const sectorAngle = (i: number) => -90 + stepDeg * (i + 0.5)
+  const labelR = radius + 16
+  const iAbs = wheelSectorIndex(absorbed)
+  const iSeen = wheelSectorIndex(seen)
 
   return (
     <g transform={`translate(${cx}, ${cy})`}>
-      {SPECTRAL_KEYS.map((key, i) => {
-        const a0 = rad(-90 + 60 * i)
-        const a1 = rad(-90 + 60 * (i + 1))
+      {WHEEL_SECTORS.map((sector, i) => {
+        const a0 = rad(-90 + stepDeg * i)
+        const a1 = rad(-90 + stepDeg * (i + 1))
         const x0 = radius * Math.cos(a0)
         const y0 = radius * Math.sin(a0)
         const x1 = radius * Math.cos(a1)
         const y1 = radius * Math.sin(a1)
         const d = `M0 0 L${x0.toFixed(1)} ${y0.toFixed(1)} A${radius} ${radius} 0 0 1 ${x1.toFixed(1)} ${y1.toFixed(1)} Z`
-        const isAbs = key === absorbed
-        const isSeen = key === seen
+        const isAbs = sector.key === absorbed
+        const isSeen = sector.key === seen
         return (
           <path
-            key={key}
+            key={sector.key}
             d={d}
-            fill={SPECTRAL_TOKEN[key]}
+            fill={sector.fill}
             fillOpacity={isAbs ? 0.35 : 0.9}
             stroke={isAbs || isSeen ? FG : SURFACE}
-            strokeWidth={isAbs || isSeen ? 2.5 : 1.8}
+            strokeWidth={isAbs || isSeen ? 2.5 : 1.6}
             strokeDasharray={isAbs ? '5 3' : undefined}
           />
         )
       })}
-      {SPECTRAL_KEYS.map((key, i) => {
+      {WHEEL_SECTORS.map((sector, i) => {
         const ang = sectorAngle(i)
         const c = Math.cos(rad(ang))
         const s = Math.sin(rad(ang))
         const anchor = Math.abs(c) < 0.2 ? 'middle' : c > 0 ? 'start' : 'end'
-        const isMarked = key === absorbed || key === seen
-        const shortLabel = key === 'green' && absorbed === 'green' ? 'blue-green' : key
+        const isMarked = sector.key === absorbed || sector.key === seen
         return (
           <text
-            key={`lbl-${key}`}
+            key={`lbl-${sector.key}`}
             x={(labelR * c).toFixed(1)}
-            y={(labelR * s + (s > 0.5 ? 14 : s < -0.5 ? -4 : 5)).toFixed(1)}
+            y={(labelR * s + (s > 0.65 ? 14 : s < -0.65 ? -4 : 5)).toFixed(1)}
             textAnchor={anchor}
-            fontSize={16}
+            fontSize={15}
             fontWeight={isMarked ? 700 : 400}
             fill={isMarked ? FG : MUTED}
           >
-            {shortLabel}
+            {sector.label}
           </text>
         )
       })}
       <line
-        x1={(0.58 * radius * Math.cos(rad(sectorAngle(SPECTRAL_KEYS.indexOf(absorbed))))).toFixed(1)}
-        y1={(0.58 * radius * Math.sin(rad(sectorAngle(SPECTRAL_KEYS.indexOf(absorbed))))).toFixed(1)}
-        x2={(0.58 * radius * Math.cos(rad(sectorAngle(SPECTRAL_KEYS.indexOf(seen))))).toFixed(1)}
-        y2={(0.58 * radius * Math.sin(rad(sectorAngle(SPECTRAL_KEYS.indexOf(seen))))).toFixed(1)}
+        x1={(0.58 * radius * Math.cos(rad(sectorAngle(iAbs)))).toFixed(1)}
+        y1={(0.58 * radius * Math.sin(rad(sectorAngle(iAbs)))).toFixed(1)}
+        x2={(0.58 * radius * Math.cos(rad(sectorAngle(iSeen)))).toFixed(1)}
+        y2={(0.58 * radius * Math.sin(rad(sectorAngle(iSeen)))).toFixed(1)}
         stroke={FG}
         strokeWidth={2.5}
         strokeLinecap="round"
@@ -137,12 +140,12 @@ export function CftDdColour({ step, reducedMotion }: CftDdColourProps) {
   const ligandAngles = [0, 60, 120, 180, 240, 300]
   const ligandR = s.ligandsPresent ? 40 : 68
 
-  // Sine-wave photon path from 498 nm band toward the electron in the energy diagram
-  let photonPath = 'M 200 264'
+  // Sine-wave photon path from 498 nm band toward the energy diagram, stopping cleanly left of the Delta_o bracket
+  let photonPath = 'M 202 260'
   for (let i = 1; i <= 24; i++) {
     const t = i / 24
-    const px = 200 + t * 144
-    const py = 264 - t * 88 + Math.sin(t * Math.PI * 6) * 6
+    const px = 202 + t * 104
+    const py = 260 - t * 42 + Math.sin(t * Math.PI * 6) * 5.5
     photonPath += ` L ${px.toFixed(1)} ${py.toFixed(1)}`
   }
 
@@ -441,7 +444,7 @@ export function CftDdColour({ step, reducedMotion }: CftDdColourProps) {
       {s.showPhoton && (
         <g>
           <path d={photonPath} fill="none" stroke="var(--db-ln)" strokeWidth={3} markerEnd={`url(#${photonArrowId})`} />
-          <text x={242} y={208} fontSize={16} fontWeight={700} fill="var(--db-ln)">
+          <text x={240} y={216} fontSize={16} fontWeight={700} fill="var(--db-ln)">
             hν
           </text>
         </g>
@@ -453,12 +456,12 @@ export function CftDdColour({ step, reducedMotion }: CftDdColourProps) {
           <text x={422} y={48} textAnchor="middle" fontSize={17} fontWeight={700} fill={FG}>
             Complementary colour wheel
           </text>
-          <CompactWheel cx={422} cy={176} radius={62} absorbed="green" seen="violet" markerId={arrowId} />
+          <CompactWheel cx={422} cy={174} radius={56} absorbed="green" seen="purple" markerId={arrowId} />
           <text x={422} y={292} textAnchor="middle" fontSize={16} fontWeight={600} fill={FG}>
-            Absorbed: blue-green
+            Absorbed: blue-green (498 nm)
           </text>
           <text x={422} y={318} textAnchor="middle" fontSize={16} fontWeight={600} fill={FG}>
-            Seen: violet (complement)
+            Seen: violet / purple (complement)
           </text>
         </g>
       )}

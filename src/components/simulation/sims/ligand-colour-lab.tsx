@@ -1,13 +1,15 @@
 'use client'
 
 import { useId, useState } from 'react'
-import { SPECTRAL_KEYS, SPECTRAL_TOKEN, type SpectralKey } from '@/components/vocab/dblock'
 import {
   LAB_COMPLEXES,
+  WHEEL_SECTORS,
   findLabComplex,
   formatPhotonEnergy,
   wavelengthFraction,
+  wheelSectorIndex,
   type LabComplex,
+  type WheelSectorKey,
 } from '@/lib/chem/ligand-colour-lab'
 import type { SimulationProps } from '../registry'
 import styles from './ligand-colour-lab.module.css'
@@ -17,6 +19,92 @@ const VIEW_H = 380
 const FG = 'var(--fg)'
 const MUTED = 'var(--fg-muted)'
 const SURFACE = 'var(--surface)'
+
+const SUPERSCRIPT_DIGITS: Record<string, string> = {
+  '0': '⁰',
+  '1': '¹',
+  '2': '²',
+  '3': '³',
+  '4': '⁴',
+  '5': '⁵',
+  '6': '⁶',
+  '7': '⁷',
+  '8': '⁸',
+  '9': '⁹',
+}
+
+function toSuperscript(n: number): string {
+  return String(n)
+    .split('')
+    .map((ch) => SUPERSCRIPT_DIGITS[ch] ?? ch)
+    .join('')
+}
+
+/** Ground-state t2g / eg occupation for the lab's complexes (Co3+ complexes here are low-spin d6). */
+function groundStateCounts(dCount: number): { t2g: [number, number, number]; eg: [number, number] } {
+  const t2g: [number, number, number] = [0, 0, 0]
+  const eg: [number, number] = [0, 0]
+  let rem = Math.max(0, Math.min(10, dCount))
+  // Fill t2g singly then pair (covers d1 Ti3+, low-spin d6 Co3+, d8 Ni2+, d9 Cu2+)
+  for (let i = 0; i < 3 && rem > 0; i++) {
+    t2g[i] += 1
+    rem -= 1
+  }
+  for (let i = 0; i < 3 && rem > 0; i++) {
+    t2g[i] += 1
+    rem -= 1
+  }
+  for (let i = 0; i < 2 && rem > 0; i++) {
+    eg[i] += 1
+    rem -= 1
+  }
+  for (let i = 0; i < 2 && rem > 0; i++) {
+    eg[i] += 1
+    rem -= 1
+  }
+  return { t2g, eg }
+}
+
+/** Degenerate 5-orbital Hund occupation when ligands are removed. */
+function degenerateCounts(dCount: number): number[] {
+  const boxes = [0, 0, 0, 0, 0]
+  let rem = Math.max(0, Math.min(10, dCount))
+  for (let i = 0; i < 5 && rem > 0; i++) {
+    boxes[i] += 1
+    rem -= 1
+  }
+  for (let i = 0; i < 5 && rem > 0; i++) {
+    boxes[i] += 1
+    rem -= 1
+  }
+  return boxes
+}
+
+/** Crisp vertical electron spin arrows above an orbital line at y. */
+function OrbitalElectrons({ cx, y, count }: { cx: number; y: number; count: number }) {
+  if (count <= 0) return null
+  const arrow = (x: number, up: boolean, key: string) => {
+    const yBot = y - 3
+    const yTop = y - 19
+    return (
+      <g key={key} stroke="var(--electron)" strokeWidth={2.2} strokeLinecap="round" strokeLinejoin="round" fill="none">
+        <line x1={x} y1={yBot} x2={x} y2={yTop} />
+        {up ? (
+          <path d={`M ${x - 3.2} ${yTop + 4.5} L ${x} ${yTop} L ${x + 3.2} ${yTop + 4.5}`} />
+        ) : (
+          <path d={`M ${x - 3.2} ${yBot - 4.5} L ${x} ${yBot} L ${x + 3.2} ${yBot - 4.5}`} />
+        )}
+      </g>
+    )
+  }
+  if (count === 1) return arrow(cx, true, 'up')
+  return (
+    <g>
+      {arrow(cx - 7, true, 'up')}
+      {arrow(cx + 7, false, 'down')}
+    </g>
+  )
+}
 
 /** Visible spectrum bands ordered 400 nm (violet, left) to 700 nm (red, right). */
 const VISIBLE_BANDS: readonly { key: string; startNm: number; endNm: number; colour: string }[] = [
@@ -41,65 +129,67 @@ function WheelDiagram({
   cx: number
   cy: number
   radius: number
-  absorbed: SpectralKey | null
-  seen: SpectralKey | null
+  absorbed: WheelSectorKey | null
+  seen: WheelSectorKey | null
   markerId: string
   disabled: boolean
 }) {
   const rad = (deg: number) => (deg * Math.PI) / 180
-  const sectorAngle = (i: number) => -60 + 60 * i
-  const labelR = radius + 19
+  const n = WHEEL_SECTORS.length
+  const stepDeg = 360 / n
+  const sectorAngle = (i: number) => -90 + stepDeg * (i + 0.5)
+  const labelR = radius + 14
 
   return (
     <g transform={`translate(${cx}, ${cy})`}>
-      {SPECTRAL_KEYS.map((key, i) => {
-        const a0 = rad(-90 + 60 * i)
-        const a1 = rad(-90 + 60 * (i + 1))
+      {WHEEL_SECTORS.map((sector, i) => {
+        const a0 = rad(-90 + stepDeg * i)
+        const a1 = rad(-90 + stepDeg * (i + 1))
         const x0 = radius * Math.cos(a0)
         const y0 = radius * Math.sin(a0)
         const x1 = radius * Math.cos(a1)
         const y1 = radius * Math.sin(a1)
         const d = `M0 0 L${x0.toFixed(1)} ${y0.toFixed(1)} A${radius} ${radius} 0 0 1 ${x1.toFixed(1)} ${y1.toFixed(1)} Z`
-        const isAbs = !disabled && absorbed === key
-        const isSeen = !disabled && seen === key
+        const isAbs = !disabled && absorbed === sector.key
+        const isSeen = !disabled && seen === sector.key
         return (
           <path
-            key={key}
+            key={sector.key}
             d={d}
-            fill={SPECTRAL_TOKEN[key]}
+            fill={sector.fill}
             fillOpacity={disabled ? 0.22 : isAbs ? 0.35 : 0.88}
             stroke={isAbs || isSeen ? FG : SURFACE}
-            strokeWidth={isAbs || isSeen ? 2.4 : 1.5}
+            strokeWidth={isAbs || isSeen ? 2.4 : 1.4}
             strokeDasharray={isAbs ? '5 3' : undefined}
           />
         )
       })}
-      {SPECTRAL_KEYS.map((key, i) => {
+      {WHEEL_SECTORS.map((sector, i) => {
         const ang = sectorAngle(i)
         const c = Math.cos(rad(ang))
         const s = Math.sin(rad(ang))
         const anchor = Math.abs(c) < 0.2 ? 'middle' : c > 0 ? 'start' : 'end'
-        const isMarked = !disabled && (absorbed === key || seen === key)
+        const isMarked = !disabled && (absorbed === sector.key || seen === sector.key)
         return (
           <text
-            key={`wl-${key}`}
+            key={`wl-${sector.key}`}
             x={(labelR * c).toFixed(1)}
-            y={(labelR * s + (s > 0.5 ? 14 : s < -0.5 ? -4 : 5)).toFixed(1)}
+            y={(labelR * s + (s > 0.65 ? 14 : s < -0.65 ? -4 : 5)).toFixed(1)}
             textAnchor={anchor}
             fontSize={15}
             fontWeight={isMarked ? 700 : 400}
             fill={isMarked ? FG : MUTED}
           >
-            {key}
+            {sector.label}
           </text>
         )
       })}
       {!disabled && absorbed && seen && (
         <line
-          x1={(0.58 * radius * Math.cos(rad(sectorAngle(SPECTRAL_KEYS.indexOf(absorbed))))).toFixed(1)}
-          y1={(0.58 * radius * Math.sin(rad(sectorAngle(SPECTRAL_KEYS.indexOf(absorbed))))).toFixed(1)}
-          x2={(0.58 * radius * Math.cos(rad(sectorAngle(SPECTRAL_KEYS.indexOf(seen))))).toFixed(1)}
-          y2={(0.58 * radius * Math.sin(rad(sectorAngle(SPECTRAL_KEYS.indexOf(seen))))).toFixed(1)}
+          x1={(0.58 * radius * Math.cos(rad(sectorAngle(wheelSectorIndex(absorbed))))).toFixed(1)}
+          y1={(0.58 * radius * Math.sin(rad(sectorAngle(wheelSectorIndex(absorbed))))).toFixed(1)}
+          x2={(0.58 * radius * Math.cos(rad(sectorAngle(wheelSectorIndex(seen))))).toFixed(1)}
+          y2={(0.58 * radius * Math.sin(rad(sectorAngle(wheelSectorIndex(seen))))).toFixed(1)}
           stroke={FG}
           strokeWidth={2.4}
           strokeLinecap="round"
@@ -123,11 +213,13 @@ export function LigandColourLab({ reducedMotion }: SimulationProps) {
   const tr = reducedMotion ? 'none' : 'all 340ms cubic-bezier(0.22, 1, 0.36, 1)'
 
   // Energy diagram coordinates (left side of SVG)
-  const diagX = 36
-  const baryY = 128
-  const halfGap = ligandsPresent ? Math.round(complex.relativeGap * 64) : 0
+  const diagX = 24
+  const baryY = 132
+  const halfGap = ligandsPresent ? Math.max(30, Math.round(complex.relativeGap * 58)) : 0
   const egY = baryY - halfGap
   const t2gY = baryY + halfGap
+  const occ = groundStateCounts(complex.dCount)
+  const degOcc = degenerateCounts(complex.dCount)
 
   // Spectrum strip coordinates (bottom of SVG)
   const stripX = 112
@@ -271,33 +363,38 @@ export function LigandColourLab({ reducedMotion }: SimulationProps) {
 
           {/* Left: d-orbital splitting diagram */}
           <g>
-            <text x={118} y={28} textAnchor="middle" fontSize={16} fontWeight={700} fill={FG}>
-              {ligandsPresent ? `d-orbital gap (${complex.metalIon}, d${complex.dCount})` : `${complex.metalIon} (no ligands)`}
+            <text x={110} y={28} textAnchor="middle" fontSize={16} fontWeight={700} fill={FG}>
+              {ligandsPresent ? `d-orbital gap (${complex.metalIon}, d${toSuperscript(complex.dCount)})` : `${complex.metalIon} (no ligands)`}
             </text>
 
             {ligandsPresent ? (
               <>
                 {/* eg level */}
-                <line x1={diagX + 34} y1={egY} x2={diagX + 78} y2={egY} stroke={FG} strokeWidth={3} strokeLinecap="round" style={{ transition: tr }} />
-                <line x1={diagX + 94} y1={egY} x2={diagX + 138} y2={egY} stroke={FG} strokeWidth={3} strokeLinecap="round" style={{ transition: tr }} />
-                <text x={diagX + 150} y={egY + 5} fontSize={16} fontWeight={700} fill={FG}>
+                <line x1={diagX + 30} y1={egY} x2={diagX + 74} y2={egY} stroke={FG} strokeWidth={3} strokeLinecap="round" style={{ transition: tr }} />
+                <line x1={diagX + 90} y1={egY} x2={diagX + 134} y2={egY} stroke={FG} strokeWidth={3} strokeLinecap="round" style={{ transition: tr }} />
+                <OrbitalElectrons cx={diagX + 52} y={egY} count={occ.eg[0]} />
+                <OrbitalElectrons cx={diagX + 112} y={egY} count={occ.eg[1]} />
+                <text x={diagX + 146} y={egY + 5} fontSize={16} fontWeight={700} fill={FG}>
                   eg
                 </text>
 
                 {/* t2g level */}
-                <line x1={diagX + 14} y1={t2gY} x2={diagX + 54} y2={t2gY} stroke={FG} strokeWidth={3} strokeLinecap="round" style={{ transition: tr }} />
-                <line x1={diagX + 66} y1={t2gY} x2={diagX + 106} y2={t2gY} stroke={FG} strokeWidth={3} strokeLinecap="round" style={{ transition: tr }} />
-                <line x1={diagX + 118} y1={t2gY} x2={diagX + 158} y2={t2gY} stroke={FG} strokeWidth={3} strokeLinecap="round" style={{ transition: tr }} />
-                <text x={diagX + 168} y={t2gY + 5} fontSize={16} fontWeight={700} fill={FG}>
+                <line x1={diagX + 10} y1={t2gY} x2={diagX + 50} y2={t2gY} stroke={FG} strokeWidth={3} strokeLinecap="round" style={{ transition: tr }} />
+                <line x1={diagX + 62} y1={t2gY} x2={diagX + 102} y2={t2gY} stroke={FG} strokeWidth={3} strokeLinecap="round" style={{ transition: tr }} />
+                <line x1={diagX + 114} y1={t2gY} x2={diagX + 154} y2={t2gY} stroke={FG} strokeWidth={3} strokeLinecap="round" style={{ transition: tr }} />
+                <OrbitalElectrons cx={diagX + 30} y={t2gY} count={occ.t2g[0]} />
+                <OrbitalElectrons cx={diagX + 82} y={t2gY} count={occ.t2g[1]} />
+                <OrbitalElectrons cx={diagX + 134} y={t2gY} count={occ.t2g[2]} />
+                <text x={diagX + 164} y={t2gY + 5} fontSize={16} fontWeight={700} fill={FG}>
                   t₂g
                 </text>
 
-                {/* Jump arrow */}
+                {/* Jump arrow (between t2g electrons and eg level) */}
                 <line
-                  x1={diagX + 86}
-                  y1={t2gY - 12}
-                  x2={diagX + 86}
-                  y2={egY + 12}
+                  x1={diagX + 82}
+                  y1={t2gY - 24}
+                  x2={diagX + 82}
+                  y2={egY + 8}
                   stroke={FG}
                   strokeWidth={2.2}
                   strokeDasharray="5 4"
@@ -305,29 +402,28 @@ export function LigandColourLab({ reducedMotion }: SimulationProps) {
                   style={{ transition: tr }}
                 />
 
-                {/* Electron circle */}
-                <circle cx={diagX + 34} cy={t2gY - 12} r={8} fill="var(--electron)" style={{ transition: tr }} />
-
                 {/* Delta_o label */}
-                <text x={diagX + 102} y={baryY + 5} fontSize={16} fontWeight={700} fill={FG}>
+                <text x={diagX + 96} y={baryY + 2} fontSize={16} fontWeight={700} fill={FG}>
                   Δₒ
                 </text>
               </>
             ) : (
               <>
                 {[0, 1, 2, 3, 4].map((idx) => (
-                  <line
-                    key={idx}
-                    x1={diagX + idx * 34}
-                    y1={baryY}
-                    x2={diagX + 26 + idx * 34}
-                    y2={baryY}
-                    stroke={FG}
-                    strokeWidth={3}
-                    strokeLinecap="round"
-                  />
+                  <g key={idx}>
+                    <line
+                      x1={diagX + idx * 34}
+                      y1={baryY}
+                      x2={diagX + 26 + idx * 34}
+                      y2={baryY}
+                      stroke={FG}
+                      strokeWidth={3}
+                      strokeLinecap="round"
+                    />
+                    <OrbitalElectrons cx={diagX + 13 + idx * 34} y={baryY} count={degOcc[idx]} />
+                  </g>
                 ))}
-                <text x={118} y={baryY + 34} textAnchor="middle" fontSize={15} fill={MUTED}>
+                <text x={110} y={baryY + 34} textAnchor="middle" fontSize={15} fill={MUTED}>
                   5 degenerate d orbitals (Δₒ = 0)
                 </text>
               </>
@@ -336,20 +432,20 @@ export function LigandColourLab({ reducedMotion }: SimulationProps) {
 
           {/* Middle: Colour wheel */}
           <g>
-            <text x={338} y={28} textAnchor="middle" fontSize={16} fontWeight={700} fill={FG}>
+            <text x={344} y={28} textAnchor="middle" fontSize={16} fontWeight={700} fill={FG}>
               Colour wheel
             </text>
             <WheelDiagram
-              cx={338}
+              cx={344}
               cy={124}
-              radius={52}
+              radius={46}
               absorbed={complex.wheelAbsorbed}
               seen={complex.wheelSeen}
               markerId={arrowId}
               disabled={!ligandsPresent || complex.isUv}
             />
             {(!ligandsPresent || complex.isUv) && (
-              <text x={338} y={232} textAnchor="middle" fontSize={15} fill={MUTED}>
+              <text x={344} y={232} textAnchor="middle" fontSize={15} fill={MUTED}>
                 {!ligandsPresent ? 'No visible absorption' : 'UV band (off visible wheel)'}
               </text>
             )}
@@ -357,11 +453,11 @@ export function LigandColourLab({ reducedMotion }: SimulationProps) {
 
           {/* Right: Swatch of colour seen */}
           <g>
-            <text x={516} y={28} textAnchor="middle" fontSize={16} fontWeight={700} fill={FG}>
+            <text x={522} y={28} textAnchor="middle" fontSize={16} fontWeight={700} fill={FG}>
               Colour seen
             </text>
             <rect
-              x={468}
+              x={474}
               y={54}
               width={96}
               height={118}
@@ -371,10 +467,10 @@ export function LigandColourLab({ reducedMotion }: SimulationProps) {
               strokeWidth={2}
               style={{ transition: tr }}
             />
-            <text x={516} y={196} textAnchor="middle" fontSize={15} fontWeight={700} fill={FG}>
+            <text x={522} y={196} textAnchor="middle" fontSize={15} fontWeight={700} fill={FG}>
               {ligandsPresent ? complex.observedText : 'Colourless'}
             </text>
-            <text x={516} y={218} textAnchor="middle" fontSize={15} fill={MUTED}>
+            <text x={522} y={218} textAnchor="middle" fontSize={15} fill={MUTED}>
               {complex.source === 'table-5-3' ? 'Table 5.3' : 'Ni + en'}
             </text>
           </g>
