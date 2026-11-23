@@ -31,7 +31,7 @@ The walk-through below follows one acid through this reaction, then shows a clos
   Now take 2,2-dimethylpropanoic acid, whose α-carbon carries three methyl groups and no hydrogen at all. Bromine and red phosphorus are added exactly as before, but the drawing shows no new bromine on the chain, because there is no α-hydrogen to replace. The reaction has nothing to act on, so the flask stays as it was.
   </Step>
   <Step>
-  Benzoic acid is drawn as a hexagon with the COOH group hanging from one corner. With a nitrating mixture, nitric acid and sulfuric acid, an NO₂ group enters the ring. It lands on the carbon meta to the carboxyl group, the third position counted from COOH, and the product is 3-nitrobenzoic acid. The ortho and para positions are shown faded to show they were not chosen.
+  Benzoic acid is drawn as a hexagon with the COOH group hanging from one corner. With a nitrating mixture, nitric acid and sulphuric acid, an NO₂ group enters the ring. It lands on the carbon meta to the carboxyl group, carbon 3 when the carbon carrying COOH is counted as 1, and the product is 3-nitrobenzoic acid. The ortho and para positions are shown faded to show they were not chosen.
   </Step>
   <Step>
   Next, try a Friedel–Crafts reaction on benzoic acid, with CH₃Cl and AlCl₃. The aluminium chloride is drawn bonding to an oxygen of the COOH group, with an arrow from that oxygen's lone pair to aluminium. The ring is left bare: no methyl group is added, and a cross marks the attempted reaction. The Lewis acid is tied up at the carboxyl group, so it is not free to work on the ring.
@@ -41,7 +41,7 @@ The walk-through below follows one acid through this reaction, then shows a clos
   </Step>
 </Scrolly>
 
-In the equation, the butanoic acid and the product appear with the reagents over the arrow:
+As an equation:
 
 $$
 \ce{CH3CH2CH2COOH + Br2 ->[red P] CH3CH2CHBrCOOH + HBr}
@@ -57,7 +57,7 @@ $$
 \ce{C6H5COOH + HNO3 ->[H2SO4] C6H4(NO2)COOH + H2O}
 $$
 
-The same group that steers the nitration also blocks the Friedel–Crafts reaction. The catalyst, aluminium chloride, is a Lewis acid, and it binds to the carboxyl group instead of activating the ring. Because of this, the Friedel–Crafts reaction does not take place on the ring.
+The same group also blocks the Friedel–Crafts reaction, for two reasons. The carboxyl group deactivates the ring, and the catalyst, aluminium chloride, is a Lewis acid that binds to the carboxyl group. Together these stop the Friedel–Crafts reaction on the ring.
 
 ## Where the acids are used
 
@@ -73,29 +73,34 @@ In the bench below, choose an acid and a reaction. Try one acid with two α-hydr
 
 <Check
   n={1}
-  options={["2-bromobutanoic acid", "4-bromobutanoic acid", "butanoyl bromide"]}
+  options={["2-bromobutanoic acid", "3-bromobutanoic acid", "4-bromobutanoic acid", "butanoyl bromide"]}
   answer={0}
-  explanation="Only the hydrogen on the carbon beside COOH is replaced by bromine. The bromine does not move to the far end of the chain, and the COOH group stays as it is."
+  explanation="Only a hydrogen on the α-carbon, the carbon beside COOH, is replaced by bromine, so the bromine sits on carbon 2. Carbons 3 and 4 are not touched, and the COOH group stays as it is, so no acyl bromide forms."
 >
 Butanoic acid is treated with bromine and a little red phosphorus. Which compound forms?
 </Check>
 
 <Check
   n={2}
-  options={["Butanoic acid", "2,2-dimethylpropanoic acid", "Propanoic acid"]}
+  options={["Butanoic acid", "2,2-dimethylpropanoic acid", "Propanoic acid", "Ethanoic acid"]}
   answer={1}
-  explanation="2,2-dimethylpropanoic acid has no hydrogen on its α-carbon, so there is nothing to replace. Butanoic and propanoic acids both have α-hydrogens and are halogenated at the α-position."
+  explanation="2,2-dimethylpropanoic acid has no hydrogen on its α-carbon, so there is nothing to replace. Butanoic, propanoic and ethanoic acids all have α-hydrogens and are halogenated at the α-position."
 >
 Which of these acids would not be halogenated at the α-position under these conditions?
 </Check>
 
 <Check
   n={3}
-  options={["ortho to COOH", "meta to COOH", "para to COOH"]}
-  answer={1}
-  explanation="The carboxyl group is deactivating and meta-directing, so the nitro group enters the meta position, which gives 3-nitrobenzoic acid."
+  options={[
+    "The carboxyl group deactivates the ring, and AlCl₃ binds to the carboxyl group",
+    "Benzoic acid has no hydrogen left on its ring",
+    "The COOH group directs the methyl group to the meta position only",
+    "CH₃Cl reacts with the COOH group to make an ester instead"
+  ]}
+  answer={0}
+  explanation="Both parts of the reason matter: the carboxyl group makes the ring less reactive, and the Lewis acid AlCl₃ is tied up at the carboxyl group, so it cannot help the alkyl halide attack the ring. The ring still has five hydrogens, and meta-direction would decide where a group goes, not whether the reaction happens."
 >
-Benzoic acid is nitrated in a nitrating mixture. Where does the NO₂ group go relative to the COOH group?
+Benzoic acid does not undergo the Friedel–Crafts reaction with CH₃Cl and AlCl₃. Why?
 </Check>
 
 <KeyIdeas>
