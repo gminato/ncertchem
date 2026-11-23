@@ -62,14 +62,14 @@ Working with $K_a$ values is awkward, because they run over many powers of ten. 
 
 A carboxylic acid is weaker than a mineral acid such as hydrochloric acid, yet it is a stronger acid than an alcohol or a simple phenol. Phenol, with $pK_a$ near 10, is a weak acid. Ethanol, whose $pK_a$ is about 16, is extremely weak.
 
-The difference is in the conjugate base. Acetate can be drawn in two resonance forms that are exactly equivalent, and in both of them the negative charge sits on an oxygen atom, which is the more electronegative element. Phenoxide has a charge that can be placed only on ring carbons, and those forms are not equivalent. Acetate spreads its charge over two oxygens, whereas phenoxide spreads it over one oxygen and several less electronegative carbons. The more stable the conjugate base, the stronger the acid.
+The difference is in the conjugate base. Acetate can be drawn in two resonance forms that are exactly equivalent, and in both of them the negative charge sits on an oxygen atom, which is the more electronegative element. In phenoxide the charge sits on the oxygen in one form and on ring carbons in the others, and those forms are not equivalent. Acetate spreads its charge over two oxygens, whereas phenoxide spreads it over one oxygen and several less electronegative carbons. The more stable the conjugate base, the stronger the acid.
 
 <Scrolly animation="acid-strength">
   <Step>
   Two acetic acid molecules face each other. The O–H hydrogen of each sits close to the C=O oxygen of the other, and two dashed lines join each pair into a ring. This pair is a dimer. The drawing shows only the pairing and the hydrogen bonds, and the molecules keep their own carbon skeletons.
   </Step>
   <Step>
-  The acid gives up its proton to water. A curved arrow starts at the O–H bond and ends at the water oxygen, which becomes H₃O⁺, and the acetate ion CH₃COO⁻ is left behind. A double arrow shows that the reaction runs both ways. A smaller $pK_a$, found from −log $K_a$, marks a stronger acid.
+  The acid gives up its proton to water. One curved arrow starts at a lone pair on the water oxygen and ends on the acid's O–H hydrogen; a second runs from the O–H bond onto the acid's oxygen. Water becomes H₃O⁺, and the acetate ion CH₃COO⁻ is left behind. A double arrow shows that the reaction runs both ways. A smaller $pK_a$, found from −log $K_a$, marks a stronger acid.
   </Step>
   <Step>
   The acetate ion has two oxygen atoms, and its negative charge can sit on either one. The two resonance forms are equivalent, so the charge is shared equally between the two oxygen atoms. Both forms are drawn, joined by a double-headed arrow, and the charge is never shown on one oxygen alone.
@@ -85,7 +85,7 @@ The difference is in the conjugate base. Acetate can be drawn in two resonance f
   </Step>
 </Scrolly>
 
-Attaching a phenyl ring directly to the carboxyl carbon makes the acid stronger, even though resonance would normally be expected to push the effect the other way. NCERT gives the reason: the carbon of the ring is sp² hybridised, and an sp² carbon is more electronegative than an sp³ carbon, so the carboxyl group sits on a more electron-pulling framework. That is why benzoic acid sits above acetic acid in the strip.
+Attaching a phenyl ring directly to the carboxyl carbon makes the acid stronger, even though resonance would normally be expected to push the effect the other way. The reason is that the ring carbon is sp² hybridised, and an sp² carbon is more electronegative than an sp³ carbon, so the carboxyl group sits on a more electron-pulling framework. That is why benzoic acid sits above acetic acid in the strip.
 
 Ring substituents act in the same direction on benzoic acid. An electron-withdrawing nitro group on the ring makes the acid stronger, and an electron-donating methoxy group makes it weaker. The effect is visible on a scale that uses $pK_a$ values alone.
 
@@ -97,20 +97,25 @@ In the simulation below, put an acid on the $pK_a$ ruler, compare it with hydroc
 
 <Check
   n={1}
-  options={["Phenol", "Benzoic acid", "4-Methoxybenzoic acid"]}
-  answer={1}
-  explanation="Benzoic acid has the smallest pKa of the three, 4.19, so it is the strongest. The methoxy group donates electrons to the ring and weakens the acid slightly, giving 4.46. Phenol, at 10, is far weaker than either carboxylic acid."
+  options={["2,2-dichloroethanoic acid (CHCl₂COOH)", "2-chloroethanoic acid (ClCH₂COOH)", "ethanoic acid (CH₃COOH)", "propanoic acid (CH₃CH₂COOH)"]}
+  answer={0}
+  explanation="Chlorine withdraws electron density and stabilises the carboxylate ion, so each chlorine on the α-carbon strengthens the acid. Two chlorines withdraw more than one. Ethanoic acid has none, and the extra CH₃ of propanoic acid donates electrons, which makes it the weakest of the four."
 >
-Which of these three is the strongest acid: phenol, benzoic acid or 4-methoxybenzoic acid?
+Which of these is the strongest acid?
 </Check>
 
 <Check
   n={2}
-  options={["3-Nitrobenzoic acid", "4-Methoxybenzoic acid"]}
+  options={[
+    "Its carboxylate ion is stabilised by two equivalent resonance forms with the charge on oxygen",
+    "It has more hydrogen atoms to give away than phenol",
+    "Its O–H bond is shorter than phenol's",
+    "Phenol has no O–H group"
+  ]}
   answer={0}
-  explanation="The nitro group is electron-withdrawing. It pulls electron density out of the ring and stabilises the carboxylate, so the acid is stronger. The methoxy group is electron-donating and destabilises the carboxylate, so it is the weaker acid."
+  explanation="An acid is stronger when its conjugate base is more stable. The carboxylate ion shares its charge equally over two oxygen atoms in two equivalent forms, while phenoxide's forms are not equivalent and most put the charge on less electronegative ring carbons. So a carboxylic acid is strong enough to release CO₂ from NaHCO₃, and phenol is not."
 >
-Which is the stronger acid: 3-nitrobenzoic acid or 4-methoxybenzoic acid?
+Benzoic acid fizzes with sodium hydrogencarbonate, but phenol does not. Which statement explains this?
 </Check>
 
 <Check
