@@ -174,6 +174,9 @@ import { GeometricalIsomerBuilder } from './c12-unit5/isomerism/GeometricalIsome
 import { ChiralityMirror } from './c12-unit5/isomerism/ChiralityMirror'
 import { StructuralIsomerSwaps } from './c12-unit5/isomerism/StructuralIsomerSwaps'
 import { VbtHybridisation } from './c12-unit5/vbt/VbtHybridisation'
+import { CftOctahedralSplitting } from './c12-unit5/cft/CftOctahedralSplitting'
+import { CftHighLowSpin } from './c12-unit5/cft/CftHighLowSpin'
+import { CftTetrahedralSplitting } from './c12-unit5/cft/CftTetrahedralSplitting'
 
 /**
  * Animations available to a Scrolly Animation, keyed by the `animation` prop.
@@ -358,6 +361,9 @@ export const animations = {
   'chirality-mirror': ChiralityMirror,
   'structural-isomer-swaps': StructuralIsomerSwaps,
   'vbt-hybridisation': VbtHybridisation,
+  'cft-octahedral-splitting': CftOctahedralSplitting,
+  'cft-high-low-spin': CftHighLowSpin,
+  'cft-tetrahedral-splitting': CftTetrahedralSplitting,
 } as const
 
 export type AnimationName = keyof typeof animations
