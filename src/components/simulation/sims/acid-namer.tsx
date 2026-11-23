@@ -29,7 +29,7 @@ const SUBSTITUENTS: { value: Substituent; label: string }[] = [
   { value: 'Cl', label: 'Cl' },
 ]
 
-const DRAW_SCALE = 40
+const DRAW_SCALE = 62
 
 export function AcidNamer() {
   const [spec, setSpec] = useState<AcidSpec>(DEFAULT_SPEC)
@@ -55,7 +55,7 @@ export function AcidNamer() {
             graph={model.graph}
             scale={DRAW_SCALE}
             x={280}
-            y={186}
+            y={176}
             locants={model.locantAtoms.map((l) => ({ atom: l.atom, label: l.label }))}
             highlightAtoms={[model.carboxylAtom]}
           />

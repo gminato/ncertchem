@@ -1,5 +1,8 @@
 import { describe, expect, it } from 'vitest'
-import { acidModel, DEFAULT_SPEC, maxPosition, resolveSpec, type AcidSpec } from './acid-namer'
+import { acidModel, condensedChain, DEFAULT_SPEC, maxPosition, resolveSpec, type AcidSpec } from './acid-namer'
+import { lonePairPoint } from '@/components/organic/frame'
+import { skeletalFrame } from '@/components/organic/SkeletalFormula'
+import { freeAngle } from '@/components/organic/layout'
 
 const chain = (carbons: number, substituent: AcidSpec['substituent'] = 'none', position = 2, diacid = false): AcidSpec => ({
   skeleton: 'chain',
@@ -83,5 +86,68 @@ describe('every control combination', () => {
             count++
           }
     expect(count).toBe(6 * 3 * 5 * 2)
+  })
+})
+
+describe('condensedChain: the line under the name', () => {
+  const cond = (spec: Partial<AcidSpec>) => condensedChain({ ...chain(3), ...spec } as AcidSpec)
+
+  it('reads from the COOH end, with the branch in brackets', () => {
+    expect(cond({ carbons: 3 })).toBe('CH3CH2COOH')
+    expect(cond({ carbons: 3, substituent: 'CH3', position: 2 })).toBe('CH3CH(CH3)COOH')
+    expect(cond({ carbons: 3, substituent: 'Cl', position: 2 })).toBe('CH3CH(Cl)COOH')
+    expect(cond({ carbons: 5, substituent: 'CH3', position: 3 })).toBe('CH3CH2CH(CH3)CH2COOH')
+    expect(cond({ carbons: 1 })).toBe('HCOOH')
+  })
+
+  it('writes a second COOH at the start and the end of the chain', () => {
+    expect(cond({ carbons: 2, diacid: true })).toBe('HOOCCOOH')
+    expect(cond({ carbons: 6, substituent: 'Cl', position: 3, diacid: true })).toBe('HOOCCH2CH(Cl)CH2CH2COOH')
+  })
+
+  it('writes a branch on the terminal carbon as the longer chain it makes', () => {
+    expect(cond({ carbons: 3, substituent: 'CH3', position: 3 })).toBe('CH3CH2CH2COOH')
+    expect(cond({ carbons: 3, substituent: 'Cl', position: 3 })).toBe('ClCH2CH2COOH')
+  })
+
+  it('has as many carbons as the formula, for chain lengths 3 to 6 with and without each substituent', () => {
+    for (let carbons = 3; carbons <= 6; carbons++) {
+      for (const substituent of ['none', 'CH3', 'Cl'] as const) {
+        for (const diacid of [false, true]) {
+          for (let position = 2; position <= maxPosition({ ...chain(carbons), diacid }); position++) {
+            const spec = { ...chain(carbons, substituent, position, diacid) }
+            const m = acidModel(spec)
+            const formulaC = Number(/C(?!l)(\d*)/.exec(m.formula)?.[1] || 1)
+            const lineC = (m.condensed ?? '').replace(/Cl/g, '').match(/C/g)?.length ?? 0
+            expect(lineC, `${m.name}: ${m.condensed}`).toBe(formulaC)
+          }
+        }
+      }
+    }
+  })
+})
+
+describe('locant numbers sit beside their own carbons', () => {
+  // Same scale as the simulation drawing (DRAW_SCALE), with the label placed as SkeletalFormula places it.
+  it('each locant is nearest to the carbon it numbers, for every chain acid', () => {
+    for (let carbons = 2; carbons <= 6; carbons++) {
+      for (const substituent of ['none', 'CH3', 'Cl'] as const) {
+        for (const diacid of [false, true]) {
+          for (let position = 2; position <= maxPosition({ ...chain(carbons), diacid }); position++) {
+            const m = acidModel(chain(carbons, substituent, position, diacid))
+            const frame = skeletalFrame(m.graph, 62)
+            for (const { atom, label } of m.locantAtoms) {
+              const th = freeAngle(frame.points, frame.adj, atom, [])
+              const at = lonePairPoint(frame.points[atom], th, 0.66 * 62)
+              const nearest = frame.points.reduce(
+                (best: number, p: { x: number; y: number }, i: number) => (Math.hypot(p.x - at.x, p.y - at.y) < Math.hypot(frame.points[best].x - at.x, frame.points[best].y - at.y) ? i : best),
+                0,
+              )
+              expect(nearest, `${m.name} locant ${label}`).toBe(atom)
+            }
+          }
+        }
+      }
+    }
   })
 })

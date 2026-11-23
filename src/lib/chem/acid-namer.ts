@@ -5,7 +5,7 @@
  * offered: the namer cannot name every substituted benzoic acid (R24), so only the table's benzoic and phthalic acids appear.
  */
 import { TABLE_8_3_ACIDS, unit8Name } from './ncert-c12-unit8-data'
-import { canonicalKey, molecularFormula, parseSmiles, toCondensed } from './molecule-parse'
+import { canonicalKey, molecularFormula, parseSmiles } from './molecule-parse'
 import type { MolGraph } from './molecule-graph'
 
 export type Skeleton = 'chain' | 'ring'
@@ -111,6 +111,33 @@ function buildRing(spec: AcidSpec): Built {
   }
 }
 
+/**
+ * Condensed formula of a chain acid, read from the COOH end: CH3CH2CH(CH3)CH2COOH, or HOOCCH2CH(Cl)CH2COOH when
+ * there are two COOH groups. Digits are written plain; the simulation turns them into subscripts.
+ */
+export function condensedChain(spec: AcidSpec): string {
+  const n = spec.carbons
+  const sub = spec.substituent
+  const branch = sub === 'CH3' ? 'CH3' : 'Cl'
+  const middle = (k: number) => (k === spec.position && sub !== 'none' ? `CH(${branch})` : 'CH2')
+  if (spec.diacid) {
+    let text = 'HOOC'
+    for (let k = 2; k <= n - 1; k++) text += middle(k)
+    return `${text}COOH`
+  }
+  if (n === 1) return 'HCOOH'
+  let text = ''
+  let k = n - 1
+  if (sub !== 'none' && spec.position === n) {
+    // A branch on the terminal carbon makes the terminal CH2 part of the longer chain it forms with the branch.
+    text = sub === 'CH3' ? 'CH3CH2' : 'ClCH2'
+  } else {
+    text = 'CH3'
+  }
+  for (; k >= 2; k--) text += middle(k)
+  return `${text}COOH`
+}
+
 function commonNameOf(smiles: string): string | null {
   const key = canonicalKey(parseSmiles(smiles))
   const row = TABLE_8_3_ACIDS.find((r) => canonicalKey(parseSmiles(r.smiles)) === key)
@@ -129,7 +156,7 @@ export function acidModel(input: AcidSpec): AcidModel {
     formula: molecularFormula(graph),
     name: unit8Name(built.smiles),
     commonName: commonNameOf(built.smiles),
-    condensed: spec.skeleton === 'chain' ? toCondensed(graph) : null,
+    condensed: spec.skeleton === 'chain' ? condensedChain(spec) : null,
     locantAtoms: built.locants,
     carboxylAtom: built.carboxyl,
     chainAtoms: built.chainAtoms,

@@ -39,7 +39,6 @@ interface Pt {
 }
 
 const mid = (a: Pt, b: Pt): Pt => ({ x: (a.x + b.x) / 2, y: (a.y + b.y) / 2 })
-const along = (a: Pt, b: Pt, t: number): Pt => ({ x: a.x + (b.x - a.x) * t, y: a.y + (b.y - a.y) * t })
 
 /** A drawn molecule at a centre (cx, cy), with the same frame used for its arrows and arcs. */
 function Mol({
@@ -117,7 +116,7 @@ function Step1() {
   )
 }
 
-const S2 = 50
+const S2 = 70
 
 /** Step 2: the neutral form, the charge-separated form, and the two curved arrows between them. */
 function Step2() {
@@ -132,7 +131,7 @@ function Step2() {
     <g>
       <g transform={`translate(${ax} ${ay})`}>
         <CurvedArrow from={lone} to={mid(P[1], P[2])} gap={6} />
-        <CurvedArrow from={mid(P[1], P[3])} to={along(P[1], P[3], 0.66)} gap={4} />
+        <CurvedArrow from={mid(P[1], P[3])} to={lonePairPoint(P[3], -Math.PI / 4, 18)} gap={4} bend={0.5} />
       </g>
       <Mol smiles={RESONANCE_NEUTRAL} cx={ax} cy={ay} scale={S2} />
       <Mol smiles={RESONANCE_ZWITTERION} cx={bx} cy={ay} scale={S2} />
