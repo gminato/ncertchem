@@ -45,6 +45,17 @@ describe('Complex Application Explorer model', () => {
     }
   })
 
+  it('keeps SVG entity labels concise without mid-word truncation while preserving full display names', () => {
+    for (const u of EXPLORER_USES) {
+      const svgLabel = u.svgEntityLabel ?? u.entityDisplay
+      expect(svgLabel.length).toBeLessThanOrEqual(20)
+      expect(svgLabel).not.toContain('...')
+    }
+    const b12 = explorerUseById('b12')
+    expect(b12.entityDisplay).toBe('Vitamin B₁₂ (cyanocobalamine)')
+    expect(b12.svgEntityLabel).toBe('Vitamin B₁₂')
+  })
+
   it('contains no em or en dashes', () => {
     expect(JSON.stringify(EXPLORER_USES)).not.toMatch(/[\u2013\u2014]/)
     expect(JSON.stringify(COMPLEX_EFFECTS)).not.toMatch(/[\u2013\u2014]/)

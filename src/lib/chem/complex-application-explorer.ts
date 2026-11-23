@@ -47,6 +47,8 @@ export interface ExplorerUse {
   readonly metalLabel: string
   readonly ligandLabel: string
   readonly entityDisplay: string
+  /** Optional concise label for the SVG stage when entityDisplay is long. */
+  readonly svgEntityLabel?: string
   readonly effect: ComplexEffect
   readonly whyNeeded: string
   /** Motif hint for the SVG stage. */
@@ -158,6 +160,7 @@ export const EXPLORER_USES: readonly ExplorerUse[] = [
     metalLabel: 'Co',
     ligandLabel: 'Corrin ring',
     entityDisplay: 'Vitamin B₁₂ (cyanocobalamine)',
+    svgEntityLabel: 'Vitamin B₁₂',
     effect: 'hiding',
     whyNeeded: 'Cobalt coordinated inside vitamin B12 serves as the anti-pernicious anaemia factor.',
     motif: 'ring',

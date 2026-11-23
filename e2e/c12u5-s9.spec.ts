@@ -117,6 +117,15 @@ test.describe('Section 5.7 Desktop (1280x800)', () => {
     expect(await svgOutOfBounds(page, `[data-simulation="${SIM}"]`)).toEqual([])
     expect(await smallTextLeaves(page, `[data-simulation="${SIM}"]`, 14)).toEqual([])
 
+    // Select Vitamin B12 and verify clean SVG label (no truncation) and full readout
+    await sim.getByRole('button', { name: 'Vitamin B12' }).click()
+    await expect(sim.locator('[aria-live="polite"]')).toContainText('Vitamin B₁₂ (cyanocobalamine)')
+    await expect(sim.locator('svg[role="img"]')).toContainText('Vitamin B₁₂')
+    await expect(sim.locator('svg[role="img"]')).not.toContainText('...')
+    await sim.screenshot({ path: 'test-results/screens/c12u5-s9-sim-b12-desktop.png' })
+    expect(await svgOutOfBounds(page, `[data-simulation="${SIM}"]`)).toEqual([])
+    expect(await smallTextLeaves(page, `[data-simulation="${SIM}"]`, 14)).toEqual([])
+
     // Select Gold extraction
     await sim.getByRole('button', { name: 'Gold extraction' }).click()
     await expect(sim.locator('[aria-live="polite"]')).toContainText('[Au(CN)₂]⁻')
@@ -135,6 +144,15 @@ test.describe('Section 5.7 Desktop (1280x800)', () => {
     await sim.screenshot({ path: 'test-results/screens/c12u5-s9-sim-quiz-desktop.png' })
     await sim.locator('[aria-label="Entity choices"] button').first().click()
     await expect(sim.getByRole('button', { name: 'Next application' })).toBeVisible()
+
+    // Capture Step 5 prose (KaTeX formulas in Scrolly steps) and Key Ideas
+    await steps.nth(4).scrollIntoViewIfNeeded()
+    await steps.nth(4).screenshot({ path: 'test-results/screens/c12u5-s9-step5-prose-desktop.png' })
+    const keyIdeas = page.locator('aside, section').filter({ hasText: 'stability constants of their EDTA complexes' }).last()
+    if ((await keyIdeas.count()) > 0) {
+      await keyIdeas.scrollIntoViewIfNeeded()
+      await keyIdeas.screenshot({ path: 'test-results/screens/c12u5-s9-keyideas-desktop.png' })
+    }
 
     // No KaTeX errors and no console/page errors
     await expect(page.locator('.katex-error')).toHaveCount(0)

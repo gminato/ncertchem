@@ -146,7 +146,7 @@ function EntityDiagram({ use, hidden }: { use: ExplorerUse; hidden: boolean }) {
       </text>
 
       <text x={cx} y={178} textAnchor="middle" fontSize={15} fontWeight={700} fill="var(--fg)">
-        {use.entityDisplay.length > 22 ? `${use.entityDisplay.slice(0, 20)}...` : use.entityDisplay}
+        {use.svgEntityLabel ?? use.entityDisplay}
       </text>
     </g>
   )
