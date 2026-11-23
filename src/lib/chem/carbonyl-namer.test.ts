@@ -136,3 +136,15 @@ describe('locant placement', () => {
     expect(problems).toEqual([])
   })
 })
+
+describe('buildChain atom indices with a substituent', () => {
+  it('every recorded chain carbon is a carbon atom, after any substituent', async () => {
+    const { parseSmiles } = await import('./molecule-parse')
+    for (const substituent of ['methyl', 'chloro', 'bromo', 'methoxy'] as const) {
+      const built = buildChain({ n: 5, carbonyl: 1, substituent, at: 3 })
+      const g = parseSmiles(built.smiles)
+      for (const c of built.carbons) expect(g.atoms[c].element).toBe('C')
+      expect(new Set(built.carbons).has(built.substituentAtom as number)).toBe(false)
+    }
+  })
+})

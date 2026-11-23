@@ -84,6 +84,8 @@ const SUB_SMILES: Record<SubstituentKind, string> = {
   methoxy: '(OC)',
 }
 
+const SUB_ATOMS: Record<SubstituentKind, number> = { none: 0, methyl: 1, chloro: 1, bromo: 1, methoxy: 2 }
+
 /** Writes the chain as SMILES and records where each atom lands, so the drawing can number the chain. */
 export function buildChain(m: ChainModel): BuiltChain {
   if (!carbonylPositions(m.n).includes(m.carbonyl)) throw new RangeError(`carbonyl position ${m.carbonyl} is not valid for C${m.n}`)
@@ -110,6 +112,8 @@ export function buildChain(m: ChainModel): BuiltChain {
     if (hasSub && i === m.at) {
       smiles += SUB_SMILES[m.substituent]
       substituentAtom = idx
+      // Skip the substituent's own atoms (Cl, Br, the methyl C; O and C of methoxy), so later carbons keep their indices.
+      idx += SUB_ATOMS[m.substituent]
     }
   }
   const carbonylCarbon = carbons[m.carbonyl - 1]
@@ -167,7 +171,7 @@ export const RING_OPTIONS: readonly RingOption[] = [
 ]
 
 /** Distance from a vertex to its locant, in drawing units. */
-export const LOCANT_OFFSET = 14
+export const LOCANT_OFFSET = 22
 
 /**
  * Where a locant goes: LOCANT_OFFSET units out from its own vertex, along the bisector of the widest free
