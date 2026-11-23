@@ -94,8 +94,22 @@ function PushArrow({ from, to }: { from: Point; to: Point }) {
   )
 }
 
-/** Reaction arrow drawn with a plain line, one head or two. */
-function ReactionArrow({ x1, y1, x2, y2, double = false }: { x1: number; y1: number; x2: number; y2: number; double?: boolean }) {
+/** Reaction arrow drawn with a plain line; `equilibrium` draws the two opposed harpoons of an equilibrium (horizontal only). */
+function ReactionArrow({ x1, y1, x2, y2, equilibrium = false }: { x1: number; y1: number; x2: number; y2: number; equilibrium?: boolean }) {
+  if (equilibrium) {
+    const head = (tip: number, dir: 1 | -1, yy: number) => {
+      const bx = tip - 11 * dir
+      return `M${bx},${yy - 6} L${tip},${yy} L${bx},${yy + 6}`
+    }
+    return (
+      <g stroke={INK} strokeWidth={2} fill="none" strokeLinecap="round">
+        <line x1={x1} x2={x2 - 2} y1={y1 - 4} y2={y1 - 4} />
+        <path d={head(x2, 1, y1 - 4)} />
+        <line x1={x2} x2={x1 + 2} y1={y1 + 4} y2={y1 + 4} />
+        <path d={head(x1, -1, y1 + 4)} />
+      </g>
+    )
+  }
   const h = (tx: number, ty: number, dir: 1 | -1) => {
     const d = Math.hypot(x2 - x1, y2 - y1) || 1
     const ux = ((x2 - x1) / d) * dir
@@ -108,7 +122,6 @@ function ReactionArrow({ x1, y1, x2, y2, double = false }: { x1: number; y1: num
     <g stroke={INK} fill={INK}>
       <line x1={x1} y1={y1} x2={x2} y2={y2} strokeWidth={2} />
       <polygon points={h(x2, y2, 1)} stroke="none" />
-      {double ? <polygon points={h(x1, y1, -1)} stroke="none" /> : null}
     </g>
   )
 }
@@ -181,9 +194,9 @@ function Protonation() {
       <Label x={a.x} y={a.y + 6} size={22}>A</Label>
       <CurvedArrow from={lp} to={{ x: h.x - 6, y: h.y - 14 }} bend={0.3} gap={6} />
       <CurvedArrow from={bondAnchor({ x: h.x + 14, y: h.y }, { x: a.x - 14, y: a.y })} to={{ x: a.x - 8, y: a.y - 12 }} bend={0.6} gap={2} />
-      <Label x={a.x + 4} y={a.y - 40} size={18}>A⁻</Label>
       <ReactionArrow x1={230} y1={350} x2={330} y2={350} />
       <Sketch smiles={CYANOHYDRIN_SMILES} cx={440} cy={350} scale={58} />
+      <Label x={543} y={356} size={18}>+ A⁻</Label>
       <Caption>Neutral product: CH₃CH(OH)CN</Caption>
     </g>
   )
@@ -223,7 +236,7 @@ function NamedAdditions() {
       <Label x={270} y={112} size={18}>HCN, base</Label>
       <Sketch smiles={CYANOHYDRIN_SMILES} cx={440} cy={130} scale={46} />
       <Sketch smiles={ETHANAL_SMILES} cx={110} cy={330} scale={46} />
-      <ReactionArrow x1={180} y1={330} x2={330} y2={330} double />
+      <ReactionArrow x1={180} y1={330} x2={330} y2={330} equilibrium />
       <Label x={255} y={312} size={18}>NaHSO₃</Label>
       <Label x={456} y={336} size={18}>{ADDUCT_TEXT}</Label>
       <Caption>Nucleophile first, then a proton</Caption>
