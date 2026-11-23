@@ -56,7 +56,7 @@ function ReactionArrow({ x1, x2, y, above, below }: { x1: number; x2: number; y:
       <line x1={x1} y1={y} x2={x2 - 8} y2={y} stroke={MUTED} strokeWidth={2} />
       <polygon points={`${x2},${y} ${x2 - 11},${y - 5} ${x2 - 11},${y + 5}`} fill={MUTED} />
       {above ? (
-        <text x={mid} y={y - 12} textAnchor="middle" fontSize={14} fill={INK}>
+        <text x={mid} y={y - 26} textAnchor="middle" fontSize={14} fill={INK}>
           {above}
         </text>
       ) : null}
@@ -96,9 +96,12 @@ function StepHvz() {
   return (
     <g>
       <Molecule id="butanoic" x={135} scale={64} highlight={[2]} />
-      <ReactionArrow x1={250} x2={326} y={Y} above="Br₂, red P" below="+ HBr" />
+      <ReactionArrow x1={250} x2={326} y={Y} above="Br₂, red P" />
       <Molecule id="bromobutanoic" x={445} scale={64} highlight={[2]} />
-      <Caption y={380}>{`Br replaces one α-hydrogen: ${unit8Name(HVZ_MOLECULES.bromobutanoic.smiles)}`}</Caption>
+      <text x={445} y={344} textAnchor="middle" fontSize={14} fill={INK}>
+        {`${unit8Name(HVZ_MOLECULES.bromobutanoic.smiles)} + HBr`}
+      </text>
+      <Caption y={380}>Br replaces one α-hydrogen</Caption>
       <Caption y={414} muted>
         HBr is the by-product; the COOH group is unchanged
       </Caption>
@@ -124,7 +127,7 @@ function StepNoAlpha() {
 
 /** Step 4: benzoic acid ring, meta carbon 3 chosen; 3-nitrobenzoic acid drawn. */
 function StepRingNitration() {
-  const cx = 150
+  const cx = 130
   const cy = 220
   const meta = ringPoint(cx, cy, 3)
   const outward = { x: cx + (RING_R + 26) * Math.cos(Math.PI / 6), y: cy + (RING_R + 26) * Math.sin(Math.PI / 6) }
@@ -141,8 +144,8 @@ function StepRingNitration() {
       <text x={outward.x} y={outward.y} textAnchor="middle" dominantBaseline="central" fontSize={15} fill={INK}>
         3
       </text>
-      <ReactionArrow x1={252} x2={328} y={cy} above="HNO₃, H₂SO₄" />
-      <BenzeneRing variant="hexagon" substituents={[{ position: 1, label: 'COOH' }, { position: 3, label: 'NO₂' }]} x={430} y={cy} />
+      <ReactionArrow x1={222} x2={312} y={cy} above="HNO₃, H₂SO₄" />
+      <BenzeneRing variant="hexagon" substituents={[{ position: 1, label: 'COOH' }, { position: 3, label: 'NO₂' }]} x={410} y={cy} />
       <Caption y={380}>{`NO₂ enters at carbon 3, the meta position: ${unit8Name(HVZ_MOLECULES.nitrobenzoic.smiles)}`}</Caption>
       <Caption y={414} muted>
         The ortho and para positions (faded) are not chosen
@@ -151,23 +154,40 @@ function StepRingNitration() {
   )
 }
 
-/** Step 5: Friedel–Crafts. AlCl₃ bonds to the carboxyl oxygen; the ring is left bare. */
+/** A line from `from` (t0 to t1 along the way to `to`), shifted `off` units sideways: one line of a double bond. */
+function segment(from: { x: number; y: number }, to: { x: number; y: number }, t0: number, t1: number, off: number) {
+  const len = Math.hypot(to.x - from.x, to.y - from.y)
+  const ux = (to.x - from.x) / len
+  const uy = (to.y - from.y) / len
+  const at = (t: number) => ({ x: from.x + ux * t - uy * off, y: from.y + uy * t + ux * off })
+  const a = at(t0)
+  const b = at(t1)
+  return { x1: a.x, y1: a.y, x2: b.x, y2: b.y }
+}
+
+/**
+ * Step 5: Friedel–Crafts. Benzoic acid at Step 4's scale (bond = ring radius) and orientation, its
+ * C=O drawn double. AlCl₃ binds to the carbonyl oxygen; the ring is left bare.
+ */
 function StepFriedelCrafts() {
-  const cx = 320
-  const cy = 300
+  const cx = 240
+  const cy = 290
   const top = ringPoint(cx, cy, 1)
-  const c = { x: cx, y: cy - 138 }
-  const oxo = { x: cx - 34, y: cy - 166 }
-  const oh = { x: cx + 34, y: cy - 166 }
-  const al = { x: 172, y: cy - 150 }
-  const start = lonePairAnchor(oxo, Math.atan2(al.y - oxo.y, al.x - oxo.x), 18)
+  const c = { x: top.x, y: top.y - RING_R }
+  const oxo = { x: c.x - Math.cos(Math.PI / 6) * RING_R, y: c.y - RING_R / 2 }
+  const oh = { x: c.x + Math.cos(Math.PI / 6) * RING_R, y: c.y - RING_R / 2 }
+  const al = { x: 78, y: 40 }
+  const start = lonePairAnchor(oxo, Math.atan2(al.y - oxo.y, al.x - oxo.x), 16)
+  const carbonylUp = segment(c, oxo, 0, RING_R - 12, 3.5)
+  const carbonylDown = segment(c, oxo, 0, RING_R - 12, -3.5)
+  const hydroxyl = segment(c, oh, 0, RING_R - 18, 0)
   return (
     <g>
       <BenzeneRing variant="hexagon" x={cx} y={cy} />
       <line x1={top.x} y1={top.y} x2={c.x} y2={c.y} stroke={INK} strokeWidth={2} />
-      <line x1={c.x - 3} y1={c.y - 3} x2={oxo.x + 6} y2={oxo.y + 5} stroke={INK} strokeWidth={2} />
-      <line x1={c.x + 3} y1={c.y + 3} x2={oxo.x + 9} y2={oxo.y + 8} stroke={INK} strokeWidth={2} />
-      <line x1={c.x} y1={c.y} x2={oh.x - 6} y2={oh.y + 6} stroke={INK} strokeWidth={2} />
+      <line {...carbonylUp} stroke={INK} strokeWidth={2} />
+      <line {...carbonylDown} stroke={INK} strokeWidth={2} />
+      <line {...hydroxyl} stroke={INK} strokeWidth={2} />
       <text x={oxo.x} y={oxo.y} textAnchor="middle" dominantBaseline="central" fontSize={15} fill={INK}>
         O
       </text>
@@ -182,8 +202,8 @@ function StepFriedelCrafts() {
         CH₃Cl
       </text>
       <Cross cx={470} cy={250} />
-      <Caption y={390}>AlCl₃ binds to the carboxyl oxygen</Caption>
-      <Caption y={424} muted>
+      <Caption y={408}>AlCl₃ binds to the carboxyl oxygen</Caption>
+      <Caption y={438} muted>
         No methyl group is added: the ring stays bare
       </Caption>
     </g>
