@@ -111,6 +111,7 @@ import { IsomerLab } from './sims/isomer-lab'
 import { VbtOrbitalLab } from './sims/vbt-orbital-lab'
 import { CrystalFieldSplittingLab } from './sims/crystal-field-splitting-lab'
 import { LigandColourLab } from './sims/ligand-colour-lab'
+import { CarbonylExplorer } from './sims/carbonyl-explorer'
 
 export interface SimulationProps {
   /** True when the Learner has asked the OS for reduced motion. Skip tweens and loops when set. */
@@ -236,4 +237,5 @@ export const simulations: Record<string, ComponentType<SimulationProps>> = {
   'vbt-orbital-lab': VbtOrbitalLab,
   'crystal-field-splitting-lab': CrystalFieldSplittingLab,
   'ligand-colour-lab': LigandColourLab,
+  'carbonyl-explorer': CarbonylExplorer,
 }
