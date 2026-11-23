@@ -196,6 +196,7 @@ import { ChiralitySubstitution } from './c12-unit6/stereo/ChiralitySubstitution'
 import { EliminationAndMetals } from './c12-unit6/elimination/EliminationAndMetals'
 import { HaloareneReactivity } from './c12-unit6/arenes/HaloareneReactivity'
 import { CarbonylRedoxScrolly } from './c12-unit8/redox/CarbonylRedoxScrolly'
+import { NucleophilicAdditionScrolly } from './c12-unit8/nucadd/NucleophilicAdditionScrolly'
 
 /**
  * Animations available to a Scrolly Animation, keyed by the `animation` prop.
@@ -402,6 +403,7 @@ export const animations = {
   'haloarene-reactivity': HaloareneReactivity,
   'polyhalo-gallery': PolyhaloGallery,
   'carbonyl-redox': CarbonylRedoxScrolly,
+  'nucleophilic-addition': NucleophilicAdditionScrolly,
 } as const
 
 export type AnimationName = keyof typeof animations

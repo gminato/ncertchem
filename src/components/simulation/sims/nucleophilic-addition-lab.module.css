@@ -1,0 +1,52 @@
+.root {
+  display: grid;
+  gap: var(--space-3);
+  width: 100%;
+}
+
+.stage {
+  position: relative;
+  width: 100%;
+  max-width: 820px;
+  margin-inline: auto;
+}
+
+.svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  overflow: visible;
+}
+
+.stageLabel {
+  text-align: center;
+  font-size: var(--text-sm);
+  color: var(--fg-muted);
+}
+
+.product {
+  margin: 0;
+  font-size: var(--text-md);
+  text-align: center;
+}
+
+.productKey {
+  color: var(--fg-muted);
+}
+
+.reason {
+  margin: 0;
+  font-size: var(--text-sm);
+  color: var(--fg-muted);
+  text-align: center;
+  text-wrap: balance;
+}
+
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}

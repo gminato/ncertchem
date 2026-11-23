@@ -124,6 +124,7 @@ import { HaloareneMaker } from './sims/haloarene-maker'
 import { HalidePropertiesLab } from './sims/halide-properties-lab'
 import { ZaitsevChooser } from './sims/zaitsev-chooser'
 import { NitroActivation } from './sims/nitro-activation'
+import { NucleophilicAdditionLab } from './sims/nucleophilic-addition-lab'
 import { PolyhalogenExplorer } from './sims/polyhalogen-explorer'
 import { CarbonylTests } from './sims/carbonyl-tests'
 
@@ -264,6 +265,7 @@ export const simulations: Record<string, ComponentType<SimulationProps>> = {
   'stereo-outcomes': StereoOutcomes,
   'zaitsev-chooser': ZaitsevChooser,
   'nitro-activation': NitroActivation,
+  'nucleophilic-addition-lab': NucleophilicAdditionLab,
   'polyhalogen-explorer': PolyhalogenExplorer,
   'carbonyl-tests': CarbonylTests,
 }
