@@ -214,6 +214,9 @@ import { PhenolEasControl } from './c12-unit7/phenols/PhenolEasControl'
 import { PhenolNamedRedox } from './c12-unit7/phenols/PhenolNamedRedox'
 import { MethanolSyngasRoute } from './c12-unit7/methanol/MethanolSyngasRoute'
 import { EthanolFermentationPathway } from './c12-unit7/ethanol/EthanolFermentationPathway'
+import { EtherDehydrationScrolly } from './c12-unit7/dehydration/EtherDehydrationScrolly'
+import { WilliamsonScrolly } from './c12-unit7/williamson/WilliamsonScrolly'
+import { EtherPropertiesScrolly } from './c12-unit7/properties/EtherPropertiesScrolly'
 
 /**
  * Animations available to a Scrolly Animation, keyed by the `animation` prop.
@@ -438,6 +441,9 @@ export const animations = {
   'phenol-named-redox': PhenolNamedRedox,
   'methanol-syngas-route': MethanolSyngasRoute,
   'ethanol-fermentation-pathway': EthanolFermentationPathway,
+  'ether-dehydration-vs-alkene': EtherDehydrationScrolly,
+  'williamson-sn2-vs-e2': WilliamsonScrolly,
+  'ether-hbond-boiling-miscibility': EtherPropertiesScrolly,
 } as const
 
 export type AnimationName = keyof typeof animations
