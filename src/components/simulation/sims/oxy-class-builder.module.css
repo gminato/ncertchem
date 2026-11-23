@@ -1,0 +1,249 @@
+.builder {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  font-family: var(--font-sans);
+  color: var(--fg);
+  min-width: 0;
+}
+
+.layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--space-4);
+  align-items: start;
+}
+
+@media (min-width: 960px) {
+  .layout {
+    grid-template-columns: minmax(0, 1.2fr) minmax(0, 0.8fr);
+  }
+}
+
+.stage {
+  margin: 0;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md, 10px);
+  padding: var(--space-3);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  min-width: 0;
+}
+
+.drawing {
+  width: 100%;
+  height: auto;
+  display: block;
+  aspect-ratio: 560 / 340;
+}
+
+.caption {
+  margin: 0;
+  font-size: 0.9375rem;
+  color: var(--fg-muted);
+  text-align: center;
+}
+
+.panel {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md, 10px);
+  padding: var(--space-4);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  min-width: 0;
+}
+
+.titleGroup {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.name {
+  margin: 0;
+  font-size: 1.35rem;
+  font-weight: 700;
+  line-height: 1.25;
+  overflow-wrap: anywhere;
+}
+
+.commonFormula {
+  margin: 0;
+  font-size: 0.95rem;
+  color: var(--fg-muted);
+  overflow-wrap: anywhere;
+}
+
+.verdict {
+  margin: 0;
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius-md);
+  background: var(--accent-soft);
+  color: var(--accent);
+  font-size: 1.05rem;
+  font-weight: 700;
+  overflow-wrap: anywhere;
+}
+
+.verdictCaution {
+  background: var(--caution-soft);
+  color: var(--caution);
+}
+
+.readoutGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-2);
+  margin: 0;
+}
+
+.readoutCell {
+  background: var(--surface-raised);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: var(--space-2) var(--space-3);
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.readoutLabel {
+  margin: 0;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--fg-muted);
+}
+
+.readoutValue {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--fg);
+  overflow-wrap: break-word;
+}
+
+.ruleTrace {
+  margin: 0;
+  padding: var(--space-3);
+  border-radius: var(--radius-md);
+  background: var(--surface-raised);
+  border-left: 3px solid var(--accent);
+  font-size: 0.95rem;
+  line-height: 1.5;
+  color: var(--fg);
+}
+
+.ruleTraceCaution {
+  border-left-color: var(--caution);
+}
+
+.legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+  font-size: 0.9rem;
+  color: var(--fg-muted);
+}
+
+.legendItem {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.swatchSp3,
+.swatchSp2,
+.swatchSpacer {
+  flex: 0 0 auto;
+  width: 0.9rem;
+  height: 0.9rem;
+  border-radius: 50%;
+  box-sizing: border-box;
+  background: transparent;
+}
+
+.swatchSp3 {
+  border: 3px solid var(--orbital-neg);
+}
+
+.swatchSp2 {
+  border: 3px solid var(--ox);
+}
+
+.swatchSpacer {
+  border: 2.5px dashed var(--caution);
+}
+
+.controls {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  font-family: var(--font-sans);
+  color: var(--fg);
+  min-width: 0;
+}
+
+.controlGroup {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  min-width: 0;
+}
+
+.groupLabel {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--fg-muted);
+}
+
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-4);
+  align-items: flex-start;
+}
+
+.envGrid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+.envChip {
+  font-size: 0.9rem;
+  padding: var(--space-2) var(--space-3);
+  text-align: left;
+}
+
+.gallery {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+.presetButton {
+  font-size: 0.9rem;
+  padding: var(--space-2) var(--space-3);
+}
+
+.noteBadge {
+  font-size: 0.9375rem;
+  color: var(--fg-muted);
+  padding: var(--space-2) 0;
+}
+
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
