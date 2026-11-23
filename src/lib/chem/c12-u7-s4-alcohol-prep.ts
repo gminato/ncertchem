@@ -338,21 +338,21 @@ function assertNcertId(id: string): string {
 
 function buildAlcoholProduct(
   smiles: string,
-  newBondKind: 'C-O' | 'C-C',
+  newBondKind: 'C-O' | 'C=O-reduced' | 'C-C',
   addedCarbons: 1 | 2 = 1
 ): NonNullable<WorkbenchOutcome['product']> {
   const graph = parseSmiles(smiles)
   const formulaUnicode = unicodeFormula(molecularFormula(graph))
   const iupacName = displayIupac(smiles)
   const co = findAlcoholCOBond(graph)
-  if (newBondKind === 'C-O') {
+  if (newBondKind === 'C-O' || newBondKind === 'C=O-reduced') {
     return {
       iupacName,
       formulaUnicode,
       smiles,
       highlightAtoms: [co.carbon, co.oxygen],
       highlightBonds: [co.bond],
-      newBondLabel: 'New C-O bond',
+      newBondLabel: newBondKind === 'C-O' ? 'New C-O bond' : 'New C-H & O-H bonds',
     }
   }
   const cc = findGrignardNewCCBond(graph, addedCarbons)
@@ -603,7 +603,7 @@ function resolveCarbonylOutcome(substrate: SubstrateSpec, reagent: ReagentSpec):
           formulaUnicode: '[CH₃CH₂CH₂CH₂O]₄AlLi',
           note: 'Water is withheld until step (i) with LiAlH₄ is complete.',
         },
-        product: buildAlcoholProduct('CCCCO', 'C-O'),
+        product: buildAlcoholProduct('CCCCO', 'C=O-reduced'),
         degree: '1°',
         byProducts: 'LiOH + Al(OH)₃ (after H₂O quench)',
         deltaC: 0,
@@ -624,10 +624,9 @@ function resolveCarbonylOutcome(substrate: SubstrateSpec, reagent: ReagentSpec):
         kind: 'ester',
         title: 'Alkyl butanoate ester',
         formulaUnicode: "CH₃CH₂CH₂COOR'",
-        smiles: 'CCCC(=O)OC',
         note: "Step (i) esterification with R'OH/H⁺ activates the acid for hydrogenation.",
       },
-      product: buildAlcoholProduct('CCCCO', 'C-O'),
+      product: buildAlcoholProduct('CCCCO', 'C=O-reduced'),
       degree: '1°',
       byProducts: "R'OH (recovered alcohol)",
       deltaC: 0,
@@ -688,7 +687,7 @@ function resolveCarbonylOutcome(substrate: SubstrateSpec, reagent: ReagentSpec):
     reagent,
     grignard: null,
     intermediate,
-    product: buildAlcoholProduct(productSmiles, 'C-O'),
+    product: buildAlcoholProduct(productSmiles, 'C=O-reduced'),
     degree,
     byProducts: isCatalytic ? 'None' : reagent.id === 'nabh4' ? 'Borate salts (after workup)' : 'LiOH + Al(OH)₃ (after step ii)',
     deltaC: 0,

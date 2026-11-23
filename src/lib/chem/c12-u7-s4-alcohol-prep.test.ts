@@ -34,14 +34,14 @@ describe('Section 7.4.1 alcohol synthesis workbench model', () => {
       status: 'reaction',
       degree: '2°',
       deltaC: 0,
-      product: { iupacName: 'Propan-2-ol', formulaUnicode: 'C₃H₈O' },
+      product: { iupacName: 'Propan-2-ol', formulaUnicode: 'C₃H₈O', newBondLabel: 'New C-O bond' },
     })
     expect(computeWorkbenchOutcome('propene', 'hydroboration-oxidation')).toMatchObject({
       status: 'reaction',
       degree: '1°',
       deltaC: 0,
       byProducts: 'B(OH)₃ (boric acid)',
-      product: { iupacName: 'Propan-1-ol', formulaUnicode: 'C₃H₈O' },
+      product: { iupacName: 'Propan-1-ol', formulaUnicode: 'C₃H₈O', newBondLabel: 'New C-O bond' },
     })
     expect(computeWorkbenchOutcome('2-methylpropene', 'acid-hydration').product?.iupacName).toBe(
       '2-Methylpropan-2-ol'
@@ -57,12 +57,12 @@ describe('Section 7.4.1 alcohol synthesis workbench model', () => {
     expect(computeWorkbenchOutcome('propanal', 'nabh4')).toMatchObject({
       status: 'reaction',
       degree: '1°',
-      product: { iupacName: 'Propan-1-ol' },
+      product: { iupacName: 'Propan-1-ol', newBondLabel: 'New C-H & O-H bonds' },
     })
     expect(computeWorkbenchOutcome('butanone', 'h2-pd')).toMatchObject({
       status: 'reaction',
       degree: '2°',
-      product: { iupacName: 'Butan-2-ol' },
+      product: { iupacName: 'Butan-2-ol', newBondLabel: 'New C-H & O-H bonds' },
     })
     const nabh4Acid = computeWorkbenchOutcome('butanoic-acid', 'nabh4')
     expect(nabh4Acid.status).toBe('no-reaction')
@@ -73,11 +73,15 @@ describe('Section 7.4.1 alcohol synthesis workbench model', () => {
     expect(labAcid.status).toBe('reaction')
     expect(labAcid.degree).toBe('1°')
     expect(labAcid.product?.iupacName).toBe('Butan-1-ol')
+    expect(labAcid.product?.newBondLabel).toBe('New C-H & O-H bonds')
 
     const commAcid = computeWorkbenchOutcome('butanoic-acid', 'ester-h2')
     expect(commAcid.status).toBe('reaction')
     expect(commAcid.byProducts).toContain("R'OH")
+    expect(commAcid.intermediate.formulaUnicode).toBe("CH₃CH₂CH₂COOR'")
+    expect(commAcid.intermediate.smiles).toBeUndefined()
     expect(commAcid.product?.iupacName).toBe('Butan-1-ol')
+    expect(commAcid.product?.newBondLabel).toBe('New C-H & O-H bonds')
   })
 
   it('handles Grignard Step (i) adduct and Step (ii) 1°, 2°, 3° alcohol degrees with ΔC', () => {

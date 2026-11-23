@@ -89,7 +89,7 @@ function Step1AldehydesKetones() {
         <RightReactionArrow x1={174} x2={288} y={326} above="NaBH₄" below="or LiAlH₄" />
 
         <LabelText x={364} y={320} size={17} weight={700}>R–CH(OH)–R&apos;</LabelText>
-        <LabelText x={364} y={348} size={15} weight={500} fill="var(--fg-muted)">C-O &amp; C-H formed</LabelText>
+        <LabelText x={364} y={348} size={15} weight={500} fill="var(--fg-muted)">O-H &amp; C-H formed</LabelText>
         <LabelText x={364} y={388} size={15} weight={600} fill="var(--accent)">→ CH₃CH(OH)CH₃</LabelText>
         <PillLabel cx={476} cy={320} text="2° alcohol" tone="accent" />
       </StepCard>
