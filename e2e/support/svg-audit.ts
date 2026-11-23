@@ -116,3 +116,24 @@ export async function expectNoSidewaysScroll(page: Page): Promise<void> {
   }))
   expect(scrollWidth).toBeLessThanOrEqual(clientWidth)
 }
+
+/**
+ * HTML text in a Simulation or panel whose rendered size is under minPx (SVG text is left to auditSvg).
+ * KaTeX internals, screen-reader-only text and the shell's eyebrow are skipped.
+ */
+export async function smallHtmlText(root: Locator, minPx: number): Promise<string[]> {
+  return root.evaluate((el, min) => {
+    const bad: string[] = []
+    const walker = document.createTreeWalker(el, NodeFilter.SHOW_TEXT)
+    for (let node = walker.nextNode(); node; node = walker.nextNode()) {
+      const text = (node.textContent ?? '').trim()
+      const parent = node.parentElement
+      if (!text || !parent || parent.closest('svg, .katex, [class*="srOnly"], [class*="eyebrow"]')) continue
+      const cs = getComputedStyle(parent)
+      if (cs.display === 'none' || cs.visibility === 'hidden') continue
+      const size = parseFloat(cs.fontSize)
+      if (size < min - 0.05) bad.push(`${size.toFixed(1)} px: ${text.slice(0, 40)}`)
+    }
+    return bad
+  }, minPx)
+}
