@@ -72,7 +72,7 @@ function unit(v: Pt): Pt {
 
 function Label({ at, size = 20, children, weight = 600 }: { at: Pt; size?: number; children: ReactNode; weight?: number }) {
   return (
-    <text x={at.x} y={at.y} textAnchor="middle" dominantBaseline="central" fontSize={size} fontWeight={weight} fill="var(--fg)" fontFamily="var(--font-sans)" stroke="var(--surface)" strokeWidth={6} strokeLinejoin="round">
+    <text x={at.x} y={at.y} textAnchor="middle" dominantBaseline="central" fontSize={size} fontWeight={weight} fill="var(--fg)" fontFamily="var(--font-sans)" stroke="var(--surface)" strokeWidth={6} strokeLinejoin="round" paintOrder="stroke">
       {children}
     </text>
   )
