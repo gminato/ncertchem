@@ -133,6 +133,7 @@ import { AcidStrengthLab } from './sims/acid-strength-lab'
 import { CarbonylDerivativeMaker } from './sims/carbonyl-derivative-maker'
 import { ArylCarbonylBench } from './sims/aryl-carbonyl-bench'
 import { AcidSynthesisPlanner } from './sims/acid-synthesis-planner'
+import { CarbonylNamer } from './sims/carbonyl-namer'
 
 export interface SimulationProps {
   /** True when the Learner has asked the OS for reduced motion. Skip tweens and loops when set. */
@@ -280,4 +281,5 @@ export const simulations: Record<string, ComponentType<SimulationProps>> = {
   'carbonyl-derivative-maker': CarbonylDerivativeMaker,
   'aryl-carbonyl-bench': ArylCarbonylBench,
   'acid-synthesis-planner': AcidSynthesisPlanner,
+  'carbonyl-namer': CarbonylNamer,
 }
