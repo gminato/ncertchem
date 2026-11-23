@@ -1,0 +1,299 @@
+---
+class: 12
+unit: 7
+section: "7.6.3"
+order: 12
+title: "Chemical Reactions of Ethers"
+slug: "12-7-6-3-chemical-reactions-of-ethers"
+access: free
+summary: "Ethers resist mild reagents, yet hot concentrated HI or HBr splits their C-O bonds by SN2 or SN1 pathways while alkoxy groups steer aromatic rings to ortho and para substitution."
+ncert: "Class 12, Part II, Unit 7, Section 7.6.3"
+---
+
+<Hook>
+Why does anisole surrender its methyl group to hot concentrated $\ce{HI}$ while keeping its phenyl-oxygen bond intact, yet react so rapidly with bromine in ethanoic acid that it needs no Lewis acid catalyst at all? Both outcomes trace back to the same oxygen atom and how its electrons interact with the carbons beside it.
+</Hook>
+
+## Why ethers need harsh conditions to cleave
+
+Among common organic classes, ethers are unusually unreactive. They carry no acidic $\ce{O-H}$ proton, and an alkoxide ion ($-\ce{OR}$) is a poor leaving group on its own, so mild acids, bases, and dilute reagents leave the $\ce{C-O}$ linkage untouched.
+
+Splitting that $\ce{C-O}$ bond takes drastic conditions: heating the ether with excess concentrated hydrogen halide. Not all hydrogen halides are equally effective; their reactivity follows the order:
+
+$$
+\ce{HI > HBr > HCl}
+$$
+
+Concentrated $\ce{HI}$ or $\ce{HBr}$ at high temperature works best because both are strong enough acids to protonate the ether oxygen and supply strongly nucleophilic halide ions ($\ce{I-}$ or $\ce{Br-}$).
+
+With a symmetrical dialkyl ether, one equivalent of $\ce{HX}$ yields an alkyl halide and an alcohol, and excess $\ce{HX}$ at high temperature converts that alcohol into a second alkyl halide molecule:
+
+$$
+\ce{R-O-R + HX -> R-X + R-OH}
+$$
+
+$$
+\ce{R-OH + HX -> R-X + H2O}
+$$
+
+When an ether carries two different alkyl groups, one side becomes the alkyl halide and the other leaves as the alcohol:
+
+$$
+\ce{R-O-R' + HX -> R-X + R'-OH}
+$$
+
+Alkyl aryl ethers behave differently from purely aliphatic ethers. Because the bond between the aromatic ring carbon and oxygen is much stronger than the bond to the alkyl group, cleavage always occurs at the alkyl-oxygen bond to give phenol and an alkyl halide:
+
+$$
+\ce{C6H5-O-R + HX -> C6H5-OH + R-X}
+$$
+
+## How the mechanism decides which bond breaks
+
+The cleavage of ethers by concentrated $\ce{HI}$ always begins with protonation, yet the second step forks between $\mathrm{S_N2}$ and $\mathrm{S_N1}$ depending on the carbon attached to oxygen.
+
+### Primary and secondary alkyl ethers: the $\mathrm{S_N2}$ route
+
+Take ethyl methyl ether ($\ce{CH3-O-CH2CH3}$) reacting with concentrated $\ce{HI}$:
+
+1. **Step 1 (Protonation):** A lone pair on oxygen captures a proton from $\ce{HI}$ in a reversible equilibrium, converting the poor $-\ce{OR}$ leaving group into a good neutral alcohol leaving group inside an oxonium ion:
+
+$$
+\ce{CH3-O-CH2CH3 + H-I <=> CH3-\overset{+}{O}(H)-CH2CH3 + I-}
+$$
+
+2. **Step 2 ($\mathrm{S_N2}$ displacement):** Iodide is a good nucleophile. It attacks the less sterically hindered (less substituted) carbon of the oxonium ion from the back side, pushing out ethanol through a concerted transition state:
+
+$$
+\ce{I- + CH3-\overset{+}{O}(H)-CH2CH3 -> CH3I + CH3CH2OH}
+$$
+
+When an unsymmetrical ether contains only primary or secondary alkyl groups, the lower (less substituted) alkyl group forms the alkyl iodide, while the bulkier group departs as the alcohol.
+
+3. **Step 3 (Excess $\ce{HI}$ at high temperature):** If $\ce{HI}$ is present in excess and the mixture is heated strongly, the ethanol formed in Step 2 is protonated to an ethyl oxonium ion and attacked by a second iodide ion:
+
+$$
+\ce{CH3CH2-O-H + H-I <=> CH3CH2-\overset{+}{O}H2 + I-}
+$$
+
+$$
+\ce{I- + CH3CH2-\overset{+}{O}H2 -> CH3CH2I + H2O}
+$$
+
+### Tertiary alkyl ethers: the $\mathrm{S_N1}$ reversal
+
+Introduce a tertiary alkyl group, as in *tert*-butyl methyl ether ($\ce{(CH3)3C-O-CH3}$), and the regioselectivity flips completely:
+
+$$
+\ce{(CH3)3C-O-CH3 + HI -> CH3OH + (CH3)3C-I}
+$$
+
+Here the **tertiary** group becomes the alkyl iodide, not the methyl group. After protonation forms $\ce{(CH3)3C-\overset{+}{O}(H)-CH3}$, backside attack at the crowded tertiary carbon is blocked. Instead, the $\ce{C-O}$ bond breaks slowly on its own because departure of $\ce{CH3OH}$ generates a stable tertiary carbocation, $\ce{(CH3)3C+}$:
+
+$$
+\ce{(CH3)3C-\overset{+}{O}(H)-CH3 ->[\text{slow}] (CH3)3C+ + CH3OH}
+$$
+
+$$
+\ce{(CH3)3C+ + I- ->[\text{fast}] (CH3)3C-I}
+$$
+
+Because carbocation stability drives the rate-determining step, tertiary alkyl ethers cleave by an $\mathrm{S_N1}$ mechanism.
+
+### Alkyl aryl ethers: why phenol never turns into a halide
+
+When anisole ($\ce{C6H5-O-CH3}$) is protonated by $\ce{HI}$, it forms the methylphenyl oxonium ion, $\ce{C6H5-\overset{+}{O}(H)-CH3}$. Two electronic factors make its $\ce{O-C6H5}$ bond markedly stronger than its $\ce{O-CH3}$ bond:
+
+- The carbon atom of the phenyl ring is $sp^2$ hybridised, pulling bonding electrons closer than an $sp^3$ methyl carbon.
+- Conjugation between an oxygen lone pair and the aromatic $\pi$ system gives the $\ce{O-C6H5}$ bond partial double-bond character.
+
+Iodide therefore attacks exclusively at the methyl carbon, breaking the $\ce{O-CH3}$ bond to produce $\ce{CH3I}$ and phenol ($\ce{C6H5OH}$). Even with excess $\ce{HI}$, phenol does not convert into iodobenzene because the $sp^2$ ring carbon cannot undergo nucleophilic substitution.
+
+{/*
+SCROLLY: ether-cleavage-pathways
+Visual spec: A clean two-row mechanistic stage comparing ether cleavage by conc. HI across 5 steps. Uses tokens.css colours, curved electron-pushing arrows, oxonium charges, and clear >=14px bond/atom labels.
+- Step 0: Ethyl methyl ether + H-I; curved arrow from oxygen lone pair to H, forming methyl(ethyl)oxonium ion + I-.
+- Step 1: Backside SN2 attack by I- on the less hindered CH3 carbon of the oxonium ion (highlighted steric shield on CH2CH3), concerted transition state, yielding CH3I + CH3CH2OH.
+- Step 2: Excess HI + heat panel lights up; CH3CH2OH protonates to CH3CH2-OH2+ and I- displaces H2O to yield CH3CH2I + H2O.
+- Step 3: tert-Butyl methyl ether oxonium ion; slow bond cleavage releases CH3OH to display a planar (CH3)3C+ carbocation (SN1), followed by fast capture by I- to give (CH3)3C-I.
+- Step 4: Methylphenyl oxonium ion from anisole; sp2 ring carbon and partial double-bond character along O-C6H5 are highlighted as strong/locked, directing I- to break O-CH3 to yield C6H5OH + CH3I, with a blocked-substitution badge on phenol.
+*/}
+<Scrolly animation="ether-cleavage-pathways">
+  <Step>
+  Concentrated $\ce{HI}$ begins every ether cleavage the same way: an oxygen lone pair accepts a proton to create a positively charged oxonium ion, turning a poor alkoxide group into a neutral alcohol leaving group.
+  </Step>
+  <Step>
+  In protonated ethyl methyl ether, iodide targets the less crowded methyl carbon rather than the ethyl carbon. Backside $\mathrm{S_N2}$ displacement breaks the $\ce{O-CH3}$ bond to give $\ce{CH3I}$ and ethanol.
+  </Step>
+  <Step>
+  When excess $\ce{HI}$ and heat are supplied, that ethanol does not survive for long. A second protonation produces $\ce{CH3CH2-\overset{+}{O}H2}$, and another iodide ion displaces water to yield ethyl iodide.
+  </Step>
+  <Step>
+  Switch to *tert*-butyl methyl ether and the pathway reverses. Instead of waiting for a crowded $\mathrm{S_N2}$ attack, methanol leaves slowly to uncover a stable tertiary carbocation, $\ce{(CH3)3C+}$, which iodide captures rapidly in an $\mathrm{S_N1}$ sequence to form *tert*-butyl iodide.
+  </Step>
+  <Step>
+  In protonated anisole, the $\ce{O-C6H5}$ bond links oxygen to an $sp^2$ ring carbon and carries partial double-bond character. Iodide cleaves only the weaker $\ce{O-CH3}$ bond to give phenol and $\ce{CH3I}$, and phenol refuses any further halide substitution.
+  </Step>
+</Scrolly>
+
+## Electrophilic substitution on aromatic ethers
+
+When an ether oxygen sits directly on a benzene ring, as in anisole, the $-\ce{OR}$ group governs how the ring reacts with electrophiles. Just like the $-\ce{OH}$ group of phenol, an alkoxy group **activates** the benzene ring and is ***ortho, para* directing**.
+
+### Why $-\ce{OR}$ activates the *ortho* and *para* positions
+
+A lone pair on the ether oxygen overlaps with the $\pi$ cloud of the benzene ring. Across the resonance contributors of an aryl alkyl ether, pushing that oxygen lone pair toward the ring creates a $\ce{C=O+R}$ double bond and places a formal negative charge specifically on the two *ortho* carbons and the *para* carbon, while the *meta* carbons never carry that excess electron density.
+
+Because the *ortho* and *para* carbons are enriched with electron density, incoming electrophiles attack there rapidly, and the ring reacts much more readily than benzene itself.
+
+{/*
+SCROLLY: anisole-resonance-eas
+Visual spec: Resonance delocalisation and EAS regioselectivity of an aryl alkyl ether (Ar-OR) across 4 steps. Uses BenzeneRing + CurvedArrow + delta/charge badges from src/components/organic/.
+- Step 0: Neutral contributor I showing :OR with lone pairs aligned to the benzene pi system.
+- Step 1: Contributor II with curved arrows from oxygen lone pair to C-O (forming C=O+R) and ring pi bond onto C-2 (ortho), showing negative charge at ortho.
+- Step 2: Contributors III and IV shifting the negative charge around the ring to C-4 (para) and C-6 (ortho), explicitly dimming/leaving C-3 and C-5 (meta) uncharged.
+- Step 3: Electrophile E+ approach arrows aimed at ortho and para carbons, highlighting para as the major less-hindered substitution product.
+*/}
+<Scrolly animation="anisole-resonance-eas">
+  <Step>
+  Start with neutral anisole: the methoxy oxygen carries two lone pairs right next to the conjugated $\pi$ ring, ready to donate electron density into the aromatic system.
+  </Step>
+  <Step>
+  Moving an oxygen lone pair into the carbon-oxygen bond pushes $\pi$ electrons onto the *ortho* carbon. The oxygen takes a positive charge while the *ortho* position becomes electron-rich.
+  </Step>
+  <Step>
+  Further delocalisation carries that negative charge across the ring to the *para* carbon and the second *ortho* carbon. Notice that the *meta* carbons never receive this negative charge in any contributor.
+  </Step>
+  <Step>
+  When an electrophile ($\ce{E+}$) approaches, it seeks out the electron-rich *ortho* and *para* carbons. Both substituted products form, with the less sterically crowded *para* isomer normally predominating.
+  </Step>
+</Scrolly>
+
+### Characteristic ring reactions of anisole
+
+1. **Halogenation (Bromination):**
+   Anisole undergoes bromination with $\ce{Br2}$ in ethanoic acid ($\ce{CH3COOH}$) **even without an iron(III) bromide ($\ce{FeBr3}$) catalyst**, because the $-\ce{OCH3}$ group strongly activates the ring. The *para* isomer (*p*-bromoanisole) is obtained in **90% yield** as the major product alongside *o*-bromoanisole as the minor product:
+
+$$
+\ce{C6H5OCH3 + Br2 ->[CH3COOH] p-BrC6H4OCH3 \text{ (90\%, major)} + o-BrC6H4OCH3 \text{ (minor)}}
+$$
+
+2. **Friedel-Crafts reactions:**
+   Treating anisole with an alkyl halide or an acyl halide in the presence of anhydrous aluminium chloride ($\ce{AlCl3}$, a Lewis acid catalyst) introduces the alkyl or acyl group at the *ortho* and *para* positions:
+   - **Alkylation:** With chloromethane ($\ce{CH3Cl}$) and anhydrous $\ce{AlCl3}$ in carbon disulphide ($\ce{CS2}$), anisole gives **4-methoxytoluene** (major) and **2-methoxytoluene** (minor).
+   - **Acylation:** With ethanoyl chloride ($\ce{CH3COCl}$) and anhydrous $\ce{AlCl3}$, anisole gives **4-methoxyacetophenone** (major) and **2-methoxyacetophenone** (minor).
+
+3. **Nitration:**
+   Reacting anisole with a mixture of concentrated sulphuric acid ($\ce{H2SO4}$) and concentrated nitric acid ($\ce{HNO3}$) yields a mixture of **4-nitroanisole** (major) and **2-nitroanisole** (minor).
+
+## Explore cleavage and ring substitution together
+
+Test both sides of ether reactivity in the workbench below. Switch between **C-O Cleavage with HI** (choosing symmetrical, unsymmetrical, tertiary, or aryl ethers under 1 equivalent or excess reagent) and **Anisole Ring Substitution** (bromination, Friedel-Crafts alkylation/acylation, and nitration) to track which bond breaks, which mechanism operates, and which major and minor products emerge.
+
+{/*
+SIM: ether-reaction-workbench
+Title: Ether Cleavage & Ring Substitution Lab
+Data source: Import NCERT_7_6_3_CLEAVAGE_CASES and NCERT_7_6_3_ANISOLE_EAS from src/lib/chem/ncert-c12-unit7-data.ts (add any extra structural layout metadata in a new file src/lib/chem/c12-u7-s12-ether-lab.ts).
+Controls:
+- Mode tabs: "C-O Cleavage (HI)" | "Anisole Ring EAS"
+- In Cleavage mode:
+  - Substrate selector (4 pills): "Diethyl ether (C2H5-O-C2H5)" | "Ethyl methyl ether (CH3-O-CH2CH3)" | "tert-Butyl methyl ether ((CH3)3C-O-CH3)" | "Anisole (C6H5-O-CH3)"
+  - Reagent stoichiometry toggle: "1 eq conc. HI" | "Excess conc. HI, high T"
+- In Ring EAS mode:
+  - Reaction selector (4 pills): "Bromination (Br2 / CH3COOH)" | "Friedel-Crafts Alkylation (CH3Cl / AlCl3)" | "Friedel-Crafts Acylation (CH3COCl / AlCl3)" | "Nitration (conc. H2SO4 + HNO3)"
+Physics/Chemistry Rules:
+- Diethyl ether: 1 eq HI -> C2H5I + C2H5OH (SN2); Excess HI -> 2 C2H5I + H2O.
+- Ethyl methyl ether: 1 eq HI -> CH3I + CH3CH2OH (SN2 at less substituted methyl); Excess HI -> CH3I + CH3CH2I + H2O.
+- tert-Butyl methyl ether: 1 eq HI -> (CH3)3C-I + CH3OH (SN1 via stable (CH3)3C+ carbocation); Excess HI -> (CH3)3C-I + CH3I + H2O (second equivalent converts CH3OH to CH3I).
+- Anisole + HI: Both 1 eq and Excess HI -> C6H5OH + CH3I ONLY; display explicit note that sp2 C-O has partial double-bond character and phenol does not undergo nucleophilic substitution to iodobenzene.
+- Anisole EAS:
+  - Bromination: Br2 in CH3COOH, catalyst = "None (no FeBr3 needed)", major = p-Bromoanisole (90% yield), minor = o-Bromoanisole.
+  - FC Alkylation: CH3Cl in CS2, catalyst = "Anhydrous AlCl3", major = 4-Methoxytoluene, minor = 2-Methoxytoluene.
+  - FC Acylation: CH3COCl (ethanoyl chloride), catalyst = "Anhydrous AlCl3", major = 4-Methoxyacetophenone, minor = 2-Methoxyacetophenone.
+  - Nitration: conc. H2SO4 + conc. HNO3, catalyst = "Acid mixture", major = 4-Nitroanisole, minor = 2-Nitroanisole.
+Visual Layout:
+- Clean 2-column or wide SVG reaction stage (>=14px text, light/dark tokens.css support, zero overflow at 390px):
+  - Cleavage mode shows protonated oxonium intermediate with dashed cleavage line across the breaking C-O bond, curved attack arrow (SN2) or carbocation intermediate badge (SN1), and rendered structural products.
+  - EAS mode shows anisole with ortho/para activation highlights, reagent/catalyst arrow box (highlighting "No FeBr3 required" for bromination), and side-by-side para (major) + ortho (minor) BenzeneRing product structures.
+Readouts:
+- Cleavage mode: Mechanism badge (SN2 / SN1), Bond Broken, Products, and Reason summary.
+- EAS mode: Reagent & Catalyst, Directing Effect ("ortho, para directing"), Major Product (with 90% yield badge for p-bromoanisole), and Minor Product.
+*/}
+<Simulation name="ether-reaction-workbench" title="Ether Cleavage & Ring Substitution Lab" />
+
+## Check your understanding
+
+<Check
+  n={1}
+  options={[
+    "HCl > HBr > HI",
+    "HBr > HI > HCl",
+    "HI > HBr > HCl",
+    "HI > HCl > HBr"
+  ]}
+  answer={2}
+  explanation="Cleavage reactivity follows HI > HBr > HCl. Both HI and HBr are strong enough acids to protonate the ether oxygen and supply strong nucleophiles (I⁻ and Br⁻), with HI being the most reactive."
+>
+Which order correctly ranks the reactivity of hydrogen halides in cleaving the $\ce{C-O}$ bond of ethers?
+</Check>
+
+<Check
+  n={2}
+  options={[
+    "CH₃OH and CH₃CH₂I, because iodide attacks the larger group",
+    "CH₃I and CH₃CH₂OH, because iodide attacks the less substituted carbon by SN2",
+    "CH₃CH₂OH and CH₃CH₂I only",
+    "No reaction occurs unless a tertiary carbon is present"
+  ]}
+  answer={1}
+  explanation="After protonation to the oxonium ion CH₃-O⁺(H)-CH₂CH₃, the reaction follows an SN2 pathway. Iodide attacks the less sterically hindered methyl carbon, giving CH₃I and ethanol (CH₃CH₂OH)."
+>
+What are the products when ethyl methyl ether ($\ce{CH3-O-CH2CH3}$) reacts with one equivalent of concentrated $\ce{HI}$?
+</Check>
+
+<Check
+  n={3}
+  options={[
+    "CH₃I and (CH₃)₃COH via SN2",
+    "(CH₃)₃C-I and CH₃OH via SN1",
+    "CH₃OCH₃ and (CH₃)₃CI",
+    "No cleavage because the tertiary group blocks protonation"
+  ]}
+  answer={1}
+  explanation="Protonated (CH₃)₃C-O⁺(H)-CH₃ loses neutral CH₃OH slowly to form the stable tertiary carbocation (CH₃)₃C⁺. Fast capture by I⁻ then yields (CH₃)₃C-I and CH₃OH via an SN1 mechanism."
+>
+Predict the products of cleaving *tert*-butyl methyl ether ($\ce{(CH3)3C-O-CH3}$) with $\ce{HI}$ and identify the mechanism.
+</Check>
+
+<Check
+  n={4}
+  options={[
+    "The O-CH₃ bond breaks to give phenol and CH₃I; phenol resists further substitution",
+    "The O-C₆H₅ bond breaks to give iodobenzene and CH₃OH",
+    "Both C-O bonds break immediately to yield iodobenzene and CH₃I",
+    "The ring carbon is sp³ hybridised, making O-C₆H₅ weaker than O-CH₃"
+  ]}
+  answer={0}
+  explanation="In protonated anisole, the phenyl carbon is sp² hybridised and the O-C₆H₅ bond has partial double-bond character, making it stronger than O-CH₃. Iodide breaks O-CH₃ to form phenol (C₆H₅OH) and CH₃I, and phenol's sp² carbon cannot undergo nucleophilic substitution."
+>
+Which statement accurately describes the reaction of anisole ($\ce{C6H5-O-CH3}$) with concentrated $\ce{HI}$?
+</Check>
+
+<Check
+  n={5}
+  numeric
+  answer={90}
+  tolerance={0}
+  unit="%"
+  explanation="Because the methoxy (-OCH₃) group strongly activates the benzene ring, anisole reacts with bromine in ethanoic acid even without an FeBr₃ catalyst, giving p-bromoanisole as the major isomer in 90% yield."
+>
+When anisole is treated with $\ce{Br2}$ in ethanoic acid in the absence of an $\ce{FeBr3}$ catalyst, what percentage yield of the major *para* isomer (*p*-bromoanisole) is obtained?
+</Check>
+
+<KeyIdeas>
+- Ethers are unreactive toward mild reagents and cleave only with concentrated hydrogen halides at high temperature in the reactivity order $\ce{HI > HBr > HCl}$.
+- Primary and secondary mixed ethers cleave by an $\mathrm{S_N2}$ pathway where $\ce{I-}$ attacks the less substituted alkyl carbon; with excess $\ce{HI}$ and heat, the resulting alcohol also converts to an alkyl iodide.
+- Ethers containing a tertiary alkyl group switch to an $\mathrm{S_N1}$ pathway because departure of the alcohol generates a stable tertiary carbocation, producing the tertiary alkyl iodide.
+- Alkyl aryl ethers such as anisole cleave at the weaker $\ce{O-R}$ bond to give phenol and an alkyl halide, because the aryl carbon is $sp^2$ hybridised with partial double-bond character and phenol resists nucleophilic substitution.
+- An alkoxy group ($-\ce{OR}$) strongly activates the benzene ring and directs electrophiles *ortho* and *para* via resonance, enabling catalyst-free bromination of anisole (90% *para*), Friedel-Crafts alkylation/acylation, and nitration.
+</KeyIdeas>

@@ -217,6 +217,8 @@ import { EthanolFermentationPathway } from './c12-unit7/ethanol/EthanolFermentat
 import { EtherDehydrationScrolly } from './c12-unit7/dehydration/EtherDehydrationScrolly'
 import { WilliamsonScrolly } from './c12-unit7/williamson/WilliamsonScrolly'
 import { EtherPropertiesScrolly } from './c12-unit7/properties/EtherPropertiesScrolly'
+import { EtherCleavagePathways } from './c12-unit7/ether-cleavage/EtherCleavagePathways'
+import { AnisoleResonanceEas } from './c12-unit7/anisole-eas/AnisoleResonanceEas'
 
 /**
  * Animations available to a Scrolly Animation, keyed by the `animation` prop.
@@ -444,6 +446,8 @@ export const animations = {
   'ether-dehydration-vs-alkene': EtherDehydrationScrolly,
   'williamson-sn2-vs-e2': WilliamsonScrolly,
   'ether-hbond-boiling-miscibility': EtherPropertiesScrolly,
+  'ether-cleavage-pathways': EtherCleavagePathways,
+  'anisole-resonance-eas': AnisoleResonanceEas,
 } as const
 
 export type AnimationName = keyof typeof animations

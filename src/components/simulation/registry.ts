@@ -136,6 +136,7 @@ import { AlcoholCoCleavageLab } from './sims/alcohol-co-cleavage-lab'
 import { PhenolReactionBench } from './sims/phenol-reaction-bench'
 import { CommercialAlcoholsLab } from './sims/commercial-alcohols-lab'
 import { EtherSynthesisAndPropertiesLab } from './sims/ether-synthesis-and-properties-lab'
+import { EtherReactionWorkbench } from './sims/ether-reaction-workbench'
 
 export interface SimulationProps {
   /** True when the Learner has asked the OS for reduced motion. Skip tweens and loops when set. */
@@ -286,4 +287,5 @@ export const simulations: Record<string, ComponentType<SimulationProps>> = {
   'phenol-reaction-bench': PhenolReactionBench,
   'commercial-alcohols-lab': CommercialAlcoholsLab,
   'ether-synthesis-and-properties-lab': EtherSynthesisAndPropertiesLab,
+  'ether-reaction-workbench': EtherReactionWorkbench,
 }
