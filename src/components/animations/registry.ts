@@ -195,6 +195,8 @@ import { NucleophileSwap } from './c12-unit6/nusub/NucleophileSwap'
 import { ChiralitySubstitution } from './c12-unit6/stereo/ChiralitySubstitution'
 import { EliminationAndMetals } from './c12-unit6/elimination/EliminationAndMetals'
 import { HaloareneReactivity } from './c12-unit6/arenes/HaloareneReactivity'
+import { AlcoholHBondBoiling } from './c12-unit7/physical/AlcoholHBondBoiling'
+import { AlcoholWaterSolubility } from './c12-unit7/physical/AlcoholWaterSolubility'
 
 /**
  * Animations available to a Scrolly Animation, keyed by the `animation` prop.
@@ -400,6 +402,8 @@ export const animations = {
   'elimination-and-metals': EliminationAndMetals,
   'haloarene-reactivity': HaloareneReactivity,
   'polyhalo-gallery': PolyhaloGallery,
+  'alcohol-hbond-boiling': AlcoholHBondBoiling,
+  'alcohol-water-solubility': AlcoholWaterSolubility,
 } as const
 
 export type AnimationName = keyof typeof animations
