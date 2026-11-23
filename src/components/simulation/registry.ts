@@ -137,6 +137,7 @@ import { CarbonylNamer } from './sims/carbonyl-namer'
 import { AldolBuilder } from './sims/aldol-builder'
 import { CarbonylBpLadder } from './sims/carbonyl-bp-ladder'
 import { AcidDerivativeBench } from './sims/acid-derivative-bench'
+import { CarbonylFateSorter } from './sims/carbonyl-fate-sorter'
 
 export interface SimulationProps {
   /** True when the Learner has asked the OS for reduced motion. Skip tweens and loops when set. */
@@ -288,4 +289,5 @@ export const simulations: Record<string, ComponentType<SimulationProps>> = {
   'aldol-builder': AldolBuilder,
   'carbonyl-bp-ladder': CarbonylBpLadder,
   'acid-derivative-bench': AcidDerivativeBench,
+  'carbonyl-fate-sorter': CarbonylFateSorter,
 }
