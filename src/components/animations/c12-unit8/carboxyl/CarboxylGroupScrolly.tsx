@@ -125,12 +125,13 @@ function Step2() {
   const P = fA.points
   const ax = 140
   const ay = 200
-  const lone = lonePairPoint(P[2], outwardAngle(P, fA.adj, 2), 16)
+  // Start 30 units out, clear of the OH label, and bow below the C–O bond on the way to its midpoint.
+  const lone = lonePairPoint(P[2], outwardAngle(P, fA.adj, 2), 30)
   const bx = 420
   return (
     <g>
       <g transform={`translate(${ax} ${ay})`}>
-        <CurvedArrow from={lone} to={mid(P[1], P[2])} gap={6} />
+        <CurvedArrow from={lone} to={mid(P[1], P[2])} gap={6} bend={0.5} />
         <CurvedArrow from={mid(P[1], P[3])} to={lonePairPoint(P[3], -Math.PI / 4, 18)} gap={4} bend={0.5} />
       </g>
       <Mol smiles={RESONANCE_NEUTRAL} cx={ax} cy={ay} scale={S2} />
@@ -141,10 +142,10 @@ function Step2() {
       <text x={280} y={ay - 16} fontSize={16} fill={MUTED} textAnchor="middle">
         resonance
       </text>
-      <text x={ax} y={318} fontSize={18} fill={FG} textAnchor="middle">
+      <text x={ax} y={350} fontSize={18} fill={FG} textAnchor="middle">
         neutral form
       </text>
-      <text x={bx} y={318} fontSize={18} fill={FG} textAnchor="middle">
+      <text x={bx} y={350} fontSize={18} fill={FG} textAnchor="middle">
         charge-separated form
       </text>
     </g>
