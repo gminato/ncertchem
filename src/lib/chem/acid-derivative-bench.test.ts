@@ -37,7 +37,7 @@ describe('acid-derivative-bench', () => {
         if (!o.product) continue
         expect(o.product.formula).toBe(molecularFormula(parseSmiles(o.product.smiles)))
         if (reagent !== 'anhydride') expect(o.product.name).toBe(unit8Name(o.product.smiles))
-        else expect(o.product.name === 'acid anhydride' || o.product.name === unit8Name(o.product.smiles)).toBe(true)
+        else expect(o.product.name).toBe(`${unit8Name(acidSmiles(id as AcidId)).replace(/ acid$/, '')} anhydride`)
       }
     }
   })
@@ -46,7 +46,13 @@ describe('acid-derivative-bench', () => {
     expect(benchOutcome('butanoic', 'socl2').product!.name).toBe('butanoyl chloride')
     expect(benchOutcome('ethanoic', 'anhydride').product!.formula).toBe('C4H6O3')
     expect(benchOutcome('ethanoic', 'anhydride').product!.name).toBe('ethanoic anhydride')
-    expect(benchOutcome('butanoic', 'anhydride').product!.name).toBe('acid anhydride')
+    expect(benchOutcome('butanoic', 'anhydride').product!.name).toBe('butanoic anhydride')
+    expect(['ethanoic', 'propanoic', 'butanoic', 'pentanoic'].map((a) => benchOutcome(a as AcidId, 'anhydride').product!.name)).toEqual([
+      'ethanoic anhydride',
+      'propanoic anhydride',
+      'butanoic anhydride',
+      'pentanoic anhydride',
+    ])
   })
 
   it('counts carbons: soda-lime removes one, reduction and substitution keep the count', () => {

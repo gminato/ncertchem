@@ -90,6 +90,11 @@ function nameOf(smiles: string, reagent: ReagentId): string {
   }
 }
 
+/** The anhydride is named from its acid: "butanoic acid" gives "butanoic anhydride". */
+function anhydrideName(acid: AcidId): string {
+  return unit8Name(acidSmiles(acid)).replace(/ acid$/, ' anhydride')
+}
+
 function carbonCount(smiles: string): number {
   return parseSmiles(smiles).atoms.filter((a) => a.element === 'C').length
 }
@@ -195,7 +200,7 @@ export function benchOutcome(acid: AcidId, reagent: ReagentId): BenchOutcome {
   const product: BenchProduct | null = smiles
     ? {
         smiles,
-        name: nameOf(smiles, reagent),
+        name: reagent === 'anhydride' ? anhydrideName(acid) : nameOf(smiles, reagent),
         formula: molecularFormula(parseSmiles(smiles)),
         carbons: carbonCount(smiles),
       }

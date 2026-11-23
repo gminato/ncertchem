@@ -98,6 +98,9 @@ function Step2() {
   )
 }
 
+/** x of the down-arrows between stage rows: centre of the formula column (text from x 96, about 205 wide). */
+const STAGE_ARROW_X = 198
+
 const STAGES: readonly { y: number; text: ReactNode; label: string }[] = [
   {
     y: 84,
@@ -109,7 +112,7 @@ const STAGES: readonly { y: number; text: ReactNode; label: string }[] = [
     label: '1  H⁺ on the C=O oxygen',
   },
   {
-    y: 140,
+    y: 138,
     text: (
       <>
         CH₃<tspan fill={DELTA}>C</tspan>(OH)₂OCH₃
@@ -118,7 +121,7 @@ const STAGES: readonly { y: number; text: ReactNode; label: string }[] = [
     label: '2  CH₃OH adds to C',
   },
   {
-    y: 196,
+    y: 192,
     text: (
       <>
         CH₃<tspan fill={DELTA}>C</tspan>(OH)(OH₂⁺)OCH₃
@@ -127,7 +130,7 @@ const STAGES: readonly { y: number; text: ReactNode; label: string }[] = [
     label: '3  H⁺ shifts: –OH → –OH₂⁺',
   },
   {
-    y: 252,
+    y: 246,
     text: (
       <>
         CH₃<tspan fill={DELTA}>C</tspan>(OH)=O⁺CH₃
@@ -136,7 +139,7 @@ const STAGES: readonly { y: number; text: ReactNode; label: string }[] = [
     label: '4  water leaves',
   },
   {
-    y: 308,
+    y: 300,
     text: 'CH₃COOCH₃ + H⁺',
     label: '5  H⁺ lost: ester',
   },
@@ -154,7 +157,13 @@ function Step3() {
             {s.label}
           </T>
           {i < STAGES.length - 1 ? (
-            <CurvedArrow from={{ x: 52, y: s.y + 14 }} to={{ x: 52, y: STAGES[i + 1].y - 14 }} bend={0.3} />
+            <g stroke={MUTED} fill={MUTED} strokeWidth={2}>
+              <line x1={STAGE_ARROW_X} y1={s.y + 14} x2={STAGE_ARROW_X} y2={STAGES[i + 1].y - 17} />
+              <polygon
+                points={`${STAGE_ARROW_X},${STAGES[i + 1].y - 8} ${STAGE_ARROW_X - 4.5},${STAGES[i + 1].y - 17} ${STAGE_ARROW_X + 4.5},${STAGES[i + 1].y - 17}`}
+                stroke="none"
+              />
+            </g>
           ) : null}
         </g>
       ))}
@@ -167,7 +176,7 @@ function Step4() {
   return (
     <g>
       <T x={120} y={160} size={19}>CH₃CH₂CH₂COOH</T>
-      <Arrow x1={205} x2={330} y={160} />
+      <Arrow x1={216} x2={330} y={160} />
       <T x={268} y={128} size={15}>PCl₅, PCl₃</T>
       <T x={268} y={146} size={15}>or SOCl₂</T>
       <Mol smiles={SMILES.butanoylChloride} x={445} y={160} />
@@ -186,8 +195,8 @@ function Step5() {
       <Arrow x1={262} x2={322} y={150} />
       <T x={470} y={150} size={18}>CH₃CH₂COO⁻ NH₄⁺</T>
       <g stroke={INK} fill={INK} strokeWidth={2}>
-        <line x1={470} y1={168} x2={470} y2={222} />
-        <polygon points="470,230 465.5,220.5 474.5,220.5" stroke="none" />
+        <line x1={470} y1={168} x2={470} y2={204} />
+        <polygon points="470,207 465.5,197.5 474.5,197.5" stroke="none" />
       </g>
       <T x={482} y={200} size={15} anchor="start">heat, Δ</T>
       <Mol smiles={SMILES.propanamide} x={400} y={262} />
