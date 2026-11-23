@@ -168,6 +168,7 @@ import { LanthanoidContraction } from './c12-unit4/lanthanoids/LanthanoidContrac
 import { WernerCobaltAmmine } from './c12-unit5/werner/WernerCobaltAmmine'
 import { LigandDenticityGallery } from './c12-unit5/denticity/LigandDenticityGallery'
 import { CoordinationPolyhedraGallery } from './c12-unit5/polyhedra/CoordinationPolyhedraGallery'
+import { NamingAssembler } from './c12-unit5/nomenclature/NamingAssembler'
 
 /**
  * Animations available to a Scrolly Animation, keyed by the `animation` prop.
@@ -346,6 +347,7 @@ export const animations = {
   'werner-cobalt-ammine': WernerCobaltAmmine,
   'ligand-denticity-gallery': LigandDenticityGallery,
   'coordination-polyhedra-gallery': CoordinationPolyhedraGallery,
+  'naming-assembler': NamingAssembler,
 } as const
 
 export type AnimationName = keyof typeof animations
