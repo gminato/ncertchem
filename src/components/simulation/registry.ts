@@ -127,6 +127,7 @@ import { HalidePropertiesLab } from './sims/halide-properties-lab'
 import { ZaitsevChooser } from './sims/zaitsev-chooser'
 import { NitroActivation } from './sims/nitro-activation'
 import { NucleophilicAdditionLab } from './sims/nucleophilic-addition-lab'
+import { AcidNamer } from './sims/acid-namer'
 import { PolyhalogenExplorer } from './sims/polyhalogen-explorer'
 import { CarbonylTests } from './sims/carbonyl-tests'
 import { AcidStrengthLab } from './sims/acid-strength-lab'
@@ -290,4 +291,5 @@ export const simulations: Record<string, ComponentType<SimulationProps>> = {
   'carbonyl-bp-ladder': CarbonylBpLadder,
   'acid-derivative-bench': AcidDerivativeBench,
   'carbonyl-fate-sorter': CarbonylFateSorter,
+  'acid-namer': AcidNamer,
 }

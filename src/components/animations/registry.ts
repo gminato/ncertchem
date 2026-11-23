@@ -208,6 +208,7 @@ import { AldolScrolly } from './c12-unit8/aldol/AldolScrolly'
 import { CarbonylPhysicalScrolly } from './c12-unit8/physical/CarbonylPhysicalScrolly'
 import { AcidDerivativesScrolly } from './c12-unit8/cooh/AcidDerivativesScrolly'
 import { CannizzaroScrolly } from './c12-unit8/cannizzaro/CannizzaroScrolly'
+import { CarboxylGroupScrolly } from './c12-unit8/carboxyl/CarboxylGroupScrolly'
 
 /**
  * Animations available to a Scrolly Animation, keyed by the `animation` prop.
@@ -426,6 +427,7 @@ export const animations = {
   'carbonyl-physical': CarbonylPhysicalScrolly,
   'acid-derivatives': AcidDerivativesScrolly,
   'cannizzaro-and-ring': CannizzaroScrolly,
+  'carboxyl-group': CarboxylGroupScrolly,
 } as const
 
 export type AnimationName = keyof typeof animations
