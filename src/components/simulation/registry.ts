@@ -1,4 +1,5 @@
 import { MoleBridge } from './sims/mole-bridge'
+import { HvzBench } from './sims/hvz-bench'
 import type { ComponentType } from 'react'
 import { SigFigRuler } from './sims/sigfig-ruler'
 import { StatesOfMatter } from './sims/StatesOfMatter'
@@ -263,5 +264,6 @@ export const simulations: Record<string, ComponentType<SimulationProps>> = {
   'stereo-outcomes': StereoOutcomes,
   'zaitsev-chooser': ZaitsevChooser,
   'nitro-activation': NitroActivation,
+  'hvz-bench': HvzBench,
   'polyhalogen-explorer': PolyhalogenExplorer,
 }
