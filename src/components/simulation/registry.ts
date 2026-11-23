@@ -127,6 +127,7 @@ import { NitroActivation } from './sims/nitro-activation'
 import { NucleophilicAdditionLab } from './sims/nucleophilic-addition-lab'
 import { PolyhalogenExplorer } from './sims/polyhalogen-explorer'
 import { CarbonylTests } from './sims/carbonyl-tests'
+import { AcidStrengthLab } from './sims/acid-strength-lab'
 
 export interface SimulationProps {
   /** True when the Learner has asked the OS for reduced motion. Skip tweens and loops when set. */
@@ -268,4 +269,5 @@ export const simulations: Record<string, ComponentType<SimulationProps>> = {
   'nucleophilic-addition-lab': NucleophilicAdditionLab,
   'polyhalogen-explorer': PolyhalogenExplorer,
   'carbonyl-tests': CarbonylTests,
+  'acid-strength-lab': AcidStrengthLab,
 }
