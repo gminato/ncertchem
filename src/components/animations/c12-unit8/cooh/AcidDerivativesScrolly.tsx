@@ -98,8 +98,8 @@ function Step2() {
   )
 }
 
-/** x of the down-arrows between stage rows: centre of the formula column (text from x 96, about 205 wide). */
-const STAGE_ARROW_X = 198
+/** x of the down-arrows between stage rows: 20 units left of the formulas (which start at x 96), so no arrow crosses a formula. */
+const STAGE_ARROW_X = 76
 
 const STAGES: readonly { y: number; text: ReactNode; label: string }[] = [
   {
