@@ -247,10 +247,10 @@ function Scene({ beat }: { beat: CarbonylBeat }) {
       )
     }
     case 'butane-alone': {
-      // One butane in the middle, one neighbour above and one below, 60 units apart; each pair joined by four vertical contacts.
-      const main = mol(BUTANE_SMILES, 39, 380, 290)
-      const above = mol(BUTANE_SMILES, 39, 380, 230)
-      const below = mol(BUTANE_SMILES, 39, 380, 350)
+      // One butane in the middle, one neighbour above and one below, 90 units apart; each pair joined by four vertical contacts.
+      const main = mol(BUTANE_SMILES, 52, 380, 280)
+      const above = mol(BUTANE_SMILES, 52, 380, 190)
+      const below = mol(BUTANE_SMILES, 52, 380, 370)
       return (
         <g>
           <Drawn p={above} opacity={0.45} />
@@ -262,7 +262,7 @@ function Scene({ beat }: { beat: CarbonylBeat }) {
               <Line a={atomAt(main, i)} b={atomAt(below, i)} stroke={MUTED} dash="4 4" trim={6} />
             </g>
           ))}
-          <text x={main.cx + 64} y={main.cy + 40} fontSize={16} fill={INK}>
+          <text x={below.cx} y={below.cy + 60} textAnchor="middle" fontSize={16} fill={INK}>
             {NAME(BUTANE_SMILES)}
           </text>
         </g>
