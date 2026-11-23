@@ -107,6 +107,7 @@ import { FBlockCompare } from './sims/f-block-compare'
 import { WernerPrecipitationLab } from './sims/werner-precipitation-lab'
 import { CoordinationDissector } from './sims/coordination-dissector'
 import { ComplexNamer } from './sims/complex-namer'
+import { IsomerLab } from './sims/isomer-lab'
 
 export interface SimulationProps {
   /** True when the Learner has asked the OS for reduced motion. Skip tweens and loops when set. */
@@ -228,4 +229,5 @@ export const simulations: Record<string, ComponentType<SimulationProps>> = {
   'werner-precipitation-lab': WernerPrecipitationLab,
   'coordination-dissector': CoordinationDissector,
   'complex-namer': ComplexNamer,
+  'isomer-lab': IsomerLab,
 }

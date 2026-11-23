@@ -169,6 +169,10 @@ import { WernerCobaltAmmine } from './c12-unit5/werner/WernerCobaltAmmine'
 import { LigandDenticityGallery } from './c12-unit5/denticity/LigandDenticityGallery'
 import { CoordinationPolyhedraGallery } from './c12-unit5/polyhedra/CoordinationPolyhedraGallery'
 import { NamingAssembler } from './c12-unit5/nomenclature/NamingAssembler'
+import { IsomerFamilyTree } from './c12-unit5/isomerism/IsomerFamilyTree'
+import { GeometricalIsomerBuilder } from './c12-unit5/isomerism/GeometricalIsomerBuilder'
+import { ChiralityMirror } from './c12-unit5/isomerism/ChiralityMirror'
+import { StructuralIsomerSwaps } from './c12-unit5/isomerism/StructuralIsomerSwaps'
 
 /**
  * Animations available to a Scrolly Animation, keyed by the `animation` prop.
@@ -348,6 +352,10 @@ export const animations = {
   'ligand-denticity-gallery': LigandDenticityGallery,
   'coordination-polyhedra-gallery': CoordinationPolyhedraGallery,
   'naming-assembler': NamingAssembler,
+  'isomer-family-tree': IsomerFamilyTree,
+  'geometrical-isomer-builder': GeometricalIsomerBuilder,
+  'chirality-mirror': ChiralityMirror,
+  'structural-isomer-swaps': StructuralIsomerSwaps,
 } as const
 
 export type AnimationName = keyof typeof animations
