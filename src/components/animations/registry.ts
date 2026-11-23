@@ -206,6 +206,7 @@ import { HvzAndRing } from './c12-unit8/hvz/HvzAndRing'
 import { CarbonylScrolly } from './c12-unit8/carbonyl/CarbonylScrolly'
 import { AldolScrolly } from './c12-unit8/aldol/AldolScrolly'
 import { CarbonylPhysicalScrolly } from './c12-unit8/physical/CarbonylPhysicalScrolly'
+import { AcidDerivativesScrolly } from './c12-unit8/cooh/AcidDerivativesScrolly'
 
 /**
  * Animations available to a Scrolly Animation, keyed by the `animation` prop.
@@ -422,6 +423,7 @@ export const animations = {
   'carbonyl-group': CarbonylScrolly,
   'aldol': AldolScrolly,
   'carbonyl-physical': CarbonylPhysicalScrolly,
+  'acid-derivatives': AcidDerivativesScrolly,
 } as const
 
 export type AnimationName = keyof typeof animations
