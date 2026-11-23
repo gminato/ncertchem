@@ -269,8 +269,8 @@ function FermentationStage({
       </g>
       {res.co2Rate > 0 && (
         <g>
-          <circle cx={111} cy={148} r={5} fill="var(--bubble-fill)" stroke="var(--bond)" strokeWidth={1.2} />
-          <circle cx={120} cy={130} r={6} fill="var(--bubble-fill)" stroke="var(--bond)" strokeWidth={1.2} />
+          <circle cx={98} cy={148} r={5} fill="var(--bubble-fill)" stroke="var(--bond)" strokeWidth={1.2} />
+          <circle cx={106} cy={130} r={6} fill="var(--bubble-fill)" stroke="var(--bond)" strokeWidth={1.2} />
           <text x={144} y={92} fontSize={15} fontWeight={600} fill="var(--accent)">
             CO₂↑
           </text>
@@ -278,11 +278,11 @@ function FermentationStage({
       )}
       {seal === 'air-leak' && (
         <g>
-          <circle cx={72} cy={128} r={7} fill="var(--atom-o)" />
-          <circle cx={86} cy={128} r={7} fill="var(--atom-o)" />
-          <text x={58} y={134} textAnchor="end" fontSize={15} fontWeight={600} fill="var(--atom-o)">
+          <text x={140} y={138} textAnchor="end" fontSize={15} fontWeight={600} fill="var(--atom-o)">
             O₂
           </text>
+          <circle cx={151} cy={133} r={6.5} fill="var(--atom-o)" />
+          <circle cx={164} cy={133} r={6.5} fill="var(--atom-o)" />
         </g>
       )}
 
@@ -343,7 +343,15 @@ function FermentationStage({
         height={84}
         rx={10}
         fill={res.zymaseInhibited ? 'var(--caution-soft)' : 'var(--surface)'}
-        stroke={res.zymaseInhibited ? 'var(--caution)' : res.hexosesReady ? 'var(--success)' : 'var(--border)'}
+        stroke={
+          res.zymaseInhibited
+            ? 'var(--caution)'
+            : !res.hexosesReady
+              ? 'var(--border)'
+              : seal === 'air-leak'
+                ? 'var(--ox)'
+                : 'var(--success)'
+        }
         strokeWidth={1.8}
       />
       <text x={333} y={172} textAnchor="middle" fontSize={15} fontWeight={600} fill="var(--fg)">
@@ -355,7 +363,15 @@ function FermentationStage({
         textAnchor="middle"
         fontSize={15}
         fontWeight={600}
-        fill={res.zymaseInhibited ? 'var(--caution)' : seal === 'air-leak' ? 'var(--ox)' : res.hexosesReady ? 'var(--success)' : 'var(--fg-muted)'}
+        fill={
+          res.zymaseInhibited
+            ? 'var(--caution)'
+            : !res.hexosesReady
+              ? 'var(--fg-muted)'
+              : seal === 'air-leak'
+                ? 'var(--ox)'
+                : 'var(--success)'
+        }
       >
         {res.zymaseInhibited
           ? 'Inhibited (>14%)'
