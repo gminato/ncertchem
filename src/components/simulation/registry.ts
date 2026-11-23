@@ -133,6 +133,7 @@ import { PhenolRouteWorkbench } from './sims/phenol-route-workbench'
 import { AlcoholPropertiesExplorer } from './sims/alcohol-properties-explorer'
 import { AcidityEsterificationLab } from './sims/acidity-esterification-lab'
 import { AlcoholCoCleavageLab } from './sims/alcohol-co-cleavage-lab'
+import { PhenolReactionBench } from './sims/phenol-reaction-bench'
 
 export interface SimulationProps {
   /** True when the Learner has asked the OS for reduced motion. Skip tweens and loops when set. */
@@ -280,4 +281,5 @@ export const simulations: Record<string, ComponentType<SimulationProps>> = {
   'alcohol-properties-explorer': AlcoholPropertiesExplorer,
   'acidity-esterification-lab': AcidityEsterificationLab,
   'alcohol-co-cleavage-lab': AlcoholCoCleavageLab,
+  'phenol-reaction-bench': PhenolReactionBench,
 }

@@ -210,6 +210,8 @@ import { AlcoholPhenolAcidity } from './c12-unit7/acidity/AlcoholPhenolAcidity'
 import { EsterificationAcetylation } from './c12-unit7/esterification/EsterificationAcetylation'
 import { EthanolDehydration } from './c12-unit7/dehydration/EthanolDehydration'
 import { AlcoholOxidation } from './c12-unit7/oxidation/AlcoholOxidation'
+import { PhenolEasControl } from './c12-unit7/phenols/PhenolEasControl'
+import { PhenolNamedRedox } from './c12-unit7/phenols/PhenolNamedRedox'
 
 /**
  * Animations available to a Scrolly Animation, keyed by the `animation` prop.
@@ -430,6 +432,8 @@ export const animations = {
   'esterification-acetylation': EsterificationAcetylation,
   'ethanol-dehydration-mechanism': EthanolDehydration,
   'alcohol-oxidation-pathways': AlcoholOxidation,
+  'phenol-eas-control': PhenolEasControl,
+  'phenol-named-redox': PhenolNamedRedox,
 } as const
 
 export type AnimationName = keyof typeof animations
