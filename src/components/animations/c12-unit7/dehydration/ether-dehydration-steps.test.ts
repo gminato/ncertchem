@@ -3,7 +3,7 @@ import {
   DEHYDRATION_GRAPHS,
   DEHYDRATION_STEPS,
   DEHYDRATION_TEMPS_DATA,
-} from './dehydration-steps'
+} from './ether-dehydration-steps'
 import { clampStep } from '../ether-svg-helpers'
 
 describe('ether-dehydration-vs-alkene Scrolly steps', () => {

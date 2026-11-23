@@ -9,7 +9,7 @@ import {
   SvgHeader,
   clampStep,
 } from '../ether-svg-helpers'
-import { DEHYDRATION_GRAPHS, DEHYDRATION_STEPS } from './dehydration-steps'
+import { DEHYDRATION_GRAPHS, DEHYDRATION_STEPS } from './ether-dehydration-steps'
 
 export interface EtherDehydrationScrollyProps {
   step: number
