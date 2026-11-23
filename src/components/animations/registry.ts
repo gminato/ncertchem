@@ -208,6 +208,8 @@ import { AlcoholHBondBoiling } from './c12-unit7/physical/AlcoholHBondBoiling'
 import { AlcoholWaterSolubility } from './c12-unit7/physical/AlcoholWaterSolubility'
 import { AlcoholPhenolAcidity } from './c12-unit7/acidity/AlcoholPhenolAcidity'
 import { EsterificationAcetylation } from './c12-unit7/esterification/EsterificationAcetylation'
+import { EthanolDehydration } from './c12-unit7/dehydration/EthanolDehydration'
+import { AlcoholOxidation } from './c12-unit7/oxidation/AlcoholOxidation'
 
 /**
  * Animations available to a Scrolly Animation, keyed by the `animation` prop.
@@ -426,6 +428,8 @@ export const animations = {
   'alcohol-water-solubility': AlcoholWaterSolubility,
   'alcohol-phenol-acidity': AlcoholPhenolAcidity,
   'esterification-acetylation': EsterificationAcetylation,
+  'ethanol-dehydration-mechanism': EthanolDehydration,
+  'alcohol-oxidation-pathways': AlcoholOxidation,
 } as const
 
 export type AnimationName = keyof typeof animations
