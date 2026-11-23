@@ -124,6 +124,7 @@ import { HaloareneMaker } from './sims/haloarene-maker'
 import { HalidePropertiesLab } from './sims/halide-properties-lab'
 import { ZaitsevChooser } from './sims/zaitsev-chooser'
 import { NitroActivation } from './sims/nitro-activation'
+import { NucleophilicAdditionLab } from './sims/nucleophilic-addition-lab'
 import { PolyhalogenExplorer } from './sims/polyhalogen-explorer'
 import { OxyClassBuilder } from './sims/oxy-class-builder'
 import { OxygenGroupNamer } from './sims/oxygen-group-namer'
@@ -137,6 +138,7 @@ import { PhenolReactionBench } from './sims/phenol-reaction-bench'
 import { CommercialAlcoholsLab } from './sims/commercial-alcohols-lab'
 import { EtherSynthesisAndPropertiesLab } from './sims/ether-synthesis-and-properties-lab'
 import { EtherReactionWorkbench } from './sims/ether-reaction-workbench'
+import { CarbonylTests } from './sims/carbonyl-tests'
 
 export interface SimulationProps {
   /** True when the Learner has asked the OS for reduced motion. Skip tweens and loops when set. */
@@ -275,6 +277,7 @@ export const simulations: Record<string, ComponentType<SimulationProps>> = {
   'stereo-outcomes': StereoOutcomes,
   'zaitsev-chooser': ZaitsevChooser,
   'nitro-activation': NitroActivation,
+  'nucleophilic-addition-lab': NucleophilicAdditionLab,
   'polyhalogen-explorer': PolyhalogenExplorer,
   'oxy-class-builder': OxyClassBuilder,
   'oxygen-group-namer': OxygenGroupNamer,
@@ -288,4 +291,5 @@ export const simulations: Record<string, ComponentType<SimulationProps>> = {
   'commercial-alcohols-lab': CommercialAlcoholsLab,
   'ether-synthesis-and-properties-lab': EtherSynthesisAndPropertiesLab,
   'ether-reaction-workbench': EtherReactionWorkbench,
+  'carbonyl-tests': CarbonylTests,
 }
