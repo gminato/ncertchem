@@ -54,7 +54,7 @@ function ProductBlock({ p, x, y }: { p: Product; x: number; y: number }) {
           {p.condensed}
         </text>
       ) : (
-        <SkeletalFormula graph={parseSmiles(p.smiles)} scale={36} x={x} y={y} />
+        <SkeletalFormula graph={parseSmiles(p.smiles)} scale={40} x={x} y={y} />
       )}
       <text x={x} y={y + 62} textAnchor="middle" fontSize={16} fontWeight={600} fontFamily="var(--font-sans)" fill="var(--fg)">
         {label}
