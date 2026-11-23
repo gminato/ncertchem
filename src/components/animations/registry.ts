@@ -199,6 +199,7 @@ import { AlcoholClasses } from './c12-unit7/classes/AlcoholClasses'
 import { PhenolEtherClasses } from './c12-unit7/classes/PhenolEtherClasses'
 import { AlcoholPhenolNaming } from './c12-unit7/alcohol-phenol-naming/AlcoholPhenolNaming'
 import { EtherNaming } from './c12-unit7/ether-naming/EtherNaming'
+import { FunctionalGroupStructures } from './c12-unit7/structures/FunctionalGroupStructures'
 
 /**
  * Animations available to a Scrolly Animation, keyed by the `animation` prop.
@@ -408,6 +409,7 @@ export const animations = {
   'phenol-ether-classes': PhenolEtherClasses,
   'alcohol-phenol-naming': AlcoholPhenolNaming,
   'ether-naming': EtherNaming,
+  'functional-group-structures': FunctionalGroupStructures,
 } as const
 
 export type AnimationName = keyof typeof animations

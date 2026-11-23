@@ -127,6 +127,7 @@ import { NitroActivation } from './sims/nitro-activation'
 import { PolyhalogenExplorer } from './sims/polyhalogen-explorer'
 import { OxyClassBuilder } from './sims/oxy-class-builder'
 import { OxygenGroupNamer } from './sims/oxygen-group-namer'
+import { FunctionalGroupGeometryLab } from './sims/functional-group-geometry-lab'
 
 export interface SimulationProps {
   /** True when the Learner has asked the OS for reduced motion. Skip tweens and loops when set. */
@@ -268,4 +269,5 @@ export const simulations: Record<string, ComponentType<SimulationProps>> = {
   'polyhalogen-explorer': PolyhalogenExplorer,
   'oxy-class-builder': OxyClassBuilder,
   'oxygen-group-namer': OxygenGroupNamer,
+  'functional-group-geometry-lab': FunctionalGroupGeometryLab,
 }
