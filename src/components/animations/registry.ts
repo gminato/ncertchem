@@ -182,6 +182,7 @@ import { NiEnColourSeries } from './c12-unit5/ni-en/NiEnColourSeries'
 import { CftLimitations } from './c12-unit5/limitations/CftLimitations'
 import { CarbonylStructures } from './c12-unit5/carbonyls/CarbonylStructures'
 import { CarbonylSynergicBonding } from './c12-unit5/carbonyls/CarbonylSynergicBonding'
+import { CoordinationApplications } from './c12-unit5/applications/CoordinationApplications'
 
 /**
  * Animations available to a Scrolly Animation, keyed by the `animation` prop.
@@ -374,6 +375,7 @@ export const animations = {
   'cft-limitations': CftLimitations,
   'carbonyl-structures': CarbonylStructures,
   'carbonyl-synergic-bonding': CarbonylSynergicBonding,
+  'coordination-applications': CoordinationApplications,
 } as const
 
 export type AnimationName = keyof typeof animations
