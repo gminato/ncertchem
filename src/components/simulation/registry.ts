@@ -58,6 +58,7 @@ import { AlkyneIsomers } from './sims/alkyne-isomers'
 import { HuckelChecker } from './sims/huckel-checker'
 import { FormulaTranslator } from './sims/formula-translator'
 import { ArrowPusher } from './sims/arrow-pusher'
+import { CarbonylRouteFinder } from './sims/carbonyl-route-finder'
 import { AlkyneAcidTest } from './sims/alkyne-acid-test'
 import { HalideNamer } from './sims/halide-namer'
 import { HalogenationLab } from './sims/halogenation-lab'
@@ -264,4 +265,5 @@ export const simulations: Record<string, ComponentType<SimulationProps>> = {
   'zaitsev-chooser': ZaitsevChooser,
   'nitro-activation': NitroActivation,
   'polyhalogen-explorer': PolyhalogenExplorer,
+  'carbonyl-route-finder': CarbonylRouteFinder,
 }
