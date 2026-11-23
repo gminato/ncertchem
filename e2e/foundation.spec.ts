@@ -88,8 +88,8 @@ test.describe('Unit navigation', () => {
   })
 
   test('a Unit with no Sections yet shows a calm empty state', async ({ page }) => {
-    await page.goto('/class-12/unit-6')
-    await expect(page.getByRole('heading', { level: 1 })).toHaveText('Haloalkanes and Haloarenes')
+    await page.goto('/class-12/unit-7')
+    await expect(page.getByRole('heading', { level: 1 })).toHaveText('Alcohols, Phenols and Ethers')
     await expect(page.getByText('The Sections of this Unit are being written.')).toBeVisible()
   })
 
