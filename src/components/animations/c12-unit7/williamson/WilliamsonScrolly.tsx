@@ -235,7 +235,7 @@ function StepTertiaryElimination() {
       <text x={102} y={228} textAnchor="middle" fontSize={15} fontWeight={600} fontFamily="var(--font-sans)" fill="var(--ion-cation)">
         Na⁺
       </text>
-      <text x={92} y={248} textAnchor="middle" fontSize={15} fontWeight={600} fontFamily="var(--base)">
+      <text x={92} y={248} textAnchor="middle" fontSize={15} fontWeight={600} fontFamily="var(--font-sans)" fill="var(--base)">
         Strong base
       </text>
 
@@ -247,10 +247,10 @@ function StepTertiaryElimination() {
         strokeWidth={2.4}
         strokeDasharray="5 4"
       />
-      <text x={182} y={208} textAnchor="middle" fontSize={15} fontWeight={600} fontFamily="var(--caution)">
+      <text x={182} y={208} textAnchor="middle" fontSize={15} fontWeight={600} fontFamily="var(--font-sans)" fill="var(--caution)">
         SN2
       </text>
-      <text x={182} y={226} textAnchor="middle" fontSize={15} fontWeight={600} fontFamily="var(--caution)">
+      <text x={182} y={226} textAnchor="middle" fontSize={15} fontWeight={600} fontFamily="var(--font-sans)" fill="var(--caution)">
         blocked
       </text>
 
@@ -373,10 +373,10 @@ function StepPhenolArylEther() {
       </text>
       <line x1={452} y1={120} x2={452} y2={146} stroke="var(--fg)" strokeWidth={2.4} strokeLinecap="round" />
       <PhenylHexagon cx={452} cy={180} r={34} />
-      <text x={452} y={240} textAnchor="middle" fontSize={15} fontWeight={600} fontFamily="var(--success)">
+      <text x={452} y={240} textAnchor="middle" fontSize={15} fontWeight={600} fontFamily="var(--font-sans)" fill="var(--success)">
         Alkyl aryl ether
       </text>
-      <text x={452} y={262} textAnchor="middle" fontSize={15} fontFamily="var(--fg-muted)">
+      <text x={452} y={262} textAnchor="middle" fontSize={15} fontFamily="var(--font-sans)" fill="var(--fg-muted)">
         C₆H₅–O–R + NaX
       </text>
 

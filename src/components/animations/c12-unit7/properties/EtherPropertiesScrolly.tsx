@@ -115,7 +115,7 @@ function StepDipoleNoSelfHBond() {
       <text x={145} y={358} textAnchor="middle" fontSize={15} fontFamily="var(--font-sans)" fill="var(--fg-muted)">
         No hydrogen on oxygen
       </text>
-      <text x={145} y={384} textAnchor="middle" fontSize={15} fontWeight={600} fontFamily="var(--caution)">
+      <text x={145} y={384} textAnchor="middle" fontSize={15} fontWeight={600} fontFamily="var(--font-sans)" fill="var(--caution)">
         No self H-bonding
       </text>
 
@@ -133,7 +133,7 @@ function StepDipoleNoSelfHBond() {
       <text x={415} y={358} textAnchor="middle" fontSize={15} fontFamily="var(--font-sans)" fill="var(--fg-muted)">
         Carries polar O–H group
       </text>
-      <text x={415} y={384} textAnchor="middle" fontSize={15} fontWeight={600} fontFamily="var(--success)">
+      <text x={415} y={384} textAnchor="middle" fontSize={15} fontWeight={600} fontFamily="var(--font-sans)" fill="var(--success)">
         Strong O–H⋯O network
       </text>
 
@@ -365,7 +365,7 @@ function StepWaterMiscibility() {
       <text x={308} y={146} textAnchor="middle" dominantBaseline="central" fontSize={18} fontWeight={700} fontFamily="var(--font-sans)" fill="var(--fg)">
         H
       </text>
-      <text x={308} y={170} textAnchor="middle" fontSize={15} fontWeight={700} fontFamily="var(--font-sans)" fill="var(--delta-plus)">
+      <text x={308} y={176} textAnchor="middle" fontSize={15} fontWeight={700} fontFamily="var(--font-sans)" fill="var(--delta-plus)">
         δ⁺
       </text>
       <line x1={320} y1={146} x2={358} y2={158} stroke="var(--fg)" strokeWidth={2.4} strokeLinecap="round" />

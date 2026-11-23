@@ -172,7 +172,7 @@ function SynthesisMechanismSvg({
           <text x={194} y={182} textAnchor="middle" fontSize={15} fontFamily="var(--font-sans)" fill="var(--fg-muted)">
             Both alcohols protonate: CH₃–OH₂⁺ &amp; C₂H₅–OH₂⁺
           </text>
-          <text x={194} y={214} textAnchor="middle" fontSize={15} fontFamily="var(--fg-muted)">
+          <text x={194} y={214} textAnchor="middle" fontSize={15} fontFamily="var(--font-sans)" fill="var(--fg-muted)">
             Both alcohols attack: CH₃OH &amp; C₂H₅OH
           </text>
           <rect x={44} y={240} width={300} height={66} rx={10} fill="var(--caution-soft)" stroke="var(--caution)" strokeWidth={1.4} />
@@ -196,8 +196,9 @@ function SynthesisMechanismSvg({
         : alcohol === 'tert-butanol'
           ? '3° tert-Butyl alcohol'
           : 'Protonated ethanol'
-    const betaSub = alcohol === 'tert-butanol' ? 'C(CH₃)₂' : alcohol === 'propan-2-ol' ? 'CH(CH₃)' : 'CH₂'
-    const alphaSub = alcohol === 'tert-butanol' ? 'CH₂' : 'CH₂'
+    const betaCarbonGroup = 'CH₂'
+    const alphaCarbonGroup =
+      alcohol === 'tert-butanol' ? 'C(CH₃)₂' : alcohol === 'propan-2-ol' ? 'CH(CH₃)' : 'CH₂'
     const showCarbocationNote = alcohol === 'propan-2-ol' || alcohol === 'tert-butanol'
 
     return (
@@ -216,13 +217,13 @@ function SynthesisMechanismSvg({
         <line x1={98} y1={168} x2={122} y2={200} stroke="var(--fg)" strokeWidth={2.2} strokeLinecap="round" />
 
         <text x={136} y={214} textAnchor="middle" dominantBaseline="central" fontSize={16} fontWeight={700} fontFamily="var(--font-sans)" fill="var(--fg)">
-          {alphaSub}
+          {betaCarbonGroup}
         </text>
         <line x1={160} y1={214} x2={216} y2={214} stroke="var(--fg)" strokeWidth={2.4} strokeLinecap="round" />
         <line x1={164} y1={204} x2={212} y2={204} stroke="var(--accent)" strokeWidth={2.4} strokeDasharray="5 4" />
 
         <text x={246} y={214} textAnchor="middle" dominantBaseline="central" fontSize={16} fontWeight={700} fontFamily="var(--font-sans)" fill="var(--fg)">
-          {betaSub}
+          {alphaCarbonGroup}
         </text>
 
         <line x1={284} y1={214} x2={318} y2={214} stroke="var(--fg)" strokeWidth={2.2} strokeLinecap="round" />
@@ -334,25 +335,25 @@ function SynthesisMechanismSvg({
         <>
           <MiniPhenylRing cx={56} cy={244} r={22} />
           <line x1={72} y1={230} x2={88} y2={220} stroke="var(--fg)" strokeWidth={2} strokeLinecap="round" />
-          <text x={102} y={216} textAnchor="middle" dominantBaseline="central" fontSize={16} fontWeight={700} fontFamily="var(--atom-o)">
+          <text x={102} y={216} textAnchor="middle" dominantBaseline="central" fontSize={16} fontWeight={700} fontFamily="var(--font-sans)" fill="var(--atom-o)">
             O⁻
           </text>
         </>
       ) : (
-        <text x={78} y={218} textAnchor="middle" dominantBaseline="central" fontSize={16} fontWeight={700} fontFamily="var(--atom-o)">
+        <text x={78} y={218} textAnchor="middle" dominantBaseline="central" fontSize={16} fontWeight={700} fontFamily="var(--font-sans)" fill="var(--atom-o)">
           {nucShort}
         </text>
       )}
-      <text x={78} y={288} textAnchor="middle" fontSize={15} fontWeight={600} fontFamily="var(--base)">
+      <text x={78} y={288} textAnchor="middle" fontSize={15} fontWeight={600} fontFamily="var(--font-sans)" fill="var(--base)">
         Acts as base
       </text>
 
       {/* Steric barrier arc */}
       <path d="M 192 182 A 42 42 0 0 0 192 252" fill="none" stroke="var(--caution)" strokeWidth={2.2} strokeDasharray="5 4" />
-      <text x={154} y={230} textAnchor="middle" fontSize={15} fontWeight={600} fontFamily="var(--caution)">
+      <text x={154} y={230} textAnchor="middle" fontSize={15} fontWeight={600} fontFamily="var(--font-sans)" fill="var(--caution)">
         SN2
       </text>
-      <text x={154} y={250} textAnchor="middle" fontSize={15} fontWeight={600} fontFamily="var(--caution)">
+      <text x={154} y={250} textAnchor="middle" fontSize={15} fontWeight={600} fontFamily="var(--font-sans)" fill="var(--caution)">
         blocked
       </text>
 
@@ -541,17 +542,17 @@ function PureLiquidSvg({ selection }: { selection: CompoundSelection }) {
               <text x={306} y={188} textAnchor="middle" dominantBaseline="central" fontSize={16} fontWeight={600} fontFamily="var(--font-sans)" fill="var(--fg)">
                 C₂H₅
               </text>
-              <text x={213} y={192} textAnchor="middle" fontSize={15} fontWeight={700} fontFamily="var(--font-sans)" fill="var(--accent)">
+              <text x={213} y={222} textAnchor="middle" fontSize={15} fontWeight={700} fontFamily="var(--font-sans)" fill="var(--accent)">
                 {`Bent (${ETHER_ANGLE_DEG}°) → net dipole`}
               </text>
-              <line x1={110} y1={224} x2={316} y2={224} stroke="var(--caution)" strokeWidth={1.8} strokeDasharray="5 4" />
-              <text x={213} y={258} textAnchor="middle" fontSize={16} fontWeight={600} fontFamily="var(--font-sans)" fill="var(--fg)">
+              <line x1={110} y1={242} x2={316} y2={242} stroke="var(--caution)" strokeWidth={1.8} strokeDasharray="5 4" />
+              <text x={213} y={274} textAnchor="middle" fontSize={16} fontWeight={600} fontFamily="var(--font-sans)" fill="var(--fg)">
                 C₂H₅–O–C₂H₅  ⋯×⋯  C₂H₅–O–C₂H₅
               </text>
-              <text x={213} y={306} textAnchor="middle" fontSize={15} fontWeight={600} fontFamily="var(--caution)">
+              <text x={213} y={312} textAnchor="middle" fontSize={15} fontWeight={600} fontFamily="var(--font-sans)" fill="var(--caution)">
                 No O–H bond → no self hydrogen bonding
               </text>
-              <text x={213} y={336} textAnchor="middle" fontSize={15} fontFamily="var(--font-sans)" fill="var(--fg-muted)">
+              <text x={213} y={338} textAnchor="middle" fontSize={15} fontFamily="var(--font-sans)" fill="var(--fg-muted)">
                 Boils at 307.6 K (close to n-pentane)
               </text>
             </g>

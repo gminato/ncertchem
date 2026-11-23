@@ -93,6 +93,65 @@ async function svgOutOfBounds(scope: Locator): Promise<string[]> {
   })
 }
 
+/** Pairs of SVG `<text>` elements in the same SVG whose bounding boxes overlap by > 1 px in both axes. */
+async function svgTextOverlaps(scope: Locator): Promise<string[]> {
+  return scope.locator('svg[role="img"]').evaluateAll((svgs) => {
+    const overlaps: string[] = []
+    svgs.forEach((svg) => {
+      const texts = Array.from(svg.querySelectorAll('text')).filter((el) => {
+        if (el.closest('defs, clipPath, mask, pattern, symbol, marker')) return false
+        if (!(el.textContent ?? '').trim()) return false
+        const r = el.getBoundingClientRect()
+        return r.width > 0 && r.height > 0
+      })
+      for (let i = 0; i < texts.length; i++) {
+        const r1 = texts[i].getBoundingClientRect()
+        for (let j = i + 1; j < texts.length; j++) {
+          const r2 = texts[j].getBoundingClientRect()
+          const ow = Math.min(r1.right, r2.right) - Math.max(r1.left, r2.left)
+          const oh = Math.min(r1.bottom, r2.bottom) - Math.max(r1.top, r2.top)
+          if (ow > 1 && oh > 1) {
+            const t1 = (texts[i].textContent ?? '').trim().slice(0, 24)
+            const t2 = (texts[j].textContent ?? '').trim().slice(0, 24)
+            overlaps.push(`"${t1}" vs "${t2}" (${ow.toFixed(1)}x${oh.toFixed(1)}px)`)
+          }
+        }
+      }
+    })
+    return overlaps
+  })
+}
+
+/** Visible SVG `<text>` elements whose computed fill is fallback black `rgb(0, 0, 0)`. */
+async function svgBlackTextFills(scope: Locator): Promise<string[]> {
+  return scope.locator('svg[role="img"]').evaluateAll((svgs) => {
+    const bad: string[] = []
+    svgs.forEach((svg) => {
+      svg.querySelectorAll('text').forEach((el) => {
+        if (el.closest('defs, clipPath, mask, pattern, symbol, marker')) return
+        const txt = (el.textContent ?? '').trim()
+        if (!txt) return
+        const r = el.getBoundingClientRect()
+        if (r.width === 0 && r.height === 0) return
+        const fill = getComputedStyle(el).fill
+        if (fill === 'rgb(0, 0, 0)') {
+          bad.push(`black fill on "${txt.slice(0, 30)}"`)
+        }
+      })
+    })
+    return bad
+  })
+}
+
+async function assertCleanSvgScope(scope: Locator, scheme: 'light' | 'dark') {
+  expect(await smallTextLeaves(scope)).toEqual([])
+  expect(await svgOutOfBounds(scope)).toEqual([])
+  expect(await svgTextOverlaps(scope)).toEqual([])
+  if (scheme === 'dark') {
+    expect(await svgBlackTextFills(scope)).toEqual([])
+  }
+}
+
 for (const scheme of ['light', 'dark'] as const) {
   test.describe(`C12 U7 S11 Ethers (${scheme})`, () => {
     test.use({ viewport: { width: 1440, height: 900 }, colorScheme: scheme, reducedMotion: 'reduce' })
@@ -114,8 +173,7 @@ for (const scheme of ['light', 'dark'] as const) {
           await steps.nth(k).scrollIntoViewIfNeeded()
           const panelSvg = scrolly.locator('svg[role="img"]').first()
           await expect(panelSvg).toHaveAttribute('data-step', String(k), { timeout: 5000 })
-          expect(await smallTextLeaves(panelSvg)).toEqual([])
-          expect(await svgOutOfBounds(scrolly)).toEqual([])
+          await assertCleanSvgScope(scrolly, scheme)
           await panelSvg.screenshot({
             path: `test-results/screens/c12u7-s11-${scrollySpec.short}-step${k + 1}-${scheme}.png`,
           })
@@ -130,68 +188,65 @@ for (const scheme of ['light', 'dark'] as const) {
       // 1. Default: Synthesis Lab -> Alcohol Dehydration -> 1° Ethanol @ 413 K
       await expect(sim.getByTestId('ether-pathway-verdict')).toHaveText('SN2 Substitution')
       await expect(sim.getByTestId('ether-major-product')).toContainText('Ethoxyethane')
-      expect(await smallTextLeaves(sim)).toEqual([])
-      expect(await svgOutOfBounds(sim)).toEqual([])
+      await assertCleanSvgScope(sim, scheme)
       await sim.screenshot({ path: `test-results/screens/c12u7-s11-sim-dehydration-413-${scheme}.png` })
 
       // 2. Dehydration 1° Ethanol @ 443 K
       await sim.getByRole('radio', { name: '443 K' }).click()
       await expect(sim.getByTestId('ether-pathway-verdict')).toHaveText('Elimination')
       await expect(sim.getByTestId('ether-major-product')).toContainText('Ethene')
-      expect(await smallTextLeaves(sim)).toEqual([])
-      expect(await svgOutOfBounds(sim)).toEqual([])
+      await assertCleanSvgScope(sim, scheme)
       await sim.screenshot({ path: `test-results/screens/c12u7-s11-sim-dehydration-443-${scheme}.png` })
 
       // 3. Dehydration 1° Mixture @ 413 K
       await sim.getByRole('radio', { name: '413 K' }).click()
       await sim.getByRole('radio', { name: /1° Mixture/ }).click()
       await expect(sim.getByTestId('ether-pathway-verdict')).toHaveText('Mixed Ethers (SN2)')
-      expect(await smallTextLeaves(sim)).toEqual([])
-      expect(await svgOutOfBounds(sim)).toEqual([])
+      await assertCleanSvgScope(sim, scheme)
       await sim.screenshot({ path: `test-results/screens/c12u7-s11-sim-dehydration-mix-${scheme}.png` })
 
       // 4. Williamson Synthesis -> tert-Butoxide + CH3-Br (SN2) -> swap to 3° halide + methoxide (Elimination) -> phenoxide + CH3-Br (Anisole)
       await sim.getByRole('radio', { name: 'Williamson Synthesis' }).click()
       await expect(sim.getByTestId('ether-pathway-verdict')).toHaveText('SN2 Substitution')
       await expect(sim.getByTestId('ether-major-product')).toContainText('2-Methoxy-2-methylpropane')
-      expect(await smallTextLeaves(sim)).toEqual([])
-      expect(await svgOutOfBounds(sim)).toEqual([])
+      await assertCleanSvgScope(sim, scheme)
 
       await sim.getByRole('radio', { name: 'CH₃O⁻Na⁺' }).click()
       await sim.getByRole('radio', { name: '(CH₃)₃C–Br (3°)' }).click()
       await expect(sim.getByTestId('ether-pathway-verdict')).toHaveText('Elimination')
       await expect(sim.getByTestId('ether-major-product')).toContainText('2-Methylpropene')
-      expect(await smallTextLeaves(sim)).toEqual([])
-      expect(await svgOutOfBounds(sim)).toEqual([])
+      await assertCleanSvgScope(sim, scheme)
       await sim.screenshot({ path: `test-results/screens/c12u7-s11-sim-williamson-e2-${scheme}.png` })
 
       await sim.getByRole('radio', { name: 'C₆H₅O⁻Na⁺' }).click()
       await sim.getByRole('radio', { name: 'CH₃–Br (1°)' }).click()
       await expect(sim.getByTestId('ether-pathway-verdict')).toHaveText('SN2 Substitution')
       await expect(sim.getByTestId('ether-major-product')).toContainText('Anisole')
-      expect(await smallTextLeaves(sim)).toEqual([])
-      expect(await svgOutOfBounds(sim)).toEqual([])
+      await assertCleanSvgScope(sim, scheme)
       await sim.screenshot({ path: `test-results/screens/c12u7-s11-sim-williamson-anisole-${scheme}.png` })
 
-      // 5. Physical Properties Lab -> Boiling Compare All
+      // 5. Physical Properties Lab -> Boiling Compare All + Ethoxyethane single-compound view
       await sim.getByRole('radio', { name: 'Physical Properties Lab' }).click()
       await sim.getByRole('radio', { name: 'Compare All' }).click()
       await expect(sim.getByTestId('ether-bp-readout')).toContainText('307.6 K')
-      expect(await smallTextLeaves(sim)).toEqual([])
-      expect(await svgOutOfBounds(sim)).toEqual([])
+      await assertCleanSvgScope(sim, scheme)
       await sim.screenshot({ path: `test-results/screens/c12u7-s11-sim-props-boiling-${scheme}.png` })
 
-      // 6. Physical Properties Lab -> In Water (Miscibility) -> Ethoxyethane & Compare All
+      await sim.getByRole('radio', { name: 'Ethoxyethane' }).click()
+      await expect(sim.getByTestId('ether-bp-readout')).toContainText('307.6 K')
+      await assertCleanSvgScope(sim, scheme)
+      await sim.screenshot({ path: `test-results/screens/c12u7-s11-sim-props-boiling-ethoxyethane-${scheme}.png` })
+
+      // 6. Physical Properties Lab -> In Water (Miscibility) -> Compare All & Ethoxyethane
+      await sim.getByRole('radio', { name: 'Compare All' }).click()
       await sim.getByRole('radio', { name: 'In Water (Miscibility)' }).click()
       await expect(sim.getByTestId('ether-misc-readout')).toContainText('7.5 g')
-      expect(await smallTextLeaves(sim)).toEqual([])
-      expect(await svgOutOfBounds(sim)).toEqual([])
+      await assertCleanSvgScope(sim, scheme)
       await sim.screenshot({ path: `test-results/screens/c12u7-s11-sim-props-water-all-${scheme}.png` })
 
       await sim.getByRole('radio', { name: 'Ethoxyethane' }).click()
       await expect(sim.getByTestId('ether-misc-readout')).toContainText('7.5 g per 100 mL water')
-      expect(await smallTextLeaves(sim)).toEqual([])
-      expect(await svgOutOfBounds(sim)).toEqual([])
+      await assertCleanSvgScope(sim, scheme)
 
       await expect(page.locator('.katex-display').first()).toBeAttached()
       await expect(page.locator('.katex-error')).toHaveCount(0)
